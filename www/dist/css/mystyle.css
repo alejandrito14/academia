@@ -1,0 +1,80 @@
+@charset "UTF-8";
+/* CSS Document */
+
+.btn-primary{
+	background-color: #f6821f ;
+	border: 1px solid #FFFFFF;
+}
+
+.btn-primary:hover{
+	background-color: #f6821f ;
+	border: 1px solid #FFFFFF;
+}
+
+
+.page-item.active .page-link {
+	background-color: #044186 ;
+	border: 1px solid #FFFFFF;
+}
+
+.paginate_button .page-item .active {
+	background-color: #044186 ;
+	border: 1px solid #FFFFFF;
+}
+
+..page-link {
+	color: #044186;
+}
+
+.btn_colorgray{
+     background-color:gray;
+    border: 1px solid #FFFFFF;
+
+    color:#ffffff;
+
+}
+.btn_azul{
+   background-color:#021836;
+    border: 1px solid #FFFFFF;
+    color:#ffffff;
+}
+
+/*.btn_verde{
+   background-color:#469924;
+    border: 1px solid #FFFFFF;
+    color:#ffffff;
+}*/
+
+.btn_rojo{
+   background-color:red;
+    border: 1px solid #FFFFFF;
+    color:#ffffff;
+}
+
+.btn_accion{
+	 background-color:#a7a25a;
+    border: 1px solid #FFFFFF;
+    color:#ffffff;
+}
+.container-fluid{
+    font-size: 12px!important;
+}
+h5,h4{
+    font-size: 12px!important;
+}
+
+.btn{
+    font-size: 12px!important;
+}
+
+.chosen-container{
+    font-size: 10px!important;
+}
+
+    input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    }
+input[type=number] { -moz-appearance:textfield; }
+

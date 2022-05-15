@@ -1,0 +1,216 @@
+<div class="page page-profile" data-name="profile">
+    <div class="navbar">
+        <div class="navbar-bg"></div>
+        <div class="navbar-inner">
+            <div class="left">
+                <a href="/home/" class="button button-fill text-color-theme bg-color-white button-44 regreso"
+                    >
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+            </div>
+            <div class="title">
+                <h5>Perfil</h5>
+            </div>
+            <div class="right">
+                <a href="/notification/" class="button button-fill text-color-theme bg-color-white button-44">
+                    <i class="bi bi-bell"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- main page content -->
+    <div class="page-content">
+
+        <!-- user information -->
+        <div class="row">
+            <div class="col-100">
+                <div class="card margin-bottom">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-40 badgefoto">
+                                <figure class="avatar rounded-10">
+                                    <img class="imagencliente2 " src="img/user1.jpg" alt=""style="width: 6em;">
+                                </figure>
+
+                                <!--  <div class="badgefoto"  ><span class="bi bi-camera"></span></div> -->
+                            </div>
+                            <div class="col no-padding-horizontal align-self-center">
+                                <h3 class="no-margin-bottom text-color-theme nombreusuario"></h3>
+                                <p class="text-muted tipousuario"></p>
+                            </div>
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+
+        <!-- followers and connections -->
+        <div class="row margin-bottom text-align-center padding-vertical ">
+            <div class="col">
+                <h5 class="no-margin-bottom"></h5>
+                <i class="bi bi-person-circle"></i>
+                <p class="text-muted small"><a href="/datospersonales/">Datos personales</a></p>
+            </div>
+            <div class="col">
+                <h5 class="no-margin-bottom"></h5>
+                 <i class="bi bi-plus-square"></i>
+                <p class="text-muted small"><a href="/datosemergencia/">Datos de emergencia</a></p>
+            </div>
+            <div class="col">
+                <h5 class="no-margin-bottom"></h5>
+                <i class="bi bi-suit-heart-fill"></i>
+                <p class="text-muted small"><a href="/datosdesalud/">Datos de salud</a></p>
+            </div>
+        </div>
+
+        <div class="row margin-bottom text-align-center padding-vertical ">
+            <div class="col">
+                <h5 class="no-margin-bottom"></h5>
+            <i class="bi bi-lock-fill"></i>
+                <p class="text-muted small"><a id="datosacceso">Datos acceso</a></p>
+            </div>
+            <div class="col">
+                <h5 class="no-margin-bottom"></h5>
+                <i class="bi bi-geo-alt"></i>
+                <p class="text-muted small"><a href="/datosdireccion/">Datos de dirección</a></p>
+            </div>
+            <div class="col">
+                <h5 class="no-margin-bottom"></h5>
+            <i class="bi bi-wallet"></i>
+                <p class="text-muted small"><a href="/pagos/">Pagos</a></p>
+            </div>
+        </div>
+
+ <div class="row h-100 ">
+        <a id="btncerrarsesion" class="button button-fill button-large button-raised margin-bottom color-theme" style="margin: 1em;">
+                Cerrar sesión
+              </a>
+          </div>
+        <!-- summary -->
+      <!--   <div class="row margin-bottom">
+            <div class="col-33 medium-33">
+                <div class="card margin-bottom-half">
+                    <div class="card-content card-content-padding">
+                        <div class="row">
+                            <div class="col-auto no-padding-horizontal">
+                                <div class="avatar avatar-40 bg-color-yellow text-color-white elevation-2 rounded-10-right">
+                                    <i class="bi bi-star"></i>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <p class="text-muted size-12 no-margin-bottom">Datos personales</p>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-33 medium-33">
+                <div class="card margin-bottom-half">
+                    <div class="card-content card-content-padding">
+                        <div class="row">
+                            <div class="col-auto no-padding-horizontal">
+                                <div class="avatar avatar-40 bg-color-green text-color-white elevation-2 rounded-10-right">
+                                    <i class="bi bi-cash-stack"></i>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <p class="text-muted size-12 no-margin-bottom">Datos de emergencia</p>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-33 medium-33">
+                <div class="card margin-bottom-half">
+                    <div class="card-content card-content-padding">
+                        <div class="row">
+                            <div class="col-auto no-padding-horizontal">
+                                <div class="avatar avatar-40 bg-color-yellow text-color-white elevation-2 rounded-10-right">
+                                    <i class="bi bi-star"></i>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <p class="text-muted size-12 no-margin-bottom">Datos de salud</p>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+          <div class="row margin-bottom">
+            <div class="col-33 medium-33">
+                <div class="card margin-bottom-half">
+                    <div class="card-content card-content-padding">
+                        <div class="row">
+                            <div class="col-auto no-padding-horizontal">
+                                <div class="avatar avatar-40 bg-color-yellow text-color-white elevation-2 rounded-10-right">
+                                    <i class="bi bi-star"></i>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <p class="text-muted size-12 no-margin-bottom">Datos de acceso</p>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-33 medium-33">
+                <div class="card margin-bottom-half">
+                    <div class="card-content card-content-padding">
+                        <div class="row">
+                            <div class="col-auto no-padding-horizontal">
+                                <div class="avatar avatar-40 bg-color-green text-color-white elevation-2 rounded-10-right">
+                                    <i class="bi bi-cash-stack"></i>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <p class="text-muted size-12 no-margin-bottom"> Dirección</p>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-33 medium-33">
+                <div class="card margin-bottom-half">
+                    <div class="card-content card-content-padding">
+                        <div class="row">
+                            <div class="col-auto no-padding-horizontal">
+                                <div class="avatar avatar-40 bg-color-yellow text-color-white elevation-2 rounded-10-right">
+                                    <i class="bi bi-star"></i>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <p class="text-muted size-12 no-margin-bottom">Pagos</p>
+                               
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+ -->
+
+        <!-- map location -->
+        
+
+        <!-- summary swiper carousel -->
+       
+
+
+        <!-- Connections -->
+      
+       
+
+    </div>
+
+
+</div>
