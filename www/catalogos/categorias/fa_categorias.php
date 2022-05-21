@@ -246,13 +246,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 							<div class="form-group">
 
-								<div class="form-check">
-					               
-					                  <input type="checkbox" class="form-check-input " name="v_activarcategoria"  value="0" id="v_activarcategoria" style="top: -0.3em;">
-					                   <label class="form-check-label">
-										 ASIGNAR CATEGORÍA
-					                </label>
-				                </div>
+								
 
 								 	<div class="form-check">
 					               
@@ -262,7 +256,17 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					                </label>
 				                </div>
 				              </div>
-				              <div id="divavanzado" style="display: none;">
+				     <div  class="divavanzado" style="display: none;">
+							<div class="form-group">
+				              	<div class="form-check">
+					               
+					                  <input type="checkbox" class="form-check-input " name="v_activarcategoria"  value="0" id="v_activarcategoria" style="top: -0.3em;">
+					                   <label class="form-check-label">
+										 ASIGNAR CATEGORÍA
+					                </label>
+				                </div>
+				            </div>
+
 							 <div class="form-group">
 								 	<div class="form-check">
 					               
@@ -423,8 +427,37 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					
 					</div>
 				</div>
+ <div  class="divavanzado" style="display: none;">
+			<div class="card" style="" id="divhorarios">
+				<div class="card-header" style="">
+					<h5>HORARIOS EN QUE SE ENCUENTRA DISPONIBLE</h5>
+
+				</div>
+				<div class="card-body">
+						<div style="margin-top: 3em">
+
+							<div class="row">
+								<div class="col-md-12">
+								
+									<button class="btn btn-primary" type="button" style=" float: right;   margin-top: -1em;" onclick="AgregarHorario()">NUEVO HORARIO</button>
+								</div>
+								<div class="col-md-3">
+										
+									</div>
+							</div>
+
+								
+								<div id="horarios"></div>
+
+
+
+
+					</div>
+				</div>
+			</div>
 			</div>
 		</div>
+	</div>
 
 
 	</div>
@@ -512,6 +545,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		}
 		HabilitarCostos();
 		ActivarAvanzado();
+		ObtenerHorariosSemanaCategorias(idcategoria);
+
 	}
 
 	

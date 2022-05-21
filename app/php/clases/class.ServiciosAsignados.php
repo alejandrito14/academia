@@ -54,5 +54,27 @@ class ServiciosAsignados
 	}
 
 
+	public function buscarUsuarioServicio()
+	{
+		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario'
+		 ";
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 
 }

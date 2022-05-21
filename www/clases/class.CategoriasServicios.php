@@ -9,7 +9,7 @@ class CategoriasServicios
 	public $nombre;
 	public $estatus;
 	public $tipo;
-	
+	public $intervalo;
 	
 	//Funcion para obtener todos los categoriasservicio activos
 	public function ObtcategoriasservicioActivos()
@@ -56,7 +56,7 @@ class CategoriasServicios
 	
 	public function Guardarcategoriasservicio()
 	{
-		$query="INSERT INTO categoriasservicio (nombrecategoria,estatus,tipo) VALUES ('$this->nombre','$this->estatus','$this->tipo')";
+		$query="INSERT INTO categoriasservicio (nombrecategoria,estatus,tipo,intervalo) VALUES ('$this->nombre','$this->estatus','$this->tipo','$this->intervalo')";
 		
 		$resp=$this->db->consulta($query);
 		$this->idcategoriasservicio = $this->db->id_ultimo();
@@ -66,8 +66,10 @@ class CategoriasServicios
 	//funcion para modificar los usuarios
 	public function Modificarcategoriasservicio()
 	{
-		$query="UPDATE categoriasservicio SET nombrecategoria='$this->nombre',
-		estatus='$this->estatus'
+		$query="UPDATE categoriasservicio SET 
+		nombrecategoria='$this->nombre',
+		estatus='$this->estatus',
+		intervalo='$this->intervalo'
 		WHERE idcategoriasservicio=$this->idcategoriasservicio";
 
 		$resp=$this->db->consulta($query);
@@ -77,8 +79,6 @@ class CategoriasServicios
 	public function buscarcategoriasservicio()
 	{
 		$query="SELECT * FROM categoriasservicio WHERE idcategoriasservicio=".$this->idcategoriasservicio;
-
-		
 		$resp=$this->db->consulta($query);
 		
 		//echo $total;

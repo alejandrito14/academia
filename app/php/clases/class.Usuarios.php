@@ -23,6 +23,9 @@ class Usuarios
 	public $email;
 	public $sexo;
 	public $tokenfirebase;
+    public $alias;
+
+    public $idtutorado;
 
     public $v_codigopostal;
     public $v_pais;
@@ -138,6 +141,22 @@ class Usuarios
         $this->idusuario=$this->db->id_ultimo();
 	}
 
+    public function ActualizarUsuarioTutorado()
+    {
+         $query = "UPDATE usuarios SET
+         nombre = '$this->nombre',
+         paterno='$this->paterno',
+         materno='$this->materno',
+         sexo='$this->sexo',
+         email='$this->email',
+         usuario='$this->email',
+         estatus='$this->estatus',
+         fechanacimiento='$this->fecha'
+        WHERE idusuarios = '$this->idtutorado' ";
+ 
+        $result = $this->db->consulta($query);
+    }
+
 	public function GuardarUsuarioyTutor($idusuariotutorado,$parentesco)
 	{
 		$sql = "INSERT INTO usuariossecundarios (idusuariostutor,idusuariotutorado,idparentesco)
@@ -147,6 +166,16 @@ class Usuarios
 
         $result  = $this->db->consulta($sql);
 	}
+
+    public function ActualizarParentesco($parentesco)
+    {
+          $query = "UPDATE usuariossecundarios SET
+         idparentesco = '$parentesco'
+        WHERE idusuariotutorado = '$this->idtutorado' ";
+
+     
+        $result = $this->db->consulta($query);
+    }
 
 
 	function validarUsuarioCliente ()
@@ -623,6 +652,40 @@ class Usuarios
 
         $this->db->consulta($sql);
     
+    }
+
+        public function ActualizarUsuarioFotoAlias()
+    {
+         $query = "UPDATE usuarios SET
+         foto = '$this->foto',
+         alias='$this->alias',
+         estatus='$this->estatus'
+        WHERE idusuarios = '$this->idusuarios' ";
+     
+
+        $result = $this->db->consulta($query);
+    }
+
+    public function ObtenerparentescoUsuario()
+    {
+         $sql = "SELECT * FROM usuariossecundarios WHERE idusuariotutorado = '$this->idusuarios'";
+
+
+        $result = $this->db->consulta($sql);
+        return $result;
+    }
+
+    public function EliminarUsuarioSecundario()
+    {
+       $sql = "DELETE FROM usuariossecundarios WHERE  idusuariotutorado='$this->idusuarios'";
+
+        $this->db->consulta($sql);
+    }
+    public function EliminarUsuario()
+    {
+        $sql = "DELETE FROM usuarios WHERE  idusuarios='$this->idusuarios'";
+
+        $this->db->consulta($sql);
     }
 
 }

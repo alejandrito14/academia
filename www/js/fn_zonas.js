@@ -5,29 +5,9 @@ function Guardarzona(form,regresar,donde,idmenumodulo)
 		//recibimos todos los datos..
 		var datos = ObtenerDatosFormulario(form);
 
-		var diasemana=[];
+		var color=$("#v_color").val();
 
-		var horainicio=[];
-
-		var horafin=[];
-		$(".diasemana").each(function(){
-				var valor=$(this).val();
-				diasemana.push(valor);
-			});
-		$(".horainiciodia").each(function(){
-				var valor=$(this).val();
-				horainicio.push(valor);
-			});
-
-		$(".horafindia").each(function(){
-			var valor=$(this).val();
-			horafin.push(valor);
-
-		});
-
-		var datos=datos+"&diasemana="+diasemana+"&horainiciodia="+horainicio+"&horafindia="+horafin;
-		
-	
+		var datos=datos+"&v_color="+color;
 		 $('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
 				
 		setTimeout(function(){
@@ -58,7 +38,7 @@ function Guardarzona(form,regresar,donde,idmenumodulo)
 	 }
 }
 
-
+/*
 function ObtenerHorariosSemanaZona(idzona) {
 	var datos="idzona="+idzona;
 
@@ -160,4 +140,4 @@ function PintarHorariosSemanaZonas(horarios) {
 		
 	}
 			
-}
+}*/

@@ -196,6 +196,10 @@ var routes = [
   },
   // register datos personales
 
+ {
+    path: '/registrofoto/',
+    componentUrl: './pages/registrofoto.html',
+  },
   {
     path: '/registro/',
     componentUrl: './pages/registro.html',
@@ -266,6 +270,10 @@ var routes = [
    {
       path:'/registrotutorados/',
       componentUrl: './pages/registrotutorados.html',
+    },
+    {
+      path:'/nuevotutorado/',
+      componentUrl: './pages/nuevotutorado.html',
     },
 
       // membresia

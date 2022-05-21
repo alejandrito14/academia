@@ -41,12 +41,12 @@ try
 	$zona->idzona = trim($_POST['id']);
 	$zona->nombre = trim($f->guardar_cadena_utf8($_POST['v_zona']));
 	$zona->estatus=trim($f->guardar_cadena_utf8($_POST['v_estatus']));
-	
-	$diasemanas=explode(',', $_POST['diasemana']);
+	$zona->color=trim($f->guardar_cadena_utf8($_POST['v_color']));
+	//$diasemanas=explode(',', $_POST['diasemana']);
 
-	$horainiciosemana=explode(',', $_POST['horainiciodia']);
+	//$horainiciosemana=explode(',', $_POST['horainiciodia']);
 
-	$horafinsemana=explode(',', $_POST['horafindia']);
+	//$horafinsemana=explode(',', $_POST['horafindia']);
 
 	//Validamos si hacermos un insert o un update
 	if($zona->idzona == 0)
@@ -54,7 +54,7 @@ try
 		//guardando
 		$zona->Guardarzona();
 
-		if (count($diasemanas)>0 && $diasemanas[0]!='') {
+		/*if (count($diasemanas)>0 && $diasemanas[0]!='') {
 			# code...
 		
 		for ($i=0; $i < count($diasemanas); $i++) { 
@@ -63,13 +63,13 @@ try
 				$zona->horafinsemana=$horafinsemana[$i];
 				$zona->GuardarHorarioSemana();
 			}
-		}
+		}*/
 
 		$md->guardarMovimiento($f->guardar_cadena_utf8('zona'),'zona',$f->guardar_cadena_utf8('Nuevo zona creado con el ID-'.$zona->idzona));
 	}else{
 		$zona->Modificarzona();	
 
-		if (count($diasemanas)>0 && $diasemanas[0]!='') {
+		/*if (count($diasemanas)>0 && $diasemanas[0]!='') {
 			$zona->EliminarHorarioSemana();
 		
 		for ($i=0; $i < count($diasemanas); $i++) { 
@@ -78,7 +78,7 @@ try
 				$zona->horafinsemana=$horafinsemana[$i];
 				$zona->GuardarHorarioSemana();
 			}
-		}
+		}*/
 
 		$md->guardarMovimiento($f->guardar_cadena_utf8('zona'),'zona',$f->guardar_cadena_utf8('Modificación de zona -'.$zona->idzona));
 	}

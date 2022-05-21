@@ -63,7 +63,7 @@ if(isset($_GET['ac']))
 		echo '<script type="text/javascript">AbrirNotificacion("'.$_GET['msj'].'","mdi-close-circle");</script>';
 	}
 	
-	echo '<script type="text/javascript">OcultarNotificacion()</script>';
+	//echo '<script type="text/javascript">OcultarNotificacion()</script>';
 }
 
 /*======================= TERMINA VALIDACIÓN DE RESPUESTA (alertas) =========================*/

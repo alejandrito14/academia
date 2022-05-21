@@ -21,7 +21,7 @@ class Tipodeusuarios
 
 			//$sql.=" AND idtipousuario IN('$this->tipo')";
 		}
-	echo $sql;die();
+	//echo $sql;die();
 		$resp = $this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 

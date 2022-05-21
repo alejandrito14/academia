@@ -16,6 +16,7 @@ class Servicios
 	public $horainiciosemana;
 	public $horafinsemana;
 
+
 	public $totalclase;
 	public $modalidad;
 	public $montopagarparticipante;
@@ -30,6 +31,7 @@ class Servicios
 	public $periodo;
 
 	public $idusuarios;
+	public $fecha;
 	
 
 	public function ObtenerServicios()
@@ -115,7 +117,6 @@ class Servicios
 		periodo='$this->periodo'
 		WHERE idservicio=$this->idservicio";
 
-
 		$resp=$this->db->consulta($query);
 	}
 
@@ -160,7 +161,8 @@ class Servicios
 
 	public function GuardarHorarioSemana()
 	{
-		$query = "INSERT INTO horariosservicio (idservicio,dia,horainicial,horafinal) VALUES ('$this->idservicio','$this->dia','$this->horainiciosemana','$this->horafinsemana');";
+		$query = "INSERT INTO horariosservicio (idservicio,dia,horainicial,horafinal,fecha,idzona) VALUES ('$this->idservicio','$this->dia','$this->horainiciosemana','$this->horafinsemana','$this->fecha','$this->idzona');";
+
 			
 		$this->db->consulta($query);
 
@@ -169,7 +171,6 @@ class Servicios
 	public function EliminarHorarioSemana()
 	{
 		$sql="DELETE FROM horariosservicio WHERE idservicio='$this->idservicio'";
-		
 		$resp = $this->db->consulta($sql);
 		return $resp;
 	}

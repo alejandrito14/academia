@@ -173,7 +173,7 @@ function Cargar() {
     localStorage.setItem('montodescontado','');
   localStorage.setItem('datostarjeta','');
   localStorage.setItem('adelante',1);
-
+  localStorage.setItem('idtutorado','');
   localStorage.setItem('cont',-1);
 
   /* pictureSource=navigator.camera.PictureSourceType;
@@ -1298,6 +1298,18 @@ $$(document).on('page:init', '.page[data-name="token"]', function (e) {
 });
 
 
+$$(document).on('page:init', '.page[data-name="registrofoto"]', function (e) {
+  /* swiper carousel projects */
+  $$('#btncontinuarregistro').attr('onclick','IrRegistro()')
+  $$(".badgefoto").attr('onclick','AbrirModalFoto()');
+
+   
+    ObtenerdatosRegistro();
+    CargarFoto();
+
+
+});
+
 $$(document).on('page:init', '.page[data-name="registro"]', function (e) {
   /* swiper carousel projects */
   $$('#btncontinuar').attr('onclick','Registrar()')
@@ -1413,12 +1425,41 @@ localStorage.setItem('genero',"");
 
 
 $$(document).on('page:init', '.page[data-name="registrotutorados"]', function (e) {
-  $$('#btnnuevotutorado').attr('onclick','MostrarFormTutorado()');
-  $$('.btnregresar').attr('onclick','RegresarApantalla()');
-  $$('#btnguadartuto').attr('onclick','GuardarTurorado()');
-   phoneFormatter('v_celulartu');
+
   ObtenerTutorados();
 });
+
+$$(document).on('page:init', '.page[data-name="nuevotutorado"]', function (e) {
+   var id=-1;
+   $("#v_idtu").val(id);
+ObtenerParentesco();
+      $("#tituloventana").html('Nuevo <span style="color: #0abe68;">tutorado</span>');
+
+    if (localStorage.getItem('idtutorado')!='' && localStorage.getItem('idtutorado')!=undefined) {
+    
+      var id=localStorage.getItem('idtutorado');
+      $("#v_idtu").val(id);
+
+      Obtenerdatostutorado(id);
+      $("#tituloventana").html('Editar <span style="color: #0abe68;">tutorado</span>');
+    }
+         
+
+
+          var v=$("#v_idtu").val();
+
+          if (v=='' || v==-1) {
+            
+           $$('#btnguadartuto').attr('onclick','GuardarTutoradoForm(-1)');
+
+          }else{
+          $$('#btnguadartuto').attr('onclick','GuardarTutoradoForm('+v+')');
+
+          }
+phoneFormatter('v_celulartu');
+
+});
+
 
 $$(document).on('page:init', '.page[data-name="forgotpassword"]', function (e) {
 

@@ -1229,8 +1229,8 @@ $navegador = $f->navegador();
 <script src="js/fn_asignarusuarioservicio.js"></script>
 
 
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-   
+ <!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    -->
     <script type="text/javascript" src="js/mark-your-calendar.js"></script>
 
 <!-- <script src="js/fn_espacios.js?<?php echo time(); ?>"></script>

@@ -72,7 +72,7 @@ if(!isset($_GET['idcategoriasservicio'])){
 	$categoriasservicio=$f->imprimir_cadena_utf8($result_categoriasservicio_row['nombrecategoria']);
 	$tipo=$result_categoriasservicio_row['tipo'];
 	$estatus = $f->imprimir_cadena_utf8($result_categoriasservicio_row['estatus']);
-	
+	$intervalo=$result_categoriasservicio_row['intervalo'];
 
 	$col = "col-md-12";
 	$ver = "";
@@ -140,7 +140,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				
 				<!--<button type="button" onClick="var resp=MM_validateForm('v_empresa','','R','v_direccion','','R','v_tel','','R','v_email','',' isEmail R'); if(resp==1){ GuardarEmpresa('f_empresa','catalogos/empresas/fa_empresas.php','main');}" class="btn btn-success" style="float: right;"><i class="mdi mdi-content-save"></i>  GUARDAR</button>-->
 				
-				<button type="button" onClick="aparecermodulos('catalogos/categoriasservicio/vi_categoriasservicios.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" style="float: right; margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i> LISTADO DE CATEGORÍAS</button>
+				<button type="button" onClick="aparecermodulos('catalogos/categoriasservicios/vi_categoriasservicios.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" style="float: right; margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i> LISTADO DE CATEGORÍAS</button>
 				<div style="clear: both;"></div>
 				
 				<input type="hidden" id="id" name="id" value="<?php echo $idcategoriasservicio; ?>" />
@@ -181,6 +181,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								</select>
 							</div>
 
+							<div class="form-group m-t-20">
+								<label>*INTERVALO DE TIEMPO(minutos):</label>
+								<input type="number" class="form-control" id="v_intervalo" name="v_intervalo" value="<?php echo $intervalo; ?>" title="INTERVALO" placeholder='INTERVALO'>
+							</div>
 
 							
 						<div class="form-group m-t-20">

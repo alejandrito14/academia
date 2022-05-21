@@ -219,7 +219,7 @@ function Registrar() {
     		localStorage.setItem("nombre", respuesta.nombre);
     		localStorage.setItem("paterno",respuesta.paterno);
     		localStorage.setItem("materno", respuesta.materno);
-    		localStorage.setItem("foto", '');
+    		localStorage.setItem("foto", respuesta.foto);
    			localStorage.setItem('pregunta',0);
 			localStorage.setItem('habilitarfactura','0');
 			localStorage.setItem("fechanacimiento",v_fecha);
@@ -474,7 +474,7 @@ function RegistrarAcceso() {
 				    	if(respuesta.existe == 0)
 				    	{
 
-				    		localStorage.setItem("email", respuesta.email);
+				    		localStorage.setItem("correo", respuesta.email);
 				    	    localStorage.setItem("session", 0);
 				    		localStorage.setItem("passacademia", v_contra1);
 				    		localStorage.setItem('tipoUsuario',respuesta.tipousuario);
@@ -2175,7 +2175,7 @@ function ValidarToken(){
 			if (respuesta==1) {
 				
 				$("#botoncontinuartoken").css('display','block');
-				$("#botoncontinuartoken").attr('href','/registro/');
+				$("#botoncontinuartoken").attr('href','/registrofoto/');
 
 			}else{
 
@@ -3306,95 +3306,6 @@ function LimpiarFormTutorado() {
 	$("#v_idtu").val(-1);
 
 }
-
-function ObtenerTutorados() {
-		var id_user=localStorage.getItem('id_user')
-		var pagina = "ObtenerTutorados.php";
-		var datos="id_user="+id_user;
-		$.ajax({
-		type: 'POST',
-		dataType: 'json',
-		url: urlphp+pagina,
-		data:datos,
-		async:false,
-		success: function(datos){
-			PintarTutorados(datos.respuesta);
-
-		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
-			var error;
-				if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
-				if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
-				//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
-				console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
-		}
-
-	});
-}
-
-function PintarTutorados(respuesta) {
-	var html="";
-	if (respuesta.length>0) {
-		for (var i = 0; i <respuesta.length; i++) {
-			html+=`
-			<div class="col-100 medium-33 large-50" style="    margin-top: 1em;
-    margin-bottom: 1em;"><div class="card">
-    <div class="card-content card-content-padding ">
-    <div class="row">
-	    <div class="col-auto align-self-center">
-		    <div class="avatar avatar-40 alert-danger text-color-red rounded-circle">
-		    <i class="bi bi-person-circle"></i>
-
-		    </div>
-	    </div>
-    <div class="col align-self-center no-padding-left">
-    <div class="row margin-bottom-half"><div class="col">
-	    <p class="small text-muted no-margin-bottom">
-	    </p>
-	    <p>`+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`</p>
-	    </div><div class="col-auto text-align-right">
-	    <p class="small text-muted no-margin-bottom"></p>
-	    	<p class="small"></p></div>
-	    			</div>
-    			</div>
-    		</div>
-    	</div>
-   	 </div>
-    </div>
-		`;
-		}
-	}else{
-
-		html+=`
-			<div class="col-100 medium-33 large-50" style="    margin-top: 1em;
-    margin-bottom: 1em;"><div class="card">
-    <div class="card-content card-content-padding ">
-    <div class="row">
-	    <div class="col-auto align-self-center">
-		    <div class="avatar avatar-40 alert-danger text-color-red rounded-circle">
-		    </div>
-	    </div>
-    <div class="col align-self-center no-padding-left">
-    <div class="row margin-bottom-half"><div class="col">
-	    <p class="small text-muted no-margin-bottom">
-	    </p>
-	    <p>No tienes tutorados registrados</p>
-	    </div><div class="col-auto text-align-right">
-	    <p class="small text-muted no-margin-bottom"></p>
-	    	<p class="small"></p></div>
-	    			</div>
-    			</div>
-    		</div>
-    	</div>
-   	 </div>
-    </div>
-		`;
-
-	}
-
-
-	$(".listado").html(html);
-}
-
 function ObtenerParentesco(idparentesco) {
 		var pagina = "ObtenerParentesco.php";
 		$.ajax({
@@ -3497,7 +3408,9 @@ function PintarDatosRegistro(datos) {
 	$("#v_materno").val(datos.materno);
 	$("#v_sexo").val(datos.sexo);
 	$("#v_fecha").val(datos.fechanacimiento);
+	$("#v_alias").val(datos.alias);
 
+	localStorage.setItem('foto',datos.foto);
 
 }
 
@@ -3664,7 +3577,45 @@ function ValidacionUsuario() {
 	}
 }
 
+function VerificarexisteCorreoTutorado(correo,v_idtu) {
+	 return new Promise(function(resolve, reject) {
+	var datos="correo="+correo;
 
+	if (v_idtu==0) {
+	var pagina="VerificarexisteCorreo2.php";
+	$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: urlphp+pagina,
+			data: datos,
+			async:false,
+			beforeSend: function() {
+		        
+
+		    },
+		    success: function(datos){
+		    	respuestafuncion=datos.existe;
+    			resolve(respuestafuncion);
+					
+				},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+					app.preloader.hide();
+
+					alert('Error de conexión');
+					var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+				}
+			});
+		}else{
+
+			resolve(0);
+		}
+	});
+
+
+}
 
 function getValidacionUsuario() {
     return new Promise(function(resolve, reject) {
@@ -3746,3 +3697,68 @@ function getValidacionUsuario() {
     })
 }
 
+function IrRegistro() {
+	var bandera=1;
+
+	$(".lialias").removeClass('is-invalid');
+	$(".lialias").addClass('is-valid');
+	var v_alias=$("#v_alias").val();
+	if (v_alias=='') {
+
+		bandera=0;
+	}
+	if (localStorage.getItem('foto')=='' || localStorage.getItem('foto')==null) {
+
+		bandera=0;
+	}
+
+	if (bandera==1) {
+	
+
+		var iduser=localStorage.getItem('id_user');
+		var foto=localStorage.getItem('foto');
+		var datos="id_user="+iduser+"&foto="+foto+"&v_alias="+v_alias;
+		var pagina="registroalias.php";
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: urlphp+pagina,
+			data: datos,
+			success: function(datos){
+
+						GoToPage('registro');
+
+					},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+								var error;
+				  				if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  				if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+								console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+							}
+			});
+
+	
+
+	}else{
+
+		
+
+		if (v_alias=='') {
+			
+			$(".lialias").addClass('is-invalid');
+			$(".lialias").removeClass('is-valid');
+			bandera=0;
+		}
+		if (localStorage.getItem('foto')=='' || localStorage.getItem('foto')==null) {
+				bandera=0;
+		alerta('','Para continuar es necesaria una foto de perfil');
+	
+		}
+		if (bandera==0) {
+				alerta('','Te falta por capturar una opción obligatoria');
+		}
+
+
+	}
+}

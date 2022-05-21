@@ -74,6 +74,14 @@ try
 		$emp->participantes=1;
 	}
 
+
+	$diasemanas=explode(',', $_POST['diasemana']);
+
+	$horainiciosemana=explode(',', $_POST['horainiciodia']);
+
+	$horafinsemana=explode(',', $_POST['horafindia']);
+
+
 	//$emp->participantes=$participantes;
 	$emp->cantidadparticipantes=$cantidadparticipantes;
 	$emp->coachs=$coachs;
@@ -82,9 +90,34 @@ try
 	{
 		//guardando
 		$emp->guardarCategoria();
+
+
+		if (count($diasemanas)>0 && $diasemanas[0]!='') {		
+		for ($i=0; $i < count($diasemanas); $i++) { 
+				$emp->dia=$diasemanas[$i];
+				$emp->horainiciosemana=$horainiciosemana[$i];
+				$emp->horafinsemana=$horafinsemana[$i];
+				$emp->GuardarHorarioSemana();
+			}
+		}
+
+
 		$md->guardarMovimiento($f->guardar_cadena_utf8('Categoria'),'categorias',$f->guardar_cadena_utf8('Nueva categoria creado con el ID-'.$emp->idcategoria));
 	}else{
 		$emp->modificarCategoria();	
+
+
+		if (count($diasemanas)>0 && $diasemanas[0]!='') {
+			$emp->EliminarHorarioSemana();
+		
+		for ($i=0; $i < count($diasemanas); $i++) { 
+				$emp->dia=$diasemanas[$i];
+				$emp->horainiciosemana=$horainiciosemana[$i];
+				$emp->horafinsemana=$horafinsemana[$i];
+				$emp->GuardarHorarioSemana();
+			}
+		}
+
 		$md->guardarMovimiento($f->guardar_cadena_utf8('Categoria'),'categorias',$f->guardar_cadena_utf8('Modificación de la categoria -'.$emp->idcategoria));
 	}
 

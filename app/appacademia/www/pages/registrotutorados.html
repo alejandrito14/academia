@@ -3,7 +3,7 @@
     <div class="navbar">
       <div class="navbar-inner">
         <div class="left">
-          <a id="btnregresar" class="button button-fill text-color-theme bg-color-white button-44 btnregresar">
+          <a href="/profile/" class="button button-fill text-color-theme bg-color-white button-44 ">
             <i class="bi bi-arrow-left"></i>
           </a>
         </div>
@@ -15,216 +15,60 @@
     </div>
 
     <div class="page-content">
-      <div class="block h-100 no-margin">
-               <div class="" style="height: 100%;">
-                <div style="background: white; height: 100%;width: 100%;border-radius: 20px;">
-                   <div class="row">
-                     <div class="col-20">
-                         <div class="iconocerrar link sheet-close">
-                    <span class="bi bi-x-circle-fill"></span>
-                       </div>
-                    </div>
-
-                     <div class="col-60">
-                     <span class="titulomodal"></span>
-                     </div>
-                     <div class="col-20">
-                     <span class="limpiarfiltros"></span>
-                     </div>
-                 </div>
+               
                  <div class="" style="position: absolute;width: 100%;">
                   
                     <div class="">
 
 
-                      <div class="block" style="margin-right:1em;margin-left:1em;">
-       
+                      <div class="" style="margin-right:1em;margin-left:1em;">
+                         <div class="row ">
+                          <div class="col-85 medium-50 large-40 margin-left-auto margin-right-auto align-self-center  padding-vertical">
+                            <h1 style="text-align: center;">Tutorados <span style="color: #0abe68;"></span>
+                          </h1>
+
+                          </div>
+                           
+                        </div>
       
-        <div class="row " >
-           <div class="">
-          <h1 style="padding-left: .5em;"> Registrar tutorados</h1>
+                        <div class="row " >
+                         
 
-          
-         </div>
+                          <div class="" >
 
-          <div class="" >
-
-            <div  class="listadotutorados" >
-                <div class="row" style="padding-top: 3em;">
+                            <div  class="listadotutorados" >
+                                <div class="row">
 
 
 
-        <div class="col">
+                        <div class="col">
 
-         
-          <div class="block">
-         
-         <div class="list media-list " id="" style="">           
-          <div class="listado"></div>
-      <!-- <div class="col-100 medium-33 large-50" style="    margin-top: 1em;
-    margin-bottom: 1em;">
-    <div class="card">
-                <div class="card-content card-content-padding "><div class="row">
-                  <div class="col-auto align-self-center">
-                    <div class="avatar avatar-40 alert-danger text-color-red rounded-circle">
-                     
-                    </div>
-                  </div>
-                  <div class="col align-self-center no-padding-left">
-                      <div class="row margin-bottom-half"><div class="col">
-                        <p class="small text-muted no-margin-bottom"></p>
-                        <p>No tienes tutorados registrados</p></div>
-                        <div class="col-auto text-align-right"><p class="small text-muted no-margin-bottom"></p><p class="small"></p>
+                         
+                          <div class="block">
+                         
+                         <div class="list media-list " id="" style="">           
+                          <div class="listado"></div>
+                   
+
+
+                          <a id="btnnuevotutorado" class="button button-fill  botonesredondeado estiloboton" href="/nuevotutorado/" style="color: white;">Agregar un tutorado</a>
+
+
+
+                                
+                              
+                              </div>
+
                         </div>
                       </div>
-                     
-                     </div>
-                   </div>
-                   </div>
+                    </div>
+                      </div>
+
+                    </div>
                   </div>
-                 </div> -->
-
-
-          <button id="btnnuevotutorado" class="button button-fill botonesaccion botonesredondeado estiloboton" >Agregar un tutorado</button>
-
-
-
-                
-              
-              </div>
-
-        </div>
-      </div>
-    </div>
-      </div>
-      <div class="col-85 medium-50 large-40 margin-left-auto margin-right-auto align-self-center text-align-center " id="formtutorados" style="display: none;    margin-right: 1em;
-    margin-left: 1em;">
-            <div style="height:400px;overflow:scroll;" >
-                              <input type="hidden" name="v_idtu" id="v_idtu" class="input-with-value" />
-
-              <div class="list form-list no-margin margin-bottom">
-                <ul>
-            
-                <li class="item-content item-input item-input-with-value is-valid linombretu">
-
-                  <div class="item-inner">
-                  <div class="item-title item-floating-label">Nombre</div>
-                  <div class="item-input-wrap">
-                  <input type="text" name="v_nombretu" id="v_nombretu" class="input-with-value" />
-                  <span class="input-clear-button"></span>
-                </div>
-              </div>
-              </li>
-
-               <li class="item-content item-input item-input-with-value is-valid lipaternotu">
-
-                  <div class="item-inner">
-                  <div class="item-title item-floating-label">Apellido paterno</div>
-                  <div class="item-input-wrap">
-                  <input type="text" name="v_paternotu" id="v_paternotu" class="input-with-value" />
-                  <span class="input-clear-button"></span>
-                </div>
-              </div>
-              </li>
-
-               <li class="item-content item-input item-input-with-value is-valid limaternotu">
-
-                  <div class="item-inner">
-                  <div class="item-title item-floating-label">Apellido materno</div>
-                  <div class="item-input-wrap">
-                  <input type="text" name="v_maternotu" id="v_maternotu" class="input-with-value" />
-                  <span class="input-clear-button"></span>
-                </div>
-              </div>
-              </li>
-
-               <li class="item-content item-input item-input-with-value is-valid lifechanacimientotu">
-
-                  <div class="item-inner">
-                  <div class="item-title item-floating-label">Fecha de Nacimiento</div>
-                  <div class="item-input-wrap">
-                  <input type="date" name="v_fechatu" id="v_fechatu" class="input-with-value" />
-                  <span class="input-clear-button"></span>
-                </div>
-              </div>
-              </li>
-
-               <li class="item-content item-input item-input-with-value is-valid lisexotu">
-
-                  <div class="item-inner">
-                  <div class="item-title item-floating-label">Sexo:</div>
-                  <div class="item-input-wrap">
-                  <select name="gender" id="v_sexotu" class="">
-                          <option value="0" class="special">Seleccionar género</option>
-                          <option class="black" value="H" >HOMBRE</option>
-                          <option class="black" value="M">MUJER</option>
-                        </select>
-                </div>
-              </div>
-              </li>
-
-
-               <li class="item-content item-input item-input-with-value is-valid liparentescotu">
-
-                  <div class="item-inner">
-                  <div class="item-title item-floating-label">Parentesco:</div>
-                  <div class="item-input-wrap">
-                  <select name="gender" id="v_parentescotu" class="">
-                          <option value="0" class="special">Seleccionar parentesco</option>
-                          
-                        </select>
-                </div>
-              </div>
-              </li>
-
-               <li class="item-content item-input item-input-with-value is-valid licelulartu">
-
-                  <div class="item-inner">
-                  <div class="item-title item-floating-label">Número de celular</div>
-                  <div class="item-input-wrap">
-                  <input type="text" name="v_celulartu" id="v_celulartu" class="input-with-value" />
-                  <span class="input-clear-button"></span>
-                </div>
-              </div>
-              </li>
-
-              <div id="mensajecelular" style="color:red;"></div>
-
-
-               <li class="item-content item-input item-input-with-value is-valid licorreotu">
-
-                  <div class="item-inner">
-                  <div class="item-title item-floating-label">Correo electrónico</div>
-                  <div class="item-input-wrap">
-                  <input type="text" name="v_correotu" id="v_correotu" class="input-with-value" />
-                  <span class="input-clear-button"></span>
-                </div>
-              </div>
-              </li>
-
-              <div id="mensajecorreo" style="color:red;"></div>
-            </ul>
-
-
-
-
             </div>
-          
-              <p class="margin-bottom"> </p>
-
-              <button type="button"  class="button button-fill button-large button-raised margin-bottom color-theme" id="btnguadartuto">
-               Guardar
-              </button>
-            </div>          
-      </div>
-          </div>
-         
         </div>
-      </div>
-    </div>
+     </div>
   </div>
 </div>
-      </div>
-    </div>
-  </div>
 </template>

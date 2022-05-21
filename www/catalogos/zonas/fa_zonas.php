@@ -72,6 +72,7 @@ if(!isset($_GET['idzona'])){
 	$zona=$f->imprimir_cadena_utf8($result_zona_row['nombre']);
 	
 	$estatus = $f->imprimir_cadena_utf8($result_zona_row['estatus']);
+	$color=$result_zona_row['color'];
 	
 
 	$col = "col-md-12";
@@ -171,6 +172,11 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<input type="text" class="form-control" id="v_zona" name="v_zona" value="<?php echo $zona; ?>" title="NOMBRE" placeholder='NOMBRE'>
 							</div>
 
+							<div class="form-group m-t-20">
+								<label>*COLOR:</label>
+								<input type="color" class="form-control" id="v_color" name="v_color" value="<?php echo $color; ?>" title="COLOR" placeholder='COLOR'>
+							</div>
+
 
 							
 						<div class="form-group m-t-20">
@@ -192,7 +198,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 			</div>
 			</div>
 
-			<div class="card" style="" id="divhorarios">
+			<div class="card" style="display: none;" id="divhorarios">
 				<div class="card-header" style="">
 					<h5>HORARIOS EN QUE SE ENCUENTRA DISPONIBLE</h5>
 

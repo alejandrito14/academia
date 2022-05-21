@@ -14,6 +14,7 @@ class Zonas
 	public $dia;
 	public $horainiciosemana;
 	public $horafinsemana;
+	public $color;
 	
 	//Funcion para obtener todos los Zonas activos
 	public function ObtZonasActivos()
@@ -59,7 +60,7 @@ class Zonas
 	
 	public function Guardarzona()
 	{
-		$query="INSERT INTO zonas (nombre,estatus) VALUES ('$this->nombre','$this->estatus')";
+		$query="INSERT INTO zonas (nombre,estatus,color) VALUES ('$this->nombre','$this->estatus','$this->color')";
 		
 		$resp=$this->db->consulta($query);
 		$this->idzonas = $this->db->id_ultimo();
@@ -70,7 +71,8 @@ class Zonas
 	public function Modificarzona()
 	{
 		$query="UPDATE zonas SET nombre='$this->nombre',
-		estatus='$this->estatus'
+		estatus='$this->estatus',
+		color='$this->color'
 		WHERE idzona=$this->idzona";
 
 		$resp=$this->db->consulta($query);
@@ -109,8 +111,31 @@ class Zonas
 	public function ObtenerHorariosSemanaZona()
 	{
 		$sql="SELECT *FROM horarioszona WHERE idzona=".$this->idzona."";
-
+		
 		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerZona()
+	{
+		$query="SELECT * FROM zonas WHERE idzona=".$this->idzona;
+
+		
+		$resp=$this->db->consulta($query);
 		$cont = $this->db->num_rows($resp);
 
 		$array=array();

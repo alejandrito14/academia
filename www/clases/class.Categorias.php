@@ -31,6 +31,9 @@ class Categorias
 	public $tipo_usuario;
 	public $lista_empresas;
 	
+	public $dia;
+	public $horainiciosemana;
+	public $horafinsemana;
 
 		public function obtenerTodas()
 	{
@@ -243,6 +246,46 @@ class Categorias
 		
 		return $array;
 	}
+
+		public function GuardarHorarioSemana()
+	{
+		$query = "INSERT INTO horariostipo (idcategorias,dia,horainicial,horafinal) VALUES ('$this->idcategoria','$this->dia','$this->horainiciosemana','$this->horafinsemana');";
+
+		$this->db->consulta($query);
+
+	}
+
+	public function EliminarHorarioSemana()
+	{
+		$sql="DELETE FROM horariostipo WHERE idcategorias='$this->idcategoria'";
+		
+		$resp = $this->db->consulta($sql);
+		return $resp;
+	}
+
+
+
+	public function ObtenerHorariosSemanaCategorias()
+	{
+		$sql="SELECT *FROM horariostipo WHERE idcategorias=".$this->idcategoria."";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
 
 	
 

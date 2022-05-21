@@ -49,16 +49,25 @@ try
 	$horainiciosemana=explode(',', $_POST['horainiciodia']);
 	$horafinsemana=explode(',', $_POST['horafindia']);
 	
-	$zonas=explode(',',  $_POST['zonas']);
-	$coachs=explode(',',  $_POST['coachs']);
+	$zonas=explode(',',$_POST['zonas']);
+	$coachs=explode(',',$_POST['coachs']);
 	$participantes=explode(',',  $_POST['participantes']);
 
 	$costo=$_POST['v_costo']!=''?$_POST['v_costo']:0;
-	$totalclase=$_POST['v_totalclase']!=''?$_POST['v_totalclase']:0;
+	$totalclase=0;
+	$valorclase=$_POST['v_totalclase'];
+	if($valorclase!=''&& $valorclase!='undefined' ){
+		$totalclase=$_POST['v_totalclase'];
+	}
+
+		
 	$modalidad=$_POST['v_modalidad']!='undefined'?$_POST['v_modalidad']:0;
 	$montopagarparticipante=$_POST['v_montopagarparticipante'];
 	$montopagargrupo=$_POST['v_montopagargrupo'];
 	$categoriaservicio=$_POST['v_categoriaservicio'];
+	$arrayhorarios=explode(',', $_POST['v_arraydiaselegidos']);
+
+	
 
 	$emp->totalclase=$totalclase;
 	$emp->modalidad=$modalidad;
@@ -70,7 +79,8 @@ try
 	$emp->fechafinal=$_POST['v_fechafinal'];
 
 	$emp->modalidadpago=$_POST['v_modalidadpago']!='undefined'?$_POST['v_modalidadpago']:0;
-	$emp->periodo=$_POST['v_perido'];
+	$emp->periodo=$_POST['v_perido']!='undefined'? $_POST['v_perido']:0;
+
 	
 
 
@@ -81,13 +91,23 @@ try
 		$emp->GuardarServicio();
 		$md->guardarMovimiento($f->guardar_cadena_utf8('Servicio'),'Servicio',$f->guardar_cadena_utf8('Nuevo Servicio creado con el ID-'.$emp->idservicio));
 
-		if (count($diasemanas)>0 && $diasemanas[0]!='') {
+		if (count($arrayhorarios)>0 && $arrayhorarios[0]!='') {
 			# code...
 		
-		for ($i=0; $i < count($diasemanas); $i++) { 
-				$emp->dia=$diasemanas[$i];
-				$emp->horainiciosemana=$horainiciosemana[$i];
-				$emp->horafinsemana=$horafinsemana[$i];
+		for ($i=0; $i < count($arrayhorarios); $i++) { 
+				 $dividircadena=explode('-', $arrayhorarios[$i]);
+			$fecha=$dividircadena[0].'-'.$dividircadena[1].'-'.$dividircadena[2];
+				 $horainicial=$dividircadena[3];
+				 $horafinal=$dividircadena[4];
+				 $idzona=$dividircadena[5];
+				 $numdia=date('w',strtotime($fecha));
+
+				$emp->dia=$numdia;
+				$emp->horainiciosemana=$horainicial;
+				$emp->horafinsemana=$horafinal;
+				$emp->fecha=$fecha;
+				$emp->idzona=$idzona;
+
 				$emp->GuardarHorarioSemana();
 			}
 		}
@@ -120,16 +140,27 @@ try
 		$emp->ModificarServicio();	
 		$md->guardarMovimiento($f->guardar_cadena_utf8('Servicio'),'Servicio',$f->guardar_cadena_utf8('Modificación del Servicio -'.$emp->idservicio));
 
-		if (count($diasemanas)>0 && $diasemanas[0]!='') {
+	if (count($arrayhorarios)>0 && $arrayhorarios[0]!='') {
 			$emp->EliminarHorarioSemana();
 		
-		for ($i=0; $i < count($diasemanas); $i++) { 
-				$emp->dia=$diasemanas[$i];
-				$emp->horainiciosemana=$horainiciosemana[$i];
-				$emp->horafinsemana=$horafinsemana[$i];
+		for ($i=0; $i < count($arrayhorarios); $i++) { 
+				 $dividircadena=explode('-', $arrayhorarios[$i]);
+				 $fecha=$dividircadena[0].'-'.$dividircadena[1].'-'.$dividircadena[2];
+				 $horainicial=substr($dividircadena[3],0,5);
+				 $horafinal=substr($dividircadena[4],0,5);
+				 $idzona=$dividircadena[5];
+				 $numdia=date('w',strtotime($fecha));
+
+				$emp->dia=$numdia;
+				$emp->horainiciosemana=$horainicial;
+				$emp->horafinsemana=$horafinal;
+				$emp->fecha=$fecha;
+				$emp->idzona=$idzona;
+
 				$emp->GuardarHorarioSemana();
 			}
 		}
+		
 
 			if (count($participantes)>0 && $participantes[0]!='') {
 				$emp->EliminarParticipantes();

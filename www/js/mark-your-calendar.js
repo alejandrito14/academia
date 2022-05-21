@@ -20,7 +20,7 @@
         `;
         var nextHtml = `<div id="myc-next-week">></div>`;
         var defaults = {
-            availability: [[], [], [], [], [], [], []], // listahan ng mga oras na pwedeng piliin
+            availability: [[], [], [], [], [], [], [],[]], // listahan ng mga oras na pwedeng piliin
             isMultiple: false,
             months: ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
             prevHtml: prevHtml,
@@ -80,9 +80,11 @@
         this.getDatesHeader = function() {
             var tmp = ``;
             for (i = 0; i < 7; i++) {
+             
                 var d = settings.startDate.addDays(i);
+                var fecha= d.getFullYear()+'-'+(d.getMonth() + 1)+'-'+d.getDate();
                 tmp += `
-                    <div class="myc-date-header" id="myc-date-header-` + i + `">
+                    <div class="myc-date-header  " id="myc-date-header-` + i + `">
                         <div class="myc-date-number">` + d.getDate() + `</div>
                         <div class="myc-date-display">` + settings.weekdays[d.getDay()] + `</div>
                     </div>
@@ -104,12 +106,16 @@
                         </a>
                     `;
                 });
+
+                 var d = settings.startDate.addDays(i);
+                var fecha= d.getFullYear()+'-'+(d.getMonth() + 1)+'-'+d.getDate();
                 tmp += `
-                    <div class="myc-day-time-container" id="myc-day-time-container-` + i + `">
+                    <div class="myc-day-time-container btn-group btn-group-toggle `+fecha+`" id="myc-day-time-container-` + i + `" data-toggle="buttons">
                         ` + tmpAvailTimes + `
                         <div style="clear:both;"></div>
                     </div>
                 `;
+
             }
             return tmp
         }
