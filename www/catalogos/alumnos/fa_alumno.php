@@ -309,7 +309,7 @@ $su->lista_empresas = $lista_empresas;
 			
 					$bt->armar_boton();
 				?>
-				<button type="button" onClick="aparecermodulos('catalogos/usuarios/vi_usuarios.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" title="LISTADO DE JUGADORES" style="margin-right: 10px;float: right;"><i class="mdi mdi-arrow-left-box"></i>LISTADO DE ALUMNOS</button>
+				<button type="button" onClick="aparecermodulos('catalogos/alumnos/vi_alumnos.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" title="LISTADO DE JUGADORES" style="margin-right: 10px;float: right;"><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
 				
 				<input type="hidden" id="v_idusuario" name="v_idusuario" value="<?php echo $idusuario; ?>" />
 			</div>

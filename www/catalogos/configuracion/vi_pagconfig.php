@@ -63,8 +63,8 @@ try{
 
 	<form name="f_configuracion" id="f_configuracion">
 		<div class="card">
-				<div class="card-header">
-					<h4 class="card-title m-b-0">CONFIGURACI&Oacute;N DE TU EMPRESA</h4>
+				<div class="card-body">
+					<h4 class="card-title m-b-0">CONFIGURACI&Oacute;N DE LA EMPRESA</h4>
 
 				<div style="float: right;">
 					<button type="button" title="GUARDAR" onClick="g_Configuracion();" class="btn btn-success alt_btn" style="float: right;" <?php echo $disabled; ?>>Guardar</button>	

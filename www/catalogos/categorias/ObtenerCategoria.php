@@ -55,9 +55,10 @@ $array = array();
 $categoria->idcategoria=$idcategoriasproducto;
 $categorias=$categoria->buscarCategoria();
 $rowcategoria=$db->fetch_assoc($categorias);
-
+$dias=$categoria->ObtenerHorariosCategoriasDia();
 
 $respuesta['respuesta']=$rowcategoria;
+$respuesta['horarios']=$dias;
 
 echo json_encode($respuesta);
 

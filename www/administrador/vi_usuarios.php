@@ -80,11 +80,11 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 <div class="card">
-	<div class="card-header">
+	<div class="card-body">
 		<h5 class="card-title" style="float: left;">LISTADO DE USUARIOS</h5>
 		<?php
 			//SCRIPT PARA CONSTRUIR UN BOTON
-			$bt->titulo = "Nuevo Usuario";
+			$bt->titulo = "NUEVO";
 			$bt->icon = "mdi-plus-circle";
 			$bt->funcion = "aparecermodulos('administrador/fa_usuarios.php','main');";
 			$bt->estilos = "float: right;";

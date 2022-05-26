@@ -42,7 +42,7 @@ try
 			<div style="float: right;">
 				<button type="button" onClick="var resp=MM_validateForm('nombre','','R','archivo','','R','ubi','','R'); if(resp==1){ GuardarEspecial('alta_modulos','administrador/ga_md_modulosMenu.php','administrador/vi_modulos.php','main');}" class="btn btn-success alt_btn" style="float: right;" <?php echo $disabled; ?>>Guardar</button>
 	 		
-				<button type="button" style="margin-right: 10px;" onClick="aparecermodulos('administrador/vi_modulos.php','main');" class="btn btn-primary" style="float: right;">LISTADO DE  MÓDULOS</button>
+				<button type="button" style="margin-right: 10px;" onClick="aparecermodulos('administrador/vi_modulos.php','main');" class="btn btn-primary" style="float: right;">VER LISTADO</button>
 				<div style="clear: both;"></div>
 
 				</div>

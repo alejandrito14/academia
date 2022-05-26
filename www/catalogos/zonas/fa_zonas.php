@@ -123,7 +123,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					//SCRIPT PARA CONSTRUIR UN BOTON
 					$bt->titulo = "GUARDAR";
 					$bt->icon = "mdi mdi-content-save";
-					$bt->funcion = "var resp=MM_validateForm('v_nombre','','R'); if(resp==1){ Guardarzona('f_zona','catalogos/zonas/vi_zonas.php','main','$idmenumodulo');}";
+					$bt->funcion = "var resp=MM_validateForm('v_nombre','','R','v_color','',''); if(resp==1){ Guardarzona('f_zona','catalogos/zonas/vi_zonas.php','main','$idmenumodulo');}";
 					$bt->estilos = "float: right;";
 					$bt->permiso = $permisos;
 					$bt->class='btn btn-success';
@@ -141,7 +141,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				
 				<!--<button type="button" onClick="var resp=MM_validateForm('v_empresa','','R','v_direccion','','R','v_tel','','R','v_email','',' isEmail R'); if(resp==1){ GuardarEmpresa('f_empresa','catalogos/empresas/fa_empresas.php','main');}" class="btn btn-success" style="float: right;"><i class="mdi mdi-content-save"></i>  GUARDAR</button>-->
 				
-				<button type="button" onClick="aparecermodulos('catalogos/zonas/vi_zonas.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" style="float: right; margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i> LISTADO DE ZONA</button>
+				<button type="button" onClick="aparecermodulos('catalogos/zonas/vi_zonas.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" style="float: right; margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
 				<div style="clear: both;"></div>
 				
 				<input type="hidden" id="id" name="id" value="<?php echo $idzona; ?>" />

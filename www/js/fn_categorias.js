@@ -82,6 +82,7 @@ function GuardarCategorias(form,regresar,donde,idmenumodulo)
 		var v_habilitarmodalidadpago=$("#v_habilitarmodalidadpago").is(':checked')?1:0;
 		var v_activaravanzado=$("#v_activaravanzado").is(':checked')?1:0;
 		var v_activarcategoria=$("#v_activarcategoria").is(':checked')?1:0;
+		var v_activardias=$("#v_activardias").is(':checked')?1:0;
 		if($("#v_activarhorarios").is(':checked')){
 
 			v_activarhorarios=1;
@@ -139,6 +140,7 @@ function GuardarCategorias(form,regresar,donde,idmenumodulo)
 		data.append('diasemana',diasemana);
 		data.append('horainiciodia',horainicio);
 		data.append('horafindia',horafin);
+		data.append('v_activardias',v_activardias);
 
 		 $('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Subiendo Archivos...</div>')
 				

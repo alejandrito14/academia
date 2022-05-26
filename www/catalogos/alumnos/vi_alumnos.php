@@ -102,22 +102,22 @@ var oTable = $('#zero_config').dataTable( {
   
 
 <div class="card mb-3">
-	<div class="card-header">
+		<div class="card-body">
 		<h5 class="card-title" style="float: left; margin-top: 5px;">LISTADO DE ALUMNOS</h5>
 		<!--<button type="button" onClick="AbrirModalGeneral2('ModalPrincipal','900','560','catalogos/Usuarios/fa_cliente.php');" class="btn btn-info" style="float: right;">AGREGAR CLIENTE</button>-->
 		<?php
 		
 				
-		$bt->titulo = "NUEVO ALUMNO";
+		$bt->titulo = "NUEVO";
 		$bt->icon = "mdi-plus-circle";
 		$bt->funcion = "
 	
-			 aparecermodulos('catalogos/Usuarios/fa_cliente.php?idmenumodulo=$idmenumodulo','main');
+			 aparecermodulos('catalogos/alumnos/fa_alumno.php?idmenumodulo=$idmenumodulo','main');
 			 ";
 		$bt->estilos = "float: right; margin-right: 10px;";
 		$bt->permiso = $permisos;
 		$bt->tipo = 5;
-		$bt->title="NUEVO ALUMNO";
+		$bt->title="NUEVO";
 		$bt->armar_boton();
 
 			?>

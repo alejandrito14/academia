@@ -105,7 +105,7 @@ if(!isset($_GET['idcategoria'])){
 	$avanzado=$result_presentacion_row['avanzado'];
 
 		$asignarcategoria=$result_presentacion_row['asignarcategoria'];
-
+		$asignardias=$result_presentacion_row['asignardias'];
 
 	$ruta='';
 	if($foto==""){
@@ -181,7 +181,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				
 				<!--<button type="button" onClick="var resp=MM_validateForm('v_empresa','','R','v_direccion','','R','v_tel','','R','v_email','',' isEmail R'); if(resp==1){ GuardarEmpresa('f_empresa','catalogos/empresas/fa_empresas.php','main');}" class="btn btn-success" style="float: right;"><i class="mdi mdi-content-save"></i>  GUARDAR</button>-->
 				
-				<button type="button" onClick="aparecermodulos('catalogos/categorias/vi_categorias.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" style="float: right; margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i> LISTADO DE TIPOS DE SERVICIO </button>
+				<button type="button" onClick="aparecermodulos('catalogos/categorias/vi_categorias.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" style="float: right; margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i> VER LISTADO </button>
 				<div style="clear: both;"></div>
 				
 				<input type="hidden" id="id" name="id" value="<?php echo $idcategoria; ?>" />
@@ -245,8 +245,12 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 							<div class="form-group">
-
-								
+								<!-- <div class="btn-group-toggle" data-toggle="buttons">
+								  <label class="btn btn-secondary active">
+								    <input type="checkbox" class="form-check-input " name="v_activaravanzado" onchange="ActivarAvanzado()"  value="0" id="v_activaravanzado" style="top: -0.3em;"> AVANZADO
+								  </label>
+								</div> -->
+																
 
 								 	<div class="form-check">
 					               
@@ -256,8 +260,50 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					                </label>
 				                </div>
 				              </div>
+
+				               <div  class="divavanzado" style="display: none;">
+			<div class="card" style="" id="divhorarios">
+				<div class="" style="">
+					<label>ASIGNAR DISPONIBILIDAD DE HORARIO </label>
+					<button class="btn btn-primary" type="button" style="  margin-top: -1em;" onclick="AgregarHorario()"><span class="mdi mdi-plus-box"></span></button>
+
+				</div>
+				<div class="">
+						<div style="margin-top: 1em">
+
+							<div class="row">
+								<div class="col-md-12">
+								
+									
+								</div>
+								<div class="col-md-3">
+										
+									</div>
+							</div>
+
+								
+								<div id="horarios"></div>
+
+
+
+
+					</div>
+				</div>
+			</div>
+			</div>
 				     <div  class="divavanzado" style="display: none;">
-							<div class="form-group">
+
+				     	<div class="form-group" style="display: none;">
+				              	<div class="form-check">
+					               
+					                  <input type="checkbox" class="form-check-input " name="v_activardias"  value="0" id="v_activardias" style="top: -0.3em;">
+					                   <label class="form-check-label">
+										 ASIGNAR DÍAS
+					                </label>
+				                </div>
+				            </div>
+
+							<div class="form-group" style="display: none;">
 				              	<div class="form-check">
 					               
 					                  <input type="checkbox" class="form-check-input " name="v_activarcategoria"  value="0" id="v_activarcategoria" style="top: -0.3em;">
@@ -267,7 +313,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				                </div>
 				            </div>
 
-							 <div class="form-group">
+							 <div class="form-group" style="display: none;">
 								 	<div class="form-check">
 					               
 					                  <input type="checkbox" class="form-check-input " name="v_activarhorarios"  value="0" id="v_activarhorarios" style="">
@@ -277,7 +323,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				                </div>
 				              </div>
 
-				               <div class="form-group">
+				               <div class="form-group" style="display: none;">
 								 	<div class="form-check">
 					               
 					                  <input type="checkbox" class="form-check-input " name="v_zonas" value="0" id="v_zonas" style="">
@@ -287,7 +333,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				                </div>
 				              </div>
 
-				               <div class="form-group">
+				               <div class="form-group" style="display: none;">
 								 	<div class="form-check">
 					               
 					                  <input type="checkbox" class="form-check-input " name="v_coachs"  value="0" id="v_coachs" style="">
@@ -314,14 +360,14 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				              </div>
 
 
-				             <div class="form-group">
+				             <div class="form-group" style="display: none;">
 				              		<label>NÚMERO DE DÍAS:</label>
 							<input type="number" class="form-control" id="v_numerodias" name="v_numerodias" value="<?php echo $numerodias; ?>" title="NÚMERO DE DÍAS" placeholder='NÚMERO DE DÍAS'>
 
 				            </div>
 
 
-				            <div class="form-group">
+				            <div class="form-group" style="display: none;">
 								 	<div class="form-check">
 					               
 					                  <input type="checkbox" class="form-check-input " name="v_habilitarcostos" onchange="HabilitarCostos()" value="0" id="v_habilitarcostos" style="">
@@ -332,7 +378,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				              </div>
 
 				             <div id="divcostos" style="margin-left: 1em;display: none;">
-				              <div class="form-group">
+				              <div class="form-group" style="display: none;">
 								 	<div class="form-check">
 					               
 					                  <input type="checkbox" class="form-check-input " name="v_habilitarmodalidad"  value="0" id="v_habilitarmodalidad" style="">
@@ -342,7 +388,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				                </div>
 				              </div>
 
-				               <div class="form-group">
+				               <div class="form-group" style="display: none;">
 								 	<div class="form-check">
 					               
 					                  <input type="checkbox" class="form-check-input " name="v_habilitarcampototalclases"  id="v_habilitarcampototalclases" style="">
@@ -352,7 +398,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				                </div>
 				              </div>
 
-				              <div class="form-group">
+				              <div class="form-group" style="display: none;">
 								 	<div class="form-check">
 					               
 					                  <input type="checkbox" class="form-check-input " name="v_habilitarcampopreciounitario"  id="v_habilitarcampopreciounitario" style="">
@@ -363,7 +409,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				              </div>
 
 
-				              <div class="form-group">
+				              <div class="form-group" style="display: none;">
 								 	<div class="form-check">
 					               
 					                  <input type="checkbox" class="form-check-input " name="v_habilitarcampomontoparticipante"  id="v_habilitarcampomontoparticipante" style="">
@@ -373,7 +419,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				                </div>
 				              </div>
 
-				               <div class="form-group">
+				               <div class="form-group" style="display: none;">
 								 	<div class="form-check">
 					               
 					                  <input type="checkbox" class="form-check-input " name="v_habilitarcampomontoparticipante"  id="v_habilitarcampomontogrupo" style="">
@@ -386,7 +432,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 				          </div>
 
-				          <div class="form-group">
+				          <div class="form-group" style="display: none;">
 								 	<div class="form-check">
 					               
 					                  <input type="checkbox" class="form-check-input " name="v_habilitarmodalidadpago"  value="0" id="v_habilitarmodalidadpago" style="">
@@ -427,35 +473,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					
 					</div>
 				</div>
- <div  class="divavanzado" style="display: none;">
-			<div class="card" style="" id="divhorarios">
-				<div class="card-header" style="">
-					<h5>HORARIOS EN QUE SE ENCUENTRA DISPONIBLE</h5>
 
-				</div>
-				<div class="card-body">
-						<div style="margin-top: 3em">
-
-							<div class="row">
-								<div class="col-md-12">
-								
-									<button class="btn btn-primary" type="button" style=" float: right;   margin-top: -1em;" onclick="AgregarHorario()">NUEVO HORARIO</button>
-								</div>
-								<div class="col-md-3">
-										
-									</div>
-							</div>
-
-								
-								<div id="horarios"></div>
-
-
-
-
-					</div>
-				</div>
-			</div>
-			</div>
 		</div>
 	</div>
 
@@ -502,7 +520,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		var habilitarcampomontogrupo='<?php echo $habilitarcampomontogrupo; ?>';
 		var habilitarmodalidadpago='<?php echo $habilitarmodalidadpago; ?>';
 		var avanzado='<?php echo $avanzado; ?>';
-		var asignarcategoria='<?php echo $asignarcategoria ?>';
+		var asignarcategoria='<?php echo $asignarcategoria; ?>';
+		var asignardias='<?php echo $asignardias; ?>';
 
 		$("#v_numerodias").val(numerodias);
 		if (habilitarcostos==1) {
@@ -542,6 +561,11 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 		$("#v_activarcategoria").attr('checked',true);
 		
+		}
+
+		if (asignardias==1) {
+
+			$("#v_activardias").attr('checked',true);
 		}
 		HabilitarCostos();
 		ActivarAvanzado();

@@ -94,7 +94,7 @@ $(document).ready(function() {
   
 
 
-var produccion = 1;
+var produccion = 0;
 
  
 
@@ -1672,4 +1672,10 @@ $$(document).on('page:init', '.page[data-name="detalleservicio"]', function (e) 
   regresohome();
   //ObtenerServicioAsignado();
  
+});
+
+$$(document).on('page:init', '.page[data-name="aceptacionservicio"]', function (e) {
+  
+ ObtenerServicioAsignado();
+ $$("#btnaceptartermino").attr('onclick','AceptarTerminos()');
 });

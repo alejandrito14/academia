@@ -94,13 +94,13 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 			<?php
 			
 				//SCRIPT PARA CONSTRUIR UN BOTON
-				$bt->titulo = "NUEVO TIPO DE SERVICIO";
+				$bt->titulo = "NUEVO";
 				$bt->icon = "mdi-plus-circle";
 				$bt->funcion = "aparecermodulos('catalogos/categorias/fa_categorias.php?idmenumodulo=$idmenumodulo','main');";
 				$bt->estilos = "float: right; margin-right:10px;";
 				$bt->permiso = $permisos;
 				$bt->tipo = 5;
-				$bt->title="NUEVO TIPO DE SERVICIO";
+				$bt->title="NUEVO";
 
 				$bt->armar_boton();
 			

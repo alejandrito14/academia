@@ -293,7 +293,7 @@ $su->lista_empresas = $lista_empresas;
 					$bt->icon = "mdi mdi-content-save";
 					$bt->funcion = "					
 				var resp=MM_validateForm('v_nombre','','R','v_paterno','','R');
-					 if(resp==1){ Guardarusuario('form_usuario','catalogos/alumnos/vi_coachs.php','main',$idmenumodulo)}";
+					 if(resp==1){ Guardarusuario('form_usuario','catalogos/coachs/vi_coachs.php','main',$idmenumodulo)}";
 
 					$bt->estilos = "float: right;";
 					$bt->permiso = $permisos;
@@ -309,7 +309,7 @@ $su->lista_empresas = $lista_empresas;
 			
 					$bt->armar_boton();
 				?>
-				<button type="button" onClick="aparecermodulos('catalogos/usuarios/vi_coachs.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" title="LISTADO DE JUGADORES" style="margin-right: 10px;float: right;"><i class="mdi mdi-arrow-left-box"></i>LISTADO DE COACHS</button>
+				<button type="button" onClick="aparecermodulos('catalogos/coachs/vi_coachs.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" title="LISTADO DE JUGADORES" style="margin-right: 10px;float: right;"><i class="mdi mdi-arrow-left-box"></i>LISTADO DE COACHS</button>
 				
 				<input type="hidden" id="v_idusuario" name="v_idusuario" value="<?php echo $idusuario; ?>" />
 			</div>

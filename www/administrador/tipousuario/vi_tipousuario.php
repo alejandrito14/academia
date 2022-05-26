@@ -84,8 +84,8 @@ $mostrar = array('NO','SI' );
 ?>
 
 <div class="card">
-	<div class="card-header">
-		<h5 class="card-title" style="float: left;">LISTADO DE TIPO DE USUARIO</h5>
+	<div class="card-body">
+		<h5 class="card-title" style="float: left;">LISTADO DE TIPOS DE USUARIO</h5>
 		
 		<div style="float:right;">
 			<button type="button" onClick="abrir_filtro('modal-filtros');" class="btn btn-primary" style="float: right;display: none;"><i class="mdi mdi-account-search"></i>  BUSCAR</button>			
@@ -93,13 +93,13 @@ $mostrar = array('NO','SI' );
 			<?php
 		
 				//SCRIPT PARA CONSTRUIR UN BOTON
-				$bt->titulo = "NUEVO TIPO DE USUARIO";
+				$bt->titulo = "NUEVO";
 				$bt->icon = "mdi-plus-circle";
 				$bt->funcion = "aparecermodulos('administrador/tipousuario/fa_tipousuario.php?idmenumodulo=$idmenumodulo','main');";
 				$bt->estilos = "float: right; margin-right:10px;";
 				$bt->permiso = $permisos;
 				$bt->tipo = 5;
-				$bt->title="NUEVO TIPO DE USUARIO";
+				$bt->title="NUEVO";
 				
 
 				$bt->armar_boton();

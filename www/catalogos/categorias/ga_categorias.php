@@ -43,48 +43,54 @@ try
 	$emp->estatus = trim($f->guardar_cadena_utf8($_POST['v_estatus']));
 
 
-	$emp->numerodias=$_POST['numerodias'];
+	$emp->numerodias=$_POST['v_numerodias'];
 
 	if ($emp->numerodias=='') {
 		$emp->numerodias=0;
 	}
 
-	$emp->habilitarcostos=$_POST['v_habilitarcostos'];
-	$emp->habilitarmodalidad=$_POST['v_habilitarmodalidad'];
-	$emp->habilitarcampototalclases=$_POST['v_habilitarcampototalclases'];
-	$emp->habilitarcampopreciounitario=$_POST['v_habilitarcampopreciounitario'];
-	$emp->habilitarcampomontoparticipante=$_POST['v_habilitarcampomontoparticipante'];
-	$emp->habilitarcampomontogrupo=$_POST['v_habilitarcampomontogrupo'];
-	$emp->habilitarmodalidadpago=$_POST['v_habilitarmodalidadpago'];
 	$emp->habilitaravanzado=$_POST['v_activaravanzado'];
-	$emp->activarcategoria=$_POST['v_activarcategoria'];
+
+	if ($emp->habilitaravanzado==1) {
+		$emp->habilitarcostos=1;
+		$emp->habilitarmodalidad=1;
+		$emp->habilitarcampopreciounitario=1;
+		$emp->habilitarmodalidadpago=1;
+		$emp->activarcategoria=1;
+		$emp->activardias=1;
+		$emp->coachs=1;
+		$emp->horarios=1;
+		$emp->zonas=1;
+	}
+	
+	$emp->habilitarcampototalclases=0;
+	$emp->habilitarcampomontoparticipante=0;
+	$emp->habilitarcampomontogrupo=0;
+	$emp->participantes=0;
+	
 
 
 	$ruta="imagenes/".$_SESSION['codservicio'].'/';
 
-	$horarios=$_POST['v_activarhorarios'];
+	/*$horarios=$_POST['v_activarhorarios'];
 	$zonas=$_POST['v_zonas'];
 	$participantes=$_POST['v_participantes'];
 	$cantidadparticipantes=$_POST['v_cantidadparticipantes'];
-	$coachs=$_POST['v_coachs'];
-	$emp->horarios=$horarios;
-	$emp->zonas=$zonas;
-	$emp->participantes=0;
+	$coachs=$_POST['v_coachs'];*/
+	
 	if ($cantidadparticipantes>0) {
 		$emp->participantes=1;
 	}
 
 
 	$diasemanas=explode(',', $_POST['diasemana']);
-
 	$horainiciosemana=explode(',', $_POST['horainiciodia']);
-
 	$horafinsemana=explode(',', $_POST['horafindia']);
 
 
 	//$emp->participantes=$participantes;
 	$emp->cantidadparticipantes=$cantidadparticipantes;
-	$emp->coachs=$coachs;
+	
 	//Validamos si hacermos un insert o un update
 	if($emp->idcategoria == 0)
 	{
@@ -106,9 +112,9 @@ try
 	}else{
 		$emp->modificarCategoria();	
 
-
+		$emp->EliminarHorarioSemana();
 		if (count($diasemanas)>0 && $diasemanas[0]!='') {
-			$emp->EliminarHorarioSemana();
+			
 		
 		for ($i=0; $i < count($diasemanas); $i++) { 
 				$emp->dia=$diasemanas[$i];

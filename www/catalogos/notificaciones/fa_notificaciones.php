@@ -35,12 +35,12 @@ $emp = new Notificaciones();
 $f = new Funciones();
 $bt = new Botones_permisos();
 
-$cli = new Clientes();
+/*$cli = new Clientes();
 $cli->db = $db;
 $r_clientes = $cli->lista_clientes();
 $a_cliente = $db->fetch_assoc($r_clientes);
 $r_clientes_num = $db->num_rows($r_clientes);
-
+*/
 $usu=new Usuarios();
 $usu->db=$db;
 $r_usuarios=$usu->ObtUsuariosActivos();

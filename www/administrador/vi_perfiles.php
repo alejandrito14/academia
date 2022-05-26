@@ -50,12 +50,12 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 ?>
 <div class="card">
-	<div class="card-header">
+	<div class="card-body">
 		<h5 class="card-title">LISTADO DE PERFILES</h5>	
 		
 		<?php
 			//SCRIPT PARA CONSTRUIR UN BOTON
-			$bt->titulo = "Nuevo Perfil";
+			$bt->titulo = "NUEVO";
 			$bt->icon = "mdi-plus-circle";
 			$bt->funcion = "aparecermodulos('administrador/fa_perfiles.php','main');";
 			$bt->estilos = "float: right;";

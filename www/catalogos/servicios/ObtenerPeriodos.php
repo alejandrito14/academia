@@ -37,14 +37,10 @@ try
 
 	//Recbimos parametros
 	$servicio->idservicio = trim($_POST['idservicio']);
-
-	$obtener=$servicio->ObtenerHorariosSemana($servicio->idservicioes);
-
-	$obtenerservicio=$servicio->ObtenerServicio();
+	$obtener=$servicio->ObtenerPeriodosPagos();
 
 
 	$respuesta['respuesta']=$obtener;
-	$respuesta['servicio']=$obtenerservicio[0];
 
 	echo json_encode($respuesta);
 

@@ -29,13 +29,13 @@ try
 ?>
 <form id="alta_modulos" method="post" action="">
 	<div class="card">
-		<div class="card-header">
+		<div class="card-body">
 			<h5 class="card-title m-b-0" style="float: left;">EDITAR MÓDULO</h5>
 		
 
 			<button type="button" onClick="var resp=MM_validateForm('nombre','','R'); if(resp==1){ GuardarEspecial('alta_modulos','administrador/ga_md_modulosMenu.php','administrador/vi_modulos.php','main');}" class="btn btn-success" style="float: right;" <?php echo $disabled; ?>>Guardar</button>
 			
-			<button type="button" onClick="aparecermodulos('administrador/vi_modulos.php','main');" class="btn btn-primary" style="float: right;margin-right: 10px;">LISTADO DE MÓDULOS</button>
+			<button type="button" onClick="aparecermodulos('administrador/vi_modulos.php','main');" class="btn btn-primary" style="float: right;margin-right: 10px;">VER LISTADO</button>
 
 			<div style="clear: both;"></div>
 		</div>

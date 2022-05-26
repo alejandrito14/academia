@@ -26,6 +26,7 @@ class Categorias
 	public $habilitarmodalidadpago;
 	public $habilitaravanzado;
 	public $activarcategoria;
+	public $activardias;
 	//validacione de tipo de usuario
 	
 	public $tipo_usuario;
@@ -137,7 +138,7 @@ class Categorias
 		campopreciounitario,
 		campomontoporparticipante,
 		campomontoporgrupo,
-		habilitarmodalidadpago,avanzado,asignarcategoria) VALUES ('$this->nombre','$this->orden','$this->estatus','$this->horarios','$this->zonas','$this->participantes','$this->cantidadparticipantes','$this->coachs','$this->numerodias','$this->habilitarcostos','$this->habilitarmodalidad','$this->habilitarcampototalclases','$this->habilitarcampopreciounitario','$this->habilitarcampomontoparticipante','$this->habilitarcampomontogrupo','$this->habilitarmodalidadpago','$this->habilitaravanzado','$this->activarcategoria');";
+		habilitarmodalidadpago,avanzado,asignarcategoria,asignardias) VALUES ('$this->nombre','$this->orden','$this->estatus','$this->horarios','$this->zonas','$this->participantes','$this->cantidadparticipantes','$this->coachs','$this->numerodias','$this->habilitarcostos','$this->habilitarmodalidad','$this->habilitarcampototalclases','$this->habilitarcampopreciounitario','$this->habilitarcampomontoparticipante','$this->habilitarcampomontogrupo','$this->habilitarmodalidadpago','$this->habilitaravanzado','$this->activarcategoria','$this->activardias');";
 		
 		
 		$resp = $this->db->consulta($sql);
@@ -164,7 +165,8 @@ class Categorias
 		campomontoporgrupo='$this->habilitarcampomontogrupo',
 		habilitarmodalidadpago='$this->habilitarmodalidadpago',
 		avanzado='$this->habilitaravanzado',
-		asignarcategoria='$this->activarcategoria'
+		asignarcategoria='$this->activarcategoria',
+		asignardias='$this->activardias'
 		WHERE idcategorias = '$this->idcategoria'";
 
 
@@ -250,7 +252,6 @@ class Categorias
 		public function GuardarHorarioSemana()
 	{
 		$query = "INSERT INTO horariostipo (idcategorias,dia,horainicial,horafinal) VALUES ('$this->idcategoria','$this->dia','$this->horainiciosemana','$this->horafinsemana');";
-
 		$this->db->consulta($query);
 
 	}
@@ -287,6 +288,27 @@ class Categorias
 	}
 
 
+
+	public function ObtenerHorariosCategoriasDia()
+	{
+		$sql="SELECT *FROM horariostipo WHERE idcategorias=".$this->idcategoria." GROUP BY dia";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 	
 
 }

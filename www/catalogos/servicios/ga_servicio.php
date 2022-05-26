@@ -52,6 +52,16 @@ try
 	$zonas=explode(',',$_POST['zonas']);
 	$coachs=explode(',',$_POST['coachs']);
 	$participantes=explode(',',  $_POST['participantes']);
+	$periodosinicial=explode(',', $_POST['v_periodoinicial']);
+	$periodosfinal=explode(',', $_POST['v_periodofinal']);
+
+	$lunes=$_POST['v_lunes'];
+	$martes=$_POST['v_martes'];
+	$miercoles=$_POST['v_miercoles'];
+	$jueves=$_POST['v_jueves'];
+	$viernes=$_POST['v_viernes'];
+	$sabado=$_POST['v_sabado'];
+	$domingo=$_POST['v_domingo'];
 
 	$costo=$_POST['v_costo']!=''?$_POST['v_costo']:0;
 	$totalclase=0;
@@ -62,12 +72,20 @@ try
 
 		
 	$modalidad=$_POST['v_modalidad']!='undefined'?$_POST['v_modalidad']:0;
-	$montopagarparticipante=$_POST['v_montopagarparticipante'];
-	$montopagargrupo=$_POST['v_montopagargrupo'];
+	$montopagarparticipante=$_POST['v_montopagarparticipante']!='undefined'?$_POST['v_montopagarparticipante']:0;
+	$montopagargrupo=$_POST['v_montopagargrupo']!='undefined'?$_POST['v_montopagargrupo']:0;
+
+	
 	$categoriaservicio=$_POST['v_categoriaservicio'];
 	$arrayhorarios=explode(',', $_POST['v_arraydiaselegidos']);
 
-	
+	$emp->lunes=$lunes;
+	$emp->martes=$martes;
+	$emp->miercoles=$miercoles;
+	$emp->jueves=$jueves;
+	$emp->viernes=$viernes;
+	$emp->sabado=$sabado;
+	$emp->domingo=$domingo;
 
 	$emp->totalclase=$totalclase;
 	$emp->modalidad=$modalidad;
@@ -80,7 +98,7 @@ try
 
 	$emp->modalidadpago=$_POST['v_modalidadpago']!='undefined'?$_POST['v_modalidadpago']:0;
 	$emp->periodo=$_POST['v_perido']!='undefined'? $_POST['v_perido']:0;
-
+	$emp->numparticipantes=$_POST['v_numparticipantes'];
 	
 
 
@@ -97,8 +115,8 @@ try
 		for ($i=0; $i < count($arrayhorarios); $i++) { 
 				 $dividircadena=explode('-', $arrayhorarios[$i]);
 			$fecha=$dividircadena[0].'-'.$dividircadena[1].'-'.$dividircadena[2];
-				 $horainicial=$dividircadena[3];
-				 $horafinal=$dividircadena[4];
+				 $horainicial=substr($dividircadena[3],0,5);
+				 $horafinal=substr($dividircadena[4],0,5);
 				 $idzona=$dividircadena[5];
 				 $numdia=date('w',strtotime($fecha));
 
@@ -121,17 +139,26 @@ try
 
 				}
 
-			if (count($coachs)>0 && $coachs[0]!='') {
+			/*if (count($coachs)>0 && $coachs[0]!='') {
 				for ($i=0; $i < count($coachs); $i++) { 
 						$emp->idparticipantes=$coachs[$i];
 						$emp->Guardarparticipantes();
 					}
-				}
+				}*/
 
 			if (count($participantes)>0 && $participantes[0]!='') {
 					for ($i=0; $i < count($participantes); $i++) { 
 						$emp->idparticipantes=$participantes[$i];
 						$emp->Guardarparticipantes();
+					}
+				}
+
+				if (count($periodosinicial)>0 && $periodosinicial[0]!='') {
+					for ($i=0; $i < count($periodosinicial); $i++) { 
+						$emp->periodoinicial=$periodosinicial[$i];
+						$emp->periodofinal=$periodosfinal[$i];
+
+						$emp->GuardarPeriodo();
 					}
 				}
 
@@ -162,16 +189,17 @@ try
 		}
 		
 
-			if (count($participantes)>0 && $participantes[0]!='') {
+			/*if (count($participantes)>0 && $participantes[0]!='') {
 				$emp->EliminarParticipantes();
 					for ($i=0; $i < count($participantes); $i++) { 
 						$emp->idparticipantes=$participantes[$i];
 						$emp->Guardarparticipantes();
 					}
-				}
+				}*/
+
+		$emp->EliminarZonas();
 
 		if (count($zonas)>0 && $zonas[0]!='') {
-			$emp->EliminarZonas();
 				for ($i=0; $i < count($zonas); $i++) { 
 
 					$emp->idzona=$zonas[$i];
@@ -179,12 +207,24 @@ try
 					}
 
 				}
-
+				$emp->EliminarCoachs();
 			if (count($coachs)>0 && $coachs[0]!='') {
-					$emp->EliminarCoachs();
+					
 					for ($i=0; $i < count($coachs); $i++) { 
 						$emp->idparticipantes=$coachs[$i];
 						$emp->Guardarparticipantes();
+					}
+				}	
+
+				$emp->EliminarPeriodos();
+
+			if (count($periodosinicial)>0 && $periodosinicial[0]!='') {
+
+					for ($i=0; $i < count($periodosinicial); $i++) { 
+						$emp->periodoinicial=$periodosinicial[$i];
+						$emp->periodofinal=$periodosfinal[$i];
+
+						$emp->GuardarPeriodo();
 					}
 				}
 

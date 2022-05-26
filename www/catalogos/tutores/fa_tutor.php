@@ -106,7 +106,7 @@ if(!isset($_GET['idusuarios']))
 	$v_referencia='';
 	$v_fis_correo="";
 	$v_celular="";
-	$titulo='NUEVO usuario';
+	$titulo='NUEVO USUARIO';
 	$bloquearediciondedatos=0;
 }else
 {
@@ -220,7 +220,7 @@ if(!isset($_GET['idusuarios']))
 		$checkedhabilitar="checked";
 
 	}
-	$titulo='EDITAR usuario';
+	$titulo='EDITAR USUARIO';
 
 
 	
@@ -307,7 +307,7 @@ $su->lista_empresas = $lista_empresas;
 			
 					$bt->armar_boton();
 				?>
-				<button type="button" onClick="aparecermodulos('catalogos/tutores/vi_tutores.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" title="LISTADO DE JUGADORES" style="margin-right: 10px;float: right;"><i class="mdi mdi-arrow-left-box"></i>LISTADO DE TUTORES</button>
+				<button type="button" onClick="aparecermodulos('catalogos/tutores/vi_tutores.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" title="VER LISTADO" style="margin-right: 10px;float: right;"><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
 				
 				<input type="hidden" id="v_idusuario" name="v_idusuario" value="<?php echo $idusuario; ?>" />
 			</div>

@@ -58,13 +58,13 @@ if(isset($_GET['id']))
 ?>
 <form id="alta_usuario" method="post" action="">
 	<div class="card">
-		<div class="card-header">
+		<div class="card-body">
 			<h5 class="card-title m-b-0" style="float: left;"><?php echo $titulo;?></h5>
 
 			<input type="hidden" id="v_id" name="v_id" value="<?php echo $idusuario; ?>" />
 			<button type="button" id="alt_btn" onClick="var resp=MM_validateForm('nombre','','R','paterno','','R','materno','','R','email','','RisEmail','usuario','','R','clave','','R'); if(resp==1){ GuardarEspecial('alta_usuario','administrador/ga_usuarios.php','administrador/vi_usuarios.php','main');}" class="btn btn-success" style="float: right;"><i class="mdi mdi-content-save"></i> GUARDAR</button>
 
-			<button type="button" onClick="aparecermodulos('administrador/vi_usuarios.php','main');" class="btn btn-primary" style="float: right;margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i>LISTADO DE USUARIOS</button>
+			<button type="button" onClick="aparecermodulos('administrador/vi_usuarios.php','main');" class="btn btn-primary" style="float: right;margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
 			<div style="clear: both;"></div>
 
 

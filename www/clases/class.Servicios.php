@@ -32,7 +32,17 @@ class Servicios
 
 	public $idusuarios;
 	public $fecha;
-	
+
+	public $periodoinicial;
+	public $periodofinal;
+	public $lunes;
+	public $martes;
+	public $miercoles;
+	public $jueves;
+	public $viernes;
+	public $sabado;
+	public $domingo;
+	public $numparticipantes;
 
 	public function ObtenerServicios()
 	{
@@ -88,9 +98,17 @@ class Servicios
 		fechainicial,
 		fechafinal,
 		modalidaddepago,
-		periodo
-		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo')";
-		
+		periodo,
+		lunes,
+		martes,
+		miercoles,
+		jueves,
+		viernes,
+		sabado,
+		domingo,
+		numeroparticipantes
+		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes')";
+
 		$resp=$this->db->consulta($query);
 		$this->idservicio = $this->db->id_ultimo();
 		
@@ -114,8 +132,18 @@ class Servicios
 		fechainicial='$this->fechainicial',
 		fechafinal='$this->fechafinal',
 		modalidaddepago='$this->modalidadpago',
-		periodo='$this->periodo'
+		periodo='$this->periodo',
+		lunes='$this->lunes',
+		martes='$this->martes',
+		miercoles='$this->miercoles',
+		jueves='$this->jueves',
+		viernes='$this->viernes',
+		sabado='$this->sabado',
+		domingo='$this->domingo',
+		numeroparticipantes='$this->numparticipantes'
 		WHERE idservicio=$this->idservicio";
+
+		
 
 		$resp=$this->db->consulta($query);
 	}
@@ -221,7 +249,8 @@ class Servicios
 
 	public function ObtenerHorariosSemana()
 	{
-		$sql="SELECT *FROM horariosservicio WHERE idservicio=".$this->idservicio."";
+		$sql="SELECT idhorarioservicio,dia,horainicial,
+		horafinal,fecha,zonas.idzona,zonas.color  FROM horariosservicio INNER JOIN zonas ON zonas.idzona=horariosservicio.idzona WHERE idservicio=".$this->idservicio."";
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -412,6 +441,46 @@ class Servicios
 		}
 		
 		return $contador;
+	}
+
+	public function GuardarPeriodo()
+	{
+		$query = "INSERT INTO periodoservicio (fechainicial,fechafinal,idservicio) VALUES ('$this->periodoinicial','$this->periodofinal','$this->idservicio');";
+
+			
+		$this->db->consulta($query);
+
+	}
+
+	public function EliminarPeriodos()
+	{
+		$sql="DELETE FROM periodoservicio WHERE idservicio='$this->idservicio'";
+		
+		$resp = $this->db->consulta($sql);
+		return $resp;
+		
+	}
+
+	public function ObtenerPeriodosPagos()
+	{
+		$sql="SELECT *FROM periodoservicio WHERE idservicio='$this->idservicio'";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
 	}
 }
 

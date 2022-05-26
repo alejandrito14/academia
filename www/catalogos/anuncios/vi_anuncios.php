@@ -98,13 +98,13 @@ $estatus=array('DESACTIVADO','ACTIVADO');
       <?php
     
         //SCRIPT PARA CONSTRUIR UN BOTON
-        $bt->titulo = "NUEVO ANUNCIO";
+        $bt->titulo = "NUEVO";
         $bt->icon = "mdi-plus-circle";
         $bt->funcion = "aparecermodulos('catalogos/anuncios/fa_anuncios.php?idmenumodulo=$idmenumodulo','main');";
         $bt->estilos = "float: right; margin-right:10px;";
         $bt->permiso = $permisos;
         $bt->tipo = 5;
-        $bt->title="NUEVO ANUNCIO";
+        $bt->title="NUEVO";
         
 
         $bt->armar_boton();

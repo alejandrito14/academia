@@ -95,13 +95,13 @@ $estatus=array('DESACTIVADO','ACTIVADO');
       <?php
     
         //SCRIPT PARA CONSTRUIR UN BOTON
-        $bt->titulo = "NUEVA MEMBRESÍA";
+        $bt->titulo = "NUEVO";
         $bt->icon = "mdi-plus-circle";
         $bt->funcion = "aparecermodulos('catalogos/membresia/fa_membresia.php?idmenumodulo=$idmenumodulo','main');";
         $bt->estilos = "float: right; margin-right:10px;";
         $bt->permiso = $permisos;
         $bt->tipo = 5;
-        $bt->title="NUEVA MEMBRESÍA";
+        $bt->title="NUEVO";
         
 
         $bt->armar_boton();

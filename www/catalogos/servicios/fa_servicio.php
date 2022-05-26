@@ -116,7 +116,14 @@ if(!isset($_GET['idservicio'])){
 
 	$modalidadpago=$result_SERVICIO_row['modalidaddepago'];
 	$periodo=$result_SERVICIO_row['periodo'];
-
+	$lunes=$result_SERVICIO_row['lunes'];
+	$martes=$result_SERVICIO_row['martes'];
+	$miercoles=$result_SERVICIO_row['miercoles'];
+	$jueves=$result_SERVICIO_row['jueves'];
+	$viernes=$result_SERVICIO_row['viernes'];
+	$sabado=$result_SERVICIO_row['sabado'];
+	$domingo=$result_SERVICIO_row['domingo'];
+	$numeroparticipantes=$result_SERVICIO_row['numeroparticipantes'];
 
 	$col = "col-md-12";
 	$ver = "";
@@ -300,7 +307,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 		
 
-				<div class="card" id="divdias" >
+				<div class="card" id="divdias" style="display: none;" >
 				<div class="card-header">
 					<h5>DIAS</h5>
 				</div>
@@ -309,20 +316,27 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						
 						<div class="form-group m-t-20">
 								<label for="">*SELECCIONAR DIAS:</label>
-
-								<input type="checkbox" id="Domingo" value="0">Dom
-
-								<input type="checkbox" id="Lunes" value="1">Lun
-
-								<input type="checkbox" id="Martes" value="2">Mar
-								
-								<input type="checkbox" id="Miercoles" value="3">Mier
-
-								<input type="checkbox" id="Jueves" value="4">Jueves
-
-								<input type="checkbox" id="Viernes" value="5">Viernes
-
-									<input type="checkbox" id="Sabado" value="6">Sábado
+								 <div class="form-group m-t-20">
+									<input type="checkbox" id="Domingo" class="diasckeckbox" value="0"> Domingo
+								</div>
+								 <div class="form-group m-t-20">
+									<input type="checkbox" id="Lunes" class="diasckeckbox" value="1"> Lunes
+								</div>
+								<div class="form-group m-t-20">
+								<input type="checkbox" id="Martes" class="diasckeckbox" value="2"> Martes
+								</div>
+								<div class="form-group m-t-20">
+								<input type="checkbox" id="Miercoles" class="diasckeckbox" value="3"> Miércoles
+								</div>
+								<div class="form-group m-t-20">
+								<input type="checkbox" id="Jueves" class="diasckeckbox" value="4"> Jueves
+								</div>
+								<div class="form-group m-t-20">
+								<input type="checkbox" id="Viernes" class="diasckeckbox" value="5"> Viernes
+							</div>
+							<div class="form-group m-t-20">
+									<input type="checkbox" id="Sabado" class="diasckeckbox" value="6"> Sábado
+								</div>
 
 							</div>
 							
@@ -374,11 +388,15 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 				</div>
 				<div class="card-body">
-						 <div class="clientes col-md-6"  style="overflow:scroll;height:100px;overflow-x: hidden" >
-
-						 	  <div class="form-group m-t-20">	 
+						
+						<div class=" col-md-6">
+							
+						
+					 <div class="form-group m-t-20">	 
 						<input type="text" class="form-control" name="buscadorzonas_1" id="buscadorzonas_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadorzonas_','.zonas_')">
 				    </div>
+				    </div>
+				     <div class="clientes col-md-6"  style="overflow:scroll;height:100px;overflow-x: hidden" >
 					    <?php     	
 							if ($num_zonas>0) {	
 						    	do {
@@ -489,9 +507,11 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						<div style="margin-top: 3em">
 
 							 <div id="picker"></div>
-					    <div>
-					        <p>Fechas/Horas Seleccionadas:</p>
+					    <div class="row">
+					    	<div class="col-md-4">
+					        <label>Fechas/Horas Seleccionadas:</label>
 					        <div id="selected-dates"></div>
+					        </div>
 					    </div>
 
 
@@ -585,7 +605,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 							</div> -->
 
-							<div class="form-group" style="float: left;width: 50%;">
+							<div class="form-group" style="float: left;width: 50%;display: none;">
 								 	<div class="form-check">
 					               
 					                  <input type="radio" class="form-check-input " name="v_grupo2" onchange="CambioPeriodo()" value="1" id="v_habilitarevento" style="" >
@@ -596,9 +616,9 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				              </div>
 
 
-				              <div class="form-group" style="float: left;width: 50%;">
+				              <div class="form-group" style="float: left;width: 50%;display: none;">
 								 	<div class="form-check">
-					                 <input type="radio" class="form-check-input " name="v_grupo2" onchange="CambioPeriodo()" value="2" id="v_habilitarperiodo" style="" >
+					                 <input type="radio" class="form-check-input " name="v_grupo2" onchange="CambioPeriodo()" value="2" id="v_habilitarperiodo" style="" checked>
 					                   <label class="form-check-label" style="    padding-top: 0.3em;">
 										POR PERIODO
 					                </label>
@@ -610,14 +630,16 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 						</div>
 					</div>
-			</div>
+		
 
 
-			<div class="card" style="display: none;" id="divperiodos">
-				<div class="card-header" style="">
-					<h5>PERIODOS</h5>
+			<div class="card" style="" id="divperiodos">
+				<!-- <div class="card-header" style=""> -->
+					<!-- <h5>PERIODOS</h5>
+ -->
+				<!-- </div> -->
 
-				</div>
+				 <h5 style="margin-left: 2.5em;">PERIODOS DE PAGO</h5>
 				<div class="card-body">
 						<div style="margin-top: 3em">
 
@@ -639,7 +661,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					</div>
 				</div>
 			</div>
-
+	</div>
 
 			<div class="card" style="display: none;" id="divparticipantes">
 				<div class="card-header" style="">
@@ -727,19 +749,13 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 </form>
 <script>
 
-	$("#v_costo").on({
-		 /* "focus": function(event) {
-		    $(event.target).select();
-		  },
-		  "keyup": function(event) {
-		    $(event.target).val(function(index, value) {
-		      return value.replace(/\D/g, "")
-		        .replace(/([0-9])([0-9]{2})$/, '$1.$2')
-		        .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ",");
-		    });
-		  }*/
-		});
+	
 	var idservicio='<?php echo $idservicio?>';
+	var fecha='<?php echo date('Y-m-d'); ?>';
+
+	$("#v_fechainicial").val(fecha);
+	$("#v_fechafinal").val(fecha);
+
 	if (idservicio>0) {
 		var idcategoriaservicio='<?php echo $idcategoriaservicio; ?>';
 
@@ -749,7 +765,6 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		$("#v_categoriaservicio").val(idcategoria);
 
 		 SeleccionarCategoria();
-		 ObtenerHorariosSemana(idservicio);
 		 Obtenerparticipantes(3,idservicio);
 		 ObtenerZonas(idservicio);
 		 ObtenerCoachs(5,idservicio);
@@ -788,8 +803,48 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		 }
 
 
-	}
+		 var lunes='<?php echo $lunes; ?>';
+		var martes='<?php echo $martes;?>';
+		var miercoles='<?php echo $miercoles; ?>';
+		var jueves='<?php echo $jueves;?>';
+		var viernes='<?php echo $viernes;?>';
+		var sabado='<?php echo $sabado;?>';
+		var domingo='<?php echo $domingo; ?>';
 
+		if (lunes==1) {
+			$("#Lunes").attr('checked',true);
+		}
+		if (martes==1) {
+			$("#Martes").attr('checked',true);
+		}
+		if (miercoles==1) {
+			$("#Miercoles").attr('checked',true);
+		}
+		if (jueves==1) {
+			$("#Jueves").attr('checked',true);
+		}
+		if (viernes==1) {
+			$("#Viernes").attr('checked',true);
+		}
+		if (sabado==1) {
+			$("#Sabado").attr('checked',true);
+		}
+		if (domingo==1) {
+			$("#Domingo").attr('checked',true);
+		}
+
+		var fechainicial='<?php echo $fechainicial; ?>';
+		var fechafinal='<?php echo $fechafinal; ?>';
+		
+		$("#v_fechainicial").val(fechainicial);
+		$("#v_fechafinal").val(fechafinal);
+
+		ObtenerHorariosSemana(idservicio);
+
+		ObtenerPeriodos(idservicio);
+
+	}
+	CambioPeriodo();
 	
 	    function SubirImagenservicio() {
 	 	// body...

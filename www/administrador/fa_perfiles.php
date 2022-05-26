@@ -28,14 +28,14 @@ try
 
 <form id="alta_perfil" method="post" action="">
 	<div class="card">
-		<div class="card-header">
-			<h5 class="card-title m-b-0" style="float: left;">NUEVO PERFIL</h5>
+		<div class="card-body">
+			<h5 class="card-title m-b-0" style="float: left;">NUEVO</h5>
 
 			<button type="button" onClick="var resp=MM_validateForm('nombre','','R'); if(resp==1){ if(Validar_Check()==1)
             { GuardarEspecial4('alta_perfil','administrador/ga_md_perfiles.php','administrador/vi_perfiles.php','main');}}" class="btn btn-success alt_btn" style="float: right;" <?php echo $disabled; ?>><i class="mdi mdi-content-save"></i> Guardar</button>
             
 
-			<button type="button" onClick="aparecermodulos('administrador/vi_perfiles.php','main');" class="btn btn-primary" style="float: right;margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i>LISTADO DE PERFILES</button>
+			<button type="button" onClick="aparecermodulos('administrador/vi_perfiles.php','main');" class="btn btn-primary" style="float: right;margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
 			<div style="clear: both;"></div>
 
 

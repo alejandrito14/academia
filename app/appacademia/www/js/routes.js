@@ -63,6 +63,15 @@ var routes = [
     path:'/cambiocontra/',
     componentUrl: './pages/cambiocontra.html',
   },
+
+  //aceptacion de servicio
+
+   {
+    path:'/aceptacionservicio/',
+    componentUrl: './pages/aceptacionservicio.html',
+  },
+
+  
    // stats
   {
     path: '/stats/',

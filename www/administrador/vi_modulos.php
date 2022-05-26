@@ -130,12 +130,12 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 <div class="card">
-	<div class="card-header">
+	<div class="card-body">
 		<h5 class="card-title" style="float: left;">LISTADO DE MÓDULOS</h5>
 		
 		<?php
 			//SCRIPT PARA CONSTRUIR UN BOTON
-			$bt->titulo = "NUEVO MÓDULO";
+			$bt->titulo = "NUEVO";
 			$bt->icon = "mdi-plus-circle";
 			$bt->funcion = "aparecermodulos('administrador/fa_modulos.php','main');";
 			$bt->estilos = "float: right;";
@@ -221,7 +221,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		<div style="padding: 20px;">			
 			<?php
 				//SCRIPT PARA CONSTRUIR UN BOTON
-				$bt->titulo = "NUEVO MENÚ";
+				$bt->titulo = "NUEVO";
 				$bt->icon = "mdi-plus-circle";
 				$bt->funcion = "aparecermodulos('administrador/fa_menu.php','main');";
 				$bt->estilos = "float: right;";

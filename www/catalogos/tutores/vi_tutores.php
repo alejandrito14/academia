@@ -101,23 +101,23 @@ var oTable = $('#zero_config').dataTable( {
 </script>
   
 
-<div class="card mb-3">
-	<div class="card-header">
-		<h5 class="card-title" style="float: left; margin-top: 5px;">LISTADO DE TUTORES</h5>
+<div class="card mb-3"><div class="card-body">
+	<div class="card-title">
+		<h5 class="" style="float: left; margin-top: 5px;">LISTADO DE TUTORES</h5>
 		<!--<button type="button" onClick="AbrirModalGeneral2('ModalPrincipal','900','560','catalogos/Usuarios/fa_cliente.php');" class="btn btn-info" style="float: right;">AGREGAR CLIENTE</button>-->
 		<?php
 		
 				
-		$bt->titulo = "NUEVO TUTOR";
+		$bt->titulo = "NUEVO";
 		$bt->icon = "mdi-plus-circle";
 		$bt->funcion = "
 	
-			 aparecermodulos('catalogos/Usuarios/fa_cliente.php?idmenumodulo=$idmenumodulo','main');
+			 aparecermodulos('catalogos/tutores/fa_tutor.php?idmenumodulo=$idmenumodulo','main');
 			 ";
 		$bt->estilos = "float: right; margin-right: 10px;";
 		$bt->permiso = $permisos;
 		$bt->tipo = 5;
-		$bt->title="NUEVO TUTOR";
+		$bt->title="NUEVO";
 		$bt->armar_boton();
 
 			?>
@@ -127,6 +127,7 @@ var oTable = $('#zero_config').dataTable( {
 		
 		<div style="clear: both;"></div>
 	</div>
+</div>
   	<div class="card-body">
 		<div class="table-responsive">
 			<table id="zero_config" class="table table-bordered table-hover" cellpadding="0" cellspacing="0">
