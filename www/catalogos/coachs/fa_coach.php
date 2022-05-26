@@ -106,7 +106,7 @@ if(!isset($_GET['idusuarios']))
 	$v_referencia='';
 	$v_fis_correo="";
 	$v_celular="";
-	$titulo='NUEVO ALUMNO';
+	$titulo='NUEVO COACH';
 	$v_idtipo=0;
 	$bloquearediciondedatos=0;
 }else
@@ -222,7 +222,7 @@ if(!isset($_GET['idusuarios']))
 		$checkedhabilitar="checked";
 
 	}
-	$titulo='EDITAR usuario';
+	$titulo='EDITAR COACH';
 
 
 	
@@ -278,7 +278,10 @@ $su->lista_empresas = $lista_empresas;
 		<div class="card-body">
 			<h4 class="card-title m-b-0" style="float: left;"><?php echo $titulo; ?></h4>
 
-			<div style="float: right;" >
+			<div style="float: right;float: right;position: fixed!important;    
+    z-index: 10;           
+     right: 0;        
+     margin-right: 2em;width: 74%;" >
 					
 			
 					<div style="clear: both;"></div>
@@ -309,7 +312,7 @@ $su->lista_empresas = $lista_empresas;
 			
 					$bt->armar_boton();
 				?>
-				<button type="button" onClick="aparecermodulos('catalogos/coachs/vi_coachs.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" title="LISTADO DE JUGADORES" style="margin-right: 10px;float: right;"><i class="mdi mdi-arrow-left-box"></i>LISTADO DE COACHS</button>
+				<button type="button" onClick="aparecermodulos('catalogos/coachs/vi_coachs.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" title="LISTADO DE JUGADORES" style="margin-right: 10px;float: right;"><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
 				
 				<input type="hidden" id="v_idusuario" name="v_idusuario" value="<?php echo $idusuario; ?>" />
 			</div>

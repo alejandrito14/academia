@@ -1227,6 +1227,7 @@ $navegador = $f->navegador();
 <script src="js/fn_membresia.js"></script>
 <script src="js/fn_categoriasservicios.js"></script>
 <script src="js/fn_asignarusuarioservicio.js"></script>
+<script src="js/fn_tutor.js"></script>
 
 
  <!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>

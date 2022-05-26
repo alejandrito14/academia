@@ -22,10 +22,14 @@ $fu = new Funciones();
 		<div class="card-body">
 			<h5 class="card-title m-b-0" style="float: left;">NUEVO MÓDULO</h5>
 			
-
+			<div style="position: fixed!important;    
+    z-index: 10;           
+     right: 0;        
+     margin-right: 2em;width: 74%;">
 			<button type="button" onClick="var resp=MM_validateForm('nombre','','R'); if(resp==1){ GuardarEspecial('alta_modulos','administrador/ga_md_modulosMenu.php','administrador/vi_modulos.php','main');}" class="btn btn-success alt_btn" style="float: right;" <?php echo $disabled; ?>>Guardar</button>
 
 			<button type="button" onClick="aparecermodulos('administrador/vi_modulos.php','main');" class="btn btn-primary" style="float: right;margin-right: 5px;">VER LISTADO</button>
+			</div>
 			<div style="clear: both;"></div>
 		</div>
 		<div class="card-body">
@@ -48,7 +52,7 @@ $fu = new Funciones();
 			</div>
 		</div>
 		
-		<div class="card-footer">
+		<div class="">
 			<input type="hidden" name="tipo" id="tipo" value="1" />
 			
 		</div>

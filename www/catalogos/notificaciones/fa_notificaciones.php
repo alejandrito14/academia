@@ -171,7 +171,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		<div class="card-body">
 			<h4 class="card-title m-b-0" style="float: left;"><?php echo $titulo; ?></h4>
 
-			<div style="float: right;">
+			<div style="float: right;float: right;position: fixed!important;    
+    z-index: 10;           
+     right: 0;        
+     margin-right: 2em;width: 74%;">
 				
 				<?php
 			
@@ -196,7 +199,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				
 				<!--<button type="button" onClick="var resp=MM_validateForm('v_empresa','','R','v_direccion','','R','v_tel','','R','v_email','',' isEmail R'); if(resp==1){ GuardarEmpresa('f_empresa','catalogos/empresas/fa_empresas.php','main');}" class="btn btn-success" style="float: right;"><i class="mdi mdi-content-save"></i>  GUARDAR</button>-->
 				
-				<button type="button" onClick="aparecermodulos('catalogos/notificaciones/vi_notificaciones.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" style="float: right; margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i> LISTADO DE NOTIFICACION</button>
+				<button type="button" onClick="aparecermodulos('catalogos/notificaciones/vi_notificaciones.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" style="float: right; margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
 				<div style="clear: both;"></div>
 				
 				<input type="hidden" id="id" name="id" value="<?php echo $idnotificacion; ?>" />

@@ -177,7 +177,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		<div class="card-body">
 			<h4 class="card-title m-b-0" style="float: left;"><?php echo $titulo; ?></h4>
 
-			<div style="float: right;">
+			<div style="float: right;position: fixed!important;    
+    z-index: 10;           
+     right: 0;        
+     margin-right: 2em;width: 74%;">
 				
 				<?php
 			

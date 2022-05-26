@@ -103,7 +103,7 @@ var oTable = $('#zero_config').dataTable( {
 
 <div class="card mb-3">
 	<div class="card-body">
-		<h5 class="card-title" style="float: left; margin-top: 5px;">LISTADO DE COACHS</h5>
+		<h5 class="card-title" style="float: left; margin-top: 5px;">LISTADO DE COACHES</h5>
 		<!--<button type="button" onClick="AbrirModalGeneral2('ModalPrincipal','900','560','catalogos/Usuarios/fa_cliente.php');" class="btn btn-info" style="float: right;">AGREGAR CLIENTE</button>-->
 		<?php
 		

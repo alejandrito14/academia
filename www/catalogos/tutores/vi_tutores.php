@@ -186,7 +186,7 @@ var oTable = $('#zero_config').dataTable( {
 													//SCRIPT PARA CONSTRUIR UN BOTON
 													$bt->titulo = "";
 													$bt->icon = "mdi-table-edit";
-													$bt->funcion = "aparecermodulos('catalogos/Usuarios/fa_cliente.php?idmenumodulo=$idmenumodulo&idcliente=".$result_row['idusuarios']."','main')";
+													$bt->funcion = "aparecermodulos('catalogos/tutores/fa_tutor.php?idmenumodulo=$idmenumodulo&idusuarios=".$result_row['idusuarios']."','main')";
 													$bt->estilos = "";
 													$bt->permiso = $permisos;
 													$bt->tipo = 2;

@@ -32,11 +32,14 @@ try
 		<div class="card-body">
 			<h5 class="card-title m-b-0" style="float: left;">EDITAR MÓDULO</h5>
 		
-
+			<div style="float: right;position: fixed!important;    
+    z-index: 10;           
+     right: 0;        
+     margin-right: 2em;width: 74%;">
 			<button type="button" onClick="var resp=MM_validateForm('nombre','','R'); if(resp==1){ GuardarEspecial('alta_modulos','administrador/ga_md_modulosMenu.php','administrador/vi_modulos.php','main');}" class="btn btn-success" style="float: right;" <?php echo $disabled; ?>>Guardar</button>
 			
 			<button type="button" onClick="aparecermodulos('administrador/vi_modulos.php','main');" class="btn btn-primary" style="float: right;margin-right: 10px;">VER LISTADO</button>
-
+</div>
 			<div style="clear: both;"></div>
 		</div>
 		

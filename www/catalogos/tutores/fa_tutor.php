@@ -106,8 +106,9 @@ if(!isset($_GET['idusuarios']))
 	$v_referencia='';
 	$v_fis_correo="";
 	$v_celular="";
-	$titulo='NUEVO USUARIO';
+	$titulo='NUEVO TUTOR';
 	$bloquearediciondedatos=0;
+	$rutaperfil="images/sinfoto.png";
 }else
 {
 	
@@ -115,12 +116,12 @@ if(!isset($_GET['idusuarios']))
 	
 	//buscamos la información del usuario..
 	
-	$cli->idusuario = $idusuario;
+	$cli->id_usuario = $idusuario;
 	$usuario = $cli->ObtenerInformacionusuario();
 
 	$usuario_row = $db->fetch_assoc($usuario);
 	$usuario_num = $db->num_rows($usuario);
-	
+
 	
 	$v_idempresa = $fu->imprimir_cadena_utf8($usuario_row['idempresas']);
 	$v_no_usuario = $fu->imprimir_cadena_utf8($usuario_row['no_usuario']);
@@ -220,7 +221,7 @@ if(!isset($_GET['idusuarios']))
 		$checkedhabilitar="checked";
 
 	}
-	$titulo='EDITAR USUARIO';
+	$titulo='EDITAR TUTOR';
 
 
 	
@@ -276,7 +277,10 @@ $su->lista_empresas = $lista_empresas;
 		<div class="card-body">
 			<h4 class="card-title m-b-0" style="float: left;"><?php echo $titulo; ?></h4>
 
-			<div style="float: right;" >
+			<div style="float: right;position: fixed!important;    
+    z-index: 10;           
+     right: 0;        
+     margin-right: 2em;width: 74%;" >
 					
 			
 					<div style="clear: both;"></div>
@@ -291,7 +295,9 @@ $su->lista_empresas = $lista_empresas;
 					$bt->icon = "mdi mdi-content-save";
 					$bt->funcion = "					
 				var resp=MM_validateForm('v_nombre','','R','v_paterno','','R');
-					 if(resp==1){ Guardarusuario('form_usuario','catalogos/tutores/vi_tutores.php','main',$idmenumodulo)}";
+					 if(resp==1){ Guardarusuario('form_usuario','catalogos/tutores/vi_tutores.php','main','catalogos/tutores/ga_clientes.php',$idmenumodulo)}";
+
+
 
 					$bt->estilos = "float: right;";
 					$bt->permiso = $permisos;
@@ -538,7 +544,7 @@ $su->lista_empresas = $lista_empresas;
 					 	</div>
 					</div>
 
-					<div class="col-md-4">
+					<div class="col-md-4" style="display: none;">
 						<label>INE:</label>
 					 	<div>
 
