@@ -126,7 +126,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					//SCRIPT PARA CONSTRUIR UN BOTON
 					$bt->titulo = "GUARDAR";
 					$bt->icon = "mdi mdi-content-save";
-					$bt->funcion = "var resp=MM_validateForm('v_nombre','','R','v_color','',''); if(resp==1){ Guardarzona('f_zona','catalogos/zonas/vi_zonas.php','main','$idmenumodulo');}";
+					$bt->funcion = "var resp=MM_validateForm('v_nombre','','R','v_color','','R'); if(resp==1){ Guardarzona('f_zona','catalogos/zonas/vi_zonas.php','main','$idmenumodulo');}";
 					$bt->estilos = "float: right;";
 					$bt->permiso = $permisos;
 					$bt->class='btn btn-success';

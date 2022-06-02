@@ -21,7 +21,7 @@ $lista_empresas = $_SESSION['se_liempresas']; //variables de sesion
 
 //Importamos nuestras clases
 require_once("../../clases/conexcion.php");
-require_once("../../clases/class.Espacios.php");
+require_once("../../clases/class.Clasificacion.php");
 require_once("../../clases/class.Funciones.php");
 require_once("../../clases/class.Botones.php");
 
@@ -29,7 +29,7 @@ $idmenumodulo = $_GET['idmenumodulo'];
 
 //Se crean los objetos de clase
 $db = new MySQL();
-$emp = new Espacios();
+$emp = new Clasificacion();
 $f = new Funciones();
 $bt = new Botones_permisos();
 
@@ -39,9 +39,9 @@ $emp->tipo_usuario = $tipousaurio;
 $emp->lista_empresas = $lista_empresas;
 
 //Validamos si cargar el formulario para nuevo registro o para modificacion
-if(!isset($_GET['idespacio'])){
+if(!isset($_GET['idclasificacion'])){
 	//El formulario es de nuevo registro
-	$idespacio = 0;
+	$idclasificacion = 0;
 
 	//Se declaran todas las variables vacias
 	 $nombre='';
@@ -51,33 +51,31 @@ if(!isset($_GET['idespacio'])){
 	
 	$col = "col-md-12";
 	$ver = "display:none;";
-	$titulo='NUEVO ESPACIO';
+	$titulo='NUEVA CLASIFICACIÓN';
 
 }else{
 	//El formulario funcionara para modificacion de un registro
 
-	//Enviamos el id del espacio a modificar a nuestra clase espacios
-	$idespacio = $_GET['idespacio'];
-	$emp->idespacio = $idespacio;
+	//Enviamos el id del Clasificacion a modificar a nuestra clase Clasificacions
+	$idclasificacion = $_GET['idclasificacion'];
+	$emp->idclasificacion = $idclasificacion;
 
-	//Realizamos la consulta en tabla espacios
-	$result_espacio = $emp->buscarEspacio();
-	$result_espacio_row = $db->fetch_assoc($result_espacio);
-
+	//Realizamos la consulta en tabla Clasificacions
+	$result_Clasificacion = $emp->buscarClasificacion();
+	$result_Clasificacion_row = $db->fetch_assoc($result_Clasificacion);
 
 
 	//Cargamos en las variables los datos 
 
 	//DATOS GENERALES
-	$nombre=$f->imprimir_cadena_utf8($result_espacio_row['nombre']);
-	$lugar = $f->imprimir_cadena_utf8($result_espacio_row['lugar']);
-	$ubicacion = $f->imprimir_cadena_utf8($result_espacio_row['ubicacion']);
-	$estatus = $f->imprimir_cadena_utf8($result_espacio_row['estatus']);
+	$nombre=$f->imprimir_cadena_utf8($result_Clasificacion_row['nombre']);
+
+	$estatus = $f->imprimir_cadena_utf8($result_Clasificacion_row['estatus']);
 	
 
 	$col = "col-md-12";
 	$ver = "";
-		$titulo='EDITAR ESPACIO';
+		$titulo='EDITAR CLASIFICACIÓN';
 
 }
 
@@ -111,7 +109,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 ?>
 
-<form id="f_espacio" name="f_espacio" method="post" action="">
+<form id="f_Clasificacion" name="f_Clasificacion" method="post" action="">
 	<div class="card">
 		<div class="card-body">
 			<h4 class="card-title m-b-0" style="float: left;"><?php echo $titulo; ?></h4>
@@ -123,13 +121,13 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					//SCRIPT PARA CONSTRUIR UN BOTON
 					$bt->titulo = "GUARDAR";
 					$bt->icon = "mdi mdi-content-save";
-					$bt->funcion = "var resp=MM_validateForm('v_nombre','','R'); if(resp==1){ GuardarEspacio('f_espacio','catalogos/espacios/vi_espacios.php','main','$idmenumodulo');}";
+					$bt->funcion = "var resp=MM_validateForm('v_nombre','','R'); if(resp==1){ GuardarClasificacion('f_Clasificacion','catalogos/clasificacion/vi_clasificacion.php','main','$idmenumodulo');}";
 					$bt->estilos = "float: right;";
 					$bt->permiso = $permisos;
 					$bt->class='btn btn-success';
 				
 					//validamos que permiso aplicar si el de alta o el de modificacion
-				if($idespacios == 0)
+				if($idclasificacion == 0)
 					{
 						$bt->tipo = 1;
 					}else{
@@ -141,10 +139,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				
 				<!--<button type="button" onClick="var resp=MM_validateForm('v_empresa','','R','v_direccion','','R','v_tel','','R','v_email','',' isEmail R'); if(resp==1){ GuardarEmpresa('f_empresa','catalogos/empresas/fa_empresas.php','main');}" class="btn btn-success" style="float: right;"><i class="mdi mdi-content-save"></i>  GUARDAR</button>-->
 				
-				<button type="button" onClick="aparecermodulos('catalogos/espacios/vi_espacios.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" style="float: right; margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
+				<button type="button" onClick="aparecermodulos('catalogos/clasificacion/vi_clasificacion.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" style="float: right; margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
 				<div style="clear: both;"></div>
 				
-				<input type="hidden" id="id" name="id" value="<?php echo $idespacio; ?>" />
+				<input type="hidden" id="id" name="id" value="<?php echo $idclasificacion; ?>" />
 			</div>
 			<div style="clear: both;"></div>
 		</div>
@@ -160,7 +158,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				</div>
 
 				<div class="card-body">
-					
+					<div class="col-md-6">
 					
 					<div class="tab-content tabcontent-border">
 						<div class="tab-pane active show" id="generales" role="tabpanel">
@@ -172,15 +170,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 
-							<div class="form-group m-t-20">
-								<label>*LUGAR:</label>
-								<input type="text" class="form-control" id="v_lugar" name="v_lugar" value="<?php echo $lugar; ?>" title="LUGAR" placeholder='LUGAR '>
-							</div>
-							<div class="form-group m-t-20">
-								<label>*UBICACIÓN:</label>
-								<input type="text" class="form-control" id="v_ubicacion" name="v_ubicacion" value="<?php echo $ubicacion; ?>" title="UBICACIÓN" placeholder='UBICACIÓN '>
-							</div>
-							
+						
 						<div class="form-group m-t-20">
 							<label>ESTATUS:</label>
 							<select name="v_estatus" id="v_estatus" title="Estatus" class="form-control"  >
@@ -196,6 +186,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						
 					
 					</div>
+				</div>
 				</div>
 			</div>
 		</div>

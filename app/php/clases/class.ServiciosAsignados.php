@@ -33,7 +33,7 @@ class ServiciosAsignados
 
 	public function ObtenerHorariosServicio()
 	{
-		$sql="SELECT *FROM horariosservicio  WHERE idservicio='$this->idservicio'
+		$sql="SELECT *FROM horariosservicio INNER JOIN zonas ON horariosservicio.idzona=zonas.idzona WHERE idservicio='$this->idservicio'
 		 ";
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

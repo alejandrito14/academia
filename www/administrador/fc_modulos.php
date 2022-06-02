@@ -36,7 +36,7 @@ try
     z-index: 10;           
      right: 0;        
      margin-right: 2em;width: 74%;">
-			<button type="button" onClick="var resp=MM_validateForm('nombre','','R'); if(resp==1){ GuardarEspecial('alta_modulos','administrador/ga_md_modulosMenu.php','administrador/vi_modulos.php','main');}" class="btn btn-success" style="float: right;" <?php echo $disabled; ?>>Guardar</button>
+			<button type="button" style="float:right;"  onClick="var resp=MM_validateForm('nombre','','R'); if(resp==1){ GuardarEspecial('alta_modulos','administrador/ga_md_modulosMenu.php','administrador/vi_modulos.php','main');}" class="btn btn-success" >Guardar</button>
 			
 			<button type="button" onClick="aparecermodulos('administrador/vi_modulos.php','main');" class="btn btn-primary" style="float: right;margin-right: 10px;">VER LISTADO</button>
 </div>
@@ -63,7 +63,7 @@ try
 			</div>
 		</div>
 		
-		<div class="card-footer">
+		<div class="">
 			<input type="hidden" name="tipo" id="tipo" value="2" />
     		<input type="hidden" name="idmodulo" id="idmodulo" value="<?php echo $idmodulo;?>" />
 			

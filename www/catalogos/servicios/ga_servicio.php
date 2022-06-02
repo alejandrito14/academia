@@ -99,7 +99,8 @@ try
 	$emp->modalidadpago=$_POST['v_modalidadpago']!='undefined'?$_POST['v_modalidadpago']:0;
 	$emp->periodo=$_POST['v_perido']!='undefined'? $_POST['v_perido']:0;
 	$emp->numparticipantes=$_POST['v_numparticipantes'];
-	
+	$emp->numparticipantesmax=$_POST['v_numparticipantesmax'];
+
 
 
 	//Validamos si hacermos un insert o un update

@@ -64,7 +64,7 @@ try{
 	<form name="f_configuracion" id="f_configuracion">
 		<div class="card">
 				<div class="card-body">
-					<h4 class="card-title m-b-0">CONFIGURACI&Oacute;N DE LA EMPRESA</h4>
+					<h4 class="card-title m-b-0" style="float: left;">CONFIGURACI&Oacute;N DE LA EMPRESA</h4>
 
 					<div style="float: right;position: fixed!important;    
     z-index: 10;           

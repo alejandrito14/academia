@@ -79,8 +79,13 @@ input[type=number]::-webkit-outer-spin-button {
 input[type=number] { -moz-appearance:textfield; }
 
 .activohorario{
-    font-weight: bold;
-    color: black!important;
+/*    font-weight: bold;
+*/    background: white!important;
+    color: gray!important;
+   /* /* filter: brightness(50%); 
+
+      opacity: 0.5;
+    filter: alpha(opacity=50);*/ /* For IE8 and earlier */
 }
 
 .botonesenmovi{
@@ -89,4 +94,43 @@ input[type=number] { -moz-appearance:textfield; }
     z-index: 10;           
      right: 0;        
      margin-right: 2em;width: 74%;
+}
+
+
+.btn_colorgray2{
+     background-color:#acacac;
+    border: 1px solid #FFFFFF;
+    color:#ffffff;
+
+}
+
+.btn_colorgray3{
+     background-color:#eeeff0;
+    border: 1px solid #FFFFFF;
+    color:#9c9c9c;
+
+}
+
+.btn_colorgray2:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show>.btn-primary.dropdown-toggle {
+    color: #fff;
+    background-color: #4c32e9;
+    border-color: #4226e8;
+}
+
+.colordesactivo{
+    color: #b4b7bf;
+}
+.inputrequerido{
+
+     border: 1px solid red;
+}
+
+.badge1{
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    float: right;
+    top: 2px;
+    margin-top: 0.3em;
+    
 }

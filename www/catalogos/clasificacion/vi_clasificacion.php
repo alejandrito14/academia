@@ -26,27 +26,27 @@ $lista_empresas = $_SESSION['se_liempresas']; //variables de sesion
 
 //Importación de clase conexión
 require_once("../../clases/conexcion.php");
-require_once("../../clases/class.Espacios.php");
+require_once("../../clases/class.Clasificacion.php");
 require_once("../../clases/class.Botones.php");
 require_once("../../clases/class.Funciones.php");
 
 //Declaración de objeto de clase conexión
 $db = new MySQL();
-$espacios = new Espacios();
+$clasificacion = new Clasificacion();
 $bt = new Botones_permisos(); 
 $f = new Funciones();
 
-$espacios->db = $db;
+$clasificacion->db = $db;
 
 
 //obtenemos todas las empreas que puede visualizar el usuario.
 
-$espacios->tipo_usuario = $tipousaurio;
-$espacios->lista_empresas = $lista_empresas;
+$clasificacion->tipo_usuario = $tipousaurio;
+$clasificacion->lista_empresas = $lista_empresas;
 
-$l_espacios = $espacios->ObtenerTodosEspacios();
-$l_espacios_row = $db->fetch_assoc($l_espacios);
-$l_espacios_num = $db->num_rows($l_espacios);
+$l_clasificacion = $clasificacion->ObtenerTodosclasificacion();
+$l_clasificacion_row = $db->fetch_assoc($l_clasificacion);
+$l_clasificacion_num = $db->num_rows($l_clasificacion);
 
 /*======================= INICIA VALIDACIÓN DE RESPUESTA (alertas) =========================*/
 
@@ -84,7 +84,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
 <div class="card">
 	<div class="card-body">
-		<h5 class="card-title" style="float: left;">LISTADO DE ESPACIOS</h5>
+		<h5 class="card-title" style="float: left;">LISTADO DE CLASIFICACIÓN</h5>
 		
 		<div style="float:right;">
 			<button type="button" onClick="abrir_filtro('modal-filtros');" class="btn btn-primary" style="float: right;display: none;"><i class="mdi mdi-account-search"></i>  BUSCAR</button>			
@@ -92,13 +92,13 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 			<?php
 		
 				//SCRIPT PARA CONSTRUIR UN BOTON
-				$bt->titulo = "NUEVO ESPACIO";
+				$bt->titulo = "NUEVO";
 				$bt->icon = "mdi-plus-circle";
-				$bt->funcion = "aparecermodulos('catalogos/espacios/fa_espacio.php?idmenumodulo=$idmenumodulo','main');";
+				$bt->funcion = "aparecermodulos('catalogos/clasificacion/fa_clasificacion.php?idmenumodulo=$idmenumodulo','main');";
 				$bt->estilos = "float: right; margin-right:10px;";
 				$bt->permiso = $permisos;
 				$bt->tipo = 5;
-				$bt->title="NUEVO BANCO";
+				$bt->title="NUEVO";
 				
 
 				$bt->armar_boton();
@@ -114,14 +114,13 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
 <div class="card">
 	<div class="card-body">
-		<div class="table-responsive" id="contenedor_espacios">
-			<table id="tbl_espacios" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
+		<div class="table-responsive" id="contenedor_clasificacion">
+			<table id="tbl_clasificacion" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
 				<thead>
 					<tr>
 						 
 						<th style="text-align: center;">NOMBRE </th> 
-						<th style="text-align: center;">LUGAR</th>
-						<th style="text-align: center;">UBICACIÓN</th>
+						
 						<th style="text-align: center;">ESTATUS</th>
 						<th style="text-align: center;">ACCI&Oacute;N</th>
 					</tr>
@@ -129,7 +128,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 				<tbody>
 					
 					<?php
-					if($l_espacios_num== 0){
+					if($l_clasificacion_num== 0){
 						?>
 						<tr> 
 							<td colspan="6" style="text-align: center">
@@ -144,18 +143,17 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 							<tr>
 							
 						
-							<td style="text-align: center;"><?php echo $l_espacios_row['nombre'];?></td>
-							<td style="text-align: center;"><?php echo $l_espacios_row['lugar'];?></td>
-							<td style="text-align: center;"><?php echo $l_espacios_row['ubicacion'];?></td>
-							<td style="text-align: center;"><?php echo $estatus[$l_espacios_row['estatus']];?></td>
+							<td style="text-align: center;"><?php echo $l_clasificacion_row['nombre'];?></td>
+							
+							<td style="text-align: center;"><?php echo $estatus[$l_clasificacion_row['estatus']];?></td>
 
 							<td style="text-align: center; font-size: 15px;">
 
 									<?php
-													//SCRIPT PARA CONSTRUIR UN BOTON
+							//SCRIPT PARA CONSTRUIR UN BOTON
 									$bt->titulo = "";
 									$bt->icon = "mdi-table-edit";
-									$bt->funcion = "aparecermodulos('catalogos/espacios/fa_espacio.php?idmenumodulo=$idmenumodulo&idespacio=".$l_espacios_row['idespacio']."','main')";
+									$bt->funcion = "aparecermodulos('catalogos/clasificacion/fa_clasificacion.php?idmenumodulo=$idmenumodulo&idclasificacion=".$l_clasificacion_row['idclasificacion']."','main')";
 									$bt->estilos = "";
 									$bt->permiso = $permisos;
 									$bt->tipo = 2;
@@ -171,7 +169,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
 							</tr>
 							<?php
-						}while($l_espacios_row = $db->fetch_assoc($l_espacios));
+						}while($l_clasificacion_row = $db->fetch_assoc($l_clasificacion));
 					}
 					?>
 				</tbody>
@@ -183,7 +181,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
 
 <script type="text/javascript">
-	 $('#tbl_espacios').DataTable( {		
+	 $('#tbl_clasificacion').DataTable( {		
 		 	"pageLength": 100,
 			"oLanguage": {
 						"sLengthMenu": "Mostrar _MENU_ ",

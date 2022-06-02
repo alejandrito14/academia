@@ -24,6 +24,7 @@ require_once("../../clases/conexcion.php");
 require_once("../../clases/class.CategoriasServicios.php");
 require_once("../../clases/class.Funciones.php");
 require_once("../../clases/class.Botones.php");
+require_once("../../clases/class.Clasificacion.php");
 
 $idmenumodulo = $_GET['idmenumodulo'];
 
@@ -32,12 +33,14 @@ $db = new MySQL();
 $emp = new CategoriasServicios();
 $f = new Funciones();
 $bt = new Botones_permisos();
-
+$clasificacion=new Clasificacion();
+$clasificacion->db=$db;
 $emp->db = $db;
 
 $emp->tipo_usuario = $tipousaurio;
 $emp->lista_empresas = $lista_empresas;
 
+$obtenerclasificacion=$clasificacion->ObtenerListado();
 //Validamos si cargar el formulario para nuevo registro o para modificacion
 if(!isset($_GET['idcategoriasservicio'])){
 	//El formulario es de nuevo registro
@@ -70,7 +73,7 @@ if(!isset($_GET['idcategoriasservicio'])){
 
 	//DATOS GENERALES
 	$categoriasservicio=$f->imprimir_cadena_utf8($result_categoriasservicio_row['nombrecategoria']);
-	$tipo=$result_categoriasservicio_row['tipo'];
+	$idclasificacion=$result_categoriasservicio_row['idclasificacion'];
 	$estatus = $f->imprimir_cadena_utf8($result_categoriasservicio_row['estatus']);
 	$intervalo=$result_categoriasservicio_row['intervalo'];
 
@@ -178,9 +181,20 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<label>*TIPO:</label>
 								<select name="v_tipo" id="v_tipo" class="form-control">
 									<option value="0">SELECCIONAR TIPO</option>
-									<option value="1">NIÑO</option>
-									<option value="2">ADULTO</option>
-									<option value="3">TODOS</option>
+
+									<?php 
+										if (count($obtenerclasificacion)) {
+											
+											for ($i=0; $i <count($obtenerclasificacion) ; $i++) {  ?>
+												
+												<option value="<?php echo $obtenerclasificacion[$i]->idclasificacion?>"><?php echo $obtenerclasificacion[$i]->nombre; ?></option>
+									<?php
+											}
+										}
+
+									 ?>
+									
+								
 								</select>
 							</div>
 
@@ -215,11 +229,11 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 <script>
 	
 	var idcategoriasservicio='<?php echo $idcategoriasservicio; ?>';
-
+	$("#v_tipo").val(0);
 	if (idcategoriasservicio>0) {
-		var tipo='<?php echo $tipo;  ?>';
+		var idclasificacion='<?php echo $idclasificacion;  ?>';
 
-		$("#v_tipo").val(tipo);
+		$("#v_tipo").val(idclasificacion);
 	}
 
 </script>

@@ -37,6 +37,28 @@ class Zonas
 		return $array;
 	}
 
+	public function ObtZonasActivosConcat()
+	{
+		$sql = "SELECT GROUP_CONCAT(idzona) as idzonas FROM zonas WHERE estatus = 1";
+		
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+	
+
 	public function ObtenerTodosZonas()
 	{
 		$query="SELECT * FROM zonas ";

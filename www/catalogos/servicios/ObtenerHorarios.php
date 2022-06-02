@@ -55,7 +55,8 @@ try
 	$viernes=$_POST['viernes'];
 	$sabado=$_POST['sabado'];
 	$domingo=$_POST['domingo'];
-	$v_zonas=explode(',',$_POST['v_zonas']);
+	$obtenerzonas=$zonas->ObtZonasActivosConcat();
+	$v_zonas=explode(',',$obtenerzonas[0]->idzonas);
 	$v_fechainicial=$_POST['v_fechainicial'];
 	$v_fechafinal=$_POST['v_fechafinal'];
 	$dias="";
@@ -202,12 +203,13 @@ try
 			//var_dump($arreglodiasfechas);die();
 			$zonasarray = $v_zonas;
 			$arraydiaszonas=array();
+			$arraydatoszona=array();
 			for ($h=0; $h <count($zonasarray); $h++) { 
 				# code...
 				$horarioservicio->idzona=$zonasarray[$h];
 				$zonas->idzona=$zonasarray[$h];
 				$datoszona=$zonas->ObtenerZona();
-				
+				array_push($arraydatoszona, $datoszona[0]);
 
 			for ($i=0; $i <count($arreglodiasfechas) ; $i++) {
 
@@ -307,6 +309,7 @@ $arreglodiasfechas[$i]['horasposibles'][0][$j]['disponible']=0;
 	//var_dump($arreglodiasfechas);
 
 	$respuesta['respuesta']=$arraydiaszonas;
+	$respuesta['zonas']=$arraydatoszona;
 
 	echo json_encode($respuesta);
 

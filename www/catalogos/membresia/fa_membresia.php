@@ -136,7 +136,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 <form id="f_membresia" name="f_membresia" method="post" action="">
 	<div class="card">
 		<div class="card-body">
-			<h4 class="card-title m-b-0" style="float: left;"><?php echo $titulo; ?></h4>
+			<h4 class="card-title m-b-0" style="float:left;"><?php echo $titulo;?></h4>
 
 			<div style="float: right;position: fixed!important;    
     z-index: 10;           

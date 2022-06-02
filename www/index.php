@@ -1228,6 +1228,7 @@ $navegador = $f->navegador();
 <script src="js/fn_categoriasservicios.js"></script>
 <script src="js/fn_asignarusuarioservicio.js"></script>
 <script src="js/fn_tutor.js"></script>
+<script src="js/fn_clasificacion.js"></script>
 
 
  <!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -1253,16 +1254,16 @@ $navegador = $f->navegador();
 
 <script src="js/fn_codigopostal.js?<?php echo time(); ?>"></script>
 
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script src="https://cdn.ckeditor.com/4.14.1/standard-all/ckeditor.js"></script>
+<!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
+<!-- <script src="https://cdn.ckeditor.com/4.14.1/standard-all/ckeditor.js"></script> -->
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css"> -->
 
 <!-- Latest compiled and minified JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script> -->
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.13.4/jquery.mask.min.js"></script>
-
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.13.4/jquery.mask.min.js"></script>
+ -->
 
 <div class="alert alert-primary" role="alert" style="display: none">
   A simple primary alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.

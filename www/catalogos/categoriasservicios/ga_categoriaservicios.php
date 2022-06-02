@@ -43,7 +43,7 @@ try
 	$categoriasservicio->idcategoriasservicio = trim($_POST['id']);
 	$categoriasservicio->nombre = trim($f->guardar_cadena_utf8($_POST['v_categoriasservicio']));
 	$categoriasservicio->estatus=trim($f->guardar_cadena_utf8($_POST['v_estatus']));
-	$categoriasservicio->tipo=$_POST['v_tipo'];
+	$categoriasservicio->idclasificacion=$_POST['v_tipo'];
 	$categoriasservicio->intervalo=$_POST['v_intervalo'];
 	
 	//Validamos si hacermos un insert o un update

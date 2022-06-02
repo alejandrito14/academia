@@ -36,17 +36,18 @@ try
 
 <form id="alta_modulos" method="post" action="">
 	<div class="card">
-		<div class="card-header">
-			<h5 class="card-title m-b-0">EDITAR MENÚ</h5>
+		<div class="card-body">
+			<h5 class="card-title m-b-0" style="float: left;">EDITAR MENÚ</h5>
 
-			<div style="float: right;">
-				<button type="button" onClick="var resp=MM_validateForm('nombre','','R','archivo','','R','ubi','','R'); if(resp==1){ GuardarEspecial('alta_modulos','administrador/ga_md_modulosMenu.php','administrador/vi_modulos.php','main');}" class="btn btn-success alt_btn" style="float: right;" <?php echo $disabled; ?>>Guardar</button>
+				<div style="float:right;position: fixed!important; z-index: 10; right: 0; 
+     margin-right: 2em;width: 74%;">
+				<button type="button" style="float:right;"class="btn btn-success alt_btn"  onClick="var resp=MM_validateForm('nombre','','R','archivo','','R','ubi','','R'); if(resp==1){ GuardarEspecial('alta_modulos','administrador/ga_md_modulosMenu.php','administrador/vi_modulos.php','main');}"  >Guardar</button>
 	 		
-				<button type="button" style="margin-right: 10px;" onClick="aparecermodulos('administrador/vi_modulos.php','main');" class="btn btn-primary" style="float: right;">VER LISTADO</button>
-				<div style="clear: both;"></div>
-
+			<button type="button" style="float: right;" onClick="aparecermodulos('administrador/vi_modulos.php','main');" class="btn btn-primary" >VER LISTADO</button>
+				
 				</div>
-			
+			<div style="clear: both;"></div>
+
 		</div>
 		<div class="card-body">
 			<div class="form-group m-t-20">

@@ -23,6 +23,8 @@ try
 
 	
 	$obtenerservicio=$lo->ObtenerServicioAsignado();
+	$lo->idservicio=$obtenerservicio[0]->idservicio;
+	$obtenerhorarios=$lo->ObtenerHorariosServicio();
 
 
 	$respuesta['respuesta']=$obtenerservicio[0];

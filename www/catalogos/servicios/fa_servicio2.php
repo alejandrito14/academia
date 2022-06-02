@@ -84,14 +84,6 @@ if(!isset($_GET['idservicio'])){
 	$ver = "display:none;";
 	$titulo='NUEVO SERVICIO';
 	$costo="";
-	$obtenerorden=$emp->ObtenerUltimoOrdenservicio();
-	$roworden=$db->fetch_assoc($obtenerorden);
-	$num=$db->num_rows($obtenerorden);
-	if ($num>0) {
-		$orden=$roworden['ordenar']+1;
-	}else{
-		$orden=0;
-	}
 
 }else{
 	//El formulario funcionara para modificacion de un registro
@@ -132,7 +124,7 @@ if(!isset($_GET['idservicio'])){
 	$sabado=$result_SERVICIO_row['sabado'];
 	$domingo=$result_SERVICIO_row['domingo'];
 	$numeroparticipantes=$result_SERVICIO_row['numeroparticipantes'];
-	$numeroparticipantesmax=$result_SERVICIO_row['numeroparticipantesmax'];
+
 	$col = "col-md-12";
 	$ver = "";
 		$titulo='EDITAR SERVICIO';
@@ -179,27 +171,29 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 //*================== TERMINA RECIBIMOS PARAMETRO DE PERMISOS =======================*/
 
 ?>
-<div id="idmenumodulo" style="display: none;"><?php echo $idmenumodulo; ?></div>
 
 <form id="f_servicio" name="f_servicio" method="post" action="">
 	<div class="card">
 		<div class="card-body">
-		<h4 class="card-title m-b-0" style="float: left;"><?php echo $titulo; ?></h4>
+			<h4 class="card-title m-b-0" style="float: left;"><?php echo $titulo; ?></h4>
 
-		<div style="float: right;position:fixed!important;z-index:10;right:0;margin-right:2em;width: 20%;">
+			<div style="float: right;position: fixed!important;    
+    z-index: 10;           
+     right: 0;        
+     margin-right: 2em;width: 74%;">
 				
 				<?php
 			
 					//SCRIPT PARA CONSTRUIR UN BOTON
 					$bt->titulo = "GUARDAR";
 					$bt->icon = "mdi mdi-content-save";
-					$bt->funcion = " Guardarservicio('f_servicio','catalogos/servicios/vi_servicios.php','main','$idmenumodulo');";
-					$bt->estilos = "float:right;";
+					$bt->funcion = "var resp=MM_validateForm('v_titulo','','R'); if(resp==1){ Guardarservicio('f_servicio','catalogos/servicios/vi_servicios.php','main','$idmenumodulo');}";
+					$bt->estilos = "float: right;";
 					$bt->permiso = $permisos;
-					$bt->class='btn btn-success btnguardarservicio';
+					$bt->class='btn btn-success';
 				
 					//validamos que permiso aplicar si el de alta o el de modificacion
-				if($idservicio == 0)
+				if($idPagos == 0)
 					{
 						$bt->tipo = 1;
 					}else{
@@ -209,46 +203,20 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					$bt->armar_boton();
 				?>
 				
-			
+				<!--<button type="button" onClick="var resp=MM_validateForm('v_empresa','','R','v_direccion','','R','v_tel','','R','v_email','',' isEmail R'); if(resp==1){ GuardarEmpresa('f_empresa','catalogos/empresas/fa_empresas.php','main');}" class="btn btn-success" style="float: right;"><i class="mdi mdi-content-save"></i>  GUARDAR</button>-->
 				
 				<button type="button" onClick="aparecermodulos('catalogos/servicios/vi_servicios.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" style="float: right; margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
 				<div style="clear: both;"></div>
 				
 				<input type="hidden" id="id" name="id" value="<?php echo $idservicio; ?>" />
 			</div>
-
-
-			
 			<div style="clear: both;"></div>
 		</div>
 	</div>
 	
-
-
-	<ul class="nav nav-tabs" id="myTab" role="tablist">
-  <li class="nav-item" role="presentation">
-    <button onclick="ActivarTab(this,'home')" class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true" onclick="">CONFIGURAR SERVICIO</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button type="button"  class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">SELECCIONAR DÍAS</button>
-
-<!--     onclick="ActivarTab(this,'profile')"
- -->  </li>
-  <li class="nav-item" role="presentation">
-    <button type="button"  class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">ASIGNAR HORARIOS</button>
-
-<!--     onclick="ActivarTab(this,'contact')"
- -->  </li>
-
-   <li class="nav-item" role="presentation">
-    <button  type="button" class="nav-link" id="costos-tab" data-bs-toggle="tab" data-bs-target="#costos" type="button" role="tab" aria-controls="costos" aria-selected="false">ASIGNAR COSTOS</button>
-
-<!--     onclick="ActivarTab(this,'costos')"
- -->  </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-  		<div class="">
+	
+	<div class="row">
+		<div class="<?php echo $col; ?>">
 			<div class="card">
 				<div class="card-header" style="padding-bottom: 0; padding-right: 0; padding-left: 0; padding-top: 0;">
 					<!--<h5>DATOS</h5>-->
@@ -257,6 +225,9 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 				<div class="card-body">
 					
+					
+					<div class="tab-content tabcontent-border">
+						<div class="tab-pane active show" id="generales" role="tabpanel">
 
 						<div class="col-md-6" >
 
@@ -277,390 +248,6 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								            </div>
 								          <!--   <input type="button" class="btn btn-primary upload" value="Subir"> -->
 								        </div>
-								    </div>
-								</form>
-
-									<p style="text-align: center;">Dimensiones de la imagen Ancho:640px Alto:360px</p>
-								</div>
-
-							<div class="col-md-6">
-							<div class="form-group m-t-20">
-								<label>*TÍTULO:</label>
-								<input type="text" class="form-control" id="v_titulo" name="v_titulo" value="<?php echo $titulo1; ?>" title="TÍTULO" placeholder='TÍTULO'>
-							</div>
-
-							<div class="form-group m-t-20">
-								<label>*DESCRIPCIÓN:</label>
-								<textarea name="v_descripcion" id="v_descripcion" placeholder="DESCRIPCIÓN" class="form-control"><?php echo $descripcion; ?></textarea>
-							</div>
-							
-						
-
-							<div class="form-group m-t-20">
-								<label for="">*TIPO DE SERVICIO:</label>
-								<select name="v_categoria" id="v_categoria" onchange="SeleccionarCategoria(0)" class="form-control">
-									<option value="0" >SELECCIONAR TIPO DE SERVICIO</option>
-
-									<?php if (count($obtenercat)){
-
-										for ($i=0; $i <count($obtenercat) ; $i++) {  ?>
-											<option value="<?php echo $obtenercat[$i]->idcategorias;?>"><?php echo $obtenercat[$i]->titulo; ?></option>
-										
-										
-									<?php 
-									}
-								} ?>
-									
-								</select>
-							</div>
-
-							<div class="form-group m-t-20">
-								<label>*ORDEN:</label>
-								<input type="number" class="form-control" id="v_orden" name="v_orden" value="<?php echo $orden; ?>" title="ORDEN" placeholder='ORDEN'>
-							</div>
-
-						<div class="form-group m-t-20">
-							<label>ESTATUS:</label>
-							<select name="v_estatus" id="v_estatus" title="Estatus" class="form-control"  >
-								<option value="0" <?php if($estatus == 0) { echo "selected"; } ?> >DESACTIVO</option>
-								<option value="1" <?php if($estatus == 1) { echo "selected"; } ?> >ACTIVO</option>
-							</select>
-						</div>
-
-						</div>
-							
-						</div>
-						
-			
-			</div>
-		</div>
-
-  </div>
-  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-  		<div class="card" id="divdias"  >
-				<div class="card-header" style="margin-top: 1em;">
-					<h5>DIAS</h5>
-				</div>
-				<div class="card-body">
-					<div class="col-md-6">
-						
-						<div class="form-group m-t-20">
-								<label for="" id="lbldias">*SELECCIONAR DIAS:</label>
-
-								<div id="leyenda" style="margin-bottom: 1em;"></div>
-								 <div class="form-group m-t-20">
-								 	    <div class="btn-group btn-group-toggle d-flex flex-column flex-md-row" data-toggle="buttons">
-
-								 	 <label class="btn btn_colorgray2 lbldomingo">
-								    <input type="checkbox" id="Domingo" class="diasckeckbox" value="0"> Domingo
-								  </label>
-
-
-								 	 <label class="btn btn_colorgray2 lbllunes">
-								   <input type="checkbox" id="Lunes" class="diasckeckbox" value="1"> Lunes
-								  </label>
-
-
-								   <label class="btn btn_colorgray2 lblmartes">
-								  <input type="checkbox" id="Martes" class="diasckeckbox" value="2"> Martes
-								  </label>
-
-								   <label class="btn btn_colorgray2 lblmiercoles">
-								 <input type="checkbox" id="Miercoles" class="diasckeckbox" value="3"> Miércoles
-								  </label>
-
-								   <label class="btn btn_colorgray2 lbljueves">
-								 <input type="checkbox" id="Jueves" class="diasckeckbox" value="4"> Jueves
-								  </label>
-
-								   <label class="btn btn_colorgray2 lblviernes">
-								<input type="checkbox" id="Viernes" class="diasckeckbox" value="5"> Viernes
-								  </label>
-
-								   <label class="btn btn_colorgray2 lblsabado">
-								<input type="checkbox" id="Sabado" class="diasckeckbox" value="6"> Sábado
-								  </label>
-
-
-
-								</div>
-
-									
-								</div>
-								<!--  <div class="form-group m-t-20">
-									<input type="checkbox" id="Lunes" class="diasckeckbox" value="1"> Lunes
-								</div> -->
-								<!-- <div class="form-group m-t-20">
-								<input type="checkbox" id="Martes" class="diasckeckbox" value="2"> Martes
-								</div> -->
-								<!-- <div class="form-group m-t-20">
-								<input type="checkbox" id="Miercoles" class="diasckeckbox" value="3"> Miércoles
-								</div> -->
-								<!-- <div class="form-group m-t-20">
-								<input type="checkbox" id="Jueves" class="diasckeckbox" value="4"> Jueves
-								</div> -->
-								<!-- <div class="form-group m-t-20">
-								<input type="checkbox" id="Viernes" class="diasckeckbox" value="5"> Viernes
-							</div> -->
-						<!-- 	<div class="form-group m-t-20">
-									<input type="checkbox" id="Sabado" class="diasckeckbox" value="6"> Sábado
-								</div> -->
-
-							</div>
-							
-
-
-					</div>
-				</div>
-
-			</div>
-
-
-			<div class="card" id="divcategoria" style="">
-				<div class="card-header" style="margin-top: 1em;">
-					<h5>ASIGNAR CATEGORÍA</h5>
-				</div>
-				<div class="card-body">
-					<div class="col-md-6">
-						
-						<div class="form-group m-t-20">
-								<label for="">*CATEGORIA:</label>
-								<select name="v_categoriaservicio" id="v_categoriaservicio" class="form-control">
-									<option value="0" >SELECCIONAR CATEGORÍA</option>
-
-									<?php
-
-									 if (count($obtenercateservicios)){
-
-										for ($i=0; $i <count($obtenercateservicios) ; $i++) {  ?>
-											<option value="<?php echo $obtenercateservicios[$i]->idcategoriasservicio;?>"><?php echo $obtenercateservicios[$i]->nombrecategoria; ?></option>
-										
-								
-										
-									<?php 
-									}
-								} ?>
-									
-								</select>
-							</div>
-							
-
-
-					</div>
-				</div>
-
-			</div>
-
-  </div>
-  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-  	<div class="card" style="" id="divhorarios">
-				<div class="card-header" style="margin-top: 1em;">
-					<h5>ASIGNAR HORARIOS</h5>
-
-				</div>
-				<div class="card-body">
-						<div class="row">
-							<div class="col-md-12">
-
-								<div id="leyendahorarios" style="margin-left: 1em;margin-bottom: 1em;">Selecciona la fecha inicial y final para elegir el periodo del servicio </div>
-
-							<div class="col-md-3" style="float:left;">
-							<div class="form-group m-t-20">
-								<label>*FECHA INICIAL:</label>
-								<input type="date" class="form-control" id="v_fechainicial" name="v_fechainicial" value="<?php echo $fechainicial; ?>" title="FECHA INICIAL" placeholder='FECHA INICIAL'>
-							</div>
-
-						</div>
-						<div class="col-md-3" style="float:left;">
-							<div class="form-group m-t-20">
-								<label>*FECHA FINAL:</label>
-								<input type="date" class="form-control" id="v_fechafinal" name="v_fechafinal" value="<?php echo $fechafinal; ?>" title="FECHA FINAL" placeholder='FECHA FINAL'>
-							</div>
-						</div>
-
-						<div class="col-md-3" style="float:left;">
-							<button type="button" style="    margin-top: 2em;" onclick="HorariosDisponibles()" class="btn btn-primary">APLICAR</button>
-						</div>
-
-						</div>
-					</div>
-
-
-						<div style="margin-top: 3em;display: none;" id="calendario" >
-
-							 <div id="picker"></div>
-					    <div class="row">
-					    	<div class="col-md-4">
-					        <label>Fechas/Horas Seleccionadas:</label>
-					        <div id="selected-dates" class="list-group"></div>
-					        </div>
-					    </div>
-
-
-					</div>
-				</div>
-			</div>
-
-
-
-  </div>
-
-
-   <div class="tab-pane fade" id="costos" role="tabpanel" aria-labelledby="profile-tab">
-   			 <div class="card"  id="divmodalidadcobro" style="">
-				<div class="card-header" style="margin-top: 1em;">
-					<h5>ASIGNAR COSTO</h5>
-
-				</div>
-				<div class="card-body">
-
-						<div class="col-md-6" >
-
-							   <div class="form-group m-t-20">
-								<label for="">No. PARTICIPANTES MÍNIMO:</label>
-								<input type="number" id="v_numparticipantesmin" class="form-control" value="<?php echo $numeroparticipantesmin; ?>" placeholder="NÚMERO DE PARTICIPANTES" title="NÚMERO DE PARTICIPANTES MÍNIMO">
-
-							</div>
-
-
-
-							   <div class="form-group m-t-20">
-								<label for="">No. PARTICIPANTES MÁXIMO:</label>
-								<input type="number" id="v_numparticipantesmax" class="form-control" value="<?php echo $numeroparticipantes; ?>" placeholder="NÚMERO DE PARTICIPANTES" title="NÚMERO DE PARTICIPANTES MÁXIMO">
-
-							</div>
-
-						</div>
-					</div>
-				</div>
-
-				<div class="card">
-
-				<div class="card-header" style="">
-							<h5>*MODALIDAD DE COBRO:</h5>
-
-						</div>
-
-				<div class="card-body">
-					<div id="divmodalidad" class="row">	
-						<div class="col-md-6 divmodo">
-							<div class="form-group m-t-20">
-							<label for=""></label>
-				
-							</div>
-
-						<div class="form-group" style="float: left;width: 30%;padding-left: 1em;">
-								 	<div class="form-check">
-					               
-					                  <input type="radio" class="form-check-input " name="v_grupo" value="1" id="v_individual" style="" >
-					                   <label class="form-check-label" style=" padding-top: 0.3em;">
-										MONTO FIJO
-					                </label>
-				                </div>
-				              </div>
-
-
-				              <div class="form-group" style="float: left;width: 30%;">
-								 	<div class="form-check">
-					                 <input type="radio" class="form-check-input " name="v_grupo" value="2" id="v_grupal" style="" >
-					                   <label class="form-check-label" style=" padding-top: 0.3em;">
-										MONTO DIVIDIDO
-					                </label>
-				                </div>
-				              </div>
-				          </div>
-				      </div>
-				     
-
-
-				          <div class="row">
-				          	<div class="col-md-6">
-							<div class="form-group m-t-20" id="preciounitariodiv" style="padding-top: 1em;">
-								<label for="">*PRECIO UNITARIO $:</label>
-								<input type="number" id="v_costo" class="form-control" value="<?php echo $costo; ?>" placeholder="PRECIO UNITARIO" title="PRECIO UNITARIO">
-
-							</div>
-
-							</div>
-							</div>
-						</div>
-					</div>
-								
-
-							
-				           <div class="card">
-
-							<div class="card-header" style="">
-							<h5 id="lblperiodos">*PERIODOS DE COBRO:</h5>
-
-							</div>
-
-							<div class="card-body">
-						
-				              		 <button class="btn btn-primary" id="btnperiodo" type="button" style=" margin-top: -1em;margin-bottom: 1em;" onclick="AgregarPeriodo()">NUEVO PERIODO</button>
-				              </div>
-
-				              <div class="row" style="float: left;width: 50%;">
-
-				              </div>
-
-
-
-						</div>
-
-						<div style="    margin-left: 1em;" id="periodos"></div>
-					</div>
-		
-
-				</div>
-
-			<div class="card" style="" id="divperiodos">
-		
-				<div class="card-body">
-						<div style="">
-						
-
-					</div>
-				</div>
-			</div>
-	</div>
-
-   </div>
-
-</div>
-
-	
-	<!-- <div class="row">
-		<div class="<?php echo $col; ?>">
-			<div class="card">
-				<div class="card-header" style="padding-bottom: 0; padding-right: 0; padding-left: 0; padding-top: 0;">
-
-				</div> -->
-
-			<!-- 	<div class="card-body">
-					
-					
-					
-
-						<div class="col-md-6" >
-
-									<form method="post" action="#" enctype="multipart/form-data">
-								    <div class="card" style="width: 18rem;margin: auto;margin-top: 3em;">
-								        <img class="card-img-top" src="">
-								        <div id="d_foto" style="text-align:center; ">
-											<img src="<?php echo $ruta; ?>" class="card-img-top" alt="" style="border: 1px #777 solid"/> 
-										</div>
-								        <div class="card-body">
-								            <h5 class="card-title"></h5>
-								           
-								            <div class="form-group">
-
-								            	
-								               
-								                <input type="file" class="form-control-file" name="image" id="image" onchange="SubirImagenservicio()">
-								            </div>
-								           <input type="button" class="btn btn-primary upload" value="Subir"> -->
-								      <!--   </div>
 								    </div>
 								</form>
 
@@ -712,9 +299,13 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						</div>
 
 						</div>
-							 -->
+							
+						</div>
 						
-				<!-- </div>
+						
+					
+					</div>
+				</div>
 			</div>
 
 		
@@ -758,8 +349,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				</div>
 
 			</div>
- -->
-	<!-- 	<div class="card" id="divcategoria" style="display: none;">
+
+		<div class="card" id="divcategoria" style="display: none;">
 				<div class="card-header">
 					<h5>ASIGNAR CATEGORÍA</h5>
 				</div>
@@ -792,9 +383,9 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					</div>
 				</div>
 
-			</div> -->
+			</div>
 
-		<!-- 	<div class="card" style="display: none;" id="divzonas">
+			<div class="card" style="display: none;" id="divzonas">
 				<div class="card-header" style="">
 					<h5>ASIGNAR ESPACIO</h5>
 
@@ -830,7 +421,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					</div>
 			</div>
 	
- -->
+
 
 			<!-- <div class="card" id="divmodalidadpago" style="display: none; padding-bottom: 1em;">
 
@@ -885,7 +476,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 			</div> -->
 
-			<!-- <div class="card" style="display: none;" id="divhorarios">
+			<div class="card" style="display: none;" id="divhorarios">
 				<div class="card-header" style="">
 					<h5>ASIGNAR HORARIOS</h5>
 
@@ -930,8 +521,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					</div>
 				</div>
 			</div>
- -->
-<!-- 
+
+
 			<div class="card"  id="divmodalidadcobro" style="display: none;">
 				<div class="card-header" style="">
 					<h5>ASIGNAR COSTO</h5>
@@ -973,7 +564,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<input type="number" id="v_numparticipantes" class="form-control" value="<?php echo $numeroparticipantes; ?>" placeholder="NÚMERO DE PARTICIPANTES" title="NÚMERO DE PARTICIPANTES">
 
 							</div>
- -->
+
 
 
 				          
@@ -996,12 +587,12 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 					</div> -->
 
-<!-- 
+
 							<div class="form-group m-t-20" id="preciounitariodiv" style="display: none;">
 								<label for="">*PRECIO UNITARIO $:</label>
 								<input type="number" id="v_costo" class="form-control" value="<?php echo $costo; ?>" placeholder="PRECIO UNITARIO" title="PRECIO UNITARIO">
 
-							</div> -->
+							</div>
 
 
 							<!-- <div class="form-group m-t-20" id="montopargarparticipante" style="display: none;">
@@ -1016,7 +607,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<input type="number" id="v_montopagargrupo" class="form-control" value="<?php echo $costo; ?>" placeholder="MONTO" title="MONTO">
 
 							</div> -->
-<!-- 
+
 							<div class="form-group" style="float: left;width: 50%;display: none;">
 								 	<div class="form-check">
 					               
@@ -1042,11 +633,15 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 						</div>
 					</div>
-		 -->
+		
 
 
-			<!-- <div class="card" style="" id="divperiodos">
-			
+			<div class="card" style="" id="divperiodos">
+				<!-- <div class="card-header" style=""> -->
+					<!-- <h5>PERIODOS</h5>
+ -->
+				<!-- </div> -->
+
 				 <h5 style="margin-left: 2.5em;">PERIODOS DE PAGO</h5>
 				<div class="card-body">
 						<div style="margin-top: 3em">
@@ -1069,9 +664,9 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					</div>
 				</div>
 			</div>
-	</div> -->
+	</div>
 
-			<!-- <div class="card" style="display: none;" id="divparticipantes">
+			<div class="card" style="display: none;" id="divparticipantes">
 				<div class="card-header" style="">
 					<h5>ASIGNAR PARTICIPANTES</h5>
 					<h5>CANTIDAD A ELEGIR <span id="cantidadparticipantes"></span></h5>
@@ -1108,12 +703,12 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							</div>
 					</div>
 			</div>
- -->
+
 			
 
 
 
-			<!-- <div class="card" style="display: none;" id="divcoachs">
+			<div class="card" style="display: none;" id="divcoachs">
 				<div class="card-header" style="">
 					<h5>ASIGNAR COACHS</h5>
 
@@ -1148,7 +743,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								</div>
 							</div>
 					</div>
-			</div> -->
+			</div>
 
 		</div>
 
@@ -1156,9 +751,6 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 	</div>
 </form>
 <script>
-	$("#profile-tab").css('display','none');
-	$("#contact-tab").css('display','none');
-	$("#costos-tab").css('display','none');
 
 	
 	var idservicio='<?php echo $idservicio?>';
@@ -1175,7 +767,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 		$("#v_categoriaservicio").val(idcategoria);
 
-		 SeleccionarCategoria(idservicio);
+		 SeleccionarCategoria();
 		 Obtenerparticipantes(3,idservicio);
 		 ObtenerZonas(idservicio);
 		 ObtenerCoachs(5,idservicio);
@@ -1190,10 +782,6 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		 	 $("#v_grupal").attr('checked',true);
 		 }
 
-		 
-		 var numparticipantes='<?php echo $numeroparticipantes; ?>';
-		 var numparticipantesmax='<?php echo $numeroparticipantesmax; ?>';
-
 		var totalclases='<?php echo $totalclases; ?>';
 		var montopagarparticipante='<?php echo $montopagarparticipante; ?>';
 		var montopagargrupo	='<?php echo $montopagargrupo ?>';
@@ -1203,8 +791,6 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		$("#v_costo").val(precio);
 		$("#v_montopagarparticipante").val(montopagarparticipante);
 		$("#v_montopagargrupo").val(montopagargrupo);
-		$("#v_numparticipantesmin").val(numparticipantes);
-		$("#v_numparticipantesmax").val(numparticipantesmax);
 
 		var modalidadpago='<?php echo $modalidadpago; ?>';
 		var periodo='<?php echo $periodo; ?>';
@@ -1229,37 +815,25 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		var domingo='<?php echo $domingo; ?>';
 
 		if (lunes==1) {
-			//$("#Lunes").attr('checked',true);
-			$(".lbllunes").addClass('active');
+			$("#Lunes").attr('checked',true);
 		}
 		if (martes==1) {
-			//$("#Martes").attr('checked',true);
-			$(".lblmartes").addClass('active');
+			$("#Martes").attr('checked',true);
 		}
 		if (miercoles==1) {
-			//$("#Miercoles").attr('checked',true);
-			$(".lblmiercoles").addClass('active');
-
+			$("#Miercoles").attr('checked',true);
 		}
 		if (jueves==1) {
-			//$("#Jueves").attr('checked',true);
-			$(".lbljueves").addClass('active');
-
+			$("#Jueves").attr('checked',true);
 		}
 		if (viernes==1) {
-			//$("#Viernes").attr('checked',true);
-			$(".lblviernes").addClass('active');
-
+			$("#Viernes").attr('checked',true);
 		}
 		if (sabado==1) {
-			//$("#Sabado").attr('checked',true);
-			$(".lblsabado").addClass('active');
-
+			$("#Sabado").attr('checked',true);
 		}
 		if (domingo==1) {
-			//$("#Domingo").attr('checked',true);
-			$(".lbldomingo").addClass('active');
-
+			$("#Domingo").attr('checked',true);
 		}
 
 		var fechainicial='<?php echo $fechainicial; ?>';
@@ -1272,8 +846,6 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 		ObtenerPeriodos(idservicio);
 
-	}else{
-		arraydiaseleccionados=[];
 	}
 	CambioPeriodo();
 	
@@ -1312,9 +884,6 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 </script>
 
 <script>
-
-
-
   function cargarinputperiodos() {
     	// body...
   

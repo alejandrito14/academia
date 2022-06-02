@@ -43,6 +43,7 @@ class Servicios
 	public $sabado;
 	public $domingo;
 	public $numparticipantes;
+	public $numparticipantesmax;
 
 	public function ObtenerServicios()
 	{
@@ -106,8 +107,10 @@ class Servicios
 		viernes,
 		sabado,
 		domingo,
-		numeroparticipantes
-		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes')";
+		numeroparticipantes,
+		numeroparticipantesmax
+		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax')";
+
 
 		$resp=$this->db->consulta($query);
 		$this->idservicio = $this->db->id_ultimo();
@@ -140,7 +143,9 @@ class Servicios
 		viernes='$this->viernes',
 		sabado='$this->sabado',
 		domingo='$this->domingo',
-		numeroparticipantes='$this->numparticipantes'
+		numeroparticipantes='$this->numparticipantes',
+		numeroparticipantesmax='$this->numparticipantesmax'
+
 		WHERE idservicio=$this->idservicio";
 
 		
@@ -481,6 +486,15 @@ class Servicios
 		}
 		
 		return $array;
+	}
+
+	public function ObtenerUltimoOrdenservicio()
+	{
+		$query="SELECT MAX(orden) as ordenar FROM servicios";		
+		$resp=$this->db->consulta($query);
+		
+		//echo $total;
+		return $resp;
 	}
 }
 

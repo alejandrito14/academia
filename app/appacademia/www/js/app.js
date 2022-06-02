@@ -1670,7 +1670,7 @@ $$(document).on('page:init', '.page[data-name="servicios"]', function (e) {
 $$(document).on('page:init', '.page[data-name="detalleservicio"]', function (e) {
   
   regresohome();
-  //ObtenerServicioAsignado();
+  ObtenerServicioAsignado();
  
 });
 

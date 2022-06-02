@@ -224,7 +224,7 @@ if(!isset($_GET['idusuarios']))
 		$checkedhabilitar="checked";
 
 	}
-	$titulo='EDITAR usuario';
+	$titulo='EDITAR ALUMNO';
 
 
 	
