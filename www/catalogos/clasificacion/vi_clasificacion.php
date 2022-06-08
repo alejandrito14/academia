@@ -164,6 +164,20 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
 									?>
 
+										<?php
+						//SCRIPT PARA CONSTRUIR UN BOTON
+								$bt->titulo = "";
+								$bt->icon = "mdi-delete-empty";
+								$bt->funcion = "BorrarClasificacion('".$l_clasificacion_row['idclasificacion']."','idclasificacion','clasificacion','n','catalogos/clasificacion/vi_clasificacion.php','main','$idmenumodulo')";
+
+								$bt->estilos = "";
+								$bt->permiso = $permisos;
+								$bt->tipo = 3;
+								$bt->title="BORAR";
+
+								$bt->armar_boton();
+							?>
+
 								</td>
 
 

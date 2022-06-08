@@ -30,10 +30,7 @@ try
 	<div class="card">
 		<div class="card-body">
 			<h5 class="card-title m-b-0" style="float: left;">NUEVO</h5>
-			<div style="position: fixed!important;    
-    z-index: 10;           
-     right: 0;        
-     margin-right: 2em;width: 74%;">
+			<div style="float: right;position:fixed!important;z-index:10;right:0;margin-right:2em;width: 20%;">
 			<button type="button" onClick="var resp=MM_validateForm('nombre','','R'); if(resp==1){ if(Validar_Check()==1)
             { GuardarEspecial4('alta_perfil','administrador/ga_md_perfiles.php','administrador/vi_perfiles.php','main');}}" class="btn btn-success alt_btn" style="float: right;" <?php echo $disabled; ?>><i class="mdi mdi-content-save"></i> Guardar</button>
             

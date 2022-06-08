@@ -292,6 +292,29 @@ var routes = [
     componentUrl:'./pages/membresia.html',
 
   },
+
+       // evaluacion servicio
+  {
+    path: '/evaluacionesservicio/',
+    componentUrl:'./pages/evaluacionesservicio.html',
+
+  },
+
+  // comentarios servicio
+  {
+    path: '/comentariosservicio/',
+    componentUrl:'./pages/comentariosservicio.html',
+
+  },
+
+   {
+    path: '/elegirparticipantes/',
+    componentUrl:'./pages/elegirparticipantes.html',
+
+  },
+
+
+  
   
    {
     path: '/token/',

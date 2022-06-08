@@ -45,9 +45,25 @@ class Servicios
 	public $numparticipantes;
 	public $numparticipantesmax;
 
+	public $abiertocliente;
+	public $abiertocoach;
+	public $abiertoadmin;
+	public $ligarclientes;
+	public $tiempoaviso;
+	public $tituloaviso;
+	public $descripcionaviso;
+	public $politicascancelacion;
+	public $reembolso;
+	public $cantidadreembolso;
+	public $asignadocliente;
+	public $asignadocoach;
+	public $asignadoadmin;
+
 	public function ObtenerServicios()
 	{
-		$sql="SELECT *FROM servicios ORDER BY orden asc";
+		$sql="SELECT servicios.*,categorias.titulo as nombrecategoria FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio ORDER BY orden asc";
+
+	/*	$sql="SELECT * FROM servicios  ORDER BY orden asc";*/
 
 		$resp=$this->db->consulta($sql);
 		return $resp;
@@ -108,9 +124,22 @@ class Servicios
 		sabado,
 		domingo,
 		numeroparticipantes,
-		numeroparticipantesmax
-		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax')";
+		numeroparticipantesmax,
+		abiertocliente,
+		abiertocoach,
+		abiertoadmin,
+		ligarcliente,
+		tiempoaviso,
+		tituloaviso,
+		descripcionaviso,
+		politicascancelacion,
+		reembolso,
+		cantidadreembolso,
+		asignadocliente,
+		asignadocoach,
+		asignadoadmin
 
+		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin')";
 
 		$resp=$this->db->consulta($query);
 		$this->idservicio = $this->db->id_ultimo();
@@ -144,11 +173,22 @@ class Servicios
 		sabado='$this->sabado',
 		domingo='$this->domingo',
 		numeroparticipantes='$this->numparticipantes',
-		numeroparticipantesmax='$this->numparticipantesmax'
-
+		numeroparticipantesmax='$this->numparticipantesmax',
+		abiertocliente='$this->abiertocliente',
+		abiertocoach='$this->abiertocoach',
+		abiertoadmin='$this->abiertoadmin',
+		ligarcliente='$this->ligarclientes',
+		tiempoaviso='$this->tiempoaviso',
+		tituloaviso='$this->tituloaviso',
+		descripcionaviso='$this->descripcionaviso',
+		politicascancelacion='$this->politicascancelacion',
+		reembolso='$this->reembolso',
+		cantidadreembolso='$this->cantidadreembolso',
+		asignadocliente='$this->asignadocliente',
+		asignadocoach='$this->asignadocoach',
+		asignadoadmin='$this->asignadoadmin'
 		WHERE idservicio=$this->idservicio";
 
-		
 
 		$resp=$this->db->consulta($query);
 	}

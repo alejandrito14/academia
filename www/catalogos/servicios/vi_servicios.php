@@ -95,13 +95,13 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 			<?php
 		
 				//SCRIPT PARA CONSTRUIR UN BOTON
-				$bt->titulo = "NUEVO SERVICIO";
+				$bt->titulo = "NUEVO";
 				$bt->icon = "mdi-plus-circle";
 				$bt->funcion = "aparecermodulos('catalogos/servicios/fa_servicio.php?idmenumodulo=$idmenumodulo','main');";
 				$bt->estilos = "float: right; margin-right:10px;";
 				$bt->permiso = $permisos;
 				$bt->tipo = 5;
-				$bt->title="NUEVO SERVICIO";
+				$bt->title="NUEVO";
 				
 
 				$bt->armar_boton();
@@ -123,6 +123,9 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 					<tr>
 						 
 						<th style="text-align: center;">TÍTULO </th> 
+
+						<th style="text-align: center;">IMÁGEN </th> 
+						<th style="text-align: center;">FORMATO DE SERVICIO </th> 
 						<th style="text-align: center;">ORDEN </th> 
 						<th style="text-align: center;">ESTATUS</th>
 
@@ -150,6 +153,15 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 							
 							<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($l_Servicios_row['titulo']);?></td>
 
+						 <td style="text-align: center;">
+		                    <?php 
+		                     $img='./catalogos/servicios/imagenes/'.$_SESSION['codservicio'].'/'.$f->imprimir_cadena_utf8($l_Servicios_row['imagen']);
+
+		                     ?>
+		                     <img src="<?php echo $img; ?>" alt=""style="width: 400px;">
+		                   </td>
+
+							<td style="text-align: center;"><?php echo $l_Servicios_row['nombrecategoria'];?></td>
 							
 
 							<td style="text-align: center;"><?php echo $l_Servicios_row['orden'];?></td>

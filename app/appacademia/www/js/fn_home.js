@@ -52,7 +52,7 @@ function CargarDatos() {
 	Obtenerpublicidad(1);
 	ObtenerConfiguracion();
 	
-	socket=io.connect(globalsockect, { transports : ["websocket"],rejectUnauthorized: false });
+	/*socket=io.connect(globalsockect, { transports : ["websocket"],rejectUnauthorized: false });
     socket.on('connect', function (data) 
 	{
        socket.emit('conectado', { customId:iduser,tipouser:1 });
@@ -61,7 +61,7 @@ function CargarDatos() {
 	{
     	console.log("mensaje respuesta");
     	PintarMensaje(data);
-	});
+	});*/
 }
 
 function CargarDatosAdmin(argument) {
@@ -510,11 +510,13 @@ function PintarServiciosAsignados(respuesta) {
                     <p class="text-color-theme no-margin-bottom">`+respuesta[i].titulo+`</p>
 
                     `;
-                    horarios=respuesta[i].horarios;
+                  //  horarios=respuesta[i].horarios;
                     	var horarioshtml="";
-                    	for (var j = 0; j < horarios.length; j++) {
-                    		horarioshtml+=`<span>`+horarios[j].diasemana.slice(0,3) +` `+horarios[j].horainicial+` - `+horarios[j].horafinal+` Hrs.</span></br>`;
-                    	}
+                    	//for (var j = 0; j < horarios.length; j++) {
+                    		if (respuesta[i].fechaproxima!='') {
+                    		horarioshtml+=`<span>`+respuesta[i].fechaproxima+` `+respuesta[i].horainicial+` - `+respuesta[i].horafinal+` Hrs.</span></br>`;
+                    		}
+                    	//}
 
                     html+=`
                     <p class="text-muted size-12">`+horarioshtml+`</p>

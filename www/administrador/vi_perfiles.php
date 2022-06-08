@@ -51,7 +51,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 ?>
 <div class="card">
 	<div class="card-body">
-		<h5 class="card-title">LISTADO DE PERFILES</h5>	
+		<h5 class="card-title" style="float: left;">LISTADO DE PERFILES</h5>	
 		
 		<?php
 			//SCRIPT PARA CONSTRUIR UN BOTON

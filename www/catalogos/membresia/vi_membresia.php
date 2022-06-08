@@ -160,7 +160,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
         <thead>
           <tr>
              
-            <th style="text-align: center;">TITULO</th> 
+            <th style="text-align: center;">TÍTULO</th> 
 
             <th style="text-align: center;">ESTATUS</th>
 

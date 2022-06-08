@@ -84,7 +84,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		<tr style="text-align: center">
 <!-- 			<th>ID</th> 
  -->			<th>NOMBRE</th> 
-			<th>ORDEN</th> 
+ 			    <th>IMÁGEN</th> 
+ 			     <th>AVANZADO</th> 
+
+				<th>ORDEN</th> 
 				<th>ESTATUS</th> 
 
 			<th>ACCI&Oacute;N</th>
@@ -108,6 +111,22 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 			<tr>
 			   <!--  <td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($resultado_empresas_row['idcategorias']); ?></td> -->
 				<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($resultado_empresas_row['titulo']); ?></td>
+
+
+                  <td style="text-align: center;">
+                    <?php 
+                     $img='./catalogos/categorias/imagenes/'.$_SESSION['codservicio'].'/'.$f->imprimir_cadena_utf8($resultado_empresas_row['foto']);
+
+                     ?>
+                     <img src="<?php echo $img; ?>" alt=""style="width: 400px;">
+                   </td>
+
+                   <td style="text-align: center;"><?php 
+
+                   	$ressul=$resultado_empresas_row['avanzado']=='1'?'SI':'NO';
+
+                   echo $f->imprimir_cadena_utf8(	$ressul); ?></td>
+
 				<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($resultado_empresas_row['orden']); ?></td>
 				
 				<td style="text-align: center;"><?php echo $estatus[$resultado_empresas_row['estatus']];?></td>

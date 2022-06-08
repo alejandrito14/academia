@@ -29,9 +29,9 @@
 }
 
 #myc-prev-week {
-    border: 1px solid #e0e0e0;
+    border: 1px solid #485e71;
     border-radius: 80px;
-    color: #e0e0e0;
+    color: #485e71;
     cursor: pointer;
     float: left;
     font-size: 1.6em;
@@ -39,19 +39,25 @@
     height: 40px;
     text-align: center;
     width: 40px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.9;
 }
 
 #myc-next-week {
-    border: 1px solid #e0e0e0;
+     border: 1px solid #485e71;
     border-radius: 80px;
-    color: #e0e0e0;
+    color: #485e71;
     cursor: pointer;
-    float: right;
+    float: left;
     font-size: 1.6em;
     font-weight: lighter;
     height: 40px;
     text-align: center;
     width: 40px;
+    display: flex;
+    justify-content: center;
+    line-height: 1.9;
 }
 
 #myc-prev-week:hover, #myc-next-week:hover {

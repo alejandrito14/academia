@@ -94,7 +94,7 @@ $(document).ready(function() {
   
 
 
-var produccion = 0;
+var produccion = 1;
 
  
 
@@ -1678,8 +1678,8 @@ $$(document).on('page:init', '.page[data-name="detalleservicio"]', function (e) 
   ObtenerServicioAsignado();
   $$("#abrirpantallacali").attr('onclick','PantallaCalificacion()');
   $$("#Abrirchat").attr('onclick','ElegirParticipantesChat()');
-
- 
+  $$("#btncalendario").attr('onclick','FechasServicio()');
+  Verificarcantidadhorarios();
 });
 
 $$(document).on('page:init', '.page[data-name="aceptacionservicio"]', function (e) {

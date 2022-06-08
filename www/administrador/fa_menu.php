@@ -31,13 +31,10 @@ try
 		<div class="card-body">
 			<h5 class="card-title m-b-0" style="float: left;">NUEVO MENÚ</h5>
 			
-			<div style="float: right;position: fixed!important;    
-    z-index: 10;           
-     right: 0;        
-     margin-right: 2em;width: 74%;">
-			<button type="button" onClick="var resp=MM_validateForm('nombre','','R','archivo','','R','ubi','','R','nivel','','RisNum'); if(resp==1){ GuardarEspecial('alta_modulos','administrador/ga_md_modulosMenu.php','administrador/vi_modulos.php','main');}" class="btn btn-success alt_btn" style="float: right;" <?php echo $disabled; ?>>Guardar</button>
+			<div style="float: right;position:fixed!important;z-index:10;right:0;margin-right:2em;width: 20%;">
+			<button type="button" onClick="var resp=MM_validateForm('nombre','','R','archivo','','R','ubi','','R','nivel','','RisNum'); if(resp==1){ GuardarEspecial('alta_modulos','administrador/ga_md_modulosMenu.php','administrador/vi_modulos.php','main');}" class="btn btn-success alt_btn" style="float: right;" <?php echo $disabled; ?>><i class="mdi mdi-content-save"></i>Guardar</button>
 
-			<button type="button" onClick="aparecermodulos('administrador/vi_modulos.php','main');" class="btn btn-primary" style="float: right;">VER LISTADO</button>
+			<button type="button" onClick="aparecermodulos('administrador/vi_modulos.php','main');" class="btn btn-primary" style="float: right;margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
 
 			</div>
 			<div style="clear: both;"></div>

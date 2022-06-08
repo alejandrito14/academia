@@ -174,6 +174,24 @@ class Zonas
 		return $array;
 	}
 
+
+	public function VerificarRelacionclasificacion()
+	{
+		$query="SELECT * FROM servicios_zonas WHERE idzona=".$this->idzona;
+
+		$resp=$this->db->consulta($query);
+		
+		//echo $total;
+		return $resp;
+	}
+
+	public function Borrarzona()
+	{
+		$sql="DELETE FROM zonas WHERE idzona='$this->idzona'";
+		
+		$resp = $this->db->consulta($sql);
+		return $resp;
+	}
 	
 
 }

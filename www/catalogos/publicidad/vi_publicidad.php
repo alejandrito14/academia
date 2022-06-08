@@ -160,7 +160,8 @@ $estatus=array('DESACTIVADO','ACTIVADO');
         <thead>
           <tr>
              
-            <th style="text-align: center;">TITULO</th> 
+            <th style="text-align: center;">TÍTULO</th> 
+            <th style="text-align: center;">IMÁGEN</th> 
 
             <th style="text-align: center;">ESTATUS</th>
 
@@ -188,7 +189,14 @@ $estatus=array('DESACTIVADO','ACTIVADO');
               
               <td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($l_Publicidad_row['titulo']);?></td>
 
-                
+                <td style="text-align: center;">
+                    <?php 
+                     $img='./catalogos/publicidad/imagenes/'.$_SESSION['codservicio'].'/'.$f->imprimir_cadena_utf8($l_Publicidad_row['imagen']);
+
+                     ?>
+
+                     <img src="<?php echo $img; ?>" alt=""style="width: 400px;">
+                   </td>
             
               <td style="text-align: center;"><?php echo $estatus[$l_Publicidad_row['estatus']];?></td>
 

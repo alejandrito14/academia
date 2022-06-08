@@ -35,7 +35,11 @@ class CategoriasServicios
 
 	public function ObtenerTodoscategoriasservicio()
 	{
-		$query="SELECT * FROM categoriasservicio ";
+		$query="SELECT nombrecategoria,
+	idcategoriasservicio,
+	categoriasservicio.idclasificacion,
+	clasificacion.nombre,
+	categoriasservicio.estatus,intervalo FROM categoriasservicio INNER JOIN clasificacion ON categoriasservicio.idclasificacion = clasificacion.idclasificacion ";
 		$resp=$this->db->consulta($query);
 		
 		//echo $total;
@@ -87,6 +91,14 @@ class CategoriasServicios
 	}
 
 	
+	public function ObtenerClasificacion($idclasificacion)
+	{
+		$query="SELECT * FROM clasificacion WHERE idclasificacion ";
+		$resp=$this->db->consulta($query);
+		
+		//echo $total;
+		return $resp;
+	}
 
 
 	

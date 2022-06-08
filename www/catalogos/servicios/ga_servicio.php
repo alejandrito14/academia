@@ -101,6 +101,20 @@ try
 	$emp->numparticipantes=$_POST['v_numparticipantes'];
 	$emp->numparticipantesmax=$_POST['v_numparticipantesmax'];
 
+	$emp->abiertocliente=$_POST['abiertocliente'];
+	$emp->abiertocoach=$_POST['abiertocoach'];
+	$emp->abiertoadmin=$_POST['abiertoadmin'];
+	$emp->ligarclientes=$_POST['ligarclientes'];
+	$emp->tiempoaviso=$_POST['v_tiempoaviso'];
+	$emp->tituloaviso=$_POST['v_tituloaviso'];
+	$emp->descripcionaviso=$_POST['v_descripcionaviso'];
+	$emp->politicascancelacion=$_POST['v_politicascancelacion'];
+	$emp->reembolso=$_POST['v_reembolso'];
+	$emp->cantidadreembolso=$_POST['v_cantidadreembolso'];
+	$emp->asignadocliente=$_POST['v_asignadocliente'];
+	$emp->asignadocoach=$_POST['v_asignadocoach'];
+	$emp->asignadoadmin=$_POST['v_asignadoadmin'];
+
 
 
 	//Validamos si hacermos un insert o un update

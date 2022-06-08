@@ -122,6 +122,8 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 					<tr>
 						 
 						<th style="text-align: center;">NOMBRE </th> 
+						<th style="text-align: center;">CLASIFICACIÓN </th>
+						<th style="text-align: center;">INTERVALO (MINUTOS) </th> 
 					
 						<th style="text-align: center;">ESTATUS</th>
 
@@ -149,6 +151,9 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 							
 							<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($l_categoriasservicio_row['nombrecategoria']);?></td>
 
+							<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($l_categoriasservicio_row['nombre']);?></td>
+
+							<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($l_categoriasservicio_row['intervalo']);?></td>
 						
 							<td style="text-align: center;"><?php echo $estatus[$l_categoriasservicio_row['estatus']];?></td>
 

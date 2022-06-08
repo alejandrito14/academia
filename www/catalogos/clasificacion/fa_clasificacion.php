@@ -111,10 +111,12 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 <form id="f_Clasificacion" name="f_Clasificacion" method="post" action="">
 	<div class="card">
-		<div class="card-body">
-			<h4 class="card-title m-b-0" style="float: left;"><?php echo $titulo; ?></h4>
+		<div class="card-body" style="">
 
-			<div style="float: right;">
+			
+			<h5 class="card-title m-b-0" style="float: left;"><?php echo $titulo; ?></h5>
+
+			<div style="float: right;position:fixed!important;z-index:10;right:0;margin-right:2em;width: 20%;">
 				
 				<?php
 			
@@ -194,8 +196,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 	</div>
 </form>
-<script  type="text/javascript" src="./js/mayusculas.js"></script>
-
+<!-- <script  type="text/javascript" src="./js/mayusculas.js"></script>
+ -->
 
 
 <?php

@@ -7,6 +7,8 @@ header('Access-Control-Allow-Origin: *');
 require_once("clases/conexcion.php");
 require_once("clases/class.Servicios.php");
 require_once("clases/class.Funciones.php");
+require_once("clases/class.Fechas.php");
+
 //require_once("clases/class.MovimientoBitacora.php");
 /*require_once("clases/class.Sms.php");
 require_once("clases/class.phpmailer.php");
@@ -19,6 +21,7 @@ try
 	$db = new MySQL();
 	$lo = new Servicios();
 	$f=new Funciones();
+	$fechas=new Fechas();
 
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
@@ -26,6 +29,32 @@ try
 	$lo->estatus=$_POST['estatus'];
 	
 	$obtenerservicios=$lo->ObtenerServicios();
+
+	for ($i=0; $i <count($obtenerservicios) ; $i++) { 
+		
+		$lo->idservicio=$obtenerservicios[$i]->idservicio;
+		$horarios=$lo->ObtenerHorariosAgrupadoServicio();
+
+		//$obtenerservicios[$i]->horarios=$horarios;
+		$arreglohorarios=array();
+
+		for ($j=0; $j < count($horarios); $j++) { 
+				
+		$diasemana=$fechas->diaarreglo($horarios[$j]->dia);
+		$horainicio1=date('H:i',strtotime($horarios[$j]->horainicial));
+		$horafinal1=date('H:i',strtotime($horarios[$j]->horafinal));
+
+		$arreglo=array('diasemana'=>$diasemana,'horainicial'=>$horainicio1,'horafinal'=>$horafinal1);
+
+		array_push($arreglohorarios,$arreglo);
+
+		}
+	 $obtenerservicios[$i]->horarios=$arreglohorarios;
+
+
+
+
+	}
 
 
 

@@ -123,6 +123,8 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 					<tr>
 						 
 						<th style="text-align: center;">TÍTULO </th> 
+						<th style="text-align: center;">IMAGEN </th> 
+
 						<th style="text-align: center;">ORDEN </th> 
 						<th style="text-align: center;">ESTATUS</th>
 
@@ -150,6 +152,15 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 							
 							<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($l_Entradas_row['titulo']);?></td>
 
+							 <td style="text-align: center;">
+                    <?php 
+                     $img='./catalogos/entradas/imagenes/'.$_SESSION['codservicio'].'/'.$f->imprimir_cadena_utf8($l_Entradas_row['imagen']);
+
+
+
+                     ?>
+                     <img src="<?php echo $img; ?>" alt=""style="width: 400px;">
+                   </td>
 							
 
 							<td style="text-align: center;"><?php echo $l_Entradas_row['orden'];?></td>

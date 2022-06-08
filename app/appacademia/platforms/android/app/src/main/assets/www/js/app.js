@@ -120,6 +120,7 @@ if (produccion == 0) {
     var urlimagenes = "http://localhost:8888/is-academia/www/catalogos/"; 
     var urlimagendefault="http://localhost:8888/is-academia/www/images/sinfoto.png";
     var urlimagenlogo="http://localhost:8888/is-academia/www/images/sinimagenlogo.png";
+    var globalsockect="http://localhost:3400/";
 
 } else {
     var codigoserv="109/";
@@ -127,7 +128,7 @@ if (produccion == 0) {
     var urlimagenes = "https://issoftware1.com.mx/IS-ACADEMIA/catalogos/"; 
     var urlimagendefault="https://issoftware1.com.mx/IS-ACADEMIA/images/sinimagen.png"
     var urlimagenlogo="https://issoftware1.com.mx/IS-ACADEMIA/images/sinimagenlogo.png";
-
+    var globalsockect="";
 }
  
 function Cargar() {
@@ -440,7 +441,11 @@ $$(document).on('page:init', '.page[data-name="home"]', function (e) {
      $$(".iniciotab").attr('onclick','CargarInicio()');
       ObtenerMembresiaActivas();
 
+
+
   var pregunta=localStorage.getItem('pregunta');
+
+
  
     if (pregunta==0) {
 
@@ -1672,7 +1677,9 @@ $$(document).on('page:init', '.page[data-name="detalleservicio"]', function (e) 
   regresohome();
   ObtenerServicioAsignado();
   $$("#abrirpantallacali").attr('onclick','PantallaCalificacion()');
- 
+  $$("#Abrirchat").attr('onclick','ElegirParticipantesChat()');
+  $$("#btncalendario").attr('onclick','FechasServicio()');
+  Verificarcantidadhorarios();
 });
 
 $$(document).on('page:init', '.page[data-name="aceptacionservicio"]', function (e) {
@@ -1682,3 +1689,37 @@ $$(document).on('page:init', '.page[data-name="aceptacionservicio"]', function (
   regresohome();
 
 });
+
+
+$$(document).on('page:init', '.page[data-name="evaluacionesservicio"]', function (e) {
+  $(".regreso").attr('href','/detalleservicio/');
+
+
+});
+
+$$(document).on('page:init', '.page[data-name="comentariosservicio"]', function (e) {
+  
+  $(".regreso").attr('href','/detalleservicio/');
+
+});
+
+$$(document).on('page:init', '.page[data-name="elegirparticipantes"]', function (e) {
+  
+ $(".regreso").attr('href','/detalleservicio/');
+ ObtenerParticipantes();
+
+  $$("#btnIniciarChat").attr('onclick','IniciarChat()');
+
+});
+
+$$(document).on('page:init', '.page[data-name="messages"]', function (e) {
+  
+ $(".regreso").attr('href','/detalleservicio/');
+
+ CargarFunciones();
+
+});
+
+/*$$(document).on('page:init', '.page[data-name="messages"]', function (e) {
+
+});*/

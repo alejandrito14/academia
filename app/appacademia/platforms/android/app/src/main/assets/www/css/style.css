@@ -2278,3 +2278,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     border-radius: 10px;
     */
 }
+
+.iconosestrella{
+
+  font-size: 30px;
+}
+.oculto{
+  display: none;
+}
+
+.colorestrella{
+  color: orange;
+}

@@ -422,7 +422,7 @@ $navegador = $f->navegador();
         <!-- ============================================================== -->
         <!-- footer -->
         <!-- ============================================================== -->
-        <footer class="footer text-center">
+        <footer class="footer text-center" style="color: #bdc3c8;">
            Copyright &copy; 2022 Innovative Software Services (ISS). Todos los derechos reservados.
 
 

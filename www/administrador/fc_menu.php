@@ -39,11 +39,12 @@ try
 		<div class="card-body">
 			<h5 class="card-title m-b-0" style="float: left;">EDITAR MENÚ</h5>
 
-				<div style="float:right;position: fixed!important; z-index: 10; right: 0; 
-     margin-right: 2em;width: 74%;">
-				<button type="button" style="float:right;"class="btn btn-success alt_btn"  onClick="var resp=MM_validateForm('nombre','','R','archivo','','R','ubi','','R'); if(resp==1){ GuardarEspecial('alta_modulos','administrador/ga_md_modulosMenu.php','administrador/vi_modulos.php','main');}"  >Guardar</button>
+				<div style="float: right;position:fixed!important;z-index:10;right:0;margin-right:2em;width: 20%;">
+				<button type="button" style="float:right;"class="btn btn-success alt_btn"  onClick="var resp=MM_validateForm('nombre','','R','archivo','','R','ubi','','R'); if(resp==1){ GuardarEspecial('alta_modulos','administrador/ga_md_modulosMenu.php','administrador/vi_modulos.php','main');}"  >
+					<i class="mdi mdi-content-save"></i>
+				Guardar</button>
 	 		
-			<button type="button" style="float: right;" onClick="aparecermodulos('administrador/vi_modulos.php','main');" class="btn btn-primary" >VER LISTADO</button>
+			<button type="button" style="float: right;margin-right: 10px;" onClick="aparecermodulos('administrador/vi_modulos.php','main');" class="btn btn-primary" ><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
 				
 				</div>
 			<div style="clear: both;"></div>

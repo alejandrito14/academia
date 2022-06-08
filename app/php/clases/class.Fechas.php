@@ -3,8 +3,8 @@
   {
 	  public $diasSemana = array('Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sábado');
 	  public $mesesAnho = array('','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre');
-	  public $mesesAnho3 = array('','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic');
-		
+	  public $mesesAnho3 = array('Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic');
+	 public $diasSemanaCorto = array('Dom','Lun','Mar','Mie','Jue','Vie','Sáb');	
 	
 	public function Fechas()
 	{
@@ -30,6 +30,14 @@
 	   
 	  return $this->diasSemana[$dia];
 	}
+
+	public function diaarreglocorto($dia)
+	{
+	   
+	  return $this->diasSemanaCorto[$dia];
+	}
+
+	
 	  
 	public function diames()
 	{

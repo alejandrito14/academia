@@ -62,10 +62,7 @@ if(isset($_GET['id']))
 			<h5 class="card-title m-b-0" style="float: left;"><?php echo $titulo;?></h5>
 
 			<input type="hidden" id="v_id" name="v_id" value="<?php echo $idusuario; ?>" />
-			<div style="position: fixed!important;    
-    z-index: 10;           
-     right: 0;        
-     margin-right: 2em;width: 74%;">
+			<div style="float: right;position:fixed!important;z-index:10;right:0;margin-right:2em;width: 20%;">
 			<button type="button" id="alt_btn" onClick="var resp=MM_validateForm('nombre','','R','paterno','','R','materno','','R','email','','RisEmail','usuario','','R','clave','','R'); if(resp==1){ GuardarEspecial('alta_usuario','administrador/ga_usuarios.php','administrador/vi_usuarios.php','main');}" class="btn btn-success" style="float: right;"><i class="mdi mdi-content-save"></i> GUARDAR</button>
  
 			<button type="button" onClick="aparecermodulos('administrador/vi_usuarios.php','main');" class="btn btn-primary" style="float: right;margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>

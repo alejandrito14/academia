@@ -122,7 +122,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 					<tr>
 						 
 						<th style="text-align: center;">NOMBRE </th> 
-					
+						<th style="text-align: center;">COLOR </th> 
 						<th style="text-align: center;">ESTATUS</th>
 
 						<th style="text-align: center;">ACCI&Oacute;N</th>
@@ -149,6 +149,12 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 							
 							<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($l_Zonas_row['nombre']);?></td>
 
+							<td style="text-align: center;">
+								<?php $color= $l_Zonas_row['color']; ?>
+								<div class="" style="width: 100%;height: 20px;background: <?php echo $color; ?>" ></div>
+
+							</td>
+
 						
 							<td style="text-align: center;"><?php echo $estatus[$l_Zonas_row['estatus']];?></td>
 
@@ -168,6 +174,21 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
 
 									?>
+
+										<?php
+						//SCRIPT PARA CONSTRUIR UN BOTON
+								$bt->titulo = "";
+								$bt->icon = "mdi-delete-empty";
+								$bt->funcion = "BorrarZonas('".$l_Zonas_row['idzona']."','idzona','zonas','n','catalogos/zonas/vi_zonas.php','main','$idmenumodulo')";
+
+								$bt->estilos = "";
+								$bt->permiso = $permisos;
+								$bt->tipo = 3;
+								$bt->title="BORAR";
+
+								$bt->armar_boton();
+							?>
+
 
 								</td>
 

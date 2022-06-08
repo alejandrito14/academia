@@ -66,11 +66,8 @@ try{
 				<div class="card-body">
 					<h4 class="card-title m-b-0" style="float: left;">CONFIGURACI&Oacute;N DE LA EMPRESA</h4>
 
-					<div style="float: right;position: fixed!important;    
-    z-index: 10;           
-     right: 0;        
-     margin-right: 2em;width: 74%;">
-						<button type="button" title="GUARDAR" onClick="g_Configuracion();" class="btn btn-success alt_btn" style="float: right;" <?php echo $disabled; ?>>Guardar</button>	
+					<div style="float: right;position:fixed!important;z-index:10;right:0;margin-right:2em;width: 20%;">
+						<button type="button" title="GUARDAR" onClick="g_Configuracion();" class="btn btn-success alt_btn" style="float: right;" <?php echo $disabled; ?>><i class="mdi mdi-content-save"></i>Guardar</button>	
 					</div>
 				</div>
 			<div style="clear: both;"></div>

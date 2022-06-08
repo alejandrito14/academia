@@ -86,6 +86,30 @@ class Servicios
 		return $array;
 	}
 
+	public function ObtenerHorariosAgrupadoServicio()
+	{
+		$sql="SELECT *FROM horariosservicio INNER JOIN zonas ON horariosservicio.idzona=zonas.idzona WHERE idservicio='$this->idservicio' GROUP BY dia,horainicial,horafinal ORDER BY dia asc
+		 ";
+
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
 }
 
 ?>

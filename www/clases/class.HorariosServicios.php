@@ -81,7 +81,7 @@ class HorariosServicios
 		WHERE fecha='$this->fecha' AND idzona='$this->idzona' )AS TABLA1
 		where
 		  TABLA1.horainicial BETWEEN '$this->horainicial' AND '$this->horafinal'
-		  AND
+		  OR
 		  TABLA1.horafinal BETWEEN '$this->horainicial' AND '$this->horafinal'";
 
 		  $resp = $this->db->consulta($sql);

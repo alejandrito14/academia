@@ -32,7 +32,7 @@ try
 	for ($i=0; $i <count($obtenerservicios) ; $i++) { 
 		
 		$lo->idservicio=$obtenerservicios[$i]->idservicio;
-		$horarios=$lo->ObtenerHorariosServicio();
+		/*$horarios=$lo->ObtenerHorariosAgrupadoServicio();
 
 		//$obtenerservicios[$i]->horarios=$horarios;
 		$arreglohorarios=array();
@@ -50,7 +50,43 @@ try
 		}
 	 $obtenerservicios[$i]->horarios=$arreglohorarios;
 
+*/
+	 	$obtenerhorarios=$lo->ObtenerHorariosProximo();
 
+
+		if (count($obtenerhorarios)>0) {
+			
+		
+		$diasemana=$fechas->diaarreglocorto($obtenerhorarios[0]->dia);
+
+
+		$horainicio1=date('H:i:s',strtotime($obtenerhorarios[0]->horainicial));
+		$horafinal1=date('H:i:s',strtotime($obtenerhorarios[0]->horafinal));
+
+
+
+
+		$horainicio=date('H:i',strtotime($obtenerhorarios[0]->horainicial));
+
+		$horafinal=date('H:i',strtotime($obtenerhorarios[0]->horafinal));
+
+		$fecha=$obtenerhorarios[0]->fecha;
+		$dianumero=explode('-', $fecha);
+
+
+		$obtenerservicios[$i]->fechaproxima=$diasemana.' '.$dianumero[2].'/'.$fechas->mesesAnho3[$fechas->mesdelano($fecha)-1];
+		$obtenerservicios[$i]->horainicial=$horainicio;
+		$obtenerservicios[$i]->horafinal=$horafinal;
+		$diasemananumero=$obtenerhorarios[0]->dia;
+		$dia=date('w');
+		$horaactual=date('H:i:s');
+			}
+			else{
+
+			$obtenerservicios[$i]->horainicial="";
+			$obtenerservicios[$i]->horafinal="";
+			$obtenerservicios[$i]->fechaproxima="";
+			}
 
 
 	}

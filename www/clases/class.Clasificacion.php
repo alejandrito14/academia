@@ -99,6 +99,24 @@ class Clasificacion
 		return $array;
 	}
 
+	public function VerificarRelacionclasificacion(){
+
+		$sql = "SELECT * FROM categoriasservicio WHERE idclasificacion='$this->idclasificacion'";
+	
+		$resp=$this->db->consulta($sql);
+		
+		return $resp;
+	}
+	public function Borrarclasificacion(){
+			$sql="
+		DELETE FROM clasificacion
+		 WHERE `idclasificacion` = $this->idclasificacion
+		";
+
+	
+		$resp=$this->db->consulta($sql);
+	}
+
 	
 
 }
