@@ -52,7 +52,16 @@ function CargarDatos() {
 	Obtenerpublicidad(1);
 	ObtenerConfiguracion();
 	
-	
+	socket=io.connect(globalsockect, { transports : ["websocket"],rejectUnauthorized: false });
+    socket.on('connect', function (data) 
+	{
+       socket.emit('conectado', { customId:iduser,tipouser:1 });
+    });
+ 	socket.on('mensajerespuestacliente',function (data) 
+	{
+    	console.log("mensaje respuesta");
+    	PintarMensaje(data);
+	});
 }
 
 function CargarDatosAdmin(argument) {
@@ -69,8 +78,8 @@ function CargarDatosAdmin(argument) {
 	Obtenerpublicidad(0);
 	ObtenerConfiguracion();
 	
-
-	setInterval('ObtenerAlumnosSinServicio()',2000);
+	ObtenerServiciosRegistrados();
+	//setInterval('ObtenerAlumnosSinServicio()',2000);
 
 	$(".seleccionador").css('display','block');
 }
@@ -477,14 +486,24 @@ function PintarServiciosAsignados(respuesta) {
 
 	if (respuesta.length>0) {
 		for (var i = 0; i <respuesta.length; i++) {
-			urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
+			
+			var imagen='';
+			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null) {
+
+				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+			}else{
+
+				urlimagen=localStorage.getItem('logo');
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+			}
 
 			html+=`
 				 <li class="list-item" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">
                 <div class="row">
                   <div class="col-30">
-                    <div class="avatar  shadow rounded-10 ">
-                      <img src="`+urlimagen+`" alt=""  style="width:100px;height:80px;"/>
+                    <div class="avatar  shadow rounded-10 ">`+imagen+`
+                      
                     </div>
                   </div>
                   <div class="col-60">
@@ -1234,12 +1253,7 @@ function PintarAlumnosSinServicio(respuesta) {
 
 
 		html+=`
-			 <li class="list-item">
-                <div class="row text-color-theme">
-                  <h4 style="text-align:center;">En breve el administrador te asignará tus servicios</h4>
-                </div>
-              </li>
-
+			
 
 		`;
 
@@ -1398,7 +1412,7 @@ function DetalleServicioAsignado(idusuarios_servicios) {
 			if (respuesta==0) {
 
 				GoToPage('aceptacionservicio');
-
+ 
 			}else{
 
 					GoToPage('detalleservicio');
@@ -1416,4 +1430,96 @@ function DetalleServicioAsignado(idusuarios_servicios) {
 
 
 	
+}
+
+function ObtenerServiciosRegistrados() {
+
+	var pagina = "ObtenerServicios.php";
+	var estatus=0;
+	var datos="estatus="+estatus;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+
+			var respuesta=datos.respuesta;
+			PintarServiciosRegistrados(respuesta);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+
+}
+
+function PintarServiciosRegistrados(respuesta) {
+	
+	var html="";
+
+	if (respuesta.length>0) {
+		for (var i = 0; i <respuesta.length; i++) {
+
+			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null) {
+
+				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+			}else{
+
+				urlimagen=localStorage.getItem('logo');
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+			}
+
+			html+=`
+				 <li class="list-item" onclick="VerdetalleUsuario(`+respuesta[i].idservicio+`)">
+                <div class="row">
+                  <div class="col-30">
+                    <div class="avatar  shadow rounded-10 ">
+                    `+imagen+`
+                    </div>
+                  </div>
+                  <div class="col-60">
+                    <p class="text-color-theme no-margin-bottom">`+respuesta[i].titulo+`</p>
+                    `;
+                    horarios=respuesta[i].horarios;
+                    	var horarioshtml="";
+                    	for (var j = 0; j < horarios.length; j++) {
+                    		horarioshtml+=`<span>`+horarios[j].diasemana.slice(0,3) +` `+horarios[j].horainicial+` - `+horarios[j].horafinal+` Hrs.</span></br>`;
+                    	}
+
+                    html+=`
+                    <p class="text-muted size-12">`+horarioshtml+`</p>
+                  
+                  </div>
+                  <div class="col-10">
+                    <p class=""><i style="text-align: right;
+    display: flex;
+    justify-content: right;" class="bi bi-chevron-right"></i></p>
+                    <p class="text-muted size-12"></p>
+                  </div>
+                </div>
+              </li>
+
+			`;
+		}
+
+		$$(".serviciosregistrados").html(html);
+	}else{
+
+
+		html+=`
+			
+
+		`;
+
+				$$(".serviciosregistrados").html(html);
+
+		}
 }

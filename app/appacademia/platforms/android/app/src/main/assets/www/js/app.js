@@ -1670,6 +1670,15 @@ $$(document).on('page:init', '.page[data-name="servicios"]', function (e) {
 $$(document).on('page:init', '.page[data-name="detalleservicio"]', function (e) {
   
   regresohome();
-  //ObtenerServicioAsignado();
+  ObtenerServicioAsignado();
+  $$("#abrirpantallacali").attr('onclick','PantallaCalificacion()');
  
+});
+
+$$(document).on('page:init', '.page[data-name="aceptacionservicio"]', function (e) {
+  
+ ObtenerServicioAsignado();
+ $$("#btnaceptartermino").attr('onclick','AceptarTerminos()');
+  regresohome();
+
 });

@@ -477,14 +477,24 @@ function PintarServiciosAsignados(respuesta) {
 
 	if (respuesta.length>0) {
 		for (var i = 0; i <respuesta.length; i++) {
-			urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
+			
+			var imagen='';
+			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null) {
+
+				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+			}else{
+
+				urlimagen=localStorage.getItem('logo');
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+			}
 
 			html+=`
 				 <li class="list-item" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">
                 <div class="row">
                   <div class="col-30">
-                    <div class="avatar  shadow rounded-10 ">
-                      <img src="`+urlimagen+`" alt=""  style="width:100px;height:80px;"/>
+                    <div class="avatar  shadow rounded-10 ">`+imagen+`
+                      
                     </div>
                   </div>
                   <div class="col-60">
@@ -1379,6 +1389,41 @@ function Cargarperfilfoto(argument) {
 }
 
 function DetalleServicioAsignado(idusuarios_servicios) {
-	localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
-	GoToPage('detalleservicio');
+	
+	var pagina = "VerificarAceptacion.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user+"&idusuarios_servicios="+idusuarios_servicios;
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+			localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
+
+			var respuesta=datos.respuesta;
+			if (respuesta==0) {
+
+				GoToPage('aceptacionservicio');
+ 
+			}else{
+
+					GoToPage('detalleservicio');
+
+			}
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+
+
+	
 }
