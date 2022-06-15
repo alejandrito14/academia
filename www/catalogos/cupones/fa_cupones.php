@@ -36,8 +36,9 @@ require_once "../../clases/class.Funciones.php";
 require_once "../../clases/class.Botones.php";
 require_once "../../clases/class.Sucursal.php";
 require_once "../../clases/class.AccesoEmpresa.php";
-require_once "../../clases/class.Paquetes.php";
-require_once("../../clases/class.Clientes.php");
+require_once("../../clases/class.Usuarios.php");
+require_once "../../clases/class.Servicios.php";
+
 
 //Se crean los objetos de clase
 $db = new MySQL();
@@ -46,9 +47,8 @@ $bt = new Botones_permisos();
 $acceso = new AccesoEmpresa();
 $acceso->db = $db;
 
-//////PAQUETES//////
-$paquetes=new Paquetes();
-$paquetes->db=$db;
+$servicios=new Servicios();
+$servicios->db=$db;
 
 $su = new Sucursal();
 $su->db = $db;
@@ -58,16 +58,18 @@ $obj->db = $db;
 $obj->tipo_usuario = $tipousaurio;
 $obj->lista_empresas = $lista_empresas;
 
-$cli = new Clientes();
+$cli = new Usuarios();
 $cli->db = $db;
-$r_clientes = $cli->lista_clientes();
+$r_clientes = $cli->lista_Usuarios(3);
 $a_cliente = $db->fetch_assoc($r_clientes);
 $r_clientes_num = $db->num_rows($r_clientes);
 
-$r_sucursales = $su->ObtenerTodos();
-$r_sucursales_num = $db->num_rows($r_sucursales);
-$a_sucursal = $db->fetch_assoc($r_sucursales);
 
+
+/*$r_sucursales = $su->ObtenerTodos();
+$r_sucursales_num = $db->num_rows($r_sucursales);
+$a_sucursal = $db->fetch_assoc($r_sucursales);die();
+*/
 ///VALIDAR FORMULARIO NUEVO///
 if (!isset($_GET['idcupon'])) {
     //NUEVO//
@@ -126,7 +128,7 @@ if (isset($_SESSION['permisos_acciones_erp'])) {
                 <button type="button"
                     onClick="aparecermodulos('catalogos/cupones/vi_cupones.php?idmenumodulo=<?php echo $idmenumodulo; ?>','main');"
                     class="btn btn-primary" style="float: right; margin-right: 10px;"><i
-                        class="mdi mdi-arrow-left-box"></i> LISTADO DE CUPONES </button>
+                        class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
                 <div style="clear: both;"></div>
 
                 <input type="hidden" id="id" name="id" value="<?php echo $idcupon; ?>" />
@@ -191,89 +193,55 @@ if (isset($_SESSION['permisos_acciones_erp'])) {
         </div>
     </div>
 
+ 
     <div class="card">
-		<div class="card-header">
-				<label style="font-size: 16px;">*PAQUETE(S):</label>
-			</div>
-		<div class="card-body col-md-12">
-			<div class="col-md-6" style="float: left;">
-				<div class="card-header" style="padding-left: 0.45rem;">CUPÓN VÁLIDO PARA TODOS LOS PAQUETES
-				 <input type="checkbox" id="v_tpaquetes"  name="v_tpaquetes" onchange="HabilitarDeshabilitarCheck('#lpaquetesdiv')" value="<?php ?>" title="PROMOCIÓN" placeholder='PROMOCIÓN' <?php  ?> >
-				</div>
+        <div class="card-header">
+                <label style="font-size: 16px;">*SERVICIO(S):</label>
+            </div>
+        <div class="card-body col-md-12">
+            <div class="col-md-6" style="float: left;">
+                <div class="card-header" style="padding-left: 0.45rem;">CUPÓN VÁLIDO PARA TODOS LOS SERVICIOS
+                 <input type="checkbox" id="v_tpaquetes"  name="v_tpaquetes" onchange="HabilitarDeshabilitarCheck('#lpaquetesdiv')" value="<?php ?>" title="PROMOCIÓN" placeholder='PROMOCIÓN' <?php  ?> >
+                </div>
                 <div class="card-body" id="lpaquetesdiv" style="display: block;padding-left: 0;">
-                    <div class="form-group m-t-20">	 
-						<input type="text" class="form-control" name="buscadorpaq_" id="buscadorpaq_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadorpaq_','.pasuc_')">
-				    </div>
+                    <div class="form-group m-t-20">  
+                        <input type="text" class="form-control" name="buscadorpaq_" id="buscadorpaq_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadorpaq_','.pasuc_')">
+                    </div>
                     <div class="paquetessucursales"  style="overflow:scroll;height:100px;" id="paquetessucursales_<?php echo $a_sucursal['idsucursales'];?>">
-						<?php      
-						        $r_paquetes=$paquetes->obtenerFiltro();
-				    	        $a_paquete=$db->fetch_assoc($r_paquetes);
-				    	        $contar=$db->num_rows($r_paquetes);
-						    	if ($contar>0) {
-							    	 do {
-						    		    ?>
-						    		    <div class="form-check pasuc_"  id="pasuc_x_<?php echo $a_paquete['idpaquete'];?>">
-						    			<?php 
-						    			//$idsucursal=$a_sucursal['idsucursales'];
-						    			//$idpaquete=$a_paquete['idpaquete'];
-						    			//$estacheckeado=$paquetes->ObtenerPaqueteSucursal($idsucursal,$idpaquete);
-						    			$valor="";
-						    			if ($a_paquete['estatus']==1) {
-						    
-						    			?>
-									    <input  type="checkbox" value="" class="form-check-input chkpaquete_<?php echo $idcupon;?>" id="inputpaq_<?php echo $a_paquete['idpaquete']?>_<?php echo $a_sucursal['idsucursales'];?>" <?php echo $valor; ?>>
-									    <label class="form-check-label" for="flexCheckDefault">
-									    <?php echo $a_paquete['nombrepaquete']; 
+                        <?php      
+                                $r_paquetes=$servicios->ObtenerServicios();
+                                $a_paquete=$db->fetch_assoc($r_paquetes);
+                                $contar=$db->num_rows($r_paquetes);
+                                if ($contar>0) {
+                                     do {
+                                        ?>
+                                        <div class="form-check pasuc_"  id="pasuc_x_<?php echo $a_paquete['idservicio'];?>">
+                                        <?php 
+                                        //$idsucursal=$a_sucursal['idsucursales'];
+                                        //$idpaquete=$a_paquete['idpaquete'];
+                                        //$estacheckeado=$paquetes->ObtenerPaqueteSucursal($idsucursal,$idpaquete);
+                                        $valor="";
+                                        if ($a_paquete['estatus']==1) {
+                            
+                                        ?>
+                                        <input  type="checkbox" value="" class="form-check-input chkpaquete_<?php echo $idcupon;?>" id="inputpaq_<?php echo $a_paquete['idservicio']?>" <?php echo $valor; ?>>
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <?php echo $a_paquete['titulo']; 
                                         }?>
-									  </label>
-									</div>						    		
-						    	<?php
-						    		} while ($a_paquete = $db->fetch_assoc($r_paquetes));
-     					    	 ?>
-						    	<?php
+                                      </label>
+                                    </div>                                  
+                                <?php
+                                    } while ($a_paquete = $db->fetch_assoc($r_paquetes));
+                                 ?>
+                                <?php
                                  } 
                                 ?>    
-				    </div>
+                    </div>
                     
                 </div> <!--lpaquetesdiv-->
-			</div>
-		</div>
+            </div>
+        </div>
     </div><!--card-PAQ-->
-
-	<div class="card">
-		<div class="card-header">
-				<label style="font-size: 16px;">*SUCURSAL(ES):</label>
-		</div>
-		<div class="card-body col-md-12">
-			<div class="col-md-6" style="float: left;">
-				<div class="card-header" style="padding-left: 0.45rem;">CUPÓN VÁLIDO PARA TODAS LAS SUCURSALES
-				 <input type="checkbox" id="v_tsucursales" name="v_tsucursales" onchange="HabilitarDeshabilitarCheck('#lsucursalesdiv')" value="" title="TODAS" placeholder='TODAS' <?php  ?> >
-				</div>
-                <div class="card-body" id="lsucursalesdiv" style="display: block;padding-left: 0;">
-                    <div class="form-group m-t-20">	 
-						<input type="text" class="form-control" name="buscadorsuc_" id="buscadorsuc_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadorsuc_','.suc_')">
-				    </div>
-                    <div class="sucursales"  style="overflow:scroll;height:100px;overflow-x: hidden" id="sucursales_<?php echo $a_sucursal['idsucursales'];?>">
-					    <?php     	
-							if ($r_sucursales_num>0) {	
-						    	do {
-						?>
-						    	<div class="form-check suc_"  id="suc_<?php echo $a_sucursal['idsucursales'];?>_<?php echo $a_sucursal['idsucursales'];?>">
-						    	    <?php 	
-						    			$valor="";
-						    		?>
-									  <input  type="checkbox" value="" class="form-check-input chksucursal_<?php echo $idcupon;?>" id="inputsuc_<?php echo $a_sucursal['idsucursales']?>_<?php echo $a_sucursal['idsucursales'];?>" <?php echo $valor; ?>>
-									  <label class="form-check-label" for="flexCheckDefault"><?php echo $a_sucursal['sucursal']; ?></label>
-								</div>						    		
-						    	<?php
-						    		} while ($a_sucursal = $db->fetch_assoc($r_sucursales));
-     					    	 ?>
-						    	<?php } ?>    
-				    </div>
-                </div><!--lsucursalesdiv-->
-			</div>
-		</div>
-    </div><!--card-Suc-->
 
     <div class="card">
 		<div class="card-header">
@@ -289,17 +257,17 @@ if (isset($_SESSION['permisos_acciones_erp'])) {
                     <div class="form-group m-t-20">	 
 						<input type="text" class="form-control" name="buscadorcli_?>" id="buscadorcli_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadorcli_','.cli_')">
 				    </div>
-                    <div class="clientes"  style="overflow:scroll;height:100px;overflow-x: hidden" id="clientes_<?php echo $a_cliente['idcliente'];?>">
-					    <?php     	
+                    <div class="clientes"  style="overflow:scroll;height:100px;overflow-x: hidden" id="clientes_<?php echo $a_cliente['idusuarios'];?>"> 
+					     <?php     	
 							if ($r_clientes_num>0) {	
 						    	do {
 						?>
-						    	<div class="form-check cli_"  id="cli_<?php echo $a_cliente['idcliente'];?>_<?php echo $a_cliente['idcliente'];?>">
+						    	<div class="form-check cli_"  id="cli_<?php echo $a_cliente['idusuarios'];?>_<?php echo $a_cliente['idcliente'];?>">
 						    	    <?php 	
 						    			$valor="";
                                         $nombre=mb_strtoupper($f->imprimir_cadena_utf8($a_cliente['nombre']." ".$a_cliente['paterno']." ".$a_cliente['materno']));
 						    		?>
-									  <input  type="checkbox" value="" class="form-check-input chkcliente_<?php echo $idcupon;?>" id="inputcli_<?php echo $a_cliente['idcliente']?>_<?php echo $idcupon;?>" <?php echo $valor; ?>>
+									  <input  type="checkbox" value="" class="form-check-input chkcliente_<?php echo $idcupon;?>" id="inputcli_<?php echo $a_cliente['idusuarios']?>_<?php echo $idcupon;?>" <?php echo $valor; ?>>
 									  <label class="form-check-label" for="flexCheckDefault"><?php echo $nombre; ?></label>
 								</div>						    		
 						    	<?php
@@ -354,7 +322,7 @@ if (isset($_SESSION['permisos_acciones_erp'])) {
                 </div>
             </div>
             
-            <div class="col-md-6" style="float: left;margin-top: 1em;">
+            <div class="col-md-6" style="float: left;margin-top: 1em;display: none;">
                 <label >CANTIDAD MÍNIMA DE PAQUETES POR COMPRA:</label>
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" id="v_cantidadcompra" name="v_cabtidadcompra" pattern="^[0-9]+$"
@@ -362,7 +330,7 @@ if (isset($_SESSION['permisos_acciones_erp'])) {
                     <div class="invalid-feedback">Ingresa una cantidad (solo números)</div>
                 </div>
             </div>
-            <div class="col-md-6" style="float: left;">
+            <div class="col-md-6" style="float: left;display: none;">
                 <label >POR SECUENCIA DE VENTAS:</label>
                 <div class="input-group mb-3">
                     <input type="text" class="form-control" id="v_secuenciaventa" name="v_secuenciaventa" pattern="(\d+)(,\s*\d+)*"
@@ -370,7 +338,7 @@ if (isset($_SESSION['permisos_acciones_erp'])) {
                     <div class="invalid-feedback">Ingrese una listado (números separados por coma) Ejemplo: 5, 10, 15  </div>
                 </div>
             </div>
-            <div class="col-md-6" style="float: left;margin-bottom: 0.5em;">
+            <div class="col-md-6" style="float: left;display:none; margin-bottom: 0.5em;">
                 <label> APLICA PARA PAQUETE EN PROMOCIÓN:</label>
                 <input type="checkbox" id="v_aplicarsobrepromo"  name="v_aplicarsobrepromo"  value="<?php ?>" title="SOBRE PROMOCIÓN">
             </div>
@@ -395,11 +363,10 @@ if (isset($_SESSION['permisos_acciones_erp'])) {
                 </div>
             </div>
 
-            <div class="col-md-2" style="float: left;">
+            <div class="col-md-2" style="float: left;display: none;">
                 <label >POR SUCURSAL:</label>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" id="v_lusosucursal" name="v_lusosucursal" pattern="^[0-9]+$"
-                           value="" title="POR SUCURSAL" >
+                    <input type="text" class="form-control" id="v_lusosucursal" name="v_lusosucursal" pattern="^[0-9]+$" value="" title="POR SUCURSAL" >
                     <div class="invalid-feedback">Ingresa una cantidad (solo números)</div>
                 </div>
             </div>  

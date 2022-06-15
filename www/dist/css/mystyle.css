@@ -134,3 +134,7 @@ input[type=number] { -moz-appearance:textfield; }
     margin-top: 0.3em;
     
 }
+.lbldias{
+        font-size: 9px!important;
+    width: 8em!important;
+}

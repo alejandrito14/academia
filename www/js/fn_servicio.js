@@ -440,6 +440,10 @@ function SeleccionarCategoria(idservicio) {
 	$("#profile-tab").css('display','none');
 	$("#contact-tab").css('display','none');
 	$("#costos-tab").css('display','none');
+	$("#coach-tab").css('display','none');
+	$("#multi-tab").css('display','none');
+	$("#politicas-tab").css('display','none');
+
 
 	
 
@@ -539,18 +543,29 @@ if (categoriaid>0) {
 							$("#profile-tab").css('display','block');
 							$("#contact-tab").css('display','block');
 							$("#costos-tab").css('display','block');
+							$("#coach-tab").css('display','block');
+							$("#multi-tab").css('display','block');
+							$("#politicas-tab").css('display','block');
+
 							$(".btnguardarservicio").attr('onclick',"Guardarservicio('f_servicio','catalogos/servicios/vi_servicios.php','main','"+idmenumodulo+"')");
+ 							//$(".btncontinuar").attr('onclick',"Guardarservicio('f_servicio','catalogos/servicios/vi_servicios.php','main','"+idmenumodulo+"')");
+							
+ 							$(".btnguardarservicio").html('<i class="mdi mdi-arrow-right-box"></i>Continuar');
 
 							if (idservicio>0) {
 
 							$("#profile-tab").attr('onclick','ActivarTab(this,"profile")');
 							$("#contact-tab").attr('onclick','ActivarTab(this,"contact")');
 							$("#costos-tab").attr('onclick','ActivarTab(this,"costos")');
+							$("#coach-tab").attr('onclick','ActivarTab(this,"coaches")');
+							$("#multi-tab").attr('onclick','ActivarTab(this,"multi")');
+							$("#politicas-tab").attr('onclick','ActivarTab(this,"politicas")');
 
 							}
 						}else{
-
+							$(".btncontinuar").css('display','none');
 							$(".btnguardarservicio").attr('onclick',"Guardarservicio2('f_servicio','catalogos/servicios/vi_servicios.php','main','"+idmenumodulo+"')");
+ 							$(".btnguardarservicio").html('<i class="mdi mdi-content-save"></i>Guardar');
 
 						}
 						$(".diasckeckbox").attr('disabled',true);
@@ -1704,29 +1719,42 @@ function ActivarTab(elemento,idelemento) {
 	$("#"+idelemento).addClass('show');
 	$("#"+idelemento).addClass('active');
 
+	if ('multi'==idelemento) {
+		$(".btnguardarservicio").html('<i class="mdi mdi-content-save"></i>Guardar');
+
+	}else{
+ 	
+ 	$(".btnguardarservicio").html('<i class="mdi mdi-arrow-right-box"></i>Continuar');
+
+
+	}
 
 }
 
 
 function Guardarservicio(form,regresar,donde,idmenumodulo)
 {
-	if(confirm("\u00BFDesea realizar esta operaci\u00f3n?"))
+	/*if(confirm("\u00BFDesea realizar esta operaci\u00f3n?"))
 	{	
-			$("#v_titulo").removeClass('inputrequerido');
-			$("#v_descripcion").removeClass('inputrequerido');
-			$("#v_categoria").removeClass('inputrequerido');
-			$("#v_orden").removeClass('inputrequerido');
+*/
+
+
+
+			$("#lbltitulo").removeClass('inputrequerido');
+			$("#lbldescripcion").removeClass('inputrequerido');
+			$("#lbltiposervicio").removeClass('inputrequerido');
+			$("#lblorden").removeClass('inputrequerido');
 			$("#lbldias").removeClass('inputrequerido');
 			$("#lblcategoria").removeClass('inputrequerido');
 			$("#v_numparticipantesmin").removeClass('inputrequerido');
 			$("#v_numparticipantesmax").removeClass('inputrequerido');
-			$("#v_costo").removeClass('inputrequerido');
+			$("#lblcostounitario").removeClass('inputrequerido');
 			$(".divmodo").removeClass('inputrequerido');
 	    	$("#lblperiodos").css('color','#3e5569');
 			$("#lblhorarios").removeClass('inputrequerido');
 			$("#lblminimo").removeClass('inputrequerido');
 			$("#lblmaximo").removeClass('inputrequerido');
-	    	$("#lblcostounitario").removeClass('inputrequerido');
+			$("#lbldescripcionpolitica").removeClass('inputrequerido');
 
 
 		var domingo=0,lunes=0,martes=0,miercoles=0,jueves=0,Viernes=0,sabado=0;
@@ -1887,7 +1915,7 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 		var abiertocoach=$("#v_abiertocoach").is(':checked')?1:0;
 		var abiertoadmin=$("#v_abiertoadmin").is(':checked')?1:0;
 		var ligarclientes=$("#v_ligarclientes").is(':checked')?1:0;
-	
+		var v_numligarclientes=$("#v_numligarclientes").val();
 
 		var v_tiempoaviso=$("#v_tiempoaviso").val();
 		var v_tituloaviso=$("#v_tituloaviso").val();
@@ -1941,6 +1969,7 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 		datos.append('abiertocoach',abiertocoach);
 		datos.append('abiertoadmin',abiertoadmin);
 		datos.append('ligarclientes',ligarclientes);
+		datos.append('v_numligarclientes',v_numligarclientes);
 		datos.append('v_tiempoaviso',v_tiempoaviso);
 		datos.append('v_tituloaviso',v_tituloaviso);
 		datos.append('v_descripcionaviso',v_descripcionaviso);
@@ -1953,23 +1982,25 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 		
 		var bandera1=1;
 		if (nombre=='') {
-			$("#v_titulo").addClass('inputrequerido');
+			$("#lbltitulo").addClass('inputrequerido');
 			bandera1=0;
 		}
 
 		if (descripcion=='') {
-			$("#v_descripcion").addClass('inputrequerido');
-		bandera1=0;
+			$("#lbldescripcion").addClass('inputrequerido');
+			bandera1=0;
 		}
-		if (categoria==0) {
 
-			$("#v_categoria").addClass('inputrequerido');
+
+		if (categoria == 0) {
+
+			$("#lbltiposervicio").addClass('inputrequerido');
 			bandera1=0;
 		}
 
 		if (orden=='') {
 
-			$("#v_orden").addClass('inputrequerido');
+			$("#lblorden").addClass('inputrequerido');
 			bandera1=0;
 		}
 
@@ -2042,7 +2073,7 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 		}
 
 		var bandera3=1;
-		console.log(arraydiaseleccionados);
+		//console.log(arraydiaseleccionados);
 
 		if (arraydiaseleccionados.length>0) {
 			seccion4=1;
@@ -2057,18 +2088,18 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 		var bandera4=1;
 		if ($("#v_numparticipantesmin").val()=='') {
 			bandera4=0;
-		$("#v_numparticipantesmin").addClass('inputrequerido');
+		//$("#v_numparticipantesmin").addClass('inputrequerido');
 
 		}
 
 		if ($("#v_numparticipantesmax").val()=='') {
 			bandera4=0;
 
-		$("#v_numparticipantesmax").addClass('inputrequerido');
+		//$("#v_numparticipantesmax").addClass('inputrequerido');
 	
 		}
-
-		if (v_costo == '') {
+		
+		if ($("#v_costo").val()=='') {
 
 			bandera4=0;
 	    	$("#lblcostounitario").addClass('inputrequerido');
@@ -2111,26 +2142,53 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 			$("#lblmaximo").addClass('inputrequerido');
 		}
 
+		if (bandera4==1) {
 
-		if (seccion2==1 && seccion3==0 && seccion4==0) {
-		document.getElementById("profile-tab").click();
+			seccion5=1;
+									 //onclick="ActivarTab(this,'profile')"
+			$("#politicas-tab").attr('onclick','ActivarTab(this,"politicas")');
+									//document.getElementById("contact-tab").click();
 
+		}else{
+			seccion5=0;
 		}
 
-		if (seccion2==1 &&seccion3==1 && seccion4==0) {
-			document.getElementById("contact-tab").click();
+		var bandera5=1;
+		
+		if (v_politicascancelacion=='') {
 
+			$("#lbldescripcionpolitica").addClass('inputrequerido');
+			bandera5=0;
+			
 		}
 
-		if (seccion2==1 && seccion3==1 && seccion4==1) {
+
+
+	
+		if (seccion2==1 && seccion3==1 && seccion4==1 && seccion5==1) {
+			document.getElementById("politicas-tab").click();
+
+
+		}
+		if (seccion2==1 && seccion3==1 && seccion4==1 && seccion5==0) {
 			document.getElementById("costos-tab").click();
 
 
 		}
+
+		if (seccion2==1 &&seccion3==1 && seccion4==0 && seccion5==0) {
+			document.getElementById("contact-tab").click();
+
+		}
+
+		if (seccion2==1 && seccion3==0 && seccion4==0 && seccion5==0) {
+		document.getElementById("profile-tab").click();
+
+		}
 		
 		// $('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
-				
-		setTimeout(function(){
+				if (bandera1==1) {
+		//setTimeout(function(){
 				  $.ajax({
 					url:'catalogos/servicios/ga_servicio.php', //Url a donde la enviaremos
 					type:'POST', //Metodo que usaremos
@@ -2154,7 +2212,7 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 
 
 						   console.log("El resultado de msj es: "+msj);
-						   if (bandera1==1 && bandera2==1 && bandera3==1 && bandera4==1) {
+						   if (bandera1==1 && bandera2==1 && bandera3==1 && bandera4==1 && bandera5==1) {
 						   	if( resp[0] == 1 ){
 								aparecermodulos(regresar+"?ac=1&idmenumodulo="+idmenumodulo+"&msj=Operacion realizada con exito",donde);
 						 	 }else{
@@ -2168,7 +2226,9 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 						  	}*/			
 					  	}
 				  });				  					  
-		},1000);
+		/*},1000);*/
+
+		//}
 	 }
 }
 
@@ -2182,4 +2242,12 @@ function CambiarNumeros(numero) {
 	var resultado=formato_numero(numero,2,'.',','); 
 
 	$("#v_costo").val(resultado);
+}
+
+function Permitirligar() {
+	if ($("#v_ligarclientes").is(':checked')) {
+		$("#cantidadligar").css('display','block');
+		}else{
+		$("#cantidadligar").css('display','none');
+	}
 }

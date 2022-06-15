@@ -114,13 +114,13 @@ try
 	$emp->asignadocliente=$_POST['v_asignadocliente'];
 	$emp->asignadocoach=$_POST['v_asignadocoach'];
 	$emp->asignadoadmin=$_POST['v_asignadoadmin'];
-
+	$emp->numligarclientes=$_POST['v_numligarclientes'];
 
 
 	//Validamos si hacermos un insert o un update
 	if($emp->idservicio == 0)
 	{
-		//guardando
+		//guardando 
 		$emp->GuardarServicio();
 		$md->guardarMovimiento($f->guardar_cadena_utf8('Servicio'),'Servicio',$f->guardar_cadena_utf8('Nuevo Servicio creado con el ID-'.$emp->idservicio));
 

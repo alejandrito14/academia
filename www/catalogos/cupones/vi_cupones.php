@@ -140,7 +140,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
                             $s_sucursales = "";
                             if ($a_cupon['tsucursales'] == 1){
                                 $s_sucursales ="Todas";
-                            }
+                            }/*
                             else{
                                 $r_cuponsucursales = $cups->ObtenerCuponSucursales($a_cupon['idcupon']);
                                 $a_cuponsucursales = $db->fetch_assoc($r_cuponsucursales);
@@ -148,9 +148,9 @@ if(isset($_SESSION['permisos_acciones_erp'])){
                                     $s_sucursales = $s_sucursales."".$a_cuponsucursales['sucursal'].", ";
                                 }while ($a_cuponsucursales = $db->fetch_assoc($r_cuponsucursales));
                                 $s_sucursales= substr_replace($s_sucursales ,"", -2);
-                            }
+                            }*/
                             
-                            $s_paquetes = "";
+                           /* $s_paquetes = "";
                             if ($a_cupon['tpaquetes'] == 1){
                                 $s_paquetes ="Todos";
                             }
@@ -158,14 +158,14 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		  					    $r_paquetes = $cups->ObtenerCuponPaquetes($a_cupon['idcupon']); 
 			                    $a_paquete = $db->fetch_assoc($r_paquetes);
                                 $r_paquetes_num = $db->num_rows($r_paquetes);
-              
-                                do {
+              */
+                               /* do {
                                     $s_paquetes = $s_paquetes."".$a_paquete['nombrepaquete'].", ";            	                
                                 }while($a_paquete =$db->fetch_assoc($r_paquetes));
                                 $s_paquetes= substr_replace($s_paquetes ,"", -2);
-                            }
+                            }*/
 
-                            $s_clientes = "";
+                           /* $s_clientes = "";
                             if ($a_cupon['tclientes'] == 1){
                                 $s_clientes ="Todos";
                             }
@@ -187,7 +187,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
                              if ($a_cupon['automatico'] == 0)
                                 $switchstate2="";
                             else
-                                $switchstate2="checked";
+                                $switchstate2="checked";*/
 		  					?>
                     <tr>
 
@@ -234,7 +234,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
                         </td>
                        
                     </tr>
-                    <?php 
+                   <!--  <?php 
                         $strfiltros="FILTROS: ";
                         if($a_cupon['fechainicial'] != ""){
                         $fechainicial = date_create($a_cupon['fechainicial']);
@@ -270,8 +270,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
                         if ($strfiltros == "FILTROS: ")
                             $strfiltros = "FILTROS: [Ninguno]";
                 
-                    ?>
-                    <tr><th style="background-color: rgba(0,0,0,0.05);" colspan="7"><?php echo $f->imprimir_cadena_utf8($strfiltros); ?></th></tr>
+                    ?> -->
+                     <tr><th style="background-color: rgba(0,0,0,0.05);" colspan="7"><?php echo $f->imprimir_cadena_utf8($strfiltros); ?></th></tr> 
                     
                     <?php
               $s_paquetes = "";
