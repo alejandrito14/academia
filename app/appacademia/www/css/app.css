@@ -637,3 +637,19 @@ code {
 .negacion{
     color: red;
 }
+
+#inferior{
+color: black;
+background: white;
+position:absolute; /*El div será ubicado con relación a la pantalla*/
+left:0px; /*A la derecha deje un espacio de 0px*/
+right:0px; /*A la izquierda deje un espacio de 0px*/
+bottom:0px; /*Abajo deje un espacio de 0px*/
+height:150px; /*alto del div*/
+z-index:0;
+ }
+
+ .codigocupon::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: gray;
+  opacity: 1; /* Firefox */
+}

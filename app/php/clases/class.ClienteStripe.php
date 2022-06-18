@@ -1,8 +1,8 @@
 <?php
-class ClienteStripe
+class usuariostripe
 {
 	public $db;//objeto de conecxion con la base de datos
-	public $idCliente;//ide del Cliente
+	public $idusuarios;//ide del Cliente
 	
 	//DATOS GENERALES
     public $customerid;
@@ -17,49 +17,50 @@ class ClienteStripe
 	public $estatus;
 	public $fechaTransaccion;
 	public $fechaactual;
+	public $idintento;
 	
     public function ObtenerID()
 	{
-		$Query="SELECT customerid_stripe FROM clientes WHERE idcliente = '$this->idCliente'";
+		$Query="SELECT customerid_stripe FROM usuarios WHERE idusuarios = '$this->idusuarios'";
 		$resp=$this->db->consulta($Query);		
 		return $resp;
 	}
 
     public function ObtenerLastCard()
     {
-		$Query="SELECT lastcard_stripe FROM clientes WHERE idcliente = '$this->idCliente'";
+		$Query="SELECT lastcard_stripe FROM usuarios WHERE idusuarios = '$this->idusuarios'";
 		$resp=$this->db->consulta($Query);		
 		return $resp;
     }
 	
 	public function ObtenerDatosCliente()
     {
-		$sql="SELECT nombre,paterno,email FROM clientes
-			WHERE idcliente='$this->idCliente'";
+		$sql="SELECT nombre,paterno,email FROM usuarios
+			WHERE idusuarios='$this->idusuarios'";
 		$resp = $this->db->consulta($sql);
 		return $resp;
 	}
 
 	public function ActualizarId()
 	{
-		$query="UPDATE clientes SET 
+		$query="UPDATE usuarios SET 
 		customerid_stripe = '$this->customerid'
-		WHERE idcliente = '$this->idCliente' ";
+		WHERE idusuarios = '$this->idusuarios' ";
 		$result = $this->db->consulta($query);
 	}
 
     public function ActualizarLastCard()
 	{
 		if ($this->lastcard == "null"){
-		$query="UPDATE clientes SET 
+		$query="UPDATE usuarios SET 
 		lastcard_stripe = NULL
-		WHERE idcliente = '$this->idCliente' ";
+		WHERE idusuarios = '$this->idusuarios' ";
 		}
 		else
 		{
-        $query="UPDATE clientes SET 
+        $query="UPDATE usuarios SET 
 		lastcard_stripe = '$this->lastcard'
-		WHERE idcliente = '$this->idCliente' ";
+		WHERE idusuarios = '$this->idusuarios' ";
 		}
 		$result = $this->db->consulta($query);
     }
@@ -67,24 +68,26 @@ class ClienteStripe
 	public function RegistrarIntentoPago()
 	{
 		
-		$sql = "INSERT INTO pagostripe (idtransaccion, idnotaremision, monto, digitostarjeta, idcliente, estatus, fechatransaccion) 
-		VALUES ('$this->idTransaccion',$this->idNotaRemision,$this->monto,'$this->digitosTarjeta',$this->idCliente,'$this->estatus','$this->fechaTransaccion')";	
+		$sql = "INSERT INTO pagostripe (idtransaccion, idnotaremision, monto, digitostarjeta, idusuarios, estatus, fechatransaccion) 
+		VALUES ('$this->idTransaccion',$this->idNotaRemision,$this->monto,'$this->digitosTarjeta',$this->idusuarios,'$this->estatus','$this->fechaTransaccion')";	
 		
 		$result = $this->db->consulta($sql);
+		$this->idintento=$this->db->id_ultimo();
+
 		
 	}
 
 
 	  public function ObtenerIDCustomer()
 	{
-		$Query="SELECT customerid_stripe FROM customerstripe WHERE idcliente = '$this->idCliente' and skeystripe='$this->skey'";
+		$Query="SELECT customerid_stripe FROM customerstripe WHERE idusuarios = '$this->idusuarios' and skeystripe='$this->skey'";
 		$resp=$this->db->consulta($Query);		
 		return $resp;
 	}
 
 	public function GuardarIdCustomer(){
 
-		$query = "INSERT INTO customerstripe (skeystripe,idcliente,customerid_stripe) VALUES ('$this->skey','$this->idCliente','$this->customerid');";
+		$query = "INSERT INTO customerstripe (skeystripe,idusuarios,customerid_stripe) VALUES ('$this->skey','$this->idusuarios','$this->customerid');";
 		$resp=$this->db->consulta($query);
 		return $resp;
 
@@ -124,10 +127,25 @@ class ClienteStripe
 
 	public function RegistrarIntentoPagoFallido()
 	{
-		$sql = "INSERT INTO intentospagosfallidos (idtransaccion, idnotaremision, monto, digitostarjeta, idcliente, estatus, fechatransaccion) 
-		VALUES ('$this->idTransaccion',$this->idNotaRemision,$this->monto,'$this->digitosTarjeta',$this->idCliente,'$this->estatus','$this->fechaTransaccion')";	
+		$sql = "INSERT INTO intentospagosfallidos (idtransaccion, idnotaremision, monto, digitostarjeta, idusuarios, estatus, fechatransaccion) 
+		VALUES ('$this->idTransaccion',$this->idNotaRemision,$this->monto,'$this->digitosTarjeta',$this->idusuarios,'$this->estatus','$this->fechaTransaccion')";	
 		
 		$result = $this->db->consulta($sql);
+	}
+
+	public function ActualizarIntento()
+	{
+		$sql="
+			UPDATE pagostripe SET 
+			idtransaccion = '$this->idTransaccion',
+			 idnotaremision = '$this->idNotaRemision',
+			 monto = $this->monto, 
+			 digitostarjeta = '$this->digitosTarjeta', 
+			 idusuarios = $this->idusuarios, 
+			 estatus = '$this->estatus',
+			 fechatransaccion = '$this->fechaTransaccion' WHERE idpagostripe = $this->idintento";
+			
+		$result=$this->db->consulta($sql);
 	}
 
 

@@ -52,16 +52,30 @@ function CargarDatos() {
 	Obtenerpublicidad(1);
 	ObtenerConfiguracion();
 	
-	/*socket=io.connect(globalsockect, { transports : ["websocket"],rejectUnauthorized: false });
+	var iduser=localStorage.getItem('id_user');
+	socket=io.connect(globalsockect, { transports : ["websocket"],rejectUnauthorized: false });
     socket.on('connect', function (data) 
 	{
-       socket.emit('conectado', { customId:iduser,tipouser:1 });
+       socket.emit('conectado', { customId:iduser,tipouser:localStorage.getItem('idtipousuario')});
     });
  	socket.on('mensajerespuestacliente',function (data) 
 	{
     	console.log("mensaje respuesta");
     	PintarMensaje(data);
-	});*/
+	});
+
+	socket.on('nuevomensaje',function (data) 
+	{	
+			console.log(data);
+    	if (data.idusuario!=iduser) {
+    		console.log('idsala'+data.soporte);
+    		if (data.soporte == localStorage.getItem('idsala')) {
+    			PintarMensaje(data);
+$$('.messages-content').scrollTop( $('.messages-content').get(0).scrollHeight, 400 );
+
+    		}
+    	}
+	});
 }
 
 function CargarDatosAdmin(argument) {
@@ -77,8 +91,11 @@ function CargarDatosAdmin(argument) {
 	//ObtenerServiciosAsignados();
 	Obtenerpublicidad(0);
 	ObtenerConfiguracion();
-	
 	ObtenerServiciosRegistrados();
+
+	ContarNuevasSolicitudes();
+	ContarImagenesGaleria();
+	ContarNuevasPromociones();
 	//setInterval('ObtenerAlumnosSinServicio()',2000);
 
 	$(".seleccionador").css('display','block');
@@ -98,8 +115,52 @@ function CargarDatosCoach() {
 	ObtenerServiciosAsignadosCoach();
 	//Obtenerpublicidad();
 	ObtenerConfiguracion();
-	
-	
+	var iduser=localStorage.getItem('id_user');
+
+	socket=io.connect(globalsockect, { transports : ["websocket"],rejectUnauthorized: false });
+    socket.on('connect', function (data) 
+	{
+       socket.emit('conectado', { customId:iduser,tipouser:localStorage.getItem('idtipousuario')});
+    });
+ 	socket.on('mensajerespuestacliente',function (data) 
+	{
+    	console.log("mensaje respuesta");
+    	if (data.soporte==localStorage.getItem('idsala')) {
+    		PintarMensaje(data);
+    	}
+    	
+	});
+
+	socket.on('nuevomensaje',function (data) 
+	{	
+
+    	if (data.idusuario!=iduser) {
+    		if (data.soporte==localStorage.getItem('idsala')) {
+    			
+    			PintarMensaje(data);
+$$('.messages-content').scrollTop( $('.messages-content').get(0).scrollHeight, 400 );
+
+    			 messages.addMessage({
+		            text: data.mensaje,
+		            type: 'received',
+		            name: data.nombre,
+		            avatar: person.avatar
+	          });
+
+    			 var contar=parseFloat($(".badge6").text());
+	    		var suma=contar+1;
+	    		if (suma>0) {
+
+	    			$(".badge6").text(suma);
+	    			$(".badge6").css('display','block');
+
+	    		}
+    		
+    		}
+
+    		
+    	}
+	});
 }
 
 
@@ -567,6 +628,7 @@ function ObtenerServiciosAsignadosCoach() {
 		success: function(datos){
 
 			var respuesta=datos.respuesta;
+
 			PintarServiciosAsignadosCoach(respuesta);
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -580,30 +642,42 @@ function ObtenerServiciosAsignadosCoach() {
 }
 
 function PintarServiciosAsignadosCoach(respuesta) {
+		
 	
 		var html="";
 
 	if (respuesta.length>0) {
 		for (var i = 0; i <respuesta.length; i++) {
-			urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
+				
+			var imagen='';
+			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null) {
+
+				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+			}else{
+
+				urlimagen=localStorage.getItem('logo');
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+			}
+
 
 			html+=`
-				 <li class="list-item">
+				 <li class="list-item" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">
                 <div class="row">
                   <div class="col-30">
                     <div class="avatar  shadow rounded-10 ">
-                      <img src="`+urlimagen+`" alt=""  style="width:80px;height:60px;"/>
+                    `+imagen+`
                     </div>
                   </div>
                   <div class="col-60">
                     <p class="text-color-theme no-margin-bottom">`+respuesta[i].titulo+`</p>
 
                     `;
-                    horarios=respuesta[i].horarios;
-                    	var horarioshtml="";
-                    	for (var j = 0; j < horarios.length; j++) {
-                    		horarioshtml+=`<span>`+horarios[j].diasemana.slice(0,3) +` `+horarios[j].horainicial+` `+horarios[j].horafinal+` Hrs.</span>`;
-                    	}
+                   var horarioshtml="";
+                    	//for (var j = 0; j < horarios.length; j++) {
+                    		if (respuesta[i].fechaproxima!='') {
+                    		horarioshtml+=`<span>`+respuesta[i].fechaproxima+` `+respuesta[i].horainicial+` - `+respuesta[i].horafinal+` Hrs.</span></br>`;
+                    		}
 
                     html+=`
                     <p class="text-muted size-12">`+horarioshtml+`</p>
@@ -1434,6 +1508,12 @@ function DetalleServicioAsignado(idusuarios_servicios) {
 	
 }
 
+function DetalleServicioAsignadoCoach(idusuarios_servicios) {
+			localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
+
+	GoToPage('detalleserviciocoach');
+}
+
 function ObtenerServiciosRegistrados() {
 
 	var pagina = "ObtenerServicios.php";
@@ -1525,3 +1605,77 @@ function PintarServiciosRegistrados(respuesta) {
 
 		}
 }
+
+function ContarNuevasSolicitudes() {
+
+ 	var pagina = "ObtenerNuevasSolicitudes.php";
+	
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		success: function(datos){
+
+			var respuesta=datos.respuesta;
+			PintarServiciosRegistrados(respuesta);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+ } 
+ function ContarImagenesGaleria() {
+ 	var pagina = "ObtenerNuevasImagenes.php";
+	
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		success: function(datos){
+
+			var respuesta=datos.respuesta;
+			PintarServiciosRegistrados(respuesta);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+ } 
+
+function ContarNuevasPromociones() {
+ 	var pagina = "ObtenerNuevasImagenes.php";
+	
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		success: function(datos){
+
+			var respuesta=datos.respuesta;
+			PintarServiciosRegistrados(respuesta);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+ } 
+
+

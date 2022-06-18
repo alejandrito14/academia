@@ -14,7 +14,6 @@ var app = new Framework7({
   store: store,
   // routes.js,
   routes: routes,
-
  
 
   popup: {
@@ -94,7 +93,7 @@ $(document).ready(function() {
   
 
 
-var produccion = 1;
+var produccion = 0;
 
  
 
@@ -129,6 +128,8 @@ if (produccion == 0) {
     var urlimagendefault="https://issoftware1.com.mx/IS-ACADEMIA/images/sinimagen.png"
     var urlimagenlogo="https://issoftware1.com.mx/IS-ACADEMIA/images/sinimagenlogo.png";
     var globalsockect="";
+   // var urlimagenvacia="https://issoftware1.com.mx/IS-ACADEMIA/images/sinimagenlogo.png";
+
 }
  
 function Cargar() {
@@ -535,7 +536,7 @@ $$(document).on('page:init', '.page[data-name="homeadmin"]', function (e) {
 
         localStorage.setItem('pregunta',1);
 
-          app.dialog.alert('','Se guardó la sesión'); 
+         // app.dialog.alert('','Se guardó la sesión'); 
 
         },
 
@@ -1500,7 +1501,7 @@ $$(document).on('page:init', '.page[data-name="chat"]', function (e) {
   /* swiper carousel projects */
  // $$('#btnverificartoken').attr('onclick','ValidarCelular()')
 regresohome();
-
+listadochats();
 });
 
 $$(document).on('page:init', '.page[data-name="notificaciones"]', function (e) {
@@ -1514,7 +1515,28 @@ $$(document).on('page:init', '.page[data-name="pagos"]', function (e) {
   /* swiper carousel projects */
  // $$('#btnverificartoken').attr('onclick','ValidarCelular()')
 regresohome();
+ObtenerTotalPagos();
+ProximopagoaVencer();
+$$('#btnlistadopagos').attr('onclick','VerListadoPago()')
 
+
+});
+
+$$(document).on('page:init', '.page[data-name="listadopagos"]', function (e) {
+  $(".regreso").attr('href','/pagos/');
+
+  ObtenerTodosPagos();
+  $(".seleccionar" ).each(function( index ) {
+       $(this).attr('checked',true);     
+  });
+
+  $("#checktodos").attr('checked',true);
+  $("#btnpagar").prop('disabled',false);
+  HabilitarBotonPago();
+  $(".btnpagar").attr('onclick','ResumenPago()');
+  localStorage.setItem('monedero',0);
+  localStorage.setItem('cupon','');
+  localStorage.setItem('descuentocupon',0);
 });
 
 
@@ -1682,10 +1704,26 @@ $$(document).on('page:init', '.page[data-name="detalleservicio"]', function (e) 
   Verificarcantidadhorarios();
 });
 
+$$(document).on('page:init', '.page[data-name="detalleserviciocoach"]', function (e) {
+  
+  regresohome();
+  ObtenerServicioAsignado();
+ // $$("#abrirpantallacali").attr('onclick','PantallaCalificacion()');
+  $$("#Abrirchat").attr('onclick','ElegirParticipantesChat()');
+  $$("#btncalendario").attr('onclick','FechasServicio()');
+  ObtenerParticipantesAlumnos();
+
+  //Verificarcantidadhorarios();
+});
+
+
 $$(document).on('page:init', '.page[data-name="aceptacionservicio"]', function (e) {
   
  ObtenerServicioAsignado();
  $$("#btnaceptartermino").attr('onclick','AceptarTerminos()');
+ $$("#btnrechazartermino").attr('onclick','PantallaRechazarTerminos()');
+
+ 
   regresohome();
 
 });
@@ -1705,7 +1743,15 @@ $$(document).on('page:init', '.page[data-name="comentariosservicio"]', function 
 
 $$(document).on('page:init', '.page[data-name="elegirparticipantes"]', function (e) {
   
- $(".regreso").attr('href','/detalleservicio/');
+  if (localStorage.getItem('idtipousuario')==3) {
+     $(".regreso").attr('href','/detalleservicio/');
+
+   }
+   if (localStorage.getItem('idtipousuario')==5){
+
+    $(".regreso").attr('href','/detalleserviciocoach/');
+
+   }
  ObtenerParticipantes();
 
   $$("#btnIniciarChat").attr('onclick','IniciarChat()');
@@ -1714,9 +1760,37 @@ $$(document).on('page:init', '.page[data-name="elegirparticipantes"]', function 
 
 $$(document).on('page:init', '.page[data-name="messages"]', function (e) {
   
- $(".regreso").attr('href','/detalleservicio/');
+ $$(".regreso").attr('href','/detalleservicio/');
 
  CargarFunciones();
+ CargarFoto();
+
+ if (localStorage.getItem('idsala')!=undefined && localStorage.getItem('idsala')!='') {
+    ObtenerMensajesAnteriores();
+ }
+
+});
+
+$$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
+  
+ $$(".regreso").attr('onclick','GoToPage("listadopagos")');
+ CargarPagosElegidos();
+ Cargartipopago(0)
+ 
+ $$(".btnmonedero").attr('onclick','AbrirModalmonedero()');
+ $$(".btncupon").attr('onclick','AbrirModalcupon()');
+  CalcularTotales();
+
+  $$("#tipopago").attr('onchange','CargarOpcionesTipopago()');
+});
+
+$$(document).on('page:init', '.page[data-name="nuevaimagengrupal"]', function (e) {
+  
+ $$(".imglogoimagenes").attr('src',urlimagendefault);
+ 
+ $$(".fotoimagen").attr('onclick','AbrirModalFotoimagenesnegocio()');
+ $$("#btnguardarimagen").attr('onclick','Guardarimagenesnegocio()');
+
 
 });
 

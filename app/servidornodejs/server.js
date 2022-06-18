@@ -97,7 +97,9 @@ io.on('connection', function(socket) {
    });
 
  socket.on('nuevomensaje',function (data) {
+        console.log('nuevomensaje');
 
+      console.log(data);
       EnviarMensajeSoportes(data);
      
    });
@@ -274,15 +276,26 @@ function Estagregado(iduser,clientes) {
   }
 }
 function EnviarMensajeSoportes(data) {
-    for (var i = 0; i < clientes.length; i++) {
-          if (clientes[i].tipo == 2) {
+
+      var arrayusuarios=data.arrayusuarios;
+
+
+      for (var i = 0; i < arrayusuarios.length; i++) {
+          var idusuario=arrayusuarios[i];
+          console.log('envio'+idusuario);
+          const resultado = clientes.find( cliente => cliente.Iduser ===  idusuario);
+          io.in(resultado.clientId).emit('nuevomensaje',data);
+
+      }
+   /* for (var i = 0; i < clientes.length; i++) {
+         // if (clientes[i].tipo == 2) {
   console.log("enviar soportes"+data+""+clientes[i].clientId);
 
               io.in(clientes[i].clientId).emit('nuevomensaje',data);
 
-          }
+          //}
 
-    }
+    }*/
 }
 
 function EnviarMensajeRespuesta(data) {
