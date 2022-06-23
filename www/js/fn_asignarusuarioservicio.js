@@ -151,7 +151,7 @@ function ObterHorariosServicio(idservicio) {
 
 }
 function PintarHorariosServicio2(horarios,servicio) {
-	HorariosDisponibles2(servicio);
+	HorariosDisponibles3(servicio);
 	for (var i = 0; i < horarios.length; i++) {
 
 		var obtenerfecha=horarios[i].fecha;
@@ -178,7 +178,7 @@ function PintarHorariosServicio2(horarios,servicio) {
 }
 
 
-function HorariosDisponibles2(servicio) {
+function HorariosDisponibles3(servicio) {
 	var v_zonas=[];
 	arraydiaselegidos=[];
 	arraydiaseleccionados=[];

@@ -624,7 +624,7 @@ function ConclusionSoporte(data) {
   app.dialog.alert('Se ha concluido Soporte', 'Soporte Terminado!');
 }
 
-function VerImagen(imagen) {
+/*function VerImagen(imagen) {
 
   var dynamicPopup = app.popup.create({
   content: '<div class="popup">'+
@@ -650,7 +650,7 @@ function VerImagen(imagen) {
     dynamicPopup.open();
 
 
-}
+}*/
 
 function IniciaChat2(imagen) {
   var nombre=localStorage.getItem('Snombre');

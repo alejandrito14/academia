@@ -41,9 +41,12 @@ try
 
     if ($numrow>0) {
     	echo 1;
-    }
+    } 
     else{
 
+    	$emp->BorrarHorarios();
+    	$emp->BorrarZonas();
+    	$emp->BorrarCoaches();
     	$emp->Borrarservicio();
     	echo 0;
     }

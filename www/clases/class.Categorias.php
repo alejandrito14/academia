@@ -216,6 +216,14 @@ class Categorias
 		return $resp;
 	}
 
+	public function BorrarHorariostipo()
+	{
+		
+		$query="DELETE FROM horariostipo WHERE idcategorias=".$this->idcategoria."";	
+		$resp=$this->db->consulta($query);
+		return $resp;
+	}
+
 	public function BorrarCategoria()
 	{
 		

@@ -225,6 +225,22 @@ var routes = [
     path: '/detalleservicio/',
     componentUrl: './pages/detalleservicio.html',
   },
+
+  {
+    path: '/detalleserviciocoach/',
+    componentUrl: './pages/detalleserviciocoach.html',
+  },
+
+   { 
+    
+    path: '/asignaralumnos/',
+    componentUrl: './pages/asignaralumnos.html',
+  },
+   //nueva imagen grupal
+  {
+    path: '/nuevaimagengrupal/',
+    componentUrl: './pages/nuevaimagengrupal.html',
+  },
   //datospersonales
   {
     path: '/datospersonales/',
@@ -274,6 +290,15 @@ var routes = [
     path:'/pagos/',
     componentUrl: './pages/pagos.html',
   },
+  {
+    path:'/listadopagos/',
+    componentUrl: './pages/listadopagos.html',
+  },
+ {
+    path:'/resumenpago/',
+    componentUrl: './pages/resumenpago.html',
+  },
+  
   //registrotutorados
 
    {

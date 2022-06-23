@@ -229,32 +229,35 @@ try
 					$horarioservicio->horafinal=$horafinal;
 					$horarioservicio->fecha=$fecha;
 
-					$consultarsiestaocupado=$horarioservicio->Disponibilidad2();
+					$consultarsiestaocupado=$horarioservicio->Disponibilidad3();
 					//var_dump($consultarsiestaocupado);die();
 					if (count($consultarsiestaocupado)>0) {
 						# code...
+
+					/*	$horarioreserva=0;
+
 					
-				/*	for ($k=0; $k <count($consultarsiestaocupado) ; $k++) { 
+					for ($k=0; $k <count($consultarsiestaocupado) ; $k++) { 
 
 					
 					if ($consultarsiestaocupado[$k]->horainicial >=$horainicial   && $consultarsiestaocupado[$k]->horainicial <= $horafinal  && $consultarsiestaocupado[$k]->horafinal >= $horainicial  && $consultarsiestaocupado[$k]->horafinal<=  $horafinal) {
 					//echo "<b>AMBAS horas estan DENTRO del horario anterior</b>";
-					$problema = 1;
+					$horarioreserva ++;
 				
 					} elseif($horainicial <  $consultarsiestaocupado[$k]->horainicial && 
 					 $horafinal >  $consultarsiestaocupado[$k]->horafinal) {
 					//echo "<b>problema con la HORA FINAL</b>";
-					$problema = 1;
+					$horarioreserva ++;
 				
 				
 					} elseif($horafinal<  $consultarsiestaocupado[$k]->horainicial && $horafinal >  $consultarsiestaocupado[$k]->horafinal) {
 					//echo "<b>problema con la HORA DE INICIO</b>";
-					$problema = 1;
+					$horarioreserva++;
 				
 				
 					}else{
 					//echo "<b>horario DISPONIBLE</b>";
-					$problema = 0;
+					$horarioreserva = 0;
 					break;
 
 						
@@ -262,6 +265,13 @@ try
 
 						
 
+				}*/
+
+				/*if ($horarioreserva==0) {
+					$arreglodiasfechas[$i]['horasposibles'][0][$j]['disponible']=1;
+				}else{
+
+					$arreglodiasfechas[$i]['horasposibles'][0][$j]['disponible']=0;
 				}*/
 
 				/*if ($horafinal==NULL || $horainicial==NULL) {
@@ -332,6 +342,7 @@ $arreglodiasfechas[$i]['horasposibles'][0][$j]['disponible']=0;
 	$respuesta['respuesta']=$arraydiaszonas;
 	$respuesta['zonas']=$arraydatoszona;
 	$respuesta['fechadia']=$fechadia;
+	$respuesta['arrayfechasdias']=$arrayfechasdias;
 
 	echo json_encode($respuesta);
 

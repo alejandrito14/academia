@@ -57,8 +57,8 @@
         // Eto ang controller para lumipat ng linggo
         // Controller to change 
         this.getNavControl = function() {
-            var previousWeekHtml = `<div id="myc-prev-week-container">` + settings.prevHtml + `</div>`;
-            var nextWeekHtml = `<div id="myc-prev-week-container">` + settings.nextHtml + `</div>`;
+            var previousWeekHtml = `<div id="myc-prev-week-container" class="btncalendario">` + settings.prevHtml + `</div>`;
+            var nextWeekHtml = `<div id="myc-prev-week-container" class="btncalendario">` + settings.nextHtml + `</div>`;
             var monthYearHtml = `
                 <div id="myc-current-month-year-container">
                     ` + this.getMonthName(settings.startDate.getMonth()) + ' ' + settings.startDate.getFullYear() + `
@@ -84,7 +84,7 @@
                 var d = settings.startDate.addDays(i);
                 var fecha= d.getFullYear()+'-'+(d.getMonth() + 1)+'-'+d.getDate();
                 tmp += `
-                    <div class="myc-date-header  " id="myc-date-header-` + i + `">
+                    <div class="myc-date-header fecha_`+fecha+`" id="myc-date-header-` + i + `">
                         <div class="myc-date-number">` + d.getDate() + `</div>
                         <div class="myc-date-display">` + settings.weekdays[d.getDay()] + `</div>
                     </div>

@@ -59,6 +59,7 @@ class Servicios
 	public $asignadocliente;
 	public $asignadocoach;
 	public $asignadoadmin;
+	public $politicasaceptacion;
 
 	public function ObtenerServicios()
 	{
@@ -139,9 +140,10 @@ class Servicios
 		asignadocliente,
 		asignadocoach,
 		asignadoadmin,
-		numligarclientes
+		numligarclientes,
+		politicasaceptacion
 
-		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes')";
+		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes','$this->politicasaceptacion')";
 
 		$resp=$this->db->consulta($query);
 		$this->idservicio = $this->db->id_ultimo();
@@ -189,7 +191,8 @@ class Servicios
 		cantidadreembolso='$this->cantidadreembolso',
 		asignadocliente='$this->asignadocliente',
 		asignadocoach='$this->asignadocoach',
-		asignadoadmin='$this->asignadoadmin'
+		asignadoadmin='$this->asignadoadmin',
+		politicasaceptacion='$this->politicasaceptacion'
 		WHERE idservicio=$this->idservicio";
 
 		
@@ -214,6 +217,59 @@ class Servicios
 		
 		$resp = $this->db->consulta($sql);
 		return $resp;
+	}
+
+	public function BorrarHorarios()
+	{
+	$sql="DELETE FROM horariosservicio WHERE idservicio='$this->idservicio'";
+
+		
+		$resp = $this->db->consulta($sql);
+		return $resp;
+	}
+
+	public function BorrarZonas()
+	{
+		$sql="DELETE FROM servicios_zonas WHERE idservicio='$this->idservicio'";
+
+		
+		$resp = $this->db->consulta($sql);
+		return $resp;
+	}
+
+	public function BorrarCoaches()
+	{
+		$sql1="SELECT usuarios_servicios.idusuarios,usuarios.nombre,usuarios.usuario FROM usuarios INNER JOIN usuarios_servicios on usuarios.idusuarios=usuarios_servicios.idusuarios WHERE tipo=5 AND  idservicio='$this->idservicio'";
+	
+		$resp = $this->db->consulta($sql1);
+
+		$cont = $this->db->num_rows($resp);
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+
+		
+		if ($cont>0) {
+			
+			for ($i=0; $i <count($array) ; $i++) { 
+
+				$idusuario=$array[$i]->idusuarios;
+			$sql="DELETE FROM usuarios_servicios WHERE idservicio='$this->idservicio' AND idusuarios='$idusuario'";
+		
+			$resp = $this->db->consulta($sql);
+			}
+		
+
+		}
+		//return $resp;
 	}
 
 	public function GuardarZona(){

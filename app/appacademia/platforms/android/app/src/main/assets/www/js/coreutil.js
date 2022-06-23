@@ -231,3 +231,25 @@ class MediaList {
 		return this.html;
 	}
   }
+
+  
+  function BuscarEnLista(idbuscador,clista) {
+
+
+		var buscador=$(idbuscador).val().toLowerCase();
+		console.log(buscador);
+		//var datos="idsucursal="+idsucursal+"&buscador="+buscador;
+	
+		$(clista).each(function(){
+				var id=$(this).attr('id');
+				obtener=$('#'+id).text().toLowerCase();
+				cadena=$(this).text().toLowerCase();
+
+				console.log(cadena);
+					  if (obtener.indexOf(buscador.toLowerCase())!=-1 ) {
+						  $('#'+id).css('display','block');	
+					  }else{
+						  $('#'+id).css('display','none');	
+					  }
+			});
+}

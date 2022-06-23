@@ -93,7 +93,7 @@ $(document).ready(function() {
   
 
 
-var produccion = 0;
+var produccion = 1;
 
  
 
@@ -127,7 +127,7 @@ if (produccion == 0) {
     var urlimagenes = "https://issoftware1.com.mx/IS-ACADEMIA/catalogos/"; 
     var urlimagendefault="https://issoftware1.com.mx/IS-ACADEMIA/images/sinimagen.png"
     var urlimagenlogo="https://issoftware1.com.mx/IS-ACADEMIA/images/sinimagenlogo.png";
-    var globalsockect="";
+    var globalsockect="https://issoftware1.com.mx:3000/";
    // var urlimagenvacia="https://issoftware1.com.mx/IS-ACADEMIA/images/sinimagenlogo.png";
 
 }
@@ -570,7 +570,7 @@ $$(document).on('page:init', '.page[data-name="homecoach"]', function (e) {
   Cargarperfilfoto();
   CargarFoto();
   $$(".iniciotab").attr('onclick','CargarInicio()');
-
+ 
   CargarDatosCoach();
   var pregunta=localStorage.getItem('pregunta');
 
@@ -582,7 +582,7 @@ $$(document).on('page:init', '.page[data-name="homecoach"]', function (e) {
 
         localStorage.setItem('pregunta',1);
 
-          app.dialog.alert('','Se guardó la sesión'); 
+         // app.dialog.alert('','Se guardó la sesión'); 
 
         },
 
@@ -1716,6 +1716,13 @@ $$(document).on('page:init', '.page[data-name="detalleserviciocoach"]', function
   //Verificarcantidadhorarios();
 });
 
+$$(document).on('page:init', '.page[data-name="asignaralumnos"]', function (e) {
+  $(".regreso").attr('href','/detalleserviciocoach/');
+ ObtenerAlumnos();
+    $$("#buscadorusuario").attr('onkeyup','BuscarEnLista("#buscadorusuario",".lista_")');
+    $$("#limpiarfiltro").attr('onclick','LimpiarFiltroalumnos()');
+});
+
 
 $$(document).on('page:init', '.page[data-name="aceptacionservicio"]', function (e) {
   
@@ -1786,9 +1793,8 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
 
 $$(document).on('page:init', '.page[data-name="nuevaimagengrupal"]', function (e) {
   
- $$(".imglogoimagenes").attr('src',urlimagendefault);
- 
- $$(".fotoimagen").attr('onclick','AbrirModalFotoimagenesnegocio()');
+ $$(".imglogoimagengrupal").attr('src',urlimagendefault);
+$$(".fotoimagen").attr('onclick','AbrirModalFotoimagengrupal()');
  $$("#btnguardarimagen").attr('onclick','Guardarimagenesnegocio()');
 
 

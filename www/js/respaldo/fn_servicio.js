@@ -248,7 +248,7 @@ var datos='idservicio='+idservicio;
 			   if( resp == 0 ){
 				  aparecermodulos(regresar+"?ac=1&idmenumodulo="+idmenumodulo+"&msj=Operacion realizada con exito",donde);
 				}else{
-				  aparecermodulos(regresar+"?ac=0&idmenumodulo="+idmenumodulo+"&msj=La categoría se encuentra relacionada "+msj,donde);
+				  aparecermodulos(regresar+"?ac=0&idmenumodulo="+idmenumodulo+"&msj=El servicio se encuentra relacionado con al menos un alumno "+msj,donde);
 				}			
 			}
 	});
@@ -440,7 +440,10 @@ function SeleccionarCategoria(idservicio) {
 	$("#profile-tab").css('display','none');
 	$("#contact-tab").css('display','none');
 	$("#costos-tab").css('display','none');
-
+	$("#coach-tab").css('display','none');
+	$("#multi-tab").css('display','none');
+	$("#politicas-tab").css('display','none');
+	$("#aceptacion-tab").css('display','none');
 	
 
 if (categoriaid>0) {
@@ -539,18 +542,33 @@ if (categoriaid>0) {
 							$("#profile-tab").css('display','block');
 							$("#contact-tab").css('display','block');
 							$("#costos-tab").css('display','block');
+							$("#coach-tab").css('display','block');
+							$("#multi-tab").css('display','block');
+							$("#politicas-tab").css('display','block');
+							$("#aceptacion-tab").css('display','block');
+
 							$(".btnguardarservicio").attr('onclick',"Guardarservicio('f_servicio','catalogos/servicios/vi_servicios.php','main','"+idmenumodulo+"')");
+ 							//$(".btncontinuar").attr('onclick',"Guardarservicio('f_servicio','catalogos/servicios/vi_servicios.php','main','"+idmenumodulo+"')");
+							
+ 							$(".btnguardarservicio").html('<i class="mdi mdi-arrow-right-box"></i>Continuar');
 
 							if (idservicio>0) {
 
 							$("#profile-tab").attr('onclick','ActivarTab(this,"profile")');
 							$("#contact-tab").attr('onclick','ActivarTab(this,"contact")');
 							$("#costos-tab").attr('onclick','ActivarTab(this,"costos")');
+							$("#coach-tab").attr('onclick','ActivarTab(this,"coaches")');
+							$("#multi-tab").attr('onclick','ActivarTab(this,"multi")');
+							$("#politicas-tab").attr('onclick','ActivarTab(this,"politicas")');
+							
+
+							
 
 							}
 						}else{
-
+							$(".btncontinuar").css('display','none');
 							$(".btnguardarservicio").attr('onclick',"Guardarservicio2('f_servicio','catalogos/servicios/vi_servicios.php','main','"+idmenumodulo+"')");
+ 							$(".btnguardarservicio").html('<i class="mdi mdi-content-save"></i>Guardar');
 
 						}
 						$(".diasckeckbox").attr('disabled',true);
@@ -632,17 +650,17 @@ if (categoriaid>0) {
 						if (diasdisponibles.length>0) {
 
 							var uniqueArray = uArray(diasdisponibles);
-							console.log(uniqueArray);
+							
 							var dias='';
 							for (var i = 0; i <uniqueArray.length; i++) {
 
 								if (i>0) {
-									dias+=',';
+									dias+=', ';
 								}
 								dias+=uniqueArray[i];
 							}
 
-							$("#leyenda").text('Los dias disponibles son: '+dias)
+							$("#leyenda").html('Los dias disponibles son: <span style="font-weight:bold;">'+dias+'<span>')
 						}
 
 
@@ -1046,7 +1064,40 @@ function cargarHorarios(contadorperiodos) {
 
 }
 
+function Aplicar() {
+		var preguntar=0;
+	if (arraydiaselegidos.length==0) {
+		preguntar=0;
+	}else{
+		preguntar=1;
+	}
+
+	if (preguntar==1) {
+
+		if(confirm("\u00BFEstas seguro de querer realizar esta operaci\u00f3n , se borrarán los horarios seleccionados?"))
+		{
+			preguntar=0;
+		}
+
+	}
+
+	if (preguntar==0) {
+
+		HorariosDisponibles();
+		var id=$("#id").val();
+		if (id>0) {
+		ObtenerHorariosSemana(id);	
+		}
+		
+	}
+
+}
+
 function HorariosDisponibles() {
+
+
+
+
 	var v_zonas=[];
 	arraydiaselegidos=[];
 	arraydiaseleccionados=[];
@@ -1109,7 +1160,7 @@ Resumenfechas();
 					url: 'catalogos/servicios/ObtenerHorarios.php', //Url a donde la enviaremos
 					type: 'POST', //Metodo que usaremos
 					data:datos,
-					dataType:'json',
+					dataType:'json', 
 					error: function (XMLHttpRequest, textStatus, errorThrown) {
 						var error;
 						console.log(XMLHttpRequest);
@@ -1119,9 +1170,9 @@ Resumenfechas();
 					},	
 					success: function (msj) {
 
+						var v_fechainicial=msj.fechadia;
 						var dividirfecha=v_fechainicial.split('-');
-							console.log(dividirfecha);
-
+						
 						 $('#picker').markyourcalendar({
 	          			 startDate: new Date(dividirfecha[0],dividirfecha[1]-1,dividirfecha[2]),
 			             months: ['ene','feb','mar','abr','may','jun','jul','agos','sep','oct','nov','dic'],
@@ -1135,15 +1186,16 @@ Resumenfechas();
 
 						});
 
-
+						 var fechas=msj.arrayfechasdias[0];
+						PintarFechasCalendario(fechas);
 
 						var id=fecha+'-'+horainicial+'-'+horafinal+'-'+idzona;
 
 
 						 var respuesta=msj.respuesta;
 						  zonasarray=msj.zonas;
-						 console.log('a');
-						 console.log(zonasarray);
+						// console.log('a');
+						// console.log(zonasarray);
 
 						 if (respuesta.length>0) {
 						 	$("#calendario").css('display','block');
@@ -1324,7 +1376,8 @@ function HorariosDisponibles2() {
 
 						var dividirfecha=v_fechainicial.split('-');
 						 zonasarray=msj.zonas;
-
+						 var fechas=msj.arrayfechasdias[0];
+						PintarFechasCalendario(fechas);
 				
 						 var respuesta=msj.respuesta;
 						for (var i = 0; i < respuesta.length; i++) {
@@ -1413,7 +1466,7 @@ function CargarEventoSeleccionador() {
 
  								 	BorrarElemento(id);
  								 	BorrarElementoObjeto(id);
-
+ 								 	element.style.color='black';
 						 		}else{
 
 						 			arraydiaselegidos.push(id);
@@ -1482,7 +1535,7 @@ function BorrarElemento(id) {
 }
 function BorrarElementoObjeto(id) {
 	for (var i = 0; i <arraydiaseleccionados.length; i++) {
-		
+			console.log(''+id+'=='+arraydiaseleccionados[i].id);
 
 		if (id == arraydiaseleccionados[i].id) {
 
@@ -1504,7 +1557,7 @@ function PintarSeleccionados() {
 			if (!!document.getElementById(id)) {
 			var element = document.getElementById(id);
 				element.classList.add("activohorario");
-	
+				element.classList.add("inputdia");
 				var zonaelegida =zonasarray.find( zona => zona.idzona === iddividido[5]);
 				var color=zonaelegida.color;
  				element.style.border="1px solid "+color;
@@ -1520,7 +1573,7 @@ function Resumenfechas() {
 		$("#selected-dates").html('');
 		let days = ['Domingo','Lunes','Martes','Miércoles', 'Jueves', 'Viernes', 'Sábado','Domingo'];
 		
-		var ordenado =arraydiaseleccionados.sort(generateSortFn([{name: 'idzona'}, {name: 'fecha',reverse: true}]));
+		var ordenado =arraydiaseleccionados.sort(generateSortFn([{name: 'idzona'}, {name: 'fecha',reverse: false}]));
 
 
 		if (ordenado.length>0) {
@@ -1551,7 +1604,7 @@ function Resumenfechas() {
 					if (!!$("#colocarzona"+idzona)) {
 
 						var html=`
-						<div  class="list-group-item" style="background:`+colordiv+`">`+nombrezona+`</div>
+						<div  class="list-group-item" style="font-weight:bold;">`+nombrezona+`<div class="badge1" style="background:`+colordiv+`"></div></div>
 						<div class="zonas" id="colocarzona`+idzona+`"></div>`;
 						
 						$("#selected-dates").append(html);
@@ -1565,7 +1618,19 @@ function Resumenfechas() {
 			}
 
 
-			var htmlfechas=`<div class="list-group-item" class="fechas">`+dia+` `+fecha+` `+horainicial+`-`+horafinal+`</div>`;
+			var htmlfechas=`<div class="list-group-item" class="fechas">
+						<div class="row">
+							<div class="col-md-4">
+								`+dia+`
+							</div>
+							<div class="col-md-4">
+								`+fecha+`
+							</div>
+							<div class="col-md-4">
+							 `+horainicial+`-`+horafinal+`
+							</div>
+						</div>
+					 </div>`;
 			
 			$("#colocarzona"+idzona).append(htmlfechas);
 			
@@ -1704,25 +1769,43 @@ function ActivarTab(elemento,idelemento) {
 	$("#"+idelemento).addClass('show');
 	$("#"+idelemento).addClass('active');
 
+	if ('multi'==idelemento) {
+		$(".btnguardarservicio").html('<i class="mdi mdi-content-save"></i>Guardar');
+
+	}else{
+ 	
+ 	$(".btnguardarservicio").html('<i class="mdi mdi-arrow-right-box"></i>Continuar');
+
+
+	}
 
 }
 
 
 function Guardarservicio(form,regresar,donde,idmenumodulo)
 {
-	if(confirm("\u00BFDesea realizar esta operaci\u00f3n?"))
+	/*if(confirm("\u00BFDesea realizar esta operaci\u00f3n?"))
 	{	
-			$("#v_titulo").removeClass('inputrequerido');
-			$("#v_descripcion").removeClass('inputrequerido');
-			$("#v_categoria").removeClass('inputrequerido');
-			$("#v_orden").removeClass('inputrequerido');
+*/
+
+
+
+			$("#lbltitulo").removeClass('inputrequerido');
+			$("#lbldescripcion").removeClass('inputrequerido');
+			$("#lbltiposervicio").removeClass('inputrequerido');
+			$("#lblorden").removeClass('inputrequerido');
 			$("#lbldias").removeClass('inputrequerido');
-			$("#v_categoriaservicio").removeClass('inputrequerido');
+			$("#lblcategoria").removeClass('inputrequerido');
 			$("#v_numparticipantesmin").removeClass('inputrequerido');
 			$("#v_numparticipantesmax").removeClass('inputrequerido');
-			$("#v_costo").removeClass('inputrequerido');
+			$("#lblcostounitario").removeClass('inputrequerido');
 			$(".divmodo").removeClass('inputrequerido');
 	    	$("#lblperiodos").css('color','#3e5569');
+			$("#lblhorarios").removeClass('inputrequerido');
+			$("#lblminimo").removeClass('inputrequerido');
+			$("#lblmaximo").removeClass('inputrequerido');
+			$("#lbldescripcionpolitica").removeClass('inputrequerido');
+			$("#lbldescripcionaceptacionpolitica").removeClass('inputrequerido');
 
 
 		var domingo=0,lunes=0,martes=0,miercoles=0,jueves=0,Viernes=0,sabado=0;
@@ -1877,6 +1960,26 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 			var valor=$(this).val();
 			periodofinal.push(valor);
 		 });
+
+
+		var abiertocliente=$("#v_abiertocliente").is(':checked')?1:0;
+		var abiertocoach=$("#v_abiertocoach").is(':checked')?1:0;
+		var abiertoadmin=$("#v_abiertoadmin").is(':checked')?1:0;
+		var ligarclientes=$("#v_ligarclientes").is(':checked')?1:0;
+		var v_numligarclientes=$("#v_numligarclientes").val();
+
+		var v_tiempoaviso=$("#v_tiempoaviso").val();
+		var v_tituloaviso=$("#v_tituloaviso").val();
+		var v_descripcionaviso=$("#v_descripcionaviso").val();
+
+		var v_politicascancelacion=$("#v_politicascancelacion").val();
+		var v_politicasaceptacion=$("#v_politicasaceptacion").val();
+		var v_reembolso=$("#v_reembolso").is(':checked')?1:0;
+		var v_cantidadreembolso=$("#v_cantidadreembolso").val();
+		var v_asignadocliente=$("#v_asignadocliente").is(':checked')?1:0;
+		var v_asignadocoach=$("#v_asignadocoach").is(':checked')?1:0;
+		var v_asignadoadmin=$("#v_asignadoadmin").is(':checked')?1:0;
+
 		const zonas = [...new Set(arraydiaseleccionados.map(bill => bill.idzona))];
 		datos.append('coachs',coachs);
 		datos.append('participantes',participantes);
@@ -1914,25 +2017,44 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 		datos.append('v_numparticipantes',v_numparticipantes);
 		datos.append('v_numparticipantesmax',v_numparticipantesmax);
 
+		datos.append('abiertocliente',abiertocliente);
+		datos.append('abiertocoach',abiertocoach);
+		datos.append('abiertoadmin',abiertoadmin);
+		datos.append('ligarclientes',ligarclientes);
+		datos.append('v_numligarclientes',v_numligarclientes);
+		datos.append('v_tiempoaviso',v_tiempoaviso);
+		datos.append('v_tituloaviso',v_tituloaviso);
+		datos.append('v_descripcionaviso',v_descripcionaviso);
+		datos.append('v_politicascancelacion',v_politicascancelacion);
+		datos.append('v_reembolso',v_reembolso);
+		datos.append('v_cantidadreembolso',v_cantidadreembolso);
+		datos.append('v_asignadocliente',v_asignadocliente);
+		datos.append('v_asignadocoach',v_asignadocoach);
+		datos.append('v_asignadoadmin',v_asignadoadmin);
+		datos.append('v_politicasaceptacion',v_politicasaceptacion);
+
+		
 		var bandera1=1;
 		if (nombre=='') {
-			$("#v_titulo").addClass('inputrequerido');
+			$("#lbltitulo").addClass('inputrequerido');
 			bandera1=0;
 		}
 
 		if (descripcion=='') {
-			$("#v_descripcion").addClass('inputrequerido');
-		bandera1=0;
+			$("#lbldescripcion").addClass('inputrequerido');
+			bandera1=0;
 		}
-		if (categoria==0) {
 
-			$("#v_categoria").addClass('inputrequerido');
+
+		if (categoria == 0) {
+
+			$("#lbltiposervicio").addClass('inputrequerido');
 			bandera1=0;
 		}
 
 		if (orden=='') {
 
-			$("#v_orden").addClass('inputrequerido');
+			$("#lblorden").addClass('inputrequerido');
 			bandera1=0;
 		}
 
@@ -1984,7 +2106,7 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 		if ($("#v_categoriaservicio").val()==0) {
 			validar2=0;
 			bandera2=0;
-			$("#v_categoriaservicio").addClass('inputrequerido');
+			$("#lblcategoria").addClass('inputrequerido');
 		}
 
 		if (cont==0) {
@@ -2005,6 +2127,7 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 		}
 
 		var bandera3=1;
+		//console.log(arraydiaseleccionados);
 
 		if (arraydiaseleccionados.length>0) {
 			seccion4=1;
@@ -2013,66 +2136,135 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 		}else{
 			seccion4=0;
 			bandera3=0;
-/*			$("#leyendahorarios").text('Selecciona la fecha inicial y final para elegir el periodo del servicio');
-*/
+			$("#lblhorarios").addClass('inputrequerido');
+
 		}
 		var bandera4=1;
 		if ($("#v_numparticipantesmin").val()=='') {
 			bandera4=0;
-		$("#v_numparticipantesmin").addClass('inputrequerido');
+		//$("#v_numparticipantesmin").addClass('inputrequerido');
 
 		}
 
 		if ($("#v_numparticipantesmax").val()=='') {
 			bandera4=0;
 
-		$("#v_numparticipantesmax").addClass('inputrequerido');
+		//$("#v_numparticipantesmax").addClass('inputrequerido');
+	
+		}
+		
+		if ($("#v_costo").val()=='') {
+
+			bandera4=0;
+	    	$("#lblcostounitario").addClass('inputrequerido');
 	
 		}
 
-		if ($("#v_costo").val()=='') {
-			bandera4=0;
-	    	$("#v_costo").addClass('inputrequerido');
 	
-		}
-
-		if ($("#v_costo").val()=='') {
-			bandera4=0;
-	    	$("#v_costo").addClass('inputrequerido');
-	
-		}
 		if (periodoinicial.length==0) {
 			bandera4=0;
 	    	$("#lblperiodos").css('color','red');
 			
 		}
 
+		for (var i = 0; i < periodoinicial.length; i++) {
+			if (isValidDate(periodoinicial[i])==false) {
+			bandera4=0;
+	    	$("#lblperiodos").css('color','red');
+
+			}
+		}
+
+		for (var i = 0; i < periodofinal.length; i++) {
+			if (isValidDate(periodofinal[i])==false) {
+			bandera4=0;
+	    	$("#lblperiodos").css('color','red');
+
+			}
+		}
+
 		if (modalidad==0) {
 
 			$(".divmodo").addClass('inputrequerido');
+			bandera4=0;
 		}
+
+		if (v_numparticipantes=='') {
+			bandera4=0;
+			$("#lblminimo").addClass('inputrequerido');
+		}
+		if (v_numparticipantesmax=='') {
+			bandera4=0;
+			$("#lblmaximo").addClass('inputrequerido');
+		}
+
+		if (bandera4==1) {
+
+			seccion5=1;
+									 //onclick="ActivarTab(this,'profile')"
+			$("#aceptacion-tab").attr('onclick','ActivarTab(this,"aceptacion")');
+									//document.getElementById("contact-tab").click();
+
+		}else{
+			seccion5=0;
+		}
+
+
+		var bandera5=1;
+		var seccion6=0;
+		if (v_politicasaceptacion=='') {
+
+			$("#lbldescripcionaceptacionpolitica").addClass('inputrequerido');
+			
+			bandera5=0;
+			
+		}
+
+		if (bandera5==1) {
+			seccion6=1;
+		}
+
+		/*var bandera6=1;
 		
+		if (v_politicascancelacion=='') {
+
+			$("#lbldescripcionpolitica").addClass('inputrequerido');
+			bandera6=0;
+			
+		}*/
 
 
-		if (seccion2==1 && seccion3==0 && seccion4==0) {
-		document.getElementById("profile-tab").click();
+
+		if (seccion2==1 && seccion3==1 && seccion4==1 && seccion5==1 &&seccion6==1) {
+			document.getElementById("politicas-tab").click();
+
 
 		}
+	
+		if (seccion2==1 && seccion3==1 && seccion4==1 && seccion5==1 && seccion6==0) {
+			document.getElementById("aceptacion-tab").click();
 
-		if (seccion2==1 &&seccion3==1 && seccion4==0) {
-			document.getElementById("contact-tab").click();
 
 		}
-
-		if (seccion2==1 && seccion3==1 && seccion4==1) {
+		if (seccion2==1 && seccion3==1 && seccion4==1 && seccion5==0 && seccion6==0) {
 			document.getElementById("costos-tab").click();
 
 
 		}
+
+		if (seccion2==1 &&seccion3==1 && seccion4==0 && seccion5==0 && seccion6==0) {
+			document.getElementById("contact-tab").click();
+
+		}
+
+		if (seccion2==1 && seccion3==0 && seccion4==0 && seccion5==0 && seccion6==0) {
+		document.getElementById("profile-tab").click();
+
+		}
 		
 		// $('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
-				
-		setTimeout(function(){
+				if (bandera1==1) {
+		//setTimeout(function(){
 				  $.ajax({
 					url:'catalogos/servicios/ga_servicio.php', //Url a donde la enviaremos
 					type:'POST', //Metodo que usaremos
@@ -2096,7 +2288,7 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 
 
 						   console.log("El resultado de msj es: "+msj);
-						   if (bandera1==1 && bandera2==1 && bandera3==1 && bandera4==1) {
+						   if (bandera1==1 && bandera2==1 && bandera3==1 && bandera4==1 && bandera5==1) {
 						   	if( resp[0] == 1 ){
 								aparecermodulos(regresar+"?ac=1&idmenumodulo="+idmenumodulo+"&msj=Operacion realizada con exito",donde);
 						 	 }else{
@@ -2110,6 +2302,51 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 						  	}*/			
 					  	}
 				  });				  					  
-		},1000);
+		/*},1000);*/
+
+		//}
 	 }
+}
+
+function Colocardescripcion() {
+	var v_titulo=$("#v_titulo").val();
+	$("#v_descripcion").val(v_titulo);
+}
+
+function CambiarNumeros(numero) {
+	var numero=$("#v_costo").val();
+	var resultado=formato_numero(numero,2,'.',','); 
+
+	$("#v_costo").val(resultado);
+}
+
+function Permitirligar() {
+	if ($("#v_ligarclientes").is(':checked')) {
+		$("#cantidadligar").css('display','block');
+		}else{
+		$("#cantidadligar").css('display','none');
+	}
+}
+
+function HabilitarcantidadReembolso() {
+	if ($("#v_reembolso").is(':checked')) {
+		$(".divcantidadreembolso").css('display','block');
+		}else{
+		$(".divcantidadreembolso").css('display','none');
+	}
+}
+
+
+
+function PintarFechasCalendario(fechas) {
+
+	
+	for (var i = 0; i <fechas.length; i++) {
+		var dividirfecha=fechas[i].fecha.split('-');
+		var nuevafecha=dividirfecha[0]+'-'+parseInt(dividirfecha[1])+'-'+parseInt(dividirfecha[2]);
+					
+		$(".fecha_"+nuevafecha).css('background','#cecece');	 
+		$(".fecha_"+nuevafecha).css('border','0');	 
+
+	}
 }

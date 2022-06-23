@@ -15,8 +15,17 @@ function ObtenerServicioAsignado() {
 			var respuesta=datos.respuesta;
 			var imagen=respuesta.imagen;
 			var horarios=datos.horarios;
+			var idservicio=respuesta.idservicio;
+			localStorage.setItem('idservicio',idservicio);
+			if (imagen!=null && imagen!='') {
 
-			imagen=urlimagenes+`servicios/imagenes/`+codigoserv+imagen;
+				imagen=urlimagenes+`servicios/imagenes/`+codigoserv+imagen;
+	
+			}else{
+
+
+				imagen=localStorage.getItem('logo');
+			}
 			$("#imgservicioasignado").attr('src',imagen);
 
 			$(".tituloservicio").text(respuesta.titulo);
@@ -27,8 +36,19 @@ function ObtenerServicioAsignado() {
              	horarioshtml+=`<span>`+respuesta.fechaproxima+` `+respuesta.horainicial+` - `+respuesta.horafinal+` Hrs.</span></br>`;
              }
 
-
+             $(".descripcionpoliticas").text(respuesta.politicascancelacion);
 			$(".colocarhorarios").html(horarioshtml);
+
+
+			if (respuesta.abiertocoach==1) {
+				$("#permisoasignaralumno").css('display','block');
+			}
+			if (respuesta.abiertocliente==1) {
+				$("#permisoasignaralumno").css('display','block');
+			}
+			if (respuesta.abiertoadmin==1) {
+				$("#permisoasignaralumno").css('display','block');
+			}
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
@@ -70,6 +90,81 @@ function AceptarTerminos() {
 			if (datos.respuesta==1) {
 				
 				GoToPage('detalleservicio');
+			}
+			
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+}
+
+function PantallaRechazarTerminos() {
+	 var html=`
+         
+              <div class="block">
+
+                <div class="row" style="padding-top:1em;">
+                	<label style="font-size:16px;padding:1px;">Motivo:</label>
+                	<textarea name="" id="txtcomentariorechazo" cols="30" rows="3"></textarea>
+                </div>
+              </div>
+           
+         
+        `;
+       app.dialog.create({
+          title: 'Rechazar servicio',
+          //text: 'Dialog with vertical buttons',
+          content:html,
+          buttons: [
+            {
+              text: 'Cancelar',
+            },
+            {
+              text: 'Aceptar',
+            },
+            
+          ],
+
+           onClick: function (dialog, index) {
+            if(index === 0){
+             
+          }
+          else if(index === 1){
+               RechazarTerminos();
+
+            }
+
+        },
+          verticalButtons: false,
+        }).open();
+	
+}
+
+function RechazarTerminos() {
+	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
+	var pagina = "RechazarTerminos.php";
+	var id_user=localStorage.getItem('id_user');
+	var motivo=$("#txtcomentariorechazo").val();
+	var datos="id_user="+id_user+"&idusuarios_servicios="+idusuarios_servicios+"&motivocancelacion="+motivo;
+	
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+
+			if (datos.respuesta==1) {
+
+				alerta('','Operación realizada');
+				GoToPage('home');
 			}
 			
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -129,7 +224,7 @@ function PantallaCalificacion() {
 
                 <div class="row" style="padding-top:1em;">
                 	<label style="font-size:16px;padding:1px;">Comentarios:</label>
-                	<textarea name="" id="" cols="30" rows="3"></textarea>
+                	<textarea name="" id="txtcomentario" cols="30" rows="3"></textarea>
                 </div>
               </div>
            
@@ -148,9 +243,49 @@ function PantallaCalificacion() {
             },
             
           ],
+           onClick: function (dialog, index) {
+                    if(index === 0){
+               
+          }
+          else if(index === 1){
+             	CalificarServicio();
+
+            }
+           
+        },
           verticalButtons: false,
         }).open();
 	
+}
+
+function CalificarServicio() {
+	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
+	var id_user=localStorage.getItem('id_user');
+	var calificacion=$(".colorestrella").length;
+	var txtcomentario=$("#txtcomentario").val();
+	var datos="idusuarios_servicios="+idusuarios_servicios+"&calificacion="+calificacion+"&txtcomentario="+txtcomentario+"&id_user="+id_user;
+	var pagina="GuardarCalificacion.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+			var respuesta=datos.respuesta;
+			
+			alerta('','Se guardó calificacion');
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
 }
 
 function SeleccionarEstrella(cantidad) {
@@ -313,7 +448,43 @@ function IniciarChat() {
   		
 	});
 
-	GoToPage('messages');
+	if (arrayidusuarios.length>0) {
+	localStorage.setItem('usuariossala',JSON.stringify(arrayidusuarios));
+
+	var pagina = "NuevaSala.php";
+	var id_user=localStorage.getItem('id_user');
+	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
+
+	arrayidusuarios.push(id_user);
+
+	var datos="idusuarios_servicios="+idusuarios_servicios+"&id_user="+id_user+"&idusuarios="+JSON.stringify(arrayidusuarios);
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(respuesta){
+			var resultado=respuesta.idsala;
+			localStorage.setItem('idsala',resultado);
+			
+			GoToPage('messages');
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+
+		}else{
+
+			alerta('','No se ha seleccionado ningun participante');
+		}
 	//console.log(arrayidusuarios);
 	
 }
@@ -493,3 +664,203 @@ function CargarHorarios() {
 
 		});
 	}
+
+function ObtenerParticipantesAlumnos() {
+	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
+	var pagina = "ObtenerParticipantesAlumnos.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user+"&idusuarios_servicios="+idusuarios_servicios;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+			var respuesta=datos.respuesta;
+			PintarParticipantesAlumnos(respuesta);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+}
+
+function PintarParticipantesAlumnos(respuesta) {
+	if (respuesta.length>0) {
+		var html="";
+		for (var i =0; i < respuesta.length; i++) {
+
+			if (respuesta[i].foto!='' && respuesta[i].foto!=null) {
+
+				urlimagen=urlimagenes+`upload/perfil/`+respuesta[i].foto;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+			}else{
+
+				urlimagen="img/icon-usuario.png";
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+			}
+			html+=`
+				  
+
+                <li>
+            <label class="label-radio item-content">                                                                               
+              <div class="item-inner" style="width:80%;">
+             
+                <div class="row">
+                <div class="item-media">
+              		  <div class="col-30">
+                        <figure class="avatar  rounded-10">
+                        <img src="`+urlimagen+`" alt="" style="width:80px;height:80px;" />
+                        </figure>
+                        </div>
+                        
+                        	<div class="col-100">
+                        	 <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
+
+
+             		   </div>
+             		   <div class="row">
+             		     <div class="col-100 item-text" style="font-size:18px;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].usuario+`
+             		     </div>
+             		   </div>
+             		   <div class="row">
+                        	  <div class="item-text">`+respuesta[i].nombretipo+`</div>
+                    </div>
+                        	</div>
+                        	
+                        	</div>
+                        </div>
+             		 
+              </div>
+
+            </label>
+          </li>
+
+
+			`;
+		}
+		$("#divparticipantesalumnos").html(html);
+
+	}
+}
+
+
+function ObtenerAlumnos() {
+	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
+	var pagina = "ObtenerAlumnos.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user+"&idusuarios_servicios="+idusuarios_servicios;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+			var respuesta=datos.respuesta;
+			PintarAlumnos(respuesta);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+}
+
+
+function PintarAlumnos(respuesta) {
+	if (respuesta.length>0) {
+		var html="";
+		for (var i =0; i < respuesta.length; i++) {
+
+			if (respuesta[i].foto!='' && respuesta[i].foto!=null) {
+
+				urlimagen=urlimagenes+`upload/perfil/`+respuesta[i].foto;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+			}else{
+
+				urlimagen="img/icon-usuario.png";
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+			}
+			html+=`
+				  
+
+                <li class="lista_" id="lista_`+respuesta[i].idusuarios+`">
+            <label class="label-radio item-content">                                                                               
+              <div class="item-inner" style="width:80%;">
+             
+                <div class="row">
+                <div class="item-media">
+              		  <div class="col-30">
+                        <figure class="avatar  rounded-10">
+                        <img src="`+urlimagen+`" alt="" style="width:80px;height:80px;" />
+                        </figure>
+                        </div>
+                        
+                        	<div class="col-100">
+                        	 <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
+             		   </div>
+
+
+                     <div class="row">
+             		     <div class="col-100 item-text" style="font-size:18px;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].usuario+`
+             		     </div>
+             		   </div>
+
+             		   <div class="row">
+                        	  <div class="item-text">`+respuesta[i].nombretipo+`</div>
+                    </div>
+
+                        	</div>
+                        	
+                         	</div>
+                        </div>
+             		 
+              </div>
+             <input type="checkbox" name="my-opcion" class="idusuariosiniciar" id="idusuarios_`+respuesta[i].idusuarios+`"  style="height:20px;width:20px;" onchange="SeleccionarAsignado(`+respuesta[i].idusuarios+`)">
+
+            </label>
+          </li>
+
+
+			`;
+		}
+		$("#divalumnos").html(html);
+
+	}
+}
+
+function SeleccionarAsignado(idusuarios) {
+	var contar=0;
+	$(".idusuariosiniciar").each(function( index ) {
+  			if ($(this).is(':checked')) {
+  				contar++;
+  			}
+	});
+
+	if (contar>0) {
+
+		$("#btnguardarasignacion").css('display','block');
+	}else{
+
+		$("#btnguardarasignacion").css('display','none');
+	
+	}
+}
+function LimpiarFiltroalumnos() {
+	
+	$(".lista_").css('display','block');
+}
+

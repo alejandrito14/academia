@@ -11,7 +11,7 @@ function GuardarNivel(form,regresar,donde,idmenumodulo)
 				
 		setTimeout(function(){
 				  $.ajax({
-					url:'catalogos/nivel/ga_nivel.php', //Url a donde la enviaremos
+					url:'catalogos/niveles/ga_nivel.php', //Url a donde la enviaremos
 					type:'POST', //Metodo que usaremos
 					data: datos, //Le pasamos el objeto que creamos con los archivos
 					error:function(XMLHttpRequest, textStatus, errorThrown){

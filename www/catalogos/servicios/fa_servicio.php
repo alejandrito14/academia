@@ -148,6 +148,7 @@ if(!isset($_GET['idservicio'])){
 	$tituloaviso=$result_SERVICIO_row['tituloaviso'];
 	$descripcionaviso=$result_SERVICIO_row['descripcionaviso'];
 	$politicasca=$result_SERVICIO_row['politicascancelacion'];
+	$politicasaceptacion=$result_SERVICIO_row['politicasaceptacion'];
 
 	$col = "col-md-12";
 	$ver = "";
@@ -243,10 +244,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 	<ul class="nav nav-tabs" id="myTab" role="tablist">
   <li class="nav-item" role="presentation">
-    <button onclick="ActivarTab(this,'home')" class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true" onclick="">CONFIGURAR SERVICIO</button>
+    <button onclick="ActivarTab(this,'home')" class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true" onclick="">CONFIGURACIÓN GENERAL</button>
   </li>
   <li class="nav-item" role="presentation">
-    <button type="button"  class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">SELECCIONAR DÍAS</button>
+    <button type="button"  class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">ASIGNAR DÍAS</button>
 
 <!--     onclick="ActivarTab(this,'profile')"
  -->  </li>
@@ -263,6 +264,12 @@ if(isset($_SESSION['permisos_acciones_erp'])){
  -->  </li>
 
   <li class="nav-item" role="presentation">
+    <button  type="button" onclick="ActivarTab(this,'aceptacion')" class="nav-link" id="aceptacion-tab" data-bs-toggle="tab" data-bs-target="#aceptacion" type="button" role="tab" aria-controls="aceptacion" aria-selected="false">POLÍTICAS DE ACEPTACIÓN</button>
+
+<!--     onclick="ActivarTab(this,'costos')"
+ -->  </li>
+
+  <li class="nav-item" role="presentation">
     <button  type="button" onclick="ActivarTab(this,'politicas')" class="nav-link" id="politicas-tab" data-bs-toggle="tab" data-bs-target="#politicas" type="button" role="tab" aria-controls="politicas" aria-selected="false">POLÍTICAS DE CANCELACIÓN</button>
 
 <!--     onclick="ActivarTab(this,'politicas')"
@@ -274,7 +281,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
   </li>
 
    <li class="nav-item" role="presentation" >
-    <button  type="button" onclick="ActivarTab(this,'multi')" class="nav-link" id="multi-tab" data-bs-toggle="tab" data-bs-target="#multi" type="button" role="tab" aria-controls="multi" aria-selected="false">ASIGNACIONES</button>
+    <button  type="button" onclick="ActivarTab(this,'multi')" class="nav-link" id="multi-tab" data-bs-toggle="tab" data-bs-target="#multi" type="button" role="tab" aria-controls="multi" aria-selected="false">ASIGNAR PERMISOS</button>
   </li>
 
   
@@ -318,19 +325,19 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 							<div class="col-md-6">
 							<div class="form-group m-t-20">
-								<label id="lbltitulo">*TÍTULO:</label>
+								<label id="lbltitulo">* TÍTULO:</label>
 								<input type="text" class="form-control" id="v_titulo" name="v_titulo" value="<?php echo $titulo1; ?>" title="TÍTULO" placeholder='TÍTULO' onblur="Colocardescripcion()">
 							</div>
 
 							<div class="form-group m-t-20">
-								<label id="lbldescripcion">*DESCRIPCIÓN:</label>
+								<label id="lbldescripcion">* DESCRIPCIÓN:</label>
 								<textarea name="v_descripcion" id="v_descripcion" placeholder="DESCRIPCIÓN" class="form-control"><?php echo $descripcion; ?></textarea>
 							</div>
 							
 						
 
 							<div class="form-group m-t-20">
-								<label for="" id="lbltiposervicio">*TIPO DE SERVICIO:</label>
+								<label for="" id="lbltiposervicio">* TIPO DE SERVICIO:</label>
 								<select name="v_categoria" id="v_categoria" onchange="SeleccionarCategoria(0)" class="form-control">
 									<option value="0" >SELECCIONAR TIPO DE SERVICIO</option>
 
@@ -348,7 +355,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							</div>
 
 							<div class="form-group m-t-20">
-								<label id="lblorden">*ORDEN:</label>
+								<label id="lblorden">* ORDEN:</label>
 								<input type="number" class="form-control" id="v_orden" name="v_orden" value="<?php echo $orden; ?>" title="ORDEN" placeholder='ORDEN'>
 							</div>
 
@@ -384,7 +391,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					<div class="col-md-6">
 						
 						<div class="form-group m-t-20">
-								<label for="" id="lbldias">*SELECCIONAR DÍAS:</label>
+								<label for="" id="lbldias">* SELECCIONAR DÍAS:</label>
 
 								<div id="leyenda" style="margin-bottom: 1em;"></div>
 								 <div class="form-group m-t-20">
@@ -466,7 +473,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					<div class="col-md-6">
 						
 						<div class="form-group m-t-20">
-							<label for="" id="lblcategoria">*CATEGORIA:</label>
+							<label for="" id="lblcategoria">* CATEGORÍA:</label>
 								<select name="v_categoriaservicio" id="v_categoriaservicio" class="form-control">
 									<option value="0" >SELECCIONAR CATEGORÍA</option>
 
@@ -511,31 +518,31 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 								<div id="leyendahorarios" style="margin-left: 1em;margin-bottom: 1em;">
 
-								Selecciona la fecha inicial y final para elegir el periodo del servicio </div>
+								Selecciona la fecha inicial y final para el periodo del servicio </div>
 
 							<div class="col-md-3" style="float:left;">
 							<div class="form-group m-t-20">
-								<label>*FECHA INICIAL:</label>
+								<label>* FECHA INICIAL:</label>
 								<input type="date" class="form-control" id="v_fechainicial" name="v_fechainicial" value="<?php echo $fechainicial; ?>" title="FECHA INICIAL" placeholder='FECHA INICIAL'>
 							</div>
 
 						</div>
 						<div class="col-md-3" style="float:left;">
 							<div class="form-group m-t-20">
-								<label>*FECHA FINAL:</label>
+								<label>* FECHA FINAL:</label>
 								<input type="date" class="form-control" id="v_fechafinal" name="v_fechafinal" value="<?php echo $fechafinal; ?>" title="FECHA FINAL" placeholder='FECHA FINAL'>
 							</div>
 						</div>
 
 						<div class="col-md-3" style="float:left;">
-							<button type="button" style="    margin-top: 2em;" onclick="HorariosDisponibles()" class="btn btn-primary">APLICAR</button>
+							<button type="button" style="    margin-top: 2em;" onclick="Aplicar()" class="btn btn-primary">APLICAR</button>
 						</div>
 
 						</div>
 
 						<div class="col-md-12">
 						<div class="form-group m-t-20 col-md-3">
-							<label id="lblhorarios">*ASIGNAR HORARIOS</label>
+							<label id="lblhorarios">* ASIGNAR HORARIOS</label>
 						</div>
 					</div>
 
@@ -583,7 +590,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				          <div class="row">
 				          	<div class="col-md-6">
 							<div class="form-group m-t-20" id="preciounitariodiv" style="padding-top: 1em;">
-								<label for="" id="lblcostounitario">*COSTO UNITARIO $:</label>
+								<label for="" id="lblcostounitario">* COSTO UNITARIO $:</label>
 								<input type="number" id="v_costo" class="form-control" value="<?php echo $costo; ?>" placeholder="COSTO UNITARIO" title="COSTO UNITARIO" onblur="CambiarNumeros()">
 
 							</div>
@@ -601,7 +608,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						
 							
 					<div class="col-md-6">
-						<p for=""><label for="" class="divmodo">*MONTO:</label></p>
+						<p for=""><label for="" class="divmodo">* MONTO:</label></p>
 
 						<div class="form-group" style="float: left;width: 30%;">
 								 	<div class="form-check">
@@ -640,7 +647,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					<div class="col-md-6" >
 
 							   <div class="form-group m-t-20">
-								<label for="" id="lblminimo">*MÍNIMO:</label>
+								<label for="" id="lblminimo">* MÍNIMO:</label>
 								<input type="number" id="v_numparticipantesmin" class="form-control" value="<?php echo $numeroparticipantesmin; ?>" placeholder="MÍNIMO" title="MÍNIMO">
 
 							</div>
@@ -648,7 +655,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
  
 							   <div class="form-group m-t-20">
-								<label for="" id="lblmaximo">*MÁXIMO:</label>
+								<label for="" id="lblmaximo">* MÁXIMO:</label>
 								<input type="number" id="v_numparticipantesmax" class="form-control" value="<?php echo $numeroparticipantes; ?>" placeholder="MÁXIMO" title="MÁXIMO">
 
 							</div>
@@ -667,7 +674,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							</div>
 
 							<div class="card-body">
-							<label for="" id="lblperiodos" style="margin-top:1em;margin-bottom: 1em;">*PERIODOS DE COBRO:</label>
+							<label for="" id="lblperiodos" style="margin-top:1em;margin-bottom: 1em;">* PERIODOS DE COBRO:</label>
 				              		 <button class="btn btn-primary" id="btnperiodo" type="button" style=" margin-top: -1em;margin-bottom: 1em;" onclick="AgregarPeriodo()">NUEVO PERIODO</button>
 				              </div>
 
@@ -756,29 +763,21 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					<div class="row">
 								<div class="col-md-6">
 									 <div class="form-group m-t-20">
-										<label for="">ASIGNADO A CLIENTE</label>
-										<input type="checkbox" id="v_abiertocliente">
+										<label for="">PERMITIR ASIGNAR AL CLIENTE</label>
+										<span style="width: 20px;margin-left: 0.5em;"></span><input type="checkbox" id="v_abiertocliente">
 									</div>
 
  								<div class="form-group m-t-20">
-										<label for="">ASIGNADO A COACH</label>
-									<input type="checkbox" id="v_abiertocoach">
+										<label for="">PERMITIR ASIGNAR AL COACH</label>
+									<span style="width: 20px;margin-left: 0.5em;"></span><input type="checkbox" id="v_abiertocoach">
 								</div>
 
  								<div class="form-group m-t-20">
-											<label for="">ASIGNADO A ADMIN</label>
-											<input type="checkbox" id="v_abiertoadmin">
+								<label for="">PERMITIR ASIGNAR AL ADMIN</label>
+								<span style="width: 20px;margin-left: 0.5em;"></span><input type="checkbox" id="v_abiertoadmin">
 								</div>
 
-									<div class="form-group m-t-20">
-											<label for="">PERMITIR LIGAR CLIENTES</label>
-											<input type="checkbox" id="v_ligarclientes" onchange="Permitirligar()">
-								</div>
-
-									<div class="form-group m-t-20" id="cantidadligar" style="display: none;">
-											<label for="">CANTIDAD</label>
-											<input type="number" class="form-control" id="v_numligarclientes" value="<?php echo $numligarclientes; ?>">
-								</div>
+							
 
 								
 
@@ -788,6 +787,26 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						</div>
 
 					  </div>
+
+
+					  <div class="card" style="" id="divcoachs">
+				<div class="card-header" style="margin-top: 1em;">
+					<h5>LIGAR CLIENTES</h5>
+
+				</div>
+				<div class="card-body">
+						<div class="form-group m-t-20">
+									<label for="">PERMITIR LIGAR CLIENTES</label>
+									<span style="width: 20px;margin-left: 0.5em;"></span><input type="checkbox" id="v_ligarclientes" onchange="Permitirligar()">
+								</div>
+
+								<div class="form-group m-t-20" id="cantidadligar" style="display: none;">
+									<label for="">CANTIDAD</label>
+									<input type="number" class="form-control" id="v_numligarclientes" value="<?php echo $numligarclientes; ?>">
+								</div>
+				</div>
+			</div>
+
 
 					  	<div class="card" style="" id="divcoachs">
 								<div class="card-header" style="margin-top: 1em;">
@@ -830,6 +849,28 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					</div>
 
 
+				<div class="tab-pane fade" id="aceptacion" role="tabpanel" aria-labelledby="aceptacion-tab">
+				 <div class="card" style="" id="">
+						<div class="card-header" style="margin-top: 1em;">
+							<h5>POLÍTICAS DE ACEPTACIÓN</h5>
+
+						</div>
+						<div class="card-body">
+							<div class="row">
+								<div class="col-md-6">
+								<div class="form-group m-t-20" style="">
+									<label for="" id="lbldescripcionaceptacionpolitica">* DESCRIPCIÓN:</label>
+									<textarea name="" id="v_politicasaceptacion" cols="20" rows="5" class="form-control"><?php echo $politicasaceptacion; ?></textarea>
+
+								</div>
+							</div>
+						</div>
+
+						</div>
+					</div>
+				</div>
+
+
 					   <div class="tab-pane fade" id="politicas" role="tabpanel" aria-labelledby="politicas-tab">
 
 					   	<div class="card" style="" id="divpoliticas">
@@ -845,34 +886,39 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 					   		 <div class="form-group m-t-20">
 									<label for="">REEMBOLSO</label>
-										<input type="checkbox" id="v_reembolso">
+
+									<span style="width: 20px;margin-left: 0.5em;"></span>
+										<input type="checkbox" id="v_reembolso" onchange="HabilitarcantidadReembolso()">
 
 									</div>
- 								<div class="form-group m-t-20">
+ 								<div class="form-group m-t-20 divcantidadreembolso" style="display: none;">
 									<label for="">CANTIDAD $:</label>
 									<input type="text" id="v_cantidadreembolso" class="form-control" value="<?php echo $cantidadreembolso; ?>">
 								</div>
 
-									 <div class="form-group m-t-20">
+								<div class="form-group m-t-20" style="display: none;">
 									<label for="" id="lbldescripcionpolitica">DESCRIPCIÓN:</label>
 									<textarea name="" id="v_politicascancelacion" cols="20" rows="5" class="form-control"><?php echo $politicasca; ?></textarea>
 
-									</div>
+								</div>
 
 
 
 								<div class="form-group m-t-20">
-									<label for="">CANCELADO POR CLIENTE </label>
+									<label for="">CANCELADO POR CLIENTE</label>
+									<span style="width: 20px;margin-left: 0.5em;"></span>
 									<input type="checkbox" id="v_asignadocliente" >
 								</div>
 
 								<div class="form-group m-t-20">
-									<label for="">CANCELADO POR COACH </label>
+									<label for="">CANCELADO POR COACH</label>
+									<span style="width: 20px;margin-left: 0.5em;"></span>
 									<input type="checkbox" id="v_asignadocoach" >
 								</div>
 
 									<div class="form-group m-t-20">
-									<label for="">CANCELADO POR ADMIN </label>
+									<label for="">CANCELADO POR ADMIN</label>
+									<span style="width: 20px;margin-left: 0.5em;"></span>
 									<input type="checkbox" id="v_asignadoadmin">
 								</div>
 
@@ -1432,6 +1478,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 	$("#coach-tab").css('display','none');
 	$("#multi-tab").css('display','none');
 	$("#politicas-tab").css('display','none');
+	$("#aceptacion-tab").css('display','none');
 
 	
 	var idservicio='<?php echo $idservicio?>';
@@ -1439,7 +1486,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 	$("#v_fechainicial").val(fecha);
 	$("#v_fechafinal").val(fecha);
-
+	var arraydiaselegidos=[];
+	var arraydiaseleccionados=[];
 	if (idservicio>0) {
 		var idcategoriaservicio='<?php echo $idcategoriaservicio; ?>';
 
@@ -1595,9 +1643,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 			$("#v_asignadocoach").attr('checked',true);
 		}
 	Permitirligar();
-
+	HabilitarcantidadReembolso();
 	}else{
 		arraydiaseleccionados=[];
+		AgregarPeriodo();
 	}
 	CambioPeriodo();
 	

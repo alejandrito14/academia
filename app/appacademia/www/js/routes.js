@@ -230,6 +230,12 @@ var routes = [
     path: '/detalleserviciocoach/',
     componentUrl: './pages/detalleserviciocoach.html',
   },
+
+   { 
+    
+    path: '/asignaralumnos/',
+    componentUrl: './pages/asignaralumnos.html',
+  },
    //nueva imagen grupal
   {
     path: '/nuevaimagengrupal/',

@@ -109,6 +109,7 @@ try
 	$emp->tituloaviso=$_POST['v_tituloaviso'];
 	$emp->descripcionaviso=$_POST['v_descripcionaviso'];
 	$emp->politicascancelacion=$_POST['v_politicascancelacion'];
+	$emp->politicasaceptacion=$_POST['v_politicasaceptacion'];
 	$emp->reembolso=$_POST['v_reembolso'];
 	$emp->cantidadreembolso=$_POST['v_cantidadreembolso'];
 	$emp->asignadocliente=$_POST['v_asignadocliente'];

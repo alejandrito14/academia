@@ -306,10 +306,32 @@ $arreglodiasfechas[$i]['horasposibles'][0][$j]['disponible']=0;
 			}
 		}
 
+
+		$fechadia=date('Y-m-d',strtotime($v_fechainicial));
+		$dia=date('w',strtotime($fechadia));
+
+		if ($dia!=0) {
+			
+			 $unafechaantes  = (new DateTime($fechadia))->modify('-1 week');
+			 $fechaanterior=$unafechaantes->format('Y-m-d');
+			
+			$diasentre=$fechas->DiasEntrefechas($fechaanterior,$fechadia);
+			
+
+				for ($j=0; $j <count($diasentre) ; $j++) { 
+				if($diasentre[$j]['numdia']==0){
+
+					$fechadia=$diasentre[$j]['fecha'];
+					
+					break;
+				}
+			}
+		}
 	//var_dump($arreglodiasfechas);
 
 	$respuesta['respuesta']=$arraydiaszonas;
 	$respuesta['zonas']=$arraydatoszona;
+	$respuesta['fechadia']=$fechadia;
 
 	echo json_encode($respuesta);
 

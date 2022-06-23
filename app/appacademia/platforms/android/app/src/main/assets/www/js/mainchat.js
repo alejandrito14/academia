@@ -83,6 +83,7 @@ function CargarFunciones() {
      ActualizarMensajes();      
 
 
+
 }
 
 
@@ -162,55 +163,70 @@ var conimagen="0";
 localStorage.setItem('nombrechat',nombre);
 var datos= 'usuario='+idusuario+'&nombre='+nombre+'&correo='+correo+'&mensaje='+mensaje+'&conimagen='+conimagen;
 
-/* $.ajax({
-        url: ruta2+'Chatiss/InicioChat',
-        type: 'post',
-        dataType: 'json',
-        data:datos,
-     success: function(data) {*/
-
-      localStorage.setItem('idsoporte',1);
-            console.log('sopor'+data.soporte);
-          Envio(nombre,correo,mensaje,data.soporte,data.imagen,data.idmensaje);
-/*
-
-         
-        }
-    });
-*/
-}
-
-function EnviaMensaje() {
-  var nombre=localStorage.getItem('Snombre');
-  var  idsoporte=localStorage.getItem('idsoporte');
-  var correo=localStorage.getItem('Semail');
+ var nombre=localStorage.getItem('nombreusuario');
+  var  idsoporte=localStorage.getItem('idsala');
+  var correo=localStorage.getItem('correo');
   var mensaje=$("#mensajetxt").val();
   var conimagen="0";
-var idusuario=localStorage.getItem('Sid');
+var idusuario=localStorage.getItem('id_user');
 
 localStorage.setItem('nombrechat',nombre);
 var datos= 'usuario='+idusuario+'&soporte='+idsoporte+'&nombre='+nombre+'&correo='+correo+'&mensaje='+mensaje+'&conimagen='+conimagen;
-
-/* $.ajax({
-        url: ruta2+'Chatiss/EnviaMensaje',
+var pagina="EnviarMensaje.php";
+ $.ajax({
+       // url: ruta2+'Chatiss/EnviaMensaje',
+        url: urlphp+pagina,
         type: 'post',
         dataType: 'json',
         data:datos,
      success: function(data) {
 
       localStorage.setItem('usuario',1);
-      localStorage.setItem('idsoporte',data.soporte);*/
-            console.log(data.soporte);
-          Envio(nombre,correo,mensaje,data.soporte,data.imagen,data.idmensaje);
+      //localStorage.setItem('idsoporte',data.soporte);
+         
+            var arrayusuarios=localStorage.getItem('usuariossala');
+          Envio(nombre,correo,mensaje,data.soporte,data.imagen,data.idmensaje,arrayusuarios);
 
 
-     /*    
+         
         }
-    });*/
+    });
+}
+
+function EnviaMensaje(text) {
+
+  var nombre=localStorage.getItem('nombre');
+  var  idsoporte=localStorage.getItem('idsala');
+  var correo=localStorage.getItem('correo');
+  var mensaje=text;
+  var conimagen="0";
+var idusuario=localStorage.getItem('id_user');
+
+localStorage.setItem('nombrechat',nombre);
+var datos= 'usuario='+idusuario+'&soporte='+idsoporte+'&nombre='+nombre+'&correo='+correo+'&mensaje='+mensaje+'&conimagen='+conimagen;
+var pagina="EnviarMensaje.php";
+ $.ajax({
+       // url: ruta2+'Chatiss/EnviaMensaje',
+        url: urlphp+pagina,
+        type: 'post',
+        dataType: 'json',
+        data:datos,
+     success: function(data) {
+
+      localStorage.setItem('usuario',1);
+      //localStorage.setItem('idsoporte',data.soporte);
+         
+            var arrayusuarios=localStorage.getItem('usuariossala');
+          Envio(nombre,correo,mensaje,data.soporte,data.imagen,data.idmensaje,arrayusuarios,idsoporte);
+
+
+         
+        }
+    });
 
 }
 
-function Envio(nombre,correo,mensaje,soporte,imagen,idmensaje) {
+function Envio(nombre,correo,mensaje,soporte,imagen,idmensaje,arrayusuarios,idsoporte) {
 
 
   //app.dialog.alert(""+imagen);
@@ -257,29 +273,30 @@ function Envio(nombre,correo,mensaje,soporte,imagen,idmensaje) {
     var divmensajes= $("#mensajes").html();
     var mensajes=divmensajes+html;
     $("#mensajes").html(mensajes);
+   $$('.messages-content').scrollTop( $('.messages-content').get(0).scrollHeight, 400 );
 
 /*    myMessagebar.scrollMessages();  
-*/     $("#formdatos").addClass('abajomensaje');
-     var idusuario=localStorage.getItem('usuario');
+*/     //$("#formdatos").addClass('abajomensaje');
+     var idusuario=localStorage.getItem('id_user');
      var tipo="Invitado";
 /*    socket=io.connect('http://localhost:3000');
 */
   
 
-   var JSon={"idusuario":idusuario,"soporte":soporte,"socketid":socket.id,"nombre":nombre,"mensaje":mensaje,"imagen":imagen,"idmensaje":idmensaje};
-
+   var JSon={"idusuario":idusuario,"soporte":idsoporte,"socketid":socket.id,"nombre":nombre,"mensaje":mensaje,"imagen":imagen,"idmensaje":idmensaje,"arrayusuarios":JSON.parse(arrayusuarios)};
+   console.log(JSon);
   Mandarmensaje(JSon);
 
   $("#mensajetxt").val('');
-  $("textarea").css('height','28');
+ /* $("textarea").css('height','28');
   $("#divmensaje").css('height','44');
-  
+  */
 
     
 
-    var alto=0,alto2=0;
+   // var alto=0,alto2=0;
 
-    $(".message").each(function( index ) {
+   /* $(".message").each(function( index ) {
        var t=$(this).height();
 
        alto=alto+t;
@@ -297,7 +314,7 @@ function Envio(nombre,correo,mensaje,soporte,imagen,idmensaje) {
         
 
 
-          myScroll.scrollTo(0, (-1*tamaniodiv));
+          myScroll.scrollTo(0, (-1*tamaniodiv));*/
 
   // $('#mensajes').scrollTop( $('#mensajes').prop('scrollHeight')+20); 
 
@@ -384,7 +401,7 @@ function PintarMensaje(data) {
       $("#lbl_mensajes").css('display','flex');
 
     }
-    var alto=0,alto2=0;
+   /* var alto=0,alto2=0;
 
      $(".message").each(function( index ) {
        var t=$(this).height();
@@ -395,16 +412,16 @@ function PintarMensaje(data) {
        var t=$(this).height();
 
          alto2=alto2+t;
-      });
-       console.log("alto"+alto);
+      });*/
+      // console.log("alto"+alto);
 
         
-      var tamaniodiv=alto+alto2+20;
+     /* var tamaniodiv=alto+alto2+20;
         console.log("tamanio"+tamaniodiv);
-        
+        */
 
 
-          myScroll.scrollTo(0, (-1*tamaniodiv));
+        //  myScroll.scrollTo(0, (-1*tamaniodiv));
 /*        myMessagebar.scrollMessages();  
 */
 }
@@ -607,7 +624,7 @@ function ConclusionSoporte(data) {
   app.dialog.alert('Se ha concluido Soporte', 'Soporte Terminado!');
 }
 
-function VerImagen(imagen) {
+/*function VerImagen(imagen) {
 
   var dynamicPopup = app.popup.create({
   content: '<div class="popup">'+
@@ -633,7 +650,7 @@ function VerImagen(imagen) {
     dynamicPopup.open();
 
 
-}
+}*/
 
 function IniciaChat2(imagen) {
   var nombre=localStorage.getItem('Snombre');
@@ -1003,7 +1020,7 @@ fileTransfer.download(download_link, fp,
 function ActualizarMensajes() {
   var  idsoporte=localStorage.getItem('idsoporte');
 
-if (idsoporte > 0) {
+/*if (idsoporte > 0) {
   
 
 var datos= 'soporte='+idsoporte;
@@ -1020,7 +1037,7 @@ var datos= 'soporte='+idsoporte;
          
         }
     });
-  }
+  }*/
 }
 /*
 
