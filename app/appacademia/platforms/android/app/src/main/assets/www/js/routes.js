@@ -71,7 +71,11 @@ var routes = [
     componentUrl: './pages/aceptacionservicio.html',
   },
 
-  
+ {
+    path:'/calendario/',
+    componentUrl: './pages/calendario.html',
+  },
+
    // stats
   {
     path: '/stats/',

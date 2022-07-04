@@ -653,3 +653,8 @@ z-index:0;
   color: gray;
   opacity: 1; /* Firefox */
 }
+
+.calendar-day-event {
+    width: 2em!important;
+
+    }

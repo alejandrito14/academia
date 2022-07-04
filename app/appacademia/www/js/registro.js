@@ -1,5 +1,7 @@
 var watchID2 = "";
 var dynamicSheet2="";
+var deportes=[];
+
 function Registrar() {
 
 	$(".linombre").removeClass('is-invalid');
@@ -684,7 +686,7 @@ function RegistrarAcceso() {
 	
 }
 
-function ObtenerNiveles() {
+function ObtenerNiveles(idnivel) {
 	var pagina = "ObtenerNiveles.php";
 
 	$.ajax({
@@ -718,6 +720,11 @@ function ObtenerNiveles() {
 				}
 
 				$("#v_nivel").html(html);
+
+				if (idnivel>0) {
+					$("#v_nivel").val(idnivel);
+	
+				}
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
@@ -3361,6 +3368,7 @@ function ObtenerdatosRegistro() {
 		success: function(datos){
 
 			PintarDatosRegistro(datos.respuesta);
+			PintarDeportesUsuario(datos.deportes);
 
 
 		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -3374,6 +3382,23 @@ function ObtenerdatosRegistro() {
 	});
 }
 
+function PintarDeportesUsuario(respuesta) {
+
+	if (respuesta.length>0) {
+
+		for (var i = 0; i <respuesta.length; i++) {
+			var objeto={
+				iddeporte:respuesta[i].iddeporte,
+				idnivel:respuesta[i].idnivel,
+				txtdeporte:respuesta[i].deporte,
+				txtnivel:respuesta[i].nivel
+			}
+
+			deportes.push(objeto);
+		}
+		MostrarDeportes();
+	}
+}
 
 function ObtenerdatosAcceso() {
 	var pagina = "Obtenerdatospersonales.php";
@@ -3712,12 +3737,16 @@ function IrRegistro() {
 		bandera=0;
 	}
 
+	if (deportes.length==0) {
+		bandera=0;
+	}
+
 	if (bandera==1) {
 	
-
+	
 		var iduser=localStorage.getItem('id_user');
 		var foto=localStorage.getItem('foto');
-		var datos="id_user="+iduser+"&foto="+foto+"&v_alias="+v_alias;
+		var datos="id_user="+iduser+"&foto="+foto+"&v_alias="+v_alias+"&v_deportes="+JSON.stringify(deportes);
 		var pagina="registroalias.php";
 
 		$.ajax({
@@ -3726,6 +3755,7 @@ function IrRegistro() {
 			url: urlphp+pagina,
 			data: datos,
 			success: function(datos){
+
 
 						GoToPage('registro');
 
@@ -3750,6 +3780,11 @@ function IrRegistro() {
 			$(".lialias").removeClass('is-valid');
 			bandera=0;
 		}
+
+		if (deportes.length==0) {
+			bandera=0;
+		}
+
 		if (localStorage.getItem('foto')=='' || localStorage.getItem('foto')==null) {
 				bandera=0;
 		alerta('','Para continuar es necesaria una foto de perfil');
@@ -3762,3 +3797,453 @@ function IrRegistro() {
 
 	}
 }
+var dynamicSheet3="";
+function AbrirModalDeporte() {
+	
+	
+var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: none;">
+            <div class="toolbar">
+              <div class="toolbar-inner">
+                <div class="left"></div>
+                <div class="right">
+                  <a class="link sheet-close"></a>
+                </div>
+              </div>
+            </div>
+            <div class="sheet-modal-inner" style="background: white;border-top-left-radius: 20px;border-top-right-radius:20px; ">
+              <div class="" style="height: 100%;">
+                <div style="background: white; height: 100%;width: 100%;border-radius: 20px;">
+   						     <div class="row">
+	   						     <div class="col-20">
+	   						      	 <div class="iconocerrar link sheet-close">
+	 									<span class="bi bi-x-circle-fill"></span>
+	   						    	 </div>
+	   						    </div>
+
+   						    	 <div class="col-60">
+   						    	 <span class="titulomodal"></span>
+   						    	 </div>
+   						    	 <div class="col-20">
+   						    	 <span class="limpiarfiltros"></span>
+   						    	 </div>
+   							 </div>
+   							 <div class="" style="position: absolute;width: 100%;">
+   							 	
+	   							  <div class="">
+
+
+		   							 	  <div class="block" style="margin-right:1em;margin-left:1em;">
+									    <div class="row " >
+							           <div style="margin-left: 1em;" class="col-85 medium-50 large-40 margin-left-auto margin-right-auto align-self-center  padding-vertical">
+							         	 <h1 style=""> Registrar <span style="color: #0abe68;">deporte</span>
+							         	 </h1>
+
+							          
+							         </div>
+		   
+
+      <div class="col-85 medium-50 large-40 margin-left-auto margin-right-auto align-self-center text-align-center " id="formtutorados" style="margin-right: 1em;
+    margin-left: 1em;">
+            <form style="" >
+                              <input type="hidden" name="v_iddepo" id="v_iddepo" class="input-with-value" />
+
+              <div class="list form-list no-margin margin-bottom">
+               <ul>
+
+
+               <li class="item-content item-input item-input-with-value is-valid lideporte">
+
+                  <div class="item-inner">
+                  <div class="item-title item-floating-label">Deporte:</div>
+                  <div class="item-input-wrap">
+                  <select name="gender" id="v_deporte" class="">
+                          <option value="0" class="special">Seleccionar deporte</option> 
+                   </select>
+                </div>
+              </div>
+              </li>
+
+               <li class="item-content item-input item-input-with-value is-valid linivel">
+
+                  <div class="item-inner">
+                  <div class="item-title item-floating-label">Nivel:</div>
+                  <div class="item-input-wrap">
+                  <select name="gender" id="v_nivel" class="">
+                          <option value="0" class="special">Seleccionar nivel</option>
+                          
+                   </select>
+                </div>
+              </div>
+              </li>
+             
+
+
+
+            </ul>
+
+
+
+
+            </div>
+          
+              <p class="margin-bottom"> </p>
+
+              <div class="">
+              	
+              
+            
+	              <div class="col-100 mostrar">
+	              <button type="button"  class="button button-fill button-large button-raised margin-bottom color-theme" id="btnguadardeporte" >
+	               Guardar
+	              </button>
+	              </div>
+
+
+	            </div>
+            </form>          
+			</div>
+          </div>
+         
+        </div>
+      </div>
+    </div>
+
+
+		   							 			` ;
+				
+
+		   							 	html+=`</div>
+
+	   							 	</div>
+
+   							 </div>
+
+   				</div>
+                
+              </div>
+            </div>
+          </div>`;
+          
+	  dynamicSheet3 = app.sheet.create({
+        content: html,
+
+    	swipeToClose: true,
+        backdrop: true,
+        // Events
+        on: {
+          open: function (sheet) {
+           //
+           // $$('#btnguadardeporte').attr('onclick','GuardarDeporte()');
+			$$('#v_deporte').attr('onchange','ObtenerNiveles()')
+
+
+          },
+          opened: function (sheet) {
+           
+           //CargarNivel();
+    		
+    			var v=$("#v_iddepo").val();
+    			if (v=='' || v==-1) {
+    				
+    				CargarDeportes(0);
+    			 $$('#btnguadardeporte').attr('onclick','GuardarDeporte(-1)');
+
+    			}else{
+    			 $$('#btnguadardeporte').attr('onclick','GuardarDeporte('+v+')');
+
+    			}
+          },
+
+          close:function () {
+          
+
+          },
+        }
+      });
+
+       dynamicSheet3.open();
+
+}
+
+function CargarDeportes(iddeportev) {
+		var datos="id_user="+iduser;
+		var pagina="ObtenerDeportes.php";
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: urlphp+pagina,
+			data: datos,
+			async:false,
+			success: function(datos){
+
+			var respuesta=datos.respuesta;
+			PintarDeportes(respuesta);
+
+			if (iddeportev>0) {
+				
+				$("#v_deporte").val(iddeportev);
+
+			}
+
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+					var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+					//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+				}
+			});
+
+}
+function PintarDeportes(resultado) {
+	var html="";
+	html+=`<option value="0">Seleccionar deporte</option>`;
+
+	if (resultado.length>0) {
+
+		for (var i = 0; i < resultado.length; i++) {
+			html+=`<option value="`+resultado[i].iddeporte+`">`+resultado[i].deporte+`</option>`;
+		}
+	}
+		$("#v_deporte").html(html);
+
+}
+function ObtenerNiveles(idnivel) {
+	var iddeporte=$("#v_deporte").val();
+	var datos="id_user="+iduser+"&iddeporte="+iddeporte;
+		var pagina="ObtenerNiveles.php";
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: urlphp+pagina,
+			data: datos,
+			async:false,
+			success: function(datos){
+				var respuesta=datos.respuesta;
+				PintarNiveles(respuesta);	
+
+				if (idnivel>0) {
+				$("#v_nivel").val(idnivel);
+
+				}	
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+					var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+					//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+				}
+		});
+}
+
+function PintarNiveles(resultado) {
+	var html="";
+				html+=`<option value="0">Seleccionar nivel</option>`;
+
+	if (resultado.length>0) {
+
+		for (var i = 0; i < resultado.length; i++) {
+			html+=`<option value="`+resultado[i].idnivel+`">`+resultado[i].nivel+`</option>`;
+		}
+	}
+		$("#v_nivel").html(html);
+
+}
+function GuardarDeporte(v_iddepo) {
+	//var v_iddepo=$("#v_iddepo").val();
+	var iddeporte=$("#v_deporte").val();
+	var txtdeporte=$('#v_deporte option:selected').html();
+	var idnivel=$("#v_nivel").val();
+	var txtnivel=$('#v_nivel option:selected').html();
+
+	var objeto={
+		iddeporte:iddeporte,
+		idnivel:idnivel,
+		txtdeporte:txtdeporte,
+		txtnivel:txtnivel
+	}
+	if(v_iddepo>=0) {
+
+		
+		var posicion="";
+		for (var i = 0; i <deportes.length; i++) {
+			if (i == v_iddepo) {
+
+				encontrado=1;
+				posicion=i;
+			}
+
+			if (encontrado==1) {
+					break;
+				}
+			}
+
+
+		deportes[posicion].iddeporte=iddeporte;
+		deportes[posicion].idnivel=idnivel;
+		deportes[posicion].txtdeporte=txtdeporte;
+		deportes[posicion].txtnivel=txtnivel;
+
+
+	}else{
+
+				deportes.push(objeto);
+
+	}
+
+
+	dynamicSheet3.close();
+
+	MostrarDeportes();
+}
+
+function MostrarDeportes() {
+
+
+	var contador=deportes.length;
+	var suma=0;
+	var cont=0;
+	var html="";
+	var i=0;
+	//console.log('contador'+contador);
+	if(contador>0) {
+
+
+	for (var i = 0; i < deportes.length; i++) {
+		
+	
+        //construir template
+
+      		
+	//if (respuesta.length>0) {
+	//	for (var i = 0; i <respuesta.length; i++) {
+	html+=`
+			<div class="col-100 medium-33 large-50 elementod"  style="    margin-top: 1em;
+    margin-bottom: 1em;" id="elementod_`+i+`"><div class="card">
+    <div class="card-content card-content-padding ">
+    <div class="row">
+	    <div class="col-auto align-self-center">
+		    <div class="avatar avatar-30 alert-danger text-color-red rounded-circle">
+		    <i class="bi bi-bar-chart-line-fill"></i>
+
+		    </div>
+	    </div>
+    <div class="col align-self-center no-padding-left">
+    <div class="row margin-bottom-half"><div class="col">
+	    
+	    <p style="padding:.5em;">`+deportes[i].txtdeporte+` `+deportes[i].txtnivel+`</p>
+	    </div>
+
+	  
+	    <div class="col-auto" style="text-align: right;">
+	    <span class="" style="float: left;padding: .5em;" onclick="EditarDeporte(`+i+`)"><i class="bi-pencil-fill"></i> </span>
+	    	<span class="" style="float: left;padding: 0.5em;" onclick="EliminarDeporte(`+i+`);"><i class="bi-x-circle-fill"></i></span>
+	    	</div>
+
+	    			</div>
+    			</div>
+    		</div>
+    	</div>
+   	 </div>
+    </div>
+		`;
+		
+	
+
+	
+
+	}
+
+	$(".mostrardeportes").css('display','block');
+
+	}else{
+
+		html+=`
+			<div class="col-100 medium-33 large-50" style="    margin-top: 1em;
+    margin-bottom: 1em;"><div class="card">
+    <div class="card-content card-content-padding ">
+    <div class="row">
+	    <div class="col-auto align-self-center">
+		    <div class="avatar avatar-40 alert-danger text-color-red rounded-circle">
+		    </div>
+	    </div>
+    <div class="col align-self-center no-padding-left">
+    <div class="row margin-bottom-half"><div class="col">
+	    <p class="small text-muted no-margin-bottom">
+	    </p>
+	    <p>No tienes tutorados registrados</p>
+	    </div><div class="col-auto text-align-right">
+	    <p class="small text-muted no-margin-bottom"></p>
+	    	<p class="small"></p></div>
+	    			</div>
+    			</div>
+    		</div>
+    	</div>
+   	 </div>
+    </div>
+		`;
+	$(".mostrardeportes").css('display','none');
+
+	}
+	$(".listadodeporte").html(html);
+
+
+	//$("#lista-objeto").html(html);
+
+}
+
+function EliminarDeporte(idcontador) {
+	 app.dialog.confirm('','¿Seguro de eliminar el deporte?', function () {
+	 	 $(".elementod").each(function(){
+	    	var id=$(this).attr('id');
+	    	var elemento=id.split('_');
+	    	if (idcontador==elemento[1]) {
+	    		$("#elementod_"+idcontador).remove();
+	    	}
+	    });
+	 	 var posicion='';
+	 	 for (var i = 0; i < deportes.length; i++) {
+	 	 	if (i==idcontador) {
+				encontrado=1;
+				posicion=i;
+			}
+			if (encontrado==1) {
+				 deportes.splice(posicion, 1);
+				return true;
+			}
+	 	 }
+	  });
+
+}
+function EditarDeporte(contador) {
+	var posicion='';
+	 for (var i = 0; i < deportes.length; i++) {
+
+	 	 	if (i == contador) {
+				encontrado=1;
+				posicion=i;
+			}
+			if (encontrado==1) {
+				
+				break;
+			}
+	 	 }
+
+			console.log('aq'+posicion);
+		AbrirModalDeporte();
+		Llenar(deportes[posicion],posicion);
+		$$("#btnguadardeporte").attr('onclick','GuardarDeporte('+posicion+')');
+
+		
+}
+
+function Llenar(deporte,posicion) {
+	$("#v_iddepo").val(posicion);
+	CargarDeportes(deporte.iddeporte);
+	ObtenerNiveles(deporte.idnivel);
+	
+	}

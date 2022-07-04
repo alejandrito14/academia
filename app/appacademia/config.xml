@@ -146,7 +146,7 @@
 
 
     </platform>
-    <preference name="SplashScreenDelay" value="8000" />
+    <preference name="SplashScreenDelay" value="5000" />
     <preference name="AutoHideSplashScreen" value="true" />
 
 

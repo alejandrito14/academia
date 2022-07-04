@@ -490,6 +490,9 @@ function IniciarChat() {
 }
 var dynamicSheet1="";
 function FechasServicio() {
+	GoToPage('calendario');
+}
+function FechasServicio2() {
 
 
 var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 80%;">
@@ -699,7 +702,7 @@ function PintarParticipantesAlumnos(respuesta) {
 
 			if (respuesta[i].foto!='' && respuesta[i].foto!=null) {
 
-				urlimagen=urlimagenes+`upload/perfil/`+respuesta[i].foto;
+				urlimagen=urlphp+`upload/perfil/`+respuesta[i].foto;
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
 			}else{
 
@@ -709,7 +712,8 @@ function PintarParticipantesAlumnos(respuesta) {
 			html+=`
 				  
 
-                <li>
+                <li style="background: white;
+    border-radius: 10px;">
             <label class="label-radio item-content">                                                                               
               <div class="item-inner" style="width:80%;">
              
@@ -787,7 +791,7 @@ function PintarAlumnos(respuesta) {
 
 			if (respuesta[i].foto!='' && respuesta[i].foto!=null) {
 
-				urlimagen=urlimagenes+`upload/perfil/`+respuesta[i].foto;
+				urlimagen=urlphp+`upload/perfil/`+respuesta[i].foto;
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
 			}else{
 
@@ -829,7 +833,7 @@ function PintarAlumnos(respuesta) {
                         </div>
              		 
               </div>
-             <input type="checkbox" name="my-opcion" class="idusuariosiniciar" id="idusuarios_`+respuesta[i].idusuarios+`"  style="height:20px;width:20px;" onchange="SeleccionarAsignado(`+respuesta[i].idusuarios+`)">
+             <input type="checkbox" name="my-opcion" class="idusuariosiniciar" id="idusuarios_`+respuesta[i].idusuarios+`"  style="height:20px;width:20%;" onchange="SeleccionarAsignado(`+respuesta[i].idusuarios+`)">
 
             </label>
           </li>
@@ -864,3 +868,45 @@ function LimpiarFiltroalumnos() {
 	$(".lista_").css('display','block');
 }
 
+
+function GuardarAsignacion() {
+	var pagina = "GuardarAsignacion.php";
+	var id_user=localStorage.getItem('id_user');
+	var idservicio=localStorage.getItem('idservicio');
+
+	var idusuarios=[];
+	$(".idusuariosiniciar" ).each(function( index ) {
+	  	if ($(this).is(':checked')) {
+	  		var id=$(this).attr('id');
+	  		var dividir=id.split('_')[1];
+	  		idusuarios.push(dividir);
+	  	}
+
+	});
+
+	var datos="id_user="+id_user+"&idusuarios="+idusuarios+"&idservicio="+idservicio;
+	
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+
+			if (datos.respuesta==1) {
+				
+				GoToPage('detalleserviciocoach');
+			}
+			
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+}

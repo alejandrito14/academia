@@ -217,7 +217,7 @@
         var foto=localStorage.getItem("fotoimagengrupal");
 
       if (foto!='null' && foto!='') {
-        $(".imglogoimagengrupal").attr('src',urlphp+"upload/sucursal/"+foto);
+        $(".imglogoimagengrupal").attr('src',urlphp+"upload/imagengrupal/"+foto);
 
       }else{
         $(".imglogoimagengrupal").attr('src',urlimagenimagengrupal);
@@ -362,10 +362,10 @@
 
 
 
-function ObtenerImagenesSucursal(){
-    var idsucursal=localStorage.getItem('idsucursal');
-    var datos="idsucursal="+idsucursal;
-    var pagina = "ObtenerSucursalImagenes.php";
+function ObtenerImagenesGrupal(){
+    var idservicio=localStorage.getItem('idservicio');
+    var datos="idservicio="+idservicio;
+    var pagina = "ObtenerServicioImagenes.php";
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -397,7 +397,7 @@ function PintarimagengrupalListado(resultado) {
 
     if (resultado[i].foto!='' && resultado[i].foto!='null') {
 
-        urlimagen=urlimagenes+`upload/sucursal/`+resultado[i].foto;
+        urlimagen=urlphp+`upload/imagengrupal/`+resultado[i].foto;
         imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;"/>';
       }else{
 
@@ -406,36 +406,25 @@ function PintarimagengrupalListado(resultado) {
       }
       
       html+=`
-         <li class="list-item sucursal_" style="background:white;" id="imagen_`+resultado[i].idsucursalesimagenes+`" >
-         <div class="row">
-         <div class="col-auto">
-         <div class="avatar shadow rounded-10">
-                   `+imagen+`
-                  </div>
-                </div>
-                <div class="col-30 align-self-center no-padding-left">
-                  <p class="text-muted size-12">Fecha de registro:`+resultado[i].fechacreacion+`</p>
-                </div>
-                  
-                  
-                   `;
-     
-        html+=`              
+         
 
-              
-                    <div class="col-10">
-                    <span style="font-size: 28px;display: flex;justify-content: center;" onclick="EditarImagenesSucursal(`+resultado[i].idsucursalesimagenes+`)"><i class="bi bi-pencil"></i></span>
-
+               <div class="col-100 medium-50 large-33">
+                <a  class="card margin-bottom">
+                    <div class="card-content card-content-padding">
+                        <div class="row">
+                            <div class="col-100">
+                                <div class="h-190  rounded-10 coverimg margin-bottom" style="background-image: url('`+urlimagen+`');">
+                                    
+                                </div>
+                            </div>
+                            <div class="col align-self-center">
+                                <p class="text-color-theme margin-bottom-half"></p>
+                                <p class="text-muted small"></p>
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="col">
-                    <span style="font-size: 28px;display: flex;justify-content: center;" onclick="EliminarImagenes(`+resultado[i].idsucursalesimagenes+`)"><i class="bi bi-trash"></i></span>
-
-                    </div>
-                  <div>
-                </div>
-               </div>
-               </li> 
+                </a>
+            </div>
 
       `;
 
@@ -455,11 +444,10 @@ function Guardarimagengrupal() {
   var foto=localStorage.getItem('fotoimagengrupal');
   var idservicio=localStorage.getItem('idservicio');
   var iduser=localStorage.getItem('id_user');
-  var idsucursal=localStorage.getItem('idsucursal');
   var datos="v_idimagengrupal="+id+"&foto="+foto+"&iduser="+iduser+"&idservicio="+idservicio;
   var bandera=1;
 
-  if (foto=='' && foto!=null) {
+  if (localStorage.getItem('fotoimagengrupal')=='' || localStorage.getItem('fotoimagengrupal')==null) {
 
     bandera=0;
   }
@@ -482,7 +470,7 @@ function Guardarimagengrupal() {
                 localStorage.setItem('fotoimagengrupal','');
 
                 alerta('','Registro guardado correctamente');
-                GoToPage('imagenessucursal');
+                GoToPage('detalleserviciocoach');
                 
                
                 },error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -505,7 +493,7 @@ function Guardarimagengrupal() {
 
 
         if (bandera==0) {
-            alerta('','Falta completar campo obligatorio');
+            alerta('','Falta por subir una imagen');
         }
     }
 
