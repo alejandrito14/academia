@@ -26,7 +26,7 @@ function CargarFechas() {
 
 						var objeto={
 							date:new Date(anio,mes,dia),
-							color:color,
+							color:'rgb(255 255 255 / 10%)',
 						};
 						eventos.push(objeto);
 
@@ -46,12 +46,12 @@ function CargarFechas() {
         containerEl: '#demo-calendar',
         weekHeader: true,
          events: eventos,
-        
+        firstDay:0,
         on: {
           init: function (c) {
 
           	$(".calendar .toolbar").removeClass('toolbar-top');
-
+          	$(".calendar-day-has-events .calendar-day-number").addClass('calendarevento');
           },
          calendarChange:function (c) {
          	//console.log(calendarInline.getValue());

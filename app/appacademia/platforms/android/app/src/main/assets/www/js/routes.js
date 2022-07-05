@@ -245,6 +245,11 @@ var routes = [
     path: '/nuevaimagengrupal/',
     componentUrl: './pages/nuevaimagengrupal.html',
   },
+
+   {
+    path: '/nuevovideogrupal/',
+    componentUrl: './pages/nuevovideogrupal.html',
+  },
   //datospersonales
   {
     path: '/datospersonales/',

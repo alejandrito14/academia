@@ -30,6 +30,13 @@ function ObtenerServicioAsignado() {
 
 			$(".tituloservicio").text(respuesta.titulo);
 
+			var fechainicial=respuesta.fechainicial.split('-');
+			var fechafinal=respuesta.fechafinal.split('-');
+			var fechai=fechainicial[2]+'/'+fechainicial[1]+'/'+fechainicial[0];
+			var fechaf=fechafinal[2]+'/'+fechafinal[1]+'/'+fechafinal[0];
+
+			$(".fechasservicio").text(fechai+' - '+fechaf);
+
 			var horarioshtml="";
 
              if (respuesta.fechaproxima!='') {
@@ -38,6 +45,9 @@ function ObtenerServicioAsignado() {
 
              $(".descripcionpoliticas").text(respuesta.politicascancelacion);
 			$(".colocarhorarios").html(horarioshtml);
+
+			$(".cantidadtotal").text(respuesta.numeroparticipantesmax);
+
 
 
 			if (respuesta.abiertocoach==1) {
@@ -682,6 +692,7 @@ function ObtenerParticipantesAlumnos() {
 		data:datos,
 		success: function(datos){
 			var respuesta=datos.respuesta;
+			$(".cantidadalumnos").text(respuesta.length);
 			PintarParticipantesAlumnos(respuesta);
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -697,6 +708,7 @@ function ObtenerParticipantesAlumnos() {
 
 function PintarParticipantesAlumnos(respuesta) {
 	if (respuesta.length>0) {
+
 		var html="";
 		for (var i =0; i < respuesta.length; i++) {
 

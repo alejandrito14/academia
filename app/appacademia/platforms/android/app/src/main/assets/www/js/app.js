@@ -1762,8 +1762,13 @@ $$(document).on('page:init', '.page[data-name="comentariosservicio"]', function 
    if (localStorage.getItem('idtipousuario')==5){
 
     $(".regreso").attr('href','/detalleserviciocoach/');
+    $(".divcomentar").css('display','none');
 
    }
+
+   ObtenerServicioAsignado();
+
+
   ObtenerComentarios();
 
   $$(".btncomentar").attr('onclick','NuevoComentario()');
@@ -1839,6 +1844,14 @@ $$(document).on('page:init', '.page[data-name="nuevaimagengrupal"]', function (e
 $$(".fotoimagen").attr('onclick','AbrirModalFotoimagengrupal()');
  $$("#btnguardarimagen").attr('onclick','Guardarimagengrupal()');
 
+
+});
+
+$$(document).on('page:init', '.page[data-name="nuevovideogrupal"]', function (e) {
+  
+// $$(".imglogoimagengrupal").attr('src',urlimagendefault);
+$$(".divvideo").attr('onclick','AbrirModalFotovideogrupal()');
+// $$("#btnguardarimagen").attr('onclick','Guardarimagengrupal()');
 
 });
 

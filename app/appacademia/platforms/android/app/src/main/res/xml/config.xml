@@ -83,7 +83,7 @@
     <splash height="1340" src="res/icons/android/800x1340.png" width="800" />
     <preference name="loglevel" value="DEBUG" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
-    <preference name="SplashScreenDelay" value="8000" />
+    <preference name="SplashScreenDelay" value="5000" />
     <preference name="AutoHideSplashScreen" value="true" />
     <preference name="AndroidXEnabled" value="true" />
     <preference name="AndroidInsecureFileModeEnabled" value="true" />
