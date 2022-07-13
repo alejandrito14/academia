@@ -1,15 +1,20 @@
+ var path="";
  function captureSuccess(mediaFiles) {
-        var i, len;
-        for (i = 0, len = mediaFiles.length; i < len; i += 1) {
-            uploadFile(mediaFiles[i]);
-        }
+       var i, len;
+       // for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+             path = mediaFiles[0].fullPath;
+
+             uploadFile();
+            // do something interesting with the file
+        //}
     }
 
     // Called if something bad happens.
     //
     function captureError(error) {
         var msg = 'An error occurred during capture: ' + error.code;
-        navigator.notification.alert(msg, null, 'Uh oh!');
+        alert(msg);
+        //navigator.notification.alert(msg, null, 'Uh oh!');
     }
 
     // A button will call this function
@@ -17,25 +22,43 @@
     function captureVideo() {
         // Launch device video recording application,
         // allowing user to capture up to 2 video clips
-        navigator.device.capture.captureVideo(captureSuccess, captureError, {limit: 2});
+        navigator.device.capture.captureVideo(captureSuccess, captureError, {limit: 1});
     }
 
     // Upload files to server
-    function uploadFile(mediaFile) {
-        var ft = new FileTransfer(),
-            path = mediaFile.fullPath,
-            name = mediaFile.name;
+    function uploadFile() {
+        
+       var win = function (r) {
+        alert(r.ruta);
+        console.log("Code = " + r.responseCode);
+        console.log("Response = " + r.response);
+        console.log("Sent = " + r.bytesSent);
+    }
 
-        ft.upload(path,
-            "http://my.domain.com/upload.php",
-            function(result) {
-                console.log('Upload success: ' + result.responseCode);
-                console.log(result.bytesSent + ' bytes sent');
-            },
-            function(error) {
-                console.log('Error uploading file ' + path + ': ' + error.code);
-            },
-            { fileName: name });
+    var fail = function (error) {
+
+        alert("An error has occurred: Code = " + error.code);
+        console.log("upload error source " + error.source);
+        console.log("upload error target " + error.target);
+    }
+
+    var fileURL = path;
+    alert(fileURL);
+    var options = new FileUploadOptions();
+    options.fileKey = "file";
+    options.fileName = fileURL.substr(fileURL.lastIndexOf('/') + 1);
+    options.mimeType = "video/mp4";
+    options.chunkedMode = false;
+
+    var params = {};
+    params.value1 = "test";
+    params.value2 = "param";
+
+    options.params = params;
+
+    var ft = new FileTransfer();
+    ft.upload(fileURL, urlphp+"subirvideogrupal.php", win, fail,options);
+    
     }
 
 
@@ -92,7 +115,7 @@
       navigator.camera.getPicture(onPhotoDataSuccessvideo, onError, { quality: 50,
         destinationType: destinationType.FILE_URI,
         sourceType: source,
-        mediaType:MediaType.VIDEO
+        mediaType: mediaType.VIDEO
 
          });
         //  navigator.camera.getPicture(onSuccess,onError,options);

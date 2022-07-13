@@ -11,6 +11,9 @@
       "ANDROIDX_CORE_VERSION": "1.6.+",
       "PACKAGE_NAME": "com.woolis.app"
     },
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "com.woolis.app"
+    },
     "cordova-plugin-file-transfer": {
       "PACKAGE_NAME": "com.woolis.app"
     },
@@ -34,9 +37,6 @@
       "PACKAGE_NAME": "com.woolis.app"
     },
     "cordova-plugin-wkwebview-file-xhr": {
-      "PACKAGE_NAME": "com.woolis.app"
-    },
-    "cordova-plugin-device": {
       "PACKAGE_NAME": "com.woolis.app"
     }
   },

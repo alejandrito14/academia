@@ -2306,3 +2306,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     top: 0.5em;
 
 }
+.tipoalumno{
+      background: #59c158;
+    padding: 0.2em;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+}
+.tipocoach{
+      background: #b03dac ;
+    padding: 0.2em;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+}
+.cantidadalumnos{
+  color:#59c158;
+}

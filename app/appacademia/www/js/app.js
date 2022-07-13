@@ -77,7 +77,7 @@ $(document).ready(function() {
        
      pictureSource=navigator.camera.PictureSourceType;
      destinationType=navigator.camera.DestinationType;
-
+      mediaType = navigator.camera.MediaType;
         document.addEventListener("deviceready", Cargar, false);
     } else {
 
@@ -93,7 +93,7 @@ $(document).ready(function() {
   
 
 
-var produccion = 1;
+var produccion = 0;
 
  
 
@@ -1257,10 +1257,12 @@ $$(document).on('page:init', '.page[data-name="profile"]', function (e) {
     pagination: false
   });
 
-  var nombreusuario= localStorage.getItem('nombre')+" "+localStorage.getItem('paterno');
+  var nombreusuario= localStorage.getItem('alias');
   $$(".nombreusuario").text(nombreusuario);
 var tipoUsuario=localStorage.getItem('tipoUsuario');
   $$(".tipousuario").text(tipoUsuario);
+  $$(".tipousuario").addClass('tipoalumno');
+
   Cargarperfilfoto();
   CargarFoto();
   $$('#btncerrarsesion').attr('onclick','salir_app()')
@@ -1688,7 +1690,7 @@ $$("#buscador4").attr('onkeyup','Buscarcolonia()');
 
 
 $$(document).on('page:init', '.page[data-name="servicios"]', function (e) {
-
+  regresohome();
   ObtenerConfiguracion();
   ObtenerServiciosAdicionales();
 
@@ -1697,33 +1699,114 @@ $$(document).on('page:init', '.page[data-name="servicios"]', function (e) {
 
 $$(document).on('page:init', '.page[data-name="detalleservicio"]', function (e) {
   
-  regresohome();
+  $(".regreso").attr('href','/serviciosasignados/');
   ObtenerServicioAsignado();
   $$("#abrirpantallacali").attr('onclick','PantallaCalificacion()');
   $$("#Abrirchat").attr('onclick','ElegirParticipantesChat()');
   $$("#btncalendario").attr('onclick','FechasServicio()');
   Verificarcantidadhorarios();
+  VerificarSihayEvaluacionUsuario();
+  ConsultarSihayComentarios();
+    $$("#btnpermisoasignaralumno").attr('onclick','VerificarTotalAlumnos()');
+
 });
 
 $$(document).on('page:init', '.page[data-name="detalleserviciocoach"]', function (e) {
   
-  regresohome();
+  //regresohome();
+  $(".regreso").attr('href','/serviciosasignados/');
+
   ObtenerServicioAsignado();
  // $$("#abrirpantallacali").attr('onclick','PantallaCalificacion()');
   $$("#Abrirchat").attr('onclick','ElegirParticipantesChat()');
   $$("#btncalendario").attr('onclick','FechasServicio()');
   ObtenerParticipantesAlumnos();
   ObtenerImagenesGrupal();
-    Verificarcantidadhorarios();
+  Verificarcantidadhorarios();
+  VerificarSihayEvaluacion();
+
+  $$(".btnasistencia").attr('onclick','Asistencia()');
+  $$("#btnpermisoasignaralumno").attr('onclick','VerificarTotalAlumnos()');
   //Verificarcantidadhorarios();
 });
 
-$$(document).on('page:init', '.page[data-name="asignaralumnos"]', function (e) {
+
+$$(document).on('page:init', '.page[data-name="detalleservicioadmin"]', function (e) {
+  
+  //regresohome();
+  $(".regreso").attr('href','/homeadmin/');
+
+  ObtenerServicioAdmin();
+  ObtenerParticipantesAlumnosAdmin();
+  $$("#btnpermisoasignaralumno").attr('onclick','VerificarTotalAlumnos()');
+
+ // $$("#abrirpantallacali").attr('onclick','PantallaCalificacion()');
+  /*$$("#Abrirchat").attr('onclick','ElegirParticipantesChat()');
+  $$("#btncalendario").attr('onclick','FechasServicio()');
+  
+  ObtenerImagenesGrupal();
+  Verificarcantidadhorarios();
+  VerificarSihayEvaluacion();
+
+  $$(".btnasistencia").attr('onclick','Asistencia()');
+ */
+});
+
+$$(document).on('page:init', '.page[data-name="asistenciaservicio"]', function (e) {
+  
   $(".regreso").attr('href','/detalleserviciocoach/');
+  ObtenerAlumnosAsistencia();
+  ProxihorarioAsistencia();
+  $$("#btnguardarasistencia").attr('onclick','GuardarAsistencia()');
+
+  $$("#btnmashorarios").attr('onclick','Obtenermashorarios()');
+
+  $$(".colocarhorarios").attr('onclick','Obtenermashorarios()');
+
+});
+
+$$(document).on('page:init', '.page[data-name="asignaralumnos"]', function (e) {
+  if (localStorage.getItem('idtipousuario')==0) {
+     $(".regreso").attr('href','/detalleservicioadmin/');
+    ObtenerAlumnosAdmin();
+
+   }
+
+  if (localStorage.getItem('idtipousuario')==3) {
+     $(".regreso").attr('href','/detalleservicio/');
  ObtenerAlumnos();
+
+   }
+   if (localStorage.getItem('idtipousuario')==5){
+      $(".regreso").attr('href','/detalleserviciocoach/');
+ ObtenerAlumnos();
+
+    }
+
     $$("#buscadorusuario").attr('onkeyup','BuscarEnLista("#buscadorusuario",".lista_")');
     $$("#limpiarfiltro").attr('onclick','LimpiarFiltroalumnos()');
     $$("#btnguardarasignacion").attr('onclick','GuardarAsignacion()');
+
+
+
+
+});
+
+$$(document).on('page:init', '.page[data-name="serviciosasignados"]', function (e) {
+  regresohome();
+
+
+  if (localStorage.getItem('idtipousuario')==3) {
+    // $(".regreso").attr('href','/detalleservicio/');
+      ObtenerServiciosAsignados();
+   }
+   if (localStorage.getItem('idtipousuario')==5){
+      
+     ObtenerServiciosAsignadosCoach();
+
+
+   }
+
 });
 
 
@@ -1732,9 +1815,10 @@ $$(document).on('page:init', '.page[data-name="aceptacionservicio"]', function (
  ObtenerServicioAsignado();
  $$("#btnaceptartermino").attr('onclick','AceptarTerminos()');
  $$("#btnrechazartermino").attr('onclick','PantallaRechazarTerminos()');
+ $(".regreso").attr('href','/serviciosasignados/');
 
  
-  regresohome();
+  
 
 });
 
@@ -1747,29 +1831,95 @@ $$(document).on('page:init', '.page[data-name="evaluacionesservicio"]', function
    if (localStorage.getItem('idtipousuario')==5){
 
     $(".regreso").attr('href','/detalleserviciocoach/');
-
+    ObtenerParticipantesEvaluacion();
    }
 
 
 });
 
-$$(document).on('page:init', '.page[data-name="comentariosservicio"]', function (e) {
-  
-  if (localStorage.getItem('idtipousuario')==3) {
+$$(document).on('page:init', '.page[data-name="listadoevaluaciones"]', function (e) {
+ if (localStorage.getItem('idtipousuario')==3) {
      $(".regreso").attr('href','/detalleservicio/');
-
+     ObtenerListadoEvalucionesUsuario();
    }
    if (localStorage.getItem('idtipousuario')==5){
 
-    $(".regreso").attr('href','/detalleserviciocoach/');
-    $(".divcomentar").css('display','none');
-
+    $(".regreso").attr('href','/evaluacionesservicio/');
+    ObtenerListadoEvaluciones();
    }
 
-   ObtenerServicioAsignado();
+
+});
+
+$$(document).on('page:init', '.page[data-name="listadocuestiones"]', function (e) {
+ if (localStorage.getItem('idtipousuario')==3) {
+     $(".regreso").attr('href','/listadoevaluaciones/');
+
+     ListadocuestionesUsuario();
+    
+
+    // resolve runs the first function in .then
+ // shows "done!" after 1 second
+    
+   }
+   if (localStorage.getItem('idtipousuario')==5){
+
+    $(".regreso").attr('href','/listadoevaluaciones/');
+/*    ObtenerDatosEncuesta();
+*/    Listadocuestiones();
+
+    $("#btnguardarrespuestas").attr('onclick','GuardarRespuestas()');
+
+    ObtenerSitienerespuestas();
+   }
 
 
+});
+
+
+$$(document).on('page:init', '.page[data-name="comentariosservicio"]', function (e) {
+  
+   if (localStorage.getItem('idtipousuario')==0){
+       if (localStorage.getItem('variable')==1) {
+        $(".regreso").attr('href','/homeadmin/');
+        localStorage.setItem('variable',0)
+      }else{
+      $(".regreso").attr('href','/detalleservicioadmin/');
+
+       }
+    $(".divcomentar").css('display','none');
+    ObtenerServicioAdmin();
+    ObtenerComentarios();
+   }
+
+  if (localStorage.getItem('idtipousuario')==3) {
+
+     if (localStorage.getItem('variable')==1) {
+        $(".regreso").attr('href','/serviciosasignados/');
+        localStorage.setItem('variable',0)
+      }else{
+       $(".regreso").attr('href','/detalleservicio/');
+
+       }
+ObtenerServicioAsignado();
+    ObtenerComentarios();
+   }
+   if (localStorage.getItem('idtipousuario')==5){
+       if (localStorage.getItem('variable')==1) {
+        $(".regreso").attr('href','/serviciosasignados/');
+        localStorage.setItem('variable',0)
+      }else{
+      $(".regreso").attr('href','/detalleserviciocoach/');
+
+       }
+    $(".divcomentar").css('display','none');
+ObtenerServicioAsignado();
   ObtenerComentarios();
+   }
+
+   //ObtenerServicioAsignado();
+
+
 
   $$(".btncomentar").attr('onclick','NuevoComentario()');
 });
@@ -1777,12 +1927,27 @@ $$(document).on('page:init', '.page[data-name="comentariosservicio"]', function 
 $$(document).on('page:init', '.page[data-name="elegirparticipantes"]', function (e) {
   
   if (localStorage.getItem('idtipousuario')==3) {
-     $(".regreso").attr('href','/detalleservicio/');
+
+
+     if (localStorage.getItem('variable')==1) {
+        $(".regreso").attr('href','/serviciosasignados/');
+        localStorage.setItem('variable',0)
+      }else{
+         $(".regreso").attr('href','/detalleservicio/');
+
+       }
 
    }
    if (localStorage.getItem('idtipousuario')==5){
-
+      if (localStorage.getItem('variable')==1) {
+        $(".regreso").attr('href','/serviciosasignados/');
+        localStorage.setItem('variable',0)
+      }else{
     $(".regreso").attr('href','/detalleserviciocoach/');
+
+
+      }
+
 
    }
  ObtenerParticipantes();
@@ -1835,7 +2000,12 @@ $$(document).on('page:init', '.page[data-name="calendario"]', function (e) {
 });
 
 
-
+$$(document).on('page:init', '.page[data-name="calificacionesadmin"]', function (e) {
+  
+    $(".regreso").attr('href','/detalleservicioadmin/');
+    
+    
+});
 
 
 $$(document).on('page:init', '.page[data-name="nuevaimagengrupal"]', function (e) {

@@ -219,6 +219,8 @@ function Registrar() {
 
     		localStorage.setItem("id_user", respuesta.idusuario);
     		localStorage.setItem("nombre", respuesta.nombre);
+    	    localStorage.setItem("alias", respuesta.alias);
+
     		localStorage.setItem("paterno",respuesta.paterno);
     		localStorage.setItem("materno", respuesta.materno);
     		localStorage.setItem("foto", respuesta.foto);

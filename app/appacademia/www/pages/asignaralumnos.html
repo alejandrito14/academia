@@ -1,7 +1,7 @@
 <template>
 <div class="page " data-name="asignaralumnos">
   <div class="navbar">
-    <div class="navbar-bg"></div>
+    <div class="navbar-bg" style="border: none;border-radius: 0px;"></div>
     <div class="navbar-inner">
       <div class="left">
          <a href="#" class="button button-fill text-color-theme bg-color-white button-44 regreso" >
@@ -20,8 +20,8 @@
         </a> -->
       </div>
 
-      <div class="subnavbar" style="margin-top: 1em;backdrop-filter: none;">
-        <form class="searchbar">
+      <div class="subnavbar" style="backdrop-filter: none;background: whitesmoke!important;">
+        <form class="searchbar" style="margin:.5em;">
           <div class="searchbar-inner">
             <div class="searchbar-input-wrap">
               <input type="search" id="buscadorusuario" placeholder="Buscar" />
@@ -41,12 +41,11 @@
  
 
    
-    <div class="row" style="margin-top: 1em;">
+    <div class="row" style="margin-top: 2em;">
       
 
       <div class="list media-list no-margin">
-           <div id="divalumnos" style="list-style: none;height: 25em;
-    overflow: scroll;">
+           <div id="divalumnos" style="list-style: none;">
       
               </div>
            </div>

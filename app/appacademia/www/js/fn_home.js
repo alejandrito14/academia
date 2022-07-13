@@ -40,15 +40,17 @@ function CargarInicio() {
 }
 function CargarDatos() {
 	
-  var nombreusuario= localStorage.getItem('nombre')+" "+localStorage.getItem('paterno');
+  var nombreusuario= localStorage.getItem('alias');
 	$$(".nombreusuario").text(nombreusuario);
 	var tipousuario=localStorage.getItem('tipoUsuario');
 	$$(".tipousuario").text(tipousuario);
+	$$(".tipousuario").addClass('tipoalumno');
+	$$(".btnmisservicios").attr('onclick','MisServiciosAlumno()');
 
 
 	ObtenerTableroAnuncios(1);
 	ObtenerEntradas(1);
-	ObtenerServiciosAsignados();
+	//ObtenerServiciosAsignados();
 	Obtenerpublicidad(1);
 	ObtenerConfiguracion();
 	
@@ -79,7 +81,7 @@ $$('.messages-content').scrollTop( $('.messages-content').get(0).scrollHeight, 4
 }
 
 function CargarDatosAdmin(argument) {
-	 var nombreusuario= localStorage.getItem('nombre')+" "+localStorage.getItem('paterno');
+	 var nombreusuario= localStorage.getItem('nombre')
 	$$(".nombreusuario").text(nombreusuario);
 	var tipousuario=localStorage.getItem('tipoUsuario');
 	$$(".tipousuario").text(tipousuario);
@@ -93,9 +95,9 @@ function CargarDatosAdmin(argument) {
 	ObtenerConfiguracion();
 	ObtenerServiciosRegistrados();
 
-	ContarNuevasSolicitudes();
-	ContarImagenesGaleria();
-	ContarNuevasPromociones();
+	//ContarNuevasSolicitudes();
+	//ContarImagenesGaleria();
+	//ContarNuevasPromociones();
 	//setInterval('ObtenerAlumnosSinServicio()',2000);
 
 	$(".seleccionador").css('display','block');
@@ -104,15 +106,18 @@ function CargarDatosAdmin(argument) {
 
 function CargarDatosCoach() {
 	
-  var nombreusuario= localStorage.getItem('nombre')+" "+localStorage.getItem('paterno');
+  var nombreusuario= localStorage.getItem('alias');
 	$$(".nombreusuario").text(nombreusuario);
 	var tipousuario=localStorage.getItem('tipoUsuario');
 	$$(".tipousuario").text(tipousuario);
 	$("#lipagos").css('display','none');
+	$$(".tipousuario").addClass('tipocoach');
+	$$(".btnmisservicios").attr('onclick','MisServiciosCoah()');
+
 
 	ObtenerTableroAnuncios(1);
-	//ObtenerEntradas();
-	ObtenerServiciosAsignadosCoach();
+	ObtenerEntradas();
+	//ObtenerServiciosAsignadosCoach();
 	//Obtenerpublicidad();
 	ObtenerConfiguracion();
 	var iduser=localStorage.getItem('id_user');
@@ -162,7 +167,14 @@ $$('.messages-content').scrollTop( $('.messages-content').get(0).scrollHeight, 4
     	}
 	});
 }
+function MisServiciosCoah() {
+	GoToPage('serviciosasignados');
+}
 
+function MisServiciosAlumno() {
+		GoToPage('serviciosasignados');
+
+}
 
 function ObtenerTableroAnuncios(estatus) {
 	var datos="estatus="+estatus;
@@ -560,16 +572,15 @@ function PintarServiciosAsignados(respuesta) {
 			}
 
 			html+=`
-				 <li class="list-item" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">
+				 <div class="list-item"  style="background: white; margin: 1em;padding: 1em;border-radius: 10px;">
                 <div class="row">
-                  <div class="col-30">
-                    <div class="avatar  shadow rounded-10 ">`+imagen+`
+                  <div class="col-30" >
+                    <div class="avatar  shadow rounded-10 " onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+imagen+`
                       
                     </div>
                   </div>
-                  <div class="col-60">
-                    <p class="text-color-theme no-margin-bottom">`+respuesta[i].titulo+`</p>
-
+                  <div class="col-70" >
+                   <div class="row" style="margin-left: 0.4em;">
                     `;
                   //  horarios=respuesta[i].horarios;
                     	var horarioshtml="";
@@ -580,16 +591,34 @@ function PintarServiciosAsignados(respuesta) {
                     	//}
 
                     html+=`
-                    <p class="text-muted size-12">`+horarioshtml+`</p>
+                     <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</p>
+                     <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].zonanombre+`</p>
+
+ 					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;">`+respuesta[i].titulo+`</p>
+                  
+
                   </div>
-                  <div class="col-10">
-                    <p class=""><i style="text-align: right;
-    display: flex;
-    justify-content: right;" class="bi bi-chevron-right"></i></p>
-                    <p class="text-muted size-12"></p>
+                  <div class="row" style="margin-top:1em;margin-left: 0.4em;">
+                  	<div class="col" style="text-align:right;" onclick="OpinionesServicio(`+respuesta[i].idusuarios_servicios+`)">
+                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi-chat-square-dots"></i></div>
+                  	</div>
+                  	<div class="col" onclick="ParticipantesServicio(`+respuesta[i].idusuarios_servicios+`)">
+
+                  	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi-chat-left-quote-fill"></i></div>
+                  	</div>
+
+                  	 	<div class="col" onclick="AbirCalificarServicio(`+respuesta[i].idusuarios_servicios+`)">
+
+                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi-star"></i></div>
+                  	</div>
+                  
+
                   </div>
+
+               	</div>
+                  
                 </div>
-              </li>
+              </div>
 
 			`;
 		}
@@ -599,11 +628,11 @@ function PintarServiciosAsignados(respuesta) {
 
 
 		html+=`
-			 <li class="list-item">
+			 <div class="list-item">
                 <div class="row text-color-theme">
                   <h4 style="text-align:center;">En breve el administrador te asignará tus servicios</h4>
                 </div>
-              </li>
+              </div>
 
 
 		`;
@@ -662,15 +691,15 @@ function PintarServiciosAsignadosCoach(respuesta) {
 
 
 			html+=`
-				 <li class="list-item" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">
+				 <div class="list-item" style="background: white; margin: 1em;padding: 1em;border-radius: 10px;" >
                 <div class="row">
                   <div class="col-30">
-                    <div class="avatar  shadow rounded-10 ">
+                    <div class="avatar  shadow rounded-10 " onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">
                     `+imagen+`
                     </div>
                   </div>
-                  <div class="col-60">
-                    <p class="text-color-theme no-margin-bottom">`+respuesta[i].titulo+`</p>
+                  <div class="col-70" >
+                   <div class="row" style="margin-left: 0.4em;">
 
                     `;
                    var horarioshtml="";
@@ -680,16 +709,30 @@ function PintarServiciosAsignadosCoach(respuesta) {
                     		}
 
                     html+=`
-                    <p class="text-muted size-12">`+horarioshtml+`</p>
+
+                    <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</p>
+                     <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].zonanombre+`</p>
+
+ 					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;">`+respuesta[i].titulo+`</p>
+                  
+
                   </div>
-                  <div class="col-10">
-                    <p class=""><i style="text-align: right;
-    display: flex;
-    justify-content: right;" class="bi bi-chevron-right"></i></p>
-                    <p class="text-muted size-12"></p>
+                  <div class="row" style="margin-top:1em;">
+                  	<div class="col" style="text-align:right;" onclick="OpinionesServicio(`+respuesta[i].idusuarios_servicios+`)">
+                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi-chat-square-dots"></i></div>
+                  	</div>
+                  	<div class="col" onclick="ParticipantesServicio(`+respuesta[i].idusuarios_servicios+`)">
+
+                  	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi-chat-left-quote-fill"></i></div>
+                  	</div>
+                  
+
                   </div>
+
+               	</div>
+                  
                 </div>
-              </li>
+              </div>
 
 			`;
 		}
@@ -699,11 +742,11 @@ function PintarServiciosAsignadosCoach(respuesta) {
 
 
 		html+=`
-			 <li class="list-item">
+			 <div class="list-item">
                 <div class="row text-color-theme">
                   <h4 style="text-align:center;">En breve el administrador te asignará tus servicios</h4>
                 </div>
-              </li>
+              </div>
 
 
 		`;
@@ -711,6 +754,28 @@ function PintarServiciosAsignadosCoach(respuesta) {
 				$$(".serviciosasignados").html(html);
 
 	}
+}
+
+
+function AbirCalificarServicio(idusuarios_servicios) {
+	localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
+
+	PantallaCalificacion();
+}
+function ParticipantesServicio(idusuarios_servicios) {
+localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
+localStorage.setItem('variable',1);
+
+	GoToPage('elegirparticipantes');
+
+}
+
+function OpinionesServicio(idusuarios_servicios) {
+	localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
+	localStorage.setItem('variable',1);
+	
+	GoToPage('comentariosservicio');
+	
 }
 function Obtenerpublicidad(estatus){
 
@@ -1560,34 +1625,46 @@ function PintarServiciosRegistrados(respuesta) {
 			}
 
 			html+=`
-				 <li class="list-item" onclick="VerdetalleUsuario(`+respuesta[i].idservicio+`)">
+			 <div class="list-item" style="background: white; margin: 1em;padding: 1em;border-radius: 10px;" >
                 <div class="row">
                   <div class="col-30">
-                    <div class="avatar  shadow rounded-10 ">
+                    <div class="avatar  shadow rounded-10 " onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">
                     `+imagen+`
                     </div>
                   </div>
-                  <div class="col-60">
-                    <p class="text-color-theme no-margin-bottom">`+respuesta[i].titulo+`</p>
+                  <div class="col-70" >
+                   <div class="row" style="margin-left: 0.4em;">
+
                     `;
-                    horarios=respuesta[i].horarios;
-                    	var horarioshtml="";
-                    	for (var j = 0; j < horarios.length; j++) {
-                    		horarioshtml+=`<span>`+horarios[j].diasemana.slice(0,3) +` `+horarios[j].horainicial+` - `+horarios[j].horafinal+` Hrs.</span></br>`;
-                    	}
+                   var horarioshtml="";
+                    	//for (var j = 0; j < horarios.length; j++) {
+                    		if (respuesta[i].fechaproxima!='') {
+                    		horarioshtml+=`<span>`+respuesta[i].fechaproxima+` `+respuesta[i].horainicial+` - `+respuesta[i].horafinal+` Hrs.</span></br>`;
+                    		}
 
                     html+=`
-                    <p class="text-muted size-12">`+horarioshtml+`</p>
+
+                    <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">`+horarioshtml+`</p>
+                     <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">`+respuesta[i].zonanombre+`</p>
+
+ 					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;">`+respuesta[i].titulo+`</p>
                   
-                  </div>
-                  <div class="col-10">
-                    <p class=""><i style="text-align: right;
-    display: flex;
-    justify-content: right;" class="bi bi-chevron-right"></i></p>
-                    <p class="text-muted size-12"></p>
-                  </div>
+
+                  </div>`;
+                  if (respuesta[i].idcategoria>0) {
+                 html+=` <div class="row" style="margin-top:1em;">
+                  	<div class="col" style="text-align:center;" onclick="OpinionesServicio(`+respuesta[i].idusuarios_servicios+`)">
+                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi-chat-square-dots"></i></div>
+                  	</div>
+                  	`;
+                  }
+
+                  html+=`</div>
+
+               	</div>
+                  
                 </div>
-              </li>
+              </div>
 
 			`;
 		}
@@ -1604,6 +1681,11 @@ function PintarServiciosRegistrados(respuesta) {
 				$$(".serviciosregistrados").html(html);
 
 		}
+}
+
+function DetalleServicioAdmin(idservicio) {
+	localStorage.setItem('idservicio',idservicio);
+	GoToPage('detalleservicioadmin');
 }
 
 function ContarNuevasSolicitudes() {
@@ -1629,7 +1711,7 @@ function ContarNuevasSolicitudes() {
 					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
 			}
 		});
- } 
+ } /*
  function ContarImagenesGaleria() {
  	var pagina = "ObtenerNuevasImagenes.php";
 	
@@ -1677,5 +1759,5 @@ function ContarNuevasPromociones() {
 			}
 		});
  } 
-
+*/
 

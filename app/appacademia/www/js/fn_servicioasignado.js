@@ -43,21 +43,35 @@ function ObtenerServicioAsignado() {
              	horarioshtml+=`<span>`+respuesta.fechaproxima+` `+respuesta.horainicial+` - `+respuesta.horafinal+` Hrs.</span></br>`;
              }
 
-             $(".descripcionpoliticas").text(respuesta.politicascancelacion);
+             $(".descripcionpoliticas").text(respuesta.politicasaceptacion);
 			$(".colocarhorarios").html(horarioshtml);
 
 			$(".cantidadtotal").text(respuesta.numeroparticipantesmax);
 
 
+				$("#permisoasignaralumno").css('display','none');
+			if (localStorage.getItem('idtipousuario')==3) {
+				if (respuesta.abiertocliente == 1) {
+				$("#permisoasignaralumno").css('display','block');
+				}
+			}
+		if (localStorage.getItem('idtipousuario')==5) {
 
-			if (respuesta.abiertocoach==1) {
+			if (respuesta.abiertocoach == 1) {
 				$("#permisoasignaralumno").css('display','block');
 			}
-			if (respuesta.abiertocliente==1) {
+			}
+	if (localStorage.getItem('idtipousuario')==0) {
+
+			if (respuesta.abiertoadmin == 1) {
 				$("#permisoasignaralumno").css('display','block');
 			}
-			if (respuesta.abiertoadmin==1) {
-				$("#permisoasignaralumno").css('display','block');
+		}
+			
+			if (respuesta.controlasistencia==1) {
+				
+				$(".divasistencia").css('display','block');
+
 			}
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -725,7 +739,7 @@ function PintarParticipantesAlumnos(respuesta) {
 				  
 
                 <li style="background: white;
-    border-radius: 10px;">
+    border-radius: 10px;margin-bottom: 1em;">
             <label class="label-radio item-content">                                                                               
               <div class="item-inner" style="width:80%;">
              
@@ -826,12 +840,12 @@ function PintarAlumnos(respuesta) {
                         </div>
                         
                         	<div class="col-100">
-                        	 <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
+                        	 <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;word-break: break-word;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
              		   </div>
 
 
                      <div class="row">
-             		     <div class="col-100 item-text" style="font-size:18px;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].usuario+`
+             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].usuario+`
              		     </div>
              		   </div>
 
@@ -909,7 +923,51 @@ function GuardarAsignacion() {
 
 			if (datos.respuesta==1) {
 				
-				GoToPage('detalleserviciocoach');
+				if (localStorage.getItem('idtipousuario')==0) {
+				     GoToPage('detalleservicioadmin');
+
+				   }
+
+				  if (localStorage.getItem('idtipousuario')==3) {
+				     GoToPage('detalleservicio');
+
+				   }
+				   if (localStorage.getItem('idtipousuario')==5){
+				      GoToPage('detalleserviciocoach');
+
+				    }
+			}
+			
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+}
+
+function VerificarTotalAlumnos() {
+var idservicio=localStorage.getItem('idservicio');
+var datos="idservicio="+idservicio;
+var pagina="VerificarTotalAlumnos.php";
+$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+
+			if (datos.cupodisponible==0) {
+				
+				GoToPage('asignaralumnos');
+			}else{
+				var cantidadmaxima=datos.limitemaximo;
+				alerta('','El límite de alumnos para el servicio es de '+cantidadmaxima);
 			}
 			
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 

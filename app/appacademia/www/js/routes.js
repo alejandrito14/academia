@@ -217,6 +217,12 @@ var routes = [
     path: '/registro/',
     componentUrl: './pages/registro.html',
   },
+  //servicios asignados
+   {
+    path: '/serviciosasignados/',
+    componentUrl: './pages/serviciosasignados.html',
+  
+  },
 
   //servicios
    {
@@ -233,6 +239,19 @@ var routes = [
   {
     path: '/detalleserviciocoach/',
     componentUrl: './pages/detalleserviciocoach.html',
+  },
+   {
+    path: '/detalleservicioadmin/',
+    componentUrl: './pages/detalleservicioadmin.html',
+  },
+
+  { 
+    path: '/calificacionesadmin/',
+    componentUrl: './pages/calificacionesadmin.html',
+  },
+  {
+    path: '/asistenciaservicio/',
+    componentUrl: './pages/asistenciaservicio.html',
   },
 
    { 
@@ -332,8 +351,19 @@ var routes = [
     path: '/evaluacionesservicio/',
     componentUrl:'./pages/evaluacionesservicio.html',
 
+
   },
 
+  { 
+    path: '/evaluacionescoach/',
+    componentUrl:'./pages/evaluacionescoach.html',
+  },
+
+ {
+    path: '/listadoevaluaciones/',
+    componentUrl:'./pages/listadoevaluaciones.html',
+
+  },
   // comentarios servicio
   {
     path: '/comentariosservicio/',
@@ -347,8 +377,11 @@ var routes = [
 
   },
 
+ {
+    path: '/listadocuestiones/',
+    componentUrl:'./pages/listadocuestiones.html',
 
-  
+  },
   
    {
     path: '/token/',

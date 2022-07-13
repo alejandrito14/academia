@@ -22,11 +22,14 @@
 
     <!-- main page content -->
     <div class="page-content">
+      <div class="row padding-vertical">
+        <h2 style="text-align: center;" id="tituloservicio" class="tituloservicio"> </h2>
+            <h3 class="fechasservicio" style="text-align: center;font-weight: normal;"></h3>
+            <h4 style="text-align: center;font-size: 18px;" class="numeroparticipantes">Alumnos: <span class="cantidadalumnos"></span> de <span class="cantidadtotal"></span></h4>
+      </div>
         <div class="row padding-vertical" >
 
-            <h2 style="text-align: center;" id="tituloservicio" class="tituloservicio"> </h2>
-            <h3 class="fechasservicio" style="text-align: center;"></h3>
-            <h4 style="text-align: center;font-size: 18px;" class="numeroparticipantes">Alumnos: <span class="cantidadalumnos"></span> de <span class="cantidadtotal"></span></h4>
+            
           <div class="col-100 ">
                 <div class="card  margin-bottom">
                     <div class="card-content card-content-padding">
@@ -63,21 +66,13 @@
 
             </div>   
 
-            <div class="row margin-bottom text-align-center padding-vertical">
-              <div class="col-100">
-                  <button class="button button-fill button-large color-theme button-raised margin-bottom-half">
-              <i class="bi bi-watch margin-horizontal-half"></i>Asistencia
-            </button>
-              </div>
-            
-            </div>
 
             <div class="row margin-bottom text-align-center padding-vertical ">
 
 
                
           
-            <div class="col-33 medium-33 large-25">
+            <div class="col-100 medium-33 large-25">
                 <div class="card margin-bottom" style="height: 80px;"><div class="card-content  " style="padding-top: 1em">
                     <a href="/comentariosservicio/">
                     <div class="row">
@@ -89,7 +84,7 @@
                             </div>
                             <div class="col-100 " style="">
                                 <span class="small  " style="opacity: 0.6;color: black;text-align: left;display: flex;justify-content: center; ">
-                                  Comentarios
+                                  Opiniones
                                 </span>
                             </div>
                         </div>
@@ -98,8 +93,31 @@
                 </div>
             </div>
 
-              <div class="col-33 medium-33 large-25">
+             
+
+         <!--    <div class="col-50 medium-33 large-25">
                 <div class="card margin-bottom" style="height: 80px;"><div class="card-content  " style="padding-top: 1em">
+                    <a id="abrirpantallacali" >
+                    <div class="row">
+                    <div class="col-100">
+                       
+                                    <div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi  bi-star"></i>
+                                    </div>
+                              
+                            </div>
+                            <div class="col-100 " style="">
+                                <span class="small  " style="opacity: 0.6;color: black;text-align: left;display: flex;justify-content: center; ">
+                                  Califica el servicio
+                                </span>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+            </div> -->
+
+             <div class="col-100 medium-100 large-100 divevaluaciones" style="display: none;">
+                <div class="card margin-bottom " style="height: 80px;"><div class="card-content  " style="padding-top: 1em">
                     <a href="/evaluacionesservicio/">
                     <div class="row">
                     <div class="col-100">
@@ -119,19 +137,20 @@
                 </div>
             </div>
 
-            <div class="col-33 medium-33 large-25">
-                <div class="card margin-bottom" style="height: 80px;"><div class="card-content  " style="padding-top: 1em">
-                    <a id="abrirpantallacali" >
+            <div class="col-100 medium-100 large-100 divasistencia" style="display: none;">
+                <div class="card margin-bottom  " style=" height: 80px;">
+                  <div class="card-content  " style="padding-top: 1em">
+                    <a class="btnasistencia">
                     <div class="row">
                     <div class="col-100">
                        
-                                    <div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi  bi-star"></i>
+                       <div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi bi-watch"></i>
                                     </div>
                               
                             </div>
                             <div class="col-100 " style="">
                                 <span class="small  " style="opacity: 0.6;color: black;text-align: left;display: flex;justify-content: center; ">
-                                  Califica
+                                  Asistencia
                                 </span>
                             </div>
                         </div>
@@ -155,16 +174,21 @@
                 <p class="text-muted small"><a href="/datosdesalud/">Califica el servicio</a></p>
             </div> -->
         </div> 
-        <div class="row margin-bottom  padding-vertical ">
-           <div class="col-50">
-              <h5 class="title">Alumnos asignados
-              </h5>
-           </div>
-           <div class="col-30">
-             
-            </div>
-             <div class="col-20">
-               <a id="permisoasignaralumno" style="text-align: left;display: none;    font-size: 24px;" href="/asignaralumnos/"><i class="bi-plus-square"></i></a>
+
+
+           <!--  <div class="row margin-bottom text-align-center padding-vertical divasistencia" style="display: none;">
+              <div class="col-100">
+                  
+              </div> -->
+            
+           <!--  </div> -->
+        <div class="row margin-bottom  padding-vertical permisoasignaralumno" id="permisoasignaralumno" style="display: none;">
+       
+         <div class="col">
+           <button class="button button-fill button-large color-theme button-raised margin-bottom-half " id="btnpermisoasignaralumno">
+              <i style="margin-right: .3em;" class="bi bi-file-person"></i> Asignar alumnos
+            </button>
+            
             </div>
 
         </div> 
@@ -178,19 +202,39 @@
                </div>
            </div> 
 
-         <div class="row margin-bottom  padding-vertical ">
+        <!--  <div class="row margin-bottom  padding-vertical ">
            <div class="col-50">
               <h5 class="title">Galeria grupal<br /><small class="font-weight-normal text-muted"></small>
               </h5>
             </div>
             <div class="col-30">
-             <a style="text-align: left;font-size: 24px;" href="/nuevovideogrupal/"><i class="bi-plus-square"></i></a>
+             <a style="text-align: left;font-size: 24px;display: none;" href="/nuevovideogrupal/"><i class="bi-plus-square"></i></a>
 
             </div>
             <div class="col-20">
                <a style="text-align: left;font-size: 24px;" href="/nuevaimagengrupal/"><i class="bi-plus-square"></i></a>
             </div>
+        </div>  -->
+
+
+
+         <div class="row margin-bottom  padding-vertical " id="" >
+       
+         <div class="col">
+           <a class="button button-fill button-large color-theme button-raised margin-bottom-half "  href="/nuevaimagengrupal/">
+              <i class="bi bi-card-image" style="margin-right: .3em;"></i> Nueva imagen
+            </a>
+            </div>
         </div> 
+
+         <div class="row margin-bottom  padding-vertical " id="" style="">
+         <div class="col">
+           <a class="button button-fill button-large color-theme button-raised margin-bottom-half " href="/nuevovideogrupal/">
+             <i class="bi bi-camera-video" style="margin-right: .3em;"></i> Nuevo video
+            </a>
+            </div>
+        </div> 
+
         <div class="row">
           <div class="list media-list no-margin">
           <div class="listadoimagenes" style="list-style: none;height: 500px;overflow: scroll;" ></div>

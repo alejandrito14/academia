@@ -188,6 +188,7 @@ function validar_login()
 				    				localStorage.setItem('tipoUsuario',datos['tipousuario']);
 									localStorage.setItem('idtipousuario',datos['tipo']);
 
+									localStorage.setItem('alias',datos['alias']);
 
 									localStorage.setItem('correo',usuario);
 									localStorage.setItem("foto", datos['foto']);
