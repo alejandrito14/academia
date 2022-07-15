@@ -223,6 +223,12 @@ var routes = [
     componentUrl: './pages/serviciosasignados.html',
   
   },
+  {
+
+    path: '/serviciosregistrados/',
+    componentUrl: './pages/serviciosregistrados.html',
+  
+  },
 
   //servicios
    {
@@ -243,6 +249,11 @@ var routes = [
    {
     path: '/detalleservicioadmin/',
     componentUrl: './pages/detalleservicioadmin.html',
+  },
+   {
+    
+    path: '/calendarioadmin/',
+    componentUrl: './pages/calendarioadmin.html',
   },
 
   { 

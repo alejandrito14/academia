@@ -39,13 +39,15 @@ function CargarInicio() {
                 }
 }
 function CargarDatos() {
-	
+	localStorage.setItem('variable',0);
+
   var nombreusuario= localStorage.getItem('alias');
 	$$(".nombreusuario").text(nombreusuario);
 	var tipousuario=localStorage.getItem('tipoUsuario');
 	$$(".tipousuario").text(tipousuario);
-	$$(".tipousuario").addClass('tipoalumno');
 	$$(".btnmisservicios").attr('onclick','MisServiciosAlumno()');
+ 	classtipo='tipoalumno';
+  $$(".tipousuario").addClass(classtipo);
 
 
 	ObtenerTableroAnuncios(1);
@@ -81,11 +83,18 @@ $$('.messages-content').scrollTop( $('.messages-content').get(0).scrollHeight, 4
 }
 
 function CargarDatosAdmin(argument) {
+	localStorage.setItem('variable',0);
+
 	 var nombreusuario= localStorage.getItem('nombre')
 	$$(".nombreusuario").text(nombreusuario);
 	var tipousuario=localStorage.getItem('tipoUsuario');
 	$$(".tipousuario").text(tipousuario);
 	$("#lipagos").css('display','none');
+	var idtipousuario=localStorage.getItem('idtipousuario');
+
+   
+      classtipo='tipoadmin';
+  $$(".tipousuario").addClass(classtipo);
 
 
 	ObtenerTableroAnuncios(0);
@@ -93,19 +102,45 @@ function CargarDatosAdmin(argument) {
 	//ObtenerServiciosAsignados();
 	Obtenerpublicidad(0);
 	ObtenerConfiguracion();
-	ObtenerServiciosRegistrados();
-
-	//ContarNuevasSolicitudes();
-	//ContarImagenesGaleria();
-	//ContarNuevasPromociones();
-	//setInterval('ObtenerAlumnosSinServicio()',2000);
-
+	//ObtenerServiciosRegistrados();
+	$$(".btnmisservicios").attr('onclick','MisServiciosAdmin()');
+	$$(".btndisponibilidad").attr('onclick','CargarCalendarioAdmin()');
 	$(".seleccionador").css('display','block');
+
+	socket=io.connect(globalsockect, { transports : ["websocket"],rejectUnauthorized: false });
+    socket.on('connect', function (data) 
+	{
+       socket.emit('conectado', { customId:iduser,tipouser:localStorage.getItem('idtipousuario')});
+    });
+ 	socket.on('mensajerespuestacliente',function (data) 
+	{
+    	//console.log("mensaje respuesta");
+    	PintarMensaje(data);
+	});
+
+	socket.on('nuevomensaje',function (data) 
+	{	
+			//console.log(data);
+    	if (data.idusuario!=iduser) {
+    		//console.log('idsala'+data.soporte);
+    		if (data.soporte == localStorage.getItem('idsala')) {
+    		
+    			PintarMensaje(data);
+			$$('.messages-content').scrollTop( $('.messages-content').get(0).scrollHeight, 400 );
+
+    		}
+    	}
+	});
+}
+
+function MisServiciosAdmin() {
+	GoToPage('serviciosregistrados');
 }
 
 
 function CargarDatosCoach() {
-	
+	localStorage.setItem('variable',0);
+
   var nombreusuario= localStorage.getItem('alias');
 	$$(".nombreusuario").text(nombreusuario);
 	var tipousuario=localStorage.getItem('tipoUsuario');
@@ -113,6 +148,8 @@ function CargarDatosCoach() {
 	$("#lipagos").css('display','none');
 	$$(".tipousuario").addClass('tipocoach');
 	$$(".btnmisservicios").attr('onclick','MisServiciosCoah()');
+  classtipo='tipocoach';
+  $$(".tipousuario").addClass(classtipo);
 
 
 	ObtenerTableroAnuncios(1);
@@ -574,12 +611,12 @@ function PintarServiciosAsignados(respuesta) {
 			html+=`
 				 <div class="list-item"  style="background: white; margin: 1em;padding: 1em;border-radius: 10px;">
                 <div class="row">
-                  <div class="col-30" >
+                  <div class="col-40" style="justify-content:center;display:flex;" >
                     <div class="avatar  shadow rounded-10 " onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+imagen+`
                       
                     </div>
                   </div>
-                  <div class="col-70" >
+                  <div class="col-60" >
                    <div class="row" style="margin-left: 0.4em;">
                     `;
                   //  horarios=respuesta[i].horarios;
@@ -591,27 +628,23 @@ function PintarServiciosAsignados(respuesta) {
                     	//}
 
                     html+=`
-                     <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</p>
+                     <p class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</p>
                      <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].zonanombre+`</p>
 
  					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;">`+respuesta[i].titulo+`</p>
                   
 
                   </div>
-                  <div class="row" style="margin-top:1em;margin-left: 0.4em;">
-                  	<div class="col" style="text-align:right;" onclick="OpinionesServicio(`+respuesta[i].idusuarios_servicios+`)">
-                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi-chat-square-dots"></i></div>
-                  	</div>
-                  	<div class="col" onclick="ParticipantesServicio(`+respuesta[i].idusuarios_servicios+`)">
+                  <div class="row" style="margin-top:1em;">
+                  	<div class="col" style="text-align:center;" >
+                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos" onclick="OpinionesServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-chat-square-dots"></i></div>
+                                    	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos" onclick="ParticipantesServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-chat-left-quote-fill"></i></div>
+                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos" onclick="AbirCalificarServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-star"></i></div>
 
-                  	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi-chat-left-quote-fill"></i></div>
-                  	</div>
 
-                  	 	<div class="col" onclick="AbirCalificarServicio(`+respuesta[i].idusuarios_servicios+`)">
-
-                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi-star"></i></div>
                   	</div>
                   
+                                  
 
                   </div>
 
@@ -719,11 +752,11 @@ function PintarServiciosAsignadosCoach(respuesta) {
                   </div>
                   <div class="row" style="margin-top:1em;">
                   	<div class="col" style="text-align:right;" onclick="OpinionesServicio(`+respuesta[i].idusuarios_servicios+`)">
-                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi-chat-square-dots"></i></div>
+                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos"><i class="bi bi-chat-square-dots"></i></div>
                   	</div>
                   	<div class="col" onclick="ParticipantesServicio(`+respuesta[i].idusuarios_servicios+`)">
 
-                  	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi-chat-left-quote-fill"></i></div>
+                  	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos"><i class="bi bi-chat-left-quote-fill"></i></div>
                   	</div>
                   
 
@@ -760,7 +793,10 @@ function PintarServiciosAsignadosCoach(respuesta) {
 function AbirCalificarServicio(idusuarios_servicios) {
 	localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
 
-	PantallaCalificacion();
+	 ObtenerCalificacion().then(r => {
+		PantallaCalificacion(r);
+
+	  });
 }
 function ParticipantesServicio(idusuarios_servicios) {
 localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
@@ -772,6 +808,14 @@ localStorage.setItem('variable',1);
 
 function OpinionesServicio(idusuarios_servicios) {
 	localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
+	localStorage.setItem('variable',1);
+	
+	GoToPage('comentariosservicio');
+	
+}
+
+function OpinionesServicioAdmin(idservicio) {
+	localStorage.setItem('idservicio',idservicio);
 	localStorage.setItem('variable',1);
 	
 	GoToPage('comentariosservicio');
@@ -1624,13 +1668,29 @@ function PintarServiciosRegistrados(respuesta) {
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
 			}
 
+			var clasecantidad="colorred";
+			if (respuesta[i].cantidadalumnos==respuesta[i].numeroparticipantesmax) {
+				clasecantidad="colorgreen";
+			}
+			var opacidad="";
+			if (respuesta[i].fechaproxima=='') {
+				opacidad="opacity:0.8;"
+			}
+
 			html+=`
-			 <div class="list-item" style="background: white; margin: 1em;padding: 1em;border-radius: 10px;" >
+			 <div class="list-item" style="background: white; margin: 1em;padding: 1em;border-radius: 10px;`+opacidad+`" >
                 <div class="row">
                   <div class="col-30">
-                    <div class="avatar  shadow rounded-10 " onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">
+                  	<div class="row">
+                    <div class="avatar  shadow rounded-10 " style="    border-radius: 10px;
+    padding: 0; margin: 0;" onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">
                     `+imagen+`
                     </div>
+                    </div>
+                  	<div class="row">
+                  	<p style="text-align:center;" class="`+clasecantidad+`"><span>`+respuesta[i].cantidadalumnos+ ` </span>de<spa> `+respuesta[i].numeroparticipantesmax+`</spa></p>
+                  	</div>
+
                   </div>
                   <div class="col-70" >
                    <div class="row" style="margin-left: 0.4em;">
@@ -1644,7 +1704,7 @@ function PintarServiciosRegistrados(respuesta) {
 
                     html+=`
 
-                    <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">`+horarioshtml+`</p>
+                    <p class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">`+horarioshtml+`</p>
                      <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">`+respuesta[i].zonanombre+`</p>
 
  					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;">`+respuesta[i].titulo+`</p>
@@ -1652,11 +1712,22 @@ function PintarServiciosRegistrados(respuesta) {
 
                   </div>`;
                   if (respuesta[i].idcategoria>0) {
-                 html+=` <div class="row" style="margin-top:1em;">
-                  	<div class="col" style="text-align:center;" onclick="OpinionesServicio(`+respuesta[i].idusuarios_servicios+`)">
-                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi-chat-square-dots"></i></div>
+                 html+=` <div class="" style="margin-top:1em;width:100%;text-align:center;">
+                  	<div class="" >
+                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos" onclick="OpinionesServicioAdmin(`+respuesta[i].idservicio+`)"><i class="bi bi-chat-square-dots"></i></div>
+                  	
+                  	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos" onclick="ParticipantesServicio(`+respuesta[i].idservicio+`)"><i class="bi bi-chat-left-quote-fill"></i></div>
+
                   	</div>
+
+
+
+                  
                   	`;
+                 	
+
+
+
                   }
 
                   html+=`</div>

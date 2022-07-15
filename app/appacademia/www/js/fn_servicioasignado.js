@@ -202,8 +202,39 @@ function RechazarTerminos() {
 		});
 }
 
-function PantallaCalificacion() {
+
+function ObtenerCalificacion() {
+	 return new Promise(function(resolve, reject) {
+	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
+	var id_user=localStorage.getItem('id_user');
 	
+	var datos="idusuarios_servicios="+idusuarios_servicios+"&id_user="+id_user;
+	var pagina="ObtenerCalificacionUsuarioServicio.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(resp){
+			
+			resolve(resp);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+
+	});
+}
+function PantallaCalificacion(respuesta) {
+		
        var html=`
          
               <div class="block">
@@ -279,8 +310,27 @@ function PantallaCalificacion() {
         },
           verticalButtons: false,
         }).open();
-	
+	var calificacion=respuesta.calificacion;
+	if (calificacion.length>0) {
+		var cantidad=calificacion[0].calificacion;
+		Cambio(cantidad);
+		disableClicks();
+		$("#txtcomentario").val(calificacion[0].comentario);
+		$("#txtcomentario").attr('disabled',true);
+
+	}
 }
+
+function disableClicks() {
+  $(".iconosestrella").attr('onclick','');
+  $(".dialog-buttons").html('<span class="dialog-button" onclick="CerrarModal()">Cerrar</span>');
+
+
+}
+function CerrarModal() {
+	app.dialog.close();
+}
+
 
 function CalificarServicio() {
 	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
@@ -456,6 +506,34 @@ function PintarParticipantes(respuesta) {
 		$("#divparticipantes").html(html);
 
 	}
+}
+
+function ObtenerParticipantesAdmin() {
+	
+	var idservicio=localStorage.getItem('idservicio');
+	var pagina = "ObtenerParticipantesAdmin.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user+"&idservicio="+idservicio;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+			var respuesta=datos.respuesta;
+			PintarParticipantes(respuesta);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
 }
 
 function IniciarChat() {
@@ -979,4 +1057,141 @@ $.ajax({
 			}
 
 		});
+}
+
+function ObtenerCalificacionesServicio() {
+	var idservicio=localStorage.getItem('idservicio');
+	var pagina = "ObtenerCalificacionesServicio.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user+"&idservicio="+idservicio;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+			var respuesta=datos.calificaciones;
+			PintarCalificacionesServicio(respuesta);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+}
+function PintarCalificacionesServicio(respuesta) {
+
+	if (respuesta.length>0) {
+		var html="";
+		for (var i =0; i < respuesta.length; i++) {
+
+			if (respuesta[i].foto!='' && respuesta[i].foto!=null) {
+
+				urlimagen=urlphp+`upload/perfil/`+respuesta[i].foto;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+			}else{
+
+				urlimagen="img/icon-usuario.png";
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+			}
+			var calificacion=respuesta[i].calificacion;
+			var cal1="";
+			var cal2="";
+			var cal3="";
+			var cal4="";
+			var cal5="";
+
+			cal1=calificacion>0?'bi-star-fill colorestrella':'bi bi-star';
+			cal2=calificacion>=1?'bi-star-fill colorestrella':'bi bi-star';
+			cal3=calificacion>=2?'bi-star-fill colorestrella':'bi bi-star';
+			cal4=calificacion>=3?'bi-star-fill colorestrella':'bi bi-star';
+			cal5=calificacion>=5?'bi-star-fill colorestrella':'bi bi-star';
+
+
+			html+=`
+				  
+
+                <li class="lista_" id="lista_`+respuesta[i].idusuarios+`" style="background: white;border-radius: 10px;">
+            <label class="label-radio item-content">                                                                               
+              <div class="item-inner" style="width:80%;">
+             
+                <div class="row">
+                <div class="item-media">
+              		  <div class="col-30">
+                        <figure class="avatar  rounded-10">
+                        <img src="`+urlimagen+`" alt="" style="width:80px;height:80px;" />
+                        </figure>
+                        </div>
+                        
+                        	<div class="col-100">
+                        	 <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;word-break: break-word;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
+             		   </div>
+
+
+                     <div class="row">
+             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].comentario+`
+             		     </div>
+             		   </div>
+
+             		  
+
+                    <div class="row">
+                  
+	                <div class="col" >
+	                	<div>
+	                	 <i class="iconosestrella estrellaseleccionada `+cal1+`" id="estre_1"  >  </i>
+		                	 <div class="oculto">
+		                	 <input type="checkbox"  id="che_1" >
+		                	</div>
+	                	</div>
+	               
+	               </div>
+	                 <div class="col"  >
+	                 	<div >
+		                  <i class="iconosestrella estrellaseleccionada `+cal2+`" id="estre_2" ></i>
+		               		<input type="checkbox" class="oculto" id="che_2"  >
+	               		</div>
+	                </div>
+	                <div class="col" >
+		                  <div  >
+			                   <i class=" iconosestrella estrellaseleccionada `+cal3+`" id="estre_3" ></i>
+			                	<input type="checkbox" class="oculto" id="che_3"  >
+		                  </div>
+	                 </div>
+                   	<div class="col" >
+	                   <div  >
+	                   	    <i class=" iconosestrella estrellaseleccionada `+cal4+`" id="estre_4" ></i>
+	                 		<input type="checkbox" class="oculto" id="che_4" >
+	                 	</div>
+	                  </div>
+	                    <div class="col" >   
+		                    <div  >              
+		                     	 <i class=" iconosestrella estrellaseleccionada `+cal5+`" id="estre_5"  ></i>
+		                 		 <input type="checkbox" class="oculto" id="che_5"  >
+		                   	</div>
+	                    </div>
+                    </div>
+
+                        	</div>
+                        	
+                         	</div>
+                        </div>
+             		 
+              </div>
+
+            </label>
+          </li>
+
+
+			`;
+		}
+		$("#divalumnoscalificaciones").html(html);
+
+	}
 }

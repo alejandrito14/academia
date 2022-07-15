@@ -296,16 +296,17 @@ function ReenvioToken() {
       function Contarletrasinput(elemento,classe) {
 
           var longitud=$("#"+elemento).val().length;
-
         if (longitud>0) {
 
 
           $("."+classe).css('display','block');
+          $(".spanvisible").css('display','block');
 
         }else{
 
         $("."+classe).css('display','none');
-   
+         $(".spanvisible").css('display','none');
+
         }
 
       }
@@ -314,11 +315,12 @@ function ReenvioToken() {
 function CambiarAtributoinput(elemento) {
 
 
+
         if (cambiar1==1) {
 
            var valor= $('#'+elemento).val();
              $('#'+elemento).remove();
-            var html=`<input type="text" name="v_contra1" value="`+valor+`"  placeholder="Contraseña" id="v_contra1" class="place input-with-value" style="float: left;width: 80%;" onkeyup="CoincidirContra2('v_contra1','v_contra2');Contarletrasr('v_contra1','ojito1');">`;
+            var html=`<input type="text" name="v_clave" value="`+valor+`"  placeholder="Contraseña" id="v_clave" class="place input-with-value" style="width: 80%;" onkeyup="Contarletrasinput('v_clave','ojitoicono');">`;
 
 
             $(".cambiarinput").html(html);
@@ -332,14 +334,13 @@ function CambiarAtributoinput(elemento) {
 
             $(".cambiarinput").html(''); 
 
-           var html=`<input type="password" name="v_contra1"  value="`+valor+`" placeholder="Contraseña" id="v_contra1" class="place input-with-value" style="float: left;width: 80%;" onkeyup="CoincidirContra2('v_contra1','v_contra2');Contarletrasr('v_contra1','ojito1');">`;
+           var html=`<input type="password" name="v_clave"  value="`+valor+`" placeholder="Contraseña" id="v_clave" class="place input-with-value" style="width: 80%;" onkeyup="Contarletrasinput('v_clave','ojitoicono');">`;
            
 
             $(".cambiarinput").html(html); 
             cambiar1=1;
         }
         
-
       }
 
 
@@ -402,4 +403,9 @@ function CambiarAtributoinput3(elemento) {
 
       }
 
-
+function LimpiarElemento(elemento) {
+  console.log(elemento);
+  $("#"+elemento).val('');
+  $("#span1").css('display','none');
+  $(".spanvisible").css('display','none');
+}

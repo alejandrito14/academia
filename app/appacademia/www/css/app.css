@@ -659,7 +659,29 @@ z-index:0;
 
     }
   .calendarevento{
-       background: black!important;
+       background: #919191!important;
     color: white!important;
     
+  }
+
+  .iconos{
+        color: white!important;
+    background: #2196f3!important;
+  }
+
+  .colorred{
+
+    text-align: center;
+    background: red;
+    border-radius: 10px;
+    margin-top: 1em;
+    color: white;
+  }
+
+  .colorgreen{
+    text-align: center;
+    background: #59c158;
+    border-radius: 10px;
+    margin-top: 1em;
+    color: white;
   }
