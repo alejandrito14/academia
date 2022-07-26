@@ -299,13 +299,13 @@ function EditarObjeto(idcontador) {
 	let productosLS;
 
 	productosLS = obtenerObjetosLocalStorage();
-	console.log('eliminando');
+
 	let producto;
 	var conta=0;
 	var encontrado=0;
 	productosLS.forEach(function(productoLS, index){
 		//console.log('entro al for'+productoLS.idpaquete+'-'+idcontador);
-		console.log(idcontador+'  '+conta);
+		
 		if (conta==idcontador) {
 
 			producto=productoLS;
@@ -344,7 +344,7 @@ function EditarObjeto(idcontador) {
 }
 
 function LlenarFormulario(producto,idcontador) {
-	console.log(producto);
+	
 
 	$("#v_nombretu").val(producto.v_nombretu);
 	$("#v_paternotu").val(producto.v_paternotu);
@@ -354,7 +354,11 @@ function LlenarFormulario(producto,idcontador) {
 	$("#v_celulartu").val(producto.v_celulartu);
 	$("#v_correotu").val(producto.v_correotu);
 	$("#v_idtu").val(idcontador);
-	console.log('paren'+producto.v_parentescotu);
+
+	if (producto.inputsoytutor==1) {
+		$("#inputtutor").attr('checked',true);
+	}
+	
 	ObtenerParentesco(producto.v_parentescotu);
 
 }

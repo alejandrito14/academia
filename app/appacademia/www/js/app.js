@@ -93,7 +93,7 @@ $(document).ready(function() {
   
 
 
-var produccion = 0;
+var produccion = 1;
 
  
 
@@ -433,6 +433,7 @@ $$(document).on('page:init', '.page[data-name="home"]', function (e) {
  getValidacionUsuario().then(r => {
 
         var existe=r.existe;
+      
 
   if (existe==0) {
 
@@ -750,11 +751,13 @@ $$(document).on('page:init', '.page[data-name="registrodatosacceso"]', function 
   ObtenerdatosAcceso();
   ConsultarDepende();
 
- $$('#v_contra1').attr('onkeyup',"Contarletrasinput('v_contra1','ojitoicono')");
- $$('#span1').attr('onclick',"CambiarAtributoinput('v_contra1')"); 
- $$('#v_contra2').attr('onkeyup',"CoincidirContra('v_contra1','v_contra2');Contarletrasinput('v_contra2','ojitoicono2');");
+ $$('#v_contra1').attr('onkeyup',"Aparecercruz('v_contra1','limpiar','ojitoicono');");
+ $$('#span1').attr('onclick',"CambiarAtributoinput4('v_contra1')"); 
+ $$('#v_contra2').attr('onkeyup',"CoincidirContra('v_contra1','v_contra2');Aparecercruz('v_contra2','limpiar2','ojitoicono2');");
  $$('#span2').attr('onclick',"CambiarAtributoinput2('v_contra2')");
- 
+ $(".limpiar").attr('onclick',"LimpiarElemento2('v_contra1')");
+ $(".limpiar2").attr('onclick',"LimpiarElemento3('v_contra2')");
+
 });
 
 $$(document).on('page:init', '.page[data-name="datospersonales"]', function (e) {
@@ -1159,23 +1162,28 @@ $$(document).on('page:init', '.page[data-name="asignaralumnos"]', function (e) {
   if (localStorage.getItem('idtipousuario')==0) {
      $(".regreso").attr('href','/detalleservicioadmin/');
     ObtenerAlumnosAdmin();
-
+    ObtenerParticipantesAlumnosServicio();
    }
 
   if (localStorage.getItem('idtipousuario')==3) {
      $(".regreso").attr('href','/detalleservicio/');
- ObtenerAlumnos();
+     ObtenerAlumnos();
+    ObtenerParticipantesAlumnosServicio();
 
    }
    if (localStorage.getItem('idtipousuario')==5){
       $(".regreso").attr('href','/detalleserviciocoach/');
- ObtenerAlumnos();
-
+   ObtenerAlumnos();
+   ObtenerParticipantesAlumnosServicio();
     }
+    $$("#buscadorusuarioasignado").attr('onkeyup','BuscarEnLista("#buscadorusuarioasignado",".listaa_")');
 
     $$("#buscadorusuario").attr('onkeyup','BuscarEnLista("#buscadorusuario",".lista_")');
     $$("#limpiarfiltro").attr('onclick','LimpiarFiltroalumnos()');
     $$("#btnguardarasignacion").attr('onclick','GuardarAsignacion()');
+
+       $$("#btnpasar").attr('onclick','QuitarElemento()');
+       $$("#btnpasar2").attr('onclick','AgregarElemento()');
 
 
 
@@ -1386,6 +1394,15 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
   CalcularTotales();
 
   $$("#tipopago").attr('onchange','CargarOpcionesTipopago()');
+  $(".divtransferencia").css('display','none');
+  $("#divagregartarjeta").css('display','none');
+  $("#divlistadotarjetas").css('display','none');
+
+  $$("#btnpagarresumen").attr('disabled',true);
+  $$("#btnatras").attr('onclick','Atras()');
+  $$("#btnatras").css('display','none');
+
+  $$("#btnpagarresumen").attr('onclick','RealizarPago()')
 });
 
 

@@ -189,8 +189,9 @@ function validar_login()
 									localStorage.setItem('idtipousuario',datos['tipo']);
 
 									localStorage.setItem('alias',datos['alias']);
+									localStorage.setItem('usuario',datos['usuario']);
 
-									localStorage.setItem('correo',usuario);
+									localStorage.setItem('correo',datos['email']);
 									localStorage.setItem("foto", datos['foto']);
 									localStorage.setItem("session",0);
     								localStorage.setItem("passacademia",password);

@@ -41,6 +41,19 @@ function PintarParticipantesAlumnosEvaluacion(respuesta) {
 				urlimagen="img/icon-usuario.png";
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
 			}
+
+			var encuestas=respuesta[i].encuestas;
+			var totalencuestas="";
+			for (var j = 0; j < encuestas.length; j++) {
+				var icono='<i class="bi-card-list"></i>';
+				var clase="iconosrojo";
+				if (encuestas[j].contestado==1) {
+					icono='<i class="bi-card-checklist"></i>';
+					clase="iconosverde";
+				}
+				
+				totalencuestas+=`<div class="col "><span class="avatar avatar-30 rounded-circle `+clase+`">`+icono+`</span></div>`;
+			}
 			html+=`
 				  
 
@@ -68,6 +81,10 @@ function PintarParticipantesAlumnosEvaluacion(respuesta) {
              		   </div>
              		   <div class="row">
                         	  <div class="item-text">`+respuesta[i].nombretipo+`</div>
+                    </div>
+
+                    <div class="row">
+                        	  `+totalencuestas+`
                     </div>
                         	</div>
                         	

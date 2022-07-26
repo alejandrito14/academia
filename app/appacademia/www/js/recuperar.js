@@ -351,7 +351,7 @@ function CambiarAtributoinput2(elemento) {
 
            var valor= $('#'+elemento).val();
              $('#'+elemento).remove();
-            var html=`<input type="text" value="`+valor+`" name="v_contra2" placeholder="Confirmar contraseña" style="float: left;width: 80%;" id="v_contra2" onkeyup ="CoincidirContra('v_contra1','v_contra2');Contarletrasr('v_contra2','ojito2');" class="place input-with-value">`;
+            var html=`<input type="text" value="`+valor+`" name="v_contra2" placeholder="Confirmar contraseña" style="float: left;width: 80%;" id="v_contra2" onkeyup ="CoincidirContra('v_contra1','v_contra2');Aparecercruz('v_contra2','limpiar2','ojitoicono2');" class="place input-with-value">`;
 
 
             $(".cambiarinput2").html(html);
@@ -365,7 +365,7 @@ function CambiarAtributoinput2(elemento) {
 
             $(".cambiarinput2").html(''); 
 
-            var html=`<input type="password" value="`+valor+`" name="v_contra2" placeholder="Confirmar contraseña" style="float: left;width: 80%;" id="v_contra2" onkeyup ="CoincidirContra('v_contra1','v_contra2');Contarletrasr('v_contra2','ojito2');" class="place input-with-value">`;
+            var html=`<input type="password" value="`+valor+`" name="v_contra2" placeholder="Confirmar contraseña" style="float: left;width: 80%;" id="v_contra2" onkeyup ="CoincidirContra('v_contra1','v_contra2');Aparecercruz('v_contra2','limpiar2','ojitoicono2');" class="place input-with-value">`;
            
 
             $(".cambiarinput2").html(html); 
@@ -403,9 +403,69 @@ function CambiarAtributoinput3(elemento) {
 
       }
 
+
+
+function CambiarAtributoinput4(elemento) {
+
+        if (cambiarvalor==1) {
+
+           var valor= $('#'+elemento).val();
+             $('#'+elemento).remove();
+            var html=`<input type="text" value="`+valor+`" name="v_contra1" placeholder="Contraseña" style="float: left;width: 80%;" id="v_contra1" onkeyup ="Aparecercruz('v_contra1','limpiar','ojitoicono')" class="place input-with-value">`;
+
+
+            $(".cambiarinput").html(html);
+
+          cambiarvalor=2;
+
+        }else{
+              
+             var valor= $('#'+elemento).val();
+             $('#'+elemento).remove();
+
+            $(".cambiarinput").html(''); 
+
+            var html=`<input type="password" value="`+valor+`" name="v_contra1" placeholder="Contraseña" style="float: left;width: 80%;" id="v_contra1" onkeyup ="Aparecercruz('v_contra1','limpiar','ojitoicono')" class="place input-with-value">`;
+           
+
+            $(".cambiarinput").html(html); 
+            cambiarvalor=1;
+        }
+        
+
+      }
+
+
 function LimpiarElemento(elemento) {
   console.log(elemento);
   $("#"+elemento).val('');
   $("#span1").css('display','none');
   $(".spanvisible").css('display','none');
+}
+function LimpiarElemento2(elemento) {
+  console.log(elemento);
+  $("#"+elemento).val('');
+  $("#span1").css('display','none');
+  $(".limpiar").css('display','none');
+}
+function LimpiarElemento3(elemento) {
+  console.log(elemento);
+  $("#"+elemento).val('');
+  $("#span2").css('display','none');
+  $(".limpiar2").css('display','none');
+}
+
+function Aparecercruz(elemento,clase,aparecer) {
+            var longitud=$("#"+elemento).val().length;
+
+  if (longitud>0) {
+    $('.'+clase).css('display','block');
+   $("."+aparecer).css('display','block');
+
+  }else{
+    
+    $('.'+clase).css('display','none');
+    $("."+aparecer).css('display','none');
+
+  }
 }

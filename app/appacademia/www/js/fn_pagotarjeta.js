@@ -32,7 +32,8 @@ function ObtenerTarjetasStripe(setlastcard=false) {
     var pagina = "ObtenerDatosStripe.php";
     var idcliente = localStorage.getItem('id_user');
     var datos = "idcliente=" + idcliente + "&fname="+fname+"&idtipodepago="+idtipodepago;
-    
+    $("#btnatras").attr('display','none');
+
     HideDiv("divagregartarjeta");
     ShowDiv("divlistadotarjetas");
 
@@ -67,6 +68,7 @@ function PintarTarjetas(tarjetas,setlastcard=false) {
     var html = '';
     var logo = localStorage.getItem('logo');
     if (tarjetas.length > 0) {
+      $("#btnatras").attr('display','block');
         checked = "";
         checkclass = "opccard"
 
@@ -97,7 +99,7 @@ function PintarTarjetas(tarjetas,setlastcard=false) {
                 <div class="item-after">
                 ` +
                     `<a class="botoneliminar" style="line-height:0;margin-top: 0;margin-left:1em;" onclick="eliminarTarjeta('`+tarjetas[i].id +`','scard`+i+`');" style="float:left" >
-                        <i style = "size:16px;color:white;" class="icon material-icons">delete_forever</i>`+
+                       <i style="color:red;font-size:22px;" class="bi bi-trash-fill"></i>`+
                     `<span class="if-not-md">
 
                     </a>
@@ -300,22 +302,30 @@ function setupComplete(stripe, clientSecret) {
 };
 
 function eliminarTarjeta(icard,idtag){
+  var idtipodepago=localStorage.getItem('idtipodepago');
+
+
   app.dialog.confirm('','¿Seguro que desea eliminar la tarjea?', function () {
- 
+  app.preloader.show();
   $.post(urlphp + "borrartarjeta.php",
   {
     fname: "deleteCard",
     id: icard,
+    idtipodepago:idtipodepago
   })
   .done(function (result, status, xhr) { 
       HideDiv(idtag);
+     
       var checkbox = $("#" + idtag + " label input");
       if(checkbox.is(":checked")){
+
         ObtenerTarjetasStripe(true);
+
       }
+      app.preloader.hide();
   })
   .fail(function (xhr, status, error) {
-    
+      app.preloader.hide();
   });
 });
 }

@@ -152,6 +152,9 @@ function ObtenerServicioAdmin() {
 
 		});
 }
+
+
+
 function ObtenerParticipantesAlumnosAdmin() {
 	var idservicio=localStorage.getItem('idservicio');
 	var pagina = "ObtenerParticipantesAlumnosAdmin.php";

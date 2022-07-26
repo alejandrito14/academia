@@ -406,6 +406,8 @@ function PintarEventosAdmin(resultado) {
 			var color=resultado[i].color;
 			var titulo=resultado[i].titulo;
 			var coach=resultado[i].coach;
+			var fecha=resultado[i].fecha;
+			var dividirfecha=fecha.split('-');
 			html+=`
 				<div class="col-100 ">
 		        <div class="card shadow-sm margin-bottom-half">
@@ -417,15 +419,17 @@ function PintarEventosAdmin(resultado) {
 		                </div>
 		              </div>
 		              <div class="col">
-		            	<p class="text-muted size-14 no-margin-bottom">`+titulo+`</p>`;
+		             	<p class="text-muted size-14 no-margin-bottom"><span style="font-weight:bold;">`+dividirfecha[2]+'/'+dividirfecha[1]+'/'+dividirfecha[0]+`</span></p>
+
+		            	<p class="text-muted size-14 no-margin-bottom"><span style="opacity:0.6;">`+titulo+`</span></p>`;
 		            	
 		            	for (var j = 0; j <coach.length ; j++) {
 
 		            		html+=`<p class="no-margin-bottom"><span style="font-weight:bold;">Coach:</span> `+coach[j].nombre+` `+coach[j].paterno+`</p>`;
 		            	}
 
-		                html+=`<p class="text-muted size-14 no-margin-bottom"><span style="font-weight:bold;">Lugar:</span> `+zona+`</p>
-		                <p><span style="font-weight:bold;">Horario:</span> `+resultado[i].horainicial +` - `+ resultado[i].horafinal+`</p>
+		                html+=`<p class="text-muted size-14 text-color-theme no-margin-bottom" style=""><span  class="text-color-theme" style="">Lugar:</span> <span class="text-color-theme">`+zona+`</span></p>
+		                <p style="font-weight:bold;"><span class="text-color-theme" >Horario:</span><span class="text-color-theme"> `+resultado[i].horainicial +` - `+ resultado[i].horafinal+`</span></p>
 		              </div>
 		            </div>
 		          </div>

@@ -39,13 +39,17 @@ function CargarInicio() {
                 }
 }
 function CargarDatos() {
-	
+	localStorage.setItem('variable',0);
+
   var nombreusuario= localStorage.getItem('alias');
 	$$(".nombreusuario").text(nombreusuario);
 	var tipousuario=localStorage.getItem('tipoUsuario');
 	$$(".tipousuario").text(tipousuario);
-	$$(".tipousuario").addClass('tipoalumno');
 	$$(".btnmisservicios").attr('onclick','MisServiciosAlumno()');
+ 	classtipo='tipoalumno';
+ 	 $$(".tipousuario").removeClass('tipoadmin');
+ 	 $$(".tipousuario").removeClass('tipocoach');
+  	$$(".tipousuario").addClass(classtipo);
 
 
 	ObtenerTableroAnuncios(1);
@@ -81,11 +85,18 @@ $$('.messages-content').scrollTop( $('.messages-content').get(0).scrollHeight, 4
 }
 
 function CargarDatosAdmin(argument) {
+	localStorage.setItem('variable',0);
+
 	 var nombreusuario= localStorage.getItem('nombre')
 	$$(".nombreusuario").text(nombreusuario);
 	var tipousuario=localStorage.getItem('tipoUsuario');
 	$$(".tipousuario").text(tipousuario);
 	$("#lipagos").css('display','none');
+	var idtipousuario=localStorage.getItem('idtipousuario');
+
+   
+      classtipo='tipoadmin';
+  $$(".tipousuario").addClass(classtipo);
 
 
 	ObtenerTableroAnuncios(0);
@@ -93,19 +104,45 @@ function CargarDatosAdmin(argument) {
 	//ObtenerServiciosAsignados();
 	Obtenerpublicidad(0);
 	ObtenerConfiguracion();
-	ObtenerServiciosRegistrados();
-
-	//ContarNuevasSolicitudes();
-	//ContarImagenesGaleria();
-	//ContarNuevasPromociones();
-	//setInterval('ObtenerAlumnosSinServicio()',2000);
-
+	//ObtenerServiciosRegistrados();
+	$$(".btnmisservicios").attr('onclick','MisServiciosAdmin()');
+	$$(".btndisponibilidad").attr('onclick','CargarCalendarioAdmin()');
 	$(".seleccionador").css('display','block');
+
+	socket=io.connect(globalsockect, { transports : ["websocket"],rejectUnauthorized: false });
+    socket.on('connect', function (data) 
+	{
+       socket.emit('conectado', { customId:iduser,tipouser:localStorage.getItem('idtipousuario')});
+    });
+ 	socket.on('mensajerespuestacliente',function (data) 
+	{
+    	//console.log("mensaje respuesta");
+    	PintarMensaje(data);
+	});
+
+	socket.on('nuevomensaje',function (data) 
+	{	
+			//console.log(data);
+    	if (data.idusuario!=iduser) {
+    		//console.log('idsala'+data.soporte);
+    		if (data.soporte == localStorage.getItem('idsala')) {
+    		
+    			PintarMensaje(data);
+			$$('.messages-content').scrollTop( $('.messages-content').get(0).scrollHeight, 400 );
+
+    		}
+    	}
+	});
+}
+
+function MisServiciosAdmin() {
+	GoToPage('serviciosregistrados');
 }
 
 
 function CargarDatosCoach() {
-	
+	localStorage.setItem('variable',0);
+
   var nombreusuario= localStorage.getItem('alias');
 	$$(".nombreusuario").text(nombreusuario);
 	var tipousuario=localStorage.getItem('tipoUsuario');
@@ -113,6 +150,8 @@ function CargarDatosCoach() {
 	$("#lipagos").css('display','none');
 	$$(".tipousuario").addClass('tipocoach');
 	$$(".btnmisservicios").attr('onclick','MisServiciosCoah()');
+  classtipo='tipocoach';
+  $$(".tipousuario").addClass(classtipo);
 
 
 	ObtenerTableroAnuncios(1);
@@ -464,7 +503,7 @@ function PintarEntradas(respuesta) {
 
                              if (imagen==1) {
                         html+=`   <figure class="avatar avatar-20 rounded margin-horizontal-half" >
-                                <img src="`+urlimagen+`" onclick="`+onclick+`" alt="" />
+                               
                           
 
                             </figure>`;
@@ -574,12 +613,12 @@ function PintarServiciosAsignados(respuesta) {
 			html+=`
 				 <div class="list-item"  style="background: white; margin: 1em;padding: 1em;border-radius: 10px;">
                 <div class="row">
-                  <div class="col-30" >
+                  <div class="col-40" style="justify-content:center;display:flex;" >
                     <div class="avatar  shadow rounded-10 " onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+imagen+`
                       
                     </div>
                   </div>
-                  <div class="col-70" >
+                  <div class="col-60" >
                    <div class="row" style="margin-left: 0.4em;">
                     `;
                   //  horarios=respuesta[i].horarios;
@@ -591,27 +630,23 @@ function PintarServiciosAsignados(respuesta) {
                     	//}
 
                     html+=`
-                     <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</p>
+                     <p class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</p>
                      <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].zonanombre+`</p>
 
  					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;">`+respuesta[i].titulo+`</p>
                   
 
                   </div>
-                  <div class="row" style="margin-top:1em;margin-left: 0.4em;">
-                  	<div class="col" style="text-align:right;" onclick="OpinionesServicio(`+respuesta[i].idusuarios_servicios+`)">
-                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi-chat-square-dots"></i></div>
-                  	</div>
-                  	<div class="col" onclick="ParticipantesServicio(`+respuesta[i].idusuarios_servicios+`)">
+                  <div class="row" style="margin-top:1em;">
+                  	<div class="col" style="text-align:center;" >
+                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos" onclick="OpinionesServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-chat-square-dots"></i></div>
+                                    	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos" onclick="ParticipantesServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-chat-left-quote-fill"></i></div>
+                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos" onclick="AbirCalificarServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-star"></i></div>
 
-                  	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi-chat-left-quote-fill"></i></div>
-                  	</div>
 
-                  	 	<div class="col" onclick="AbirCalificarServicio(`+respuesta[i].idusuarios_servicios+`)">
-
-                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi-star"></i></div>
                   	</div>
                   
+                                  
 
                   </div>
 
@@ -641,6 +676,8 @@ function PintarServiciosAsignados(respuesta) {
 
 	}
 }
+
+
 
 
 function ObtenerServiciosAsignadosCoach() {
@@ -673,30 +710,47 @@ function ObtenerServiciosAsignadosCoach() {
 function PintarServiciosAsignadosCoach(respuesta) {
 		
 	
-		var html="";
+
+	var html="";
 
 	if (respuesta.length>0) {
 		for (var i = 0; i <respuesta.length; i++) {
-				
-			var imagen='';
-			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null) {
+
+		
+
+			var clasecantidad="colorred";
+			if (respuesta[i].cantidadalumnos==respuesta[i].numeroparticipantesmax) {
+				clasecantidad="colorgreen";
+			}
+			var opacidad="";
+			if (respuesta[i].fechaproxima=='') {
+				opacidad="opacity:0.6;"
+			}
+
+				if (respuesta[i].imagen!='' && respuesta[i].imagen!=null) {
 
 				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;'+opacidad+'"/>';
 			}else{
 
 				urlimagen=localStorage.getItem('logo');
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;'+opacidad+'"/>';
 			}
 
-
 			html+=`
-				 <div class="list-item" style="background: white; margin: 1em;padding: 1em;border-radius: 10px;" >
+			 <div class="list-item" style="background: white; margin: 1em;padding: 1em;border-radius: 10px;" >
                 <div class="row">
                   <div class="col-30">
-                    <div class="avatar  shadow rounded-10 " onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">
+                  	<div class="row">
+                    <div class="avatar  shadow rounded-10 " style="    border-radius: 10px;
+    padding: 0; margin: 0;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">
                     `+imagen+`
                     </div>
+                    </div>
+                  	<div class="row">
+                  	<p style="text-align:center;`+opacidad+`" class="`+clasecantidad+`"><span>`+respuesta[i].cantidadalumnos+ ` </span>de<spa> `+respuesta[i].numeroparticipantesmax+`</spa></p>
+                  	</div>
+
                   </div>
                   <div class="col-70" >
                    <div class="row" style="margin-left: 0.4em;">
@@ -710,24 +764,33 @@ function PintarServiciosAsignadosCoach(respuesta) {
 
                     html+=`
 
-                    <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</p>
+                    <p class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</p>
                      <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].zonanombre+`</p>
 
- 					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;">`+respuesta[i].titulo+`</p>
+ 					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</p>
                   
 
-                  </div>
-                  <div class="row" style="margin-top:1em;">
-                  	<div class="col" style="text-align:right;" onclick="OpinionesServicio(`+respuesta[i].idusuarios_servicios+`)">
-                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi-chat-square-dots"></i></div>
-                  	</div>
-                  	<div class="col" onclick="ParticipantesServicio(`+respuesta[i].idusuarios_servicios+`)">
+                  </div>`;
+                  if (respuesta[i].idcategoria>0) {
+                 html+=` <div class="" style="margin-top:1em;width:100%;text-align:center;">
+                  	
+                  	<div class="col" style="text-align:center;" >
+                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos" style="`+opacidad+`" onclick="OpinionesServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-chat-square-dots"></i></div>
+                  	    <div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos" style="`+opacidad+`"  onclick="ParticipantesServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-chat-left-quote-fill" ></i></div>
 
-                  	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi-chat-left-quote-fill"></i></div>
                   	</div>
+
+
+
                   
+                  	`;
+                 	
 
-                  </div>
+
+
+                  }
+
+                  html+=`</div>
 
                	</div>
                   
@@ -742,25 +805,23 @@ function PintarServiciosAsignadosCoach(respuesta) {
 
 
 		html+=`
-			 <div class="list-item">
-                <div class="row text-color-theme">
-                  <h4 style="text-align:center;">En breve el administrador te asignará tus servicios</h4>
-                </div>
-              </div>
-
+			
 
 		`;
 
 				$$(".serviciosasignados").html(html);
 
-	}
+		}
 }
 
 
 function AbirCalificarServicio(idusuarios_servicios) {
 	localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
 
-	PantallaCalificacion();
+	 ObtenerCalificacion().then(r => {
+		PantallaCalificacion(r);
+
+	  });
 }
 function ParticipantesServicio(idusuarios_servicios) {
 localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
@@ -772,6 +833,14 @@ localStorage.setItem('variable',1);
 
 function OpinionesServicio(idusuarios_servicios) {
 	localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
+	localStorage.setItem('variable',1);
+	
+	GoToPage('comentariosservicio');
+	
+}
+
+function OpinionesServicioAdmin(idservicio) {
+	localStorage.setItem('idservicio',idservicio);
 	localStorage.setItem('variable',1);
 	
 	GoToPage('comentariosservicio');
@@ -1411,32 +1480,82 @@ function VerdetalleUsuario(idusuario) {
 }
 
 function CambioEstatusTablero(idtableroanuncio) {
-	var estatus=0;
-	if ($("#cambio_"+idtableroanuncio).is(':checked')) {
-		estatus=1;
-	}
+		var estatus=0;
+				if ($("#cambio_"+idtableroanuncio).is(':checked')) {
+					estatus=1;
+				}
+	var html=`
+         
+              <div class="block">
+               <div class="row" style="">
 
-	var datos="estatus="+estatus+"&idtableroanuncio="+idtableroanuncio;
-	var pagina = "CambioEstatusTablero.php";
-	$.ajax({
-		type: 'POST',
-		dataType: 'json',
-		url: urlphp+pagina,
-		crossDomain: true,
-		cache: false,
-		data:datos,
-		success: function(datos){
+                </div>
 
-			alerta('','Se realizó el cambio correctamente');
+                <div class="row" style="padding-top:1em;">
+                	<label style="font-size:16px;padding:1px;">¿Desea cambiar el estatus del anuncio?</label>
+                	
+                </div>
+              </div>
+           
+         
+        `;
+       app.dialog.create({
+          title: '',
+          //text: 'Dialog with vertical buttons',
+          content:html,
+          buttons: [
+            {
+              text: 'NO',
+            },
+            {
+              text: 'SI',
+            },
+            
+          ],
 
-			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
-				var error;
-				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
-				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
-								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
-					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
-			}
-		});
+           onClick: function (dialog, index) {
+                    if(index === 0){
+
+                    	if(estatus==1){
+                    		$("#cambio_"+idtableroanuncio).prop('checked',false);
+                    	}else{
+                    		$("#cambio_"+idtableroanuncio).prop('checked',true);
+
+                    	}
+              
+          }
+          else if(index === 1){
+              
+              
+			 
+				var datos="estatus="+estatus+"&idtableroanuncio="+idtableroanuncio;
+				var pagina = "CambioEstatusTablero.php";
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					url: urlphp+pagina,
+					crossDomain: true,
+					cache: false,
+					data:datos,
+					success: function(datos){
+
+						//alerta('','Se realizó el cambio correctamente');
+
+						},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+							var error;
+							  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+							  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+											//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+								console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+						}
+					});
+              
+            }
+           },
+
+          verticalButtons: false,
+        }).open();
+	
 }
 
 
@@ -1446,27 +1565,73 @@ function CambioEstatusPublicidad(idpublicidad) {
 		estatus=1;
 	}
 
-	var datos="estatus="+estatus+"&idpublicidad="+idpublicidad;
-	var pagina = "CambioEstatusPublicidad.php";
-	$.ajax({
-		type: 'POST',
-		dataType: 'json',
-		url: urlphp+pagina,
-		crossDomain: true,
-		cache: false,
-		data:datos,
-		success: function(datos){
 
-			alerta('','Se realizó el cambio correctamente');
+	var html=`
+         
+              <div class="block">
+               <div class="row" style="">
 
-			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
-				var error;
-				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
-				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
-								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
-					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
-			}
-		});
+                </div>
+
+                <div class="row" style="padding-top:1em;">
+                	<label style="font-size:16px;padding:1px;">¿Desea cambiar el estatus de la publicidad?</label>
+                </div>
+              </div>
+           
+         
+        `;
+       app.dialog.create({
+          title: '',
+          //text: 'Dialog with vertical buttons',
+          content:html,
+          buttons: [
+            {
+              text: 'NO',
+            },
+            {
+              text: 'SI',
+            },
+            
+          ],
+
+           onClick: function (dialog, index) {
+             if(index === 0){
+              if (estatus==1) {
+              	$("#cambiopubli_"+idpublicidad).prop('checked',false);
+              }else{
+              	$("#cambiopubli_"+idpublicidad).prop('checked',true);
+     	
+              }
+          }
+          else if(index === 1){
+               var datos="estatus="+estatus+"&idpublicidad="+idpublicidad;
+				var pagina = "CambioEstatusPublicidad.php";
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					url: urlphp+pagina,
+					crossDomain: true,
+					cache: false,
+					data:datos,
+					success: function(datos){
+
+						//alerta('','Se realizó el cambio correctamente');
+
+						},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+							var error;
+							  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+							  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+											//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+								console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+						}
+					});
+              
+            }
+           },
+
+          verticalButtons: false,
+        }).open();
+	
 }
 
 function CambiarEstatusEntrada(identrada) {
@@ -1474,7 +1639,46 @@ function CambiarEstatusEntrada(identrada) {
 	if ($("#cambioentra_"+identrada).is(':checked')) {
 		estatus=1;
 	}
+	var html=`
+         
+              <div class="block">
+               <div class="row" style="">
 
+                </div>
+
+                <div class="row" style="padding-top:1em;">
+                	<label style="font-size:16px;padding:1px;">¿Desea cambiar el estatus del blog?</label>
+                </div>
+              </div>
+           
+         
+        `;
+       app.dialog.create({
+          title: '',
+          //text: 'Dialog with vertical buttons',
+          content:html,
+          buttons: [
+            {
+              text: 'NO',
+            },
+            {
+              text: 'SI',
+            },
+            
+          ],
+
+           onClick: function (dialog, index) {
+                    if(index === 0){
+
+                 if (estatus==1) {
+                 $("#cambioentra_"+identrada).prop('checked',false);	
+                 }else{
+                 $("#cambioentra_"+identrada).prop('checked',true);
+                 }
+              
+          }
+          else if(index === 1){
+               
 	var datos="estatus="+estatus+"&identrada="+identrada;
 	var pagina = "CambioEstatusEntradas.php";
 	$.ajax({
@@ -1486,8 +1690,8 @@ function CambiarEstatusEntrada(identrada) {
 		data:datos,
 		success: function(datos){
 
-			alerta('','Se realizó el cambio correctamente');
-
+/*			alerta('','Se realizó el cambio correctamente');
+*/
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
 				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
@@ -1496,6 +1700,14 @@ function CambiarEstatusEntrada(identrada) {
 					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
 			}
 		});
+              
+            }
+           },
+
+          verticalButtons: false,
+        }).open();
+	
+
 }
 
 
@@ -1608,29 +1820,47 @@ function ObtenerServiciosRegistrados() {
 }
 
 function PintarServiciosRegistrados(respuesta) {
-	 alert('a');
+	
 	var html="";
 
 	if (respuesta.length>0) {
 		for (var i = 0; i <respuesta.length; i++) {
 
+				var opacidad="";
+			if (respuesta[i].fechaproxima=='') {
+				opacidad="opacity:0.6;"
+			}
+
+
 			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null) {
 
 				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;'+opacidad+'"/>';
 			}else{
 
 				urlimagen=localStorage.getItem('logo');
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;'+opacidad+'"/>';
 			}
 
+			var clasecantidad="colorred";
+			if (respuesta[i].cantidadalumnos==respuesta[i].numeroparticipantesmax) {
+				clasecantidad="colorgreen";
+			}
+			
 			html+=`
-			 <div class="list-item" style="background: white; margin: 1em;padding: 1em;border-radius: 10px;" >
+			 <div class="list-item" style="background: white; margin: 1em;padding: 1em;border-radius: 10px;`+opacidad+`" >
                 <div class="row">
                   <div class="col-30">
-                    <div class="avatar  shadow rounded-10 " onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">
+                  	<div class="row">
+                    <div class="avatar  shadow rounded-10 " style="    border-radius: 10px;
+    padding: 0; margin: 0;" onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">
                     `+imagen+`
                     </div>
+                    </div>
+                  	<div class="row">
+                  	<p style="text-align:center;" class="`+clasecantidad+`"><span>`+respuesta[i].cantidadalumnos+ ` </span>de<spa> `+respuesta[i].numeroparticipantesmax+`</spa></p>
+                  	</div>
+
                   </div>
                   <div class="col-70" >
                    <div class="row" style="margin-left: 0.4em;">
@@ -1644,19 +1874,30 @@ function PintarServiciosRegistrados(respuesta) {
 
                     html+=`
 
-                    <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">`+horarioshtml+`</p>
-                     <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">`+respuesta[i].zonanombre+`</p>
+                    <p class="text-color-theme size-12" style="text-align:center;font-weight:bold;`+opacidad+`" onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">`+horarioshtml+`</p>
+                     <p class="text-color-theme size-12" style="text-align:center;`+opacidad+`" onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">`+respuesta[i].zonanombre+`</p>
 
- 					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;">`+respuesta[i].titulo+`</p>
+ 					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;" onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</p>
                   
 
                   </div>`;
                   if (respuesta[i].idcategoria>0) {
-                 html+=` <div class="row" style="margin-top:1em;">
-                  	<div class="col" style="text-align:center;" onclick="OpinionesServicio(`+respuesta[i].idusuarios_servicios+`)">
-                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi-chat-square-dots"></i></div>
+                 html+=` <div class="" style="margin-top:1em;width:100%;text-align:center;">
+                  	<div class="" >
+                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos" style="`+opacidad+`" onclick="OpinionesServicioAdmin(`+respuesta[i].idservicio+`)"><i class="bi bi-chat-square-dots"></i></div>
+                  	
+                  	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos" style="`+opacidad+`" onclick="ParticipantesServicio(`+respuesta[i].idservicio+`)"><i class="bi bi-chat-left-quote-fill"></i></div>
+
                   	</div>
+
+
+
+                  
                   	`;
+                 	
+
+
+
                   }
 
                   html+=`</div>
@@ -1681,6 +1922,10 @@ function PintarServiciosRegistrados(respuesta) {
 				$$(".serviciosregistrados").html(html);
 
 		}
+
+
+
+
 }
 
 function DetalleServicioAdmin(idservicio) {

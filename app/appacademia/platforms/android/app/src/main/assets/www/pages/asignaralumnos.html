@@ -1,7 +1,7 @@
 <template>
 <div class="page " data-name="asignaralumnos">
   <div class="navbar">
-    <div class="navbar-bg"></div>
+    <div class="navbar-bg" style="border: none;border-radius: 0px;"></div>
     <div class="navbar-inner">
       <div class="left">
          <a href="#" class="button button-fill text-color-theme bg-color-white button-44 regreso" >
@@ -20,8 +20,8 @@
         </a> -->
       </div>
 
-      <div class="subnavbar" style="backdrop-filter: none;">
-        <form class="searchbar">
+     <!--  <div class="subnavbar" style="backdrop-filter: none;background: whitesmoke!important;">
+        <form class="searchbar" style="margin:.5em;">
           <div class="searchbar-inner">
             <div class="searchbar-input-wrap">
               <input type="search" id="buscadorusuario" placeholder="Buscar" />
@@ -31,22 +31,75 @@
             </div><span class="searchbar-disable-button if-not-aurora">Cancel</span></div>
           </form>
           </div>
-
+ -->
 
     </div>
+
+
   </div>
+
+
   <!-- main page content -->
   <div class="page-content">
+    <div class="row">
+      <span style="    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 1em;">Usuarios asignados</span>
+    </div>
+    <div class="row">
+    <input type="search" id="buscadorusuarioasignado" placeholder="Buscar" style="    margin-left: 1em;
+    margin-right: 1em;" />
+  </div>
+
+    <div class="row" style="margin-top: 2em;">
+      
+
+      <div class="list media-list no-margin">
+           <div id="divparticipantesalumnos" style="list-style: none;">
+      
+              </div>
+           </div>
+           <div >
+           
+          </div>
+      </div>
+
+
+    <div class="row">
+        <div class="">
+            <button type="button" class="button button-fill button-large button-raised margin-bottom color-theme" style="display: none;" id="btnguardarasignacion" >GUARDAR</button>
+        </div>
+       
+      </div>
+      <div class="row">
+        <div class="">
+            <button type="button" class="button button-fill button-large button-raised margin-bottom color-theme" style="display: none;" style="background: red;" id="btnpasar" >Quitar elementos </button>
+        </div>
+       
+      </div>
+
+
+
+ <div class="row">
+      <span style="    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 1em;">Usuarios no asignados</span>
+    </div>
+
     <!-- banner -->
- 
+  <div class="row">
+    <input type="search" id="buscadorusuario" placeholder="Buscar" style="    margin-left: 1em;
+    margin-right: 1em;" />
+  </div>
 
    
     <div class="row" style="margin-top: 2em;">
       
 
       <div class="list media-list no-margin">
-           <div id="divalumnos" style="list-style: none;height: 25em;
-    overflow: scroll;">
+           <div id="divalumnos" style="list-style: none;">
       
               </div>
            </div>
@@ -56,12 +109,15 @@
           </div>
       </div>
 
-      <div class="row">
-        <div class="block">
-            <button type="button" class="button button-fill button-large button-raised margin-bottom color-theme" style="display: none;" id="btnguardarasignacion" >GUARDAR</button>
+
+       <div class="row">
+        <div class="">
+            <button type="button" class="button button-fill button-large button-raised margin-bottom color-theme" style="display: none;" style="background: #59c158;" id="btnpasar2" >Agregar elementos </button>
         </div>
        
       </div>
+
+      
    
 
 

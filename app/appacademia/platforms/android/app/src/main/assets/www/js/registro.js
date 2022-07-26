@@ -398,6 +398,7 @@ function RegistrarAcceso() {
 	$(".licontra1").removeClass('is-invalid');
 	$(".licontra2").removeClass('is-invalid');
 	$(".litipousuario").removeClass('is-invalid');
+	$(".liusuario").removeClass('is-valid');
 
 	$(".licorreo").addClass('is-valid');
 	$(".licontra1").addClass('is-valid');
@@ -409,6 +410,7 @@ function RegistrarAcceso() {
 	var v_contra1=$("#v_contra1").val();
 	var v_contra2=$("#v_contra2").val();
 	var tipousuario=$("#v_tipousuario").val();
+	var v_usuario=$("#v_usuario").val();
 
 	var id_user=localStorage.getItem('id_user');
 	var tutorados="";
@@ -419,12 +421,15 @@ function RegistrarAcceso() {
 	}
 
 
-	var datos="v_email="+v_email+"&v_contra1="+v_contra1+"&v_tipousuario="+tipousuario+"&id_user="+id_user+"&tutorados="+tutorados;
+	var datos="v_usuario="+v_usuario+"&v_email="+v_email+"&v_contra1="+v_contra1+"&v_tipousuario="+tipousuario+"&id_user="+id_user+"&tutorados="+tutorados;
 	var pagina = "registroaccesousuario.php";
 
 	var msj="";
 	var bandera=1;
-	
+	if (v_usuario=='') {
+		usuario1='Campo requerido';
+		bandera=0;
+	}
 	if (v_email=='') {
 		email1='Campo requerido';
 		bandera=0;
@@ -479,6 +484,8 @@ function RegistrarAcceso() {
 				    	{
 
 				    		localStorage.setItem("correo", respuesta.email);
+				    		localStorage.setItem("usuario", respuesta.usuario[0].usuario);
+
 				    	    localStorage.setItem("session", 0);
 				    		localStorage.setItem("passacademia", v_contra1);
 				    		localStorage.setItem('tipoUsuario',respuesta.tipousuario);
@@ -487,6 +494,9 @@ function RegistrarAcceso() {
 				    		localStorage.removeItem('vcorreoregistro');
 				    		localStorage.removeItem('vcontra1registro');
 				    		localStorage.removeItem('vcontra2registro');
+				    		var datos=respuesta.usuario[0];
+				    		localStorage.setItem('foto',datos.foto);
+				    		localStorage.setItem('alias',datos.alias);
 
 				    		if (tipousuario==3) {
 
@@ -550,7 +560,13 @@ function RegistrarAcceso() {
 
 
 
-		
+		if (v_usuario=='') {
+			usuario1='Campo requerido';
+			bandera=0;
+			$("#lblusuario").html(usuario1);
+			$(".liusuario").removeClass('is-valid');
+			$(".liusuario").addClass('is-invalid');
+			}
 
 
 
@@ -2468,7 +2484,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
               </div>
             </div>
             <div class="sheet-modal-inner" style="background: white;border-top-left-radius: 20px;border-top-right-radius:20px; ">
-              <div class="" style="height: 100%;">
+              <div class="page-content" style="height: 100%;">
                 <div style="background: white; height: 100%;width: 100%;border-radius: 20px;">
    						     <div class="row">
 	   						     <div class="col-20">
@@ -2494,7 +2510,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 		  
 		    <div class="row " >
            <div style="margin-left: 1em;" class="col-85 medium-50 large-40 margin-left-auto margin-right-auto align-self-center  padding-vertical">
-          <h1 style=""> Registrar <span style="color: #0abe68;">tutorados</span>
+          <h1 style=""> Nuevo <span style="color: #0abe68;">Asociado</span>
           </h1>
 
           
@@ -2557,6 +2573,19 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
               <div class="list form-list no-margin margin-bottom">
                <ul>
+
+              <li class="item-content item-input item-input-with-value is-valid licelulartu">
+                  <div class="item-inner">
+                  <div class="item-title item-floating-label">Número de celular</div>
+                  <div class="item-input-wrap">
+                  <input type="text" name="v_celulartu" id="v_celulartu" class="input-with-value" />
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+              </li>
+
+              <div id="mensajecelular" style="color:red;"></div>
+
 
                 <li class="item-content item-input item-input-with-value is-valid linombretu">
 	                  <div class="item-inner">
@@ -2630,19 +2659,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
               </div>
               </li>
 
-               <li class="item-content item-input item-input-with-value is-valid licelulartu">
-
-                  <div class="item-inner">
-                  <div class="item-title item-floating-label">Número de celular</div>
-                  <div class="item-input-wrap">
-                  <input type="text" name="v_celulartu" id="v_celulartu" class="input-with-value" />
-                  <span class="input-clear-button"></span>
-                </div>
-              </div>
-              </li>
-
-              <div id="mensajecelular" style="color:red;"></div>
-
+           
 
                <li class="item-content item-input item-input-with-value is-valid licorreotu">
 
@@ -2656,9 +2673,18 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
               </li>
 
               <div id="mensajecorreo" style="color:red;"></div>
+          
+
+
             </ul>
 
-
+            <div>
+	            <div class="item-content lipoliticas">
+		            <div class="item-inner">
+		            <input type="checkbox" id="inputtutor">Soy su tutor
+		            </div>
+	            </div>
+            </div>
 
 
             </div>
@@ -2750,8 +2776,8 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 				$(".lifechanacimientotu").css()
 				$(".lisexotu").css()
 				$(".liparentescotu").css()*/
-				$(".licelulartu").css('display','none')
-				$(".licorreotu").css('display','none');
+				//$(".licelulartu").css('display','none')
+				//$(".licorreotu").css('display','none');
 
     		
           },
@@ -2923,17 +2949,19 @@ function Siguientesdatos() {
 function Atrasdatos(argument) {
 				$(".linombretu").css('display','block');
 
-		$(".lipaternotu").css('display','block');
+				$(".lipaternotu").css('display','block');
 				$(".limaternotu").css('display','block');
 				$(".lifechanacimientotu").css('display','block');
 				$(".lisexotu").css('display','block');
 				$(".liparentescotu").css('display','block');
-				$(".licelulartu").css('display','none');
-				$(".licorreotu").css('display','none');
-				$(".ocultar").css('display','block');
-				$(".mostrar").css('display','none');
+				$(".licelulartu").css('display','block');
+				$(".licorreotu").css('display','block');
+				
+				/*$(".ocultar").css('display','block');
+				$(".mostrar").css('display','none');*/
+				$("#btnsiguiente").css('display','none');
 				$("#btnregresa").css('display','none');
-				$("#btnguadartuto").css('display','none');
+				$("#btnguadartuto").css('display','block');
 }
 
 function CargardatosIngresados() {
@@ -3039,12 +3067,15 @@ function GuardarTutorado(idcontador) {
 	$(".limaternotu").removeClass('is-invalid');
 	$(".lifechanacimientotu").removeClass('is-invalid');
 	$(".lisexotu").removeClass('is-invalid');
+	$(".licelulartu").removeClass('is-invalid');
 
 	$(".linombretu").addClass('is-valid');
 	$(".lipaternotu").addClass('is-valid');
 	$(".limaternotu").addClass('is-valid');
 	$(".lifechanacimientotu").addClass('is-valid');
 	$(".lisexotu").addClass('is-valid');
+	$(".licelulartu").addClass('is-valid');
+
 	$("#mensajecorreo").text('');
 	var v_nombretu=$("#v_nombretu").val();
 	var v_paternotu=$("#v_paternotu").val();
@@ -3055,7 +3086,7 @@ function GuardarTutorado(idcontador) {
 	var v_correotu=$("#v_correotu").val();
 	var v_parentescotu=$("#v_parentescotu").val();
 	var id_user=localStorage.getItem('id_user');
-
+	var inputsoytutor=$("#inputtutor").is(':checked')?1:0;
 
 	var datos="v_nombretu="+v_nombretu+"&v_paternotu="+v_paternotu+"&v_maternotu="+v_maternotu+"&v_fechatu="+v_fechatu+"&v_sexotu="+v_sexotu+"&v_celulartu="+v_celulartu+"&v_correotu="+v_correotu+"&id_user="+id_user+"&v_parentescotu="+v_parentescotu;
 	var pagina = "registrotutorado.php";
@@ -3063,7 +3094,10 @@ function GuardarTutorado(idcontador) {
 	var msj="";
 	var bandera=1;
 	
-	
+	if (v_celulartu=='') {
+		celular='Campo requerido';
+		bandera=0;
+	}
 
 	if (v_nombretu=='') {
 		nombre='Campo requerido';
@@ -3123,8 +3157,8 @@ function GuardarTutorado(idcontador) {
 			v_sexotu:v_sexotu,
 			v_celulartu:v_celulartu,
 			v_correotu:v_correotu,
-			v_parentescotu:v_parentescotu
-			
+			v_parentescotu:v_parentescotu,
+			inputsoytutor:inputsoytutor
 		};
 
 
@@ -3158,6 +3192,7 @@ function GuardarTutorado(idcontador) {
 					productoLS.v_celulartu=tutorado.v_celulartu;
 					productoLS.v_fechatu=tutorado.v_fechatu;
 					productoLS.v_parentescotu=tutorado.v_parentescotu;
+					productoLS.inputsoytutor=tutorado.inputsoytutor;
 					encontrado=1;
 				}
 				conta++;
@@ -3176,6 +3211,14 @@ function GuardarTutorado(idcontador) {
 			dynamicSheet2.close();
 
 	}else{
+
+		if (v_celulartu=='') {
+			celular='Campo requerido';
+			bandera=0;
+			$(".licelulartu").addClass('is-invalid');
+			$(".licelulartu").removeClass('is-valid');
+
+		}
 
 		if (v_nombretu=='') {
 			nombre='Campo requerido';
@@ -3533,7 +3576,7 @@ function ValidacionUsuario() {
 	
 		
 	var iduser = localStorage.getItem("id_user");
-	var usuario= localStorage.getItem("correo");
+	var usuario= localStorage.getItem("usuario");
 	var password=localStorage.getItem("passacademia");
 	var pagina = "VerificarUsuarioActivo.php";
 	var datos="idusuarios="+iduser+"&usuario="+usuario+"&password="+password;
@@ -3571,6 +3614,7 @@ function ValidacionUsuario() {
 					localStorage.setItem("nombre", '');
 					localStorage.setItem("paterno", '');
 					localStorage.setItem("materno",'');
+					localStorage.setItem('usuario','');
 
 					localStorage.setItem('correo','');
 					localStorage.setItem("foto", '');
@@ -3648,7 +3692,7 @@ function getValidacionUsuario() {
     return new Promise(function(resolve, reject) {
 
    	var iduser = localStorage.getItem("id_user");
-	var usuario= localStorage.getItem("correo");
+	var usuario= localStorage.getItem("usuario");
 	var password=localStorage.getItem("passacademia");
 	var pagina = "VerificarUsuarioActivo.php";
 	var datos="idusuarios="+iduser+"&usuario="+usuario+"&password="+password;
@@ -3730,10 +3774,10 @@ function IrRegistro() {
 	$(".lialias").removeClass('is-invalid');
 	$(".lialias").addClass('is-valid');
 	var v_alias=$("#v_alias").val();
-	if (v_alias=='') {
+	/*if (v_alias=='') {
 
 		bandera=0;
-	}
+	}*/
 	if (localStorage.getItem('foto')=='' || localStorage.getItem('foto')==null) {
 
 		bandera=0;
@@ -3776,12 +3820,12 @@ function IrRegistro() {
 
 		
 
-		if (v_alias=='') {
+		/*if (v_alias=='') {
 			
 			$(".lialias").addClass('is-invalid');
 			$(".lialias").removeClass('is-valid');
 			bandera=0;
-		}
+		}*/
 
 		if (deportes.length==0) {
 			bandera=0;

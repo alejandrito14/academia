@@ -261,6 +261,7 @@ function Pintartipodepagos(opciones,tipodepagoseleccionado) {
    var html='';
 
   if (opciones.length>0) {
+     html+=`  <option value="0">Seleccionar método de pago</option>`;
     for (var i = 0; i <opciones.length; i++) {
 
     html+=`  <option value="`+opciones[i].idtipodepago+`">`+
@@ -448,6 +449,7 @@ function AplicarCupon() {
 	var cupon=$("#txtcupon").val();
 
 	var datos="cupon="+cupon;
+  var pagina="AplicarCupon.php";
     $.ajax({
     type: 'POST',
     dataType: 'json',
@@ -482,7 +484,6 @@ function HabilitarOpcionespago(idtipodepago,foto,stripe,habilitarcampo,habilitar
 
 
   }else{
-
 
     $(".opcionestipodepago").prop('checked',false);
     $("#tipodepago_"+idtipodepago).prop('checked',true);
@@ -544,7 +545,6 @@ function HabilitarOpcionespago(idtipodepago,foto,stripe,habilitarcampo,habilitar
 
     if (habilitarcampo==1) {
       // Recalcular4();
-      alert('a');
       var sumatotalapagar1=localStorage.getItem('sumatotalapagar');
     
       $("#montocliente").val(parseFloat(round(sumatotalapagar1)));
@@ -592,121 +592,133 @@ function CargarOpcionesTipopago() {
 	var idtipopago=$("#tipopago").val();
 	var datos="idtipopago="+idtipopago;
 	var pagina="Cargartipopago.php";
-    $.ajax({
-    type: 'POST',
-    dataType: 'json',
-    url: urlphp+pagina,
-    data:datos,
-    async:false,
-    success: function(respuesta){
-    var resultado=respuesta.respuesta;
-    console.log(resultado);
-   	HabilitarOpcionespago(resultado.idtipodepago,resultado.habilitarfoto,resultado.constripe,resultado.habilitarcampomonto,resultado.habilitarcampomontofactura);
-   	$(".divtransferencia").css('display','none');
+    $(".divtransferencia").css('display','none');
+    $("#divagregartarjeta").css('display','none');
+    $("#divlistadotarjetas").css('display','none');
+    $$("#btnpagarresumen").prop('disabled',true);
 
-   	if (resultado.habilitarfoto==1) {
-   		$(".divtransferencia").css('display','block');
-   		var html="";
-   	 var datosdecuenta=resultado.cuenta.split('|');
+  if (idtipopago>0) {
+    $$("#btnpagarresumen").prop('disabled',false);
+  
+      $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: urlphp+pagina,
+      data:datos,
+      async:false,
+      success: function(respuesta){
+      var resultado=respuesta.respuesta;
+      console.log(resultado);
+     	HabilitarOpcionespago(resultado.idtipodepago,resultado.habilitarfoto,resultado.constripe,resultado.habilitarcampomonto,resultado.habilitarcampomontofactura);
+    if (resultado.habilitarfoto==1) {
+     		$(".divtransferencia").css('display','block');
+     		var html="";
+     	 var datosdecuenta=resultado.cuenta.split('|');
 
-            var html1="";
-            for (var j = 0; j <datosdecuenta.length; j++) {
-                  html1+='<p style="text-align:center;">'+datosdecuenta[j]+'</p>';
-            }
+              var html1="";
+              for (var j = 0; j <datosdecuenta.length; j++) {
+                    html1+='<p style="text-align:center;">'+datosdecuenta[j]+'</p>';
+              }
 
 
-            html+=` <li class="cuentas" id="cuenta_`+resultado.idtipodepago+`" style="" >
-            <label class="">
-              <div class="">
-               
-                <div class="" style="     margin-left: 1em;
-    margin-right: 1em;text-align: justify;-webkit-line-clamp: 200;display: inline-block;" >
+              html+=` <li class="cuentas" id="cuenta_`+resultado.idtipodepago+`" style="" >
+              <label class="">
+                <div class="">
+                 
+                  <div class="" style="     margin-left: 1em;
+      margin-right: 1em;text-align: justify;-webkit-line-clamp: 200;display: inline-block;" >
 
-                  <div style="    padding-left: 1em;padding-right: 1em;padding-top: .2em;padding-bottom: .2em;background: #dfdfdf;border-radius: 10px;font-size:16px;">
-                `+
-                html1
-                +`
+                    <div style="    padding-left: 1em;padding-right: 1em;padding-top: .2em;padding-bottom: .2em;background: #dfdfdf;border-radius: 10px;font-size:16px;">
+                  `+
+                  html1
+                  +`
+                    </div>
                   </div>
                 </div>
+              </label>
+            </li>`;
+
+            html+=`
+            	<div id="habilitarfoto" style="display: block;">
+      <div class="subdivisiones" style="margin-top: 1.5em" ><span style="margin-top: .5em;margin-left: .5em;">Comprobante</span></div>
+
+           <div class=""  >
+                  <div>
+                      <button  onclick="AbrirModalFotoComprobante()" class="button button-fill botonesaccion botonesredondeado estiloboton" style="margin-top: 1em;background:#4cd964;"> Sube tu comprobante</button>
+                             <div class="check-list" style="    display: none;
+                                          margin-right: 10em;
+                                           top: -.2em;
+                                          position: absolute;
+                                             right: -6em;"><span></span></div>
+                  </ul>
+
+                      <div class="block m-0"> 
+                       <div class="list media-list sortable" id="" style="">           
+
+                      <div id="lista-imagenescomprobante">
+                          
+                      </div>
+                  </div> 
+
+                  </div>   
+                  
+                </div>
+
               </div>
-            </label>
-          </li>`;
 
-          html+=`
-          	<div id="habilitarfoto" style="display: block;">
-    <div class="subdivisiones" style="margin-top: 1.5em" ><span style="margin-top: .5em;margin-left: .5em;">Comprobante</span></div>
+            `;
+            $(".informacioncuenta").html(html);
+        }
 
-         <div class=""  >
-                <div>
-                    <button  onclick="AbrirModalFotoComprobante()" class="button button-fill botonesaccion botonesredondeado estiloboton" style="margin-top: 1em;background:#4cd964;"> Sube tu comprobante</button>
-                           <div class="check-list" style="    display: none;
-                                        margin-right: 10em;
-                                         top: -.2em;
-                                        position: absolute;
-                                           right: -6em;"><span></span></div>
-                </ul>
 
-                    <div class="block m-0"> 
-                     <div class="list media-list sortable" id="" style="">           
+        if (resultado.habilitarcampo==1) {
 
-                    <div id="lista-imagenescomprobante">
-                        
-                    </div>
-                </div> 
 
-                </div>   
-                
-              </div>
 
-            </div>
 
-          `;
-          $(".informacioncuenta").html(html);
+        }
+
+        if (resultado.constripe==1) {
+
+        	
+  	     if (resultado.comisionporcentaje=='') {
+  	        resultado.comisionporcentaje=0;
+  	      }
+  	      if (resultado.comisionmonto=='') {
+  	        resultado.comisionmonto=0;
+  	      }
+  	      if (resultado.impuesto=='') {
+  	        resultado.impuesto=0;
+  	      }
+  	      localStorage.setItem('comisionporcentaje',resultado.comisionporcentaje);
+  	      localStorage.setItem('comisionmonto',resultado.comisionmonto);
+
+  	      localStorage.setItem('impuesto',resultado.impuesto);
+  	      localStorage.setItem('clavepublica',resultado.clavepublica);
+  	      localStorage.setItem('claveprivada',resultado.claveprivada);
+        	ObtenerTarjetasStripe();
+        	$(".btnnuevatarjeta").attr('onclick','NuevaTarjetaStripe()');
+        }
+        
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                  //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                  console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
       }
 
-
-      if (resultado.habilitarcampo==1) {
-
-
-
-
-      }
-
-      if (resultado.constripe==1) {
-
-      	alert('a');
-	     if (resultado.comisionporcentaje=='') {
-	        resultado.comisionporcentaje=0;
-	      }
-	      if (resultado.comisionmonto=='') {
-	        resultado.comisionmonto=0;
-	      }
-	      if (resultado.impuesto=='') {
-	        resultado.impuesto=0;
-	      }
-	      localStorage.setItem('comisionporcentaje',resultado.comisionporcentaje);
-	      localStorage.setItem('comisionmonto',resultado.comisionmonto);
-
-	      localStorage.setItem('impuesto',resultado.impuesto);
-	      localStorage.setItem('clavepublica',resultado.clavepublica);
-	      localStorage.setItem('claveprivada',resultado.claveprivada);
-      	ObtenerTarjetasStripe();
-      	$(".btnnuevatarjeta").attr('onclick','NuevaTarjetaStripe()');
-      }
-      
-
-    },error: function(XMLHttpRequest, textStatus, errorThrown){ 
-      var error;
-        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
-        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
-                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
-                console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
-    }
-
-  });
+    });
+  }
 }
 
+function Atras() {
+  $("#divagregartarjeta").css('display','none');
+  $("#divlistadotarjetas").css('visibility','visible');
+  $("#divlistadotarjetas").css('display','block');
 
+}
 function AbrirModalFotoComprobante() {
 
   var id_user=localStorage.getItem('id_user');
@@ -1003,6 +1015,39 @@ function VisualizarImagen(foto) {
 
   myPhotoBrowserPopupDark.open();
 
+}
+
+function RealizarPago() {
+   var pagina = "RealizarPago.php";
+   var iduser=localStorage.getItem('id_user');
+   var constripe=localStorage.getItem('constripe');
+   var idtipopago=localStorage.getItem('idtipopago');
+   var descuentocupon=localStorage.getItem('descuentocupon');
+   var codigocupon=localStorage.getItem('codigocupon');
+    var datos= 'pagos='+localStorage.getItem('pagos')+"&id_user="+id_user+"&constripe="+constripe+"&idtipodepago="+idtipopago+"&descuentocupon="+descuentocupon+"&codigocupon="+codigocupon;
+    pagina = urlphp+pagina;
+
+    $.ajax({
+      url: pagina,
+      type: 'post',
+      dataType: 'json',
+      data:datos,
+      async:false,
+    success: function(data) {
+      
+      
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+                        var error;
+                        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+                        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                                                 //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                         app.dialog.alert('Error leyendo fichero jsonP '+error,'Error');
+                     $(".check-list").css('display','none');
+                     $("#aparecerimagen").css('display','none');
+                    }
+                                       
+
+          }); 
 }
 
 
