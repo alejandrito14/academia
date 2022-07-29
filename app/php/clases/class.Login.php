@@ -51,7 +51,20 @@ class Login
 		return $result;
 	   }
 	
+	public function validar_credenciales_email()
+	   {
+	   	$sql = "SELECT * FROM usuarios us WHERE us.email = '$this->usuario' AND us.clave = '$this->password'  "; 
 	
+		$result = $this->db->consulta($sql);
+		return $result;
+	   }
+	public function validar_celular()
+	   {
+	   	$sql = "SELECT * FROM usuarios us WHERE us.celular = '$this->usuario' AND us.clave = '$this->password'  "; 
+	
+		$result = $this->db->consulta($sql);
+		return $result;
+	   }
 	
 	
 }

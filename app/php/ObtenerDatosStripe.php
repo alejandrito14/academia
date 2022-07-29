@@ -8,7 +8,7 @@ header('Access-Control-Allow-Origin: *');
 require_once("clases/conexcion.php");
 require_once("clases/class.ClienteStripe.php");
 require_once("clases/class.Tipodepagos.php");
-require_once("clases/class.NotaRemision.php");
+//require_once("clases/class.NotaRemision.php");
 
 include 'stripe-php-7.93.0/init.php';
 $obj = new ClienteStripe();
@@ -23,7 +23,7 @@ try
 
 	//Enviamos la conexion a la clase
 	$obj->db = $db;
-	$obj->idCliente=$_POST['idcliente'];
+	$obj->idusuarios=$_POST['idcliente'];
     $fname = $_POST['fname'];
 
     $idtipodepago=$_POST['idtipodepago'];
@@ -37,6 +37,7 @@ try
     $skey=$obtenertipopago[0]->claveprivada;
     $pub_key=$obtenertipopago[0]->clavepublica;
     $obj->skey=$skey;
+
 
     switch ($fname) {
         case 'getCustomerId':

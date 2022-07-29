@@ -42,6 +42,8 @@ class Usuarios
     public $calle2;
     public $calle;
     public $v_tipoasentamiento;
+    public $idnivel;
+    public $iddeporte;
 	public function validarTelefono()
 	{
 		 $sql_cliente = "SELECT * FROM usuarios WHERE celular='$this->celular'";
@@ -103,7 +105,7 @@ class Usuarios
          sexo='$this->sexo',
          estatus='$this->estatus',
          fechanacimiento='$this->fecha'
-        WHERE idusuarios = '$this->idusuario' ";
+        WHERE idusuarios = '$this->idusuarios' ";
      
 
         $result = $this->db->consulta($query);
@@ -113,7 +115,7 @@ class Usuarios
 	{
 		$sql = "INSERT INTO usuariotoken (idusuario,token,dispositivo,uuid)
         VALUES ('$this->idusuarios','$this->tokenfirebase','$this->sistema','$this->uuid')";
-
+      
         $result  = $this->db->consulta($sql);
 	}
  
@@ -121,7 +123,7 @@ class Usuarios
 		public function ActualizarUsuarioAcceso()
 	{
 		 $query = "UPDATE usuarios SET
-       	 email = '$this->usuario',
+       	 email = '$this->email',
        	 usuario='$this->usuario',
        	 clave='$this->clave',
          tipo='$this->tipousuario'
@@ -157,10 +159,10 @@ class Usuarios
         $result = $this->db->consulta($query);
     }
 
-	public function GuardarUsuarioyTutor($idusuariotutorado,$parentesco)
+	public function GuardarUsuarioyTutor($idusuariotutorado,$parentesco,$soysututor)
 	{
-		$sql = "INSERT INTO usuariossecundarios (idusuariostutor,idusuariotutorado,idparentesco)
-        VALUES ('$idusuariotutorado','$this->idusuario','$parentesco')";
+		$sql = "INSERT INTO usuariossecundarios (idusuariostutor,idusuariotutorado,idparentesco,sututor)
+        VALUES ('$idusuariotutorado','$this->idusuario','$parentesco','$soysututor')";
 
 
 
@@ -202,6 +204,31 @@ class Usuarios
 		
 		
 	}
+
+    function validarUsuarioClienteCelular ()
+    {
+        $r ;
+        $sql_cliente = "SELECT * FROM usuarios WHERE celular = '$this->celular' AND email is not null and usuario is not null and email!='' and usuario!='' and clave!='' ";
+
+        $result_cliente = $this->db->consulta($sql_cliente);
+        $result_cliente_row = $this->db->fetch_assoc($result_cliente);
+        $result_cliente_row_num = $this->db->num_rows($result_cliente);
+        
+        
+        if ($result_cliente_row_num != 0)
+        {
+            $r = 1 ;
+            
+        }
+        else
+        {
+            $r = 0;
+
+        }
+        return $r ;
+        
+        
+    }
 
 	public function validarIdUsuarioCorreo()
 	{
@@ -315,10 +342,42 @@ class Usuarios
 
 	}
 
+    public function ObtenerUsuarioCelular()
+    {
+        $sql_cliente = "SELECT * FROM usuarios WHERE celular = '$this->celular'";
+        
+        $result_cliente = $this->db->consulta($sql_cliente);
+
+        return $result_cliente;
+
+
+    }
+
 	public function validarUsuarioClienteToken()
     {
         $r;
         $sql_cliente   = "SELECT * FROM usuarios WHERE usuario = '$this->usuario' AND token='$this->token'";
+
+      
+        $result_cliente         = $this->db->consulta($sql_cliente);
+        $result_cliente_row     = $this->db->fetch_assoc($result_cliente);
+        $result_cliente_row_num = $this->db->num_rows($result_cliente);
+
+        if ($result_cliente_row_num != 0) {
+            $r = 1;
+
+        } else {
+            $r = 0;
+
+        }
+        return $r;
+    }
+
+
+public function validarUsuarioClienteTokenCel()
+    {
+        $r;
+        $sql_cliente   = "SELECT * FROM usuarios WHERE celular = '$this->celular' AND token='$this->token'";
 
       
         $result_cliente         = $this->db->consulta($sql_cliente);
@@ -691,8 +750,11 @@ class Usuarios
     public function obtenerUsuariosAlumnos($idusuariosservicio)
     {
          $sql = "SELECT * FROM usuarios INNER JOIN tipousuario ON tipousuario.idtipousuario=usuarios.tipo
-           WHERE tipo IN(3) AND usuario!='' AND idusuarios NOT IN($idusuariosservicio)";
+           WHERE tipo IN(3) AND usuario!=''";
            
+        if ($idusuariosservicio!='') {
+             $sql.="AND idusuarios NOT IN($idusuariosservicio)";
+           }
         $resp = $this->db->consulta($sql);
         $cont = $this->db->num_rows($resp);
 
@@ -708,6 +770,65 @@ class Usuarios
         }
         return $array;
     }
+
+    public function GuardarNivelDeporte()
+    {
+       $sql = "INSERT INTO deportenivelusuario (idusuario,idnivel,iddeporte)
+        VALUES ('$this->idusuarios','$this->idnivel','$this->iddeporte')";
+
+
+
+        $result  = $this->db->consulta($sql);
+    }
+
+    public function EliminarNivelDeporte()
+    {
+        $sql = "DELETE FROM deportenivelusuario WHERE  idusuario='$this->idusuarios'";
+
+        $this->db->consulta($sql);
+    }
+
+    public function ObtenerDeportesNivel()
+    {
+        $sql = "SELECT 
+            deportenivelusuario.iddeportenivel,
+            deportenivelusuario.idusuario,
+            deportenivelusuario.idnivel,
+            deportenivelusuario.iddeporte,
+            deporte.deporte,
+            nivel.nivel
+        FROM deportenivelusuario
+        INNER JOIN deporte ON deportenivelusuario.iddeporte=deporte.iddeporte
+        INNER JOIN nivel ON deportenivelusuario.idnivel=nivel.idnivel
+         WHERE  idusuario='$this->idusuarios'";
+
+         $resp = $this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+        $array    = array();
+        $contador = 0;
+        if ($cont > 0) {
+
+            while ($objeto = $this->db->fetch_object($resp)) {
+
+                $array[$contador] = $objeto;
+                $contador++;
+            }
+        }
+        return $array;
+    }
+
+    public function CambiarAlias()
+    {
+        
+         $query = "UPDATE usuarios SET
+         alias='$this->alias'
+        WHERE idusuarios = '$this->idusuarios' ";
+      
+        $result = $this->db->consulta($query);
+    }
+
+  
 
 }
 

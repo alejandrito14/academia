@@ -97,7 +97,7 @@ try
 
     //$lo->principaldireccion = 1;
     $lo->sistema            = $sistema;
-    $lo->idusuario          = $idusuario;
+    $lo->idusuarios          = $idusuario;
     
     $edicion=1;
    /* if ($ediciondedatoscliente==1) {
@@ -237,7 +237,7 @@ try
         //Realizamos envio de email
         $enviar_mail->envio_registro($lo);
 */
-        $arra = array('existe' => 1, 'idusuario' => $lo->idusuario, 'nombre' => mb_strtoupper($lo->nombre), 'paterno' => mb_strtoupper($lo->paterno), 'materno' => mb_strtoupper($lo->materno), 'celular' => $v_celular, 'email' => $email);
+        $arra = array('existe' => 1, 'idusuario' => $lo->idusuarios, 'nombre' => mb_strtoupper($lo->nombre), 'paterno' => mb_strtoupper($lo->paterno), 'materno' => mb_strtoupper($lo->materno), 'celular' => $v_celular, 'email' => $email,'usuario' => $usuario);
 
     /*} else {
 

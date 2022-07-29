@@ -27,13 +27,26 @@ try
 	$tokenfirebase=$_POST['tokenfirebase'];
 	$uuid=$_POST['uuid'];
 	$valor=$_POST['anunciovisto'];
+	$login=$_POST['login'];
 
 	//Enviamos los parametros a la clase
 	$lo->usuario = utf8_decode($usuario);
 	$lo->password = utf8_decode($password);
 
+	if ($login=='btnusuario') {
+		$resultado = $lo->validar_credenciales_cliente();
+	}
+
+	if ($login=='btnemail') {
+		$resultado = $lo->validar_credenciales_email();
+	}
+
+	if ($login=='btncelular') {
+		$resultado = $lo->validar_celular();
+	}
+
 	//Realizamos validacion del usuario en la DB
-	$resultado = $lo->validar_credenciales_cliente();
+	
 	$resultado_row = $db->fetch_assoc($resultado);
 	$resultado_num = $db->num_rows($resultado);
 	
@@ -49,7 +62,11 @@ try
 		$array->id = $idusuarios;
 		$array->nombre=$resultado_row['nombre'];	
 		$array->paterno=$resultado_row['paterno'];		
-		$array->materno=$resultado_row['materno'];		
+		$array->materno=$resultado_row['materno'];	
+		$array->alias=$resultado_row['alias'];
+		$array->usuario=$resultado_row['usuario'];		
+
+	
 		$array->validado=1;	
 		$array->foto=$resultado_row['foto'];
 		$array->tipo=$resultado_row['tipo'];	

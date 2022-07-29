@@ -31,10 +31,23 @@ try
     $lo->foto=$foto;
     $lo->estatus  = 1;
 
-    $lo->idusuarios          = $idusuario;
+    $lo->idusuarios = $idusuario;
+
+    $deportes=json_decode($_POST['v_deportes']);
  
 
     $lo->ActualizarUsuarioFotoAlias();
+    $lo->EliminarNivelDeporte();
+
+    for ($i=0; $i < count($deportes); $i++) { 
+            
+            $idnivel=$deportes[$i]->{'idnivel'};
+            $iddeporte=$deportes[$i]->{'iddeporte'};
+            $lo->idnivel=$idnivel;
+            $lo->iddeporte=$iddeporte;
+            $lo->GuardarNivelDeporte();
+
+        }
 
 
  

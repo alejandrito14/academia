@@ -23,6 +23,9 @@ try
 	$lo->idusuarios=$idusuarios;
 	$obtener=$lo->ObtenerTotalPagos();
 
+	if ($obtener[0]->total==null) {
+		$obtener[0]->total='0.00';
+	}
 
 	$respuesta['respuesta']=$obtener[0];
 	

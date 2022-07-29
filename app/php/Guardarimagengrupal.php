@@ -8,8 +8,6 @@ require_once("clases/conexcion.php");
 require_once("clases/class.Imagengrupal.php");
 require_once("clases/class.Funciones.php");
 require_once("clases/class.Usuarios.php");
-require_once("clases/class.NotificacionPush.php");
-require_once("clases/class.Sucursal.php");
 
 
 try
@@ -27,7 +25,7 @@ try
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
 
-	$lo->idimagenesgrupal = trim($_POST['v_idimagenesnegocio']);
+	$lo->idimagenesgrupal = trim($_POST['v_idimagengrupal']);
 	$lo->idusuario=$_POST['iduser'];
 
 	$lo->foto=$_POST['foto'];

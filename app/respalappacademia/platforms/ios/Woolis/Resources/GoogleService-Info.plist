@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>CLIENT_ID</key>
+    <string>385871033894-9moen82h5ld4nc1n07sl5q5hpoi7s272.apps.googleusercontent.com</string>
+    <key>REVERSED_CLIENT_ID</key>
+    <string>com.googleusercontent.apps.385871033894-9moen82h5ld4nc1n07sl5q5hpoi7s272</string>
+    <key>API_KEY</key>
+    <string>AIzaSyCsk-24lW5vwA4RWgVtuZKRwl8CdTHhLl4</string>
+    <key>GCM_SENDER_ID</key>
+    <string>385871033894</string>
+    <key>PLIST_VERSION</key>
+    <string>1</string>
+    <key>BUNDLE_ID</key>
+    <string>com.pepperswings.app</string>
+    <key>PROJECT_ID</key>
+    <string>pepers-wings-notificacion</string>
+    <key>STORAGE_BUCKET</key>
+    <string>pepers-wings-notificacion.appspot.com</string>
+    <key>IS_ADS_ENABLED</key>
+    <false/>
+    <key>IS_ANALYTICS_ENABLED</key>
+    <false/>
+    <key>IS_APPINVITE_ENABLED</key>
+    <true/>
+    <key>IS_GCM_ENABLED</key>
+    <true/>
+    <key>IS_SIGNIN_ENABLED</key>
+    <true/>
+    <key>GOOGLE_APP_ID</key>
+    <string>1:385871033894:ios:bc9d363fe7798d03ad58e7</string>
+    <key>FIREBASE_ANALYTICS_COLLECTION_ENABLED</key>
+    <string>false</string>
+    <key>FIREBASE_PERFORMANCE_COLLECTION_ENABLED</key>
+    <string>false</string>
+    <key>FirebaseCrashlyticsCollectionEnabled</key>
+    <string>false</string>
+  </dict>
+</plist>

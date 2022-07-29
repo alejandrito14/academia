@@ -38,6 +38,7 @@ try
     $fecha    = $f->guardar_cadena_utf8($_POST['v_fecha']);*/
    /* $telefono = $f->guardar_cadena_utf8($_POST['v_telefono']);*/
     $email    = $f->guardar_cadena_utf8($_POST['v_email']);
+    $usuario=$_POST['v_usuario'];
     $contra   = $f->guardar_cadena_utf8($_POST['v_contra1']);
     $tipousuario=$_POST['v_tipousuario'];
    /* $nivel    = $_POST['v_nivel'];
@@ -73,7 +74,9 @@ try
     $lo->email    = $email;*/
    /* $lo->sexo     = $sexo;
     $lo->fecha    = $fecha;*/
-    $lo->usuario  = $email;
+    $lo->usuario  = $usuario;
+    $lo->email  = $email;
+
     $lo->clave    = $contra;
     $lo->tipousuario=$tipousuario;
     /*$lo->nivel    = $nivel;
@@ -113,16 +116,19 @@ try
     $lo->ediciondedatoscliente=$edicion;
     $lo->anunciovisto=$anunciovisto;
 */
+    
     $validar = $lo->validarUsuarioCliente();
     $nombretipousuario="";
     $nombre="";
     $paterno="";
+
     if ($validar == 0) {
 
         $lo->ActualizarUsuarioAcceso();
 
         $obtenertipo=$lo->ObtenerTipo();
         $nombretipousuario=$obtenertipo[0]->nombretipo;
+
 
         if (count($tutorados)>0) {
             
@@ -140,10 +146,11 @@ try
                  $lo->curp     = "";
                  $lo->estatus  = 1;
                  $lo->tipo=3;
-                 $lo->usuario=$tutorados[$i]->{'v_correotu'};
+                 $lo->usuario='';
                  $parentesco=$tutorados[$i]->{'v_parentescotu'};
+                 $soytutor=$tutorados[$i]->{'inputsoytutor'};
                  $lo->GuardarUsuarioTutorado();
-                 $lo->GuardarUsuarioyTutor($idusuario,$parentesco);
+                 $lo->GuardarUsuarioyTutor($idusuario,$parentesco,$soytutor);
 
              }
         }
@@ -169,6 +176,8 @@ try
 
        }
     }
+
+     $obtenerdatos=$lo->ObtenerInformacionUsuario();
 /*
         if ($lo->v_codigopostal != '' && $lo->v_pais != '' && $lo->v_estado != '' && $lo->v_municipio != '') {
 
@@ -290,7 +299,7 @@ try
         //Realizamos envio de email
         $enviar_mail->envio_registro($lo);
 */
-        $arra = array('existe' => $validar, 'email' => $email,'tipousuario'=>$nombretipousuario);
+        $arra = array('existe' => $validar, 'email' => $email,'tipousuario'=>$nombretipousuario,'usuario'=>$obtenerdatos);
 
     /*} else {
 

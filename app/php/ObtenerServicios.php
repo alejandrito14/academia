@@ -8,6 +8,8 @@ require_once("clases/conexcion.php");
 require_once("clases/class.Servicios.php");
 require_once("clases/class.Funciones.php");
 require_once("clases/class.Fechas.php");
+require_once("clases/class.Espacios.php");
+require_once("clases/class.ServiciosAsignados.php");
 
 //require_once("clases/class.MovimientoBitacora.php");
 /*require_once("clases/class.Sms.php");
@@ -22,7 +24,11 @@ try
 	$lo = new Servicios();
 	$f=new Funciones();
 	$fechas=new Fechas();
+	$espacios=new Espacios();
 
+	$espacios->db=$db;
+	$asignados = new ServiciosAsignados();
+	$asignados->db=$db;
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
 
@@ -32,24 +38,66 @@ try
 
 	for ($i=0; $i <count($obtenerservicios) ; $i++) { 
 		
-		$lo->idservicio=$obtenerservicios[$i]->idservicio;
-		$horarios=$lo->ObtenerHorariosAgrupadoServicio();
+		$asignados->idservicio=$obtenerservicios[$i]->idservicio;
+		$obtenerhorarios=$asignados->ObtenerHorariosProximo();
+		$participantes=$asignados->obtenerUsuariosServiciosAlumnosAsignados();
 
-		//$obtenerservicios[$i]->horarios=$horarios;
+		$obtenerservicios[$i]->cantidadalumnos=count($participantes);
+		 //$obtenerservicios[$i]->horarios=$horarios;
 		$arreglohorarios=array();
 
-		for ($j=0; $j < count($horarios); $j++) { 
-				
-		$diasemana=$fechas->diaarreglo($horarios[$j]->dia);
-		$horainicio1=date('H:i',strtotime($horarios[$j]->horainicial));
-		$horafinal1=date('H:i',strtotime($horarios[$j]->horafinal));
+		if (count($obtenerhorarios)>0) {
+			
+		
+		$diasemana=$fechas->diaarreglocorto($obtenerhorarios[0]->dia);
 
-		$arreglo=array('diasemana'=>$diasemana,'horainicial'=>$horainicio1,'horafinal'=>$horafinal1);
 
-		array_push($arreglohorarios,$arreglo);
+		$horainicio1=date('H:i:s',strtotime($obtenerhorarios[0]->horainicial));
+		$horafinal1=date('H:i:s',strtotime($obtenerhorarios[0]->horafinal));
 
-		}
-	 $obtenerservicios[$i]->horarios=$arreglohorarios;
+
+
+
+		$horainicio=date('H:i',strtotime($obtenerhorarios[0]->horainicial));
+
+		$horafinal=date('H:i',strtotime($obtenerhorarios[0]->horafinal));
+
+		$fecha=$obtenerhorarios[0]->fecha;
+		$dianumero=explode('-', $fecha);
+
+
+		$obtenerservicios[$i]->fechaproxima=$diasemana.' '.$dianumero[2].'/'.$fechas->mesesAnho3[$fechas->mesdelano($fecha)-1];
+		$obtenerservicios[$i]->horainicial=$horainicio;
+		$obtenerservicios[$i]->horafinal=$horafinal;
+		$diasemananumero=$obtenerhorarios[0]->dia;
+		$dia=date('w');
+		$horaactual=date('H:i:s');
+
+
+		$idzona=$obtenerhorarios[0]->idzona;
+		$espacios->idespacio=$idzona;
+		$zona=$espacios->buscarEspacio();
+		$rowzona=$db->fetch_assoc($zona);
+	
+		$obtenerservicios[$i]->idzona=$rowzona['idzona'];
+		$obtenerservicios[$i]->zonanombre=$rowzona['nombre'];
+		$obtenerservicios[$i]->zonacolor=$rowzona['color'];
+
+		
+		
+
+			}
+			else{
+
+			$obtenerservicios[$i]->horainicial="";
+			$obtenerservicios[$i]->horafinal="";
+			$obtenerservicios[$i]->fechaproxima="";
+			$obtenerservicios[$i]->idzona="";
+			$obtenerservicios[$i]->zonanombre="";
+			$obtenerservicios[$i]->zonacolor="";
+			
+			}
+	// $obtenerservicios[$i]->horarios=$arreglohorarios;
 
 
 

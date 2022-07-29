@@ -199,22 +199,24 @@ class ServiciosAsignados
 	public function ObtenerHorariosProximo()
 	{
 		$fechaactual=date('Y-m-d');
-		
-		$sql="SELECT
-					* 
-				FROM
+		$horaactual=date('H:i:s');
+		$dia=date('w');
+		$sql="	SELECT* FROM
 					horariosservicio 
 				WHERE
-				idservicio = '$this->idservicio' 
-				AND fecha BETWEEN '$fechaactual'
-				AND DATE_ADD(fecha, INTERVAL 15 DAY ) ORDER BY fecha,dia,horainicial ASC ";
+					idservicio = '$this->idservicio'  
+					AND fecha >='$fechaactual'
+					 ORDER BY fecha,dia,horainicial";
 
+				
+				
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
 
 		$array=array();
 		$contador=0;
+		$newArray=array();
 		if ($cont>0) {
 
 			while ($objeto=$this->db->fetch_object($resp)) {
@@ -222,87 +224,46 @@ class ServiciosAsignados
 					$dia=date('w');
 					$horaentrada=date('H:i:s',strtotime($objeto->horainicial));
 
-					$salir=0;
+					
+					$datetime1 = $fechaactual.' '.$horaactual;//start time
+					$datetime2 = $objeto->fecha.' '.$objeto->horainicial;//end time
 
-					if ($dia==$objeto->dia && $horaentrada>=$horaactual) {
-						
+					$consulta="SELECT TIMESTAMPDIFF(MINUTE,'$datetime1','$datetime2') as intervalo";
+					$resp2=$this->db->consulta($consulta);
+					$obj=$this->db->fetch_assoc($resp2);
+
+					$interval = $obj['intervalo'];
+
+
+						$objeto->diferencia=$interval;
 						
 						$array[$contador]=$objeto;
 
 						$salir=1;
-						break;
+						//break;
 
-					}
+					//}
+					$contador++;
+				}
 
+ 					
+				for ($i=0;$i<count($array);$i++){
+				   	//echo intval($array[$i]->diferencia).'<br>';
 
-					if ($salir==0) {
-						
+				   	$number=$array[$i]->diferencia;
+				    if ($number>=0){
+				      array_push($newArray, $array[$i]);
+				    
+				    }
+				    
+				}
 
-						/*$sqlbuscar="SELECT *FROM horariosservicio  WHERE idservicio=".$this->idservicio." AND dia>=".$dia." ORDER BY dia,horainicial asc limit 1";*/
-				$sqlbuscar="
-						SELECT* FROM
-					horariosservicio 
-				WHERE
-					idservicio = '$this->idservicio' AND dia>='$dia' 
-					AND fecha BETWEEN '$fechaactual'
-					AND DATE_ADD( fecha, INTERVAL 15 DAY ) ORDER BY fecha,dia,horainicial asc limit 1";
-
-
-						$respuesta=$this->db->consulta($sqlbuscar);
-						$conta = $this->db->num_rows($respuesta);
-
-
-						if ($conta>0) {
-							
-							while ($objetosiguiente=$this->db->fetch_object($respuesta)) {
-
-								$array[$contador]=$objetosiguiente;
-
-								$salir=1;
-								break;
-
-							}
-
-						}else{
-
-							/*$sqlbuscar="SELECT *FROM horariosservicio  WHERE idservicio=".$this->idservicio." AND dia<=".$dia." ORDER BY dia,horainicial asc limit 1";*/
-						$sqlbuscar="
-					SELECT* FROM
-						horariosservicio 
-					WHERE
-						idservicio = '$this->idservicio' AND dia<='$dia' 
-						AND fecha BETWEEN '$fechaactual'
-						AND DATE_ADD( fecha, INTERVAL 15 DAY ) ORDER BY fecha,dia,horainicial asc limit 1";
-
-
-								$respuesta=$this->db->consulta($sqlbuscar);
-								$conta = $this->db->num_rows($respuesta);
 								
-								while ($objetosiguiente=$this->db->fetch_object($respuesta)) {
 
-								$array[$contador]=$objetosiguiente;
-
-								$salir=1;
-								break;
-
-							}
-
-						}
-
-
-					}
-
-					if ($salir==1) {
-						break;
-					}
-
-
-
-				$contador++;
 			} 
-		}
 		
-		return $array;
+		
+		return $newArray;
 
 	}
 
@@ -321,7 +282,8 @@ class ServiciosAsignados
 				usuarios.idusuarios,
 				usuarios.foto,
 				usuarios.tipo,
-				tipousuario.nombretipo
+				tipousuario.nombretipo,
+				usuarios.alias
 				FROM
 				usuarios_servicios
 				JOIN usuarios
@@ -329,7 +291,7 @@ class ServiciosAsignados
 				JOIN tipousuario
 				ON tipousuario.idtipousuario=usuarios.tipo
 				WHERE
-				usuarios_servicios.idservicio='$this->idservicio' AND usuarios.idusuarios NOT IN('$this->idusuario') AND usuarios.tipo=3 ORDER BY usuarios.tipo DESC 
+				usuarios_servicios.idservicio='$this->idservicio' AND usuarios.idusuarios NOT IN('$this->idusuario') AND usuarios.tipo=3 and usuarios_servicios.cancelacion=0 ORDER BY usuarios.tipo DESC 
 		 ";
 
 		 
@@ -365,7 +327,7 @@ class ServiciosAsignados
 				JOIN tipousuario
 				ON tipousuario.idtipousuario=usuarios.tipo
 				WHERE
-				usuarios_servicios.idservicio='$this->idservicio' AND usuarios.idusuarios NOT IN('$this->idusuario') ORDER BY usuarios.tipo DESC 
+				usuarios_servicios.idservicio='$this->idservicio' AND usuarios.idusuarios NOT IN('$this->idusuario') AND cancelacion=0 ORDER BY usuarios.tipo DESC 
 		 ";
 
 		
@@ -387,4 +349,184 @@ class ServiciosAsignados
 		return $array;
 	}
 
+
+	public function GuardarAsignacion()
+	{
+		$query="INSERT INTO usuarios_servicios 
+		(idservicio,idusuarios) VALUES ('$this->idservicio','$this->idusuario')";
+		
+		$resp=$this->db->consulta($query);
+	}
+
+	public function BuscarAsignacion()
+	{
+		
+		$sql="SELECT
+				*
+				FROM
+				usuarios_servicios
+				JOIN usuarios
+				ON usuarios_servicios.idusuarios = usuarios.idusuarios
+				JOIN tipousuario
+				ON tipousuario.idtipousuario=usuarios.tipo
+				WHERE tipousuario.idtipousuario=3 AND 
+				usuarios_servicios.idservicio = '$this->idservicio' AND usuarios.idusuarios='$this->idusuario'
+		 ";
+
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function BuscarAsignacionCancelacion($idusuariosnoconsiderados)
+	{
+		$sql="SELECT
+				*
+				FROM
+				usuarios_servicios
+				JOIN usuarios
+				ON usuarios_servicios.idusuarios = usuarios.idusuarios
+				JOIN tipousuario
+				ON tipousuario.idtipousuario=usuarios.tipo
+				WHERE tipousuario.idtipousuario=3 AND cancelacion=0 and 
+				usuarios_servicios.idservicio = '$this->idservicio' AND usuarios_servicios.idusuarios NOT IN($idusuariosnoconsiderados)
+		 ";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function BuscarPagos()
+	{
+		$sql="SELECT
+				*
+				FROM
+				pagos
+				WHERE
+				idservicio = '$this->idservicio' AND 
+				idusuarios ='$this->idusuario'
+		 ";
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function CambiarEstatusPago($idpago,$estatus)
+	{
+		$query="UPDATE  pagos 
+			SET estatus='$estatus'
+			 WHERE idpago='$idpago'
+
+		";
+		$resp=$this->db->consulta($query);
+	}
+
+	public function CambiarEstatusServicio($usuarioservicio)
+	{
+		$query="UPDATE  usuarios_servicios 
+			SET cancelacion='$this->cancelado',
+			motivocancelacion='".$this->motivocancelacion."',
+			fechacancelacion='".date('Y-m-d H:s:i')."' WHERE idusuarios_servicios='$usuarioservicio'
+
+		";
+
+		$resp=$this->db->consulta($query);
+		
+	}
+
+	public function ObtenerServicio()
+	{
+		$sql="SELECT*
+				FROM
+				servicios WHERE idservicio= '$this->idservicio'
+		 ";
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ActualizarConsecutivo()
+	{
+
+		 $sql="SELECT *FROM pagina_configuracion";
+		 $resp = $this->db->consulta($sql);
+		 $datos=$this->db->fetch_assoc($resp);
+
+
+		 $val=$datos['contadorfolio'];
+		 $valor=$val+1;
+
+		$sql="UPDATE pagina_configuracion SET contadorfolio='$valor'";
+
+
+		 $resp = $this->db->consulta($sql);
+		return $val;
+		
+	}
+
+	public function is_negative_number($number=0){
+
+	if( is_numeric($number) AND ($number<0) ){
+		return true;
+	}else{
+		return false;
+	}
+
+}
 }

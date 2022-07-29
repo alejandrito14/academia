@@ -57,6 +57,9 @@ try
 		$diasemananumero=$obtenerhorarios[0]->dia;
 		$dia=date('w');
 		$horaactual=date('H:i:s');
+
+		$obtenerservicio[0]->fechacompleta=$obtenerhorarios[0]->dia.'|'.$fecha.'|'.$horainicio.'|'.$horafinal;
+
 			}
 			else{
 

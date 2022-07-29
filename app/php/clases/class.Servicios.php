@@ -8,18 +8,19 @@ class Servicios
 	public $estatus;
 	public $categoria;
 
+	public $fecha;
 
 	public function ObtenerServicios()
 	{
-		$sql="SELECT *FROM servicios";
+		$sql="SELECT *FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoria ";
 			if($this->estatus!=0){
 
-			$sql.=" WHERE estatus=1";
+			$sql.=" WHERE servicios.estatus=1";
 		
 			}
-			$sql.=" ORDER BY orden asc";
+			$sql.=" ORDER BY servicios.orden asc";
 		
-
+			 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -115,7 +116,7 @@ class Servicios
 	public function ObtenerParticipantes($idtipo)
 	{
 		$sql="SELECT *FROM usuarios INNER JOIN usuarios_servicios ON usuarios.idusuarios=usuarios_servicios.idusuarios WHERE idservicio='$this->idservicio' AND tipo='$idtipo'";
-
+		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -156,6 +157,128 @@ class Servicios
 		return $array;
 	}
 
+
+
+	public function ObtenerHorariosSemana()
+	{
+		$sql="SELECT idhorarioservicio,dia,horainicial,
+		horafinal,fecha,zonas.idzona,zonas.color  FROM horariosservicio INNER JOIN zonas ON zonas.idzona=horariosservicio.idzona WHERE idservicio=".$this->idservicio."";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerHorarios()
+	{
+		$sql="SELECT idhorarioservicio,dia,horainicial,
+		horafinal,fecha,zonas.idzona,zonas.color,zonas.nombre
+		FROM horariosservicio
+		INNER JOIN zonas ON zonas.idzona=horariosservicio.idzona WHERE idservicio=".$this->idservicio." AND fecha='".$this->fecha."'";
+
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerTodasImagenesServicio()
+	{
+		$sql="SELECT *from imagenesgrupal WHERE idservicio=".$this->idservicio."";
+
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerTodosHorariosSemana()
+	{
+		$sql="SELECT idhorarioservicio,dia,horainicial,
+		horafinal,fecha,zonas.idzona,zonas.color  FROM horariosservicio INNER JOIN zonas ON zonas.idzona=horariosservicio.idzona ";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerHorariosAdmin()
+	{
+		$sql="SELECT idhorarioservicio,dia,horainicial,
+		horafinal,fecha,zonas.idzona,zonas.color,zonas.nombre,servicios.titulo,horariosservicio.idservicio
+		FROM horariosservicio
+		INNER JOIN zonas ON zonas.idzona=horariosservicio.idzona
+		INNER JOIN servicios ON servicios.idservicio=horariosservicio.idservicio
+		 WHERE  fecha='".$this->fecha."'";
+
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 
 }
 

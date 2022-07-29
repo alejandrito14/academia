@@ -33,18 +33,18 @@ try
 	
 
 
-	$lo->usuario=$email;
+	$lo->celular=$email;
 	$lo->token=$token;
 
 
 	
-	$validar=$lo->validarUsuarioClienteToken();
+	$validar=$lo->validarUsuarioClienteTokenCel();
 
 
 	if ($validar==1) {
 
 
-		$obtenercliente=$lo->ObtenerUsuarioCorreo();
+		$obtenercliente=$lo->ObtenerUsuarioCelular();
 		$result_row=$db->fetch_assoc($obtenercliente);
 		
 		$arra = array('existe' => $validar,'idusuario'=>$result_row['idusuarios']);

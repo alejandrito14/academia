@@ -7,6 +7,9 @@ header('Access-Control-Allow-Origin: *');
 require_once("clases/conexcion.php");
 require_once("clases/class.Servicios.php");
 require_once("clases/class.Funciones.php");
+require_once("clases/class.ServiciosAsignados.php");
+require_once("clases/class.Fechas.php");
+
 //require_once("clases/class.MovimientoBitacora.php");
 /*require_once("clases/class.Sms.php");
 require_once("clases/class.phpmailer.php");
@@ -19,14 +22,58 @@ try
 	$db = new MySQL();
 	$lo = new Servicios();
 	$f=new Funciones();
+	$asignar = new ServiciosAsignados();
+	$fechas=new Fechas();
 
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
-
+	$asignar->db=$db;
 	$lo->idservicio=$_POST['idservicio'];
 
 	
 	$obtenerservicio=$lo->ObtenerServicio();
+
+		$asignar->idservicio=$obtenerservicio[0]->idservicio;
+	$arreglohorarios=array();
+	
+
+		$obtenerhorarios=$asignar->ObtenerHorariosProximo();
+
+
+		if (count($obtenerhorarios)>0) {
+			
+		
+		$diasemana=$fechas->diaarreglocorto($obtenerhorarios[0]->dia);
+
+
+		$horainicio1=date('H:i:s',strtotime($obtenerhorarios[0]->horainicial));
+		$horafinal1=date('H:i:s',strtotime($obtenerhorarios[0]->horafinal));
+
+
+		$horainicio=date('H:i',strtotime($obtenerhorarios[0]->horainicial));
+
+		$horafinal=date('H:i',strtotime($obtenerhorarios[0]->horafinal));
+
+		$fecha=$obtenerhorarios[0]->fecha;
+		$dianumero=explode('-', $fecha);
+
+
+		$obtenerservicio[0]->fechaproxima=$diasemana.' '.$dianumero[2].'/'.$fechas->mesesAnho3[$fechas->mesdelano($fecha)-1];
+		$obtenerservicio[0]->horainicial=$horainicio;
+		$obtenerservicio[0]->horafinal=$horafinal;
+		$diasemananumero=$obtenerhorarios[0]->dia;
+		$dia=date('w');
+		$horaactual=date('H:i:s');
+
+		$obtenerservicio[0]->fechacompleta=$obtenerhorarios[0]->dia.'|'.$fecha.'|'.$horainicio.'|'.$horafinal;
+
+			}
+			else{
+
+			$obtenerservicio[0]->horainicial="";
+			$obtenerservicio[0]->horafinal="";
+			$obtenerservicio[0]->fechaproxima="";
+			}
 
 
 

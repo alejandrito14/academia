@@ -11,6 +11,7 @@ class Imagengrupal
 	public $estatus;
 	public $fechacreacion;
 	public $idservicio;
+	public $idusuario;
 
 	public function GuardarImagen()
 	{

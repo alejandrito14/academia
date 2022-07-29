@@ -32,13 +32,13 @@ try
 	
 
 
-	$lo->usuario=$email;
+	$lo->celular=$email;
 	
-	$validar=$lo->validarUsuarioCliente();
+	$validar=$lo->validarUsuarioClienteCelular();
 
 	if ($validar==1) {
 
-		$obtenercliente=$lo->ObtenerUsuarioCorreo();
+		$obtenercliente=$lo->ObtenerUsuarioCelular();
 
 		$result_cliente_row = $db->fetch_assoc($obtenercliente);
 		$result_cliente_row_num = $db->num_rows($obtenercliente);
@@ -52,7 +52,8 @@ try
 		$lo->paterno=$result_cliente_row['paterno'];
 		$lo->materno=$result_cliente_row['materno'];
 		$lo->celular=$result_cliente_row['celular'];
-
+		$lo->usuario=$result_cliente_row['usuario'];
+		$lo->email=$result_cliente_row['email'];
 
 		$sms = new AltiriaSMS();
 
@@ -62,7 +63,7 @@ try
 		$enviar_mail = new Emails();	
 		$enviar_mail->mailer = $mail;
 
-		$sMessage=utf8_decode($f->nombreapp." informa. Se ha solicitado reestablecer tu clave de acceso ".$lo->nombre.' '.$lo->paterno.' '.$lo->materno.', tu token es: ').$obtenertoken;
+		$sMessage=utf8_decode($f->nombreapp." informa. ".trim($lo->nombre).", se ha solicitado reestablecer tu clave de acceso. El token es: ").$obtenertoken;
 
 	//enviamos la conexión a las clases que lo requieren
 
@@ -95,7 +96,7 @@ try
                $enviar_mail->SMTPAuthe=$pagina_row['r_autenticacion'];
                $enviar_mail->SMTPSecure=$pagina_row['r_ssl'];
                       
-			   $enviar_mail->destino = $lo->usuario;						
+			   $enviar_mail->destino = $lo->email;						
 			   $enviar_mail->asunto = $f->nombreapp." informa";																
 			   $enviar_mail->CharSet = 'UTF-8';
 																
@@ -103,9 +104,14 @@ try
                $enviar_mail->destino_nombre = mb_strtoupper($lo->nombre).' '.mb_strtoupper($lo->paterno).' '.mb_strtoupper($lo->materno);
 
 			//Realizamos envio de email
-		$enviar_mail->recuperacion($lo,$obtenertoken);
 
-		$arra = array('existe' => $validar,'idusuario'=>$lo->idusuarios,'nombre'=>mb_strtoupper($lo->nombre),'paterno'=>mb_strtoupper($lo->paterno),'materno'=>mb_strtoupper($lo->materno),'email'=>$lo->usuario);
+               if ($lo->email!='') {
+
+              // 	$enviar_mail->recuperacion($lo,$obtenertoken);
+               }
+		
+
+		$arra = array('existe' => $validar,'idusuario'=>$lo->idusuarios,'nombre'=>mb_strtoupper($lo->nombre),'paterno'=>mb_strtoupper($lo->paterno),'materno'=>mb_strtoupper($lo->materno),'email'=>$lo->usuario,'celular'=>$lo->celular,'email'=>$lo->email,'usuario'=>$lo->usuario);
 
 
 

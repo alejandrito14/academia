@@ -1,5 +1,5 @@
 <?php
-class usuariostripe
+class ClienteStripe
 {
 	public $db;//objeto de conecxion con la base de datos
 	public $idusuarios;//ide del Cliente

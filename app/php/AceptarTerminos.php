@@ -21,6 +21,7 @@ try
 	$f=new Funciones();
 	$pagos= new Pagos();
 	$pagos->db=$db;
+	$db->begin();
 
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
@@ -64,11 +65,17 @@ try
 			$pagos->idservicio=$idservicio;
 			$pagos->tipo=1;
 			$pagos->monto=$montoapagar;
-			$pagos->estatus=1;
+			$pagos->estatus=0;
 			$pagos->dividido=$modalidad;
 			$pagos->fechainicial=$obtenerperiodos[$i]->fechainicial;
 			$pagos->fechafinal=$obtenerperiodos[$i]->fechafinal;
 			$pagos->concepto=$obtenerservicio[0]->titulo;
+			$contador=$lo->ActualizarConsecutivo();
+   		    $fecha = explode('-', date('d-m-Y'));
+		    $anio = substr($fecha[2], 2, 4);
+   			$folio = $fecha[0].$fecha[1].$anio.$contador;
+   			
+			$pagos->folio=$folio;
 			$pagos->CrearRegistroPago();
 
 		}
@@ -76,13 +83,14 @@ try
 	
 
 	$respuesta['respuesta']=1;
-	
+	$db->commit();
+
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);
 	echo $myJSON;
 
 }catch(Exception $e){
-	//$db->rollback();
+	$db->rollback();
 	//echo "Error. ".$e;
 	
 	$array->resultado = "Error: ".$e;

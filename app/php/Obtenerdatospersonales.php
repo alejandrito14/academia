@@ -27,11 +27,12 @@ try
 	$iduser=$_POST['id_user'];
 	$lo->idusuarios=$iduser;
 	$obtener=$lo->ObtenerUsuario();
+	$obtenerdeportes=$lo->ObtenerDeportesNivel();
 	
 
 
 	$respuesta['respuesta']=$obtener[0];
-	
+	$respuesta['deportes']=$obtenerdeportes;
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);
 	echo $myJSON;
