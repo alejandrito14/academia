@@ -144,13 +144,29 @@ function validar_login()
 	//localStorage.setItem("id_user",1);
 
 	//Obtenemos el usuario y la contraseña desde el formulario
-	var usuario = $('#v_usuario').val();
+	var usuario = $('#v_usuario').val().trim();
 	var password = $('#v_clave').val();
 	var sistema=localStorage.getItem("SO");
 	var tokenfirebase=localStorage.getItem('tokenfirebase');
 	var uuid=localStorage.getItem('UUID');
 	var mantenersession=0;
 	var anunciovisto=localStorage.getItem('anunciovisto')
+
+	var btnusuario=$("#btnusuario").hasClass('backgreen');
+	var btnemail=$("#btnemail").hasClass('backgreen');
+	var btncelular=$("#btncelular").hasClass('backgreen');
+	var login="";
+	if (btnusuario==true) {
+		login='btnusuario';
+	}
+	if (btnemail==true) {
+		login='btnemail';
+	}
+	if (btncelular==true) {
+		login='btncelular';
+	}
+
+
 
 	if($('#mantenersession').is(':checked') ) {
    
@@ -162,7 +178,7 @@ function validar_login()
 
 
 	//Almacenamos los datos en una variable para poder pasar los parametros vía ajax al script en PHP
-	var data = "usuario="+usuario+"&password="+password+"&sistema="+sistema+"&tokenfirebase="+tokenfirebase+"&uuid="+uuid+"&anunciovisto="+anunciovisto;
+	var data = "usuario="+usuario+"&password="+password+"&sistema="+sistema+"&tokenfirebase="+tokenfirebase+"&uuid="+uuid+"&anunciovisto="+anunciovisto+"&login="+login;
 
 	if (usuario!='' && password!='') {
 		$.ajax({
@@ -219,7 +235,8 @@ function validar_login()
 										
 									//	GoToPage("/inicio/");
 
-										if (datos['tipo']==3 || datos['tipo']==4) {
+										if (datos['tipo']==3 ) {
+											
 											 GoToPage("home");
 
 										}
@@ -470,5 +487,51 @@ function EliminarClienteUuid() {
 		}
 
 	});
+
+}
+
+function Accion(elemento) {
+	var id=elemento.id;
+	
+	$(".btnaccion").each(function(index) {
+			
+ 			$(this).removeClass('backgreen');
+ 		 	$(this).addClass('backwhite');
+
+		});
+
+	if ($("#"+id).hasClass('backgreen')) {
+		$("#"+id).removeClass('backgreen');
+		$("#"+id).addClass('backwhite');	
+
+	}else{
+		$("#"+id).removeClass('backwhite');
+		$("#"+id).addClass('backgreen');
+
+	}
+	
+	$('#v_usuario').val('');
+	if (id=='btncelular') {
+
+		phoneFormatter('v_usuario');
+		$("#flotante").text('Celular');
+
+	}else{
+
+		$('#v_usuario').attr({ placeholder : '' }); 
+		$("#v_usuario").off("input");
+
+
+		if (id=='btnusuario') {
+			
+			$("#flotante").text('Usuario');
+
+		}
+		if (id=='btnemail') {
+		$("#flotante").text('Email');
+
+		}
+	}
+		$('#v_usuario').focus();
 
 }

@@ -147,7 +147,8 @@ function ObtenerdatosAcceso2() {
 	});
 }
 function PintarDatosAcceso2(datos) {
-	$("#v_correo").val(datos.usuario);
+	$("#v_usuario").val(datos.usuario);
+	$("#v_correo").val(datos.email);
 	$("#v_contra1").val(datos.clave);
     $("#v_contra2").val(datos.clave);
     $("#v_tipousuario").val(datos.tipo);
@@ -831,5 +832,38 @@ function GuardarAlias() {
 				}
 
 			});
+
+}
+
+function VerificarAsociacion() {
+	
+	var pagina = "Obtenerdependencia.php";
+	var iduser=localStorage.getItem('id_user');
+	var datos="id_user="+iduser;
+
+		$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		data:datos,
+		async:false,
+		success: function(datos){
+
+			if (datos.respuesta==1) {
+				$(".coltutorados").css('display','none');
+			}else{
+				$(".coltutorados").css('display','block');
+
+			}
+
+		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+			var error;
+				if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+				//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+				console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+		}
+
+	});
 
 }

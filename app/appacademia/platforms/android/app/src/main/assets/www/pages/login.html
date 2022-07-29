@@ -13,19 +13,37 @@
       </div>
     </div>
 
-    <div class="page-content ">
+    <div class="page-content " style="padding-top: 65px;">
+
+
+
       <div class="block h-100 no-margin">
-        <div class="row h-100">
+        <div class="row ">
           <div
             class="col-85 medium-50 large-40 margin-left-auto margin-right-auto align-self-center text-align-center padding-vertical">
-            <h1 class="margin-bottom text-color-theme ">Bienvenido</h1>
+            <h1 class="margin-bottom  ">Elige <span style="color: #0abe68;">como </span>deseas     <span style="color: #0abe68;">ingresar</span></h1>
             <br/>
+
+            <div class="row" style="padding-bottom: 1em;margin-bottom: 1.5em;">
+             <div class="col-33">
+             
+             <span class="button btnaccion backgreen " id="btnusuario" style="height: 2em;">Usuario</span>
+             </div>
+             <div class="col-33">
+              <span   class="button  btnaccion backwhite" id="btnemail" style="height: 2em;">Email</span>
+             </div>
+             <div class="col-33">
+              <span  class="button btnaccion backwhite" id="btncelular" style="height: 2em;">Celular</span>
+             </div>
+
+            </div>
+
             <form class="was-validated needs-validation" novalidate>
               <div class="list form-list no-margin margin-bottom">
                 <ul>
                   <li class="item-content item-input item-input-with-value is-valid">
                     <div class="item-inner">
-                      <div class="item-title item-floating-label">Correo</div>
+                      <div class="item-title item-floating-label" id="flotante">Usuario</div>
                       <div class="item-input-wrap"><input type="text" name="email" class="input-with-value" id="v_usuario" /><span
                           class="input-clear-button"></span></div>
                     </div>
@@ -56,20 +74,26 @@
                   </li>
                 </ul>
               </div>
-              <p class="margin-bottom text-align-center">
-                <a href="/forgotpassword/" class="">
-                  ¿Recuperar contraseña?
+
+              <a id="btnlogin" style="margin-top: 2em;" class="button button-fill button-large button-raised margin-bottom color-theme">
+                Ingresar
+              </a>
+             
+
+              
+            </form>
+          
+
+             <p class="margin-bottom text-align-center" style="margin-top: 1em;" >
+                <a href="/forgotpassword/" class="button" style="font-size: 17px;color: white;background: red;">
+                  Reestablecer contraseña
                 </a>
               </p>
 
-              <a id="btnlogin" class="button button-fill button-large button-raised margin-bottom color-theme">
-                Ingresar
-              </a>
-            </form>
-            <p class="margin-bottom-half text-muted">¿Aún no tienes cuenta?</p>
-            <a href="/register/" target="_self" class="link">
-              Regístrate <i class="bi bi-arrow-right"></i>
-            </a>
+             <!--    <p class="margin-bottom-half text-muted" style="margin-top: 1em;">¿Aún no tienes cuenta?</p> -->
+           <p> <a href="/register/" target="_self" class="link button " style="font-size: 17px;background: white;">
+              Obtén tu clave de acceso <i class="bi bi-arrow-right"></i>
+            </a></p>
 
           </div>
          <!--  <div class="col-100 text-align-center margin-top-auto">

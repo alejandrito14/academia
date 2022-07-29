@@ -647,7 +647,7 @@ var tipoUsuario=localStorage.getItem('tipoUsuario');
   $$("#datosacceso").attr('onclick','Datosacceso()');
   $$(".badgefoto").attr('onclick','AbrirModalFoto()');
   $$('#btncambiaralias').attr('onclick','AbrirModalAlias()')
-
+  VerificarAsociacion();
 
   regresohome();
 })
@@ -669,6 +669,8 @@ $$(document).on('page:init', '.page[data-name="register"]', function (e) {
   $$('#btnvalidarcelular').attr('onclick','ValidarCelular()')
  phoneFormatter('telefono');
 
+$$('#telefono').attr('onfocus',"Cambiar(this);");
+$$('#telefono').attr('onblur',"Cambiar2(this);");
 
 });
 
@@ -681,6 +683,7 @@ $$(document).on('page:init', '.page[data-name="token"]', function (e) {
  $$('#t3').attr('onkeyup',"Siguiente('t3','t4')");
  $$('#t4').attr('onkeyup',"Validarcaja('t4');ValidarToken();");
  $$("#reenviotoken").attr('onclick',"ReenvioTokenCel()");
+ $("#btncancelar1").attr("onclick","EliminarVariables()");
 
 
 });
@@ -696,6 +699,9 @@ $$(document).on('page:init', '.page[data-name="registrofoto"]', function (e) {
     ObtenerdatosRegistro();
     CargarFoto();
 
+$$('#v_alias').attr('onfocus',"Cambiar(this)");
+$$('#v_alias').attr('onblur',"Cambiar2(this);QuitarEspacios(this);");
+
 
 });
 
@@ -707,28 +713,29 @@ $$(document).on('page:init', '.page[data-name="registro"]', function (e) {
    localStorage.setItem('vcontra2registro','');
 
    localStorage.setItem('objeto','');
-   /*if ( localStorage.getItem("nombre")!=null ) {
-
-    var nombre= localStorage.getItem("nombre");
-    var paterno=localStorage.getItem("paterno");
-    var materno=localStorage.getItem("materno");
-    var fechanacimiento=localStorage.getItem("fechanacimiento");
-    var genero=localStorage.getItem('genero');
-
-      $("#v_nombre").val(nombre);
-      $("#v_paterno").val(paterno);
-      $("#v_materno").val(materno);
-      $("#v_fecha").val(fechanacimiento);
-      $("#v_sexo").val(genero);
-
-
-   }else{
-*/
+ 
     
     ObtenerdatosRegistro();
     ConsultarDepende();
-  // }
- 
+
+  
+$$('#v_nombre').attr('onfocus',"Cambiar(this)");
+$$('#v_nombre').attr('onblur',"Cambiar2(this);QuitarEspacios(this);");
+
+$$('#v_paterno').attr('onfocus',"Cambiar(this)");
+$$('#v_paterno').attr('onblur',"Cambiar2(this);QuitarEspacios(this);");
+
+$$('#v_materno').attr('onfocus',"Cambiar(this)");
+$$('#v_materno').attr('onblur',"Cambiar2(this);QuitarEspacios(this);");
+
+$$('#v_fecha').attr('onfocus',"Cambiar(this)");
+$$('#v_fecha').attr('onblur',"Cambiar2(this);QuitarEspacios(this);");
+
+
+$$('#v_sexo').attr('onfocus',"Cambiar(this)");
+$$('#v_sexo').attr('onblur',"Cambiar2(this);QuitarEspacios(this);");
+
+
 
 
 });
@@ -743,6 +750,8 @@ $$(document).on('page:init', '.page[data-name="registrodatosacceso"]', function 
 
   ObtenerTiposUsuarios();
   $$('#v_tipousuario').attr('onchange','TipoUsuario()');
+  $$("#v_tipousuario").val(3);
+
   CargardatosIngresados();
   TipoUsuario();
   leerLocalStorage();
@@ -757,6 +766,23 @@ $$(document).on('page:init', '.page[data-name="registrodatosacceso"]', function 
  $$('#span2').attr('onclick',"CambiarAtributoinput2('v_contra2')");
  $(".limpiar").attr('onclick',"LimpiarElemento2('v_contra1')");
  $(".limpiar2").attr('onclick',"LimpiarElemento3('v_contra2')");
+
+ $("#v_correo").attr('onblur','CopiarEnUsuario();Cambiar2(this);QuitarEspacios(this);');
+ $$('#v_correo').attr('onfocus',"Cambiar(this)");
+
+ $("#v_usuario").attr('onblur','Validarvacio();Cambiar2(this);');
+ $$('#v_usuario').attr('onfocus',"Cambiar(this)");
+
+  $$('#v_contra1').attr('onfocus',"Cambiar(this)");
+  $$('#v_contra1').attr('onblur',"Cambiar2(this);QuitarEspacios(this);");
+
+  $$('#v_contra2').attr('onfocus',"Cambiar(this)");
+  $$('#v_contra2').attr('onblur',"Cambiar2(this);QuitarEspacios(this);");
+$("#v_tipousuario").attr('onblur','Cambiar2(this);');
+ $$('#v_tipousuario').attr('onfocus',"Cambiar(this)");
+
+
+
 
 });
 
@@ -790,12 +816,26 @@ localStorage.setItem("fechanacimiento","");
 localStorage.setItem('genero',"");
 $$('#v_clave').attr('onkeyup',"Contarletrasinput('v_clave','ojitoicono')");
 
+
+$$('#v_usuario').attr('onfocus',"Cambiar(this)");
+$$('#v_usuario').attr('onblur',"Cambiar2(this);QuitarEspacios(this)");
+
+$$('#v_clave').attr('onfocus',"Cambiar(this)");
+$$('#v_clave').attr('onblur',"Cambiar2(this);QuitarEspacios(this);");
+
+/*$("#v_usuario" ).keypress(function() {
+  if ($(this).val().length>0) {
+ 
+  }
+});*/
   $$('#span1').attr('onclick',"CambiarAtributoinput('v_clave')"); 
 $(".spanvisible").attr('onclick',"LimpiarElemento('v_clave')");
 
       var id_user=localStorage.getItem('id_user');
       var session=localStorage.getItem('session');
       var idtipousuario=localStorage.getItem('idtipousuario');
+
+  $(".btnaccion").attr('onclick','Accion(this)');
 
         if (id_user>0 && session==1) {
 
@@ -860,6 +900,9 @@ $$(document).on('page:init', '.page[data-name="forgotpassword"]', function (e) {
 
     $$('#recuperarcontrase').attr('onclick','recuperar()');
 
+    phoneFormatter('v_email');
+ $("#v_email").attr('onblur','Cambiar2(this);');
+ $$('#v_email').attr('onfocus',"Cambiar(this)");
 
 });
 
@@ -871,16 +914,31 @@ $$(document).on('page:init', '.page[data-name="verificacion"]', function (e) {
  $$('#t3').attr('onkeyup',"Siguiente('t3','t4')");
  $$('#t4').attr('onkeyup',"Validarcaja('t4');VerificarToken1();CargarBoton();");
  $$("#reenviotoken").attr('onclick',"ReenvioToken()");
+ $("#btncancelar1").attr("onclick","EliminarVariables()");
 
 });
 $$(document).on('page:init', '.page[data-name="cambiocontra"]', function (e) {
 
- $$('#v_contra1').attr('onkeyup',"Contarletrasinput('v_contra1','ojitoicono')");
- $$('#span1').attr('onclick',"CambiarAtributoinput('v_contra1')"); 
- $$('#v_contra2').attr('onkeyup',"CoincidirContra('v_contra1','v_contra2');Contarletrasinput('v_contra2','ojitoicono2');");
- $$('#span2').attr('onclick',"CambiarAtributoinput2('v_contra2')");
+ $$('#v_contra1').attr('onkeyup',"CoincidirContra('v_contra1','v_contra2');Aparecercruz('v_contra1','spanvisible','ojitoicono');AparecerBoton();");
+ $$('#span1').attr('onclick',"CambiarAtributoinputpass('v_contra1')"); 
+ $$('#v_contra2').attr('onkeyup',"CoincidirContra('v_contra1','v_contra2');Aparecercruz('v_contra2','spanvisible2','ojitoicono2');AparecerBoton();");
+ $$('#span2').attr('onclick',"CambiarAtributoinputpass2('v_contra2')");
  $$('#btncambiocontrase').attr('onclick','Reestablecercontra()');
+ $(".spanvisible").attr('onclick',"LimpiarElemento('v_contra1')");
+ $(".spanvisible2").attr('onclick',"LimpiarElemento4('v_contra2')");
+ $("#btncancelar").attr("onclick","EliminarVariables()");
+ $$("#btncambiocontrase").css('display','none');
 
+ $("#v_contra1").attr('onblur','Cambiar2(this);QuitarEspacios(this);');
+ $$('#v_contra1').attr('onfocus',"Cambiar(this);");
+
+ $("#v_contra2").attr('onblur','Cambiar2(this);QuitarEspacios(this);');
+ $$('#v_contra2').attr('onfocus',"Cambiar(this)");
+
+ AbrirInfo();
+
+   
+   
 
 
 });

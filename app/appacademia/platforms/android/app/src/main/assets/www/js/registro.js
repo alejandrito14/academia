@@ -398,12 +398,13 @@ function RegistrarAcceso() {
 	$(".licontra1").removeClass('is-invalid');
 	$(".licontra2").removeClass('is-invalid');
 	$(".litipousuario").removeClass('is-invalid');
-	$(".liusuario").removeClass('is-valid');
+	$(".liusuario").removeClass('is-invalid');
 
 	$(".licorreo").addClass('is-valid');
 	$(".licontra1").addClass('is-valid');
 	$(".licontra2").addClass('is-valid');
 	$(".litipousuario").addClass('is-valid');
+	$(".liusuario").addClass('is-valid');
 
 
 	var v_email=$("#v_correo").val();
@@ -2083,11 +2084,11 @@ function CambiarAtributo2(elemento) {
 
       }
 function validarEmail(valor) {
-
+ 	var email=valor.trim();
 
    var caract = new RegExp(/^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/);
 
-    if (caract.test(valor) == false){
+    if (caract.test(email) == false){
 
         return false;
     }else{
@@ -2500,15 +2501,15 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
    						    	 <span class="limpiarfiltros"></span>
    						    	 </div>
    							 </div>
-   							 <div class="" style="position: absolute;width: 100%;">
+   							 <div class="row" style="position: absolute;width: 100%;">
    							 	
-	   							  <div class="">
+	   							  <div class="col-100">
 
 
-		   							  <div class="block" style="margin-right:1em;margin-left:1em;">
+		   							  <div class="" style="margin-right:1em;margin-left:1em;">
 		   
 		  
-		    <div class="row " >
+		    <div class=" " >
            <div style="margin-left: 1em;" class="col-85 medium-50 large-40 margin-left-auto margin-right-auto align-self-center  padding-vertical">
           <h1 style=""> Nuevo <span style="color: #0abe68;">Asociado</span>
           </h1>
@@ -2576,10 +2577,10 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
               <li class="item-content item-input item-input-with-value is-valid licelulartu">
                   <div class="item-inner">
-                  <div class="item-title item-floating-label">Número de celular</div>
+                  <div class="item-title item-floating-label">Celular</div>
                   <div class="item-input-wrap">
-                  <input type="text" name="v_celulartu" id="v_celulartu" class="input-with-value" />
-                  <span class="input-clear-button"></span>
+                  <input type="text" name="v_celulartu" id="v_celulartu" class="input-with-value" onkeyup="ValidarCampo(this)" />
+                  <span class="input-clear-button" id="v_celulartu_1" style="display:none;"></span>
                 </div>
               </div>
               </li>
@@ -2591,18 +2592,18 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 	                  <div class="item-inner">
 	                  <div class="item-title item-floating-label">Nombre</div>
 	                  <div class="item-input-wrap">
-	                  <input type="text" name="v_nombretu" id="v_nombretu" class="input-with-value" />
-	                  <span class="input-clear-button"></span>
+	                  <input type="text" name="v_nombretu" id="v_nombretu" class="input-with-value" onkeyup="ValidarCampo(this)" />
+	                  <span class="input-clear-button" id="v_nombretu_1" style="display:none;"></span>
 		              </div>
 		             </div>
              	 </li>
 
-               <li class="item-content item-input item-input-with-value is-valid lipaternotu">
+               <li class="item-content item-input item-input-with-value is-valid lipaternotu" >
                   <div class="item-inner">
                   <div class="item-title item-floating-label">Apellido paterno</div>
                   <div class="item-input-wrap">
-                  <input type="text" name="v_paternotu" id="v_paternotu" class="input-with-value" />
-                  <span class="input-clear-button"></span>
+                  <input type="text" name="v_paternotu" id="v_paternotu" class="input-with-value" onkeyup="ValidarCampo(this)" />
+                  <span class="input-clear-button" id="v_paternotu_1" style="display:none;"></span>
                 </div>
               </div>
               </li>
@@ -2614,8 +2615,8 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
                   <div class="item-inner">
                   <div class="item-title item-floating-label">Apellido materno</div>
                   <div class="item-input-wrap">
-                  <input type="text" name="v_maternotu" id="v_maternotu" class="input-with-value" />
-                  <span class="input-clear-button"></span>
+                  <input type="text" name="v_maternotu" id="v_maternotu" class="input-with-value" onkeyup="ValidarCampo(this)" />
+                  <span class="input-clear-button" id="v_maternotu_1" style="display:none;"></span>
                 </div>
               </div>
               </li>
@@ -2625,7 +2626,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
                   <div class="item-inner">
                   <div class="item-title item-floating-label">Fecha de Nacimiento</div>
                   <div class="item-input-wrap">
-                  <input type="date" name="v_fechatu" id="v_fechatu" class="input-with-value" />
+                  <input type="date" name="v_fechatu" id="v_fechatu" class="input-with-value"  />
                   <span class="input-clear-button"></span>
                 </div>
               </div>
@@ -2661,13 +2662,13 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
            
 
-               <li class="item-content item-input item-input-with-value is-valid licorreotu">
+               <li class="item-content item-input item-input-with-value is-valid licorreotu" style="display:none;">
 
                   <div class="item-inner">
-                  <div class="item-title item-floating-label">Correo electrónico</div>
+                  <div class="item-title item-floating-label">Email</div>
                   <div class="item-input-wrap">
-                  <input type="text" name="v_correotu" id="v_correotu" class="input-with-value" />
-                  <span class="input-clear-button"></span>
+                  <input type="text" name="v_correotu" id="v_correotu" class="input-with-value" onkeyup="ValidarCampo(this)" />
+                  <span class="input-clear-button" style="display:none;"></span>
                 </div>
               </div>
               </li>
@@ -2753,6 +2754,25 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
     		leerLocalStorage();
     		
     		ObtenerParentesco(0);
+
+
+    		$("#v_celulartu").attr('onblur','Cambiar2(this);QuitarEspacios(this);');
+			$("#v_nombretu").attr('onblur','Cambiar2(this);QuitarEspacios(this);');
+			$("#v_paternotu").attr('onblur','Cambiar2(this);QuitarEspacios(this);');
+			$("#v_maternotu").attr('onblur','Cambiar2(this);QuitarEspacios(this);');
+			$("#v_fechatu").attr('onblur','Cambiar2(this);QuitarEspacios(this);');
+			$("#v_sexotu").attr('onblur','Cambiar2(this);QuitarEspacios(this);');
+			$("#v_parentescotu").attr('onblur','Cambiar2(this);QuitarEspacios(this);');
+			$("#v_correotu").attr('onblur','Cambiar2(this);QuitarEspacios(this);');
+
+			$("#v_celulartu").attr('onfocus','Cambiar(this)');
+			$("#v_nombretu").attr('onfocus','Cambiar(this)');
+			$("#v_paternotu").attr('onfocus','Cambiar(this)');
+			$("#v_maternotu").attr('onfocus','Cambiar(this)');
+			$("#v_fechatu").attr('onfocus','Cambiar(this)');
+			$("#v_sexotu").attr('onfocus','Cambiar(this)');
+			$("#v_parentescotu").attr('onfocus','Cambiar(this)');
+			$("#v_correotu").attr('onfocus','Cambiar(this)');
           },
           opened: function (sheet) {
             console.log('Sheet opened');
@@ -2790,6 +2810,20 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
       });
 
        dynamicSheet2.open();
+}
+
+function ValidarCampo(elemento) {
+	var id=elemento.id;
+	console.log(id);
+	if($("#"+id).val().length>0){
+
+	  $("#"+id+'_1').css('display','block');
+	
+		}else{
+
+	  $("#"+id+'_1').css('display','none');
+
+	}
 }
 
 function Siguientesdatos() {
@@ -2876,7 +2910,7 @@ function Siguientesdatos() {
 				$(".lisexotu").css('display','none');
 				$(".liparentescotu").css('display','none');
 				$(".licelulartu").css('display','block');
-				$(".licorreotu").css('display','block');
+				//$(".licorreotu").css('display','block');
 				$(".ocultar").css('display','none');
 				$(".mostrar").css('display','block');
 				$("#btnregresa").css('display','block');
@@ -2955,7 +2989,7 @@ function Atrasdatos(argument) {
 				$(".lisexotu").css('display','block');
 				$(".liparentescotu").css('display','block');
 				$(".licelulartu").css('display','block');
-				$(".licorreotu").css('display','block');
+				//$(".licorreotu").css('display','block');
 				
 				/*$(".ocultar").css('display','block');
 				$(".mostrar").css('display','none');*/
@@ -3068,6 +3102,7 @@ function GuardarTutorado(idcontador) {
 	$(".lifechanacimientotu").removeClass('is-invalid');
 	$(".lisexotu").removeClass('is-invalid');
 	$(".licelulartu").removeClass('is-invalid');
+	$(".licorreotu").removeClass('is-invalid');
 
 	$(".linombretu").addClass('is-valid');
 	$(".lipaternotu").addClass('is-valid');
@@ -3075,6 +3110,8 @@ function GuardarTutorado(idcontador) {
 	$(".lifechanacimientotu").addClass('is-valid');
 	$(".lisexotu").addClass('is-valid');
 	$(".licelulartu").addClass('is-valid');
+	$(".licorreotu").addClass('is-valid');
+
 
 	$("#mensajecorreo").text('');
 	var v_nombretu=$("#v_nombretu").val();
@@ -3109,7 +3146,7 @@ function GuardarTutorado(idcontador) {
 		bandera=0;
 	}
 
-	if (v_correotu!='') {
+	/*if (v_correotu!='') {
 
 		if (validarEmail(v_correotu)==true) {
 			
@@ -3125,7 +3162,7 @@ function GuardarTutorado(idcontador) {
 
 			bandera=0;
 			}
-		}
+		}*/
 	
 
 		if (v_sexotu==0) {
@@ -3212,6 +3249,14 @@ function GuardarTutorado(idcontador) {
 
 	}else{
 
+
+		if (v_correotu=='') {
+			bandera=0;
+			$(".licorreotu").addClass('is-invalid');
+			$(".licorreotu").removeClass('is-valid');
+
+		}
+
 		if (v_celulartu=='') {
 			celular='Campo requerido';
 			bandera=0;
@@ -3279,7 +3324,7 @@ function GuardarTutorado(idcontador) {
 		}
 
 
-
+/*
 		if (v_correotu!='') {
 
 		if (validarEmail(v_correotu)==true) {
@@ -3303,7 +3348,7 @@ function GuardarTutorado(idcontador) {
 
 			bandera=0;
 		}
-	}
+	}*/
 
 
 
@@ -3430,7 +3475,7 @@ function ObtenerdatosRegistro() {
 function PintarDeportesUsuario(respuesta) {
 
 	if (respuesta.length>0) {
-
+		deportes=[];
 		for (var i = 0; i <respuesta.length; i++) {
 			var objeto={
 				iddeporte:respuesta[i].iddeporte,
@@ -3442,6 +3487,8 @@ function PintarDeportesUsuario(respuesta) {
 			deportes.push(objeto);
 		}
 		MostrarDeportes();
+	}else{
+		deportes=[];
 	}
 }
 
@@ -3479,6 +3526,7 @@ function PintarDatosRegistro(datos) {
 	$("#v_sexo").val(datos.sexo);
 	$("#v_fecha").val(datos.fechanacimiento);
 	$("#v_alias").val(datos.alias);
+	$("#v_correo").val(datos.email);
 
 	localStorage.setItem('foto',datos.foto);
 
@@ -3513,12 +3561,12 @@ function ConsultarDepende() {
 				$("#btnregistraralumnos").css('display','none');
 
 				$(".datosregistro").css('display','none');
-				$("#v_nombre").attr('disabled',true);
+				/*$("#v_nombre").attr('disabled',true);
 				$("#v_paterno").attr('disabled',true);
 				$("#v_materno").attr('disabled',true);
 				$("#v_fecha").attr('disabled',true);
 				$("#v_sexo").attr('disabled',true);
-				$("#v_correo").attr('disabled',true);
+				$("#v_correo").attr('disabled',true);*/
 			}
 
 		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -3888,7 +3936,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 							         </div>
 		   
 
-      <div class="col-85 medium-50 large-40 margin-left-auto margin-right-auto align-self-center text-align-center " id="formtutorados" style="margin-right: 1em;
+      <div class="margin-left-auto margin-right-auto align-self-center text-align-center " id="formtutorados" style="margin-right: 1em;
     margin-left: 1em;">
             <form style="" >
                               <input type="hidden" name="v_iddepo" id="v_iddepo" class="input-with-value" />
@@ -3981,6 +4029,11 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
            //
            // $$('#btnguadardeporte').attr('onclick','GuardarDeporte()');
 			$$('#v_deporte').attr('onchange','ObtenerNiveles()')
+			$("#v_deporte").attr('onblur','Cambiar2(this)');
+			$("#v_deporte").attr('onfocus','Cambiar(this)');
+
+			$("#v_nivel").attr('onblur','Cambiar2(this)');
+			$("#v_nivel").attr('onfocus','Cambiar(this)');
 
 
           },
@@ -4253,13 +4306,11 @@ function EliminarDeporte(idcontador) {
 	    });
 	 	 var posicion='';
 	 	 for (var i = 0; i < deportes.length; i++) {
-	 	 	if (i==idcontador) {
-				encontrado=1;
+
+			if (i==idcontador) {
 				posicion=i;
-			}
-			if (encontrado==1) {
 				 deportes.splice(posicion, 1);
-				return true;
+				break;
 			}
 	 	 }
 	  });
@@ -4293,3 +4344,66 @@ function Llenar(deporte,posicion) {
 	ObtenerNiveles(deporte.idnivel);
 	
 	}
+
+	function CopiarEnUsuario() {
+		var valor=$("#v_correo").val();
+
+		var quitar=valor.trim();
+		$("#v_usuario").val(quitar);
+		$("#v_correo").val(quitar);
+		$(".liusuario").addClass('item-input-with-value');
+	}
+
+	function Validarvacio() {
+		var valor=$("#v_usuario").val();
+		var quitar=valor.trim();
+		$("#v_usuario").val(quitar);
+		if (valor!='') {
+			$(".liusuario").addClass('item-input-with-value');
+
+				}else{
+		$(".liusuario").removeClass('item-input-with-value');
+
+				}
+	}
+	function QuitarEspacios(elemento) {
+		var element=elemento.id;
+		var valor=$("#"+element).val().trim();
+		$("#"+element).val(valor)
+	}
+
+	function Cambiar(elemento) {
+		$('#'+elemento.id).closest('li').removeClass("is-valid");
+		$('#'+elemento.id).closest('li').removeClass("is-invalid");
+		$('#'+elemento.id).closest('li').addClass("is-blue");
+
+	}
+
+function Cambiar2(elemento) {
+
+	$('#'+elemento.id).closest('li').removeClass("is-blue");
+ 	$('#'+elemento.id).closest('li').addClass("is-valid");
+}
+
+function AbrirInfo() {
+	  var notificationCallbackOnClose = app.notification.create({
+		       // icon: '<i class="icon demo-icon">7</i>',
+		        title: 'Recuerda',
+		        //titleRightText: 'now',
+		        subtitle: '',
+		        text: 'La contraseña debe conteneder de 6 a 10 caracteres',
+		       // closeOnClick: true,
+		        closeButton: true,
+		        on: {
+		          click: function () {
+		          	 notificationCallbackOnClose.close();
+
+		          },
+
+
+		        },
+		      });
+		      notificationCallbackOnClose.open();
+
+	
+}

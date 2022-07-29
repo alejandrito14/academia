@@ -695,3 +695,16 @@ z-index:0;
     margin-top: 1em;
     color: white;
   }
+
+ .form-list ul .item-input.is-blue:before {
+
+    content: "";
+    position: absolute;
+    left: 0;
+    z-index: 1;
+    height: 68%;
+    top: 16%;
+    width: 3px;
+    border-radius: 2px;
+    background-color: #007aff;
+  }
