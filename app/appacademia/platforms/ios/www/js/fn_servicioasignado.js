@@ -1,3 +1,7 @@
+  var participastesalumnosservicio="";
+    var listaalumnos="";
+    var usuariosquitados=[];
+
 function ObtenerServicioAsignado() {
 	
 	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
@@ -202,8 +206,39 @@ function RechazarTerminos() {
 		});
 }
 
-function PantallaCalificacion() {
+
+function ObtenerCalificacion() {
+	 return new Promise(function(resolve, reject) {
+	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
+	var id_user=localStorage.getItem('id_user');
 	
+	var datos="idusuarios_servicios="+idusuarios_servicios+"&id_user="+id_user;
+	var pagina="ObtenerCalificacionUsuarioServicio.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(resp){
+			
+			resolve(resp);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+
+	});
+}
+function PantallaCalificacion(respuesta) {
+		
        var html=`
          
               <div class="block">
@@ -279,8 +314,27 @@ function PantallaCalificacion() {
         },
           verticalButtons: false,
         }).open();
-	
+	var calificacion=respuesta.calificacion;
+	if (calificacion.length>0) {
+		var cantidad=calificacion[0].calificacion;
+		Cambio(cantidad);
+		disableClicks();
+		$("#txtcomentario").val(calificacion[0].comentario);
+		$("#txtcomentario").attr('disabled',true);
+
+	}
 }
+
+function disableClicks() {
+  $(".iconosestrella").attr('onclick','');
+  $(".dialog-buttons").html('<span class="dialog-button" onclick="CerrarModal()">Cerrar</span>');
+
+
+}
+function CerrarModal() {
+	app.dialog.close();
+}
+
 
 function CalificarServicio() {
 	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
@@ -456,6 +510,34 @@ function PintarParticipantes(respuesta) {
 		$("#divparticipantes").html(html);
 
 	}
+}
+
+function ObtenerParticipantesAdmin() {
+	
+	var idservicio=localStorage.getItem('idservicio');
+	var pagina = "ObtenerParticipantesAdmin.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user+"&idservicio="+idservicio;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+			var respuesta=datos.respuesta;
+			PintarParticipantes(respuesta);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
 }
 
 function IniciarChat() {
@@ -721,6 +803,7 @@ function ObtenerParticipantesAlumnos() {
 }
 
 function PintarParticipantesAlumnos(respuesta) {
+
 	if (respuesta.length>0) {
 
 		var html="";
@@ -735,6 +818,8 @@ function PintarParticipantesAlumnos(respuesta) {
 				urlimagen="img/icon-usuario.png";
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
 			}
+
+			
 			html+=`
 				  
 
@@ -763,6 +848,10 @@ function PintarParticipantesAlumnos(respuesta) {
              		   <div class="row">
                         	  <div class="item-text">`+respuesta[i].nombretipo+`</div>
                     </div>
+
+                    <div class="row">
+                        	 
+                    </div>
                         	</div>
                         	
                         	</div>
@@ -781,6 +870,110 @@ function PintarParticipantesAlumnos(respuesta) {
 	}
 }
 
+
+function ObtenerAlumnosAdmin() {
+	var idservicio=localStorage.getItem('idservicio');
+	var pagina = "ObtenerAlumnosAdmin.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user+"&idservicio="+idservicio;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+			var respuesta=datos.respuesta;
+			PintarAlumnosAdmin(respuesta);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+}
+
+
+function PintarAlumnosAdmin(respuesta) {
+
+
+	if (respuesta.length>0) {
+		listaalumnos=respuesta;
+		var html="";
+		for (var i =0; i < respuesta.length; i++) {
+
+
+			if (respuesta[i].foto!='' && respuesta[i].foto!=null) {
+
+				urlimagen=urlphp+`upload/perfil/`+respuesta[i].foto;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+			}else{
+
+				urlimagen="img/icon-usuario.png";
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+			}
+
+			if (respuesta[i].alias=="" || respuesta[i].alias==null) {
+
+				respuesta[i].alias="";
+			}
+			html+=`
+				  
+
+                <li class="lista_" id="lista_`+respuesta[i].idusuarios+`" >
+            <label class="label-radio item-content">                                                                               
+              <div class="item-inner" style="width:80%;">
+             
+                <div class="row">
+                <div class="item-media">
+              		  <div class="col-30">
+                        <figure class="avatar  rounded-10">
+                        <img src="`+urlimagen+`" alt="" style="width:80px;height:80px;" />
+                        </figure>
+                        </div>
+                        
+                        	<div class="col-100">
+                        	 <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;word-break: break-word;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
+             		   </div>
+
+
+                     <div class="row">
+             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].alias+`
+             		     </div>
+             		   </div>
+
+             		    <div class="row">
+             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].celular+`
+             		     </div>
+             		   </div>
+
+             		   <div class="row">
+                        	  <div class="item-text">`+respuesta[i].nombretipo+`</div>
+                    </div>
+
+                        	</div>
+                        	
+                         	</div>
+                        </div>
+             		 
+              </div>
+             <input type="checkbox" name="my-opcion" class="idusuariosiniciar" id="idusuarios_`+respuesta[i].idusuarios+`"  style="height:20px;width:20%;" onchange="SeleccionarAsignado(`+respuesta[i].idusuarios+`)">
+
+            </label>
+          </li>
+
+
+			`;
+		}
+		$("#divalumnos").html(html);
+
+	}
+}
 
 function ObtenerAlumnos() {
 	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
@@ -812,10 +1005,13 @@ function ObtenerAlumnos() {
 
 function PintarAlumnos(respuesta) {
 	if (respuesta.length>0) {
+		listaalumnos=respuesta;
+		console.log(listaalumnos);
 		var html="";
+
 		for (var i =0; i < respuesta.length; i++) {
 
-			if (respuesta[i].foto!='' && respuesta[i].foto!=null) {
+			if (respuesta[i].foto!='' && respuesta[i].foto!=null && respuesta[i].foto!='null') {
 
 				urlimagen=urlphp+`upload/perfil/`+respuesta[i].foto;
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
@@ -827,7 +1023,7 @@ function PintarAlumnos(respuesta) {
 			html+=`
 				  
 
-                <li class="lista_" id="lista_`+respuesta[i].idusuarios+`">
+                <li class="lista_" id="lista_`+respuesta[i].idusuarios+`" style="background: white;border-radius: 10px;margin-bottom: 1em;">
             <label class="label-radio item-content">                                                                               
               <div class="item-inner" style="width:80%;">
              
@@ -840,12 +1036,12 @@ function PintarAlumnos(respuesta) {
                         </div>
                         
                         	<div class="col-100">
-                        	 <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
+                        	 <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;word-break: break-word;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
              		   </div>
 
 
                      <div class="row">
-             		     <div class="col-100 item-text" style="font-size:18px;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].usuario+`
+             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].usuario+`
              		     </div>
              		   </div>
 
@@ -869,6 +1065,8 @@ function PintarAlumnos(respuesta) {
 		}
 		$("#divalumnos").html(html);
 
+	}else{
+		listaalumnos=[];
 	}
 }
 
@@ -880,6 +1078,18 @@ function SeleccionarAsignado(idusuarios) {
   			}
 	});
 
+
+	if (contar>0) {
+		$("#btnpasar2").text('Agregar ('+contar+') elemento(s)');
+		$("#btnpasar2").css('display','block');
+
+	}else{
+
+		$("#btnpasar2").text('Agregar elementos');
+		$("#btnpasar2").css('display','none');
+
+	}
+
 	if (contar>0) {
 
 		$("#btnguardarasignacion").css('display','block');
@@ -888,6 +1098,34 @@ function SeleccionarAsignado(idusuarios) {
 		$("#btnguardarasignacion").css('display','none');
 	
 	}
+}
+function SeleccionarUsuarioAsignado(argument) {
+	var contar=0;
+	$(".idusuariosasignados").each(function( index ) {
+  			if ($(this).is(':checked')) {
+  				contar++;
+  			}
+	});
+
+	if (contar>0) {
+			$("#btnpasar").css('display','block');
+			$("#btnpasar").text('Quitar ('+contar+') elemento(s) ');
+	
+		}else{
+			$("#btnpasar").text('Quitar elementos ');
+			$("#btnpasar").css('display','none');
+
+		}
+
+if (contar>0) {
+
+		$("#btnguardarasignacion").css('display','block');
+	}else{
+
+		$("#btnguardarasignacion").css('display','none');
+	
+	}
+	
 }
 function LimpiarFiltroalumnos() {
 	
@@ -901,16 +1139,17 @@ function GuardarAsignacion() {
 	var idservicio=localStorage.getItem('idservicio');
 
 	var idusuarios=[];
-	$(".idusuariosiniciar" ).each(function( index ) {
-	  	if ($(this).is(':checked')) {
+	$(".listaa_" ).each(function( index ) {
+	  	//if ($(this).is(':checked')) {
 	  		var id=$(this).attr('id');
 	  		var dividir=id.split('_')[1];
 	  		idusuarios.push(dividir);
-	  	}
+	  	//}
 
 	});
 
-	var datos="id_user="+id_user+"&idusuarios="+idusuarios+"&idservicio="+idservicio;
+	var datos="id_user="+id_user+"&idusuarios="+idusuarios+"&idservicio="+idservicio+"&usuariosquitados="+usuariosquitados;
+	
 	
 	$.ajax({
 		type: 'POST',
@@ -921,9 +1160,46 @@ function GuardarAsignacion() {
 		data:datos,
 		success: function(datos){
 
-			if (datos.respuesta==1) {
 				
-				GoToPage('detalleserviciocoach');
+			if (datos.respuesta==1) {
+
+				var usuariosnoagregados=datos.usuariosnoagregados;
+
+					if (usuariosnoagregados.length > 0) {
+						var html="";
+						for (var i = 0; i <usuariosnoagregados.length; i++) {
+							html+=`<span>Usuario: `+usuariosnoagregados[i].usuario+`
+							no se pudo asignar, ya que se encuentra asignado a 
+							</span>`;
+
+
+							var serviciosasignados=usuariosnoagregados[i].servicioscruzados;
+			 				for (var j =0; j < serviciosasignados.length; j++) {
+			 					html+=`<p>`+serviciosasignados[j].titulo+`</p>`
+			 				}
+			 				html+=`</br>`;
+						}
+
+						alerta(html,'No se pudieron asignar los siguientes usuarios');
+					}else{
+
+					  alerta('','Se realizaron los cambios correctamente');
+
+					}
+				
+				if (localStorage.getItem('idtipousuario')==0) {
+				     GoToPage('detalleservicioadmin');
+
+				   }
+
+				  if (localStorage.getItem('idtipousuario')==3) {
+				     GoToPage('detalleservicio');
+
+				   }
+				   if (localStorage.getItem('idtipousuario')==5){
+				      GoToPage('detalleserviciocoach');
+
+				    }
 			}
 			
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -935,6 +1211,7 @@ function GuardarAsignacion() {
 			}
 
 		});
+
 }
 
 function VerificarTotalAlumnos() {
@@ -967,4 +1244,435 @@ $.ajax({
 			}
 
 		});
+}
+
+function ObtenerCalificacionesServicio() {
+	var idservicio=localStorage.getItem('idservicio');
+	var pagina = "ObtenerCalificacionesServicio.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user+"&idservicio="+idservicio;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+			var respuesta=datos.calificaciones;
+			PintarCalificacionesServicio(respuesta);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+}
+function PintarCalificacionesServicio(respuesta) {
+
+	if (respuesta.length>0) {
+		var html="";
+		for (var i =0; i < respuesta.length; i++) {
+
+			if (respuesta[i].foto!='' && respuesta[i].foto!=null) {
+
+				urlimagen=urlphp+`upload/perfil/`+respuesta[i].foto;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+			}else{
+
+				urlimagen="img/icon-usuario.png";
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+			}
+			var calificacion=respuesta[i].calificacion;
+			var cal1="";
+			var cal2="";
+			var cal3="";
+			var cal4="";
+			var cal5="";
+
+			cal1=calificacion>0?'bi-star-fill colorestrella':'bi bi-star';
+			cal2=calificacion>=1?'bi-star-fill colorestrella':'bi bi-star';
+			cal3=calificacion>=2?'bi-star-fill colorestrella':'bi bi-star';
+			cal4=calificacion>=3?'bi-star-fill colorestrella':'bi bi-star';
+			cal5=calificacion>=5?'bi-star-fill colorestrella':'bi bi-star';
+
+
+			html+=`
+				  
+
+                <li class="lista_" id="lista_`+respuesta[i].idusuarios+`" style="background: white;border-radius: 10px;">
+            <label class="label-radio item-content">                                                                               
+              <div class="item-inner" style="width:80%;">
+             
+                <div class="row">
+                <div class="item-media">
+              		  <div class="col-30">
+                        <figure class="avatar  rounded-10">
+                        <img src="`+urlimagen+`" alt="" style="width:80px;height:80px;" />
+                        </figure>
+                        </div>
+                        
+                        	<div class="col-100">
+                        	 <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;word-break: break-word;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
+             		   </div>
+
+
+                     <div class="row">
+             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].comentario+`
+             		     </div>
+             		   </div>
+
+             		  
+
+                    <div class="row">
+                  
+	                <div class="col" >
+	                	<div>
+	                	 <i class="iconosestrella estrellaseleccionada `+cal1+`" id="estre_1"  >  </i>
+		                	 <div class="oculto">
+		                	 <input type="checkbox"  id="che_1" >
+		                	</div>
+	                	</div>
+	               
+	               </div>
+	                 <div class="col"  >
+	                 	<div >
+		                  <i class="iconosestrella estrellaseleccionada `+cal2+`" id="estre_2" ></i>
+		               		<input type="checkbox" class="oculto" id="che_2"  >
+	               		</div>
+	                </div>
+	                <div class="col" >
+		                  <div  >
+			                   <i class=" iconosestrella estrellaseleccionada `+cal3+`" id="estre_3" ></i>
+			                	<input type="checkbox" class="oculto" id="che_3"  >
+		                  </div>
+	                 </div>
+                   	<div class="col" >
+	                   <div  >
+	                   	    <i class=" iconosestrella estrellaseleccionada `+cal4+`" id="estre_4" ></i>
+	                 		<input type="checkbox" class="oculto" id="che_4" >
+	                 	</div>
+	                  </div>
+	                    <div class="col" >   
+		                    <div  >              
+		                     	 <i class=" iconosestrella estrellaseleccionada `+cal5+`" id="estre_5"  ></i>
+		                 		 <input type="checkbox" class="oculto" id="che_5"  >
+		                   	</div>
+	                    </div>
+                    </div>
+
+                        	</div>
+                        	
+                         	</div>
+                        </div>
+             		 
+              </div>
+
+            </label>
+          </li>
+
+
+			`;
+		}
+		$("#divalumnoscalificaciones").html(html);
+
+	}
+}
+
+
+function ObtenerParticipantesAlumnosServicio() {
+	var idusuarios_servicios=localStorage.getItem('idservicio');
+	var pagina = "ObtenerParticipantesAlumnosServicio.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user+"&idservicio="+idusuarios_servicios;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+			var respuesta=datos.respuesta;
+			
+			PintarParticipantesAlumnosServicio(respuesta);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+}
+
+
+function PintarParticipantesAlumnosServicio(respuesta) {
+var html="";
+	if (respuesta.length>0) {
+		participastesalumnosservicio=respuesta;
+		html="";
+
+		for (var i =0; i < respuesta.length; i++) {
+
+			if (respuesta[i].foto!='' && respuesta[i].foto!=null && respuesta[i].foto!='null') {
+
+				urlimagen=urlphp+`upload/perfil/`+respuesta[i].foto;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+			}else{
+
+				urlimagen="img/icon-usuario.png";
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+			}
+
+		if (respuesta[i].alias=="" || respuesta[i].alias==null) {
+
+				respuesta[i].alias="";
+			}
+			html+=`
+				  
+
+                <li class="listaa_" id="listaa_`+respuesta[i].idusuarios+`" style="background: white;border-radius: 10px;margin-bottom: 1em;">
+            <label class="label-radio item-content">                                                                               
+              <div class="item-inner" style="width:80%;">
+             
+                <div class="row">
+                <div class="item-media">
+              		  <div class="col-30">
+                        <figure class="avatar  rounded-10">
+                        <img src="`+urlimagen+`" alt="" style="width:80px;height:80px;" />
+                        </figure>
+                        </div>
+                        
+                        	<div class="col-100">
+                        	 <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;word-break: break-word;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
+             		   </div>
+
+
+                     <div class="row">
+             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].alias+`
+             		     </div>
+             		   </div>
+
+             		    <div class="row">
+             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].celular+`">`+respuesta[i].celular+`
+             		     </div>
+             		   </div>
+
+             		   <div class="row">
+                        	  <div class="item-text">`+respuesta[i].nombretipo+`</div>
+                    </div>
+
+                        	</div>
+                        	
+                         	</div>
+                        </div>
+             		 
+              </div>
+             <input type="checkbox" name="my-opcion" class="idusuariosasignados" id="idusuarios_`+respuesta[i].idusuarios+`"  style="height:20px;width:20%;" onchange="SeleccionarUsuarioAsignado(`+respuesta[i].idusuarios+`)">
+
+            </label>
+          </li>
+
+
+			`;
+		}
+}else{
+
+	participastesalumnosservicio=[];
+}
+	
+$("#divparticipantesalumnos").html(html);
+
+}
+
+
+
+function AgregarElemento(argument) {
+	var idusua=[];
+		$(".idusuariosiniciar").each(function( index ) {
+  			if ($(this).is(':checked')) {
+  				var id=$(this).attr('id');
+  				var dividir=id.split('_')[1];
+  				console.log(dividir);
+  				idusua.push(dividir);
+  				$("#lista_"+dividir).remove();
+
+
+  			}
+	});
+
+	var html="";
+		for (var i = 0; i <idusua.length; i++) {
+			var id=idusua[i];
+			var resultado = listaalumnos.find( usuarios => usuarios.idusuarios === id );
+			
+			if (resultado == undefined) {
+				 resultado = participastesalumnosservicio.find( usuarios => usuarios.idusuarios === id );
+		
+				}
+
+
+			if (resultado.foto!='' && resultado.foto!=null) {
+
+				urlimagen=urlphp+`upload/perfil/`+resultado.foto;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+			}else{
+
+				urlimagen="img/icon-usuario.png";
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+			}
+			html+=`
+
+
+                <li class="listaa_" id="listaa_`+resultado.idusuarios+`" style="background: white;border-radius: 10px;margin-bottom: 1em;">
+            <label class="label-radio item-content">                                                                               
+              <div class="item-inner" style="width:80%;">
+             
+                <div class="row">
+                <div class="item-media">
+              		  <div class="col-30">
+                        <figure class="avatar  rounded-10">
+                        <img src="`+urlimagen+`" alt="" style="width:80px;height:80px;" />
+                        </figure>
+                        </div>
+                        
+                        	<div class="col-100">
+                        	 <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;word-break: break-word;" id="participante_`+resultado.idusuarios+`">`+resultado.nombre+` `+resultado.paterno+`
+             		   </div>
+
+
+                     <div class="row">
+             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+resultado.idusuarios+`">`+resultado.usuario+`
+             		     </div>
+             		   </div>
+
+             		   <div class="row">
+                        	  <div class="item-text">`+resultado.nombretipo+`</div>
+                    </div>
+
+                        	</div>
+                        	
+                         	</div>
+                        </div>
+             		 
+              </div>
+             <input type="checkbox" name="my-opcion" class="idusuariosasignados" id="idusuarios_`+resultado.idusuarios+`"  style="height:20px;width:20%;" onchange="SeleccionarUsuarioAsignado(`+resultado.idusuarios+`)">
+
+            </label>
+          </li>
+				`;
+
+
+
+
+			}
+
+		$("#divparticipantesalumnos").append(html);
+		$("#btnpasar2").text('Agregar elementos');
+		 toastTop = app.toast.create({
+          text: 'Se agregaron '+idusua.length+' elemento(s)',
+          position: 'top',
+          closeTimeout: 2000,
+        });
+	   toastTop.open();
+}
+
+function QuitarElemento() {
+	var idusu=[];
+
+		$(".idusuariosasignados").each(function( index ) {
+  			if ($(this).is(':checked')) {
+  				var id=$(this).attr('id');
+  				var dividir=id.split('_')[1];
+  				console.log(dividir);
+  				idusu.push(dividir);
+
+  				usuariosquitados.push(idusu);
+  				$("#listaa_"+dividir).remove();
+
+
+  			}
+	});
+
+
+		var html="";
+		for (var i = 0; i <idusu.length; i++) {
+			var id=idusu[i];
+			var resultado = participastesalumnosservicio.find( usuarios => usuarios.idusuarios === id );
+			
+				if (resultado == undefined) {
+					 resultado = listaalumnos.find( usuarios => usuarios.idusuarios === id );
+		
+				}
+
+
+			if (resultado.foto!='' && resultado.foto!=null) {
+
+				urlimagen=urlphp+`upload/perfil/`+resultado.foto;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+			}else{
+
+				urlimagen="img/icon-usuario.png";
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+			}
+
+			html+=`
+
+
+                <li class="lista_" id="lista_`+resultado.idusuarios+`" >
+            <label class="label-radio item-content">                                                                               
+              <div class="item-inner" style="width:80%;">
+             
+                <div class="row">
+                <div class="item-media">
+              		  <div class="col-30">
+                        <figure class="avatar  rounded-10">
+                        <img src="`+urlimagen+`" alt="" style="width:80px;height:80px;" />
+                        </figure>
+                        </div>
+                        
+                        	<div class="col-100">
+                        	 <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;word-break: break-word;" id="participante_`+resultado.idusuarios+`">`+resultado.nombre+` `+resultado.paterno+`
+             		   </div>
+
+
+                     <div class="row">
+             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+resultado.idusuarios+`">`+resultado.usuario+`
+             		     </div>
+             		   </div>
+
+             		   <div class="row">
+                        	  <div class="item-text">`+resultado.nombretipo+`</div>
+                    </div>
+
+                        	</div>
+                        	
+                         	</div>
+                        </div>
+             		 
+              </div>
+             <input type="checkbox" name="my-opcion" class="idusuariosiniciar" id="idusuarios_`+resultado.idusuarios+`"  style="height:20px;width:20%;" onchange="SeleccionarAsignado(`+resultado.idusuarios+`)">
+
+            </label>
+          </li>
+				`;
+			
+		}
+
+		$("#divalumnos").append(html);
+	$("#btnpasar").text('Quitar elementos');
+
+	 toastTop = app.toast.create({
+          text: 'Se quitaron '+idusu.length+' elemento(s)',
+          position: 'top',
+          closeTimeout: 2000,
+        });
+	   toastTop.open();
 }

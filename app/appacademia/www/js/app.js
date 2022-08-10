@@ -14,7 +14,10 @@ var app = new Framework7({
   store: store,
   // routes.js,
   routes: routes,
- 
+   touch: {
+    // Enable fast clicks
+    fastClicks: true,
+  },
 
   popup: {
     closeOnEscape: true,
@@ -93,7 +96,7 @@ $(document).ready(function() {
   
 
 
-var produccion = 1;
+var produccion = 0;
 
  
 
@@ -120,6 +123,7 @@ if (produccion == 0) {
     var urlimagendefault="http://localhost:8888/is-academia/www/images/sinfoto.png";
     var urlimagenlogo="http://localhost:8888/is-academia/www/images/sinimagenlogo.png";
     var globalsockect="http://localhost:3400/";
+    var imagenesbancos="http://localhost:8888/is-academia/www/assets/images/";
 
 } else {
     var codigoserv="109/";
@@ -127,6 +131,7 @@ if (produccion == 0) {
     var urlimagenes = "https://issoftware1.com.mx/IS-ACADEMIA/catalogos/"; 
     var urlimagendefault="https://issoftware1.com.mx/IS-ACADEMIA/images/sinfoto.png"
     var urlimagenlogo="https://issoftware1.com.mx/IS-ACADEMIA/images/sinimagenlogo.png";
+    var imagenesbancos="https://issoftware1.com.mx/IS-ACADEMIA/assets/images/";
     var globalsockect="https://issoftware1.com.mx:3000/";
    // var urlimagenvacia="https://issoftware1.com.mx/IS-ACADEMIA/images/sinimagenlogo.png";
 
@@ -136,16 +141,7 @@ function Cargar() {
    
   getConfiguracion();
    localStorage.setItem("SO", "web");
- 
 
-  // body...
-   /* ObtenerConfiEmpresa();*/
-
-   // ObtenerConfiguracionColores();
-   
-
-
-  //localStorage.setItem('idsucursales',0);
   localStorage.setItem('rutaine',0);
     localStorage.setItem('validacion',0);
 
@@ -441,7 +437,7 @@ $$(document).on('page:init', '.page[data-name="home"]', function (e) {
       CargarFoto();
       CargarDatos();
      $$(".iniciotab").attr('onclick','CargarInicio()');
-      ObtenerMembresiaActivas();
+     // ObtenerMembresiaActivas();
 
 
 
@@ -1152,7 +1148,7 @@ $$(document).on('page:init', '.page[data-name="detalleservicio"]', function (e) 
   
   $(".regreso").attr('href','/serviciosasignados/');
   ObtenerServicioAsignado();
-  $$("#abrirpantallacali").attr('onclick','PantallaCalificacion()');
+  $$("#abrirpantallacali").attr('onclick','AbirPantallaCalificarServicio()');
   $$("#Abrirchat").attr('onclick','ElegirParticipantesChat()');
   $$("#btncalendario").attr('onclick','FechasServicio()');
   Verificarcantidadhorarios();
@@ -1217,6 +1213,7 @@ $$(document).on('page:init', '.page[data-name="asistenciaservicio"]', function (
 });
 
 $$(document).on('page:init', '.page[data-name="asignaralumnos"]', function (e) {
+ 
   if (localStorage.getItem('idtipousuario')==0) {
      $(".regreso").attr('href','/detalleservicioadmin/');
     ObtenerAlumnosAdmin();
@@ -1234,6 +1231,9 @@ $$(document).on('page:init', '.page[data-name="asignaralumnos"]', function (e) {
    ObtenerAlumnos();
    ObtenerParticipantesAlumnosServicio();
     }
+
+
+
     $$("#buscadorusuarioasignado").attr('onkeyup','BuscarEnLista("#buscadorusuarioasignado",".listaa_")');
 
     $$("#buscadorusuario").attr('onkeyup','BuscarEnLista("#buscadorusuario",".lista_")');
@@ -1444,11 +1444,18 @@ $$(document).on('page:init', '.page[data-name="messages"]', function (e) {
 $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
   
  $$(".regreso").attr('onclick','GoToPage("listadopagos")');
- CargarPagosElegidos();
+ CargarPagosElegidos(); 
+
+ localStorage.setItem('comisionmonto',0);
+ localStorage.setItem('comisionporcentaje',0);
+ localStorage.setItem('comision',0);
+ localStorage.setItem('impuestotal',0);
+ localStorage.setItem('subtotalsincomision',0);
  Cargartipopago(0)
  
  $$(".btnmonedero").attr('onclick','AbrirModalmonedero()');
  $$(".btncupon").attr('onclick','AbrirModalcupon()');
+ ObtenerDescuentosRelacionados();
   CalcularTotales();
 
   $$("#tipopago").attr('onchange','CargarOpcionesTipopago()');
@@ -1460,7 +1467,7 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
   $$("#btnatras").attr('onclick','Atras()');
   $$("#btnatras").css('display','none');
 
-  $$("#btnpagarresumen").attr('onclick','RealizarPago()')
+  $$("#btnpagarresumen").attr('onclick','RealizarCargo()')
 });
 
 

@@ -1,5 +1,7 @@
-var participastesalumnosservicio="";
-var listaalumnos="";
+  var participastesalumnosservicio="";
+    var listaalumnos="";
+    var usuariosquitados=[];
+
 function ObtenerServicioAsignado() {
 	
 	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
@@ -1146,7 +1148,8 @@ function GuardarAsignacion() {
 
 	});
 
-	var datos="id_user="+id_user+"&idusuarios="+idusuarios+"&idservicio="+idservicio;
+	var datos="id_user="+id_user+"&idusuarios="+idusuarios+"&idservicio="+idservicio+"&usuariosquitados="+usuariosquitados;
+	
 	
 	$.ajax({
 		type: 'POST',
@@ -1157,7 +1160,32 @@ function GuardarAsignacion() {
 		data:datos,
 		success: function(datos){
 
+				
 			if (datos.respuesta==1) {
+
+				var usuariosnoagregados=datos.usuariosnoagregados;
+
+					if (usuariosnoagregados.length > 0) {
+						var html="";
+						for (var i = 0; i <usuariosnoagregados.length; i++) {
+							html+=`<span>Usuario: `+usuariosnoagregados[i].usuario+`
+							no se pudo asignar, ya que se encuentra asignado a 
+							</span>`;
+
+
+							var serviciosasignados=usuariosnoagregados[i].servicioscruzados;
+			 				for (var j =0; j < serviciosasignados.length; j++) {
+			 					html+=`<p>`+serviciosasignados[j].titulo+`</p>`
+			 				}
+			 				html+=`</br>`;
+						}
+
+						alerta(html,'No se pudieron asignar los siguientes usuarios');
+					}else{
+
+					  alerta('','Se realizaron los cambios correctamente');
+
+					}
 				
 				if (localStorage.getItem('idtipousuario')==0) {
 				     GoToPage('detalleservicioadmin');
@@ -1183,6 +1211,7 @@ function GuardarAsignacion() {
 			}
 
 		});
+
 }
 
 function VerificarTotalAlumnos() {
@@ -1554,6 +1583,7 @@ function AgregarElemento(argument) {
         });
 	   toastTop.open();
 }
+
 function QuitarElemento() {
 	var idusu=[];
 
@@ -1563,6 +1593,8 @@ function QuitarElemento() {
   				var dividir=id.split('_')[1];
   				console.log(dividir);
   				idusu.push(dividir);
+
+  				usuariosquitados.push(idusu);
   				$("#listaa_"+dividir).remove();
 
 

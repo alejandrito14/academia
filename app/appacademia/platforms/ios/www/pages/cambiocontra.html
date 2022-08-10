@@ -3,9 +3,9 @@
     <div class="navbar">
       <div class="navbar-inner">
         <div class="left">
-          <a href="/"  class="button button-fill text-color-theme bg-color-white button-44 ">
+          <!-- <a href="/"  class="button button-fill text-color-theme bg-color-white button-44 ">
             <i class="bi bi-arrow-left"></i>
-          </a>
+          </a> -->
         </div>
         <div class="title">
           
@@ -18,13 +18,13 @@
       <div class="block h-100 no-margin">
         <div class="row ">
            <div class="">
-          <h1 style="text-align: center;"> Reestablecer contraseña</h1>
+          <h1 style="text-align: center;"> Reestablecer <span style="color: #0abe68;">contraseña</span></h1>
 
           
          </div>
 
           <div
-            class="col-85 medium-50 large-40 margin-left-auto margin-right-auto align-self-center text-align-center padding-vertical">
+            class="col-85 margin-left-auto margin-right-auto align-self-center text-align-center padding-vertical">
             <form  >
               <div class="list form-list no-margin margin-bottom">
                 <ul>
@@ -37,18 +37,16 @@
                   <div class="item-title item-floating-label"> Contraseña</div>
                   <div class="item-input-wrap">
                       <div class="cambiarinput"></div>
-                  <input type="password" name="v_contra1" id="v_contra1" class="input-with-value" style="float: left;width: 80%;" />
-                  <span id="span1" style="color: rgb(146, 145, 141);
-    float: left;
-    width: 10%;
-    height: 34px;
-    margin-top: 0.9em;
-    margin-left: -0.5em;
-    display: none;
-    font-size: 20px;" 
+                  <input type="password" name="v_contra1" id="v_contra1" class="input-with-value" style="width: 80%;" />
+                  <span id="span1" style="color: rgb(146, 145, 141);width: 11%;
+                    position: absolute;
+                    top: 18px;
+                    right: 42px;
+                    font-size: 20px;
+                    justify-content: center;display: none;" 
                                 class="ojitoicono icon ">
                                 <i class="bi bi-eye-fill"></i></span>                                            
-                  <span class="input-clear-button"></span>
+                  <span class="input-clear-button spanvisible"></span>
 
                 </div>
               </div>
@@ -61,19 +59,12 @@
                   <div class="item-input-wrap">
                                           <div class="cambiarinput2"></div>
 
-                  <input type="password" name="v_contra2" id="v_contra2" class="input-with-value" style="float: left;width: 80%;" />
+                  <input type="password" name="v_contra2" id="v_contra2" class="input-with-value" style="width: 80%;" />
 
-                  <span id="span2" style="color: rgb(146, 145, 141);
-    float: left;
-    width: 10%;
-    height: 34px;
-    margin-top: 0.9em;
-    margin-left: -0.5em;
-    display: none;
-    font-size: 20px;" 
-                                class="ojitoicono2 icon ">
+                  <span id="span2" style="color: rgb(146, 145, 141);width: 11%;position: absolute;top: 18px;right: 42px;font-size: 20px;justify-content: center;display: none;" 
+                    class="ojitoicono2 icon ">
                                 <i class="bi bi-eye-fill"></i></span>                     
-                  <span class="input-clear-button"></span>
+                  <span class="input-clear-button spanvisible2" ></span>
                 </div>
               </div>
               </li>
@@ -147,6 +138,14 @@
                   <button type="button"  class="button button-fill button-large button-raised margin-bottom color-theme" id="btncambiocontrase">
                    Guardar
                   </button>
+                </div>
+
+
+                 <div class="col-100">
+                  
+                  <a class="button " style="background: red;color: white;font-size: 17px;" id="btncancelar" >
+                   Cancelar
+                  </a>
                 </div>
               </div>
 

@@ -138,7 +138,7 @@
     <preference name="CameraUsesGeolocation" value="false" />
     <preference name="KeepAVAudioSessionAlwaysActive" value="NO" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
-    <preference name="SplashScreenDelay" value="5000" />
+    <preference name="SplashScreenDelay" value="3000" />
     <preference name="AutoHideSplashScreen" value="true" />
     <preference name="scheme" value="app" />
     <preference name="hostname" value="localhost" />

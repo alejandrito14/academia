@@ -1,3 +1,5 @@
+var monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
 function CargarFechas() {
 
 
@@ -18,7 +20,7 @@ function CargarFechas() {
 						
 						var fecha=respuesta[i].fecha;
 						var dividir=fecha.split('-');
-						console.log(dividir);
+						
 						var anio=dividir[0];
 						var mes=(dividir[1].replace(/^(0+)/g, '')-1);
 						var dia=dividir[2];
@@ -44,47 +46,111 @@ function CargarFechas() {
       var monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
       calendarInline = app.calendar.create({
         containerEl: '#demo-calendar',
-        weekHeader: true,
+        weekHeader: false,
          events: eventos,
         firstDay:0,
+
+         renderToolbar: function () {
+          return `
+          <div class="toolbar calendar-custom-toolbar no-shadow">
+            <div class="toolbar-inner">
+              <div class="left" style="margin-left:1em;">
+                <a href="#" class="link "><i class="icon icon-back "></i></a>
+              </div>
+              <div class="center"></div>
+              <div class="right" style="margin-right:1em;">
+                <a href="#" class="link"><i class="icon icon-forward "></i></a>
+              </div>
+            </div>
+          </div>
+          `;
+        },
         on: {
           init: function (c) {
+          	$(".calendar-year-selector").css('display','none');
+            //$('.current-month-value').text(monthNames[c.currentMonth] + ' ' + c.currentYear);
+            $('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] + ', ' + c.currentYear);
+ 	
+          	$(".calendar-month-selector").css('cssText' , 'justify-content: center!important');
 
           	$(".calendar .toolbar").removeClass('toolbar-top');
+          
           	$(".calendar-day-has-events .calendar-day-number").addClass('calendarevento');
-          	 $$('.calendar-prev-month-button').on('click', function () {
+          	
+          	 $('.calendar-custom-toolbar .left .link').on('click', function () {
+              calendarInline.prevMonth();
+             // CargarFechasRefrescar1(calendarInline);
 
-              CargarFechasRefrescar1(calendarInline);
+            });
+            $('.calendar-custom-toolbar .right .link').on('click', function () {
+              calendarInline.nextMonth();
+             // CargarFechasRefrescar1(calendarInline);
 
-           });
-            
-           $$('.calendar-next-month-button').on('click', function () {
-           
-              CargarFechasRefrescar1(calendarInline);
+            });
 
-           });
 
-             $$('.calendar-prev-year-button').on('click', function () {
-            	
-              CargarFechasRefrescar1(calendarInline);
-
-           });
- 			$$('.calendar-next-year-button').on('click', function () {            	
-              CargarFechasRefrescar1(calendarInline);
-
-           });
+ 			$(".calendar-day-today .calendar-day-number").css('cssText', 'background: #46b2e2!important');
+ 			var fechaac=new Date();
+          	var mes=(fechaac.getMonth() + 1)<10?'0'+(fechaac.getMonth() + 1):(fechaac.getMonth() + 1);
+         	var dia=fechaac.getDate()<10?'0'+fechaac.getDate():fechaac.getDate();
+         	fecha=fechaac.getFullYear()+'-'+ mes+'-'+dia;
+          	ConsultarFecha(fecha);
           },
          calendarChange:function (c) {
-         	//console.log(calendarInline.getValue());
-         	//console.log(monthNames[c.currentMonth] + ', ' + c.currentYear);
+         
+         	var fechaac=new Date();
+          	var mes=fechaac.getMonth()+1;
+         	var dia=fechaac.getDate();
+         	fechaactualdata=fechaac.getFullYear()+'-'+ mes+'-'+dia;
+
           	var fecha=calendarInline.getValue();
+
+
           	var convertirfecha=new Date(fecha);
           	var mes=(convertirfecha.getMonth() + 1)<10?'0'+(convertirfecha.getMonth() + 1):(convertirfecha.getMonth() + 1);
+         	var mesdata=convertirfecha.getMonth();
+
          	var dia=convertirfecha.getDate()<10?'0'+convertirfecha.getDate():convertirfecha.getDate();
-         	fecha=convertirfecha.getFullYear()+'-'+ mes+'-'+dia;
-          	ConsultarFecha(fecha);
+         	var diadata=convertirfecha.getDate();
+
+         	fecha1=convertirfecha.getFullYear()+'-'+ mes+'-'+dia;
+          	ConsultarFecha(fecha1);
+          	var fechadata=convertirfecha.getFullYear()+'-'+mesdata+'-'+diadata;
+
+          		$(".calendar-day").each(function( index ) {
+						 var datafecha=$(this).data('date');
+
+						 if (datafecha==fechadata && datafecha!= fechaactualdata) {
+
+						 	$(this).children().eq(0).addClass('seleccionado');
+							//return 0;
+						 }else{
+
+						 $(this).children().eq(0).removeClass('seleccionado');
+
+						 }
+
+				});
+          
+      
+          },
+
+            monthYearChangeStart: function (c) {
+            $('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] + ', ' + c.currentYear);
+             //$('.current-month-value').text(monthNames[c.currentMonth] + ' ' + c.currentYear);
+             console.log('entro');
 
           },
+
+
+ 			monthYearChangeEnd: function (c) {
+            $('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] + ', ' + c.currentYear);
+             //$('.current-month-value').text(monthNames[c.currentMonth] + ' ' + c.currentYear);
+             console.log('entro change end');
+             CargarFechasRefrescar1(calendarInline);
+
+          }
+          
         
         }
       });
@@ -104,6 +170,42 @@ function CargarFechas() {
 }
 
 function ConsultarFecha(fecha) {
+	var idservicio=localStorage.getItem('idservicio');
+	var datos="idservicio="+idservicio+"&fecha="+fecha;
+
+	var id_user=localStorage.getItem('id_user');
+	var pagina="ObtenerHorarios.php";
+
+	var dividirfecha=fecha.split('-');
+	var mes=dividirfecha[1].replace(/^(0+)/g, '');
+	var anio=dividirfecha[0];
+	$('.current-month-value').text(monthNames[mes-1] + ' ' + anio);
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(respuesta){
+			
+
+			var respuesta=respuesta.respuesta;
+			PintarEventos(respuesta);
+			//RefrescarFechas(fecha);
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+}
+
+function ConsultarFecha2(fecha) {
 	var idservicio=localStorage.getItem('idservicio');
 	var datos="idservicio="+idservicio+"&fecha="+fecha;
 
@@ -140,6 +242,8 @@ function PintarEventos(resultado) {
 		for (var i = 0; i <resultado.length; i++) {
 			var zona=resultado[i].nombre;
 			var color=resultado[i].color;
+			var fecha=resultado[i].fecha;
+			var dividir=fecha.split('-');
 			html+=`
 				<div class="col-100 ">
 		        <div class="card shadow-sm margin-bottom-half">
@@ -151,6 +255,8 @@ function PintarEventos(resultado) {
 		                </div>
 		              </div>
 		              <div class="col">
+		           		 <p class="text-muted size-14 no-margin-bottom" style="font-weight:bold;">`+dividir[2]+`/`+dividir[1]+`/`+dividir[0]+ `</p>
+
 		                <p class="text-muted size-14 no-margin-bottom">`+zona+`</p>
 		                <p>Horario `+resultado[i].horainicial +` - `+ resultado[i].horafinal+`</p>
 		              </div>
@@ -167,23 +273,26 @@ function PintarEventos(resultado) {
 }
 
 function CargarFechasRefrescar1(calendarInline) {
-
+	var idservicio=localStorage.getItem('idservicio');
 	var pagina="ObtenerFechasHorarios.php";
+	var datos="idservicio="+idservicio;
+	//console.log('ObtenerFechasHorarios: '+calendarInline.getValue());
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
 	 	url: urlphp+pagina,
 		crossDomain: true,
 		cache: false,
+		data:datos,
 		success: function(datos){
 		var respuesta=datos.respuesta;
 				var eventos=[];
+				
 				calendarInline.params.events='';
 				for (var i = 0; i <respuesta.length; i++) {
 						
 						var fecha=respuesta[i].fecha;
 						var dividir=fecha.split('-');
-						console.log(dividir);
 						var anio=dividir[0];
 						var mes=(dividir[1].replace(/^(0+)/g, '')-1);
 						var dia=dividir[2];
@@ -196,11 +305,41 @@ function CargarFechasRefrescar1(calendarInline) {
 						eventos.push(objeto);
 
 					}
-					console.log(calendarInline);
 					calendarInline.params.events = eventos;
 					calendarInline.update();
+						
+
 					$(".calendar-day-has-events .calendar-day-number").addClass('calendarevento');
 
+
+
+            var fecha=calendarInline.getValue();
+          	var convertirfecha=new Date(fecha);
+          	var mes=(convertirfecha.getMonth() + 1)<10?'0'+(convertirfecha.getMonth() + 1):(convertirfecha.getMonth() + 1);
+         	var mesdata=convertirfecha.getMonth();
+         	var dia=convertirfecha.getDate()<10?'0'+convertirfecha.getDate():convertirfecha.getDate();
+         	var diadata=convertirfecha.getDate();
+         	fecha1=convertirfecha.getFullYear()+'-'+ mes+'-'+dia;
+
+          	var fechadata=convertirfecha.getFullYear()+'-'+mesdata+'-'+diadata;
+
+			$(".calendar-day").each(function( index ) {
+						 var datafecha=$(this).data('date');
+						 if (datafecha==fechadata && datafecha!= fechaactualdata) {
+
+						 	$(this).children().eq(0).addClass('seleccionado');
+							//return 0;
+						 }else{
+
+						 $(this).children().eq(0).removeClass('seleccionado');
+
+						 }
+
+				});
+
+		 	$(".calendar-day-today .calendar-day-number").css('cssText', 'background: #46b2e2!important');
+
+					//RefrescarFechas(fecha);
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
 		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
@@ -232,7 +371,6 @@ function CargarFechasAdmin(calendarInline) {
 						
 						var fecha=respuesta[i].fecha;
 						var dividir=fecha.split('-');
-						console.log(dividir);
 						var anio=dividir[0];
 						var mes=(dividir[1].replace(/^(0+)/g, '')-1);
 						var dia=dividir[2];
@@ -255,7 +393,6 @@ function CargarFechasAdmin(calendarInline) {
   
     
       // Inline with custom toolbar
-      var monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
       calendarInline = app.calendar.create({
         containerEl: '#demo-calendar',
         weekHeader: true,
@@ -263,17 +400,26 @@ function CargarFechasAdmin(calendarInline) {
         firstDay:0,
         on: {
           init: function (c) {
-
           	$(".calendar .toolbar").removeClass('toolbar-top');
           	$(".calendar-day-has-events .calendar-day-number").addClass('calendarevento');
-        
+        	$(".calendar-year-selector").css('display','none');
+
+        	$(".calendar-year-selector").css('display','none');
+        	alert(c.currentMonth);
+            $('.current-month-value').text(monthNames[c.currentMonth] + ' ' + c.currentYear);
+          	$(".calendar-month-selector").css('cssText' , 'justify-content: center!important');
+
+
              $$('.calendar-prev-month-button').on('click', function () {            	
+             $('.current-month-value').text(monthNames[calendarInline.currentMonth] + ' ' + calendarInline.currentYear);
+   
               CargarFechasRefrescar2(calendarInline);
 
            });
               
            $$('.calendar-next-month-button').on('click', function () {
-             
+            $('.current-month-value').text(monthNames[calendarInline.currentMonth] + ' ' + calendarInline.currentYear);
+  
               CargarFechasRefrescar2(calendarInline);
 
            });
@@ -308,7 +454,6 @@ function CargarFechasAdmin(calendarInline) {
         }
       });
    
-      console.log(calendarInline);
   
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
@@ -338,7 +483,6 @@ function CargarFechasRefrescar2(calendarInline) {
 						
 						var fecha=respuesta[i].fecha;
 						var dividir=fecha.split('-');
-						console.log(dividir);
 						var anio=dividir[0];
 						var mes=(dividir[1].replace(/^(0+)/g, '')-1);
 						var dia=dividir[2];
@@ -351,7 +495,6 @@ function CargarFechasRefrescar2(calendarInline) {
 						eventos.push(objeto);
 
 					}
-					console.log(calendarInline);
 					calendarInline.params.events = eventos;
 					calendarInline.update();
 					$(".calendar-day-has-events .calendar-day-number").addClass('calendarevento');
@@ -441,4 +584,117 @@ function PintarEventosAdmin(resultado) {
 		}
 	}
 	$(".eventosfecha").html(html);
+}
+
+function RefrescarFechas(fechaelegida) {
+			var fechaac=new Date();
+          	var mes=fechaac.getMonth()+1;
+         	var dia=fechaac.getDate();
+         	fechaactualdata=fechaac.getFullYear()+'-'+ mes+'-'+dia;
+         	console.log('fechaactual: '+fechaactualdata);
+          	//var fecha=new Date(fechaelegida);
+          	var convertirfecha=new Date(fechaelegida);
+         
+          	var mes=(convertirfecha.getMonth() + 1)<10?'0'+(convertirfecha.getMonth() + 1):(convertirfecha.getMonth() + 1);
+         	var mesdata=(convertirfecha.getMonth() + 1);
+
+         	var dia=convertirfecha.getDate()<10?'0'+convertirfecha.getDate():convertirfecha.getDate();
+         	var diadata=convertirfecha.getDate();
+
+         	fecha=convertirfecha.getFullYear()+'-'+ mes+'-'+dia;
+          //	ConsultarFecha(fecha);
+          	var fechadata=convertirfecha.getFullYear()+'-'+mesdata+'-'+diadata;
+          	//$(".calendar-day-selected .calendar-day-number").css('cssText','background: none;');
+
+          	
+         /* $(".calendar-day-next").each(function( index ) {
+			$(this).children().eq(0).css('cssText', 'background: none;');
+
+          });*/
+
+          /*$(".calendar-day-prev").each(function( index ) {
+			$(this).children().eq(0).css('cssText', 'background: none;');
+
+          });*/
+
+         
+/*
+          $(".calendar-day").each(function( index ) {
+          			 var datafecha=$(this).data('date');
+
+						 if (datafecha != fechaactualdata) {
+
+							 	if (!$(this).hasClass('calendar-day-prev') && !$(this).hasClass('calendar-day-next')) {
+
+							 		$(this).children().eq(0).css('cssText', 'background: none;color:black;');
+
+						
+							 }else{
+						 		$(this).children().eq(0).css('cssText', 'background: none;color:#b8b8b8;');
+
+
+						 	}
+						
+
+
+							if ($(this).hasClass("calendar-day-has-events")) {
+
+									 var datafecha=$(this).data('date');
+									 if(datafecha != fechaactualdata) {
+
+									 	$(this).children().eq(0).css('cssText','background:#919191;color:white;');
+										
+									 }
+
+									 if($(this).hasClass("calendar-day-selected")) {
+									 	console.log('a');
+
+									 	$(this).children().eq(0).css('cssText','background:red!important;color:white;');
+
+									 }
+							}else{
+
+
+									 if($(this).hasClass("calendar-day-selected")) {
+							
+
+									 	$(this).children().eq(0).css('cssText','background:red!important;color:white;');
+
+									 }
+							}
+
+
+
+
+						}
+
+
+				});*/
+
+          /*	$(".calendar-day-has-events").each(function( index ) {
+						 var datafecha=$(this).data('date');
+						 if (datafecha != fechaactualdata) {
+
+						 	$(this).children().eq(0).css('cssText','background:#919191');
+							
+						 }
+
+				});*/
+        /*  	$(".calendar-day").each(function( index ) {
+						 var datafecha=$(this).data('date');
+
+						 if ($(this).hasClass('calendar-day-has-events')) {
+						 	console.log(datafecha+'=='+fechadata);
+						 if (datafecha==fechadata && datafecha!= fechaactualdata) {
+
+						 	$(this).children().eq(0).css('cssText', 'background: red');
+							return 0;
+						 }
+						}
+
+				});*/
+
+/*   	$(".calendar-day-selected .calendar-day-number").css('cssText', 'background: #none!important;color:none;');
+*/ 	/*$(".calendar-day-today .calendar-day-number").css('cssText', 'background: #46b2e2!important');*/
+//$(".calendar-day-today .calendar-day-number").css('cssText', 'background: #46b2e2');
 }

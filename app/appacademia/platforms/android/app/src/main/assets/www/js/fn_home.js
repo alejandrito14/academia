@@ -603,18 +603,18 @@ function PintarServiciosAsignados(respuesta) {
 			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null) {
 
 				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 120px;border-radius: 10px;height: 80px;"/>';
 			}else{
 
 				urlimagen=localStorage.getItem('logo');
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 120px;border-radius: 10px;height: 80px;"/>';
 			}
 
 			html+=`
 				 <div class="list-item"  style="background: white; margin: 1em;padding: 1em;border-radius: 10px;">
                 <div class="row">
                   <div class="col-40" style="justify-content:center;display:flex;" >
-                    <div class="avatar  shadow rounded-10 " onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+imagen+`
+                    <div class="" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+imagen+`
                       
                     </div>
                   </div>
@@ -633,7 +633,7 @@ function PintarServiciosAsignados(respuesta) {
                      <p class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</p>
                      <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].zonanombre+`</p>
 
- 					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;">`+respuesta[i].titulo+`</p>
+ 					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</p>
                   
 
                   </div>
@@ -730,11 +730,11 @@ function PintarServiciosAsignadosCoach(respuesta) {
 				if (respuesta[i].imagen!='' && respuesta[i].imagen!=null) {
 
 				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;'+opacidad+'"/>';
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 120px;border-radius: 10px;height: 80px;'+opacidad+'"/>';
 			}else{
 
 				urlimagen=localStorage.getItem('logo');
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;'+opacidad+'"/>';
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 120px;border-radius: 10px;height: 80px;'+opacidad+'"/>';
 			}
 
 			html+=`

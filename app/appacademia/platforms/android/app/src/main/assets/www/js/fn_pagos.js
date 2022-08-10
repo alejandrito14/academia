@@ -1,3 +1,4 @@
+var descuentosaplicados=[];
 function ObtenerTotalPagos() {
 	var pagina = "ObtenerTotalPagos.php";
 	var id_user=localStorage.getItem('id_user');
@@ -208,7 +209,7 @@ function CargarPagosElegidos() {
 			html+=`
 				<li class="list-item">
                     <div class="row">
-                        <div class="col-50" style="padding:0;">
+                        <div class="col-80" style="padding:0;">
                             <p class="text-muted small" style="font-size:18px;" id="concepto_`+listado[i].id+`">
                               `+listado[i].concepto+`
                             </p>
@@ -216,7 +217,7 @@ function CargarPagosElegidos() {
 
                           <input type="hidden" value="`+listado[i].monto+`" class="montopago" id="val_`+listado[i].id+`">
                         </div>
-                        <div class="col-50">
+                        <div class="col-20">
 
                         </div>
                     </div>
@@ -279,6 +280,12 @@ function Pintartipodepagos(opciones,tipodepagoseleccionado) {
 
 
 function CalcularTotales() {
+
+  var comisionmonto=0;
+  var comisionporcentaje=0;
+  var impuesto=0;
+  var comision=0;
+
 	var obtenerpagos=JSON.parse(localStorage.getItem('pagos'));
 	var sumatotal=0;
 	for (var i = 0; i <obtenerpagos.length; i++) {
@@ -287,11 +294,59 @@ function CalcularTotales() {
 
 	var monedero=localStorage.getItem('monedero');
 	var descuentocupon=localStorage.getItem('descuentocupon');
-	var resta=parseFloat(sumatotal)-parseFloat(monedero)-parseFloat(descuentocupon);
 	
-	localStorage.setItem('sumatotalapagar',resta);
-	$(".lblresumen").text(formato_numero(resta,2,'.',','));
+  var totaldescuentos=0;
+  for (var i = 0; i <descuentosaplicados.length; i++) {
+    totaldescuentos=parseFloat(totaldescuentos)+parseFloat(descuentosaplicados[i].montoadescontar);
 
+  }
+  var resta=parseFloat(sumatotal)-parseFloat(monedero)-parseFloat(descuentocupon)-parseFloat(totaldescuentos);
+  var sumaconcomision=resta;
+
+  if (localStorage.getItem('comisionmonto')!=0 ){
+        comisionmonto=localStorage.getItem('comisionmonto');
+
+
+      }
+
+      if (localStorage.getItem('comisionporcentaje')!=0 ){
+        comisionporcentaje=localStorage.getItem('comisionporcentaje');
+        comimonto=parseFloat(comisionporcentaje)/100;
+        comimonto=parseFloat(comimonto)*parseFloat(sumaconcomision);
+
+        comision=parseFloat(comimonto)+parseFloat(comisionmonto);
+      
+        localStorage.setItem('comision',comision);
+
+      }
+
+
+      if (localStorage.getItem('impuesto')!=0 ){
+        impuesto=localStorage.getItem('impuesto');
+        impumonto=impuesto/100;
+
+        comision1=parseFloat(comision)*parseFloat(impumonto);
+
+        localStorage.setItem('impuestotal',comision1);
+        comision=parseFloat(comision1)+parseFloat(comision);
+
+
+      }
+        $(".divcomision").css('display','none');
+
+
+      if (comision!=0 || comisionmonto!=0 ) {
+
+        $(".divcomision").css('display','block');
+        $(".lblcomision").text(formato_numero(comision,2,'.',','));
+        localStorage.setItem('comisiontotal',comision);
+        sumaconcomision=parseFloat(sumaconcomision)+parseFloat(comision);
+      }
+
+    localStorage.setItem('subtotalsincomision',resta.toFixed(2));
+	  localStorage.setItem('sumatotalapagar',sumaconcomision.toFixed(2));
+	  $(".lblresumen").text(formato_numero(resta,2,'.',','));
+    $(".lbltotal").text(formato_numero(sumaconcomision,2,'.',','));
 }
 
 
@@ -598,7 +653,6 @@ function CargarOpcionesTipopago() {
     $$("#btnpagarresumen").prop('disabled',true);
 
   if (idtipopago>0) {
-    $$("#btnpagarresumen").prop('disabled',false);
   
       $.ajax({
       type: 'POST',
@@ -690,14 +744,17 @@ function CargarOpcionesTipopago() {
   	      if (resultado.impuesto=='') {
   	        resultado.impuesto=0;
   	      }
+        
   	      localStorage.setItem('comisionporcentaje',resultado.comisionporcentaje);
   	      localStorage.setItem('comisionmonto',resultado.comisionmonto);
-
   	      localStorage.setItem('impuesto',resultado.impuesto);
   	      localStorage.setItem('clavepublica',resultado.clavepublica);
   	      localStorage.setItem('claveprivada',resultado.claveprivada);
         	ObtenerTarjetasStripe();
         	$(".btnnuevatarjeta").attr('onclick','NuevaTarjetaStripe()');
+
+            HabilitarBotonPagar();
+            CalcularTotales();
         }
         
 
@@ -1017,23 +1074,205 @@ function VisualizarImagen(foto) {
 
 }
 
-function RealizarPago() {
+function RealizarCargo() {
+    var respuesta=0;
+     var mensaje='';
+     var pedido='';
+     var informacion='';
    var pagina = "RealizarPago.php";
    var iduser=localStorage.getItem('id_user');
    var constripe=localStorage.getItem('constripe');
-   var idtipopago=localStorage.getItem('idtipopago');
+   var idtipodepago=localStorage.getItem('idtipodepago');
    var descuentocupon=localStorage.getItem('descuentocupon');
    var codigocupon=localStorage.getItem('codigocupon');
-    var datos= 'pagos='+localStorage.getItem('pagos')+"&id_user="+id_user+"&constripe="+constripe+"&idtipodepago="+idtipopago+"&descuentocupon="+descuentocupon+"&codigocupon="+codigocupon;
+   var sumatotalapagar=localStorage.getItem('sumatotalapagar');
+   var comision=localStorage.getItem('comision');
+   var comisiontotal=localStorage.getItem('comisiontotal');
+   var comisionmonto=localStorage.getItem('comisionmonto');
+   var impuestototal=localStorage.getItem('impuestotal');
+   var subtotalsincomision=localStorage.getItem('subtotalsincomision');
+   var impuesto=localStorage.getItem('impuesto');
+   var datos= 'pagos='+localStorage.getItem('pagos')+"&id_user="+iduser+"&constripe="+constripe+"&idtipodepago="+idtipodepago+"&descuentocupon="+descuentocupon+"&codigocupon="+codigocupon+"&descuentosaplicados="+JSON.stringify(descuentosaplicados)+"&sumatotalapagar="+sumatotalapagar+"&comision="+comision+"&comisionmonto="+comisionmonto+"&comisiontotal="+comisiontotal+"&impuestototal="+impuestototal+"&subtotalsincomision="+subtotalsincomision+"&impuesto="+impuesto;
     pagina = urlphp+pagina;
 
-    $.ajax({
+ app.dialog.confirm('','¿Está seguro  de realizar el pago?' , function () {
+          $(".dialog-buttons").css('display','none');
+          CrearModalEspera();
+    var promise= $.ajax({
       url: pagina,
       type: 'post',
       dataType: 'json',
       data:datos,
       async:false,
     success: function(data) {
+        informacion=data;
+        respuesta=data.respuesta;
+        mensaje=data.mensaje;
+        pedido=data.idnota;
+
+      
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+                        var error;
+                        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+                        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                                                 //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                         app.dialog.alert('Error leyendo fichero jsonP '+error,'Error');
+                     $(".check-list").css('display','none');
+                     $("#aparecerimagen").css('display','none');
+                    }
+                                       
+
+          }); 
+
+
+
+         promise.then(function(){
+
+
+
+             if (respuesta==1) {
+
+                
+
+                      console.log(informacion);                   
+
+                      var stripe=localStorage.getItem('constripe');
+                      if(stripe==1){
+
+                       // RealizarPago(pedido);
+
+                        var output=informacion.output;
+                        //var idpedido=informacion.idnota;
+
+                       //  data = datos;
+                      var stripe = Stripe(output.publicKey);
+                      // Setup Stripe elements to collect payment method details
+                      //setupElements(data.publicKey);
+                      // Setup event handlers
+                      //setupAuthenticationView(data.clientSecret, data.paymentMethod);
+                      //setupNewPaymentMethodView(data.clientSecret);
+                      //hideEl(".sr-select-pm");
+
+                    if (output.error && output.error === "authentication_required") {
+                     var mensaje = "La tarjeta requiere autenticación (3DSecure)";
+                                       $(".mensajeproceso").css('display','none');
+                                        $(".mensajeerror").css('display','block');
+                                        $(".mensajeerror").text(mensaje);
+                                        $(".mensajeexito").css('display','none');
+                                        $(".butonok").css('display','none');
+                                        $(".butoerror").css('display','block');
+                    // PagoNorealizado(mensaje,output.paymentIntent,idpedido);
+                          alerta('',mensaje);
+
+                    }
+                    else if (output.error==1) {
+                  
+                      var mensaje = "Opps, La tarjeta fue bloqueada, ha excedido los "+output.intentos+" intentos";
+                     // PagoNorealizado(mensaje,output.paymentIntent,idpedido);
+                      alerta('',mensaje);
+                                        $(".mensajeproceso").css('display','none');
+                                        $(".mensajeerror").css('display','block');
+                                        $(".mensajeerror").text(mensaje);
+                                        $(".mensajeexito").css('display','none');
+                                        $(".butonok").css('display','none');
+                                        $(".butoerror").css('display','block');
+                    }
+                     else if (output.error) {
+                      var mensaje = "La tarjeta fue declinada";
+                   //   PagoNorealizado(mensaje,output.paymentIntent,idpedido);
+                      alerta('',mensaje);
+                                        $(".mensajeproceso").css('display','none');
+                                        $(".mensajeerror").css('display','block');
+                                        $(".mensajeerror").text(mensaje);
+                                        $(".mensajeexito").css('display','none');
+                                        $(".butonok").css('display','none');
+                                        $(".butoerror").css('display','block');
+
+                     } else if (output.succeeded) {
+                      // Card was successfully charged off-session
+                      // No recovery flow needed
+                      paymentIntentSucceeded(stripe,output.clientSecret, ".sr-select-pm");
+                      var mensaje = "El pago se ha completado con éxito";
+                                        $(".mensajeproceso").css('display','none');
+                                        $(".mensajeerror").css('display','none');
+                                        $(".mensajeexito").css('display','block');
+                                        $(".mensajeexito").text(mensaje);
+
+                                        $(".butonok").css('display','block');
+                                        $(".butoerror").css('display','none');
+                    // alerta('',mensaje);
+
+                      //PagoRealizado(mensaje,output.paymentIntent,idpedido);
+
+                    }
+
+
+                      }else{
+
+                       
+                      setTimeout(function(){
+                         LimpiarVariables2();
+                         $(".mensajeproceso").css('display','none');
+                          $(".mensajeerror").css('display','none');
+                          $(".mensajeexito").css('display','block');
+                          $(".butonok").css('display','block');
+                          $(".butoerror").css('display','none');
+
+                      }, 3000);
+                         
+
+                      }
+       
+
+
+               }else{
+
+
+                          $(".mensajeproceso").css('display','none');
+                          $(".mensajeerror").css('display','block');
+                          $(".mensajeexito").css('display','none');
+                          $(".butonok").css('display','none');
+                          $(".butoerror").css('display','block');
+
+                alerta('',mensaje);
+               }
+
+                
+          }); 
+
+       
+
+
+          },function () {
+
+          
+           
+
+          });
+
+        
+
+        
+}
+
+
+function ObtenerDescuentosRelacionados() {
+   var iduser=localStorage.getItem('id_user');
+
+  var datos= 'pagos='+localStorage.getItem('pagos')+"&id_user="+iduser;
+  var pagina = "ObtenerDescuentosRelacionados.php";
+
+    $.ajax({
+      url: urlphp+pagina,
+      type: 'post',
+      dataType: 'json',
+      data:datos,
+      async:false,
+    success: function(res) {
+
+      var resultado=res.descuentos;
+
+      PintarDescuentos(resultado);
       
       
       },error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -1048,7 +1287,142 @@ function RealizarPago() {
                                        
 
           }); 
+
+}
+
+function PintarDescuentos(respuesta) {
+   var html="";
+ if (respuesta.length>0) {
+    descuentosaplicados=respuesta;
+    $("#visualizardescuentos").css('display','block');
+
+  for (var i = 0; i <respuesta.length; i++) {
+    html+=`
+     <li class="list-item">
+                    <div class="row">
+                        <div class="col-80" style="padding: 0;">
+                            <p class="text-muted small" style="font-size:18px;" id="">
+                             `+respuesta[i].titulodescuento+`
+                            </p>
+                             <p class="text-muted " style="font-size:30px;text-align:right;">$<span class="lbldescuento">`+formato_numero(respuesta[i].montoadescontar,2,'.',',')+`</span></p>
+
+                        </div>
+                        <div class="col-20">
+                        <span class="chip color-green btncupon" style="display:none;
+                                height: 30px;
+                                
+                                margin-right: 1em;
+                                margin-left: 1em;top: 3em;" onclick="AplicarDescuento(`+respuesta[i].iddescuento+`,`+respuesta[i].idpago+`)"><span class="chip-label">Aplicar</span></span>
+                        </div>
+                    </div>
+                 </li>
+
+    `;
+
+  }
+ }else{
+  $("#visualizardescuentos").css('display','none');
+ }
+
+
+ $("#uldescuentos").html(html);
 }
 
 
+function CrearModalEspera() {
+  
 
+  var html=`
+  
+           <div class="" style="text-align: center;">
+              <div class="toolbar" style="display:none;">
+                  <div class="toolbar-inner" >
+                      <div class="left">
+
+                      <span style="color:black;margin-left:1em;font-size: 14px;
+          font-weight: bold;"></span></div>
+
+                        <div class="right">
+                         
+                        </div>
+                    </div>
+              </div>
+
+                <div class="sheet-modal-inner" style="">
+                <div style="padding-top:1em;"></div>
+
+                  <div id="" class="mensajeproceso" style="font-size:20px;font-weight:bold;" >En proceso...
+                    <img src="img/loading.gif" style="width:20%;display: flex;justify-content: center;align-items: center;margin:0px auto;">
+
+                  </div>
+                  <div id="" class="mensajeerror" style="font-size:20px;font-weight:bold;display:none;" >Error en la conexción,vuelva a intentar.</div>
+                  <div id="" class="mensajeexito" style="font-size:20px;font-weight:bold;display:none;" >Se realizó correctamente</div>
+
+                <div style="padding-top:1em;"></div>
+
+
+                <span class="dialog-button dialog-button-bold butonok" onclick="VerPagos()" style="display:none;">OK</span>
+
+                <span class="dialog-button dialog-button-bold butoerror" onclick="CerrarEspera()" style="display:none;">OK</span>
+
+
+                  <div style="padding-top:1em;"></div>
+                  <div style="color:red;font-size:20px;"></div>
+                 <div style="padding-top:1em;"></div>
+
+                     
+                      
+                </div>
+
+                    <div style="padding-top:2em;"></div>
+
+
+                  </div>
+               </div>
+
+        
+              `;
+      
+
+
+ modaldialogo=app.dialog.create({
+              title: '',
+              text:'',
+              content:html,
+
+              buttons: [
+            
+                
+              ],
+
+              onClick: function (dialog, index) {
+
+                  if(index === 0){
+                   
+                  }
+                 
+                
+              },
+              verticalButtons: true,
+            }).open();
+    
+
+}
+
+function VerPagos() {
+  app.dialog.close();
+  GoToPage('pagos');
+}
+
+function HabilitarBotonPagar() {
+   var seleccion=0;
+      $(".opccard").each(function( index ) {
+        if ($(this).is(':checked')) {
+        seleccion=1; 
+        }
+      });
+      $$("#btnpagarresumen").prop('disabled',true);
+      if (seleccion==1) {
+          $$("#btnpagarresumen").prop('disabled',false);
+      }
+}

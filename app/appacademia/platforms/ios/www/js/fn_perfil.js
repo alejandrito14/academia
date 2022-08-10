@@ -147,7 +147,8 @@ function ObtenerdatosAcceso2() {
 	});
 }
 function PintarDatosAcceso2(datos) {
-	$("#v_correo").val(datos.usuario);
+	$("#v_usuario").val(datos.usuario);
+	$("#v_correo").val(datos.email);
 	$("#v_contra1").val(datos.clave);
     $("#v_contra2").val(datos.clave);
     $("#v_tipousuario").val(datos.tipo);
@@ -754,4 +755,115 @@ function Pintardatossalud(respuesta) {
 	
 	}
 	
+}
+
+
+function AbrirModalAlias() {
+	
+	
+       var html=`
+         
+              <div class="block">
+               <div class="row" style="">
+
+                </div>
+
+                <div class="row" style="padding-top:1em;">
+                	<label style="font-size:16px;padding:1px;">Modificar alias:</label>
+                	<input type="text" name="txtalias" id="txtalias"  />
+                </div>
+              </div>
+           
+         
+        `;
+       app.dialog.create({
+          title: 'Alias',
+          //text: 'Dialog with vertical buttons',
+          content:html,
+          buttons: [
+            {
+              text: 'Cancelar',
+            },
+            {
+              text: 'Guardar',
+            },
+            
+          ],
+
+           onClick: function (dialog, index) {
+                    if(index === 0){
+              
+          }
+          else if(index === 1){
+                GuardarAlias();
+              
+            }
+           },
+
+          verticalButtons: false,
+        }).open();
+		
+}
+function GuardarAlias() {
+	var txtalias=$("#txtalias").val();
+	var pagina="ModificarAlias.php";
+	var iduser=localStorage.getItem('id_user');
+	var datos="alias="+txtalias+"&id_user="+iduser;
+		$.ajax({
+				type: 'POST',
+				dataType: 'json',
+				url: urlphp+pagina,
+				data:datos,
+				async:false,
+				success: function(msj){
+
+					if (msj.respuesta==1) {
+						$(".nombreusuario").text(txtalias);
+						localStorage.setItem('alias',txtalias);
+						app.dialog.close();
+					}
+					
+				},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+					var error;
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+						console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+				}
+
+			});
+
+}
+
+function VerificarAsociacion() {
+	
+	var pagina = "Obtenerdependencia.php";
+	var iduser=localStorage.getItem('id_user');
+	var datos="id_user="+iduser;
+
+		$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		data:datos,
+		async:false,
+		success: function(datos){
+
+			if (datos.respuesta==1) {
+				$(".coltutorados").css('display','none');
+			}else{
+				$(".coltutorados").css('display','block');
+
+			}
+
+		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+			var error;
+				if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+				//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+				console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+		}
+
+	});
+
 }

@@ -708,3 +708,14 @@ z-index:0;
     border-radius: 2px;
     background-color: #007aff;
   }
+
+
+  .seleccionado{
+    background: red!important;
+    color: white;
+  }
+
+.calendar-day-selected .calendar-day-number{
+  color:white;
+  background:red;
+}

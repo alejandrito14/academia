@@ -603,18 +603,18 @@ function PintarServiciosAsignados(respuesta) {
 			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null) {
 
 				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 120px;border-radius: 10px;height: 80px;"/>';
 			}else{
 
 				urlimagen=localStorage.getItem('logo');
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 120px;border-radius: 10px;height: 80px;"/>';
 			}
 
 			html+=`
 				 <div class="list-item"  style="background: white; margin: 1em;padding: 1em;border-radius: 10px;">
                 <div class="row">
                   <div class="col-40" style="justify-content:center;display:flex;" >
-                    <div class="avatar  shadow rounded-10 " onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+imagen+`
+                    <div class="" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+imagen+`
                       
                     </div>
                   </div>
@@ -633,7 +633,7 @@ function PintarServiciosAsignados(respuesta) {
                      <p class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</p>
                      <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].zonanombre+`</p>
 
- 					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;">`+respuesta[i].titulo+`</p>
+ 					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</p>
                   
 
                   </div>
@@ -719,9 +719,16 @@ function PintarServiciosAsignadosCoach(respuesta) {
 		
 
 			var clasecantidad="colorred";
-			if (respuesta[i].cantidadalumnos==respuesta[i].numeroparticipantesmax) {
+
+		if (respuesta[i].cantidadalumnos!='' && respuesta[i].numeroparticipantesmax!='') {
+			
+				if (respuesta[i].cantidadalumnos==respuesta[i].numeroparticipantesmax) {
 				clasecantidad="colorgreen";
+				
+				}
+
 			}
+
 			var opacidad="";
 			if (respuesta[i].fechaproxima=='') {
 				opacidad="opacity:0.6;"
@@ -730,11 +737,11 @@ function PintarServiciosAsignadosCoach(respuesta) {
 				if (respuesta[i].imagen!='' && respuesta[i].imagen!=null) {
 
 				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;'+opacidad+'"/>';
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 120px;border-radius: 10px;height: 80px;'+opacidad+'"/>';
 			}else{
 
 				urlimagen=localStorage.getItem('logo');
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;'+opacidad+'"/>';
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 120px;border-radius: 10px;height: 80px;'+opacidad+'"/>';
 			}
 
 			html+=`
@@ -747,8 +754,19 @@ function PintarServiciosAsignadosCoach(respuesta) {
                     `+imagen+`
                     </div>
                     </div>
-                  	<div class="row">
-                  	<p style="text-align:center;`+opacidad+`" class="`+clasecantidad+`"><span>`+respuesta[i].cantidadalumnos+ ` </span>de<spa> `+respuesta[i].numeroparticipantesmax+`</spa></p>
+                  	<div class="row">`;
+
+                  	console.log(respuesta[i].numeroparticipantesmax +' '+respuesta[i].cantidadalumnos);
+                  	if (respuesta[i].numeroparticipantesmax!='' && respuesta[i].cantidadalumnos !='') {
+
+                  	html+=`<p style="text-align:center;`+opacidad+`" class="`+clasecantidad+`">`;
+						                 
+                    html+=`<span>`+respuesta[i].cantidadalumnos+ ` </span>de<span> `+respuesta[i].numeroparticipantesmax+`</span>`;
+                  		
+                  		console.log(html);
+                  		}
+
+                  html+=`</p>
                   	</div>
 
                   </div>
@@ -823,6 +841,16 @@ function AbirCalificarServicio(idusuarios_servicios) {
 
 	  });
 }
+
+
+function AbirPantallaCalificarServicio() {
+
+	 ObtenerCalificacion().then(r => {
+		PantallaCalificacion(r);
+
+	  });
+}
+
 function ParticipantesServicio(idusuarios_servicios) {
 localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
 localStorage.setItem('variable',1);
@@ -1843,9 +1871,16 @@ function PintarServiciosRegistrados(respuesta) {
 			}
 
 			var clasecantidad="colorred";
-			if (respuesta[i].cantidadalumnos==respuesta[i].numeroparticipantesmax) {
+
+			if (respuesta[i].cantidadalumnos!='' && respuesta[i].numeroparticipantesmax!='') {
+				if (respuesta[i].cantidadalumnos==respuesta[i].numeroparticipantesmax) {
 				clasecantidad="colorgreen";
+				}	
+			}else{
+
+				respuesta[i].cantidadalumnos=0;
 			}
+			
 			
 			html+=`
 			 <div class="list-item" style="background: white; margin: 1em;padding: 1em;border-radius: 10px;`+opacidad+`" >
@@ -1857,9 +1892,17 @@ function PintarServiciosRegistrados(respuesta) {
                     `+imagen+`
                     </div>
                     </div>
-                  	<div class="row">
-                  	<p style="text-align:center;" class="`+clasecantidad+`"><span>`+respuesta[i].cantidadalumnos+ ` </span>de<spa> `+respuesta[i].numeroparticipantesmax+`</spa></p>
-                  	</div>
+                  	<div class="row">`;
+                  	console.log(respuesta[i].numeroparticipantesmax);
+
+               if(respuesta[i].numeroparticipantesmax!='' && respuesta[i].cantidadalumnos!='') {
+
+                 html+=`<p style="text-align:center;" class="`+clasecantidad+`">
+                 <span>`+respuesta[i].cantidadalumnos+ ` </span>de<span> `+respuesta[i].numeroparticipantesmax+`</span>
+                 </p>`;
+
+             		}
+                 html+=`</div>
 
                   </div>
                   <div class="col-70" >

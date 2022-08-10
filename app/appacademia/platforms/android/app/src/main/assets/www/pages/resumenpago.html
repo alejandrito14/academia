@@ -78,21 +78,21 @@
             <ul class="cupon" style="list-style: none;">
              <li class="list-item">
                     <div class="row">
-                        <div class="col-50" style="padding: 0;">
+                        <div class="col-80" style="padding: 0;">
                             <p class="text-muted small" style="font-size:18px;" id="">
                              Monedero
                             </p>
                              <p class="text-muted " style="font-size:30px;text-align:right;">$<span class="monedero">0.00</span></p>
 
                         </div>
-                        <div class="col-50">
+                        <div class="col-20">
                           <span class="chip color-green btnmonedero" 
                           id="" style="
                                 height: 30px;
-                                justify-content: center;
+                                /*justify-content: center;
                                 display: flex;
                                 margin-right: 1em;
-                                margin-left: 1em;top: 3em;"><span class="chip-label">Aplicar</span></span>
+                                margin-left: 1em;*/top: 3em;"><span class="chip-label">Aplicar</span></span>
                         </div>
                     </div>
                  </li>
@@ -105,19 +105,19 @@
       </div>
 
 
-       <div class="divcupones row">
+       <div class="divcupones row" style="display: none;">
         <div class="list media-list no-margin" style="background: white;">
             <ul class="cupon" style="list-style: none;">
              <li class="list-item">
                     <div class="row">
-                        <div class="col-50" style="padding: 0;">
+                        <div class="col-80" style="padding: 0;">
                             <p class="text-muted small" style="font-size:18px;" id="">
                              Cupón
                             </p>
                              <p class="text-muted " style="font-size:30px;text-align:right;">$<span class="cupondescuento">0.00</span></p>
 
                         </div>
-                        <div class="col-50">
+                        <div class="col-20">
                           <span class="chip color-green btncupon" style="
                                 height: 30px;
                                 justify-content: center;
@@ -157,8 +157,14 @@
          
           </div> -->
      
-
-     
+      <div id="visualizardescuentos" style="display: none;">
+       <div class="divdescuentos row">
+        <div class="list media-list no-margin" style="background: #46b2e2;">
+            <ul class="descuentos" style="list-style: none;" id="uldescuentos">
+            </ul>
+          </div>
+        </div>
+      </div>
         
 
     <div class="row">
@@ -166,14 +172,14 @@
             <ul class="cupon" style="list-style: none;">
              <li class="list-item">
                     <div class="row">
-                        <div class="col-50" style="padding: 0;">
+                        <div class="col-80" style="padding: 0;">
                             <p class="text-muted small" style="font-size:18px;" id="">
                              Resúmen
                             </p>
                              <p class="text-muted " style="font-size:30px;text-align:right;">$<span class="lblresumen">0.00</span></p>
 
                         </div>
-                        <div class="col-50">
+                        <div class="col-20">
                         
                         </div>
                     </div>
@@ -184,6 +190,55 @@
           
       </div>
 
+      <div class="divcomision">
+      <div class="row">
+        <div class="list media-list no-margin" style="background: #aeb3b7;">
+            <ul class="cupon" style="list-style: none;">
+             <li class="list-item">
+                    <div class="row">
+                        <div class="col-80" style="padding: 0;">
+                            <p class="text-muted small" style="font-size:18px;" id="">
+                             Comision
+                            </p>
+                             <p class="text-muted " style="font-size:30px;text-align:right;">$<span class="lblcomision">0.00</span></p>
+
+                        </div>
+                        <div class="col-20">
+                        
+                        </div>
+                    </div>
+                 </li>
+                  
+            </ul>
+           </div>
+          
+      </div>
+    </div>
+
+      <div class="row">
+        <div class="list media-list no-margin" style="background: #aeb3b7;">
+            <ul class="" style="list-style: none;">
+             <li class="list-item">
+                    <div class="row">
+                        <div class="col-80" style="padding: 0;">
+                            <p class="text-muted small" style="font-size:18px;" id="">
+                             Total
+                            </p>
+                             <p class="text-muted " style="font-size:30px;text-align:right;">$<span class="lbltotal">0.00</span></p>
+
+                        </div>
+                        <div class="col-20">
+                        
+                        </div>
+                    </div>
+                 </li>
+                  
+            </ul>
+           </div>
+          
+      </div>
+
+    
       <div class="row" style="margin-top: 1em;">
         <div class="col-100">
           <p class="text-muted" style="opacity: 0.6;">Método de pago</p>
@@ -213,7 +268,7 @@
         
 
        </div>
-</div>
+     </div>
        <div id="campomonto" style="display: none;">
     <div class="subdivisiones" style="margin-top: 1.5em;width: 12em!important;" >
       <span style="margin-top: .5em;margin-left: .5em;">¿Con cuanto pagas?</span>
@@ -415,7 +470,7 @@
             <a class="button button-fill botonesredondeado botones" onclick="" id="submit-card" style="height: 60px;
     line-height: 40px;
     /* width: 100%; */
-    color: black!important;
+    color: white!important;
     background: #FFC830!important;
     margin-left: 1em;
     margin-right: 1em;
@@ -425,12 +480,11 @@
 
      <a class="button button-fill botonesredondeado botones" onclick="" id="btnatras" style="height: 60px;
     line-height: 40px;
-    /* width: 100%; */
-    color: black!important;
-    background: #FFC830!important;
+    color: white!important;
+    background: red!important;
     margin-left: 1em;
     margin-right: 1em;
-    margin-top: 1em;">Atrás</a>
+    margin-top: 1em;">Cancelar</a>
           </div>  
         </div>
          </div> 

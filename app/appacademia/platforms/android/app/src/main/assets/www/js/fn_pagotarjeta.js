@@ -32,7 +32,7 @@ function ObtenerTarjetasStripe(setlastcard=false) {
     var pagina = "ObtenerDatosStripe.php";
     var idcliente = localStorage.getItem('id_user');
     var datos = "idcliente=" + idcliente + "&fname="+fname+"&idtipodepago="+idtipodepago;
-    $("#btnatras").attr('display','none');
+    $("#btnatras").css('display','none');
 
     HideDiv("divagregartarjeta");
     ShowDiv("divlistadotarjetas");
@@ -45,7 +45,7 @@ function ObtenerTarjetasStripe(setlastcard=false) {
         async: false,
         success: function (datos) {
             PintarTarjetas(datos,setlastcard);
-
+            HabilitarBotonPagar();
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             var error;
             if (XMLHttpRequest.status === 404) error = "Pagina no existe " + pagina + " " + XMLHttpRequest.status;// display some page not found error 
@@ -68,7 +68,7 @@ function PintarTarjetas(tarjetas,setlastcard=false) {
     var html = '';
     var logo = localStorage.getItem('logo');
     if (tarjetas.length > 0) {
-      $("#btnatras").attr('display','block');
+      $("#btnatras").css('display','block');
         checked = "";
         checkclass = "opccard"
 
@@ -89,7 +89,7 @@ function PintarTarjetas(tarjetas,setlastcard=false) {
             `&nbsp
             <div  class="item-inner">
             <div id="datostarjeta_`+ checkclass + i +`" style="line-height: 2em;">
-            <img src="https://issoftware1.com.mx/IS-U-ORDER/assets/images/` + tarjetas[i].card.brand + `.png" alt="card" style="float:left;" width="36" height="32">`+
+            <img src="`+imagenesbancos + tarjetas[i].card.brand + `.png" alt="card" style="float:left;" width="36" height="32">`+
             `<span id="datostarjetaspan_`+ checkclass + i +`" >&nbsp&nbsp****` + tarjetas[i].card.last4 + `&nbsp&nbsp`+
             
              ("0" + tarjetas[i].card.exp_month).slice(-2) + "/" + ("0" + tarjetas[i].card.exp_year).slice(-2) +`</span><div>
@@ -335,7 +335,10 @@ function CheckCardSelection(obj,objclass,cardid)
 {
   $('.'+objclass).prop('checked', false);
   $("#"+ obj.id).prop('checked', true);
-  SetLastCard(cardid)
+
+  SetLastCard(cardid);
+ 
+
 }
 
 function SetLastCard(cardid) {

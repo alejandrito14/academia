@@ -30,7 +30,7 @@ function PintarListadoComentarios(resultado) {
 	if (resultado.length>0) {
 		var html="";
 		for (var i = 0; i <resultado.length; i++) {
-					 if (resultado[i].foto!='' && resultado[i].foto!=null) {
+					 if (resultado[i].foto!='' && resultado[i].foto!=null  && resultado[i].foto!='null') {
 
         urlimagen=urlimagenes+`upload/perfil/`+resultado[i].foto;
         imagen='<img src="'+urlimagen+'" alt=""  style=""/>';
@@ -89,7 +89,7 @@ function PintarListadoComentarios(resultado) {
 function NuevoComentario() {
     var pagina = "Guardarcomentario.php";
   
-    var comentario=$("#txtcomentario").val();
+    var comentario=$("#txtcomentariocaja").val();
     var idservicio=localStorage.getItem('idservicio');
     var iduser=localStorage.getItem('id_user');
     var datos="idservicio="+idservicio+"&comentario="+comentario+"&iduser="+iduser;

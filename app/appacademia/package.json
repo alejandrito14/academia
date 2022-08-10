@@ -2,6 +2,7 @@
   "dependencies": {},
   "devDependencies": {
     "cordova-android": "^10.1.2",
+    "cordova-ios": "^6.2.0",
     "cordova-plugin-firebasex": "https://github.com/dpa99c/cordova-plugin-firebase"
   },
   "cordova": {
@@ -15,8 +16,8 @@
       }
     },
     "platforms": [
-      "ios",
-      "android"
+      "android",
+      "ios"
     ]
   }
 }

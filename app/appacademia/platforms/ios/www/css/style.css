@@ -2307,16 +2307,55 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 }
 .tipoalumno{
-      background: #59c158;
+      background: #1167f6;
     padding: 0.2em;
     border-radius: 10px;
     color: white;
     text-align: center;
+    padding: 0.3em 0.4em 0.4em 0.3em;
 }
 .tipocoach{
-      background: #b03dac ;
+      background: #ed6a41;
     padding: 0.2em;
     border-radius: 10px;
     color: white;
     text-align: center;
+    padding: 0.3em 0.4em 0.4em 0.3em;
+}
+
+.tipoadmin{
+    background: #8c2488;
+    padding: 0.2em;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+    padding: 0.3em 0.4em 0.4em 0.3em;
+}
+.cantidadalumnos{
+  color:#59c158;
+}
+.iconoremove{
+  background: red;
+    height: 10px;
+    width: 10px;
+    padding: 0.5em;
+    color: white;
+    border-radius: 10px;
+}
+.iconoplus{
+  background: #59c158;
+    height: 10px;
+    width: 10px;
+    padding: 0.5em;
+    color: white;
+    border-radius: 10px;
+}
+.backwhite{
+  color: black;
+background: white;
+
+}
+.backgreen{
+  background: black;
+  color: white;
 }

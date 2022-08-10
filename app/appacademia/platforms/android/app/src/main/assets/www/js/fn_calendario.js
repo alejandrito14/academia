@@ -18,7 +18,7 @@ function CargarFechas() {
 						
 						var fecha=respuesta[i].fecha;
 						var dividir=fecha.split('-');
-						console.log(dividir);
+						
 						var anio=dividir[0];
 						var mes=(dividir[1].replace(/^(0+)/g, '')-1);
 						var dia=dividir[2];
@@ -73,16 +73,52 @@ function CargarFechas() {
               CargarFechasRefrescar1(calendarInline);
 
            });
+
+ 			$(".calendar-day-today .calendar-day-number").css('cssText', 'background: #46b2e2!important');
+ 			var fechaac=new Date();
+          	var mes=(fechaac.getMonth() + 1)<10?'0'+(fechaac.getMonth() + 1):(fechaac.getMonth() + 1);
+         	var dia=fechaac.getDate()<10?'0'+fechaac.getDate():fechaac.getDate();
+         	fecha=fechaac.getFullYear()+'-'+ mes+'-'+dia;
+          	ConsultarFecha(fecha);
           },
          calendarChange:function (c) {
          	//console.log(calendarInline.getValue());
          	//console.log(monthNames[c.currentMonth] + ', ' + c.currentYear);
+         	var fechaac=new Date();
+          	var mes=fechaac.getMonth();
+         	var dia=fechaac.getDate();
+         	fechaactualdata=fechaac.getFullYear()+'-'+ mes+'-'+dia;
+
           	var fecha=calendarInline.getValue();
           	var convertirfecha=new Date(fecha);
           	var mes=(convertirfecha.getMonth() + 1)<10?'0'+(convertirfecha.getMonth() + 1):(convertirfecha.getMonth() + 1);
+         	var mesdata=convertirfecha.getMonth();
+
          	var dia=convertirfecha.getDate()<10?'0'+convertirfecha.getDate():convertirfecha.getDate();
+         	var diadata=convertirfecha.getDate();
+
          	fecha=convertirfecha.getFullYear()+'-'+ mes+'-'+dia;
           	ConsultarFecha(fecha);
+          	var fechadata=convertirfecha.getFullYear()+'-'+mesdata+'-'+diadata;
+          	
+          	$(".calendar-day-has-events").each(function( index ) {
+						 var datafecha=$(this).data('date');
+						 if (datafecha != fechaactualdata) {
+
+						 	$(this).children().eq(0).css('cssText','background:#919191!important');
+							
+						 }
+
+				});
+          	$(".calendar-day").each(function( index ) {
+						 var datafecha=$(this).data('date');
+						 if (datafecha==fechadata && datafecha!= fechaactualdata) {
+
+						 	$(this).children().eq(0).css('cssText', 'background: red!important');
+							return 0;
+						 }
+
+				});
 
           },
         
@@ -140,6 +176,8 @@ function PintarEventos(resultado) {
 		for (var i = 0; i <resultado.length; i++) {
 			var zona=resultado[i].nombre;
 			var color=resultado[i].color;
+			var fecha=resultado[i].fecha;
+			var dividir=fecha.split('-');
 			html+=`
 				<div class="col-100 ">
 		        <div class="card shadow-sm margin-bottom-half">
@@ -151,6 +189,8 @@ function PintarEventos(resultado) {
 		                </div>
 		              </div>
 		              <div class="col">
+		           		 <p class="text-muted size-14 no-margin-bottom" style="font-weight:bold;">`+dividir[2]+`/`+dividir[1]+`/`+dividir[0]+ `</p>
+
 		                <p class="text-muted size-14 no-margin-bottom">`+zona+`</p>
 		                <p>Horario `+resultado[i].horainicial +` - `+ resultado[i].horafinal+`</p>
 		              </div>
@@ -183,7 +223,6 @@ function CargarFechasRefrescar1(calendarInline) {
 						
 						var fecha=respuesta[i].fecha;
 						var dividir=fecha.split('-');
-						console.log(dividir);
 						var anio=dividir[0];
 						var mes=(dividir[1].replace(/^(0+)/g, '')-1);
 						var dia=dividir[2];
@@ -196,7 +235,6 @@ function CargarFechasRefrescar1(calendarInline) {
 						eventos.push(objeto);
 
 					}
-					console.log(calendarInline);
 					calendarInline.params.events = eventos;
 					calendarInline.update();
 					$(".calendar-day-has-events .calendar-day-number").addClass('calendarevento');
@@ -232,7 +270,6 @@ function CargarFechasAdmin(calendarInline) {
 						
 						var fecha=respuesta[i].fecha;
 						var dividir=fecha.split('-');
-						console.log(dividir);
 						var anio=dividir[0];
 						var mes=(dividir[1].replace(/^(0+)/g, '')-1);
 						var dia=dividir[2];
@@ -308,7 +345,6 @@ function CargarFechasAdmin(calendarInline) {
         }
       });
    
-      console.log(calendarInline);
   
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
@@ -338,7 +374,6 @@ function CargarFechasRefrescar2(calendarInline) {
 						
 						var fecha=respuesta[i].fecha;
 						var dividir=fecha.split('-');
-						console.log(dividir);
 						var anio=dividir[0];
 						var mes=(dividir[1].replace(/^(0+)/g, '')-1);
 						var dia=dividir[2];
@@ -351,7 +386,6 @@ function CargarFechasRefrescar2(calendarInline) {
 						eventos.push(objeto);
 
 					}
-					console.log(calendarInline);
 					calendarInline.params.events = eventos;
 					calendarInline.update();
 					$(".calendar-day-has-events .calendar-day-number").addClass('calendarevento');
