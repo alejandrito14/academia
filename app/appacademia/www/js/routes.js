@@ -44,6 +44,14 @@ var routes = [
     ]
   },
 
+   {
+    path:'/serviciosactivos/',
+    componentUrl: './pages/serviciosactivos.html',
+    name: 'serviciosactivos',
+    routes: [
+    ]
+  },
+
   // notification list
   {
     path: '/notificaciones/',
@@ -250,6 +258,13 @@ var routes = [
     path: '/detalleservicioadmin/',
     componentUrl: './pages/detalleservicioadmin.html',
   },
+  
+  { 
+    path: '/detalleservicioactivo/',
+    componentUrl: './pages/detalleservicioactivo.html',
+  },
+   
+
    {
     
     path: '/calendarioadmin/',

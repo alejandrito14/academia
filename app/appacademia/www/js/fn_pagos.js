@@ -158,10 +158,12 @@ var pagosarealizar=[];
 function HabilitarBotonPago() {
 	var contar=0;
 	var suma=0;
+    pagosarealizar=[];
 	$( ".seleccionar" ).each(function( index ) {
-		pagosarealizar=[];
+	
 		 if($(this ).is(':checked')){
 		 	var id=$(this).attr('id');
+     
 		 	var dividir=id.split('_')[1];
 		 	var contador=$("#val_"+dividir).val();
 		 	suma=parseFloat(suma)+parseFloat(contador);
@@ -174,7 +176,6 @@ function HabilitarBotonPago() {
 		 		monto:contador
 		 	};
 		 	pagosarealizar.push(objeto);
-		 	localStorage.setItem('pagos',JSON.stringify(pagosarealizar));
 
 		 }
 	
@@ -193,6 +194,9 @@ function HabilitarBotonPago() {
 		$(".cantidad").text(formato_numero(suma,2,'.',','));
 		localStorage.setItem('montopago',suma);
 	}
+
+  localStorage.setItem('pagos',JSON.stringify(pagosarealizar));
+
 }
 
 function ResumenPago() {

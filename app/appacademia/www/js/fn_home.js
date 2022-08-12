@@ -46,6 +46,8 @@ function CargarDatos() {
 	var tipousuario=localStorage.getItem('tipoUsuario');
 	$$(".tipousuario").text(tipousuario);
 	$$(".btnmisservicios").attr('onclick','MisServiciosAlumno()');
+    $$(".btnserviciosactivos").attr('onclick','ServiciosActivos()');
+
  	classtipo='tipoalumno';
  	 $$(".tipousuario").removeClass('tipoadmin');
  	 $$(".tipousuario").removeClass('tipocoach');
@@ -57,6 +59,7 @@ function CargarDatos() {
 	//ObtenerServiciosAsignados();
 	Obtenerpublicidad(1);
 	ObtenerConfiguracion();
+	MostrarBotonServiciosActivos();
 	
 	var iduser=localStorage.getItem('id_user');
 	socket=io.connect(globalsockect, { transports : ["websocket"],rejectUnauthorized: false });
@@ -757,7 +760,7 @@ function PintarServiciosAsignadosCoach(respuesta) {
                   	<div class="row">`;
 
                   	console.log(respuesta[i].numeroparticipantesmax +' '+respuesta[i].cantidadalumnos);
-                  	if (respuesta[i].numeroparticipantesmax!='' && respuesta[i].cantidadalumnos !='') {
+                  	if(respuesta[i].numeroparticipantesmax!='' && respuesta[i].cantidadalumnos>=0) {
 
                   	html+=`<p style="text-align:center;`+opacidad+`" class="`+clasecantidad+`">`;
 						                 
@@ -1999,7 +2002,187 @@ function ContarNuevasSolicitudes() {
 					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
 			}
 		});
- } /*
+ }
+
+ function ServiciosActivos() {
+ 	GoToPage('serviciosactivos');
+ }
+
+function MostrarBotonServiciosActivos() {
+	var pagina = "ObtenerServiciosActivos.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user;
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(res){
+			console.log(datos);
+			var respuesta=res.respuesta;
+
+			if (respuesta.length>0) {
+
+				$(".divserviciosactivos").css('display','block');
+		
+			}else{
+			
+				$(".divserviciosactivos").css('display','none');
+
+
+			}
+
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+
+
+}
+
+function ObtenerServiciosActivos() {
+	var pagina = "ObtenerServiciosActivos.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user;
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(res){
+			console.log(datos);
+			var respuesta=res.respuesta;
+
+			if (respuesta.length>0) {
+
+			PintarServicioActivos(respuesta);
+		
+			}
+
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+
+}
+
+function PintarServicioActivos(respuesta) {
+	
+	var html="";
+
+	if (respuesta.length>0) {
+		for (var i = 0; i <respuesta.length; i++) {
+
+				var opacidad="";
+			if (respuesta[i].disponible==0) {
+				opacidad="opacity:0.6;"
+			}
+
+			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null) {
+
+				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;'+opacidad+'"/>';
+			}else{
+
+				urlimagen=localStorage.getItem('logo');
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;'+opacidad+'"/>';
+			}
+
+			var clasecantidad="colorred";
+
+			if (respuesta[i].cantidadalumnos!='' && respuesta[i].numeroparticipantesmax!='') {
+				if (respuesta[i].cantidadalumnos==respuesta[i].numeroparticipantesmax) {
+				clasecantidad="colorgreen";
+				}	
+			}else{
+
+				respuesta[i].cantidadalumnos=0;
+			}
+			
+			
+			html+=`
+			 <div class="list-item" style="background: white; margin: 1em;padding: 1em;border-radius: 10px;`+opacidad+`" >
+                <div class="row">
+                  <div class="col-30">
+                  	<div class="row">
+                    <div class="avatar  shadow rounded-10 " style="    border-radius: 10px;
+    padding: 0; margin: 0;" onclick="DetalleServicioActivo(`+respuesta[i].idservicio+`)">
+                    `+imagen+`
+                    </div>
+                    </div>
+                  	<div class="row">`;
+
+              
+                 html+=`</div>
+
+                  </div>
+                  <div class="col-70" >
+                   <div class="row" style="margin-left: 0.4em;">
+
+                    `;
+                   var horarioshtml="";
+                    	//for (var j = 0; j < horarios.length; j++) {
+                    	/*	if (respuesta[i].fechaproxima!='') {
+                    		horarioshtml+=`<span>`+respuesta[i].fechaproxima+` `+respuesta[i].horainicial+` - `+respuesta[i].horafinal+` Hrs.</span></br>`;
+                    		}*/
+
+                    html+=`
+ 					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;" onclick="DetalleServicioActivo(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</p>
+                 
+ 					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;" onclick="DetalleServicioActivo(`+respuesta[i].idservicio+`)">`+respuesta[i].fechai+` `+respuesta[i].fechaf +`</p>
+
+                  </div>`;
+                
+
+                  html+=`</div>
+
+               	</div>
+                  
+                </div>
+              </div>
+
+			`;
+		}
+
+		$$(".serviciosactivos").html(html);
+	}else{
+
+
+		html+=`
+			
+
+		`;
+
+		$$(".serviciosactivos").html(html);
+
+		}
+
+
+
+}
+
+function DetalleServicioActivo(idservicio) {
+	localStorage.setItem('idservicio',idservicio);
+	GoToPage('detalleservicioactivo');
+}
+
+  /*
  function ContarImagenesGaleria() {
  	var pagina = "ObtenerNuevasImagenes.php";
 	

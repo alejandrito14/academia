@@ -89,7 +89,7 @@ function CargarFechas() {
             });
 
 
- 			$(".calendar-day-today .calendar-day-number").css('cssText', 'background: #46b2e2!important');
+ 			$(".calendar-day-today .calendar-day-number").css('cssText', 'background: #46b2e2!important;color:white;');
  			var fechaac=new Date();
           	var mes=(fechaac.getMonth() + 1)<10?'0'+(fechaac.getMonth() + 1):(fechaac.getMonth() + 1);
          	var dia=fechaac.getDate()<10?'0'+fechaac.getDate():fechaac.getDate();
@@ -337,7 +337,7 @@ function CargarFechasRefrescar1(calendarInline) {
 
 				});
 
-		 	$(".calendar-day-today .calendar-day-number").css('cssText', 'background: #46b2e2!important');
+		 	$(".calendar-day-today .calendar-day-number").css('cssText', 'background: #46b2e2!important;color:white;');
 
 					//RefrescarFechas(fecha);
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -395,61 +395,112 @@ function CargarFechasAdmin(calendarInline) {
       // Inline with custom toolbar
       calendarInline = app.calendar.create({
         containerEl: '#demo-calendar',
-        weekHeader: true,
+        weekHeader: false,
          events: eventos,
         firstDay:0,
+
+         renderToolbar: function () {
+          return `
+          <div class="toolbar calendar-custom-toolbar no-shadow">
+            <div class="toolbar-inner">
+              <div class="left" style="margin-left:1em;">
+                <a href="#" class="link "><i class="icon icon-back "></i></a>
+              </div>
+              <div class="center"></div>
+              <div class="right" style="margin-right:1em;">
+                <a href="#" class="link"><i class="icon icon-forward "></i></a>
+              </div>
+            </div>
+          </div>
+          `;
+        },
         on: {
           init: function (c) {
-          	$(".calendar .toolbar").removeClass('toolbar-top');
-          	$(".calendar-day-has-events .calendar-day-number").addClass('calendarevento');
-        	$(".calendar-year-selector").css('display','none');
-
-        	$(".calendar-year-selector").css('display','none');
-        	alert(c.currentMonth);
-            $('.current-month-value').text(monthNames[c.currentMonth] + ' ' + c.currentYear);
+          	$(".calendar-year-selector").css('display','none');
+            //$('.current-month-value').text(monthNames[c.currentMonth] + ' ' + c.currentYear);
+            $('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] + ', ' + c.currentYear);
+ 	
           	$(".calendar-month-selector").css('cssText' , 'justify-content: center!important');
 
+          	$(".calendar .toolbar").removeClass('toolbar-top');
+          
+          	$(".calendar-day-has-events .calendar-day-number").addClass('calendarevento');
+          	
+          	 $('.calendar-custom-toolbar .left .link').on('click', function () {
+              calendarInline.prevMonth();
+             // CargarFechasRefrescar1(calendarInline);
 
-             $$('.calendar-prev-month-button').on('click', function () {            	
-             $('.current-month-value').text(monthNames[calendarInline.currentMonth] + ' ' + calendarInline.currentYear);
-   
-              CargarFechasRefrescar2(calendarInline);
+            });
+            $('.calendar-custom-toolbar .right .link').on('click', function () {
+              calendarInline.nextMonth();
+             // CargarFechasRefrescar1(calendarInline);
 
-           });
-              
-           $$('.calendar-next-month-button').on('click', function () {
-            $('.current-month-value').text(monthNames[calendarInline.currentMonth] + ' ' + calendarInline.currentYear);
-  
-              CargarFechasRefrescar2(calendarInline);
+            });
 
-           });
 
-           $$('.calendar-prev-year-button').on('click', function () {
-            	
-              CargarFechasRefrescar2(calendarInline);
-
-           });
- 			$$('.calendar-next-year-button').on('click', function () {
-            	
-              CargarFechasRefrescar2(calendarInline);
-
-           });
-
- 			
+ 			$(".calendar-day-today .calendar-day-number").css('cssText', 'background: #46b2e2!important;color:white;');
+ 			var fechaac=new Date();
+          	var mes=(fechaac.getMonth() + 1)<10?'0'+(fechaac.getMonth() + 1):(fechaac.getMonth() + 1);
+         	var dia=fechaac.getDate()<10?'0'+fechaac.getDate():fechaac.getDate();
+         	fecha=fechaac.getFullYear()+'-'+ mes+'-'+dia;
+          	ConsultarFechaAdmin(fecha);
            
          	 },
         
          calendarChange:function (c) {
-         	//console.log(calendarInline.getValue());
-         	//console.log(monthNames[c.currentMonth] + ', ' + c.currentYear);
+         	var fechaac=new Date();
+          	var mes=fechaac.getMonth()+1;
+         	var dia=fechaac.getDate();
+         	fechaactualdata=fechaac.getFullYear()+'-'+ mes+'-'+dia;
+
           	var fecha=calendarInline.getValue();
+
           	var convertirfecha=new Date(fecha);
           	var mes=(convertirfecha.getMonth() + 1)<10?'0'+(convertirfecha.getMonth() + 1):(convertirfecha.getMonth() + 1);
+         	var mesdata=convertirfecha.getMonth();
+
          	var dia=convertirfecha.getDate()<10?'0'+convertirfecha.getDate():convertirfecha.getDate();
-         	fecha=convertirfecha.getFullYear()+'-'+ mes+'-'+dia;
-          	ConsultarFechaAdmin(fecha);
+         	var diadata=convertirfecha.getDate();
+
+         	fecha1=convertirfecha.getFullYear()+'-'+ mes+'-'+dia;
+          	ConsultarFechaAdmin(fecha1);
+          	var fechadata=convertirfecha.getFullYear()+'-'+mesdata+'-'+diadata;
+
+          		$(".calendar-day").each(function( index ) {
+						 var datafecha=$(this).data('date');
+
+						 if (datafecha==fechadata && datafecha!= fechaactualdata) {
+
+						 	$(this).children().eq(0).addClass('seleccionado');
+							//return 0;
+						 }else{
+
+						 $(this).children().eq(0).removeClass('seleccionado');
+
+						 }
+
+				});
+          
 
           },
+
+
+            monthYearChangeStart: function (c) {
+            $('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] + ', ' + c.currentYear);
+             //$('.current-month-value').text(monthNames[c.currentMonth] + ' ' + c.currentYear);
+             console.log('entro');
+
+          },
+
+
+ 			monthYearChangeEnd: function (c) {
+            $('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] + ', ' + c.currentYear);
+             //$('.current-month-value').text(monthNames[c.currentMonth] + ' ' + c.currentYear);
+             console.log('entro change end');
+             CargarFechasRefrescar2(calendarInline);
+
+          }
+          
         
         }
       });
@@ -498,6 +549,32 @@ function CargarFechasRefrescar2(calendarInline) {
 					calendarInline.params.events = eventos;
 					calendarInline.update();
 					$(".calendar-day-has-events .calendar-day-number").addClass('calendarevento');
+
+            var fecha=calendarInline.getValue();
+          	var convertirfecha=new Date(fecha);
+          	var mes=(convertirfecha.getMonth() + 1)<10?'0'+(convertirfecha.getMonth() + 1):(convertirfecha.getMonth() + 1);
+         	var mesdata=convertirfecha.getMonth();
+         	var dia=convertirfecha.getDate()<10?'0'+convertirfecha.getDate():convertirfecha.getDate();
+         	var diadata=convertirfecha.getDate();
+         	fecha1=convertirfecha.getFullYear()+'-'+ mes+'-'+dia;
+
+          	var fechadata=convertirfecha.getFullYear()+'-'+mesdata+'-'+diadata;
+
+			$(".calendar-day").each(function( index ) {
+						 var datafecha=$(this).data('date');
+						 if (datafecha==fechadata && datafecha!= fechaactualdata) {
+
+						 	$(this).children().eq(0).addClass('seleccionado');
+							//return 0;
+						 }else{
+
+						 $(this).children().eq(0).removeClass('seleccionado');
+
+						 }
+
+				});
+
+		 	$(".calendar-day-today .calendar-day-number").css('cssText', 'background: #46b2e2!important;colo:white;');
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;

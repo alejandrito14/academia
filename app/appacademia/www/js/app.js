@@ -288,7 +288,7 @@ $$(document).on('page:init', '.page[data-name="splash"]', function (e) {
   setTimeout(function () {
     $$('.loader-wrap').hide();
 
-  }, 2000);
+  }, 1000);
 
 
 
@@ -1186,10 +1186,36 @@ $$(document).on('page:init', '.page[data-name="detalleservicioadmin"]', function
   ObtenerServicioAdmin();
   ObtenerParticipantesAlumnosAdmin();
   $$("#btnpermisoasignaralumno").attr('onclick','VerificarTotalAlumnos()');
+  $$("#btncalendario").attr('onclick','FechasServicio()');
 
+  Verificarcantidadhorarios();
  // $$("#abrirpantallacali").attr('onclick','PantallaCalificacion()');
   /*$$("#Abrirchat").attr('onclick','ElegirParticipantesChat()');
   $$("#btncalendario").attr('onclick','FechasServicio()');
+  
+  ObtenerImagenesGrupal();
+  Verificarcantidadhorarios();
+  VerificarSihayEvaluacion();
+
+  $$(".btnasistencia").attr('onclick','Asistencia()');
+ */
+});
+
+$$(document).on('page:init', '.page[data-name="detalleservicioactivo"]', function (e) {
+  
+  //regresohome();
+  $(".regreso").attr('href','/serviciosactivos/');
+
+  ObtenerServicioAdmin();
+  ObtenerParticipantesAlumnosAdmin();
+
+  $$("#btnasignaralumno").attr('onclick','GuardarAsignacionServicio()');
+  $$("#btncalendario").attr('onclick','FechasServicio()');
+
+  Verificarcantidadhorarios();
+
+ // $$("#abrirpantallacali").attr('onclick','PantallaCalificacion()');
+  /*$$("#Abrirchat").attr('onclick','ElegirParticipantesChat()');
   
   ObtenerImagenesGrupal();
   Verificarcantidadhorarios();
@@ -1240,8 +1266,9 @@ $$(document).on('page:init', '.page[data-name="asignaralumnos"]', function (e) {
     $$("#limpiarfiltro").attr('onclick','LimpiarFiltroalumnos()');
     $$("#btnguardarasignacion").attr('onclick','GuardarAsignacion()');
 
-       $$("#btnpasar").attr('onclick','QuitarElemento()');
-       $$("#btnpasar2").attr('onclick','AgregarElemento()');
+    $$("#btnpasar").attr('onclick','QuitarElemento()');
+    $$("#btnpasar2").attr('onclick','AgregarElemento()');
+    $$("#btncancelarasi").attr('onclick','CancelarAsignacion()');
 
 
 
@@ -1473,6 +1500,12 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
 
 $$(document).on('page:init', '.page[data-name="calendario"]', function (e) {
   
+
+  if (localStorage.getItem('idtipousuario')==0) {
+     $(".regreso").attr('href','/detalleservicioadmin/');
+
+   }
+
    if (localStorage.getItem('idtipousuario')==3) {
      $(".regreso").attr('href','/detalleservicio/');
 
@@ -1506,7 +1539,7 @@ $$(document).on('page:init', '.page[data-name="calificacionesadmin"]', function 
 $$(document).on('page:init', '.page[data-name="nuevaimagengrupal"]', function (e) {
   
  $$(".imglogoimagengrupal").attr('src',urlimagendefault);
-$$(".fotoimagen").attr('onclick','AbrirModalFotoimagengrupal()');
+ $$(".fotoimagen").attr('onclick','AbrirModalFotoimagengrupal()');
  $$("#btnguardarimagen").attr('onclick','Guardarimagengrupal()');
 
 
@@ -1518,6 +1551,14 @@ $$(document).on('page:init', '.page[data-name="nuevovideogrupal"]', function (e)
 $$(".divvideo").attr('onclick','AbrirModalFotovideogrupal()');
 // $$("#btnguardarimagen").attr('onclick','Guardarimagengrupal()');
 
+});
+
+
+$$(document).on('page:init', '.page[data-name="serviciosactivos"]', function (e) {
+  
+  regresohome();
+  ObtenerServiciosActivos();
+    
 });
 
 /*$$(document).on('page:init', '.page[data-name="messages"]', function (e) {

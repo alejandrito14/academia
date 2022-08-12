@@ -1,7 +1,8 @@
   var participastesalumnosservicio="";
     var listaalumnos="";
     var usuariosquitados=[];
-
+    var usuariosagregados=[];
+    var dynamicSheet2="";
 function ObtenerServicioAsignado() {
 	
 	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
@@ -55,17 +56,21 @@ function ObtenerServicioAsignado() {
 
 				$("#permisoasignaralumno").css('display','none');
 			if (localStorage.getItem('idtipousuario')==3) {
-				if (respuesta.abiertocliente == 1) {
+
+				if (respuesta.ligarcliente==1) {
+
 				$("#permisoasignaralumno").css('display','block');
 				}
 			}
 		if (localStorage.getItem('idtipousuario')==5) {
 
-			if (respuesta.abiertocoach == 1) {
-				$("#permisoasignaralumno").css('display','block');
+				if (respuesta.abiertocoach == 1) {
+					$("#permisoasignaralumno").css('display','block');
+				}
 			}
-			}
+
 	if (localStorage.getItem('idtipousuario')==0) {
+
 
 			if (respuesta.abiertoadmin == 1) {
 				$("#permisoasignaralumno").css('display','block');
@@ -945,14 +950,15 @@ function PintarAlumnosAdmin(respuesta) {
                      <div class="row">
              		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].alias+`
              		     </div>
-             		   </div>
+             		   </div>`;
 
-             		    <div class="row">
+
+             		   html+=` <div class="row">
              		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].celular+`
              		     </div>
-             		   </div>
+             		   </div>`;
 
-             		   <div class="row">
+             		   html+=`<div class="row">
                         	  <div class="item-text">`+respuesta[i].nombretipo+`</div>
                     </div>
 
@@ -1039,9 +1045,8 @@ function PintarAlumnos(respuesta) {
                         	 <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;word-break: break-word;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
              		   </div>
 
-
                      <div class="row">
-             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].usuario+`
+             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].alias+`
              		     </div>
              		   </div>
 
@@ -1139,17 +1144,158 @@ function GuardarAsignacion() {
 	var idservicio=localStorage.getItem('idservicio');
 
 	var idusuarios=[];
+	
 	$(".listaa_" ).each(function( index ) {
 	  	//if ($(this).is(':checked')) {
 	  		var id=$(this).attr('id');
 	  		var dividir=id.split('_')[1];
 	  		idusuarios.push(dividir);
-	  	//}
-
 	});
 
 	var datos="id_user="+id_user+"&idusuarios="+idusuarios+"&idservicio="+idservicio+"&usuariosquitados="+usuariosquitados;
 	
+	
+	var usuariosparaquitar="";
+	var usuariosparagregar="";
+
+	for (var i = 0; i < usuariosquitados.length; i++) {
+		
+		var id=usuariosquitados[i];
+		var resultado = participastesalumnosservicio.find( usuarios => usuarios.idusuarios === id );
+			
+				if (resultado == undefined) {
+					 resultado = listaalumnos.find( usuarios => usuarios.idusuarios === id );
+		
+				}
+
+			usuariosparaquitar+=`<p style="text-align:center;font-size:18px;">`+(i+1)+`.- `+resultado.nombre+` `+ resultado.paterno+`</p>`;
+
+	}
+
+
+	for (var i = 0; i < usuariosagregados.length; i++) {
+		
+		var id=usuariosagregados[i];
+		var resultado = participastesalumnosservicio.find( usuarios => usuarios.idusuarios === id );
+			
+				if (resultado == undefined) {
+					 resultado = listaalumnos.find( usuarios => usuarios.idusuarios === id );
+		
+				}
+
+			usuariosparagregar+=`<p style="text-align:center;font-size:18px;">`+(i+1)+`.- `+resultado.nombre+` `+ resultado.paterno+`</p>`;
+
+	}
+
+			var html="";
+
+	html+=`	<div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: none;">
+            <div class="toolbar">
+              <div class="toolbar-inner">
+                <div class="left"></div>
+                <div class="right">
+                  <a class="link sheet-close"></a>
+                </div>
+              </div> 
+            </div>
+            <div class="sheet-modal-inner" style="background: white;border-top-left-radius: 20px;border-top-right-radius:20px; ">
+              <div class="iconocerrar link sheet-close" style="z-index:100;">
+	 									<span class="bi bi-x-circle-fill"></span>
+	   						    	 </div>
+
+              <div class="" style="height: 100%;">
+                   <div class="row">
+	   						     <div class="col-20">
+	   						      	
+	   						    </div>
+
+   						    	 <div class="col-60">
+   						    	 <span class="titulomodal"></span>
+   						    	 </div>
+   						    	 <div class="col-20">
+   						    	 <span class="limpiarfiltros"></span>
+   						    	 </div>
+   							 </div>
+                <div class="page-content" style="background: white; height: 100%;width: 100%;border-radius: 20px;">
+   						
+   							 <div class="" style="position: absolute;top:2em;width: 100%;">
+   							 	
+	   							  <div class="">
+		   							  <div class="block" style="margin-right:1em;margin-left:1em;">
+
+		   							  	<h3 style="text-align:center;font-size:22px;margin-bottom:1em;">Se realizaran las siguientes acciones</h3>`;
+ 							if (usuariosquitados.length>0) {
+		   							  html+=`
+		   							  <div class="row" style="margin-bottom:1em;">
+		   							  <h4 style="text-align:center;border-radius: 10px;color: red;padding: 0.5em;font-weight: bold;">Usuarios a cancelar el servicio</h4>`;
+		   							
+		   							     html+=usuariosparaquitar +`</div>`;
+		
+			   							
+
+		   							}
+
+		   						if (usuariosagregados.length>0) {
+
+		   							 html+=`
+		   							 <div class="row" style="margin-bottom:1em;">
+		   							 <h4 style="text-align:center;border-radius: 10px;color: rgb(89, 193, 88);padding: 0.5em;font-weight: bold;">Usuarios a agregar el servicio</h4>`;
+		   						     html+=usuariosparagregar+`</div>`;
+
+		   							}
+		   							html+=`
+		   						 <div class="row" style="margin-bottom:1em;margin-top:3em;">
+
+		   						 	 <a id="btnguardarasignacion" onclick="GuardarAsignaciones()" style="border-radius: 10px;
+									    height: 60px;" class="button button-fill button-large button-raised margin-bottom color-theme">
+									      <div class="fab-text">Guardar</div>
+									    </a>
+		   						 	</div>
+
+
+		   							</div>
+	   							 	</div>
+   							 </div>
+		   				</div>
+		                
+		              </div>
+		            </div>
+		          </div>`;
+	  dynamicSheet2 = app.sheet.create({
+        content: html,
+    	swipeToClose: true,
+        backdrop: true,
+        // Events
+        on: {
+          open: function (sheet) {
+            console.log('Sheet open');
+          },
+          opened: function (sheet) {
+            console.log('Sheet opened');
+          },
+        }
+      });
+
+       dynamicSheet2.open();
+
+}
+
+function GuardarAsignaciones() {
+	dynamicSheet2.close();
+	var pagina = "GuardarAsignacion.php";
+	var id_user=localStorage.getItem('id_user');
+	var idservicio=localStorage.getItem('idservicio');
+
+	var idusuarios=[];
+	
+	$(".listaa_" ).each(function( index ) {
+	  	//if ($(this).is(':checked')) {
+	  		var id=$(this).attr('id');
+	  		var dividir=id.split('_')[1];
+	  		idusuarios.push(dividir);
+	});
+
+	var datos="id_user="+id_user+"&idusuarios="+idusuarios+"&idservicio="+idservicio+"&usuariosquitados="+usuariosquitados+"&usuariosagregados="+usuariosagregados;
 	
 	$.ajax({
 		type: 'POST',
@@ -1211,7 +1357,6 @@ function GuardarAsignacion() {
 			}
 
 		});
-
 }
 
 function VerificarTotalAlumnos() {
@@ -1228,6 +1373,8 @@ $.ajax({
 		success: function(datos){
 
 			if (datos.cupodisponible==0) {
+				usuariosquitados=[];
+				usuariosagregados=[];
 				
 				GoToPage('asignaralumnos');
 			}else{
@@ -1460,10 +1607,7 @@ var html="";
              		     </div>
              		   </div>
 
-             		    <div class="row">
-             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].celular+`">`+respuesta[i].celular+`
-             		     </div>
-             		   </div>
+             		   
 
              		   <div class="row">
                         	  <div class="item-text">`+respuesta[i].nombretipo+`</div>
@@ -1492,9 +1636,67 @@ $("#divparticipantesalumnos").html(html);
 
 }
 
+function BuscarEnArrayUsuarios(valor,array) {
+	var encontrado=0;
+	if (array.length>0) {
+		for (var i = 0; i <array.length; i++) {
+			
+			if (array[i]==valor) {
+				encontrado=1;
+				return encontrado;
+
+			}
+		}
+	}else{
+
+		return encontrado;
+	}
+}
+
+function EliminardeArray(valor,array) {
+	
+	if (array.length>0) {
+		for (var i = 0; i <array.length; i++) {
+			
+			if (array[i]==valor) {
+				array.splice(i,1);
+
+			}
+		}
+	}
+}
 
 
-function AgregarElemento(argument) {
+function AgregarElemento() {
+
+	 if (localStorage.getItem('idtipousuario')==3) {
+
+	 	  ObtenerVerificacionServicio().then(r => {
+
+	 	  	var valor=r.respuesta;
+	 	 	var num= valor.numligarclientes;
+	 	  
+	 	 	if (usuariosagregados.length < num) {
+	 	 			AgregarElementoArray();
+	 	 	}else{
+
+
+	 	 		alerta('El límite para agregar es de'+num,'');
+	 	 	}
+	 	  
+
+
+	 	  });
+
+	 }else{
+
+	 	AgregarElementoArray();
+	 }
+	 
+
+}
+
+function AgregarElementoArray() {
 	var idusua=[];
 		$(".idusuariosiniciar").each(function( index ) {
   			if ($(this).is(':checked')) {
@@ -1504,8 +1706,13 @@ function AgregarElemento(argument) {
   				idusua.push(dividir);
   				$("#lista_"+dividir).remove();
 
+  				EliminardeArray(dividir,usuariosquitados);
 
-  			}
+  				if (!BuscarEnArrayUsuarios(dividir,usuariosagregados)) {
+
+  					usuariosagregados.push(dividir);
+  				}
+  		}
 	});
 
 	var html="";
@@ -1582,11 +1789,13 @@ function AgregarElemento(argument) {
           closeTimeout: 2000,
         });
 	   toastTop.open();
+
+	   $(".divflotanteasignacion").css('display','block');
 }
 
 function QuitarElemento() {
 	var idusu=[];
-
+	
 		$(".idusuariosasignados").each(function( index ) {
   			if ($(this).is(':checked')) {
   				var id=$(this).attr('id');
@@ -1594,9 +1803,14 @@ function QuitarElemento() {
   				console.log(dividir);
   				idusu.push(dividir);
 
-  				usuariosquitados.push(idusu);
+  				//usuariosquitados.push(dividir);
   				$("#listaa_"+dividir).remove();
+  				  	EliminardeArray(dividir,usuariosagregados);
 
+  					if (!BuscarEnArrayUsuarios(dividir,usuariosquitados)) {
+
+		  				usuariosquitados.push(dividir);
+		  			}
 
   			}
 	});
@@ -1675,4 +1889,123 @@ function QuitarElemento() {
           closeTimeout: 2000,
         });
 	   toastTop.open();
+	$(".divflotanteasignacion").css('display','block');
+
+}
+
+function GuardarAsignacionServicio() {
+ app.dialog.confirm('','¿Está seguro  de realizar la acción?' , function () {
+
+	var pagina = "GuardarAsignacionServicio.php";
+	var id_user=localStorage.getItem('id_user');
+	var idservicio=localStorage.getItem('idservicio');
+	var idusuarios=id_user;
+	var datos="id_user="+id_user+"&idservicio="+idservicio+"&idusuarios="+idusuarios;
+	
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+			var respuesta=datos.respuesta;
+			if (datos.respuesta==1) {
+
+				var usuariosnoagregados=datos.usuariosnoagregados;
+
+					if (usuariosnoagregados.length > 0) {
+						var html="";
+						for (var i = 0; i <usuariosnoagregados.length; i++) {
+							html+=`<span>Usuario: `+usuariosnoagregados[i].usuario+`
+							no se pudo asignar, ya que se encuentra asignado a 
+							</span>`;
+
+
+							var serviciosasignados=usuariosnoagregados[i].servicioscruzados;
+			 				for (var j =0; j < serviciosasignados.length; j++) {
+			 					html+=`<p>`+serviciosasignados[j].titulo+`</p>`
+			 				}
+			 				html+=`</br>`;
+						}
+
+						alerta(html,'No se puede realizar la acción');
+					}else{
+
+					  alerta('','Se realizaron los cambios correctamente');
+
+					  		if (localStorage.getItem('idtipousuario')==3) {
+
+								var idusuarios_servicios=datos.idusuarios_servicio;
+							    localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
+
+							     GoToPage('aceptacionservicio');
+
+							   }
+					}
+				
+		
+
+				  
+			}
+			
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+	});
+}
+
+function CancelarAsignacion() {
+
+  if (localStorage.getItem('idtipousuario')==0) {
+   	GoToPage('detalleservicioadmin');
+   }
+
+  if (localStorage.getItem('idtipousuario')==3) {
+     GoToPage('detalleservicio');
+   }
+   if (localStorage.getItem('idtipousuario')==5){
+  	  GoToPage('detalleserviciocoach');
+    }
+    usuariosquitados=[];
+	usuariosagregados=[];
+}
+
+function ObtenerVerificacionServicio() { 
+	 return new Promise(function(resolve, reject) {
+	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
+	var pagina = "ObtenerServicioAsignado.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user+"&idusuarios_servicios="+idusuarios_servicios;
+	
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(resp){
+			
+			resolve(resp);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+
+	});
 }
