@@ -922,10 +922,21 @@ function GuardarAsignacion() {
 		cache: false,
 		data:datos,
 		success: function(datos){
-
+				alert('a');
 			if (datos.respuesta==1) {
+
+				var usuariosnoagregados=datos.usuariosnoagregados;
+
+					if (usuariosnoagregados.length > 0) {
+						var html="";
+						for (var i = 0; i <usuariosnoagregados.length; i++) {
+							html+=`<span>`+usuariosnoagregados[i].usuario+`</span><br>`;
+						}
+
+						alerta('No se pudieron asignar los siguientes usuarios',html);
+					}
 				
-				if (localStorage.getItem('idtipousuario')==0) {
+				/*if (localStorage.getItem('idtipousuario')==0) {
 				     GoToPage('detalleservicioadmin');
 
 				   }
@@ -937,7 +948,7 @@ function GuardarAsignacion() {
 				   if (localStorage.getItem('idtipousuario')==5){
 				      GoToPage('detalleserviciocoach');
 
-				    }
+				    }*/
 			}
 			
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 

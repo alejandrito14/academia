@@ -16,57 +16,11 @@ class Servicios
 			if($this->estatus!=0){
 
 			$sql.=" WHERE servicios.estatus=1";
-			
+		
 			}
 			$sql.=" ORDER BY servicios.orden asc";
 		
 			 
-		$resp=$this->db->consulta($sql);
-		$cont = $this->db->num_rows($resp);
-
-
-		$array=array();
-		$contador=0;
-		if ($cont>0) {
-
-			while ($objeto=$this->db->fetch_object($resp)) {
-
-				$array[$contador]=$objeto;
-				$contador++;
-			} 
-		}
-		
-		return $array;
-	}
-
-
-	public function ObtenerServiciosAdmin()
-	{
-		$sql="SELECT
-		servicios.idservicio,
-		servicios.titulo,
-		servicios.descripcion,
-		servicios.estatus,
-		servicios.idcategoriaservicio,
-		servicios.imagen,
-		servicios.fechacreacion,
-		servicios.orden,
-		servicios.fechainicial,
-		servicios.fechafinal,
-		categorias.avanzado,
-		categorias.estatus AS estatuscategoria,
-		servicios.numeroparticipantes,
-		servicios.numeroparticipantesmax,
-		servicios.abiertocoach,
-		servicios.abiertoadmin,
-		servicios.abiertocliente
-		FROM
-		categorias
-		JOIN servicios
-		ON categorias.idcategorias = servicios.idcategoriaservicio WHERE categorias.avanzado=1
-		ORDER BY
-		servicios.orden ASC";
-
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -161,7 +115,7 @@ class Servicios
 
 	public function ObtenerParticipantes($idtipo)
 	{
-		$sql="SELECT *FROM usuarios INNER JOIN usuarios_servicios ON usuarios.idusuarios=usuarios_servicios.idusuarios WHERE idservicio='$this->idservicio' AND tipo='$idtipo' AND cancelacion=0 ";
+		$sql="SELECT *FROM usuarios INNER JOIN usuarios_servicios ON usuarios.idusuarios=usuarios_servicios.idusuarios WHERE idservicio='$this->idservicio' AND tipo='$idtipo'";
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -311,58 +265,6 @@ class Servicios
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
-
-		$array=array();
-		$contador=0;
-		if ($cont>0) {
-
-			while ($objeto=$this->db->fetch_object($resp)) {
-
-				$array[$contador]=$objeto;
-				$contador++;
-			} 
-		}
-		
-		return $array;
-	}
-
-	public function ObtenerServiciosActivos($serviciosasignados)
-	{
-		$fechaactual=date('Y-m-d');
-		$sql="SELECT 
-			servicios.idservicio,
-			servicios.titulo,
-			servicios.descripcion,
-			servicios.estatus,
-			servicios.idcategoriaservicio,
-			servicios.imagen,
-			servicios.fechacreacion,
-			servicios.orden,
-			servicios.fechainicial,
-			servicios.fechafinal,
-			servicios.nodedias,
-			servicios.idcategoria,
-			servicios.precio,
-			servicios.totalclases,
-			categorias.idcategorias,
-			categorias.titulo AS titulocategoria,
-			categorias.descripcion AS descripcioncategoria,
-			servicios.numeroparticipantesmax
-		FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio WHERE 
-			categorias.avanzado=1 AND servicios.estatus=1 AND servicios.abiertocliente=1";
-
-			if($serviciosasignados!=''){
-
-			$sql.=" AND  servicios.idservicio NOT IN(".$serviciosasignados.") ";
-			
-			}
-
-
-			$sql.=" ORDER BY servicios.orden asc";
-			
-		$resp=$this->db->consulta($sql);
-		$cont = $this->db->num_rows($resp);
-
 
 		$array=array();
 		$contador=0;

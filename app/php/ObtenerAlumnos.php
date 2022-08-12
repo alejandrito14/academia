@@ -31,7 +31,7 @@ try
 	$lo->idservicio=$idservicio;
 
 	$serviciosasignados->idservicio=$idservicio;
-	$usuariosservicio=$serviciosasignados->obtenerUsuariosServiciosAsignadosAgrupado();
+	$usuariosservicio=$serviciosasignados->obtenerTodosUsuariosServiciosAsignadosAgrupado();
 
 	$idusuariosservicio=$usuariosservicio[0]->idusuarios;
 

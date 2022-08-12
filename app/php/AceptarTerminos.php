@@ -58,6 +58,10 @@ try
 
 		$obtenerperiodos=$servicios->ObtenerPeriodosPagos();
 
+		$numeroperiodos=count($obtenerperiodos);
+		$montoapagar=$montoapagar/$numeroperiodos;
+
+
 		for ($i=0; $i < count($obtenerperiodos); $i++) { 
 
 			$pagos->idusuarios=$idusuarios;

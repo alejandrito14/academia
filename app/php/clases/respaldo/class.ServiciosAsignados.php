@@ -19,7 +19,6 @@ class ServiciosAsignados
 	{
 		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
 		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
-			AND cancelacion=0
 		 ";
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -299,6 +298,7 @@ class ServiciosAsignados
 				usuarios_servicios.idservicio='$this->idservicio' AND usuarios.idusuarios NOT IN('$this->idusuario') AND usuarios.tipo=3 and usuarios_servicios.cancelacion=0 ORDER BY usuarios.tipo DESC 
 		 ";
 
+		 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -334,6 +334,7 @@ class ServiciosAsignados
 				usuarios_servicios.idservicio='$this->idservicio' AND usuarios.idusuarios NOT IN('$this->idusuario') AND cancelacion=0 ORDER BY usuarios.tipo DESC 
 		 ";
 
+		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -359,7 +360,6 @@ class ServiciosAsignados
 		(idservicio,idusuarios) VALUES ('$this->idservicio','$this->idusuario')";
 		
 		$resp=$this->db->consulta($query);
-		$this->idusuarios_servicios=$this->db->id_ultimo();
 	}
 
 	public function BuscarAsignacion()
@@ -374,7 +374,7 @@ class ServiciosAsignados
 				JOIN tipousuario
 				ON tipousuario.idtipousuario=usuarios.tipo
 				WHERE tipousuario.idtipousuario=3 AND 
-				usuarios_servicios.idservicio = '$this->idservicio' AND usuarios.idusuarios='$this->idusuario' AND cancelacion=0
+				usuarios_servicios.idservicio = '$this->idservicio' AND usuarios.idusuarios='$this->idusuario'
 		 ";
 
 		
@@ -652,61 +652,4 @@ class ServiciosAsignados
 	}
 
 
-	public function obtenerServiciosAsignadosAgrupados()
-	{
-		$sql="SELECT GROUP_CONCAT(usuarios_servicios.idservicio) as serviciosasignados FROM usuarios_servicios INNER JOIN 
-		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
-		 ";
-		$resp=$this->db->consulta($sql);
-		$cont = $this->db->num_rows($resp);
-
-
-		$array=array();
-		$contador=0;
-		if ($cont>0) {
-
-			while ($objeto=$this->db->fetch_object($resp)) {
-
-				$array[$contador]=$objeto;
-				$contador++;
-			} 
-		}
-		
-		return $array;
-	}
-
-
-		public function obtenerTodosUsuariosServiciosAsignadosAgrupado()
-	{
-		$sql="SELECT
-				
-				GROUP_CONCAT(usuarios.idusuarios) as idusuarios
-				
-				FROM
-				usuarios_servicios
-				JOIN usuarios
-				ON usuarios_servicios.idusuarios = usuarios.idusuarios
-				JOIN tipousuario
-				ON tipousuario.idtipousuario=usuarios.tipo
-				WHERE
-				usuarios_servicios.idservicio='$this->idservicio'  AND cancelacion=0 ORDER BY usuarios.tipo DESC 
-		 ";
-		
-		$resp=$this->db->consulta($sql);
-		$cont = $this->db->num_rows($resp);
-
-
-		$array=array();
-		$contador=0;
-		if ($cont>0) {
-
-			while ($objeto=$this->db->fetch_object($resp)) {
-
-				$array[$contador]=$objeto;
-				$contador++;
-			} 
-		}
-		
-		return $array;
-	}
 }

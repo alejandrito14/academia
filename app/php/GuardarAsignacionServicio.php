@@ -27,8 +27,8 @@ try
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
 	$serviciosasignados->db=$db;
-	$idusuariosparaasignar=$_POST['usuariosagregados'];
-	$idusuarios=explode(',', $_POST['usuariosagregados']);
+	$idusuariosparaasignar=$_POST['idusuarios'];
+	$idusuarios=explode(',', $_POST['idusuarios']);
 	$idservicio=$_POST['idservicio'];
 	$iduser=$_POST['id_user'];
 	$serviciosasignados->idservicio=$idservicio;
@@ -37,6 +37,7 @@ try
 	$usuariosparaquitar=explode(',', $_POST['usuariosquitados']);
 	$idservicioasignar=$idservicio;
 	$usuariosnoagregados=array();
+
 	
 	/*$obtenerhorariosservicio=$serviciosasignados->ObtenerHorariosServicioZona();*/
 
@@ -126,7 +127,7 @@ try
 
 	
 	$diff=array_values(array_diff($idusuarios,$eliminararray));
-	//var_dump($diff);die();
+	
 	$idusuarios=$diff;
 
 
@@ -146,42 +147,7 @@ try
 	}
 
 
-	$obtenerusuarioscancelacion=$serviciosasignados->BuscarAsignacionCancelacion($idusuariosparaasignar);
-
-	/*if (count($obtenerusuarioscancelacion)>0) {
-		for ($i=0; $i < count($obtenerusuarioscancelacion); $i++) { 
-
-			$idusuariocancelado=$obtenerusuarioscancelacion[$i]->idusuarios;
-
-			$serviciosasignados->idusuario=$idusuariocancelado;
-
-			$serviciosasignados->motivocancelacion="cancelado desde la app por usuario ".$iduser;
-			$serviciosasignados->cancelado=1;
-			$serviciosasignados->CambiarEstatusServicio($obtenerusuarioscancelacion[$i]->idusuarios_servicios);
-
-			if ($obtenerusuarioscancelacion[$i]->aceptarterminos==1) {
-				$pagos=$serviciosasignados->BuscarPagos();
-
-				for ($j=0; $j < count($pagos); $j++) { 
-					
-					if ($pagos[$j]->pagado==1 && $pagos[$j]->estatus==2) {
-						$idpago=$pagos[$j]->idpago;
-						
-						if($obtenerdatosservicio[0]->reembolso==1){
-							$estatus=4;
-						
-							}else{
-								$estatus=5;
-							}
-						
-						$serviciosasignados->CambiarEstatusPago($idpago,$estatus);
-					}
-				}
-
-			}
-			
-		}
-	}*/
+	
 	}
 }
 
@@ -189,52 +155,13 @@ try
 
 
 		
-	if ($usuariosquitados!='') {
-		for ($i=0; $i < count($usuariosparaquitar); $i++) { 
 
-			$idusuariocancelado=$usuariosparaquitar[$i];
-
-			$serviciosasignados->idusuario=$idusuariocancelado;
-
-			$serviciosasignados->idservicio=$idservicioasignar;
-		
-		    $consulta=$serviciosasignados->BuscarAsignacion();
-
-		  
-		if (count($consulta)>0) {
-			$serviciosasignados->motivocancelacion="cancelado desde la app por usuario ".$iduser;
-			$serviciosasignados->cancelado=1;
-			$serviciosasignados->CambiarEstatusServicio2($idusuariocancelado);
-
-			if ($obtenerusuarioscancelacion[$i]->aceptarterminos==1) {
-				$pagos=$serviciosasignados->BuscarPagos();
-
-				for ($j=0; $j < count($pagos); $j++) { 
-					
-					if ($pagos[$j]->pagado==1 && $pagos[$j]->estatus==2) {
-						$idpago=$pagos[$j]->idpago;
-						
-						if($obtenerdatosservicio[0]->reembolso==1){
-							$estatus=4;
-						
-							}else{
-								$estatus=5;
-							}
-						
-						$serviciosasignados->CambiarEstatusPago($idpago,$estatus);
-					}
-				}
-
-			}
-		  }
-			
-		}
-	}
 	
 	$db->commit();
 
 	$respuesta['respuesta']=1;
 	$respuesta['usuariosnoagregados']=$usuariosnoagregados;
+	$respuesta['idusuarios_servicio']=$serviciosasignados->idusuarios_servicios;
 
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);

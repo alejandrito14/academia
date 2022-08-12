@@ -33,8 +33,9 @@ try
 	$lo->db = $db;
 
 	$lo->estatus=$_POST['estatus'];
-	
-	$obtenerservicios=$lo->ObtenerServicios();
+	 
+	$obtenerservicios=$lo->ObtenerServiciosAdmin();
+
 
 	for ($i=0; $i <count($obtenerservicios) ; $i++) { 
 		

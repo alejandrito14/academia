@@ -136,7 +136,7 @@ class Usuarios
 	public function GuardarUsuarioTutorado()
 	{
 		$sql = "INSERT INTO usuarios (nombre,paterno,materno,fechanacimiento,sexo,celular,email,usuario,tipo)
-        VALUES ('$this->nombre','$this->paterno','$this->materno','$this->fecha','$this->sexo','$this->celular','$this->usuario','$this->usuario','$this->tipo')";
+        VALUES ('$this->nombre','$this->paterno','$this->materno','$this->fecha','$this->sexo','$this->celular','$this->email','$this->usuario','$this->tipo')";
 
 
         $result  = $this->db->consulta($sql);

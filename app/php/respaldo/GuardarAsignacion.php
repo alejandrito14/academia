@@ -8,7 +8,6 @@ require_once("clases/conexcion.php");
 require_once("clases/class.Funciones.php");
 require_once("clases/class.ServiciosAsignados.php");
 require_once("clases/class.Usuarios.php");
-require_once("clases/class.Servicios.php");
 
 
 try
@@ -20,31 +19,23 @@ try
 	$serviciosasignados = new ServiciosAsignados();
 	$usuarios=new Usuarios();
 	$usuarios->db=$db;
-	$emp=new Servicios();
-	$emp->db=$db;
 	$db->begin();
 
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
 	$serviciosasignados->db=$db;
-	$idusuariosparaasignar=$_POST['usuariosagregados'];
-	$idusuarios=explode(',', $_POST['usuariosagregados']);
+	$idusuariosparaasignar=$_POST['idusuarios'];
+	$idusuarios=explode(',', $_POST['idusuarios']);
 	$idservicio=$_POST['idservicio'];
 	$iduser=$_POST['id_user'];
 	$serviciosasignados->idservicio=$idservicio;
 	$obtenerdatosservicio=$serviciosasignados->ObtenerServicio();
-	$usuariosquitados=$_POST['usuariosquitados'];
-	$usuariosparaquitar=explode(',', $_POST['usuariosquitados']);
 	$idservicioasignar=$idservicio;
 	$usuariosnoagregados=array();
 	
 	/*$obtenerhorariosservicio=$serviciosasignados->ObtenerHorariosServicioZona();*/
 
-			$emp->idservicio=$idservicio;
-			$infoservicio=$emp->ObtenerServicio();
-	
-	if ($idusuariosparaasignar!='') {
-		# code...
+
 	
 	for ($i=0; $i < count($idusuarios); $i++) { 
 		$serviciosasignados->idusuario=$idusuarios[$i];
@@ -54,13 +45,10 @@ try
 			$serviciosasignados->idservicio=$obtenersignaciones[$j]->idservicio;
 
 			$obtenerHorarios=$serviciosasignados->ObtenerHorariosServicioZona();
-
 			
-
-			$servicioscruzados=array();
 			$secruza=0;
 			for ($k=0; $k <count($obtenerHorarios) ; $k++) { 
-				$idserviciocruzado=$obtenerHorarios[$k]->idservicio;
+				
 				$fecha=$obtenerHorarios[$k]->fecha;
 				$horainicial=$obtenerHorarios[$k]->horainicial;
 				$horafinal=$obtenerHorarios[$k]->horafinal;
@@ -72,29 +60,13 @@ try
 
 				if (count($cruzahorario)) {
 					$secruza++;
-
-					$emp->idservicio=$idserviciocruzado;
-					$infoserviciocruzado=$emp->ObtenerServicio();
-
-					if (!$serviciosasignados->BuscadorArray($servicioscruzados,$infoserviciocruzado[0]->idservicio)) {
-
-						array_push($servicioscruzados,  $infoserviciocruzado[0]);
-					}
-					
-					
 				}
 
 			}
-
+			var_dump($secruza);die();
 			if ($secruza>0) {
 				$usuarios->idusuarios=$idusuarios[$i];
 				$obtenerUsuario=$usuarios->ObtenerUsuario();
-
-				$obtenerUsuario[0]->servicio=$infoservicio[0]->titulo;
-				$obtenerUsuario[0]->idservicio=$infoservicio[0]->idservicio;
-
-				//var_dump($servicioscruzados);die();
-				$obtenerUsuario[0]->servicioscruzados=$servicioscruzados;
 				
 				array_push($usuariosnoagregados,$obtenerUsuario[0]);
 				//unset($idusuarios[$i]);
@@ -106,7 +78,6 @@ try
 
 
 	}
-
 		$eliminararray=array();
 	for ($j=0; $j <count($usuariosnoagregados) ; $j++) { 
 		for ($i=0; $i <count($idusuarios); $i++) { 
@@ -148,7 +119,7 @@ try
 
 	$obtenerusuarioscancelacion=$serviciosasignados->BuscarAsignacionCancelacion($idusuariosparaasignar);
 
-	/*if (count($obtenerusuarioscancelacion)>0) {
+	if (count($obtenerusuarioscancelacion)>0) {
 		for ($i=0; $i < count($obtenerusuarioscancelacion); $i++) { 
 
 			$idusuariocancelado=$obtenerusuarioscancelacion[$i]->idusuarios;
@@ -181,56 +152,8 @@ try
 			}
 			
 		}
-	}*/
 	}
-}
-
-
-
-
-		
-	if ($usuariosquitados!='') {
-		for ($i=0; $i < count($usuariosparaquitar); $i++) { 
-
-			$idusuariocancelado=$usuariosparaquitar[$i];
-
-			$serviciosasignados->idusuario=$idusuariocancelado;
-
-			$serviciosasignados->idservicio=$idservicioasignar;
-		
-		    $consulta=$serviciosasignados->BuscarAsignacion();
-
-		  
-		if (count($consulta)>0) {
-			$serviciosasignados->motivocancelacion="cancelado desde la app por usuario ".$iduser;
-			$serviciosasignados->cancelado=1;
-			$serviciosasignados->CambiarEstatusServicio2($idusuariocancelado);
-
-			if ($obtenerusuarioscancelacion[$i]->aceptarterminos==1) {
-				$pagos=$serviciosasignados->BuscarPagos();
-
-				for ($j=0; $j < count($pagos); $j++) { 
-					
-					if ($pagos[$j]->pagado==1 && $pagos[$j]->estatus==2) {
-						$idpago=$pagos[$j]->idpago;
-						
-						if($obtenerdatosservicio[0]->reembolso==1){
-							$estatus=4;
-						
-							}else{
-								$estatus=5;
-							}
-						
-						$serviciosasignados->CambiarEstatusPago($idpago,$estatus);
-					}
-				}
-
-			}
-		  }
-			
-		}
 	}
-	
 	$db->commit();
 
 	$respuesta['respuesta']=1;

@@ -18,12 +18,6 @@ class ClienteStripe
 	public $fechaTransaccion;
 	public $fechaactual;
 	public $idintento;
-	public $comision;
-	public $comisiontotal;
-	public $comisionmonto;
-	public $impuestototal;
-	public $subtotalsincomision;
-	public $total;
 	
     public function ObtenerID()
 	{
@@ -74,8 +68,8 @@ class ClienteStripe
 	public function RegistrarIntentoPago()
 	{
 		
-		$sql = "INSERT INTO pagostripe (idtransaccion, monto, digitostarjeta, idusuarios, estatus, fechatransaccion,comision,comisiontotal,comisionmonto,impuestototal,subtotalsincomision,total,impuesto) 
-		VALUES ('$this->idTransaccion',$this->monto,'$this->digitosTarjeta',$this->idusuarios,'$this->estatus','$this->fechaTransaccion','$this->comision','$this->comisiontotal','$this->comisionmonto','$this->impuestototal','$this->subtotalsincomision','$this->total','$this->impuesto')";	
+		$sql = "INSERT INTO pagostripe (idtransaccion, idnotaremision, monto, digitostarjeta, idusuarios, estatus, fechatransaccion) 
+		VALUES ('$this->idTransaccion',$this->idNotaRemision,$this->monto,'$this->digitosTarjeta',$this->idusuarios,'$this->estatus','$this->fechaTransaccion')";	
 		
 		$result = $this->db->consulta($sql);
 		$this->idintento=$this->db->id_ultimo();
@@ -133,8 +127,8 @@ class ClienteStripe
 
 	public function RegistrarIntentoPagoFallido()
 	{
-		$sql = "INSERT INTO intentospagosfallidos (idtransaccion, monto, digitostarjeta, idusuarios, estatus, fechatransaccion) 
-		VALUES ('$this->idTransaccion',$this->monto,'$this->digitosTarjeta',$this->idusuarios,'$this->estatus','$this->fechaTransaccion')";	
+		$sql = "INSERT INTO intentospagosfallidos (idtransaccion, idnotaremision, monto, digitostarjeta, idusuarios, estatus, fechatransaccion) 
+		VALUES ('$this->idTransaccion',$this->idNotaRemision,$this->monto,'$this->digitosTarjeta',$this->idusuarios,'$this->estatus','$this->fechaTransaccion')";	
 		
 		$result = $this->db->consulta($sql);
 	}
@@ -144,6 +138,7 @@ class ClienteStripe
 		$sql="
 			UPDATE pagostripe SET 
 			idtransaccion = '$this->idTransaccion',
+			 idnotaremision = '$this->idNotaRemision',
 			 monto = $this->monto, 
 			 digitostarjeta = '$this->digitosTarjeta', 
 			 idusuarios = $this->idusuarios, 
