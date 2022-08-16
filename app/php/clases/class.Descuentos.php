@@ -20,6 +20,20 @@ class Descuentos
 	public $montoadescontar;
 	public $idpago;
 
+	public $txtnumeroservicio;
+	public $portiposervicio;
+	public $porservicio;
+	public $porniveljerarquico;
+	public $inppadre;
+	public $inphijo;
+	public $inpnieto;
+	public $modalidaddescuento;
+	public $txtdiascaducidad;
+	public $porclientenoasociado;
+	public $v_acumulardescuento;
+	//public $modalidaddescuento;
+	/*public $txtdiascaducidad;
+	public $porclientenoasociado;*/
 
 	public function ObtenerTodosdescuentos()
 	{
@@ -57,6 +71,17 @@ class Descuentos
 		$resp=$this->db->consulta($sql);
 		$this->iddescuento=$this->db->id_ultimo();
 	}
+
+/*public function Guardardescuento()
+	{
+		$sql="
+			INSERT INTO descuento(titulo, tipo, monto, convigencia, estatus,porcantidadservicio,portiposervicio,porservicio,porniveljerarquico,inppadre,inphijo,inpnieto,modalidaddescuento,txtdiascaducidad,porclientenoasociado,acumuladescuento) VALUES ('$this->titulo', '$this->tipo','$this->monto','$this->convigencia', '$this->estatus','$this->txtnumeroservicio','$this->portiposervicio','$this->porservicio','$this->porniveljerarquico','$this->inppadre','$this->inphijo','$this->inpnieto','$this->modalidaddescuento','$this->txtdiascaducidad','$this->porclientenoasociado','$this->v_acumulardescuento')";
+			echo $sql;die();
+		$resp=$this->db->consulta($sql);
+		$this->iddescuento=$this->db->id_ultimo();
+	}*/
+
+
 
 	public function Modificardescuento()
 	{
