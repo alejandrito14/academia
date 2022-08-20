@@ -33,11 +33,11 @@ function PintarChatServicios(respuesta) {
 		for (var i = 0; i <respuesta.length; i++) {
 				if (respuesta[i].ultimomensaje.foto!='' && respuesta[i].ultimomensaje.foto!=null) {
 
-				urlimagen=urlimagenes+`upload/perfil/`+respuesta[i].ultimomensaje.foto;
+				urlimagen=urlphp+`upload/perfil/`+respuesta[i].ultimomensaje.foto;
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
 			}else{
 
-				urlimagen=localStorage.getItem('logo');
+        urlimagen="img/icon-usuario.png";
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
 			}
 			

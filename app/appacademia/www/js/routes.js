@@ -52,6 +52,14 @@ var routes = [
     ]
   },
 
+  {
+    path:'/serviciosactivoscoach/',
+    componentUrl: './pages/serviciosactivoscoach.html',
+    name: 'serviciosactivoscoach',
+    routes: [
+    ]
+  },
+
   // notification list
   {
     path: '/notificaciones/',
@@ -263,8 +271,10 @@ var routes = [
     path: '/detalleservicioactivo/',
     componentUrl: './pages/detalleservicioactivo.html',
   },
-   
-
+  { 
+    path: '/detalleservicioactivocoach/',
+    componentUrl: './pages/detalleservicioactivocoach.html',
+  },
    {
     
     path: '/calendarioadmin/',

@@ -44,6 +44,22 @@ var routes = [
     ]
   },
 
+   {
+    path:'/serviciosactivos/',
+    componentUrl: './pages/serviciosactivos.html',
+    name: 'serviciosactivos',
+    routes: [
+    ]
+  },
+
+  {
+    path:'/serviciosactivoscoach/',
+    componentUrl: './pages/serviciosactivoscoach.html',
+    name: 'serviciosactivoscoach',
+    routes: [
+    ]
+  },
+
   // notification list
   {
     path: '/notificaciones/',
@@ -249,6 +265,15 @@ var routes = [
    {
     path: '/detalleservicioadmin/',
     componentUrl: './pages/detalleservicioadmin.html',
+  },
+  
+  { 
+    path: '/detalleservicioactivo/',
+    componentUrl: './pages/detalleservicioactivo.html',
+  },
+  { 
+    path: '/detalleservicioactivocoach/',
+    componentUrl: './pages/detalleservicioactivocoach.html',
   },
    {
     

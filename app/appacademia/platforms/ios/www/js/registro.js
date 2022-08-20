@@ -83,6 +83,11 @@ function Registrar() {
 
 		bandera=0;
 	}
+	
+	if (v_sexo==0 || v_sexo==null) {
+		sexo1='Campo requerido';
+		bandera=0;
+	}
 
 
 	/*if (v_telefono=='') {
@@ -289,6 +294,14 @@ function Registrar() {
 			$(".lifechanacimiento").addClass('is-invalid');
 
 		}
+
+		if (v_sexo==0 || v_sexo==null) {
+				sexo1='Campo requerido';
+				bandera=0;
+
+			$(".lisexo").addClass('is-invalid');
+
+			}
 		/*if (v_telefono==""){
 			telefono='Campo requerido';
 			$("#lbltelefono").html(telefono);
@@ -2511,7 +2524,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 		  
 		    <div class=" " >
            <div style="margin-left: 1em;" class="col-85 medium-50 large-40 margin-left-auto margin-right-auto align-self-center  padding-vertical">
-          <h1 style=""> Nuevo <span style="color: #0abe68;">Asociado</span>
+          <h1 style=""> Nuevo <span style="color: #0abe68;">asociado</span>
           </h1>
 
           
@@ -2573,6 +2586,14 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
                               <input type="hidden" name="v_idtu" id="v_idtu" class="input-with-value" />
 
               <div class="list form-list no-margin margin-bottom">
+              	<div>
+	            <div class="item-content lipoliticas">
+		            <div class="item-inner">
+		            <input type="checkbox" id="inputtutor">Soy su tutor
+		            </div>
+	            </div>
+            </div>
+
                <ul>
 
               <li class="item-content item-input item-input-with-value is-valid licelulartu">
@@ -2679,13 +2700,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
             </ul>
 
-            <div>
-	            <div class="item-content lipoliticas">
-		            <div class="item-inner">
-		            <input type="checkbox" id="inputtutor">Soy su tutor
-		            </div>
-	            </div>
-            </div>
+            
 
 
             </div>
@@ -4159,6 +4174,8 @@ function GuardarDeporte(v_iddepo) {
 	var idnivel=$("#v_nivel").val();
 	var txtnivel=$('#v_nivel option:selected').html();
 
+
+	if (iddeporte>0 && idnivel>0) {
 	var objeto={
 		iddeporte:iddeporte,
 		idnivel:idnivel,
@@ -4198,6 +4215,19 @@ function GuardarDeporte(v_iddepo) {
 	dynamicSheet3.close();
 
 	MostrarDeportes();
+	}else{
+
+			var resp="";
+		if (iddeporte==0) {
+			resp+='Seleccionar deporte<br>';
+		}
+
+		if (idnivel==0) {
+			resp+='Seleccionar nivel<br>';
+		}
+
+		alerta(resp,'');
+	}
 }
 
 function MostrarDeportes() {

@@ -30,7 +30,7 @@
       <!-- welcome user -->
       <div class="row margin-bottom">
         <div class="col-auto">
-          <div class="avatar avatar-50 shadow rounded-10">
+          <div class="avatar avatar-80 shadow rounded-10">
             <img class="imagencliente2" src="img/user1.jpg" alt="" id="imgperfil" />
           </div>
         </div>
@@ -168,10 +168,20 @@
 
 
       <!-- Transactions -->
-     <div class="row margin-bottom padding-vertical">
+     <div class="row margin-bottom " style="padding-top: 1em;">
         <div class="col-100">
           <button class="button button-fill button-large color-theme button-raised margin-bottom-half btnmisservicios" onclick="MisServiciosAlumno()">
             <i class="bi bi-calendar-check margin-horizontal-half"></i>Mis servicios
+          </button>
+        </div>
+     
+      </div>
+
+
+       <div class="row margin-bottom divserviciosactivos" style="display: none;">
+        <div class="col-100">
+          <button class="button button-fill button-large color-theme button-raised margin-bottom-half btnserviciosactivos" onclick="ServiciosActivos()">
+            <i class="bi bi-calendar-check margin-horizontal-half"></i>Servicios Activos
           </button>
         </div>
      

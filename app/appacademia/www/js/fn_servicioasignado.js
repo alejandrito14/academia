@@ -471,7 +471,7 @@ function PintarParticipantes(respuesta) {
 
 			if (respuesta[i].foto!='' && respuesta[i].foto!=null && respuesta[i].foto!='null') {
 
-				urlimagen=urlimagenes+`upload/perfil/`+respuesta[i].foto;
+				urlimagen=urlphp+`upload/perfil/`+respuesta[i].foto;
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
 			}else{
 
@@ -1963,6 +1963,77 @@ function GuardarAsignacionServicio() {
 	});
 }
 
+
+function GuardarAsignacionServicioCoach() {
+	
+ app.dialog.confirm('','¿Está seguro  de realizar la acción?' , function () {
+
+	var pagina = "GuardarAsignacionServicio.php";
+	var id_user=localStorage.getItem('id_user');
+	var idservicio=localStorage.getItem('idservicio');
+	var idusuarios=id_user;
+	var datos="id_user="+id_user+"&idservicio="+idservicio+"&idusuarios="+idusuarios;
+	
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+			var respuesta=datos.respuesta;
+			if (datos.respuesta==1) {
+
+				var usuariosnoagregados=datos.usuariosnoagregados;
+
+					if (usuariosnoagregados.length > 0) {
+						var html="";
+						for (var i = 0; i <usuariosnoagregados.length; i++) {
+							html+=`<span>Usuario: `+usuariosnoagregados[i].usuario+`
+							no se pudo asignar, ya que se encuentra asignado a 
+							</span>`;
+
+
+							var serviciosasignados=usuariosnoagregados[i].servicioscruzados;
+			 				for (var j =0; j < serviciosasignados.length; j++) {
+			 					html+=`<p>`+serviciosasignados[j].titulo+`</p>`
+			 				}
+			 				html+=`</br>`;
+						}
+
+						alerta(html,'No se puede realizar la acción');
+					}else{
+
+					  alerta('','Se realizaron los cambios correctamente');
+
+					  		if (localStorage.getItem('idtipousuario')==5) {
+
+								var idusuarios_servicios=datos.idusuarios_servicio;
+							    localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
+
+							     GoToPage('detalleserviciocoach');
+
+							   }
+					}
+				
+		
+
+				  
+			}
+			
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+	});
+}
 function CancelarAsignacion() {
 
   if (localStorage.getItem('idtipousuario')==0) {

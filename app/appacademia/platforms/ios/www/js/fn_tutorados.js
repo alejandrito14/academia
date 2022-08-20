@@ -24,7 +24,7 @@ function GuardarTutoradoForm(idcontador) {
 	var v_parentescotu=$("#v_parentescotu").val();
 	var id_user=localStorage.getItem('id_user');
 	var v_idtu=$("#v_idtu").val();
-
+	var inputtutor=$("#inputtutor").is(':checked')?1:0;
 	
 
 	var msj="";
@@ -74,7 +74,7 @@ VerificarexisteCorreoTutorado(v_correotu,v_idtu).then(r => {
 
   
 
-	var datos="v_idtu="+v_idtu+"&v_nombretu="+v_nombretu+"&v_paternotu="+v_paternotu+"&v_maternotu="+v_maternotu+"&v_fechatu="+v_fechatu+"&v_sexotu="+v_sexotu+"&v_celulartu="+v_celulartu+"&v_correotu="+v_correotu+"&id_user="+id_user+"&v_parentescotu="+v_parentescotu;
+	var datos="v_idtu="+v_idtu+"&v_nombretu="+v_nombretu+"&v_paternotu="+v_paternotu+"&v_maternotu="+v_maternotu+"&v_fechatu="+v_fechatu+"&v_sexotu="+v_sexotu+"&v_celulartu="+v_celulartu+"&v_correotu="+v_correotu+"&id_user="+id_user+"&v_parentescotu="+v_parentescotu+"&inputtutor="+inputtutor;
 	var pagina = "registrotutorado.php";
 	
 		$.ajax({
@@ -376,7 +376,7 @@ function PintarTutorados(respuesta) {
     <div class="row margin-bottom-half"><div class="col">
 	    <p class="small text-muted no-margin-bottom">
 	    </p>
-	    <p>No tienes tutorados registrados</p>
+	    <p>No tienes asociados registrados</p>
 	    </div><div class="col-auto text-align-right">
 	    <p class="small text-muted no-margin-bottom"></p>
 	    	<p class="small"></p></div>

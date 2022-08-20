@@ -10,7 +10,7 @@
           "NSCameraUsageDescription": [
             {
               "xml": "<string>The application needs access to the camera to add an image to your user profile and official ife identification</string>",
-              "count": 3
+              "count": 10
             },
             {
               "xml": "<string>This app needs camera access</string>",
@@ -20,7 +20,7 @@
           "NSPhotoLibraryUsageDescription": [
             {
               "xml": "<string>The application needs access to the phone files to add an image to your user profile and official ife identification\n          </string>",
-              "count": 3
+              "count": 10
             },
             {
               "xml": "<string>This app needs read/write-access photo library access</string>",
@@ -30,19 +30,19 @@
           "NSLocationWhenInUseUsageDescription": [
             {
               "xml": "<string>\n          The application needs access to your approximate location, to choose the zip code\n        </string>",
-              "count": 3
+              "count": 10
             }
           ],
           "NSLocationAlwaysUsageDescription": [
             {
               "xml": "<string> The application needs access to your approximate location, to choose the zip code</string>",
-              "count": 3
+              "count": 10
             }
           ],
           "CFBundleAllowMixedLocalizations": [
             {
               "xml": "<true />",
-              "count": 3
+              "count": 10
             }
           ],
           "UIBackgroundModes": [

@@ -32,7 +32,7 @@ function PintarListadoComentarios(resultado) {
 		for (var i = 0; i <resultado.length; i++) {
 					 if (resultado[i].foto!='' && resultado[i].foto!=null  && resultado[i].foto!='null') {
 
-        urlimagen=urlimagenes+`upload/perfil/`+resultado[i].foto;
+        urlimagen=urlphp+`upload/perfil/`+resultado[i].foto;
         imagen='<img src="'+urlimagen+'" alt=""  style=""/>';
       }else{
 

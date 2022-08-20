@@ -96,7 +96,7 @@ $(document).ready(function() {
   
 
 
-var produccion = 0;
+var produccion = 1;
 
  
 
@@ -288,7 +288,7 @@ $$(document).on('page:init', '.page[data-name="splash"]', function (e) {
   setTimeout(function () {
     $$('.loader-wrap').hide();
 
-  }, 1000);
+  }, 100);
 
 
 
@@ -343,7 +343,7 @@ if (session==1) {
 
   }
 
-  }, 6000);
+  }, 5000);
 });
 
 $$(document).on('page:init', '.page[data-name="thankyouorder"]', function (e) {
@@ -1225,6 +1225,21 @@ $$(document).on('page:init', '.page[data-name="detalleservicioactivo"]', functio
  */
 });
 
+$$(document).on('page:init', '.page[data-name="detalleservicioactivocoach"]', function (e) {
+  
+  //regresohome();
+  $(".regreso").attr('href','/serviciosactivoscoach/');
+
+  ObtenerServicioAdmin();
+  ObtenerParticipantesAlumnosAdmin();
+
+  $$("#btnasignaralumno").attr('onclick','GuardarAsignacionServicioCoach()');
+  $$("#btncalendario").attr('onclick','FechasServicio()');
+  Verificarcantidadhorarios();
+
+
+});
+
 $$(document).on('page:init', '.page[data-name="asistenciaservicio"]', function (e) {
   
   $(".regreso").attr('href','/detalleserviciocoach/');
@@ -1558,6 +1573,13 @@ $$(document).on('page:init', '.page[data-name="serviciosactivos"]', function (e)
   
   regresohome();
   ObtenerServiciosActivos();
+    
+});
+
+$$(document).on('page:init', '.page[data-name="serviciosactivoscoach"]', function (e) {
+  
+  regresohome();
+  ObtenerServiciosActivosCoach();
     
 });
 

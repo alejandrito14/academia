@@ -158,10 +158,12 @@ var pagosarealizar=[];
 function HabilitarBotonPago() {
 	var contar=0;
 	var suma=0;
+    pagosarealizar=[];
 	$( ".seleccionar" ).each(function( index ) {
-		pagosarealizar=[];
+	
 		 if($(this ).is(':checked')){
 		 	var id=$(this).attr('id');
+     
 		 	var dividir=id.split('_')[1];
 		 	var contador=$("#val_"+dividir).val();
 		 	suma=parseFloat(suma)+parseFloat(contador);
@@ -174,7 +176,6 @@ function HabilitarBotonPago() {
 		 		monto:contador
 		 	};
 		 	pagosarealizar.push(objeto);
-		 	localStorage.setItem('pagos',JSON.stringify(pagosarealizar));
 
 		 }
 	
@@ -193,6 +194,9 @@ function HabilitarBotonPago() {
 		$(".cantidad").text(formato_numero(suma,2,'.',','));
 		localStorage.setItem('montopago',suma);
 	}
+
+  localStorage.setItem('pagos',JSON.stringify(pagosarealizar));
+
 }
 
 function ResumenPago() {
@@ -1358,7 +1362,6 @@ function CrearModalEspera() {
                   <div id="" class="mensajeerror" style="font-size:20px;font-weight:bold;display:none;" >Error en la conexción,vuelva a intentar.</div>
                   <div id="" class="mensajeexito" style="font-size:20px;font-weight:bold;display:none;" >Se realizó correctamente</div>
 
-                <div style="padding-top:1em;"></div>
 
 
                 <span class="dialog-button dialog-button-bold butonok" onclick="VerPagos()" style="display:none;">OK</span>
@@ -1366,15 +1369,12 @@ function CrearModalEspera() {
                 <span class="dialog-button dialog-button-bold butoerror" onclick="CerrarEspera()" style="display:none;">OK</span>
 
 
-                  <div style="padding-top:1em;"></div>
                   <div style="color:red;font-size:20px;"></div>
-                 <div style="padding-top:1em;"></div>
 
                      
                       
                 </div>
 
-                    <div style="padding-top:2em;"></div>
 
 
                   </div>

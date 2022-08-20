@@ -118,25 +118,25 @@ function ObtenerServicioAdmin() {
 
 
 				$("#permisoasignaralumno").css('display','none');
-			if (localStorage.getItem('idtipousuario')==3) {
-				if (respuesta.abiertocliente == 1) {
+			if(localStorage.getItem('idtipousuario')==3) {
+				if(respuesta.abiertocliente == 1) {
 				$("#permisoasignaralumno").css('display','block');
 				}
 			}
-		if (localStorage.getItem('idtipousuario')==5) {
+		if(localStorage.getItem('idtipousuario')==5) {
 
-			if (respuesta.abiertocoach == 1) {
-				$("#permisoasignaralumno").css('display','block');
+				if(respuesta.abiertocoach == 1) {
+					$("#permisoasignaralumno").css('display','block');
+				}
 			}
-			}
-	if (localStorage.getItem('idtipousuario')==0) {
-
-			if (respuesta.abiertoadmin == 1) {
+	if(localStorage.getItem('idtipousuario')==0) {
+	
+			if(respuesta.abiertoadmin == 1) {
 				$("#permisoasignaralumno").css('display','block');
 			}
 		}
 			
-			if (respuesta.controlasistencia==1) {
+			if(respuesta.controlasistencia==1) {
 				
 				$(".divasistencia").css('display','block');
 

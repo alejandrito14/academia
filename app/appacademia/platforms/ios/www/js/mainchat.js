@@ -356,7 +356,7 @@ function PintarMensaje(data) {
   
 
       var html='<div class="message message-received message-first message-last message-tail" >'
-      html+='  <div class="message-avatar" style="background-image:url(img/iconosoporte.jpg);margin-right:0px;">'
+      html+='  <div class="message-avatar" style="background-image:url(img/icon-usuario.png);margin-right:0px;">'
       html+='</div>'
       html+='<div class="message-content" style="padding-left:2px;">'
       html+='<div class="message-name">'+data.nombre+'</div>'
@@ -463,7 +463,7 @@ function CargarSoportesAnteriores() {
               }else{
               html+=' onclick="MenuOpciones('+mensajes[i].idmensaje+')">'
               }
-              html+=' <div class="message-avatar" style="background-image:url(img/iconousuario.png)"> '
+              html+=' <div class="message-avatar" style="background-image:url(img/icon-usuario.png)"> '
               html+='    </div> '
               html+='<div class="message-content" style="padding-left:2px;">'
               html+='<div class="message-name">'
@@ -491,7 +491,7 @@ function CargarSoportesAnteriores() {
             }else{
 
             html+=' <div class="message message-received message-first message-last message-tail">'
-            html+='  <div class="message-avatar" style="background-image:url(img/iconosoporte.jpg);margin-right:0px;">'
+            html+='  <div class="message-avatar" style="background-image:url(img/icon-usuario.png);margin-right:0px;">'
             html+='  </div>'
             html+=' <div class="message-content" style="padding-left:2px;">'
             html+=' <div class="message-name">'+mensajes[i].soporte+'</div>'
@@ -574,7 +574,7 @@ function CargarSoportesAnteriores() {
 
 
             var html=' <div class="message message-received message-first message-last message-tail">'
-            html+='  <div class="message-avatar" style="background-image:url(img/iconosoporte.jpg);margin-right:0px;">'
+            html+='  <div class="message-avatar" style="background-image:url(img/icon-usuario.png);margin-right:0px;">'
             html+='  </div>'
             html+=' <div class="message-content" style="padding-left:2px;">'
             html+=' <div class="message-name">Soporte</div>'
@@ -584,7 +584,7 @@ function CargarSoportesAnteriores() {
             html+='  <div class="message-text-header">'
             html+='  </div>'
             html+='  <div class="message-text">'
-            html+='Bienvenido al chat de soporte'
+            html+='Bienvenido al chat '
             
             html+='</div>'
             html+='  <div class="message-text-footer">'

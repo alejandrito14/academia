@@ -640,7 +640,7 @@ function GuardarDatosSalud() {
 
 
 	if (bandera==1) {
-		var v_id=$("#v_id").val();
+		var v_id=$("#v_idsalud").val();
 		var idusuario=localStorage.getItem('id_user');
 		var datos="idusuario="+idusuario+"&v_id="+v_id+"&v_estatura="+estatura+"&v_peso="+peso+"&v_patologia="+patologia+"&v_alergia="+alergia+"&v_cirugia="+cirugia+"&v_ortopedico="+ortopedico+"&v_medicamento="+medicamento+"&v_inputleido="+inputleido+"&v_inputleido2="+inputleido2;
 			var pagina = "GuardarDatosSalud.php";
@@ -735,8 +735,8 @@ function Cargardatossalud() {
 }
 
 function Pintardatossalud(respuesta) {
-
-	$("#v_id").val(respuesta.idusuariodatosalud);
+	
+	$("#v_idsalud").val(respuesta.idusuariodatosalud);
 	$("#v_estatura").val(respuesta.estatura);
 	$("#v_peso").val(respuesta.peso);
 	$("#v_patologias").val(respuesta.patologias);

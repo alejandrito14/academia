@@ -358,6 +358,8 @@ function SetLastCard(cardid) {
       async: false,
       success: function (datos) {
 
+        $("#btnpagarresumen").attr('disabled',false);
+
       }, error: function (XMLHttpRequest, textStatus, errorThrown) {
           var error;
           if (XMLHttpRequest.status === 404) error = "Pagina no existe " + pagina + " " + XMLHttpRequest.status;// display some page not found error 
