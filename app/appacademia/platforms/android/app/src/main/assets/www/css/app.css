@@ -717,5 +717,18 @@ z-index:0;
 
 .calendar-day-selected .calendar-day-number{
   color:white;
-  background:red;
+  background:red!important;
+}
+.diaactual{
+  background: #46b2e2!important;
+  color:white!important;
+}
+.badge1{
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    float: right;
+    top: 2px;
+    margin-top: 0.3em;
+  
 }

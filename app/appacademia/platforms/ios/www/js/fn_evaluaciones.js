@@ -32,7 +32,7 @@ function PintarParticipantesAlumnosEvaluacion(respuesta) {
 		var html="";
 		for (var i =0; i < respuesta.length; i++) {
 
-			if (respuesta[i].foto!='' && respuesta[i].foto!=null) {
+			if (respuesta[i].foto!='' && respuesta[i].foto!=null && respuesta[i].foto!='null') {
 
 				urlimagen=urlphp+`upload/perfil/`+respuesta[i].foto;
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';

@@ -72,6 +72,13 @@ var routes = [
     componentUrl: './pages/verificacion.html',
 
   },
+    // nuevo servicio 
+  {
+    path: '/nuevoservicio/',
+    componentUrl: './pages/nuevoservicio.html',
+
+  },
+
 
   //cambiocontra
 
@@ -133,6 +140,7 @@ var routes = [
     path: '/settings/',
     url: './pages/settings.html',
   },
+
 
 
   // notifications
@@ -357,6 +365,11 @@ var routes = [
   {
     path:'/listadopagos/',
     componentUrl: './pages/listadopagos.html',
+  },
+
+   {
+    path:'/listadopagospagados/',
+    componentUrl: './pages/listadopagospagados.html',
   },
  {
     path:'/resumenpago/',

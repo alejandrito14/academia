@@ -46,7 +46,7 @@ function CargarFechas() {
       var monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
       calendarInline = app.calendar.create({
         containerEl: '#demo-calendar',
-        weekHeader: false,
+        weekHeader: true,
          events: eventos,
         firstDay:0,
 
@@ -89,7 +89,7 @@ function CargarFechas() {
             });
 
 
- 			$(".calendar-day-today .calendar-day-number").css('cssText', 'background: #46b2e2!important;color:white;');
+ 			$(".calendar-day-today .calendar-day-number").addClass('diaactual');
  			var fechaac=new Date();
           	var mes=(fechaac.getMonth() + 1)<10?'0'+(fechaac.getMonth() + 1):(fechaac.getMonth() + 1);
          	var dia=fechaac.getDate()<10?'0'+fechaac.getDate():fechaac.getDate();

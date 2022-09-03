@@ -99,18 +99,33 @@ function CargarDatosAdmin(argument) {
 
    
       classtipo='tipoadmin';
-  $$(".tipousuario").addClass(classtipo);
+    $$(".tipousuario").addClass(classtipo);
+    $$(".btnnuevoservicio").attr('onclick','NuevoServicio()');
+    $$(".btnreplicaservicio").attr('onclick','ReplicaServicio()');
 
 
-	ObtenerTableroAnuncios(0);
-	ObtenerEntradas(0);
-	//ObtenerServiciosAsignados();
-	Obtenerpublicidad(0);
-	ObtenerConfiguracion();
+
+ 	 const promesa=ObtenerTableroAnuncios(0)
+
+ 	 promesa.then(val =>{
+
+		ObtenerEntradas(0);
+
+		Obtenerpublicidad(0);
+		ObtenerConfiguracion();
+
+ 	 }).then(val =>{
+
+ 	 	$(".seleccionador").each(function(index) {
+				$(this).css('display','block');
+		});
+ 	 }).catch(err => { console.log(err) });
+
+	
+
 	//ObtenerServiciosRegistrados();
 	$$(".btnmisservicios").attr('onclick','MisServiciosAdmin()');
 	$$(".btndisponibilidad").attr('onclick','CargarCalendarioAdmin()');
-	$(".seleccionador").css('display','block');
 
 	socket=io.connect(globalsockect, { transports : ["websocket"],rejectUnauthorized: false });
     socket.on('connect', function (data) 
@@ -156,7 +171,7 @@ function CargarDatosCoach() {
   classtipo='tipocoach';
   $$(".tipousuario").addClass(classtipo);
     $$(".btnserviciosactivos").attr('onclick','ServiciosActivosCoach()');
-
+    $$(".btnnuevoservicio").attr('onclick','NuevoServicio()');
 
 	ObtenerTableroAnuncios(1);
 	ObtenerEntradas();
@@ -222,21 +237,21 @@ function MisServiciosAlumno() {
 }
 
 function ObtenerTableroAnuncios(estatus) {
+
+	return new Promise((resolve, reject) => {
+ 
 	var datos="estatus="+estatus;
 	var pagina = "ObtenerTableroAnuncios.php";
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
 		url: urlphp+pagina,
-		crossDomain: true,
-		cache: false,
-		async:false,
 		data:datos,
 		success: function(datos){
 
 			var respuesta=datos.respuesta;
 			PintarTableroAnuncios(respuesta);
-
+			resolve(respuesta);
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
 				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
@@ -245,6 +260,8 @@ function ObtenerTableroAnuncios(estatus) {
 					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
 			}
 		});
+
+	});
 }
 
 

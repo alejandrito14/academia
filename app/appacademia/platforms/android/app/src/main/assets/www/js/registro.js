@@ -2524,7 +2524,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 		  
 		    <div class=" " >
            <div style="margin-left: 1em;" class="col-85 medium-50 large-40 margin-left-auto margin-right-auto align-self-center  padding-vertical">
-          <h1 style=""> Nuevo <span style="color: #0abe68;">asociado</span>
+          <h1 style=""> Ingresa los <span style="color: #0abe68;">datos</span> del nuevo asociado
           </h1>
 
           
@@ -2584,12 +2584,24 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
     margin-left: 1em;">
             <form style="" >
                               <input type="hidden" name="v_idtu" id="v_idtu" class="input-with-value" />
+                              <input type="hidden" name="v_idusuario" id="v_idusuario" class="input-with-value" />
 
-              <div class="list form-list no-margin margin-bottom">
+              <div class="list form-list no-margin margin-bottom" >
               	<div>
-	            <div class="item-content lipoliticas">
-		            <div class="item-inner">
-		            <input type="checkbox" id="inputtutor">Soy su tutor
+	            <div class="item-content lipoliticas" >
+		            <div class="item-inner" style="    display: flex;justify-content: left;height: 50px;">
+		            <input type="checkbox" id="inputtutor">
+		            <span style="margin-left:1em;">Soy tutor</span>
+		            </div>
+	            </div>
+            </div>
+
+            <div class="list form-list no-margin margin-bottom" >
+              	<div>
+	            <div class="item-content lipoliticas" >
+		            <div class="item-inner" style="  display: flex;  justify-content: left;height: 50px;">
+		            <input type="checkbox" id="inputsincelular" onchange="SinCelular()">
+		            <span style="margin-left:1em;">Sin celular</span>
 		            </div>
 	            </div>
             </div>
@@ -2597,10 +2609,10 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
                <ul>
 
               <li class="item-content item-input item-input-with-value is-valid licelulartu">
-                  <div class="item-inner">
+                  <div class="item-inner" style="">
                   <div class="item-title item-floating-label">Celular</div>
                   <div class="item-input-wrap">
-                  <input type="text" name="v_celulartu" id="v_celulartu" class="input-with-value" onkeyup="ValidarCampo(this)" />
+                  <input type="text" name="v_celulartu" id="v_celulartu" class="input-with-value" onkeyup="ValidarCampo(this);BuscarUsuario();" />
                   <span class="input-clear-button" id="v_celulartu_1" style="display:none;"></span>
                 </div>
               </div>
@@ -2788,6 +2800,15 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 			$("#v_sexotu").attr('onfocus','Cambiar(this)');
 			$("#v_parentescotu").attr('onfocus','Cambiar(this)');
 			$("#v_correotu").attr('onfocus','Cambiar(this)');
+          	var fecha=new Date();
+		    var dia=fecha.getDate()<10?'0'+fecha.getDate():fecha.getDate();
+		    var mes=(fecha.getMonth() + 1)<10?'0'+(fecha.getMonth() + 1):(fecha.getMonth() + 1);
+		    var anio=fecha.getFullYear();
+		    var fechaactualdata=anio+'-'+ mes+'-'+dia;
+
+		    $("#v_fechatu").val(fechaactualdata);
+		  
+
           },
           opened: function (sheet) {
             console.log('Sheet opened');
@@ -2805,16 +2826,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
     			}
 
-    			/*$(".linombretu").css()
-				$(".lipaternotu").css()
-				$(".limaternotu").css()
-				$(".lifechanacimientotu").css()
-				$(".lisexotu").css()
-				$(".liparentescotu").css()*/
-				//$(".licelulartu").css('display','none')
-				//$(".licorreotu").css('display','none');
-
-    		
+    			
           },
 
           close:function () {
@@ -2829,7 +2841,6 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
 function ValidarCampo(elemento) {
 	var id=elemento.id;
-	console.log(id);
 	if($("#"+id).val().length>0){
 
 	  $("#"+id+'_1').css('display','block');
@@ -2839,6 +2850,17 @@ function ValidarCampo(elemento) {
 	  $("#"+id+'_1').css('display','none');
 
 	}
+}
+
+
+function SinCelular() {
+
+	if($("#inputsincelular").is(':checked')){
+		$("#v_celulartu").attr('disabled',true);
+	}else{
+		$("#v_celulartu").attr('disabled',false);
+	}
+	
 }
 
 function Siguientesdatos() {
@@ -3139,17 +3161,21 @@ function GuardarTutorado(idcontador) {
 	var v_parentescotu=$("#v_parentescotu").val();
 	var id_user=localStorage.getItem('id_user');
 	var inputsoytutor=$("#inputtutor").is(':checked')?1:0;
+	var v_idusuario=$("#v_idusuario").val();
+	var inputsincelular=$("#inputsincelular").is(':checked')?1:0;
 
 	var datos="v_nombretu="+v_nombretu+"&v_paternotu="+v_paternotu+"&v_maternotu="+v_maternotu+"&v_fechatu="+v_fechatu+"&v_sexotu="+v_sexotu+"&v_celulartu="+v_celulartu+"&v_correotu="+v_correotu+"&id_user="+id_user+"&v_parentescotu="+v_parentescotu;
 	var pagina = "registrotutorado.php";
 
 	var msj="";
 	var bandera=1;
-	
+if (inputsincelular==0) {
+
 	if (v_celulartu=='') {
 		celular='Campo requerido';
 		bandera=0;
 	}
+}
 
 	if (v_nombretu=='') {
 		nombre='Campo requerido';
@@ -3196,6 +3222,12 @@ function GuardarTutorado(idcontador) {
 		if (isValidDate(v_fechatu)==false) {
 			bandera=0;
 		}
+		if (idcontador=='-1') {
+			if (ValidarIdusuario(v_idusuario)) {
+
+				bandera=0;
+			}
+		}
 
 
 
@@ -3210,7 +3242,9 @@ function GuardarTutorado(idcontador) {
 			v_celulartu:v_celulartu,
 			v_correotu:v_correotu,
 			v_parentescotu:v_parentescotu,
-			inputsoytutor:inputsoytutor
+			inputsoytutor:inputsoytutor,
+			inputsincelular:inputsincelular,
+			v_idusuario:v_idusuario
 		};
 
 
@@ -3232,7 +3266,6 @@ function GuardarTutorado(idcontador) {
 			let producto="";
 			let conta=0;
 
-			console.log(tutorado);
 			encontrado=0;
 			objetoLS.forEach(function(productoLS, index){
 				if (conta==idcontador) {
@@ -3245,6 +3278,9 @@ function GuardarTutorado(idcontador) {
 					productoLS.v_fechatu=tutorado.v_fechatu;
 					productoLS.v_parentescotu=tutorado.v_parentescotu;
 					productoLS.inputsoytutor=tutorado.inputsoytutor;
+					productoLS.inputsincelular=tutorado.inputsincelular;
+					productoLS.v_idusuario=tutorado.v_idusuario;
+			
 					encontrado=1;
 				}
 				conta++;
@@ -3264,21 +3300,22 @@ function GuardarTutorado(idcontador) {
 
 	}else{
 
-
-		if (v_correotu=='') {
+		var bandera=1;
+		/*if (v_correotu=='') {
 			bandera=0;
 			$(".licorreotu").addClass('is-invalid');
 			$(".licorreotu").removeClass('is-valid');
-
-		}
-
+			console.log('aqui1');
+		}*/
+		if (inputsincelular==0) {
 		if (v_celulartu=='') {
 			celular='Campo requerido';
 			bandera=0;
 			$(".licelulartu").addClass('is-invalid');
 			$(".licelulartu").removeClass('is-valid');
-
+console.log('aqui2');
 		}
+	}
 
 		if (v_nombretu=='') {
 			nombre='Campo requerido';
@@ -3289,7 +3326,7 @@ function GuardarTutorado(idcontador) {
 			$(".linombretu").addClass('is-invalid');
 			$(".linombretu").removeClass('is-valid');
 
-
+console.log('aqui3');
 		}
 
 		
@@ -3301,6 +3338,7 @@ function GuardarTutorado(idcontador) {
 			bandera=0;
 			$(".lipaternotu").addClass('is-invalid');
 			$(".lipaternotu").removeClass('is-valid');
+		console.log('aqui4');
 		}
 
 		if (v_maternotu=='') {
@@ -3310,6 +3348,7 @@ function GuardarTutorado(idcontador) {
 			bandera=0;
 			$(".limaternotu").addClass('is-invalid');
 			$(".limaternotu").removeClass('is-valid');
+		console.log('aqui4');
 		}
 
 
@@ -3319,6 +3358,7 @@ function GuardarTutorado(idcontador) {
 
 			$(".lisexotu").addClass('is-invalid');
 			$(".lisexotu").removeClass('is-valid');
+	console.log('aqui5');
 		}
 
 		if (v_parentescotu==0) {
@@ -3327,13 +3367,14 @@ function GuardarTutorado(idcontador) {
 
 			$(".liparentescotu").addClass('is-invalid');
 			$(".liparentescotu").removeClass('is-valid');
+	console.log('aqui6');
 		}
 
 
 
 		if (isValidDate(v_fechatu)==false) {
 			bandera=0;
-
+console.log('aqui7');
 			$(".lifechanacimientotu").addClass('is-invalid');
 			$(".lifechanacimientotu").removeClass('is-valid');
 		}
@@ -3372,6 +3413,12 @@ function GuardarTutorado(idcontador) {
 				alerta('','Te falta por capturar una opción obligatoria');
 			}
 
+			if (idcontador=='-1') {
+			if (ValidarIdusuario(v_idusuario)) {
+
+				alerta('','El usuario ya se ha agregado');
+			}
+		}
 
 	}
 }
@@ -3463,7 +3510,7 @@ function ObtenerdatosRegistro() {
 	var pagina = "Obtenerdatospersonales.php";
 	var iduser=localStorage.getItem('id_user');
 	var datos="id_user="+iduser;
-
+	if (iduser!=null) {
 		$.ajax({
 		type: 'POST',
 		dataType: 'json',
@@ -3485,6 +3532,7 @@ function ObtenerdatosRegistro() {
 		}
 
 	});
+	}
 }
 
 function PintarDeportesUsuario(respuesta) {
@@ -3539,7 +3587,12 @@ function PintarDatosRegistro(datos) {
 	$("#v_paterno").val(datos.paterno);
 	$("#v_materno").val(datos.materno);
 	$("#v_sexo").val(datos.sexo);
-	$("#v_fecha").val(datos.fechanacimiento);
+
+	if (datos.fechanacimiento!='' && datos.fechanacimiento!=null &&datos.fechanacimiento!='null' ) {
+		$("#v_fecha").val(datos.fechanacimiento);
+
+	}
+	
 	$("#v_alias").val(datos.alias);
 	$("#v_correo").val(datos.email);
 
@@ -3944,7 +3997,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 		   							 	  <div class="block" style="margin-right:1em;margin-left:1em;">
 									    <div class="row " >
 							           <div style="margin-left: 1em;" class="col-85 medium-50 large-40 margin-left-auto margin-right-auto align-self-center  padding-vertical">
-							         	 <h1 style=""> Registrar <span style="color: #0abe68;">deporte</span>
+							         	 <h1 style=""> Ingresa tu <span style="color: #0abe68;">deporte</span> y nivel
 							         	 </h1>
 
 							          
@@ -4436,4 +4489,148 @@ function AbrirInfo() {
 		      notificationCallbackOnClose.open();
 
 	
+}
+
+function BuscarUsuario() {
+	var celularbuscar=$("#v_celulartu").val();
+	var iduser=localStorage.getItem('id_user');
+	var datos="id_user="+iduser+"&celularbuscar="+celularbuscar;
+	var pagina="ObtenerUsuarioCelular.php";
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: urlphp+pagina,
+			data: datos,
+			async:false,
+			success: function(resp){
+				var nombre=resp.nombre;
+				var paterno=resp.paterno;
+				var materno=resp.materno;
+				var fecha=resp.fechanacimiento;
+				var sexotu=resp.genero;
+				var v_idusuario=resp.id;
+				var esasociado=resp.esasociado;
+				var propio=resp.propio;
+				if (resp.resultado==1) {
+
+					if (esasociado==1) {
+
+						alerta('','El celular ya se encuentra asociado');
+						$("#v_celulartu").val('');
+
+					}
+
+					else if(propio==1) {
+
+						alerta('','El celular ya se encuentra registrado');
+							$("#v_celulartu").val('');
+
+					}else{
+
+
+				if (esasociado==0 && propio==0) {
+
+						$(".licelulartu").addClass('item-input-with-value');
+						$(".linombretu").addClass('item-input-with-value');
+						$(".lipaternotu").addClass('item-input-with-value');
+						$(".limaternotu").addClass('item-input-with-value');
+						$(".lifechanacimientotu").addClass('item-input-with-value');
+
+						$("#v_nombretu").val(nombre);
+						$("#v_paternotu").val(paterno);
+						$("#v_maternotu").val(materno);
+						$("#v_fechatu").val(fecha);
+						$("#v_sexotu").val(sexotu);
+						$("#v_idusuario").val(v_idusuario);	
+
+						$("#v_nombretu").css('color','gray');
+						$("#v_nombretu").css('color','gray');
+						$("#v_paternotu").css('color','gray');
+						$("#v_maternotu").css('color','gray');
+						$("#v_fechatu").css('color','gray');
+						$("#v_sexotu").css('color','gray');
+
+						$("#v_nombretu").attr('disabled',true);
+						$("#v_paternotu").attr('disabled',true);
+						$("#v_maternotu").attr('disabled',true);
+						$("#v_fechatu").attr('disabled',true);
+						$("#v_sexotu").prop('disabled','disabled');
+					}else{
+						$("#v_nombretu").val('');
+						$("#v_paternotu").val('');
+						$("#v_maternotu").val('');
+						$("#v_fechatu").val('');
+						$("#v_sexotu").val('');
+						$("#v_idusuario").val('');	
+						$("#v_celulartu").val('');
+
+						$("#v_nombretu").css('color','black');
+						$("#v_nombretu").css('color','black');
+						$("#v_paternotu").css('color','black');
+						$("#v_maternotu").css('color','black');
+						$("#v_fechatu").css('color','black');
+						$("#v_sexotu").css('color','black');
+
+						$("#v_nombretu").attr('disabled',false);
+						$("#v_paternotu").attr('disabled',false);
+						$("#v_maternotu").attr('disabled',false);
+						$("#v_fechatu").attr('disabled',false);
+						//$("#v_sexotu").removeAttr('disabled');
+
+
+					}
+				}
+				}else{
+
+					
+					if (esasociado==1) {
+
+						alerta('','El celular ya se encuentra asociado');
+						$("#v_celulartu").val('');
+
+					}
+
+					if (propio==1) {
+
+						alerta('','El celular ya se encuentra registrado');
+							$("#v_celulartu").val('');
+
+					}
+
+
+				}
+
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+					var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+					//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+				}
+		});
+}
+
+function ValidarIdusuario(idusuario) {
+		let objetoLS;
+		var encontrado=0;
+	  	objetoLS = obtenerObjetosLocalStorage();
+		objetoLS.forEach(function(productoLS, index){
+
+
+				if (productoLS.v_idusuario==idusuario) {
+					encontrado=1;
+					
+				}
+
+			});
+
+		if (encontrado==1) {
+			return true;
+		}else{
+			return false;
+		}
+
+			
 }

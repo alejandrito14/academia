@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
   <dict>
+    <key>CFBundleAllowMixedLocalizations</key>
+    <true/>
     <key>CFBundleDevelopmentRegion</key>
     <string>en_US</string>
     <key>CFBundleDisplayName</key>
@@ -20,31 +22,21 @@
     <string>1.0.1</string>
     <key>CFBundleSignature</key>
     <string>????</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>com.googleusercontent.apps.385871033894-9moen82h5ld4nc1n07sl5q5hpoi7s272</string>
+        </array>
+      </dict>
+    </array>
     <key>CFBundleVersion</key>
     <string>1.0.1</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
-    <key>NSMainNibFile</key>
-    <string/>
-    <key>NSMainNibFile~ipad</key>
-    <string/>
-    <key>UILaunchStoryboardName</key>
-    <string>CDVLaunchScreen</string>
-    <key>UIRequiresFullScreen</key>
-    <true/>
-    <key>UISupportedInterfaceOrientations</key>
-    <array>
-      <string>UIInterfaceOrientationPortrait</string>
-      <string>UIInterfaceOrientationLandscapeLeft</string>
-      <string>UIInterfaceOrientationLandscapeRight</string>
-    </array>
-    <key>UISupportedInterfaceOrientations~ipad</key>
-    <array>
-      <string>UIInterfaceOrientationPortrait</string>
-      <string>UIInterfaceOrientationLandscapeLeft</string>
-      <string>UIInterfaceOrientationPortraitUpsideDown</string>
-      <string>UIInterfaceOrientationLandscapeRight</string>
-    </array>
     <key>NSAppTransportSecurity</key>
     <dict>
       <key>NSExceptionDomains</key>
@@ -70,34 +62,43 @@
     </dict>
     <key>NSCameraUsageDescription</key>
     <string>This app needs camera access</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>This app needs read/write-access photo library access</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string> The application needs access to your approximate location, to choose the zip code</string>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>
           The application needs access to your approximate location, to choose the zip code
         </string>
-    <key>NSLocationAlwaysUsageDescription</key>
-    <string> The application needs access to your approximate location, to choose the zip code</string>
-    <key>CFBundleAllowMixedLocalizations</key>
-    <true/>
-    <key>UIBackgroundModes</key>
-    <array>
-      <string>remote-notification</string>
-    </array>
+    <key>NSMainNibFile</key>
+    <string/>
+    <key>NSMainNibFile~ipad</key>
+    <string/>
     <key>NSMicrophoneUsageDescription</key>
     <string>This app needs microphone access</string>
     <key>NSPhotoLibraryAddUsageDescription</key>
     <string>This app needs write-access to photo library</string>
-    <key>CFBundleURLTypes</key>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>This app needs read/write-access photo library access</string>
+    <key>UIBackgroundModes</key>
     <array>
-      <dict>
-        <key>CFBundleTypeRole</key>
-        <string>Editor</string>
-        <key>CFBundleURLSchemes</key>
-        <array>
-          <string>com.googleusercontent.apps.385871033894-9moen82h5ld4nc1n07sl5q5hpoi7s272</string>
-        </array>
-      </dict>
+      <string>remote-notification</string>
+    </array>
+    <key>UIInterfaceOrientation</key>
+    <array>
+      <string>UIInterfaceOrientationPortrait</string>
+    </array>
+    <key>UILaunchStoryboardName</key>
+    <string>CDVLaunchScreen</string>
+    <key>UIRequiresFullScreen</key>
+    <true/>
+    <key>UISupportedInterfaceOrientations</key>
+    <array>
+      <string>UIInterfaceOrientationPortrait</string>
+      <string>UIInterfaceOrientationPortraitUpsideDown</string>
+    </array>
+    <key>UISupportedInterfaceOrientations~ipad</key>
+    <array>
+      <string>UIInterfaceOrientationPortrait</string>
+      <string>UIInterfaceOrientationPortraitUpsideDown</string>
     </array>
   </dict>
 </plist>

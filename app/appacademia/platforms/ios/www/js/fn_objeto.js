@@ -354,12 +354,34 @@ function LlenarFormulario(producto,idcontador) {
 	$("#v_celulartu").val(producto.v_celulartu);
 	$("#v_correotu").val(producto.v_correotu);
 	$("#v_idtu").val(idcontador);
+	$("#v_idusuario").val(producto.v_idusuario);
 
 	if (producto.inputsoytutor==1) {
 		$("#inputtutor").attr('checked',true);
 	}
+
+	if (producto.inputsincelular==1) {
+		$("#inputtutor").attr('checked',true);
+	}
 	
 	ObtenerParentesco(producto.v_parentescotu);
+
+	if (producto.v_idusuario!='') {
+
+				$("#v_nombretu").css('color','gray');
+				$("#v_nombretu").css('color','gray');
+				$("#v_paternotu").css('color','gray');
+				$("#v_maternotu").css('color','gray');
+				$("#v_fechatu").css('color','gray');
+				$("#v_sexotu").css('color','gray');
+
+				$("#v_nombretu").attr('disabled',true);
+				$("#v_paternotu").attr('disabled',true);
+				$("#v_maternotu").attr('disabled',true);
+				$("#v_fechatu").attr('disabled',true);
+				$("#v_sexotu").prop('disabled','disabled');
+
+	}
 
 }
 

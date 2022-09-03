@@ -56,7 +56,7 @@ function Pintardatos(respuesta) {
 var contadorcontra=0;
 function Datosacceso() {
 	var iduser = localStorage.getItem("id_user");
-	var usuario= localStorage.getItem("correo");
+	var usuario= localStorage.getItem("usuario");
 	var pagina = "VerificarUsuarioContra.php";
 
 	//$("input[name='dialog-password']").attr('placeholder','Contraseña');

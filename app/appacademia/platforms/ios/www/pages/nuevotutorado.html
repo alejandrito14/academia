@@ -22,30 +22,49 @@
                          <div class="row ">
                           <div class="col-85 medium-50 large-40 margin-left-auto margin-right-auto align-self-center  padding-vertical">
                            
-                              <h1 style="" id="tituloventana"> Nuevo <span style="color: #0abe68;">asociado</span>
-                            </h1>
+                             <h1 style="" id="tituloventana"> Ingresa los <span style="color: #0abe68;">datos</span> del nuevo asociado
+                              </h1>
                       
                           </div>
                            
                         </div>
                         <div class="row">
 
-      <div class="col-85 medium-50 large-40 margin-left-auto margin-right-auto align-self-center text-align-center padding-vertical " id="formtutorados" style="">
+      <div class="col-85 medium-50 large-40 margin-left-auto margin-right-auto align-self-center text-align-center padding-vertical " id="formtutorados" style=""> 
             <form style="" >
               <input type="hidden" name="v_idtu" id="v_idtu" class="input-with-value" />
+             <input type="hidden" name="v_idusuario" id="v_idusuario" class="input-with-value" />
 
               <div class="list form-list no-margin margin-bottom">
 
                 <div>
               <div class="item-content lipoliticas">
-                 <div class="item-inner">
-                <input type="checkbox" id="inputtutor"/>Soy su tutor
+                 <div class="item-inner" style="  display: flex;  justify-content: left;height: 50px;">
+                <input type="checkbox" id="inputtutor"/><span style="margin-left:1em;">Soy su tutor</span>
                 </div>
               </div>
             </div>
 
+              <div class="item-content lipoliticas" >
+                <div class="item-inner" style="  display: flex;  justify-content: left;height: 50px;">
+                <input type="checkbox" id="inputsincelular" />
+                <span style="margin-left:1em;">Sin celular</span>
+                </div>
+              </div>
+          
+
                <ul>
 
+               <li class="item-content item-input item-input-with-value is-valid licelulartu">
+
+                  <div class="item-inner">
+                  <div class="item-title item-floating-label">Celular</div>
+                  <div class="item-input-wrap">
+                  <input type="text" name="v_celulartu" id="v_celulartu" class="input-with-value" />
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+              </li>
 
                 <li class="item-content item-input item-input-with-value is-valid linombretu">
                     <div class="item-inner">
@@ -119,21 +138,11 @@
               </div>
               </li>
 
-               <li class="item-content item-input item-input-with-value is-valid licelulartu">
-
-                  <div class="item-inner">
-                  <div class="item-title item-floating-label">Número de celular</div>
-                  <div class="item-input-wrap">
-                  <input type="text" name="v_celulartu" id="v_celulartu" class="input-with-value" />
-                  <span class="input-clear-button"></span>
-                </div>
-              </div>
-              </li>
 
               <div id="mensajecelular" style="color:red;"></div>
 
 
-               <li class="item-content item-input item-input-with-value is-valid licorreotu">
+               <li class="item-content item-input item-input-with-value is-valid licorreotu" style="display: none;">
 
                   <div class="item-inner">
                   <div class="item-title item-floating-label">Correo electrónico</div>

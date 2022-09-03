@@ -2365,3 +2365,12 @@ background: white;
   background: black;
   color: white;
 }
+.requerido{
+   border-bottom: 1px solid red!important;
+}
+.posicionblue{
+   border-bottom: 1px solid #007aff!important;
+}
+.requerido2{
+  color: red!important;
+}

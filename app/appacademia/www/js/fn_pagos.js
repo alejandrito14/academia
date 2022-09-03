@@ -61,6 +61,8 @@ function VerListadoPago() {
 	GoToPage('listadopagos');
 }
 
+
+
 function ObtenerTodosPagos() {
 
 	var pagina = "ObtenerTodosPagos.php";
@@ -301,6 +303,7 @@ function CalcularTotales() {
 	
   var totaldescuentos=0;
   for (var i = 0; i <descuentosaplicados.length; i++) {
+
     totaldescuentos=parseFloat(totaldescuentos)+parseFloat(descuentosaplicados[i].montoadescontar);
 
   }
@@ -1306,7 +1309,7 @@ function PintarDescuentos(respuesta) {
                     <div class="row">
                         <div class="col-80" style="padding: 0;">
                             <p class="text-muted small" style="font-size:18px;" id="">
-                             `+respuesta[i].titulodescuento+`
+                            Descuento `+respuesta[i].titulo+`
                             </p>
                              <p class="text-muted " style="font-size:30px;text-align:right;">$<span class="lbldescuento">`+formato_numero(respuesta[i].montoadescontar,2,'.',',')+`</span></p>
 
@@ -1426,3 +1429,69 @@ function HabilitarBotonPagar() {
           $$("#btnpagarresumen").prop('disabled',false);
       }
 }
+
+function VerListadoPagados() {
+
+  GoToPage('listadopagospagados');
+  
+}
+
+function ObtenerPagosPagados() {
+  
+  var pagina = "ObtenerTodosPagosPagados.php";
+  var id_user=localStorage.getItem('id_user');
+  var datos="id_user="+id_user;
+  $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+    crossDomain: true,
+    cache: false,
+    data:datos,
+    async:false,
+    success: function(respuesta){
+
+      var pagos=respuesta.respuesta;
+      PintarpagosPagados(pagos);
+
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+            if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+            if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+          console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+      }
+
+    });
+}
+function PintarpagosPagados(pagos) {
+  
+  if (pagos.length>0) {
+    var html="";
+   
+    for (var i = 0; i <pagos.length; i++) {
+      html+=`
+        <li class="list-item">
+                    <div class="row">
+                        <div class="col-80">
+                            <p class="text-muted small" id="concepto_`+pagos[i].idpago+`">
+                               Pago de `+pagos[i].concepto+`
+                            </p>
+
+                          <p class="text-muted ">Pagado `+pagos[i].fechaformatopago+`</p>
+                          <p class="text-muted small">$`+pagos[i].monto+`</p>
+                        </div>
+                        <div class="col-20">
+
+                        </div>
+                    </div>
+                 </li>
+
+      `;
+    }
+
+    $(".listadopagos").html(html);
+  }
+}
+

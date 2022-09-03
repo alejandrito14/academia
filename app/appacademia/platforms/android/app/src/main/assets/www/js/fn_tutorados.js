@@ -25,8 +25,8 @@ function GuardarTutoradoForm(idcontador) {
 	var id_user=localStorage.getItem('id_user');
 	var v_idtu=$("#v_idtu").val();
 	var inputtutor=$("#inputtutor").is(':checked')?1:0;
-	
-
+	var inputsincelular=$("#inputsincelular").is(':checked')?1:0;
+	var v_idusuario=$("#v_idusuario").val();
 	var msj="";
 	var bandera=1;
 	
@@ -74,7 +74,7 @@ VerificarexisteCorreoTutorado(v_correotu,v_idtu).then(r => {
 
   
 
-	var datos="v_idtu="+v_idtu+"&v_nombretu="+v_nombretu+"&v_paternotu="+v_paternotu+"&v_maternotu="+v_maternotu+"&v_fechatu="+v_fechatu+"&v_sexotu="+v_sexotu+"&v_celulartu="+v_celulartu+"&v_correotu="+v_correotu+"&id_user="+id_user+"&v_parentescotu="+v_parentescotu+"&inputtutor="+inputtutor;
+	var datos="v_idtu="+v_idtu+"&v_nombretu="+v_nombretu+"&v_paternotu="+v_paternotu+"&v_maternotu="+v_maternotu+"&v_fechatu="+v_fechatu+"&v_sexotu="+v_sexotu+"&v_celulartu="+v_celulartu+"&v_correotu="+v_correotu+"&id_user="+id_user+"&v_parentescotu="+v_parentescotu+"&inputtutor="+inputtutor+"&inputsincelular="+inputsincelular+"&v_idusuario="+v_idusuario;
 	var pagina = "registrotutorado.php";
 	
 		$.ajax({

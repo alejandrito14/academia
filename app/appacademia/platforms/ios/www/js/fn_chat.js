@@ -37,7 +37,7 @@ function PintarChatServicios(respuesta) {
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
 			}else{
 
-				urlimagen=localStorage.getItem('logo');
+        urlimagen="img/icon-usuario.png";
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
 			}
 			

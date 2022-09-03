@@ -72,9 +72,20 @@ var routes = [
     componentUrl: './pages/verificacion.html',
 
   },
+    // nuevo servicio 
+  {
+    path: '/nuevoservicio/',
+    componentUrl: './pages/nuevoservicio.html',
 
+  },
+  //replica servicio
+   {
+    path: '/replicaservicio/',
+    componentUrl: './pages/replicaservicio.html',
+
+  },
+  
   //cambiocontra
-
    {
     path:'/cambiocontra/',
     componentUrl: './pages/cambiocontra.html',
@@ -133,6 +144,7 @@ var routes = [
     path: '/settings/',
     url: './pages/settings.html',
   },
+
 
 
   // notifications
@@ -357,6 +369,11 @@ var routes = [
   {
     path:'/listadopagos/',
     componentUrl: './pages/listadopagos.html',
+  },
+
+   {
+    path:'/listadopagospagados/',
+    componentUrl: './pages/listadopagospagados.html',
   },
  {
     path:'/resumenpago/',

@@ -535,3 +535,20 @@ function Accion(elemento) {
 		$('#v_usuario').focus();
 
 }
+
+function RegresarInicio(argument) {
+	
+	localStorage.removeItem("nombre");
+	localStorage.removeItem("paterno");
+	localStorage.removeItem("materno");
+	localStorage.removeItem('tipoUsuario');
+	localStorage.removeItem('correo');
+	localStorage.setItem("foto", '');
+	localStorage.removeItem("idopcionespedido");
+	localStorage.removeItem("iddireccion");
+	localStorage.removeItem("correo");
+	localStorage.removeItem("passwordisuoder");
+	localStorage.removeItem("id_user");
+
+	GoToPage("/");
+}

@@ -85,6 +85,7 @@
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
     <preference name="SplashScreenDelay" value="3000" />
     <preference name="AutoHideSplashScreen" value="true" />
+    <preference name="orientation" value="portrait" />
     <preference name="AndroidXEnabled" value="true" />
     <preference name="AndroidInsecureFileModeEnabled" value="true" />
     <preference name="loadUrlTimeoutValue" value="700000" />

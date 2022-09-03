@@ -96,10 +96,7 @@ $(document).ready(function() {
   
 
 
-var produccion = 1;
-
- 
-
+var produccion = 0;
 
 var lhost = "localhost:8888";
 var rhost = "issoftware1.com.mx";
@@ -297,7 +294,7 @@ $$(document).on('page:init', '.page[data-name="splash"]', function (e) {
       var id_user=localStorage.getItem('id_user');
       var session=localStorage.getItem('session');
       var idtipousuario=localStorage.getItem('idtipousuario');
-
+     
 if (session==1) {
      
   
@@ -554,8 +551,14 @@ $$(document).on('page:init', '.page[data-name="homeadmin"]', function (e) {
 // Add 'refresh' listener on it
 $ptrContent.on('ptr:refresh', function (e) {
   // Emulate 2s loading
-  setTimeout(function () {
+  setTimeout(function () {  
+    var swiper = app.swiper.get('.cardpublicidad');
+        swiper.destroy();
      CargarDatosAdmin();
+    $(".seleccionador" ).each(function(index) {
+        $(this).css('display','block')
+    });
+
     // When loading done, we need to reset it
     app.ptr.done(); // or e.detail();
   }, 2000);
@@ -690,14 +693,12 @@ $$(document).on('page:init', '.page[data-name="registrofoto"]', function (e) {
   $$('#btncontinuarregistro').attr('onclick','IrRegistro()')
   $$(".badgefoto").attr('onclick','AbrirModalFoto()');
   $$('#btnregistrardeportenivel').attr('onclick','AbrirModalDeporte()')
+  ObtenerdatosRegistro();
+  CargarFoto();
 
-   
-    ObtenerdatosRegistro();
-    CargarFoto();
-
-$$('#v_alias').attr('onfocus',"Cambiar(this)");
-$$('#v_alias').attr('onblur',"Cambiar2(this);QuitarEspacios(this);");
-
+  $$('#v_alias').attr('onfocus',"Cambiar(this)");
+  $$('#v_alias').attr('onblur',"Cambiar2(this);QuitarEspacios(this);");
+  $$('.regreso').attr('onclick',"RegresarInicio()");
 
 });
 
@@ -709,8 +710,15 @@ $$(document).on('page:init', '.page[data-name="registro"]', function (e) {
    localStorage.setItem('vcontra2registro','');
 
    localStorage.setItem('objeto','');
- 
-    
+
+    var fecha=new Date();
+    var dia=fecha.getDate()<10?'0'+fecha.getDate():fecha.getDate();
+    var mes=(fecha.getMonth() + 1)<10?'0'+(fecha.getMonth() + 1):(fecha.getMonth() + 1);
+    var anio=fecha.getFullYear();
+    var fechaactualdata=anio+'-'+ mes+'-'+dia;
+
+    $("#v_fecha").val(fechaactualdata);
+  
     ObtenerdatosRegistro();
     ConsultarDepende();
 
@@ -864,8 +872,8 @@ $$(document).on('page:init', '.page[data-name="nuevotutorado"]', function (e) {
    var id=-1;
    $("#v_idtu").val(id);
 ObtenerParentesco();
-      $("#tituloventana").html('Nuevo <span style="color: #0abe68;">tutorado</span>');
-
+/*      $("#tituloventana").html('Nuevo <span style="color: #0abe68;">tutorado</span>');
+*/
     if (localStorage.getItem('idtutorado')!='' && localStorage.getItem('idtutorado')!=undefined) {
     
       var id=localStorage.getItem('idtutorado');
@@ -888,6 +896,10 @@ ObtenerParentesco();
 
           }
 phoneFormatter('v_celulartu');
+
+$("#inputsincelular").attr('onchange','SinCelular()');
+
+$("#v_celulartu").attr('onkeyup','ValidarCampo(this);BuscarUsuario();');
 
 });
 
@@ -961,6 +973,8 @@ regresohome();
 ObtenerTotalPagos();
 ProximopagoaVencer();
 $$('#btnlistadopagos').attr('onclick','VerListadoPago()')
+$$('#btnlistadopagados').attr('onclick','VerListadoPagados()')
+
 
 
 });
@@ -980,6 +994,12 @@ $$(document).on('page:init', '.page[data-name="listadopagos"]', function (e) {
   localStorage.setItem('monedero',0);
   localStorage.setItem('cupon','');
   localStorage.setItem('descuentocupon',0);
+});
+
+$$(document).on('page:init', '.page[data-name="listadopagospagados"]', function (e) {
+  $(".regreso").attr('href','/pagos/');
+ObtenerPagosPagados();
+
 });
 
 
@@ -1583,6 +1603,87 @@ $$(document).on('page:init', '.page[data-name="serviciosactivoscoach"]', functio
     
 });
 
+$$(document).on('page:init', '.page[data-name="nuevoservicio"]', function (e) {
+  
+  regresohome();
+  CargarFechasNuevoServicio();
+  ObtenerTipoServicios();
+
+  $("#v_costo").attr('onkeyup','');
+  $("#v_categoria").attr('onchange','SeleccionarCategoria(0)');
+  
+  ObtenerCategoriaServicios();
+  $("#btnaplicar").attr('onclick','AplicarFechas()');
+  $("#v_reembolso").attr('onchange','HabilitarcantidadReembolso()');
+  ObtenerTodasEncuestas();
+  $$(".imglogoimagenservicio").attr('src',urlimagendefault);
+  $("#btnagregarcoach").attr('onclick','NuevoCoach()');
+  $$(".fotoimagen").attr('onclick','AbrirModalFotoimagenservicio()');
+  $("#btnguardarservicio").attr('onclick','Guardarservicio()');
+  $("#btnagregarperiodo").attr('onclick','NuevoPeriodo()');
+  ObtenerOrdenServicio();
+  
+  $("#v_ligarclientes").attr('onchange','Permitirligar()');
+  $("#v_titulo").attr("onblur","Colocardescripcion();CambiarColor2('lititulo');");
+  $$('#v_titulo').attr('onfocus',"CambiarColor('lititulo');");
+
+  $("#v_descripcion").attr("onblur","CambiarColor2('lidescripcion');");
+  $$('#v_descripcion').attr('onfocus',"CambiarColor('lidescripcion');");
+  $("#v_categoria").attr("onblur","CambiarColor2('litiposervicio');");
+  $$('#v_categoria').attr('onfocus',"CambiarColor('litiposervicio');");
+  
+  $("#v_costo").attr("onblur","CambiarColor2('licosto');");
+  $$('#v_costo').attr('onfocus',"CambiarColor('licosto');");
+  
+  $("#v_orden").attr("onblur","CambiarColor2('liorden');");
+  $$('#v_orden').attr('onfocus',"CambiarColor('liorden');");
+  
+  $("#v_estatus").attr("onblur","CambiarColor2('liestatus');");
+  $$('#v_estatus').attr('onfocus',"CambiarColor('liestatus');");
+  $("#v_fechainicial").attr("onblur","CambiarColor2('lifechainicial');");
+  $$('#v_fechainicial').attr('onfocus',"CambiarColor('lifechainicial');");
+
+  $("#v_fechafinal").attr("onblur","CambiarColor2('lifechafinal');");
+  $$('#v_fechafinal').attr('onfocus',"CambiarColor('lifechafinal');");
+  
+  $("#v_politicasaceptacion").attr("onblur","CambiarColor2('lidescripcionpoliticas');");
+  $$('#v_politicasaceptacion').attr('onfocus',"CambiarColor('lidescripcionpoliticas');");
+  
+  $("#v_tiempoaviso").attr("onblur","CambiarColor2('litiempoavisos');");
+  $$('#v_tiempoaviso').attr('onfocus',"CambiarColor('litiempoavisos');");
+  
+  $("#v_tituloaviso").attr("onblur","CambiarColor2('litituloavisos');");
+  $$('#v_tituloaviso').attr('onfocus',"CambiarColor('litituloavisos');");
+    
+  $("#v_descripcionaviso").attr("onblur","CambiarColor2('lidescripcionavisos');");
+  $$('#v_descripcionaviso').attr('onfocus',"CambiarColor('lidescripcionavisos');");
+    
+  $("#v_cantidadreembolso").attr("onblur","CambiarColor2('licantidadreembolso');");
+  $$('#v_cantidadreembolso').attr('onfocus',"CambiarColor('licantidadreembolso');");
+    
+  $("#v_numligarclientes").attr("onblur","CambiarColor2('licantidadligar');");
+  $$('#v_numligarclientes').attr('onfocus',"CambiarColor('licantidadligar');");
+   
+  $("#v_numparticipantesmin").attr("onblur","CambiarColor2('linumparticipantesmin');");
+  $$('#v_numparticipantesmin').attr('onfocus',"CambiarColor('linumparticipantesmin');");
+   $("#v_numparticipantesmax").attr("onblur","CambiarColor2('linumparticipantesmax');");
+  $$('#v_numparticipantesmax').attr('onfocus',"CambiarColor('linumparticipantesmax');");
+     
+  app.on('accordionOpened', function (el) {
+       if (el.id=='general-tab') {
+        $("#v_titulo").focus();
+      }
+      if (el.id=='costos-tab') {
+        $("#v_costo").focus();
+      }
+      if (el.id=='aceptacion-tab') {
+        $("#v_politicasaceptacion").focus();
+      }
+
+    });
+ 
+
+});
 /*$$(document).on('page:init', '.page[data-name="messages"]', function (e) {
 
 });*/

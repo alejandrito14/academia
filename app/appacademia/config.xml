@@ -148,6 +148,7 @@
     </platform>
     <preference name="SplashScreenDelay" value="3000" />
     <preference name="AutoHideSplashScreen" value="true" />
+    <preference name="orientation" value="portrait" />
 
 
 </widget>
