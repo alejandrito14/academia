@@ -3,6 +3,7 @@ var asignacioncoach=[];
 var asignacionperiodos=[];
 var dynamicSheet1="";
 var arraydiaseleccionados=[];
+var fechasglobal2="";
 function NuevoServicio(){
 	
 	GoToPage('nuevoservicio');
@@ -107,10 +108,30 @@ function CargarFechasNuevoServicio() {
           	var mes=(fechaac.getMonth() + 1)<10?'0'+(fechaac.getMonth() + 1):(fechaac.getMonth() + 1);
          	var dia=fechaac.getDate()<10?'0'+fechaac.getDate():fechaac.getDate();
          	fecha=fechaac.getFullYear()+'-'+ mes+'-'+dia;
-          	ConsultarFechaDisponibles(fecha);
+          //	ConsultarFechaDisponibles(fecha);
           },
           calendarDayClick:function(c){
 
+
+          /*	var fechaac=new Date();
+          	var mes=fechaac.getMonth()+1;
+         	var dia=fechaac.getDate();
+         	fechaactualdata=fechaac.getFullYear()+'-'+ mes+'-'+dia;
+
+          	var fecha=calendarInline.getValue();
+
+
+          	var convertirfecha=new Date(fecha);
+          	var mes=(convertirfecha.getMonth() + 1)<10?'0'+(convertirfecha.getMonth() + 1):(convertirfecha.getMonth() + 1);
+         	var mesdata=convertirfecha.getMonth();
+
+         	var dia=convertirfecha.getDate()<10?'0'+convertirfecha.getDate():convertirfecha.getDate();
+         	var diadata=convertirfecha.getDate();
+
+         	fecha1=convertirfecha.getFullYear()+'-'+ mes+'-'+dia;
+          	ConsultarFechaHorariosDisponibles(fecha1);
+          	
+*/
          /*	var fechaac=new Date();
           	var mes=fechaac.getMonth()+1;
          	var dia=fechaac.getDate();
@@ -147,7 +168,6 @@ function CargarFechasNuevoServicio() {
 
          	var dia=convertirfecha.getDate()<10?'0'+convertirfecha.getDate():convertirfecha.getDate();
          	var diadata=convertirfecha.getDate();
-
          	fecha1=convertirfecha.getFullYear()+'-'+ mes+'-'+dia;
           	ConsultarFechaHorariosDisponibles(fecha1);
           	//var fechadata=convertirfecha.getFullYear()+'-'+mesdata+'-'+diadata;
@@ -206,9 +226,7 @@ function CargarFechasNuevoServicio() {
 
 }
 
-function ConsultarFechaDisponibles(fecha) {
-	// body...
-}
+
 
 function GuardarHorarios() {
 	dynamicSheet1.close();
@@ -219,7 +237,7 @@ function ConsultarFechaHorariosDisponibles(fecha) {
 	var date=fecha.split('-');
 	fechaformato=date[2]+'-'+date[1]+'-'+date[0];
 	
-	
+		if(BuscarfechaArray2(fecha)){
 
 var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: none;">
             <div class="toolbar">
@@ -275,7 +293,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
 		   							 		</div>
 		   							 		<div class="row" >
-		   							 			<div id="horarios" style="overflow: scroll;height: 20em;"></div>
+		   							 			<div id="horarios" class="page-content" style="overflow: scroll;height: 20em;"></div>
 		   							 			<a style="    border-radius: 10px;
     height: 60px;" class="button button-fill button-large button-raised margin-bottom color-theme" id="btnguardarhorarios" onclick="GuardarHorarios()"><div class="fab-text">Guardar</div></a>
 		   							 		</div>
@@ -367,7 +385,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
        dynamicSheet1.open();
 
-
+   }
 }
 function ObtenerTipoServicios() {
 
@@ -491,6 +509,24 @@ if (categoriaid>0) {
 						$(".lbljueves").addClass('btn_colorgray3');
 						$(".lblviernes").addClass('btn_colorgray3');
 						$(".lblsabado").addClass('btn_colorgray3');
+
+						$("#Domingo").attr('disabled',true);
+						$("#Lunes").attr('disabled',true);
+						$("#Martes").attr('disabled',true);
+						$("#Miercoles").attr('disabled',true);
+						$("#Jueves").attr('disabled',true);
+						$("#Viernes").attr('disabled',true);
+						$("#Sabado").attr('disabled',true);
+
+						$("#Domingo").attr('checked',false);
+						$("#Lunes").attr('checked',false);
+						$("#Martes").attr('checked',false);
+						$("#Miercoles").attr('checked',false);
+						$("#Jueves").attr('checked',false);
+						$("#Viernes").attr('checked',false);
+						$("#Sabado").attr('checked',false);
+
+
 						var diasdisponibles=[];
 						for (var i = 0; i < dias.length; i++) {
 								
@@ -671,34 +707,7 @@ function HorariosDisponibles() {
 	arraydiaselegidos=[];
 	arraydiaseleccionados=[];
 	var domingo=0,lunes=0,martes=0,miercoles=0,jueves=0,Viernes=0,sabado=0;
-	/*if($(".lbldomingo").hasClass('active')){
-
-		 domingo=1;
-		}
-		 if($(".lbllunes").hasClass('active')){
-
-		 lunes=1;
-		}
-		 if($(".lblmartes").hasClass('active')){
-
-		 martes=1;
-		}
-		 if($(".lblmiercoles").hasClass('active')){
-
-		 miercoles=1;
-		}
-		 if($(".lbljueves").hasClass('active')){
-
-		 jueves=1;
-		}
-		 if($(".lblviernes").hasClass('active')){
-
-		 Viernes=1;
-		}
-		 if($(".lblsabado").hasClass('active')){
-
-		 sabado=1;
-		}	*/
+	
 		if($("#Domingo").is(':checked')){
 
 		 domingo=1;
@@ -723,7 +732,7 @@ function HorariosDisponibles() {
 
 		 Viernes=1;
 		}
-		 if($("#Sabado").is('.checked')){
+		 if($("#Sabado").is(':checked')){
 
 		 sabado=1;
 		}	
@@ -756,6 +765,7 @@ function HorariosDisponibles() {
 						 zonasarray=msj.zonas;
 
 						 var respuesta=msj.respuesta;
+						 fechasglobal2=respuesta;
 						eventos=[];
 						 if (respuesta.length>0) {
 						 	$("#calendario").css('display','block');
@@ -1002,7 +1012,7 @@ function Resumenfechas() {
 					if (!!$("#colocarzona"+idzona)) {
 
 						var html=`
-						<div  class="list-group-item" style="font-weight:bold;">`+nombrezona+`<div class="badge1" style="background:`+colordiv+`"></div></div>
+						<div  class="list-group-item" style="font-weight:bold;margin-left: 0.6em;">`+nombrezona+`<div class="badge1" style="background:`+colordiv+`"></div></div>
 						<div class="zonas" id="colocarzona`+idzona+`"></div>`;
 						
 						$("#selected-dates").append(html);
@@ -2488,7 +2498,7 @@ function GuardarservicioNuevo() {
 }
 
 function NuevoPeriodo() {
-	var fechainicial=$("#v_fechainicial").val();
+	var fechafinal=$("#v_fechainicial").val();
 	
 var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: none;">
             <div class="toolbar">
@@ -2989,4 +2999,26 @@ function CambiarColor2(ele) {
 	$('.'+ele).removeClass("requerido");
 	$('.'+ele).removeClass("posicionblue");
 
+}
+
+function BuscarfechaArray2(fecha) {
+	
+	if (fechasglobal2.length>0) {
+		encontrado=false;
+
+		for (var i = 0; i <fechasglobal2.length; i++) {
+			
+			if (fechasglobal2[i].fecha==fecha) {
+				encontrado=true;
+				return true;
+			}
+
+		}
+
+		return encontrado;
+
+	}else{
+
+		return false;
+	}
 }

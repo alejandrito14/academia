@@ -130,6 +130,8 @@ if (produccion == 0) {
     var urlimagenlogo="https://issoftware1.com.mx/IS-ACADEMIA/images/sinimagenlogo.png";
     var imagenesbancos="https://issoftware1.com.mx/IS-ACADEMIA/assets/images/";
     var globalsockect="https://issoftware1.com.mx:3000/";
+    var urlimagendefaultservicio="https://issoftware1.com.mx/IS-ACADEMIA/images/sin-servicio.jpg"
+
    // var urlimagenvacia="https://issoftware1.com.mx/IS-ACADEMIA/images/sinimagenlogo.png";
 
 }
@@ -1684,6 +1686,18 @@ $$(document).on('page:init', '.page[data-name="nuevoservicio"]', function (e) {
  
 
 });
+$$(document).on('page:init', '.page[data-name="replicaservicio"]', function (e) {
+regresohome();
+
+ObtenerServiciosReplica();
+CargarCalendario();
+
+$("#serviciosreplica").attr('onchange','DesplegarCalendario()');
+
+  $("#btnguardarservicioreplica").attr('onclick','GuardarReplica()');
+
+});
+
 /*$$(document).on('page:init', '.page[data-name="messages"]', function (e) {
 
 });*/

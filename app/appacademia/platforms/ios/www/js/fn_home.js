@@ -101,6 +101,8 @@ function CargarDatosAdmin(argument) {
       classtipo='tipoadmin';
     $$(".tipousuario").addClass(classtipo);
     $$(".btnnuevoservicio").attr('onclick','NuevoServicio()');
+    $$(".btnreplicaservicio").attr('onclick','ReplicaServicio()');
+
 
 
  	 const promesa=ObtenerTableroAnuncios(0)
@@ -170,6 +172,7 @@ function CargarDatosCoach() {
   $$(".tipousuario").addClass(classtipo);
     $$(".btnserviciosactivos").attr('onclick','ServiciosActivosCoach()');
     $$(".btnnuevoservicio").attr('onclick','NuevoServicio()');
+    $$(".btnreplicaservicio").attr('onclick','ReplicaServicio()');
 
 	ObtenerTableroAnuncios(1);
 	ObtenerEntradas();
@@ -621,13 +624,13 @@ function PintarServiciosAsignados(respuesta) {
 		for (var i = 0; i <respuesta.length; i++) {
 			
 			var imagen='';
-			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null) {
+			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null && respuesta[i].imagen!='null') {
 
 				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
 				imagen='<img src="'+urlimagen+'" alt=""  style="width: 120px;border-radius: 10px;height: 80px;"/>';
 			}else{
 
-				urlimagen=localStorage.getItem('logo');
+				urlimagen=urlimagendefaultservicio;
 				imagen='<img src="'+urlimagen+'" alt=""  style="width: 120px;border-radius: 10px;height: 80px;"/>';
 			}
 
@@ -755,13 +758,13 @@ function PintarServiciosAsignadosCoach(respuesta) {
 				opacidad="opacity:0.6;"
 			}
 
-				if (respuesta[i].imagen!='' && respuesta[i].imagen!=null) {
+				if (respuesta[i].imagen!='' && respuesta[i].imagen!=null && respuesta[i].imagen!='null') {
 
 				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
 				imagen='<img src="'+urlimagen+'" alt=""  style="width: 120px;border-radius: 10px;height: 80px;'+opacidad+'"/>';
 			}else{
 
-				urlimagen=localStorage.getItem('logo');
+				urlimagen=urlimagendefaultservicio;
 				imagen='<img src="'+urlimagen+'" alt=""  style="width: 120px;border-radius: 10px;height: 80px;'+opacidad+'"/>';
 			}
 
@@ -769,7 +772,7 @@ function PintarServiciosAsignadosCoach(respuesta) {
 			 <div class="list-item" style="background: white; margin: 1em;padding: 1em;border-radius: 10px;" >
                 <div class="row">
                   <div class="col-30">
-                  	<div class="row">
+                  	<div class="">
                     <div class="avatar  shadow rounded-10 " style="    border-radius: 10px;
     padding: 0; margin: 0;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">
                     `+imagen+`
@@ -780,7 +783,7 @@ function PintarServiciosAsignadosCoach(respuesta) {
                   	console.log(respuesta[i].numeroparticipantesmax +' '+respuesta[i].cantidadalumnos);
                   	if(respuesta[i].numeroparticipantesmax!='' && respuesta[i].cantidadalumnos>=0) {
 
-                  	html+=`<p style="text-align:center;`+opacidad+`" class="`+clasecantidad+`">`;
+                  	html+=`<p style="text-align:center;display:none;`+opacidad+`" class="`+clasecantidad+`">`;
 						                 
                     html+=`<span>`+respuesta[i].cantidadalumnos+ ` </span>de<span> `+respuesta[i].numeroparticipantesmax+`</span>`;
                   		
@@ -1881,14 +1884,14 @@ function PintarServiciosRegistrados(respuesta) {
 			}
 
 
-			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null) {
+			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null  && respuesta[i].imagen!='null') {
 
 				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;'+opacidad+'"/>';
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:120px;height:80px;'+opacidad+'"/>';
 			}else{
 
-				urlimagen=localStorage.getItem('logo');
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;'+opacidad+'"/>';
+				urlimagen=urlimagendefaultservicio;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:120px;height:80px;'+opacidad+'"/>';
 			}
 
 			var clasecantidad="colorred";
@@ -1907,7 +1910,7 @@ function PintarServiciosRegistrados(respuesta) {
 			 <div class="list-item" style="background: white; margin: 1em;padding: 1em;border-radius: 10px;`+opacidad+`" >
                 <div class="row">
                   <div class="col-30">
-                  	<div class="row">
+                  	<div class="">
                     <div class="avatar  shadow rounded-10 " style="    border-radius: 10px;
     padding: 0; margin: 0;" onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">
                     `+imagen+`
@@ -1918,7 +1921,7 @@ function PintarServiciosRegistrados(respuesta) {
 
                if(respuesta[i].numeroparticipantesmax!='' && respuesta[i].cantidadalumnos!='') {
 
-                 html+=`<p style="text-align:center;" class="`+clasecantidad+`">
+                 html+=`<p style="text-align:center;display:none;" class="`+clasecantidad+`">
                  <span>`+respuesta[i].cantidadalumnos+ ` </span>de<span> `+respuesta[i].numeroparticipantesmax+`</span>
                  </p>`;
 
@@ -2156,14 +2159,14 @@ function PintarServicioActivos(respuesta) {
 				opacidad="opacity:0.6;"
 			}
 
-			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null) {
+			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null && respuesta[i].imagen!='null') {
 
 				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;'+opacidad+'"/>';
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:120px;height:80px;'+opacidad+'"/>';
 			}else{
 
-				urlimagen=localStorage.getItem('logo');
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;'+opacidad+'"/>';
+				urlimagen=urlimagendefaultservicio;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:120px;height:80px;'+opacidad+'"/>';
 			}
 
 			var clasecantidad="colorred";
@@ -2182,7 +2185,7 @@ function PintarServicioActivos(respuesta) {
 			 <div class="list-item" style="background: white; margin: 1em;padding: 1em;border-radius: 10px;`+opacidad+`" >
                 <div class="row">
                   <div class="col-30">
-                  	<div class="row">
+                  	<div class="">
                     <div class="avatar  shadow rounded-10 " style="    border-radius: 10px;
     padding: 0; margin: 0;" onclick="DetalleServicioActivo(`+respuesta[i].idservicio+`)">
                     `+imagen+`
@@ -2349,11 +2352,11 @@ function PintarServicioActivosCoach(respuesta) {
 			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null) {
 
 				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;'+opacidad+'"/>';
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:120px;height:80px;'+opacidad+'"/>';
 			}else{
 
-				urlimagen=localStorage.getItem('logo');
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;'+opacidad+'"/>';
+				urlimagen=urlimagendefaultservicio;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:120px;height:80px;'+opacidad+'"/>';
 			}
 
 			var clasecantidad="colorred";
@@ -2372,7 +2375,7 @@ function PintarServicioActivosCoach(respuesta) {
 			 <div class="list-item" style="background: white; margin: 1em;padding: 1em;border-radius: 10px;`+opacidad+`" >
                 <div class="row">
                   <div class="col-30">
-                  	<div class="row">
+                  	<div class="">
                     <div class="avatar  shadow rounded-10 " style="    border-radius: 10px;
     padding: 0; margin: 0;" onclick="DetalleServicioActivoCoach(`+respuesta[i].idservicio+`)">
                     `+imagen+`

@@ -78,10 +78,14 @@ var routes = [
     componentUrl: './pages/nuevoservicio.html',
 
   },
+  //replica servicio
+   {
+    path: '/replicaservicio/',
+    componentUrl: './pages/replicaservicio.html',
 
-
+  },
+  
   //cambiocontra
-
    {
     path:'/cambiocontra/',
     componentUrl: './pages/cambiocontra.html',
