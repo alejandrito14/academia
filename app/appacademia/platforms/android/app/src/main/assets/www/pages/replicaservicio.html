@@ -36,15 +36,34 @@
                <div class="col-85 margin-left-auto margin-right-auto align-self-center  padding-vertical"><h1 style=""> Replicar <span style="color: #0abe68;">servicio</span></h1></div>
 
              <div class="col-100  margin-left-auto margin-right-auto align-self-center" style="margin-right: 1em;margin-left: 1em;background: white;">
-             <form class="was-validated needs-validation" novalidate>
+             <form class="list" novalidate>
 
                <div class="block" style="background: white">
+                <ul>
+                <li>
                 <div class="item-content item-input is-valid">
-                  <div class="item-inner liservicio"><div class="item-title item-floating-label" style="    margin-left: 1em;">Servicio</div><div class="item-input-wrap">
+                  <div class="item-inner liservicio"><div class="item-title item-floating-label" style="    margin-left: 1em;"></div>
+                  <div class="item-input-wrap">
                    <select id="serviciosreplica"></select>
                    </div>
                 </div>
                 </div>
+              </li>
+
+              <li>
+                <div class="item-content item-input"><div class="item-inner lifechainicial"><div class="item-title item-label">Fecha inicial</div><div class="item-input-wrap"><input type="date" class="form-control" id="v_fechainicial" name="v_fechainicial" title="FECHA INICIAL" placeholder="" /><span class="input-clear-button"></span></div>
+              </div></div>
+              </li>
+              <li>
+                <div class="item-content item-input"><div class="item-inner lifechafinal"><div class="item-title item-label">Fecha final</div><div class="item-input-wrap">
+                  <input type="date" class="form-control" id="v_fechafinal" name="v_fechafinal" title="FECHA FINAL" placeholder="" />
+                  <span class="input-clear-button"></span></div></div></div>
+              </li>
+
+              <div class="row" style="margin-top: 1em;"><div class="col">
+                <button class="link button " style="" id="btnaplicarcalendario">Aplicar</button></div></div>
+
+            </ul>
 
                 </div>
 

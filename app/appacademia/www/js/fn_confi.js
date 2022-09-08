@@ -417,6 +417,34 @@ function GuardarTokenBase(idcliente) {
 	});
 }
 
+function getUsuario() {
+	 return new Promise(function(resolve, reject) {
+	 	var iduser=localStorage.getItem('id_user');
+    var pagina = "Obtenerdatospersonales.php";
+    var datos="id_user="+iduser;
+		$.ajax({
+		type: 'POST',
+		dataType:'json',
+		url: urlphp+pagina,
+		data:datos,
+		async:false,
+		success: function(datos){
+
+			resolve(datos);
+
+		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+			var error;
+				if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+									console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+
+    })
+}
+
 
 function getConfiguracion() {
     return new Promise(function(resolve, reject) {

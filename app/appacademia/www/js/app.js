@@ -1005,13 +1005,7 @@ ObtenerPagosPagados();
 });
 
 
-$$(document).on('page:init', '.page[data-name="membresia"]', function (e) {
 
-regresohome();
-
-CargarInformacionMembresia();
-
-});
 
 $$(document).on('page:init', '.page[data-name="datosemergencia"]', function (e) {
 
@@ -1692,12 +1686,38 @@ regresohome();
 ObtenerServiciosReplica();
 CargarCalendario();
 
-$("#serviciosreplica").attr('onchange','DesplegarCalendario()');
+//$("#serviciosreplica").attr('onchange','DesplegarCalendario()');
 
   $("#btnguardarservicioreplica").attr('onclick','GuardarReplica()');
+  $("#btnaplicarcalendario").attr('onclick','DesplegarCalendario()');
+});
+
+$$(document).on('page:init', '.page[data-name="membresia"]', function (e) {
+
+regresohome();
+
+CargarInformacionMembresia();
+
 
 });
 
+$$(document).on('page:init', '.page[data-name="pagomembresia"]', function (e) {
+
+
+ Cargartipopago(0);
+
+  $$("#tipopago").attr('onchange','CargarOpcionesTipopago()');
+  $(".divtransferencia").css('display','none');
+  $("#divagregartarjeta").css('display','none');
+  $("#divlistadotarjetas").css('display','none');
+
+  $$("#btnpagarresumen").attr('disabled',true);
+  $$("#btnatras").attr('onclick','Atras()');
+  $$("#btnatras").css('display','none');
+
+});
+
+ 
 /*$$(document).on('page:init', '.page[data-name="messages"]', function (e) {
 
 });*/

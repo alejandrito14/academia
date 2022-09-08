@@ -1692,10 +1692,10 @@ regresohome();
 ObtenerServiciosReplica();
 CargarCalendario();
 
-$("#serviciosreplica").attr('onchange','DesplegarCalendario()');
+//$("#serviciosreplica").attr('onchange','DesplegarCalendario()');
 
   $("#btnguardarservicioreplica").attr('onclick','GuardarReplica()');
-
+  $("#btnaplicarcalendario").attr('onclick','DesplegarCalendario()');
 });
 
 /*$$(document).on('page:init', '.page[data-name="messages"]', function (e) {

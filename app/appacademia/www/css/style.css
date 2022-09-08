@@ -2374,3 +2374,63 @@ background: white;
 .requerido2{
   color: red!important;
 }
+
+
+.linea {
+  text-align: center;
+  position:relative;
+}
+.linea span {
+  color: gray;
+    background: var(--fimobile-page-bg-2);
+    background: -moz-linear-gradient(45deg, var(--fimobile-page-bg-2) 0%, var(--fimobile-page-bg-1) 100%);
+    background: -webkit-linear-gradient(45deg, var(--fimobile-page-bg-2) 0%, var(--fimobile-page-bg-1) 100%);
+    background: linear-gradient(45deg, var(--fimobile-page-bg-2) 0%, var(--fimobile-page-bg-1) 100%); 
+    z-index:100;
+    position:relative;
+    padding:15px;
+}
+.linea::after  {
+  content: '';
+  position: absolute;
+  width:100%;
+  height:.5px;
+  left:0px;
+  top:50%;
+  background: gray;
+  z-index:50;
+}
+
+.linea {
+/*  border:1px solid #000;
+*/  padding:20px;
+}
+.vacio{
+  color: white!important;
+  background: #e8e8e8!important;
+}
+.convalor{
+  background: #007aff!important;
+  color: white!important;
+
+}
+.textoarribaizquierda{
+    position: absolute;
+    background: #EB212E;
+    color: white;
+    font-size: 14px;
+    padding: 0.5em;
+    border-radius: 10px;
+    margin-left: 0.5em;
+}
+
+.textoabajoderecha{
+    color: white;
+    position: absolute;
+    bottom: -8em;
+    left: 0.5em;
+    background: black;
+    border-radius: 10px;
+    padding: 0.5em;
+    margin-right: 0.5em;
+}

@@ -94,12 +94,12 @@ function CargarFechasNuevoServicio() {
           	 $('.calendar-custom-toolbar .left .link').on('click', function () {
               calendarInline.prevMonth();
              // CargarFechasRefrescar1(calendarInline);
-
+             HorariosDisponiblesFlecha();
             });
             $('.calendar-custom-toolbar .right .link').on('click', function () {
               calendarInline.nextMonth();
              // CargarFechasRefrescar1(calendarInline);
-
+             HorariosDisponiblesFlecha();
             });
 
 
@@ -734,8 +734,9 @@ function HorariosDisponibles() {
 		}
 		 if($("#Sabado").is(':checked')){
 
-		 sabado=1;
+			 sabado=1;
 		}	
+
 	var v_categoria=$("#v_categoriaservicio").val();
 	var v_tipocategoria=$("#v_categoria").val();
 	var v_fechainicial=$("#v_fechainicial").val();
@@ -809,6 +810,118 @@ function HorariosDisponibles() {
 	
 }
 
+
+function HorariosDisponiblesFlecha() {
+
+
+
+
+	var v_zonas=[];
+	arraydiaselegidos=[];
+	arraydiaseleccionados=[];
+	var domingo=0,lunes=0,martes=0,miercoles=0,jueves=0,Viernes=0,sabado=0;
+	
+		if($("#Domingo").is(':checked')){
+
+		 domingo=1;
+		}
+		 if($("#Lunes").is(':checked')){
+
+		 lunes=1;
+		}
+		 if($("#Martes").is(':checked')){
+
+		 martes=1;
+		}
+		 if($("#Miercoles").is(':checked')){
+
+		 miercoles=1;
+		}
+		if($("#Jueves").is(':checked')){
+
+		 jueves=1;
+		}
+		 if($("#Viernes").is(':checked')){
+
+		 Viernes=1;
+		}
+		 if($("#Sabado").is(':checked')){
+
+			 sabado=1;
+		}	
+
+	var v_categoria=$("#v_categoriaservicio").val();
+	var v_tipocategoria=$("#v_categoria").val();
+	var v_fechainicial=$("#v_fechainicial").val();
+	var v_fechafinal=$("#v_fechafinal").val();
+
+		var datos="domingo="+domingo+"&lunes="+lunes+"&martes="+martes+"&miercoles="+miercoles+"&jueves="+jueves+"&viernes="+Viernes+"&sabado="+sabado+"&v_categoria="+v_categoria+"&v_tipocategoria="+v_tipocategoria+"&v_fechainicial="+v_fechainicial+"&v_fechafinal="+v_fechafinal+"&v_zonas="+v_zonas;
+
+			$.ajax({
+					url: urlphp+'ObtenerHorariosFechas.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					dataType:'json', 
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+
+						var v_fechainicial=msj.fechadia;
+						var dividirfechaini=v_fechainicial.split('-');
+						anioinicial=dividirfechaini[0];
+						mesinicial=(dividirfechaini[1].replace(/^(0+)/g, '')-1);
+						 var fechas=msj.arrayfechasdias[0];
+						 zonasarray=msj.zonas;
+
+						 var respuesta=msj.respuesta;
+						 fechasglobal2=respuesta;
+						eventos=[];
+						 if (respuesta.length>0) {
+						 	$("#calendario").css('display','block');
+						 for (var i = 0; i < respuesta.length; i++) {
+						 	var fecha=respuesta[i].fecha;
+						 	var idzona=respuesta[i].idzona;
+							var nombrezona=respuesta[i].nombrezona;
+						 	var dividirfecha=fecha.split('-');
+						 	var nuevafecha=dividirfecha[0]+'-'+parseInt(dividirfecha[1])+'-'+parseInt(dividirfecha[2]);
+						 	
+						 var anio=dividirfecha[0];
+						var mes=(dividirfecha[1].replace(/^(0+)/g, '')-1);
+						var dia=dividirfecha[2];
+						var color=respuesta[i].color;
+						var objeto={
+							date:new Date(anio,mes,dia),
+							color:'rgb(255 255 255 / 10%)',
+						};
+						 	eventos.push(objeto);
+					
+
+						 }
+						// calendarInline.setYearMonth(anioinicial, mesinicial, 2);
+						 calendarInline.params.events = eventos;
+						calendarInline.update();
+						 $(".calendar-day-today .calendar-day-number").addClass('diaactual');
+
+
+						}else{
+
+							alerta('','No se encuentran horarios disponibles dentro del periodo');
+							//AbrirNotificacion('No se encuentran horarios disponibles dentro del periodo','mdi mdi-alert-circle');
+					
+						}
+						$(".calendar-day-has-events .calendar-day-number").addClass('calendarevento');
+
+						
+
+					}
+				});
+	
+}
 function HorariosDisponiblesFecha(fechaseleccionada) {
 	var fechaforma=fechaseleccionada[0]+'-'+fechaseleccionada[1]+'-'+fechaseleccionada[2];
 
@@ -843,7 +956,7 @@ return new Promise((resolve, reject) => {
 
 		 Viernes=1;
 		}
-		 if($("#Sabado").is('.checked')){
+		 if($("#Sabado").is(':checked')){
 
 		 sabado=1;
 		}	
@@ -1081,7 +1194,7 @@ function generateSortFn(props) {
 					success: function (msj) {
 
 						var encuestas=msj.respuesta;
-						console.log(encuestas);
+						
 						if (encuestas.length>0) {
 							var html="";
 							for (var i =0; i <encuestas.length; i++) {
@@ -1381,7 +1494,7 @@ dynamicSheet1.close();
 
 function PintarCoaches() {
 	var html="";
-	console.log(asignacioncoach);
+	
 	if (asignacioncoach.length>0) {
 		for (var i = 0; i <asignacioncoach.length; i++) {
 				html+=`
@@ -1474,7 +1587,7 @@ function Eliminar(posicion) {
 
 				if (asignacioncoach.length>0) {
 									for (var i = 0; i <asignacioncoach.length; i++) {
-										console.log(i+'=='+posicion)
+										
 										if (i == posicion) {
 											asignacioncoach.splice(i,1);
 											
@@ -1964,14 +2077,6 @@ function GuardarservicioNuevo() {
 		 sabado=1;
 		}	
 
-		/*console.log('domingo'+domingo)
-		console.log('lunes'+lunes)
-		console.log('martes'+martes)
-		console.log('miercoles'+miercoles)
-		console.log('jueves'+jueves)
-		console.log('Viernes'+Viernes)
-		console.log('sabado'+sabado)
-*/
 		//recibimos todos los datos..
 		var nombre =$("#v_titulo").val();
 		var descripcion=$("#v_descripcion").val();

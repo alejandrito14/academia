@@ -60,7 +60,29 @@ function CargarDatos() {
 	Obtenerpublicidad(1);
 	ObtenerConfiguracion();
 	MostrarBotonServiciosActivos();
-	
+
+	var promesa=getConfiguracion();
+    promesa.then(r => {
+      var activarpopupmembresia=r.respuesta.activarpopupmembresia;
+
+      if (activarpopupmembresia==1) {
+      		var promesa2=getUsuario();
+      		  promesa2.then(r2 => {
+      		  	console.log(r2);
+      		  	var visto=r2.respuesta.popupmembresia;
+      		  	if (visto==1) {
+
+      		  		ObtenerMembresiaActivas();
+
+      		  	}
+
+      		  });
+
+        	
+      }
+
+    });
+
 	var iduser=localStorage.getItem('id_user');
 	socket=io.connect(globalsockect, { transports : ["websocket"],rejectUnauthorized: false });
     socket.on('connect', function (data) 
@@ -505,21 +527,21 @@ function PintarEntradas(respuesta) {
                     <div class="coverimg h-100 width-100 position-absolute opacity-5" style="background-image: url(`+urlimagen+`);">
                         <img src="img/news1.jpg" alt="" style="display: none;"/>
                     </div>
-                    <div class="card-content card-content-padding">
+                    <div class="">
  					
                     `;
                      
                        if (respuesta[i].titulo!='') {
-                       	   html+=`    <a  style="color:white;" class="h4 d-block  margin-bottom-half" onclick="`+onclick+`">`+respuesta[i].titulo+`</a>`;
+                       	   html+=`    <a  style="color:white;" class="h4 d-block  margin-bottom-half textoabajoderecha" onclick="`+onclick+`">`+respuesta[i].titulo+`</a>`;
 
                        }
                         	
              
-                      if (respuesta[i].descripcion!='' && respuesta[i].descripcion!=null) {
+     /*                 if (respuesta[i].descripcion!='' && respuesta[i].descripcion!=null) {
                        	 
                       html+=`  <p class="text-muted" onclick="`+onclick+`">`+respuesta[i].descripcion+`</p>`;
 
-                       }
+                       }*/
                         	
 
 
@@ -604,7 +626,9 @@ function ObtenerServiciosAsignados() {
 		success: function(datos){
 
 			var respuesta=datos.respuesta;
-			PintarServiciosAsignados(respuesta);
+			var fechaactual=datos.fechaactual;
+			console.log(datos);
+			PintarServiciosAsignados2(respuesta,fechaactual);
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
@@ -703,6 +727,128 @@ function PintarServiciosAsignados(respuesta) {
 
 
 
+function PintarServiciosAsignados2(respuesta,fechaactual) {
+	
+		var html="";
+
+	if (respuesta.length>0) {
+		var contadorpasado=0;
+		for (var i = 0; i <respuesta.length; i++) {
+			
+			var imagen='';
+			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null && respuesta[i].imagen!='null') {
+
+				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;"/>';
+			}else{
+
+				urlimagen=urlimagendefaultservicio;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;"/>';
+			}
+
+
+
+			if (respuesta[i].porpasar==0 && contadorpasado==0) {
+
+
+				html+=`<div class="row">
+				<div class="linea"><span>Hoy `+fechaactual+`</span></div>
+
+				</div>`;
+				contadorpasado++;
+
+
+			}
+			var clasecomentario="vacio";
+			var clasechat="vacio";
+			var clasecalificacion="vacio";
+			if (respuesta[i].concalificacion==1){
+				clasecalificacion="convalor";
+			}
+			if (respuesta[i].conchat==1){
+				clasechat="convalor";
+			}
+			if (respuesta[i].concomentarios==1) {
+				clasecomentario="convalor";
+			}
+
+
+			html+=`
+				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+                <div class="row">
+                  <div class="col-100" style="padding:0;" >
+                    <div class="" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+imagen+`
+                      
+                    </div>
+                  </div>
+                  </div>
+                  <div class="row" style="height:10em;">
+                  <div class="col-100" >
+                   <div class="row" style="margin-top:.5em;">
+                    `;
+                  //  horarios=respuesta[i].horarios;
+                    	var horarioshtml="";
+                    	//for (var j = 0; j < horarios.length; j++) {
+                    		if (respuesta[i].fechaproxima!='') {
+                    		horarioshtml+=`<span style="color:black;font-size:18px;">`+respuesta[i].fechaproxima+` </span><br><span style="margin-top:.5em;font-size:16px;">`+respuesta[i].horainicial+` - `+respuesta[i].horafinal+` Hrs.</span>`;
+                    		}
+                    	//}
+
+                    html+=`
+                     <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</span>
+                     <span class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].zonanombre+`</span>
+
+ 					<span class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</span>
+                  
+
+                  </div>
+                  <div class="row" style="margin-top:1em;">
+                  	<div class="col" style="text-align:center;" >`;
+
+
+                  	html+=`<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos `+clasecomentario+`" onclick="OpinionesServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-chat-square-dots"></i></div>`;
+                    html+=`	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos `+clasechat+`" onclick="ParticipantesServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-chat-left-quote-fill"></i></div>`;
+                  	html+=`	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos `+clasecalificacion+`" onclick="AbirCalificarServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-star"></i></div>`;
+
+
+                  	html+=`</div>
+                  
+                                  
+
+                  </div>
+
+               	</div>
+                  
+                </div>
+              </div>
+              </div>
+              </div>
+
+			`;
+
+
+
+
+		}
+
+		$$(".serviciosasignados").html(html);
+	}else{
+
+
+		html+=`
+			 <div class="list-item">
+                <div class="row text-color-theme">
+                  <h4 style="text-align:center;">En breve el administrador te asignará tus servicios</h4>
+                </div>
+              </div>
+
+
+		`;
+
+				$$(".serviciosasignados").html(html);
+
+	}
+}
 
 function ObtenerServiciosAsignadosCoach() {
 	var idusuario=localStorage.getItem('id_user');
@@ -718,8 +864,8 @@ function ObtenerServiciosAsignadosCoach() {
 		success: function(datos){
 
 			var respuesta=datos.respuesta;
-
-			PintarServiciosAsignadosCoach(respuesta);
+			var fechaactual=datos.fechaactual;
+			PintarServiciosAsignadosCoach2(respuesta,fechaactual);
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
@@ -729,6 +875,162 @@ function ObtenerServiciosAsignadosCoach() {
 					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
 			}
 		});
+}
+
+function PintarServiciosAsignadosCoach2(respuesta,fechaactual) {
+		
+	
+	var html="";
+
+	if (respuesta.length>0) {
+		var contadorpasado=0;
+		for (var i = 0; i <respuesta.length; i++) {
+			
+			var imagen='';
+			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null && respuesta[i].imagen!='null') {
+
+				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;"/>';
+			}else{
+
+				urlimagen=urlimagendefaultservicio;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;"/>';
+			}
+
+
+			var clasecantidad="colorred";
+
+		if (respuesta[i].cantidadalumnos!='' && respuesta[i].numeroparticipantesmax!='') {
+			
+				if (respuesta[i].cantidadalumnos==respuesta[i].numeroparticipantesmax) {
+				clasecantidad="colorgreen";
+				
+				}
+
+			}
+
+			var opacidad="";
+			if (respuesta[i].fechaproxima=='') {
+				opacidad="opacity:0.6;"
+			}
+
+
+			if (respuesta[i].porpasar==0 && contadorpasado==0) {
+
+
+				html+=`<div class="row">
+				<div class="linea"><span>Hoy `+fechaactual+`</span></div>
+
+				</div>`;
+				contadorpasado++;
+
+
+			}
+			var clasecomentario="vacio";
+			var clasechat="vacio";
+			var clasecalificacion="vacio";
+			if (respuesta[i].concalificacion==1){
+				clasecalificacion="convalor";
+			}
+			if (respuesta[i].conchat==1){
+				clasechat="convalor";
+			}
+			if (respuesta[i].concomentarios==1) {
+				clasecomentario="convalor";
+			}
+
+			var colocarnumero="";
+              if(respuesta[i].numeroparticipantesmax=='' ) {
+				respuesta[i].numeroparticipantesmax=0;
+              }
+               if(respuesta[i].numeroparticipantesmin=='' ) {
+				respuesta[i].numeroparticipantesmin=0;
+              }
+                colocarnumero+=`<div style="text-align:center;`+opacidad+`" class="textoarribaizquierda `+clasecantidad+`">`;
+						                 
+                 colocarnumero+=`<span>`+respuesta[i].cantidadalumnos+ ` </span>de<span> `+respuesta[i].numeroparticipantesmax+`</span></div>`;
+                  		
+               
+
+
+
+			html+=`
+				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+                <div class="row">
+                  <div class="col-100" style="padding:0;" >
+                     `+colocarnumero+`
+                    <div class="" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+imagen+`
+                      
+                    </div>
+                   
+                  </div>
+                  </div>
+                  <div class="row" style="height:10em;">
+                  <div class="col-100" >
+                   <div class="row" style="margin-top:.5em;">
+                    `;
+                  //  horarios=respuesta[i].horarios;
+                    	var horarioshtml="";
+                    	//for (var j = 0; j < horarios.length; j++) {
+                    		if (respuesta[i].fechaproxima!='') {
+                    		horarioshtml+=`<span style="color:black;font-size:18px;">`+respuesta[i].fechaproxima+` </span><br><span style="margin-top:.5em;font-size:16px;">`+respuesta[i].horainicial+` - `+respuesta[i].horafinal+` Hrs.</span>`;
+                    		}
+                    	//}
+
+                    html+=`
+                     <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</span>
+                     <span class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].zonanombre+`</span>
+
+ 					<span class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</span>
+                  
+
+                  </div>
+                  <div class="row" style="margin-top:1em;">
+                  	<div class="col" style="text-align:center;" >`;
+
+
+                  	html+=`<div class="col" style="text-align:center;" >
+                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle `+clasecomentario+` iconos" style="`+opacidad+`" onclick="OpinionesServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-chat-square-dots"></i></div>
+                  	    <div class="avatar avatar-40 alert-primary text-color-blue rounded-circle `+clasechat+` iconos" style="`+opacidad+`"  onclick="ParticipantesServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-chat-left-quote-fill" ></i></div>
+
+                  	</div>`;
+                  	html+=`</div>
+                  
+                                  
+
+                  </div>
+
+               	</div>
+                  
+                </div>
+              </div>
+              </div>
+              </div>
+
+			`;
+
+
+
+
+		}
+
+		$$(".serviciosasignados").html(html);
+	}else{
+
+
+		html+=`
+			 <div class="list-item">
+                <div class="row text-color-theme">
+                  <h4 style="text-align:center;">En breve el administrador te asignará tus servicios</h4>
+                </div>
+              </div>
+
+
+		`;
+
+				$$(".serviciosasignados").html(html);
+
+	}
 }
 
 function PintarServiciosAsignadosCoach(respuesta) {
@@ -1857,7 +2159,8 @@ function ObtenerServiciosRegistrados() {
 		success: function(datos){
 
 			var respuesta=datos.respuesta;
-			PintarServiciosRegistrados(respuesta);
+			var fechaactual=datos.fechaactual;
+			PintarServiciosRegistrados2(respuesta,fechaactual);
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
@@ -1916,7 +2219,6 @@ function PintarServiciosRegistrados(respuesta) {
                     </div>
                     </div>
                   	<div class="row">`;
-                  	console.log(respuesta[i].numeroparticipantesmax);
 
                if(respuesta[i].numeroparticipantesmax!='' && respuesta[i].cantidadalumnos!='') {
 
@@ -1991,6 +2293,162 @@ function PintarServiciosRegistrados(respuesta) {
 
 
 
+
+}
+
+function PintarServiciosRegistrados2(respuesta,fechaactual) {
+	var html="";
+	if (respuesta.length>0) {
+
+		var contadorpasado=0;
+		for (var i = 0; i <respuesta.length; i++) {
+			
+			var imagen='';
+			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null && respuesta[i].imagen!='null') {
+
+				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;"/>';
+			}else{
+
+				urlimagen=urlimagendefaultservicio;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;"/>';
+			}
+
+
+			var clasecantidad="colorred";
+
+		if (respuesta[i].cantidadalumnos!='' && respuesta[i].numeroparticipantesmax!='') {
+			
+				if (respuesta[i].cantidadalumnos==respuesta[i].numeroparticipantesmax) {
+				clasecantidad="colorgreen";
+				
+				}
+
+			}
+
+			var opacidad="";
+			if (respuesta[i].fechaproxima=='') {
+				opacidad="opacity:0.6;"
+			}
+
+
+			if (respuesta[i].porpasar==0 && contadorpasado==0) {
+
+
+				html+=`<div class="row">
+				<div class="linea"><span>Hoy `+fechaactual+`</span></div>
+
+				</div>`;
+				contadorpasado++;
+
+
+			}
+			var clasecomentario="vacio";
+			var clasechat="vacio";
+			var clasecalificacion="vacio";
+			if (respuesta[i].concalificacion==1){
+				clasecalificacion="convalor";
+			}
+			if (respuesta[i].conchat==1){
+				clasechat="convalor";
+			}
+			if (respuesta[i].concomentarios==1) {
+				clasecomentario="convalor";
+			}
+
+			var colocarnumero="";
+              if(respuesta[i].numeroparticipantesmax=='' ) {
+				respuesta[i].numeroparticipantesmax=0;
+              }
+               if(respuesta[i].numeroparticipantesmin=='' ) {
+				respuesta[i].numeroparticipantesmin=0;
+              }
+                colocarnumero+=`<div style="text-align:center;`+opacidad+`" class="textoarribaizquierda `+clasecantidad+`">`;
+						                 
+                 colocarnumero+=`<span>`+respuesta[i].cantidadalumnos+ ` </span>de<span> `+respuesta[i].numeroparticipantesmax+`</span></div>`;
+                  		
+               
+
+
+
+			html+=`
+				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+                <div class="row">
+                  <div class="col-100" style="padding:0;" >
+                     `+colocarnumero+`
+                    <div class="" onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">`+imagen+`
+                      
+                    </div>
+                   
+                  </div>
+                  </div>
+                  <div class="row" style="height:10em;">
+                  <div class="col-100" >
+                   <div class="row" style="margin-top:.5em;">
+                    `;
+                  //  horarios=respuesta[i].horarios;
+                    	var horarioshtml="";
+                    	//for (var j = 0; j < horarios.length; j++) {
+                    		if (respuesta[i].fechaproxima!='') {
+                    		horarioshtml+=`<span style="color:black;font-size:18px;">`+respuesta[i].fechaproxima+` </span><br><span style="margin-top:.5em;font-size:16px;">`+respuesta[i].horainicial+` - `+respuesta[i].horafinal+` Hrs.</span>`;
+                    		}
+                    	//}
+
+                    html+=`
+                     <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">`+horarioshtml+`</span>
+                     <span class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">`+respuesta[i].zonanombre+`</span>
+
+ 					<span class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</span>
+                  
+
+                  </div>
+                  <div class="row" style="margin-top:1em;">
+                  	<div class="col" style="text-align:center;" >`;
+
+
+                   if (respuesta[i].idcategorias>0) {
+               		  html+=` <div class="" style="width:100%;text-align:center;">
+                  	<div class="" >
+                  		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle `+clasecomentario+` iconos" style="`+opacidad+`" onclick="OpinionesServicioAdmin(`+respuesta[i].idservicio+`)"><i class="bi bi-chat-square-dots"></i></div>
+                  	
+                  	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle `+clasechat+` iconos" style="`+opacidad+`" onclick="ParticipantesServicio(`+respuesta[i].idservicio+`)"><i class="bi bi-chat-left-quote-fill"></i></div>
+
+                  	</div>
+   
+                  	`;
+               
+                  }
+                  	html+=`</div>
+                  
+                                  
+                  </div>
+
+               	</div>
+                  
+                </div>
+              </div>
+              </div>
+              </div>
+
+			`;
+
+
+
+
+		}
+
+		$$(".serviciosregistrados").html(html);
+
+
+	}else{
+
+
+		html+=`
+		
+		`;
+		$$(".serviciosregistrados").html(html);
+
+		}
 
 }
 
@@ -2127,10 +2585,10 @@ function ObtenerServiciosActivos() {
 		success: function(res){
 			console.log(datos);
 			var respuesta=res.respuesta;
-
+			var fechaactual=res.fechaactual;
 			if (respuesta.length>0) {
 
-			PintarServicioActivos(respuesta);
+			PintarServicioActivos2(respuesta,fechaactual);
 		
 			}
 
@@ -2241,6 +2699,159 @@ function PintarServicioActivos(respuesta) {
 
 }
 
+function PintarServicioActivos2(respuesta,fechaactual) {
+	
+	
+	var html="";
+
+	if (respuesta.length>0) {
+		var contadorpasado=0;
+		for (var i = 0; i <respuesta.length; i++) {
+			
+			var imagen='';
+			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null && respuesta[i].imagen!='null') {
+
+				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;"/>';
+			}else{
+
+				urlimagen=urlimagendefaultservicio;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;"/>';
+			}
+
+
+			var clasecantidad="colorred";
+
+		if (respuesta[i].cantidadalumnos!='' && respuesta[i].numeroparticipantesmax!='') {
+			
+				if (respuesta[i].cantidadalumnos==respuesta[i].numeroparticipantesmax) {
+				clasecantidad="colorgreen";
+				
+				}
+
+			}
+
+			var opacidad="";
+			if (respuesta[i].fechaproxima=='') {
+				opacidad="opacity:0.6;"
+			}
+
+
+			if (respuesta[i].porpasar==0 && contadorpasado==0) {
+
+
+				html+=`<div class="row">
+				<div class="linea"><span>Hoy `+fechaactual+`</span></div>
+
+				</div>`;
+				contadorpasado++;
+
+
+			}
+			var clasecomentario="vacio";
+			var clasechat="vacio";
+			var clasecalificacion="vacio";
+			if (respuesta[i].concalificacion==1){
+				clasecalificacion="convalor";
+			}
+			if (respuesta[i].conchat==1){
+				clasechat="convalor";
+			}
+			if (respuesta[i].concomentarios==1) {
+				clasecomentario="convalor";
+			}
+
+			var colocarnumero="";
+              if(respuesta[i].numeroparticipantesmax=='' ) {
+				respuesta[i].numeroparticipantesmax=0;
+              }
+               if(respuesta[i].numeroparticipantesmin=='' ) {
+				respuesta[i].numeroparticipantesmin=0;
+              }
+               /* colocarnumero+=`<div style="text-align:center;`+opacidad+`" class="textoarribaizquierda `+clasecantidad+`">`;
+						                 
+                 colocarnumero+=`<span>`+respuesta[i].cantidadalumnos+ ` </span>de<span> `+respuesta[i].numeroparticipantesmax+`</span></div>`;
+                  	*/	
+               
+
+
+
+			html+=`
+				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+                <div class="row">
+                  <div class="col-100" style="padding:0;" >
+                     `+colocarnumero+`
+                    <div class="" onclick="DetalleServicioActivo(`+respuesta[i].idservicio+`)">`+imagen+`
+                      
+                    </div>
+                   
+                  </div>
+                  </div>
+                  <div class="row" style="height:10em;">
+                  <div class="col-100" >
+                   <div class="row" style="margin-top:.5em;">
+                    `;
+                    	var horarioshtml="";
+                    		if (respuesta[i].fechaproxima!='') {
+                    		horarioshtml+=`<span style="color:black;font-size:18px;">`+respuesta[i].fechaproxima+` </span><br><span style="margin-top:.5em;font-size:16px;">`+respuesta[i].horainicial+` - `+respuesta[i].horafinal+` Hrs.</span>`;
+                    		}
+
+                    html+=`
+                     <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioActivo(`+respuesta[i].idservicio+`)">`+horarioshtml+`</span>
+                     <span class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioActivo(`+respuesta[i].idservicio+`)">`+respuesta[i].zonanombre+`</span>
+
+ 					<span class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioActivo(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</span>
+                  
+
+                  </div>
+                  <div class="row" style="margin-top:1em;">
+                  	<div class="col" style="text-align:center;" >`;
+
+/*
+                  	html+=`<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos `+clasecomentario+`" onclick="OpinionesServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-chat-square-dots"></i></div>`;
+                    html+=`	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos `+clasechat+`" onclick="ParticipantesServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-chat-left-quote-fill"></i></div>`;
+                  	html+=`	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos `+clasecalificacion+`" onclick="AbirCalificarServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-star"></i></div>`;
+*/
+
+                  	html+=`</div>
+                  
+                                  
+
+                  </div>
+
+               	</div>
+                  
+                </div>
+              </div>
+              </div>
+              </div>
+
+			`;
+
+
+
+
+		}
+
+		$$(".serviciosactivos").html(html);
+	}else{
+
+
+		html+=`
+			 <div class="list-item">
+                <div class="row text-color-theme">
+                  <h4 style="text-align:center;">En breve el administrador te asignará tus servicios</h4>
+                </div>
+              </div>
+
+
+		`;
+
+				$$(".serviciosactivos").html(html);
+
+	}
+}
+
 function DetalleServicioActivo(idservicio) {
 	localStorage.setItem('idservicio',idservicio);
 	GoToPage('detalleservicioactivo');
@@ -2319,8 +2930,9 @@ function ObtenerServiciosActivosCoach() {
 			var respuesta=res.respuesta;
 
 			if (respuesta.length>0) {
+				var fechaactual=res.fechaactual;
 				
-			PintarServicioActivosCoach(respuesta);
+			PintarServicioActivosCoach2(respuesta,fechaactual);
 		
 			}
 
@@ -2425,5 +3037,142 @@ function PintarServicioActivosCoach(respuesta) {
 		}
 
 
+
+}
+
+function PintarServicioActivosCoach2(respuesta,fechaactual) {
+	var html="";
+	if (respuesta.length>0) {
+		var contadorpasado=0;
+		for (var i = 0; i <respuesta.length; i++) {
+			
+			var imagen='';
+			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null && respuesta[i].imagen!='null') {
+
+				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;"/>';
+			}else{
+
+				urlimagen=urlimagendefaultservicio;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;"/>';
+			}
+
+
+			var clasecantidad="colorred";
+
+		if (respuesta[i].cantidadalumnos!='' && respuesta[i].numeroparticipantesmax!='') {
+			
+				if (respuesta[i].cantidadalumnos==respuesta[i].numeroparticipantesmax) {
+				clasecantidad="colorgreen";
+				
+				}
+
+			}
+
+			var opacidad="";
+			if (respuesta[i].fechaproxima=='') {
+				opacidad="opacity:0.6;"
+			}
+
+
+			if (respuesta[i].porpasar==0 && contadorpasado==0) {
+
+
+				html+=`<div class="row">
+				<div class="linea"><span>Hoy `+fechaactual+`</span></div>
+
+				</div>`;
+				contadorpasado++;
+
+
+			}
+			var clasecomentario="vacio";
+			var clasechat="vacio";
+			var clasecalificacion="vacio";
+			if (respuesta[i].concalificacion==1){
+				clasecalificacion="convalor";
+			}
+			if (respuesta[i].conchat==1){
+				clasechat="convalor";
+			}
+			if (respuesta[i].concomentarios==1) {
+				clasecomentario="convalor";
+			}
+
+			var colocarnumero="";
+              if(respuesta[i].numeroparticipantesmax=='' ) {
+				respuesta[i].numeroparticipantesmax=0;
+              }
+               if(respuesta[i].numeroparticipantesmin=='' ) {
+				respuesta[i].numeroparticipantesmin=0;
+              }
+                colocarnumero+=`<div style="text-align:center;`+opacidad+`" class="textoarribaizquierda `+clasecantidad+`">`;
+						                 
+                 colocarnumero+=`<span>`+respuesta[i].cantidadalumnos+ ` </span>de<span> `+respuesta[i].numeroparticipantesmax+`</span></div>`;
+                  		
+               
+
+
+
+			html+=`
+				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+                <div class="row">
+                  <div class="col-100" style="padding:0;" >
+                     `+colocarnumero+`
+                    <div class="" onclick="DetalleServicioActivoCoach(`+respuesta[i].idservicio+`)">`+imagen+`
+                      
+                    </div>
+                   
+                  </div>
+                  </div>
+                  <div class="row" style="height:10em;">
+                  <div class="col-100" >
+                   <div class="row" style="margin-top:.5em;">
+                    `;
+                    	var horarioshtml="";
+                    		if (respuesta[i].fechaproxima!='') {
+                    		horarioshtml+=`<span style="color:black;font-size:18px;">`+respuesta[i].fechaproxima+` </span><br><span style="margin-top:.5em;font-size:16px;">`+respuesta[i].horainicial+` - `+respuesta[i].horafinal+` Hrs.</span>`;
+                    		}
+
+                    html+=`
+                     <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioActivoCoach(`+respuesta[i].idservicio+`)">`+horarioshtml+`</span>
+                     <span class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioActivoCoach(`+respuesta[i].idservicio+`)">`+respuesta[i].zonanombre+`</span>
+ 					<span class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioActivoCoach(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</span>
+                  
+
+                  </div>
+                  <div class="row" style="margin-top:1em;">
+                  	<div class="col" style="text-align:center;" >`;
+
+
+
+                  	html+=`</div>
+                  
+                                  
+
+                  </div>
+
+               	</div>
+                  
+                </div>
+              </div>
+              </div>
+              </div>
+
+			`;
+
+
+
+
+		}
+		$$(".serviciosactivos").html(html);
+		}else{
+
+
+		html+=``;
+
+		$$(".serviciosactivos").html(html);
+
+		}
 
 }

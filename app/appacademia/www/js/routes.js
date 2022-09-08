@@ -398,6 +398,12 @@ var routes = [
     componentUrl:'./pages/membresia.html',
 
   },
+       // pagomembresia
+  {
+    path: '/pagomembresia/',
+    componentUrl:'./pages/pagomembresia.html',
+
+  },
 
        // evaluacion servicio
   {

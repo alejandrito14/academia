@@ -341,8 +341,9 @@ function HorariosDiasCalendario() {
 	var mes=(calendarInline2.currentMonth+1)>9?(calendarInline2.currentMonth+1):'0'+(calendarInline2.currentMonth+1);
 	var anio=calendarInline2.currentYear;
 	var fecha=anio+'-'+mes+'-01';
-
-	var datos="idservicio="+idservicio+"&fecha="+fecha;
+	var fechainicial=$("#v_fechainicial").val();
+	var fechafinal=$("#v_fechafinal").val();
+	var datos="idservicio="+idservicio+"&fecha="+fecha+"&fechainicial="+fechainicial+"&fechafinal="+fechafinal;
 
 	$.ajax({
 					url: urlphp+'ObtenerDiasDisponibles.php', //Url a donde la enviaremos
