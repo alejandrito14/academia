@@ -106,9 +106,11 @@ if(!isset($_GET['idusuarios']))
 	$v_referencia='';
 	$v_fis_correo="";
 	$v_celular="";
-	$titulo='NUEVO TUTOR';
+	$titulo='NUEVO ALUMNO';
+	$v_idtipo=0;
 	$bloquearediciondedatos=0;
-	$rutaperfil="images/sinfoto.png";
+			$rutaperfil="images/sinfoto.png";
+
 }else
 {
 	
@@ -121,8 +123,10 @@ if(!isset($_GET['idusuarios']))
 
 	$usuario_row = $db->fetch_assoc($usuario);
 	$usuario_num = $db->num_rows($usuario);
-
 	
+	//echo "Entro por que tiene un id de lciente.";
+	$v_idtipo = $fu->imprimir_cadena_utf8($usuario_row['tipo']);
+	$alias = $fu->imprimir_cadena_utf8($usuario_row['alias']);
 	$v_idempresa = $fu->imprimir_cadena_utf8($usuario_row['idempresas']);
 	$v_no_usuario = $fu->imprimir_cadena_utf8($usuario_row['no_usuario']);
 	$v_sexo = $fu->imprimir_cadena_utf8($usuario_row['sexo']);
@@ -135,7 +139,7 @@ if(!isset($_GET['idusuarios']))
 	$v_telefono =$fu->imprimir_cadena_utf8($usuario_row['telefono']);
 
 	$v_celular=$fu->imprimir_cadena_utf8($usuario_row['celular']);
-	$v_edad=$fu->imprimir_cadena_utf8($usuario_row['edad']);
+	$v_edad=$fu->imprimir_cadena_utf8($usuario_row['fechanacimiento']);
 	$opcionespago='';
 	if ($usuario_row['opcionespagobloqueadas']!='') {
 		$opcionespago=$usuario_row['opcionespagobloqueadas'];
@@ -221,7 +225,7 @@ if(!isset($_GET['idusuarios']))
 		$checkedhabilitar="checked";
 
 	}
-	$titulo='EDITAR TUTOR';
+	$titulo='EDITAR ALUMNO';
 
 
 	
@@ -271,7 +275,7 @@ $su->lista_empresas = $lista_empresas;
 
 
 <form name="form_usuario" id="form_usuario">
-	<input id="v_idusuario" name="v_idusuario" type="hidden" value="<?php echo $idusuario; ?>">
+	<input id="v_id" name="v_id" type="hidden" value="<?php echo $idusuario; ?>">
 
 	<div class="card">
 		<div class="card-body">
@@ -292,9 +296,7 @@ $su->lista_empresas = $lista_empresas;
 					$bt->icon = "mdi mdi-content-save";
 					$bt->funcion = "					
 				var resp=MM_validateForm('v_nombre','','R','v_paterno','','R');
-					 if(resp==1){ Guardarusuario('form_usuario','catalogos/tutores/vi_tutores.php','main','catalogos/tutores/ga_clientes.php',$idmenumodulo)}";
-
-
+					 if(resp==1){ Guardarusuario('form_usuario','catalogos/tutores/vi_tutores.php','main','catalogos/alumnos/ga_clientes.php',$idmenumodulo)}";
 
 					$bt->estilos = "float: right;";
 					$bt->permiso = $permisos;
@@ -310,7 +312,7 @@ $su->lista_empresas = $lista_empresas;
 			
 					$bt->armar_boton();
 				?>
-				<button type="button" onClick="aparecermodulos('catalogos/tutores/vi_tutores.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" title="VER LISTADO" style="margin-right: 10px;float: right;"><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
+				<button type="button" onClick="aparecermodulos('catalogos/alumnos/vi_alumnos.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" title="LISTADO DE JUGADORES" style="margin-right: 10px;float: right;"><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
 				
 				<input type="hidden" id="v_idusuario" name="v_idusuario" value="<?php echo $idusuario; ?>" />
 			</div>
@@ -323,67 +325,87 @@ $su->lista_empresas = $lista_empresas;
 	<div class="card">
 		<div class="card-body" style="padding: 15px">
 			<!-- Nav tabs -->
-			<ul class="nav nav-tabs" role="tablist">
+			<!-- <ul class="nav nav-tabs" role="tablist">
 				<li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#home" role="tab"><span class="hidden-sm-up"></span> <span class="hidden-xs-down">DATOS GENERALES</span></a> </li>
 				
 				<li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#messages" role="tab"><span class="hidden-sm-up"></span> <span class="hidden-xs-down">DATOS DE ACCESO</span></a> </li>
 				<li style="display: none;" class="nav-item"> <a class="nav-link" data-toggle="tab" href="#envio" role="tab"><span class="hidden-sm-up"></span> <span class="hidden-xs-down">Direcci&oacute;n de env&iacute;o</span></a> </li>
 
-				<li style="" class="nav-item" id="opcionesavanzadas"> <a class="nav-link" data-toggle="tab" href="#avanzado" role="tab"><span class="hidden-sm-up"></span> <span class="hidden-xs-down">OPCIONES AVANZADAS</span></a> </li>
+				<li style="display: none;" class="nav-item" id="opcionesavanzadas"> <a class="nav-link" data-toggle="tab" href="#avanzado" role="tab"><span class="hidden-sm-up"></span> <span class="hidden-xs-down">OPCIONES AVANZADAS</span></a> </li>
 
-			</ul>
+			</ul> -->
 			<!-- Tab panes -->
 
 			<div class="tab-content tabcontent-border" style=" padding-top: 15px;">
+			
+				<div class="card" id="home" role="tabpanel">
+					<div class="card-header" style="margin-top: 1em;">
+					<h5>DATOS DE CONFIGURACIÓN </h5>
+				</div>
 
-				<div class="tab-pane active p-20" id="home" role="tabpanel">
-					<div class="row">
-				<!-- 	<div class="form-group col-md-4">
-						<label>NO. DEL usuario:</label>
-							<input type="hidden" name="VALIDACION" id="VALIDACION" value="<?php echo ($validacion);?>"  ></input>
-						<input type="text" onblur="validarusuario(this.value,'alt_btn')" onKeyDown="bloquear_enie(event.keyCode);" onkeypress="bloquear_enie(event.keyCode); verificar(event);" name="v_no_usuario" id="v_no_usuario" class="form-control" title="No. del usuario" value="<?php echo ($v_no_usuario); ?>" placeholder="CODIGO"  readonly></input><span style="margin-left:2%" id="error" ></span>
-					</div> -->
-
-					<!-- <div class="form-group col-md-4">
-						<label for="">FOLIO INTERNO</label>
-						<input class="form-control" type="text" id="foliopack" name="foliopack" value="<?php echo $folioadmin; ?>">
-					</div> -->
-					</div>
-				
+					<div class="card-body">
 				<div class="row">
+				<div class="col-md-6">
+					<div class="form-group">
+						<label for="">TIPO DE USUARIO:</label>
+						<select name="tipo" id="v_tipo" class="v_tipo form-control">
+							
+						</select>
+					</div>
+					</div>
+				</div>
+			</div>
+		</div>
+			
 
-					<div class="form-group col-md-4">
+		<div class="card" >
+					<div class="card-header" style="margin-top: 1em;">
+					<h5>DATOS GENERALES </h5>
+				</div>
+				
+			<div class="card-body">
+				<div class="row">
+				<div class="col-md-6">
+
+					<div class="form-group m-t-20">
+					<label>ALIAS:</label>
+					<input type="text" name="alias" id="v_alias" class="form-control" title="Alias" value="<?php echo $fu->imprimir_cadena_utf8($alias); ?>" placeholder="ALIAS" tabindex="100" />
+				</div>
+
+					<div class="form-group ">
 						<label>NOMBRE:</label>
-						<input name="v_nombre" id="v_nombre" title="NOMBRE" type="text" class="form-control" placeholder="NOMBRE"  required value="<?php echo $v_nombre; ?>">
+						<input name="nombre" id="nombre" title="NOMBRE" type="text" class="form-control" placeholder="NOMBRE"  required value="<?php echo $v_nombre; ?>" tabindex="101">
+					</div>
+
+					
+					<div class="form-group ">
+						<label>APELLIDO PATERNO:</label>
+						<input name="paterno" id="v_paterno" title="APELLIDO PATERNO" type="text" class="form-control" placeholder="APELLIDO PATERNO"  required value="<?php echo $v_paterno; ?>" tabindex="102">
 					</div>
 					
-					<div class="form-group col-md-4">
-						<label>PATERNO:</label>
-						<input name="v_paterno" id="v_paterno" title="APELLIDO PATERNO" type="text" class="form-control" placeholder="APELLIDO PATERNO"  required value="<?php echo $v_paterno; ?>" >
-					</div>
-					
-					<div class="form-group col-md-4">
-						<label>MATERNO:</label>
-						<input name="v_materno" id="v_materno" title="APELLIDO MATERNO" type="text" class="form-control" placeholder="APELLIDO MATERNO"  required value="<?php echo $v_materno; ?>" >
+					<div class="form-group ">
+						<label>APELLIDO MATERNO:</label>
+						<input name="materno" id="v_materno" title="APELLIDO MATERNO" type="text" class="form-control" placeholder="APELLIDO MATERNO"  required value="<?php echo $v_materno; ?>" tabindex="103">
 					</div>	
 
-						<div class=" form-group  col-md-4">
+						<div class=" form-group  ">
 							
 								<label>GÉNERO:</label>
-								<select name="v_sexo" id="v_sexo" title="sexo" class="form-control">
+								<select tabindex="104" name="v_sexo" id="v_sexo" title="sexo" class="form-control">
 									<option value="H" <?php if("H" == $v_sexo ){ echo "selected"; } ?>>HOMBRE</option>
 									<option value="M" <?php if("M" == $v_sexo ){ echo "selected"; } ?>>MUJER</option>
 								</select>
 							</div>	
 
-					<div class="col-md-4">
-						<label>EDAD:</label>
-					  <input name="v_edad" id="v_edad" title="EDAD" type="text" class="form-control" placeholder="EDAD" required="" value="<?php echo $v_edad;?>">
+					<div class="">
+						<label>FECHA DE NACIMIENTO:</label>
+					  <input name="v_fechanacimiento" id="v_fechanacimiento" title="FECHA DE NACIMIENTO" type="date" class="form-control" placeholder="FECHA DE NACIMIENTO" required="" value="<?php echo $v_edad;?>" tabindex="105">
 					</div>
+					
 
 					
 						
-						<div class="col-md-4 form-group " style="display: none;">
+						<!-- <div class="form-group " style="display: none;">
 							
 								<label>FECHA DE NACIMIENTO:</label>
 								<div class="input-group">
@@ -392,133 +414,27 @@ $su->lista_empresas = $lista_empresas;
 										<span class="input-group-text"><i class="fa fa-calendar"></i></span>
 									</div>
 								</div>
-							</div>
+							</div> -->
 
 
-				</div>
-					<div class="row">
-				
-					<!---AGREGUE PAIS,ESTADO,MUNICIPIO,LOCALIDAD--->
 			
-			   
-					<!-- <div class="form-group col-md-4">
-						<label>PAIS:</label>
-
-
-						<select name="v_pais" id="v_pais" class="form-control" onchange="ObtenerEstadosCatalogo2(0,$(this).val(),'v_estado,v_fis_estado')">
-							  <option value="0">SELECCIONAR PAIS</option>
-							   <?php
-							  do
-							  {
-							?>
-								<option  value="<?php echo $result_paises_row['idpais'] ?>"  <?php if($result_paises_row['idpais'] == $idpais){ echo "selected"; }?>><?php echo strtoupper($fu->imprimir_cadena_utf8($result_paises_row['pais']));?></option>
-							<?php
-							   }while($result_paises_row = $db->fetch_assoc($resul_paises));
-						   ?>
-						</select>
-						
-					</div> -->
-
-					<!-- <div class="form-group col-md-4">
-						<label>ESTADO:</label>
-						
-
-						<select onchange="ObtenerMunicipios(0);" name="v_estado" id="v_estado" class="form-control" >
-							<option value="0">SELECCIONAR ESTADO</option>
-						</select>
-					</div> -->
-				   
-				  <!--  <div class="form-group col-md-4">
-						<label>MUNICIPIO:</label>
-						
-
-						<select  name="v_municipio" id="v_municipio" class="form-control" >
-						<option value="0">SELECCIONAR MUNICIPIO</option>
-
-						</select>
-					</div> -->
-
-					
-				  
-				   <!--  <div class="form-group col-md-4">
-						<label>LOCALIDAD:</label>
-					
-						<input type='text' name="v_ciudad" id="v_ciudad" value="<?php echo $v_ciudad; ?>" class="form-control" placeholder='LOCALIDAD'>
-						
-					</div>  -->
-
-					<!-- <div class="form-group col-md-4">
-						<label>CP:</label>
-						<input name="v_cp" id="v_cp" title="CP" type="text" value="<?php echo $v_cp; ?>" class="form-control" placeholder="CP"  required>
-					</div> -->
-
-					<!-- <div class="form-group col-md-4">
-						<label>AVENIDA/BLVD/CALLE:</label>
-						<textarea name="v_direccion" rows="2" required id="v_direccion" class="form-control" placeholder="AVENIDA/BLVD/CALLE" title="AVENIDA/BLVD/CALLE"><?php echo $v_direccion; ?></textarea>
-					</div>
- -->
-						
-					
-<!-- 
-					<div class="col-md-4">
-						<label>NO. INT:</label>
-					  <input name="v_no_int" id="v_no_int" title="NO.INT" type="text" class="form-control" placeholder="NO.INT" required="" value="<?php echo $no_int;?>">
-					</div>
-					<div class="col-md-4">
-						<label>NO. EXT:</label>
-					  <input name="no_ext" id="no_ext" title="NO.EXT" type="text" class="form-control" placeholder="NO.EXT" required="" value="<?php echo $no_ext;?>">
-					</div> -->
-<!-- 
-					<div class="col-md-4">
-						<label>COLONIA:</label>
-						<input name="v_colonia" id="v_colonia" title="COLONIA" type="text" class="form-control" placeholder="COLONIA" required="" value="<?php echo $colonia; ?>">
-					</div> -->
-
-			<!-- 		</div>
-				<div class="row" style="    margin-top: 1em;">
-					<div class="form-group col-md-4">
-						<label>REFERENCIA:</label>
-						<textarea name="v_referencia" id="v_referencia" title="REFERENCIA" type="text" class="form-control" placeholder="REFERENCIA"><?php echo $v_referencia; ?></textarea>
-					</div> -->
-					<div class="form-group col-md-4">
+					<div class="">
+				
+					<div class="form-group ">
 						<label>CELULAR:</label>
-						<input name="v_celular" id="v_celular" title="CELULAR" type="text" class="form-control" placeholder="CELULAR" value="<?php echo $v_celular; ?>" >
+						<input name="celular" id="v_celular" title="CELULAR" type="text" class="form-control" placeholder="CELULAR" value="<?php echo $v_celular; ?>" tabindex="106">
 					</div>
-					<div class="form-group col-md-4">
+					<div class="form-group " style="display: none;">
 						<label>TEL&Eacute;FONO:</label>
 						<input name="v_telefono" id="v_telefono" title="TELÉFONO" type="text" class="form-control" placeholder="TELÉFONO"  required value="<?php echo $v_telefono; ?>">
 					</div>
 
 
-					
-
-				
-							
-					
-
-				</div>
-
-					<!---AGREGUE PAIS,ESTADO,MUNICIPIO,LOCALIDAD--->
-
-					
-
-				
-						
-					
-					
-					<div class="row">
-					<div class="form-group col-md-4">
-						<label>HABILITAR OBSERVACIONES:</label>
-						<input type="checkbox" name="habilitarobservaciones" id="habilitarobservaciones" value="<?php echo $habilitarobservacion ?>" onchange="HabilitarObservaciones()" <?php echo $checkedhabilitar; ?>>
-					</div>
-				
-					</div>
-
-					<div class="row">
-					
-					<div class="col-md-4">
+					<div class="col-md-6">
+						<div class="form-group ">
 						<label>FOTO DE PERFIL:</label>
 					 	<div>
+					 	</div>
 
 					 		<form method="post" action="#" enctype="multipart/form-data">
 								    <div class="card" style="width: 18rem;margin: auto;margin-top: 3em;">
@@ -540,6 +456,31 @@ $su->lista_empresas = $lista_empresas;
 					 		
 					 	</div>
 					</div>
+
+				
+							
+					
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+					<!---AGREGUE PAIS,ESTADO,MUNICIPIO,LOCALIDAD--->
+
+					
+
+				
+						
+					
+					
+
+					
+					<div class="row">
+					
+				</div>
 
 					<div class="col-md-4" style="display: none;">
 						<label>INE:</label>
@@ -584,14 +525,8 @@ $su->lista_empresas = $lista_empresas;
 				
 
 
-				
-					
-					
-			
-
-
 				<div class="tab-pane  p-20" id="profile" role="tabpanel">
-						<div class="row">
+						<div class="row" style="display: none;">
 					<div class="form-group col-md-4">
 						<label>RAZÓN SOCIAL:</label>
 						<input name="v_fis_razonsocial" id="v_fis_razonsocial" title="RAZÓN SOCIAL" type="text" class="form-control" placeholder="RAZÓN SOCIAL"  required value="<?php echo $v_fis_razonsocial; ?>" >
@@ -703,41 +638,67 @@ $su->lista_empresas = $lista_empresas;
 						
 
 
+				<!-- Datos de acceso --->
+
+				<div class="card" >
+					<div class="card-header" style="margin-top: 1em;">
+						<h5>DATOS DE ACCESO</h5>
 					</div>
 				
-				
-
-				
-
-				
-
-				<div class="tab-pane p-20" id="messages" role="tabpanel">
+			<div class="card-body">
+				<div class="row">
 
 					<div class="col-md-6">
 					<div class="form-group m-t-20" >
 						<label>USUARIO:</label>
-						<input name="v_usuario" onBlur="validarUsuariousuario();" id="v_usuario" title="Usuario" type="text" class="form-control" placeholder="Chiapas"  required value="<?php echo $v_usuario; ?>" >
+						<input name="usuario" onBlur="validarUsuariousuario();" id="v_usuario" title="Usuario" type="text" class="form-control" placeholder="Usuario"  required value="<?php echo $v_usuario; ?>" tabindex="107">
 					</div>
 					
 					
-					
+				
+
 					<div class="form-group m-t-20">
-						<label>CONTRASE&Ntilde;A:</label>
-						<input name="v_clave" type="password"  id="v_clave" placeholder="CONTRASEÑA" title="CONTRASEÑA" class="form-control" value="<?php echo $v_clave; ?>">
+					<label>*CONTRASEÑA:</label>
+					<div class="input-group mb-3">
+
+						<input type="password" name="clave" id="v_clave" class="form-control" title="CONTRASEÑA" value="<?php echo $v_clave; ?>"placeholder="CONTRASEÑA" tabindex="108">
+
+						<div class="input-group-append">
+							<button class="btn " type="button">
+								<span class="icon1 fa fa-eye-slash" onclick="mostrarPassword('v_clave','icon1')" style="text-align: center;"></span>
+							</button>
+						</div>
+					</div>
+					</div>
+
+					<div class="form-group m-t-20">
+						<label>*CONFIRMAR CONTRASEÑA:</label>
+						<div class="input-group mb-3">
+
+							<input type="password" name="clave2" id="clave2" class="form-control" title="CONFIRMAR CONTRASEÑA" value="<?php echo $v_clave; ?>" placeholder="CONFIRMAR CONTRASEÑA" tabindex="109">
+
+							<div class="input-group-append">
+								<button class="btn " type="button">
+									<span class="icon2 fa fa-eye-slash" onclick="mostrarPassword('clave2','icon2')" style="text-align: center;"></span>
+								</button>
+							</div>
+						</div>
+
 					</div>
 					
 					<div class="form-group m-t-20">
 						<label>ESTATUS:</label>
-						<select name="v_estatus" id="v_estatus" title="Estatus" class="form-control"  >
+						<select name="estatus" tabindex="110" id="v_estatus" title="Estatus" class="form-control"  >
 							<option value="0" <?php if($v_estatus == 0) { echo "selected"; } ?> >NO ACTIVO</option>
 							<option value="1" <?php if($v_estatus == 1) { echo "selected"; } ?> >ACTIVO</option>
 						</select>
-					</div>
+						</div>
+					 </div>
 					</div>
 				</div>
+			</div>
 				
-				
-				<div class="tab-pane p-20" id="envio" role="tabpanel">
+				<div class="tab-pane p-20" id="envio" role="tabpanel" style="display: none;">
 					
 					
 					
@@ -752,47 +713,9 @@ $su->lista_empresas = $lista_empresas;
 					
 				</div>
 
-				<div style="" class="tab-pane  p-20" id="avanzado" role="tabpanel">
-						<div class="form-group m-t-20">
-							<label>OCULTAR OPCIONES DE TIPO DE  PAGO</label>
-							<div id="opcionestipopago" class="col-md-4"></div>
-						</div>
-			
+				
 
-			
-						<div class="form-group m-t-20">
-							<label>SOLICITAR VALIDACIÓN DE TELÉFONO</label>
-							<div class="col-md-4">
-								<div class="form-check " id="">
-								   <input type="checkbox" class="form-check-input " id="validaciontelefono">
-								 <label class="form-check-label" for="flexCheckDefault" id="">Validación de teléfono</label>
-								</div>
-							</div>
-						</div>
-
-						<div class="form-group m-t-20">
-							<label>BLOQUEAR EDICIÓN DE DATOS EN LA APPLICACIÓN</label>
-							<div class="col-md-4">
-								<div class="form-check " id="">
-								   <input type="checkbox" class="form-check-input " id="bloquearediciondedatos">
-								 <label class="form-check-label" for="flexCheckDefault" id="">BLOQUEAR</label>
-								</div>
-							</div>
-						</div>
-
-						<div class="form-group m-t-20">
-							<label>ACTIVAR ANUNCIOS</label>
-							<div class="col-md-4">
-								<div class="form-check " id="">
-								   <input type="checkbox" class="form-check-input " id="mostraranuncios">
-								 <label class="form-check-label" for="flexCheckDefault" id="">ACTIVAR</label>
-								</div>
-							</div>
-						</div>
-			
-				</div>
-
-
+					</div>
 
 			</div>
 
@@ -813,25 +736,30 @@ $su->lista_empresas = $lista_empresas;
 
 <link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
 <script src="assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
-<script  type="text/javascript" src="./js/mayusculas.js"></script>
+<!-- <script  type="text/javascript" src="./js/mayusculas.js"></script> -->
 
 <script>
  phoneFormatter2('v_telefono');
  phoneFormatter2('v_celular');
 
- var bloquearediciondedatos='<?php echo $bloquearediciondedatos?>';
+
+/* var bloquearediciondedatos='<?php echo $bloquearediciondedatos?>';
 
  validarbloquearediciondatos(bloquearediciondedatos);
  var mostraranuncios='<?php echo $mostraranuncios;?>';
  anunciovisto(mostraranuncios);
-
+*/
 </script>
 
 
 
-<?php if($_GET['idusuario']>0){ ?>
+
+
 
 	<script type="text/javascript">
+	var idusuario='<?php echo $idusuario; ?>';
+
+	if (idusuario>0){
 		var opcionestipopago='<?php echo $opcionespago; ?>';
 		var opcionespago="";
 		if (opcionestipopago!='') {
@@ -841,35 +769,41 @@ $su->lista_empresas = $lista_empresas;
 
 		var validartelefono='<?php echo $validartelefono; ?>';
 
-		ObtenerEstados(<?php echo $v_estado; ?>);
+		/*ObtenerEstados(<?php echo $v_estado; ?>);
 		ObtenerMunicipiosP(<?php echo $v_estado; ?>,<?php echo $v_municipio; ?>);
 	//	ObtenerLocalidades2(<?php echo $v_municipio; ?>,<?php echo $v_ciudad; ?>);
 
 	ObtenerEstadosCatalogo(<?php echo $v_fis_estado;?>,<?php echo $idpais;?>,'v_fis_estado');
 
- 	ObtenerMunicipiosCatalogo(<?php echo $v_fis_municipio;?>,<?php echo $v_fis_estado;?>,'v_fis_municipio');
+ 	ObtenerMunicipiosCatalogo(<?php echo $v_fis_municipio;?>,<?php echo $v_fis_estado;?>,'v_fis_municipio');*/
  //	ObtenerLocalidadesCatalogo(<?php echo $v_fis_ciudad;?>,<?php echo $v_fis_municipio;?>,'v_fis_ciudad');
  	
  	if (opcionespago=='') {
  		opcionespago=0;
  	}
- 	OpcionesPago(opcionespago);
+ 	var idtipo="<?php echo $v_idtipo;?>";
+ 	//OpcionesPago(opcionespago);
 
- 	validartelefonocheck(validartelefono);
+ 	//validartelefonocheck(validartelefono);
+	ObtenerTipos(idtipo);
 
+	}else{
+
+		 ObtenerTipos(3);
+	// ObtenerEstados(0);
+	 $("#avanzado").css('display','none');
+	 $("#opcionesavanzadas").css('display','none');
+
+	}
 	</script>
 
 
-<?php 	}else{ ?>
-	<script type="text/javascript">
 
-	 ObtenerEstados(0);
-	 $("#avanzado").css('display','none');
-	 $("#opcionesavanzadas").css('display','none');
+	<script type="text/javascript">
+	
 </script>
 
 
-<?php } ?>
 
 
 <script>

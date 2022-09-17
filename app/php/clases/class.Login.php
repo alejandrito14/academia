@@ -6,7 +6,8 @@ class Login
 	public $db;					//Objeto de conexion
 	public $usuario; 			//Usuario
 	public $password;			//Contraseña
-
+	public $celular;
+	public $idusuarios;
 	//Funcion que sirve para validar el usuario y contraseña en DB
 	
 	public function validar_credenciales()
@@ -67,5 +68,46 @@ class Login
 	   }
 	
 	
+
+	public function buscar_celular()
+	   {
+	   	$sql = "SELECT * FROM usuarios us WHERE us.celular = '$this->celular' AND idusuarios='$this->idusuarios'
+	   	"; 
+		
+		$result = $this->db->consulta($sql);
+		return $result;
+	   }
+
+
+	public function buscar_celular2()
+	   {
+	   	$sql = "SELECT * FROM usuarios us WHERE us.celular = '$this->celular'
+	   	"; 
+		
+		$result = $this->db->consulta($sql);
+		return $result;
+	   }
+
+	   public function BuscarUsuarioAsociado()
+	   {
+	   	$sql="SELECT *FROM usuariossecundarios WHERE idusuariotutorado='$this->idusuarios'";
+	  
+	   	$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	   }
 }
 ?>

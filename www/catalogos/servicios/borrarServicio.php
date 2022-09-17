@@ -43,7 +43,7 @@ try
     	echo 1;
     } 
     else{
-
+    	$emp->BorrarEncuesta();
     	$emp->BorrarHorarios();
     	$emp->BorrarZonas();
     	$emp->BorrarCoaches();

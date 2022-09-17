@@ -24,6 +24,7 @@ try
     //Enviamos la conexion a la clase
     $lo->db    = $db;
     $idusuariotutor = $_POST['id_user'];
+    $lo->idusuarios=$idusuariotutor;
     //Recibimos parametros
     $nombre   = $_POST['v_nombretu'];
     $paterno  = $_POST['v_paternotu'];
@@ -46,12 +47,27 @@ try
     $lo->tipo=3;
     $lo->usuario=$email;
     $lo->idtutorado=$_POST['v_idtu'];
-
+    $inputtutor=$_POST['inputtutor'];
+    $sincelular=$_POST['inputsincelular'];
 
 
         if ($lo->idtutorado==-1 || $lo->idtutorado=='') {
-                 $lo->GuardarUsuarioTutorado();
-                 $lo->GuardarUsuarioyTutor($idusuariotutor,$parentesco);
+
+             if ($sincelular==1) {
+                    $lo->celular2=$info[0]->celular;
+                 }
+
+                   $v_idusuario=$_POST['v_idusuario'];
+                 if ($v_idusuario==''){
+                     $lo->GuardarUsuarioTutorado($sincelular);
+                   
+                    }else{
+                     $lo->idusuariotutorado=$v_idusuario;
+                    }
+
+
+              //   $lo->GuardarUsuarioTutorado();
+                 $lo->GuardarUsuarioyTutor($idusuariotutor,$parentesco,$inputtutor);
         }else{
 
 

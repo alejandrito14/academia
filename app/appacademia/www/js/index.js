@@ -276,7 +276,7 @@ var getToken = function(){
     FirebasePlugin.getToken(function(token){
         log("Got FCM token: " + token);
         localStorage.setItem('tokenfirebase',token);
-      //alert('nuevo '+token); 
+      alert('nuevo '+token); 
 
     }, function(error) {
         logError("Failed to get FCM token", error);

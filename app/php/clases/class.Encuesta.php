@@ -342,6 +342,47 @@ class Encuesta
 		return $array;
 	}
 
+	public function ObtenerTodasEncuestas()
+	{
+		$sql = "SELECT *FROM encuesta WHERE estatus = 1";
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+
+	
+	public function ObtenerEncuestasServicio()
+	{
+		$sql = "
+			SELECT * FROM servicios_encuesta WHERE idservicio='$this->idservicio'";
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
 	
 }
  ?>

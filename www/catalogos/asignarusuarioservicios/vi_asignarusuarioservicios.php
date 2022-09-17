@@ -172,9 +172,9 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 						    	<div class="form-check cli_"  id="cli_<?php echo $a_cliente['idusuarios'];?>_<?php echo $a_cliente['idusuarios'];?>">
 						    	    <?php 	
 						    			$valor="";
-                                        $nombre=mb_strtoupper($f->imprimir_cadena_utf8($a_cliente['nombre']." ".$a_cliente['paterno']." ".$a_cliente['materno']));
+             $nombre=mb_strtoupper($f->imprimir_cadena_utf8($a_cliente['nombre']." ".$a_cliente['paterno']." ".$a_cliente['materno']));
 						    		?>
-									  <input  type="checkbox"   value="<?php echo $a_cliente['idusuarios']?>" class="form-check-input chkcliente" id="inputcli_<?php echo $a_cliente['idusuarios']?>" <?php echo $valor; ?>>
+									  <input  type="checkbox"   value="<?php echo $a_cliente['idusuarios']?>" onchange="CapturarValor(<?php echo $a_cliente['idusuarios'];?>)" class="form-check-input chkcliente" id="inputcli_<?php echo $a_cliente['idusuarios']?>" <?php echo $valor; ?>>
 									  <label class="form-check-label" for="flexCheckDefault" style="margin-top: 0.2em;"><?php echo $nombre.' - '.$a_cliente['usuario']; ?></label>
 								</div>						    		
 						    	<?php

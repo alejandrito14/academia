@@ -25,6 +25,17 @@ class Membresia
 
 	//usuarios
 	public $idusuarios;
+	public $idusuarios_membresia;
+	public $renovacion;
+	public $fechaexpiracion;
+	public $pagado;
+
+	//descuento membresia
+	public $idpago;
+	public $descuento;
+	public $monto;
+	public $montoadescontar;
+	
 
 	public function ObtenerTodosmembresia()
 	{
@@ -35,6 +46,29 @@ class Membresia
 		$result = $this->db->consulta($query);
 		return $result;
 	}
+
+		public function ObtenerMembresiasActivas()
+	{
+		$sql="SELECT *FROM membresia WHERE estatus=1";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
 
 	public function buscarmembresia()
 	{
@@ -104,7 +138,6 @@ class Membresia
 	{
 		
 		$sql="SELECT *FROM servicios_membresia WHERE idmembresia='$this->idmembresia'";
-
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -142,9 +175,10 @@ class Membresia
 
 	public function ObtenerUsuarioMembresias()
 	{
-		$sql="SELECT GROUP_CONCAT(idmembresia) as idmembresias
-		FROM usuarios_membresia WHERE idusuarios='$this->idusuarios'";
-
+		$sql="SELECT * FROM usuarios_membresia
+			INNER JOIN membresia ON usuarios_membresia.idmembresia=membresia.idmembresia
+		 WHERE idusuarios='$this->idusuarios'  AND usuarios_membresia.estatus=1 AND usuarios_membresia.pagado=1  ";
+	
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -166,12 +200,41 @@ class Membresia
 	public function ObtenerMembresiasDisponibles($idmembresias)
 	{
 		$sql="SELECT *
-		FROM membresia ";
+		FROM membresia WHERE inppadre=1 and depende=0";
 
 		if ($idmembresias!='') {
-			$sql.=" WHERE idmembresia 
+			$sql.=" AND idmembresia 
 			 NOT IN('$this->idmembresias')";
 		}
+		
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerMembresiasDependen($idmembresiapadre,$inphijo,$inpnieto){
+		$sql="SELECT *
+		FROM membresia WHERE depende=1 OR inphijo='$inphijo' AND inpnieto='$inpnieto'";
+
+		if ($idmembresiapadre!='') {
+
+			$sql.=" AND idmembresiadepende='$idmembresiapadre'";
+		}
+		
 		
 
 		$resp=$this->db->consulta($sql);
@@ -215,7 +278,149 @@ class Membresia
 		return $array;
 	}
 
+	public function buscarMembresiaUsuario()
+	{
+		$sql="SELECT *
+		FROM usuarios_membresia WHERE idmembresia='$this->idmembresia' AND idusuarios='$this->idusuarios' AND estatus=1";
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+
+
+
+	}
+
+
+	public function ActualizarEstatusMembresiaUsuario()
+	{
+		$query="UPDATE membresia SET estatus='$this->estatus'
+		WHERE idusuarios_membresia='$this->idusuarios_membresia'";
+		
+		$resp=$this->db->consulta($query);
+	}
+
+	public function CrearRegistroMembresiaUsuario()
+	{
+		$query="INSERT INTO usuarios_membresia ( idusuarios,idmembresia, estatus,renovacion, fechaexpiracion,pagado) VALUES ('$this->idusuarios','$this->idmembresia', '$this->estatus',$this->renovacion,'$this->fechaexpiracion','$this->pagado')";
+		
+		$resp=$this->db->consulta($query);
+
+	}
+
+	public function ObtenerMembresiaUsuario()
+	{
+		$sql="SELECT *
+		FROM usuarios_membresia WHERE idusuarios='$this->idusuarios' and estatus=1 and pagado=1";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerCategoriasMembresia()
+	{
+		$sql="SELECT *FROM categorias_membresia WHERE idmembresia='$this->idmembresia'";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function GuardarPagoDescuentoMembresia()
+	{
+		$sql="INSERT INTO pagodescuentomembresia
+		(idpago, idmembresia, idservicio, descuento, monto,montoadescontar) VALUES ( '$this->idpago', '$this->idmembresia','$this->idservicio', '$this->descuento', '$this->monto','$this->montoadescontar')";
+		$resp=$this->db->consulta($sql);
+
+	}
+
+	public function buscarSiTutorTieneMembresia($idtutor)
+	{
+		$fechaactual=date('Y-m-d H:i:s');
+	$sql="SELECT *FROM usuarios_membresia WHERE idusuarios='$idtutor' AND estatus=1 AND  date_format(date(fechaexpiracion),'%Y-%m-%d H:i:s') >= '$fechaactual' AND pagado=1";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerSiTutoradosMembresia($idtutor)
+	{
+		$sql="SELECT *FROM usuariossecundarios
+		INNER JOIN usuarios_membresia ON usuarios_membresia.idusuarios=usuariossecundarios.idusuariotutorado
+		WHERE usuariossecundarios.idusuariostutor='$idtutor' AND usuarios_membresia.idmembresia='$this->idmembresia' 
+		";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 
 }
-
- ?>
+?>

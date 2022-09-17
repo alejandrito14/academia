@@ -1,3 +1,5 @@
+var arrayquitar=[];
+var arrayagregar=[];
 function UsuariosServicio(idservicio) {
 	
 	var datos="idservicio="+idservicio;
@@ -15,7 +17,8 @@ function UsuariosServicio(idservicio) {
 			//aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
 		},
 	  success:function(msj){
-
+	  		arrayquitar=[];
+	  		arrayagregar=[];
 	  		var servicio=msj.servicio[0];
 	  		$(".tituloseleccionado").html('<span style="font-weight: 400;">ASIGNAR A SERVICIO:</span> <span style="font-weight: bold;">'+servicio.titulo+'</span>');
 		 	$(".descripcionseleccionado").html('<span style="font-weight: 400;">DESCRIPCION:</span> <span style="font-weight: bold;">'+servicio.descripcion+'</span>');
@@ -60,7 +63,7 @@ function GuardarAsignacion(idservicio) {
 		});
 
 	
-	var datos="idservicio="+idservicio+"&participantes="+participantes;
+	var datos="idservicio="+idservicio+"&participantes="+participantes+"&arrayquitar="+arrayquitar+"&arrayagregar="+arrayagregar;
 	$.ajax({
 	  url:'catalogos/asignarusuarioservicios/GuardarAsignacion.php', //Url a donde la enviaremos
 	  type:'POST', //Metodo que usaremos
@@ -75,12 +78,42 @@ function GuardarAsignacion(idservicio) {
 			//aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
 		},
 	  success:function(msj){
-		 	if (msj.respuesta==1) {
-				aparecermodulos('catalogos/asignarusuarioservicios/vi_asignarusuarioservicios.php'+"?ac=1&idmenumodulo=113&msj=Operacion realizada con exito",'main');
 
-				//AbrirNotificacion("Se guardarón cambios en la asignación del servicio",'mdi mdi-checkbox-marked-circle');
-				//ActualizarServicios();
-		 	}
+	  	arrayquitar=[];
+	  	arrayagregar=[];
+		 var respuesta=msj.respuesta;
+		 var usuariosnoagregados=msj.usuariosnoagregados;
+		 UsuariosServicio(idservicio);
+		 if (usuariosnoagregados.length>0) {
+		 		var html="";
+		 			for (var i = 0; i <usuariosnoagregados.length; i++) {
+		 			    html+=`<span>
+		 				El usuario `+usuariosnoagregados[i].nombre +' '+usuariosnoagregados[i].paterno+` `+usuariosnoagregados[i].materno+`
+		 				no puede ser asignado a este servicio debido a que pertenece a otro servicio en el mismo horario
+
+		 				</span>`;
+
+		 				var serviciosasignados=usuariosnoagregados[i].servicioscruzados;
+		 				for (var j =0; j < serviciosasignados.length; j++) {
+		 					html+=`<p>`+serviciosasignados[j].titulo+`</p>`
+		 				}
+		 				html+=`</br>`;
+
+
+		 			}
+
+
+			AbrirNotificacion(""+html,"mdi-checkbox-marked-circle ")
+
+		 }else{
+
+			AbrirNotificacion("SE REALIZARON LOS CAMBIOS CORRECTAMENTE","mdi-checkbox-marked-circle ")
+ 	
+		 }
+
+			 			
+			
+
 		
 		}
 	});
@@ -410,4 +443,43 @@ function PintarSeleccionados2() {
 
 
 
+}
+
+
+function CapturarValor(idcliente) {
+	
+	if ($("#inputcli_"+idcliente).is(':checked')) {
+		var resp=BuscarEnarrayQuitar(idcliente);
+		arrayagregar.push(idcliente)
+
+	}else{
+		var resp=BuscarEnarrayagregar(idcliente);
+		arrayquitar.push(idcliente);
+	}
+
+
+
+}
+
+
+function BuscarEnarrayQuitar(idcliente) {
+	if (arrayquitar.length>0) {
+		for (var i = 0; i <arrayquitar.length; i++) {
+			if (arrayquitar[i] === idcliente) {
+
+				arrayquitar.splice(i,1);
+			}
+		}
+	}
+}
+function BuscarEnarrayagregar(idcliente) {
+	if (arrayagregar.length>0) {
+		for (var i = 0; i <arrayagregar.length; i++) {
+
+			if (arrayagregar[i] === idcliente) {
+
+				arrayagregar.splice(i,1);
+			}
+		}
+	}
 }

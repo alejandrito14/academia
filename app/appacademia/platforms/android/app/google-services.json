@@ -29,6 +29,13 @@
             {
               "client_id": "452739120046-5circ8cevfjhnfipjvvqu162jt8isc4i.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "452739120046-19bi02bbe23qblus7p89fsdot3ocogh0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.woolis.app"
+              }
             }
           ]
         }

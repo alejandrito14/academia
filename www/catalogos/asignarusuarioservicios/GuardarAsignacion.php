@@ -11,7 +11,7 @@ if(!isset($_SESSION['se_SAS']))
 
 	exit;
 }
-
+ 
 /*======================= TERMINA VALIDACIÓN DE SESIÓN =========================*/
 
 //Importamos las clases que vamos a utilizar
@@ -19,6 +19,8 @@ require_once("../../clases/conexcion.php");
 require_once("../../clases/class.Servicios.php");
 require_once("../../clases/class.Funciones.php");
 require_once('../../clases/class.MovimientoBitacora.php');
+require_once("../../clases/class.ServiciosAsignados.php");
+require_once("../../clases/class.Usuarios.php");
 
 try
 {
@@ -27,22 +29,191 @@ try
 	$emp = new Servicios();
 	$f = new Funciones();
 	$md = new MovimientoBitacora();
+	$serviciosasignados = new ServiciosAsignados();
+	$usuarios=new Usuarios();
+	$usuarios->db=$db;
+	$serviciosasignados->db=$db;
 
-	
 	//enviamos la conexión a las clases que lo requieren
 	$emp->db=$db;
 	$md->db = $db;	
 	
-	$db->begin();
 		
 	//Recbimos parametros
 	$emp->idservicio = trim($_POST['idservicio']);
 
 	$participantes=explode(',',  $_POST['participantes']);
-	
-	
 
-			$emp->EliminarParticipantes();
+	$idusuariosparaasignar=$_POST['arrayagregar'];
+	$idusuarios=explode(',', $_POST['arrayagregar']);
+	$idservicio=$_POST['idservicio'];
+	$iduser=$_SESSION['se_sas_Usuario'];
+	$serviciosasignados->idservicio=$idservicio;
+	$obtenerdatosservicio=$serviciosasignados->ObtenerServicio();
+	$arrayquitar=explode(',', $_POST['arrayquitar']);
+	$idusuariosparaquitar=$_POST['arrayquitar'];
+	/*$usuariosquitados=$_POST['usuariosquitados'];
+	$usuariosparaquitar=explode(',', $_POST['usuariosquitados']);*/
+	$idservicioasignar=$idservicio;
+	$usuariosnoagregados=array();
+	$db->begin();
+
+
+	if ($idusuariosparaasignar!='') {
+		# code...
+	
+	for ($i=0; $i < count($idusuarios); $i++) { 
+		$serviciosasignados->idusuario=$idusuarios[$i];
+		$obtenersignaciones=$serviciosasignados->BuscarAsignaciones();
+		
+
+		for ($j=0; $j < count($obtenersignaciones); $j++) { 
+
+		if ($obtenersignaciones[$j]->idservicio!=$idservicioasignar) {
+
+			$serviciosasignados->idservicio=$obtenersignaciones[$j]->idservicio;
+
+			$obtenerHorarios=$serviciosasignados->ObtenerHorariosServicioZona();
+
+
+			$servicioscruzados=array();
+			$secruza=0;
+			for ($k=0; $k <count($obtenerHorarios) ; $k++) { 
+				$idserviciocruzado=$obtenerHorarios[$k]->idservicio;
+				$fecha=$obtenerHorarios[$k]->fecha;
+				$horainicial=$obtenerHorarios[$k]->horainicial;
+				$horafinal=$obtenerHorarios[$k]->horafinal;
+
+				$serviciosasignados->fecha=$fecha;
+				$serviciosasignados->horainicial=$horainicial;
+				$serviciosasignados->horafinal=$horafinal;
+				$cruzahorario=$serviciosasignados->EvaluarHorarioFechaZona($idservicioasignar);
+				
+				if (count($cruzahorario)) {
+					$secruza++;
+
+					$emp->idservicio=$idserviciocruzado;
+					$infoserviciocruzado=$emp->ObtenerServicio();
+
+					if (!$serviciosasignados->BuscadorArray($servicioscruzados,$infoserviciocruzado[0]->idservicio)) {
+
+						array_push($servicioscruzados,  $infoserviciocruzado[0]);
+					}
+					
+					
+				}
+
+			}
+
+			if ($secruza>0) {
+				$usuarios->id_usuario=$idusuarios[$i];
+				$obtenerUsuario=$usuarios->ObtenerUsuarioDatos();
+				
+				$obtenerUsuario[0]->servicio=$infoservicio[0]->titulo;
+				$obtenerUsuario[0]->idservicio=$infoservicio[0]->idservicio;
+
+				//var_dump($servicioscruzados);die();
+				$obtenerUsuario[0]->servicioscruzados=$servicioscruzados;
+				
+				array_push($usuariosnoagregados,$obtenerUsuario[0]);
+				//unset($idusuarios[$i]);
+
+			}
+
+		 }
+		}
+
+
+	}
+		$eliminararray=array();
+	for ($j=0; $j <count($usuariosnoagregados) ; $j++) { 
+		for ($i=0; $i <count($idusuarios); $i++) { 
+
+			
+			if ($idusuarios[$i]==$usuariosnoagregados[$j]->idusuarios) {
+				$posicion.=$i;
+				$valor=$i+1;
+				array_push($eliminararray, $idusuarios[$i]);
+				if ($valor<count($idusuarios)) {
+					$posicion.=',';
+					
+				}
+			}
+		}
+	}
+
+	$diff=array_values(array_diff($idusuarios,$eliminararray));
+
+	$idusuarios=$diff;
+
+
+	if (count($idusuarios)>0) {
+		# code...
+	
+	for ($i=0; $i <count($idusuarios) ; $i++) { 
+		$serviciosasignados->idusuario=$idusuarios[$i];
+		$serviciosasignados->idservicio=$idservicioasignar;
+		
+		$consulta=$serviciosasignados->BuscarAsignacion();
+
+		if (count($consulta)==0) {
+		$serviciosasignados->GuardarAsignacion();
+
+		}
+	}
+
+
+
+	}
+}
+
+
+if($idusuariosparaquitar!='') {
+		# code...
+	
+	$obtenerusuarioscancelacion=$serviciosasignados->BuscarAsignacionCancelacionUsuarios($idusuariosparaquitar);
+
+	//var_dump($obtenerusuarioscancelacion);die();
+
+	if (count($obtenerusuarioscancelacion)>0) {
+		for ($i=0; $i < count($obtenerusuarioscancelacion); $i++) { 
+
+			$idusuariocancelado=$obtenerusuarioscancelacion[$i]->idusuarios;
+
+			$serviciosasignados->idusuario=$idusuariocancelado;
+
+			$serviciosasignados->motivocancelacion="cancelado desde la app por usuario ".$iduser;
+			$serviciosasignados->cancelado=1;
+			$serviciosasignados->CambiarEstatusServicio($obtenerusuarioscancelacion[$i]->idusuarios_servicios);
+
+			if ($obtenerusuarioscancelacion[$i]->aceptarterminos==1) {
+				$pagos=$serviciosasignados->BuscarPagos();
+
+				for ($j=0; $j < count($pagos); $j++) { 
+					
+					if ($pagos[$j]->pagado==1 && $pagos[$j]->estatus==2) {
+						$idpago=$pagos[$j]->idpago;
+						
+						if($obtenerdatosservicio[0]->reembolso==1){
+							$estatus=4;
+
+							//mandar a monedero
+						
+							}else{
+								$estatus=5;
+							}
+						
+						$serviciosasignados->CambiarEstatusPago($idpago,$estatus);
+					}
+				}
+
+			}
+			
+		}
+	}
+}
+
+		/*	$emp->EliminarParticipantes();
 		if (count($participantes)>0 && $participantes[0]!='') {
 			
 			for ($i=0; $i < count($participantes); $i++) { 
@@ -52,10 +223,11 @@ try
 			}
 
 	$md->guardarMovimiento($f->guardar_cadena_utf8('Servicio'),'Asignación',$f->guardar_cadena_utf8('Asignación del Servicio -'.$emp->idservicio));
-
+*/
 				
 	$db->commit();
 	$respuesta['respuesta']=1;
+	$respuesta['usuariosnoagregados']=$usuariosnoagregados;
 	echo json_encode($respuesta);
 	
 }catch(Exception $e)

@@ -33,10 +33,13 @@
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
 
     <platform name="android">
+          <preference name="android-compileSdkVersion" value="31" />
+
        <preference name="AndroidXEnabled" value="true" />
         <preference name="AndroidInsecureFileModeEnabled" value="true" />
         <preference name="loadUrlTimeoutValue" value="700000" />
 
+        <preference name="android-targetSdkVersion" value="31" />
 
         <resource-file src="res/android/build-extras.gradle" target="app/build-extras.gradle" />
         <resource-file src="res/android/gradle.properties" target="gradle.properties" />

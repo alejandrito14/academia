@@ -1,6 +1,9 @@
 <?php
   class Fechas
   {
+  	public $mes;
+	public $anio;
+	public $fecha;
 	  public $diasSemana = array('domingo','lunes','marte','miercoles','jueves','viernes','sabado');
 	  public $mesesAnho = array('Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre');
 	  public $mesesAnho3 = array('Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic');
@@ -421,18 +424,11 @@
 	
 	public function ultimodiadelmes()
 	{
-		$fecha = date('Y-m-j');
-		//$nuevafecha = strtotime ( '+1 month' , strtotime ( $fecha ) ) ;
-		//$nuevafecha = date ( 'Y-m-j' , $fecha );
-			
-		$f = explode('-',$fecha);
-		$month = $f[1];
-		$year = $f[0];
-		$day = date("d",mktime(0,0,0, $month+1, 0, $year));
-		
-		$nuevafecha = date('Y-m-d', mktime(0,0,0, $month, $day, $year));
-		
-		return $nuevafecha;
+		 $month = date('m');
+      $year = date('Y');
+      $day = date("d", mktime(0,0,0, $month+1, 0, $year));
+ 
+      return date('Y-m-d', mktime(0,0,0, $month, $day, $year));
 	}
 
 		    /** Obtener el ultimo dia del mes actual **/
@@ -540,6 +536,22 @@
        return $arreglo;
 
     }
+
+
+      function Ultimodia_mes() { 
+      $month = date('m',strtotime($this->fecha));
+      $year = date('Y',strtotime($this->fecha));
+      $day = date("d", mktime(0,0,0, $month+1, 0, $year));
+      return date('Y-m-d', mktime(0,0,0, $month, $day, $year));
+ 	 }
+ 
+  /** Obtener el primerdia del mes actual **/
+	  function Primerdia_mes() {
+	      $month = date('m',strtotime($this->fecha));
+	      $year = date('Y',strtotime($this->fecha));
+	     
+	      return date('Y-m-d', mktime(0,0,0, $month, 1, $year));
+	  } 
   
 
   }

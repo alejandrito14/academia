@@ -201,6 +201,19 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 						$bt->armar_boton();
 					?>
 
+								<?php
+						//SCRIPT PARA CONSTRUIR UN clonar
+						$bt->titulo = "";
+						$bt->icon = "mdi-book-multiple";
+						$bt->funcion = "AbrirModalClonarServicio('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$l_Servicios_row['titulo']."')";
+
+						/*$bt->permiso = $permisos;*/
+						$bt->tipo = 4;
+						$bt->title="CLONAR";
+
+						$bt->armar_boton();
+					?>
+
 
 								</td>
 
@@ -217,6 +230,235 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 </div>
 
 
+
+<div id="modalclonado" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-lg" style="max-width: 1000px;">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        
+        <h4 class="modal-title" id="tituloclonado">CLONAR SERVICIO</h4>
+      </div>
+      <div class="modal-body">
+        
+      	<div class="" id="divclonado1">
+
+      	<div class="col-md-6">
+      		<div class="form-group">
+      			<label for="">TÍTULO</label>
+      			<input type="text" id="txttituloclonado" class="form-control">
+      		</div>
+      
+
+      		<div>
+      			<h4>ELIGUE LAS CARACTERÍSTICAS A CLONAR</h4>
+      		</div>
+
+      		  <div class="form-check" style="margin-bottom: 1em;">
+         		 <input type="checkbox" class="form-check-input " name="v_general"  value="0" id="v_general" onchange="" style="top: -0.3em;" checked>
+        		 <label for="" class="form-check-label">GENERAL</label>
+       
+      		 </div>
+
+      		  <div class="form-check" style="margin-bottom: 1em;">
+         		 <input type="checkbox" class="form-check-input " name="v_costos"  value="0" id="v_costos" onchange="" style="top: -0.3em;" checked>
+        		 <label for="" class="form-check-label">COSTOS</label>
+       
+      		 </div>
+
+      		 <div class="form-check" style="margin-bottom: 1em;">
+         		 <input type="checkbox" class="form-check-input " name="v_politicasmensajes"  value="0" id="v_politicasmensajes" onchange="" style="top: -0.3em;" checked>
+        		 <label for="" class="form-check-label">POLITICAS Y MENSAJES</label>
+       
+      		 </div>
+
+      		 <div class="form-check" style="margin-bottom: 1em;">
+         		 <input type="checkbox" class="form-check-input " name="v_reglas"  value="0" id="v_reglas" onchange="" style="top: -0.3em;" checked>
+        		 <label for="" class="form-check-label">REGLAS Y PERMISOS</label>
+       
+      		 </div>
+
+
+      		 <div class="form-check" style="margin-bottom: 1em;">
+         		 <input type="checkbox" class="form-check-input " name="v_coachs"  value="0" id="v_coachs" onchange="" style="top: -0.3em;" checked>
+        		 <label for="" class="form-check-label">ASIGNACIÓN DE COACHES</label>
+       
+      		 </div>
+      	</div>
+     </div>
+
+     <div id="divclonado2" style="display: none;">
+     	<input type="hidden" id="v_categoria" >
+        <input type="hidden" id="v_categoriaservicio" >
+
+
+     	<div class="col-md-12">
+						
+						<div class="form-group m-t-20">
+								<label for="" id="lbldias">* SELECCIONAR DÍAS:</label>
+
+								<div id="leyenda" style="margin-bottom: 1em;"></div>
+								 <div class="form-group m-t-20">
+								 	    <div class="btn-group btn-group-toggle d-flex flex-column flex-md-row" data-toggle="buttons">
+
+								 	 <label class="btn btn_colorgray2 lbldomingo lbldias">
+								    <input type="checkbox" id="Domingo" class="diasckeckbox" value="0"> Domingo
+								  </label>
+
+
+								 	 <label class="btn btn_colorgray2 lbllunes lbldias">
+								   <input type="checkbox" id="Lunes" class="diasckeckbox" value="1"> Lunes
+								  </label>
+
+
+								   <label class="btn btn_colorgray2 lblmartes lbldias">
+								  <input type="checkbox" id="Martes" class="diasckeckbox" value="2"> Martes
+								  </label>
+
+								   <label class="btn btn_colorgray2 lblmiercoles lbldias">
+								 <input type="checkbox" id="Miercoles" class="diasckeckbox" value="3"> Miércoles
+								  </label>
+
+								   <label class="btn btn_colorgray2 lbljueves lbldias">
+								 <input type="checkbox" id="Jueves" class="diasckeckbox" value="4"> Jueves
+								  </label>
+
+								   <label class="btn btn_colorgray2 lblviernes lbldias">
+								<input type="checkbox" id="Viernes" class="diasckeckbox" value="5"> Viernes
+								  </label>
+
+								   <label class="btn btn_colorgray2 lblsabado lbldias">
+								<input type="checkbox" id="Sabado" class="diasckeckbox" value="6"> Sábado
+								  </label>
+
+
+
+								</div>
+
+									
+								</div>
+							
+							</div>
+							
+								<div class="card" style="" id="divhorarios">
+				<div class="card-header" style="margin-top: 1em;">
+					<h5>ASIGNAR HORARIOS</h5>
+
+				</div>
+				<div class="card-body">
+						<div class="row">
+							<div class="col-md-12">
+
+								<div id="leyendahorarios" style="margin-left: 1em;margin-bottom: 1em;">
+
+								Selecciona la fecha inicial y final para el periodo del servicio </div>
+
+							<div class="col-md-3" style="float:left;">
+							<div class="form-group m-t-20">
+								<label>* FECHA INICIAL:</label>
+								<input type="date" class="form-control" id="v_fechainicial" name="v_fechainicial" value="<?php echo $fechainicial; ?>" title="FECHA INICIAL" placeholder='FECHA INICIAL'>
+							</div>
+
+						</div>
+						<div class="col-md-3" style="float:left;">
+							<div class="form-group m-t-20">
+								<label>* FECHA FINAL:</label>
+								<input type="date" class="form-control" id="v_fechafinal" name="v_fechafinal" value="<?php echo $fechafinal; ?>" title="FECHA FINAL" placeholder='FECHA FINAL'>
+							</div>
+						</div>
+
+						<div class="col-md-3" style="float:left;">
+							<button type="button" style="    margin-top: 2em;" onclick="Aplicar()" class="btn btn-primary">APLICAR</button>
+						</div>
+
+						</div>
+
+						<div class="col-md-12">
+						<div class="form-group m-t-20 col-md-3">
+							<label id="lblhorarios">* ASIGNAR HORARIOS</label>
+						</div>
+					</div>
+
+					</div>
+
+				
+						<div style="margin-top: 3em;display: none;" id="calendario" >
+
+
+							 <div id="picker"></div>
+					    <div class="row">
+					    	<div class="col-md-4">
+					        <label>Fechas/Horas Seleccionadas:</label>
+					        <div id="selected-dates" class="list-group"></div>
+					        </div>
+					    </div>
+
+
+					    <div class="form-group">
+							
+							
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+     </div>
+
+     <div class=""  id="divclonado3" style="display: none;">
+     		<div class="col-md-12">
+						
+		<div class="form-group m-t-20">
+				<label for="" id="lbldias"> SELECCIÓN DE ALUMNOS</label>
+
+			</div>
+
+			<div class="row">
+				
+					<div class="col-md-12">
+				<div class="subject-info-box-1 " style="">
+					<label>ALUMNOS POR ASIGNAR</label>
+					<select multiple class="form-control" id="lstBox1">
+						
+
+					</select>
+				</div>
+
+				<div class="subject-info-arrows text-center">
+					<br /><br />
+					<input type='button' id='btnAllRight' value='>>' class="btn btn-default" /><br />
+					<input type='button' id='btnRight' value='>' class="btn btn-default" /><br />
+					<input type='button' id='btnLeft' value='<' class="btn btn-default" /><br />
+					<input type='button' id='btnAllLeft' value='<<' class="btn btn-default" />
+				</div>
+
+				<div class="subject-info-box-2 ">
+					<label>ALUMNOS ASIGNADOS</label>
+					<select multiple class="form-control" id="lstBox2">
+				
+					</select>
+				</div>
+
+				<div class="clearfix"></div>
+			</div>
+			</div>
+		</div>
+
+     </div>
+    </div>
+      <div class="modal-footer">
+
+      	
+      	  <button type="button" id="clonadoservicio" class="btn btn-success" >SIGUIENTE</button>
+      	  <button type="button" class="btn btn-default" data-dismiss="modal">CERRAR</button>
+        
+      </div>
+    </div>
+
+  </div>
+</div>
+   <script src="js/jquery.selectlistactions.js"></script>
 
 <script type="text/javascript">
 	 $('#tbl_Servicios').DataTable( {		
@@ -243,3 +485,91 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
 		} );
 </script>
+<style>
+	#StaffList {
+  height: 350px;
+  margin-bottom: 10px;
+}
+#PresenterList,
+#ContactList,
+#FacilitatorList {
+  height: 95px;
+  margin-bottom: 10px;
+} 
+
+.style-select select {
+  padding: 0;
+}
+
+.style-select select option {
+  padding: 4px 10px 4px 10px;
+}
+
+.style-select select option:hover {
+  background: #EEEEEE;
+}
+
+.add-btns {
+  padding: 0;
+}
+
+.add-btns input {
+  margin-top: 25px;
+  width: 100%;
+}
+
+.selected-left {
+  float: left;
+  width: 88%;
+}
+
+.selected-right {
+  float: left;
+}
+
+.selected-right button {
+  display: block;
+  margin-left: 4px;
+  margin-bottom: 2px;
+}
+
+@media (max-width: 517px) {
+  .selected-right button {
+    display: inline;
+    margin-bottom: 5px;
+  }
+}
+
+.subject-info-box-1,
+.subject-info-box-2 {
+  float: left;
+  width: 45%;
+}
+
+.subject-info-box-1 select,
+.subject-info-box-2 select {
+  height: 200px;
+  padding: 0;
+}
+
+.subject-info-box-1 select option,
+.subject-info-box-2 select option {
+  padding: 4px 10px 4px 10px;
+}
+
+.subject-info-box-1 select option:hover,
+.subject-info-box-2 select option:hover {
+  background: #EEEEEE;
+}
+
+.subject-info-arrows {
+  float: left;
+  width: 10%;
+}
+
+.subject-info-arrows input {
+  width: 70%;
+  margin-bottom: 5px;
+}
+
+</style>

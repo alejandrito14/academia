@@ -440,6 +440,9 @@ function PintarDatosRegistroTutorado(respuesta) {
 	$("#v_celulartu").val(respuesta.celular);
 	$("#v_correotu").val(respuesta.usuario);
 
+	if (respuesta.sututor==1) {
+		$("#inputtutor").prop('checked',true);
+	}
 	localStorage.removeItem('idtutorado');
 }
 function EliminarTutorado(idusuario) {

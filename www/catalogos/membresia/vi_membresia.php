@@ -213,7 +213,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
                   //SCRIPT PARA CONSTRUIR UN BOTON
                   $bt->titulo = "";
                   $bt->icon = "mdi-delete-empty";
-                  $bt->funcion = "BorrarDatos('".$l_membresia_row['idmembresia']."','idmembresia','membresia','n','catalogos/membresia/vi_membresia.php','main','$idmenumodulo')";
+                  $bt->funcion = "Borrarmembresia('".$l_membresia_row['idmembresia']."','idmembresia','membresia','n','catalogos/membresia/vi_membresia.php','main','$idmenumodulo')";
                   $bt->estilos = "";
                   $bt->permiso = $permisos;
                   $bt->tipo = 3;

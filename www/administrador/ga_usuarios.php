@@ -34,9 +34,6 @@ try
 	{
 	
 	
-		
-		// Error. Intentar mas Tarde Error. Error. exception 'Exception' with message 'No Funciona la Consulta. El Error es el siguiente: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''JOSE RUBEN','CRUZ','QUEVEDO','JCRUZ','JCRUZ','','','JCRUZ@CORPSOLUCIONES.COM.MX' at line 1' in /Applications/XAMPP/xamppfiles/htdocs/corpsistema/clases/conexcion.php:33Stack trace:
-		
 	//recibiendo datos
 	$us->idperfiles = $_POST['idperfiles'];
 	$us->idpuesto = $_POST['idpuesto'];
@@ -50,6 +47,10 @@ try
 	$us->clave=trim($f->guardar_cadena_utf8($_POST['clave']));
 	$us->idempresas_sucursal = $_POST['sucursal'];
 	$us->tipo = $_POST['tipo_usuario'];
+	$us->alias=$_POST['alias'];
+	$us->sexo=$_POST['v_sexo'];
+	$us->fechanacimiento=$_POST['v_fechanacimiento'];
+	$us->estatus=$_POST['estatus'];
 	//$us->tipo_usuario = $_POST['tipo_usuario'];
 	//guardando
 	$us->GuardarUsuario();
@@ -73,6 +74,9 @@ try
 	$us->estatus=$_POST['estatus'];
 	$us->idempresas_sucursal = $_POST['sucursal'];
 	$us->tipo_usuario = $_POST['tipo_usuario'];
+	$us->alias=$_POST['alias'];
+	$us->sexo=$_POST['v_sexo'];
+	$us->fechanacimiento=$_POST['v_fechanacimiento'];
 	
 	$tipo = $_POST['tipo'];
 

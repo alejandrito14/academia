@@ -53,8 +53,12 @@ if(!isset($_GET['idtipousuario'])){
 	$col = "col-md-12";
 	$ver = "display:none;";
 	$titulo='NUEVO TIPO DE USUARIO';
-
+$mostrarapp=0;
+$sistema=0;
+$edicion=0;
 }else{
+
+	$edicion=1;
 	//El formulario funcionara para modificacion de un registro
 
 	//Enviamos el id del pagos a modificar a nuestra clase Pagos
@@ -65,14 +69,16 @@ if(!isset($_GET['idtipousuario'])){
 	$result_tipousuario = $emp->buscartipousuario();
 	$result_tipousuario_row = $db->fetch_assoc($result_tipousuario);
 
-
 	//Cargamos en las variables los datos 
 
 	//DATOS GENERALES
-	$tipousuario=$f->imprimir_cadena_utf8($result_tipousuario_row['tipousuario']);
+	$tipousuario=$f->imprimir_cadena_utf8($result_tipousuario_row['nombretipo']);
 	
 	$estatus = $f->imprimir_cadena_utf8($result_tipousuario_row['estatus']);
 	
+	$mostrarapp = $f->imprimir_cadena_utf8($result_tipousuario_row['mostrarenapp']);
+
+	$sistema = $f->imprimir_cadena_utf8($result_tipousuario_row['sistema']);
 
 	$col = "col-md-12";
 	$ver = "";
@@ -128,7 +134,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					$bt->class='btn btn-success';
 				
 					//validamos que permiso aplicar si el de alta o el de modificacion
-				if($idPagos == 0)
+				if($idtipousuario == 0)
 					{
 						$bt->tipo = 1;
 					}else{
@@ -144,6 +150,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				<div style="clear: both;"></div>
 				
 				<input type="hidden" id="id" name="id" value="<?php echo $idtipousuario; ?>" />
+				<input type="hidden" id="edicion" name="edicion" value="<?php echo $edicion; ?>" />
 			</div>
 			<div style="clear: both;"></div>
 		</div>
@@ -181,7 +188,16 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							</div>
 							</div>
 
-							
+							<div class="col-md-12">
+							<div class="form-group">
+								<div class="form-check"> 
+								<input type="checkbox" class="form-check-input " id="v_sistema" name="v_sistema">
+								<label style="margin-top:0.2em;" class="form-check-label">USUARIO DEL SISTEMA</label>
+								</div>	
+								
+								
+							</div>
+							</div>
 
 							
 						<div class="form-group m-t-20">
@@ -206,7 +222,27 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 	</div>
 </form>
+<script>
+	
+	var idtipousuario='<?php echo $idtipousuario ?>';
+	if (idtipousuario>=0) {
+		var mostrarapp='<?php echo $mostrarapp; ?>';
+		var sistema='<?php echo $sistema; ?>';
+		
+		if (mostrarapp==1) {
+			$("#v_mostrar").attr('checked',true);
+		}
+		if (sistema==1) {
 
+			$("#v_sistema").attr('checked',true);
+		}
+
+	}
+	
+
+
+
+</script>
 
 
 <?php

@@ -38,6 +38,7 @@ $cli->lista_empresas = $lista_empresas;
 
 	 $result_row = $db->fetch_assoc($sql_cliente);
 	 $result_row_num = $db->num_rows($sql_cliente);
+$estatus=array('DESACTIVADO','ACTIVADO');
 
 //die("Entro ".$result_row_num);
 
@@ -132,15 +133,20 @@ var oTable = $('#zero_config').dataTable( {
 			<table id="zero_config" class="table table-bordered table-hover" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
- 						<th>ID</th>
- 	
+ 						<th>TIPO</th>
+ 					 <th>FOTO</th>
+ 	 				<th>ALIAS</th>
+
 						<th width="72">NOMBRE</th>
+						<th width="72">USUARIO</th>
+
 					<!--	<th>NIVEL</th> -->
 						<!--<th>NO TARJETA</th>-->
 						<th width="88">CELULAR</th>
 						<th>CORREO</th>
 <!-- 						<th width="97">LOCALIDAD</th>
  --> 
+						<th>ESTATUS</th>
 
 						<!--<th>SUCURSAL</th>-->
 						<th width="64">ACCI&Oacute;N</th>
@@ -161,23 +167,45 @@ var oTable = $('#zero_config').dataTable( {
 
 						<tr> 
 						  
-							<td width="30"><?php echo utf8_encode($result_row['idusuarios']); ?></td>
-						
+							<td width="30"><?php echo utf8_encode($result_row['nombretipo']); ?></td>
+							<td width="30"><?php
+
+						$fotoperfil=	$result_row['foto'];
+								if($fotoperfil==""){
+														$rutaperfil="images/sinfoto.png";
+													}
+													else{
+														//$rutaine="catalogos/paquetes/imagenespaquete/".$_SESSION['codservicio']."/$foto";
+
+														$rutaperfil="app/".$_SESSION['carpetaapp']."/php/upload/perfil/$fotoperfil";
+													}
+
+							 ?>
+							 	
+							 <img src="<?php echo $rutaperfil; ?>" style="height: 30px;width: 30px;">
+
+							 </td>
+							<td width="30"><?php echo utf8_encode($result_row['alias']); ?></td>
+						  
 						  	<td><?php
 
 						  	$nombre=mb_strtoupper($f->imprimir_cadena_utf8($result_row['nombre']." ".$result_row['paterno']." ".$result_row['materno']));
 
 						  	 echo mb_strtoupper($f->imprimir_cadena_utf8($result_row['nombre']." ".$result_row['paterno']." ".$result_row['materno'])); ?></td>
 						  	<!--<td><?php echo $nivel; ?></td>-->
-						  	
-						  	<td><a href="tel://<?php echo utf8_encode($result_row['celular']); ?>"><?php echo utf8_encode($result_row['celular']); ?></a></td>
-						  	<td width="30"><?php echo utf8_encode($result_row['usuario']); ?></td>
-						  	<!--<td style="text-align:center;"><?php echo utf8_encode($result_row['usuario']); ?></td>-->
-							<!-- <td width="97"><?php echo mb_strtoupper($f->imprimir_cadena_utf8($result_row['idlocalidad'])); ?></td> -->
+						  		<td width="30"><?php echo utf8_encode($result_row['usuario']); ?></td>
 
+						  	<td>
+						  		<a href="tel://<?php echo utf8_encode($result_row['celular']); ?>"><?php echo utf8_encode($result_row['celular']); ?>
+						  			
+						  		</a>
+						  	</td>
+						  		<td width="30"><?php echo utf8_encode($result_row['email']); ?></td>
+						  
+						 	<td width="30"><?php echo utf8_encode($estatus[$result_row['estatus']]); ?></td>
 						
 						
-					  	  <!--	<td style="text-align:center;"><?php echo utf8_encode($result_sucursal_row['sucursal']); ?></td>-->
+					  	
 						  	<td align="center">
 								
 
@@ -202,7 +230,6 @@ var oTable = $('#zero_config').dataTable( {
 													$bt->permiso = $permisos;
 													$bt->tipo = 3;
 													$bt->title="BORRAR";
-
 													$bt->armar_boton();
 												   					
 												
@@ -242,7 +269,7 @@ var oTable = $('#zero_config').dataTable( {
 
 					}else{?>
 						<tr> 
-				<td colspan="6" style="text-align: center">
+				<td colspan="8" style="text-align: center">
 					<h5 class="alert_warning">NO EXISTEN COACHS EN LA BASE DE DATOS.</h5>
 				</td>
 			</tr>

@@ -12,10 +12,12 @@ require_once "clases/class.Funciones.php";
 
 require_once("clases/class.Pagos.php");
 require_once("clases/class.Descuentos.php");
+require_once("clases/class.ServiciosAsignados.php");
 
 require_once("clases/class.ClienteStripe.php");
 require_once("clases/class.Tipodepagos.php");
 require_once("clases/class.PagConfig.php");
+require_once("clases/class.Membresia.php");
 
 include 'stripe-php-7.93.0/init.php';
 $folio = "";
@@ -26,6 +28,7 @@ $constripe=$_POST['constripe'];
 $sumatotalapagar=$_POST['sumatotalapagar'];
 $iduser=$_POST['id_user'];
 $descuentosaplicados=json_decode($_POST['descuentosaplicados']);
+$descuentosmembresia=json_decode($_POST['descuentosmembresia']);
 
 $comision=$_POST['comision'];
 $comisionmonto=$_POST['comisionmonto'];
@@ -38,6 +41,7 @@ $subtotalsincomision=$_POST['subtotalsincomision'];
 try {
 	 $db = new MySQL();
 	 $obj = new ClienteStripe();
+
 	 $obj->db=$db;
      $db->begin();
      $f = new Funciones();
@@ -104,7 +108,6 @@ try {
                  $obj->lastcard=$payment_method_id;
                  $intentos=$obj->ObtenerIntentos();
 
-               
                  if (count($intentos)<$cantidadintentos) {
                      # code...
                  
@@ -192,22 +195,97 @@ try {
           }
 
           if ($estatusdeproceso==1) {
-          	    $db = new MySQL();
-          	    $db->begin();
-          	     $pagos=new Pagos();
-    			 $pagos->db=$db;
-    			 $descuentos=new Descuentos();
-    			 $descuentos->db=$db;
+          	   $db = new MySQL();
+          	   $db->begin();
+          	   $pagos=new Pagos();
+        			 $pagos->db=$db;
+        			 $descuentos=new Descuentos();
+        			 $descuentos->db=$db;
+               $lo=new ServiciosAsignados();
+               $lo->db=$db;
+               $membresia= new Membresia();
+               $membresia->db=$db;
 
           	for ($i=0; $i < count($pagosconsiderados); $i++) { 
           		
-          		$pagos->estatus=2;
-				$pagos->idpago=$pagosconsiderados[$i]->id;
-				$pagos->idpagostripe=$obj->idintento;
-				$pagos->pagado=1;
-				$pagos->fechapago=date('Y-m-d H:i:s');
-          		$pagos->ActualizarEstatus();
-          		$pagos->ActualizarPagado();
+                $pagos->pagado=1;
+                $pagos->fechapago=date('Y-m-d H:i:s');
+                $pagos->idpagostripe=$obj->idintento;
+              if ($pagosconsiderados[$i]->tipo==1) {
+                  $pagos->estatus=2;
+                  $pagos->idpago=$pagosconsiderados[$i]->id;
+                 
+                
+                  $pagos->ActualizarEstatus();
+                  $pagos->ActualizarPagado();
+              }
+
+              if ($pagosconsiderados[$i]->tipo==2) {
+
+                   $pagos->idpago=$pagosconsiderados[$i]->id;
+                  $buscarpago=$pagos->ObtenerPago();
+
+                  if (count($buscarpago)==0) {
+
+
+                      $idcadena=explode('-', $pagosconsiderados[$i]->id);
+                       $membresia->idmembresia=$idcadena[1];
+                      $obtenermembresia=$membresia->ObtenerMembresia();
+
+                      $pagos->idusuarios=$iduser;
+                      $pagos->idmembresia=$idcadena[1];
+                      $pagos->idservicio=0;
+                      $pagos->tipo=2;
+                      $pagos->monto=$pagosconsiderados[$i]->monto;
+                      $pagos->estatus=0;
+                      $pagos->dividido='';
+                      $pagos->fechainicial='';
+                      $pagos->fechafinal='';
+                      $pagos->concepto=$obtenermembresia[0]->titulo;
+                      $contador=$lo->ActualizarConsecutivo();
+                          $fecha = explode('-', date('d-m-Y'));
+                        $anio = substr($fecha[2], 2, 4);
+                        $folio = $fecha[0].$fecha[1].$anio.$contador;
+                        
+                      $pagos->folio=$folio;
+                      $pagos->CrearRegistroPago();
+
+
+
+
+                  }
+                   $pagos->estatus=2;
+                   $pagos->ActualizarEstatus();
+                   $pagos->ActualizarPagado();
+
+                   $membresia->idusuarios=$iduser;
+                  $buscarmembresiausuario=$membresia->buscarMembresiaUsuario();
+
+
+                   $dias=$obtenermembresia[0]->cantidaddias;
+                   $date = date("d-m-Y");
+                   $mod_date = strtotime($date."+ ".$dias." days");
+                   $membresia->fechaexpiracion= date("Y-m-d",$mod_date).' 23:59:59';
+
+                   if (count($buscarmembresiausuario)>0) {
+                      $membresia->idusuarios_membresia= $buscarmembresiausuario[0]->idusuarios_membresia;
+                      $membresia->estatus=0;
+                      $membresia->ActualizarEstatusMembresiaUsuario();
+
+                      $membresia->renovacion=1;
+                      $membresia->estatus=1;
+                      $membresia->pagado=1;
+
+                   }else{
+
+                      $membresia->renovacion=0;
+                      $membresia->estatus=1;
+                      $membresia->pagado=1;
+                   }
+
+                    $membresia->CrearRegistroMembresiaUsuario();
+
+          	   }
           		$pagos->GuardarpagosStripe();
 
 
@@ -231,6 +309,20 @@ try {
           			}
 
           		}
+
+              if (count($descuentosmembresia)>0) {
+                
+                for ($i=0; $i <count($descuentosmembresia) ; $i++) { 
+                  $membresia->idpago=$descuentosmembresia[$i]->idpago;
+                  $membresia->idmembresia=$descuentosmembresia[$i]->idmembresia;
+
+                  $membresia->idservicio=$descuentosmembresia[$i]->idservicio;
+                  $membresia->descuento=$descuentosmembresia[$i]->descuento;
+                  $membresia->monto=$descuentosmembresia[$i]->monto;
+                  $membresia->montoadescontar=$descuentosmembresia[$i]->montoadescontar;
+                  $membresia->GuardarPagoDescuentoMembresia();
+                }
+              }
 
 
           		$db->commit();

@@ -13,7 +13,7 @@ class Tipousuario
 	public $estatus;
 	public $mostrarenapp;
 	public $tipo;
-	
+	public $sistema;
 	
 	//Funcion para obtener todos los Tipousuario activos
 	public function ObtTipousuarioActivos()
@@ -65,7 +65,7 @@ class Tipousuario
 	
 	public function Guardartipousuario()
 	{
-		$query="INSERT INTO tipousuario (tipousuario,estatus) VALUES ('$this->nombre','$this->estatus')";
+		$query="INSERT INTO tipousuario (nombretipo,estatus,mostrarenapp,sistema) VALUES ('$this->nombre','$this->estatus','$this->mostrarenapp','$this->sistema')";
 		
 		$resp=$this->db->consulta($query);
 		$this->idtipousuario = $this->db->id_ultimo();
@@ -75,8 +75,10 @@ class Tipousuario
 	//funcion para modificar los usuarios
 	public function Modificartipousuario()
 	{
-		$query="UPDATE tipousuario SET tipousuario='$this->nombre',
-		estatus='$this->estatus'
+		$query="UPDATE tipousuario SET nombretipo='$this->nombre',
+		estatus='$this->estatus',
+		mostrarenapp='$this->mostrarenapp',
+		sistema='$this->sistema'
 		WHERE idtipousuario=$this->idtipousuario";
 
 		$resp=$this->db->consulta($query);
@@ -86,7 +88,6 @@ class Tipousuario
 	public function buscartipousuario()
 	{
 		$query="SELECT * FROM tipousuario WHERE idtipousuario=".$this->idtipousuario;
-
 		
 		$resp=$this->db->consulta($query);
 		
@@ -94,10 +95,70 @@ class Tipousuario
 		return $resp;
 	}
 
+	public function VerificarRelacionUsuario(){
+		$query="SELECT * FROM usuarios WHERE tipo=".$this->idtipousuario;
+		
+		$resp=$this->db->consulta($query);
+		
+		//echo $total;
+		return $resp;
+	}
+	 public function BorrarTipousuario(){
+
+		$query="DELETE  FROM tipousuario WHERE idtipousuario=".$this->idtipousuario;
+		
+		$resp=$this->db->consulta($query);
+		
+		
+	 }
+
+	 public function ObtTipousuarioActivosSistema()
+	{
+		$sql = "SELECT * FROM tipousuario WHERE estatus = 1 AND sistema=1";
+
 	
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
 
 
 	
+	 public function ObtTipousuarioCliente()
+	{
+		$sql = "SELECT * FROM tipousuario WHERE estatus = 1 AND cliente=1";
+
+	
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+
+
 
 }
 

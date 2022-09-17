@@ -71,14 +71,25 @@ class Menu extends Funciones
 						
 					
 					$menu.='<li class="sidebar-item clasemenu" id="modulo_'.$this->conver_especial(str_replace(' ','_',$rows['modulo'])).'"> <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false"><i style="color:white;" class="'.$rows['iconomodulo'].'" style="font-size:12px;"></i><span style="font-size:12px!important;" class="hide-menu">'.$rows['modulo'].'</span></a>';
-					$menu.='<ul aria-expanded="false" class="collapse  first-level" style="background:#7e7e7e;">';
+					$menu.='<ul aria-expanded="false" class="collapse  first-level" style="background:#021836;">';
 
 					/*$menu.='<li class="sidebar-item"></li>';*/
-
+					$contador=0;
 					
 					do
 					{
 
+						$bordertop="";
+						$borderbottom="";
+						if ($contador==0) {
+						$bordertop="border-top-left-radius: 10px;
+   							 border-top-right-radius: 10px;";
+						}
+
+						if ($contador == $totalRow-1) {
+							$borderbottom="border-bottom-left-radius: 10px;
+   							 border-bottom-right-radius: 10px;";
+						}
 
 						$permisos = $row['insertar']."|".$row['modificar']."|".$row['borrar'];
 						
@@ -95,8 +106,9 @@ class Menu extends Funciones
 
 						$modulo='modulo_'.$this->conver_especial(str_replace(' ','_',$rows['modulo']));
 
-						$menu.='<li class="sidebar-item '.$modulo.' submenu" id="menu_'.$row['idmodulos_menu'].'" ><a  class="sidebar-link"  onClick="aparecermodulos2(\''.$row['ubicacion_archivo'].$row['archivo'].'?idmenumodulo='.$row['idmodulos_menu'].'\',\'main\',\''.$ruta.'\'); return false;" ><i class="mdi mdi-note-outline"></i><span style="font-size:11px!important;" class="hide-menu">'. $row['menu'].'</span></a></li>';
-
+						$menu.='<li class="sidebar-item '.$modulo.' submenu" style="background:white;color:gray;margin-right:2em;margin-left:2em;'.$bordertop.''.$borderbottom.'" id="menu_'.$row['idmodulos_menu'].'" ><a  class="sidebar-link"  style="color:#021836;font-weight:bold;    white-space: break-spaces;line-height:2" onClick="aparecermodulos2(\''.$row['ubicacion_archivo'].$row['archivo'].'?idmenumodulo='.$row['idmodulos_menu'].'\',\'main\',\''.$ruta.'\'); return false;" ><i style="color:#021836;font-weight:bold;" class="mdi mdi-note-outline"></i>
+						<span style="font-size:11px!important;" class="hide-menu">'. $row['menu'].'</span></a></li>';
+						$contador++;
 						
 					}while($row = $this->db->fetch_assoc($resp));
 					

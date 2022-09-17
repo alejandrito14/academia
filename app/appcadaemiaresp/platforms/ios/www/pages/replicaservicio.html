@@ -1,0 +1,99 @@
+<template>
+  <div class="page " data-name="replicaservicio">
+    <div class="navbar">
+        <div class="navbar-bg"></div>
+        <div class="navbar-inner">
+            <div class="left">
+                <a class="button button-fill text-color-theme bg-color-white button-44 regreso"
+                    >
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+            </div>
+            <div class="title">
+              
+            
+            </div>
+            <div class="right">
+             
+            </div>
+        </div>
+    </div>
+
+    <div class="fab fab-extended fab-center-bottom divflotantea" style="width: 92%;">
+    <a  style="    border-radius: 10px;
+    height: 60px;" class="button button-fill button-large button-raised margin-bottom color-theme" id="btnguardarservicioreplica">
+      <div class="fab-text">Guardar</div>
+    </a>
+ 
+  </div>
+
+    <div class="page-content">
+      <div class="block h-100 no-margin">
+        
+        
+
+            <div class="row">
+               <div class="col-85 margin-left-auto margin-right-auto align-self-center  padding-vertical"><h1 style=""> Replicar <span style="color: #0abe68;">servicio</span></h1></div>
+
+             <div class="col-100  margin-left-auto margin-right-auto align-self-center" style="margin-right: 1em;margin-left: 1em;background: white;">
+             <form class="was-validated needs-validation" novalidate>
+
+               <div class="block" style="background: white">
+                <div class="item-content item-input is-valid">
+                  <div class="item-inner liservicio"><div class="item-title item-floating-label" style="    margin-left: 1em;">Servicio</div><div class="item-input-wrap">
+                   <select id="serviciosreplica"></select>
+                   </div>
+                </div>
+                </div>
+
+                </div>
+
+
+                 <input type="hidden" name="v_servicio"  id="v_servicio" value="0" />
+
+                 <div class="row" style="margin-top: 1em;">
+                  <p class="liselecciona">Selecciona la fecha y el horario</p>
+                 </div>
+                 <div class="row" style="margin-top: 1em;">
+                 <div id="demo-calendar" style=""></div>
+                  </div>
+                   <div class="row" id="selected-dates" style="margin-top: 1em;">
+                    
+                  </div>
+              
+           
+         
+            </form>
+
+            </div>
+
+
+
+      </div>
+      <div class="row">
+        
+            <div class="list accordion-list">
+        <ul>
+            <li class="accordion-item accordion-item-opened" id="general-tab" style="background: #f3f3f3 "><a href="#" class="item-link item-content">
+              <div class="item-inner"><div class="item-title">General</div>
+            </div></a>
+            <div class="accordion-item-content" style="font-size: 16px;" aria-hidden="true">
+              <div class="block" style="background: white">
+                <div class="item-content item-input is-valid item-input-focused">
+                  <div class="item-inner lititulo"><div class="item-title item-floating-label ">Titulo</div><div class="item-input-wrap">
+                    <input name="v_titulo" id="v_titulo" type="text" placeholder="" class="" />
+                    <span class="input-clear-button"></span></div>
+                </div>
+                </div>
+
+                </div>
+              </div>
+            </li>
+        </ul>
+    </div>
+      </div>
+      <div style="height: 100px;"></div>
+    </div>
+    </div>
+  </div>
+</template>

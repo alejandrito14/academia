@@ -16,6 +16,7 @@ class Chat
 	public $imagen;
 
 	public $idusuario;
+	public $idservicio;
 
 
 	public function EnvioMensaje()
@@ -56,6 +57,32 @@ class Chat
 		JOIN usuarios AS usuarios_alias1
 		ON chat.idusuarioenvio = usuarios_alias1.idusuarios
  		WHERE chatdirigido.idusuarios='$this->idusuario' AND chat.idsalachat='$this->idsalachat' ORDER BY idchat desc limit 1 ";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+
+	public function ObtenerSalaChatServicio()
+	{
+		$sql="SELECT *FROM salachat
+ 		WHERE idservicio='$this->idservicio'
+ 		 LIMIT 1";
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

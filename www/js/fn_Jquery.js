@@ -21,7 +21,7 @@ $(document).ready(function() {
 	var bandera = 0;
 	
 	$("#icono_menu").click(
-	function efecto()
+	/*function efecto()
 	{
 	    $("#sidebar").toggle("slow");
 		
@@ -41,17 +41,12 @@ $(document).ready(function() {
 			  
 			  bandera = 0;
 		  }
-	});
+	}*/);
 	
 
-		$(".clasemenu").click(function(){
+		/*$(".clasemenu").click(function(){
 		var id=$(this).attr('id');
-		
-
 		var cortar=id.split('_')[1];
-	
-/*		console.log($('.'+id+':last').attr('id'));
-*/
 		var elementos=$('.'+id).length;
 
 		var dividir=parseInt(elementos/2);
@@ -91,12 +86,12 @@ $(document).ready(function() {
 			 }, 2000);
 		  return false;
 		
-	});
+	});*/
 
-		$(".submenu").click(function(){
+		/*$(".submenu").click(function(){
   		  $("html,body").animate({ scrollTop: 0 }, 600);
         return false;
-		});
+		});*/
 });
 /************-----------------------*******************-----------*************************/
 $(function(){
@@ -286,6 +281,72 @@ function MM_validateForm()
 }
 
 
+//validacion de formulario
+function MM_validateFormUsuario() 
+{ //v4.0
+  if (document.getElementById)
+  {
+    	var i,p,q,nm,test,num,min,max,errors='',args=MM_validateFormUsuario.arguments;
+    	var errorcontra="";
+    	var contra=$('#clave').val();
+		var contra2=$('#clave2').val();
+
+
+    	for (i=0; i<(args.length-2); i+=3)
+		{ 
+			test=args[i+2]; 
+			val=document.getElementById(args[i]);
+      		if (val) 
+			{ 
+				nm=val.title; 
+				if ((val=val.value)!="") 
+				{
+        			if (test.indexOf('isEmail')!=-1) 
+					{ 
+						p=val.indexOf('@');
+						if (p<1 || p==(val.length-1)) errors+='- '+nm+' Debe de contener una direccion valida de Email.<br>';
+						
+        			} 
+					else if (test!='R') 
+					{ 
+						num = parseFloat(val);
+						if (isNaN(val)) errors+='- '+nm+' Debe de contener un numero.<br>';
+						if (test.indexOf('inRange') != -1) 
+						{ 
+							p=test.indexOf(':');
+							min=test.substring(8,p); max=test.substring(p+1);
+							if (num<min || max<num) errors+='- '+nm+' Debe de contener un numero entre '+min+' y '+max+'.<br>';
+						} 
+					}
+
+					else if(val.value==0){
+						 errors += '- '+nm+' Es requerido.<br>'; 
+					}
+				} else if (test.charAt(0) == 'R') errors += '- '+nm+' Es requerido.<br>';
+
+
+			}
+    	} 
+
+
+		if (contra2!=contra) {
+
+			errors+='Las contraseñas no coinciden.<br>';
+		
+		}
+		if (errors) 
+		{
+			//alert('Han ocurrido los siguientes errores:<br>'+errors);
+			AbrirNotificacion('Han ocurrido los siguientes errores:<br>'+errors+errorcontra,"mdi-checkbox-marked-circle");
+			return 0;
+		}
+		else
+		{
+			//alert("entro en 1");
+		  return 1;
+		}
+  }
+}
 
 
 
@@ -3340,4 +3401,14 @@ function ObtenerDatosFormulario4(id)
 	cadena = cadena.substring(0,cadena.length-1);
     return cadena;
 }
+  function mostrarPassword(elemento,icon){
 
+    var cambio = document.getElementById(elemento);
+    if(cambio.type == "password"){
+      cambio.type = "text";
+      $('.'+icon).removeClass('fa fa-eye-slash').addClass('fa fa-eye');
+    }else{
+      cambio.type = "password";
+      $('.'+icon).removeClass('fa fa-eye').addClass('fa fa-eye-slash');
+    }
+  } 

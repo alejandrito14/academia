@@ -60,6 +60,11 @@ class Servicios
 	public $asignadocoach;
 	public $asignadoadmin;
 	public $politicasaceptacion;
+	public $controlasistencia;
+	public $iddescuento;
+	public $idmembresia;
+	public $idencuesta;
+	public $idusuarios_servicios;
 
 	public function ObtenerServicios()
 	{
@@ -141,10 +146,11 @@ class Servicios
 		asignadocoach,
 		asignadoadmin,
 		numligarclientes,
-		politicasaceptacion
+		politicasaceptacion,
+		controlasistencia
 
-		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes','$this->politicasaceptacion')";
-
+		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes','$this->politicasaceptacion','$this->controlasistencia')";
+		
 		$resp=$this->db->consulta($query);
 		$this->idservicio = $this->db->id_ultimo();
 		
@@ -192,7 +198,8 @@ class Servicios
 		asignadocliente='$this->asignadocliente',
 		asignadocoach='$this->asignadocoach',
 		asignadoadmin='$this->asignadoadmin',
-		politicasaceptacion='$this->politicasaceptacion'
+		politicasaceptacion='$this->politicasaceptacion',
+		controlasistencia='$this->controlasistencia'
 		WHERE idservicio=$this->idservicio";
 
 		
@@ -219,6 +226,69 @@ class Servicios
 		return $resp;
 	}
 
+	public function BorrarHorarios()
+	{
+	$sql="DELETE FROM horariosservicio WHERE idservicio='$this->idservicio'";
+
+		
+		$resp = $this->db->consulta($sql);
+		return $resp;
+	}
+
+	public function BorrarEncuesta()
+	{
+		$sql="DELETE FROM servicios_encuesta WHERE idservicio='$this->idservicio'";
+
+		
+		$resp = $this->db->consulta($sql);
+		return $resp;
+
+	}
+
+	public function BorrarZonas()
+	{
+		$sql="DELETE FROM servicios_zonas WHERE idservicio='$this->idservicio'";
+
+		
+		$resp = $this->db->consulta($sql);
+		return $resp;
+	}
+
+	public function BorrarCoaches()
+	{
+		$sql1="SELECT usuarios_servicios.idusuarios,usuarios.nombre,usuarios.usuario FROM usuarios INNER JOIN usuarios_servicios on usuarios.idusuarios=usuarios_servicios.idusuarios WHERE tipo=5 AND  idservicio='$this->idservicio'";
+	
+		$resp = $this->db->consulta($sql1);
+
+		$cont = $this->db->num_rows($resp);
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+
+		
+		if ($cont>0) {
+			
+			for ($i=0; $i <count($array) ; $i++) { 
+
+				$idusuario=$array[$i]->idusuarios;
+			$sql="DELETE FROM usuarios_servicios WHERE idservicio='$this->idservicio' AND idusuarios='$idusuario'";
+		
+			$resp = $this->db->consulta($sql);
+			}
+		
+
+		}
+		//return $resp;
+	}
+
 	public function GuardarZona(){
 			$query="INSERT INTO servicios_zonas 
 		(idservicio,idzona) VALUES ('$this->idservicio','$this->idzona')";
@@ -234,6 +304,16 @@ class Servicios
 	public function Guardarparticipantes(){
 		$query="INSERT INTO usuarios_servicios 
 		(idservicio,idusuarios) VALUES ('$this->idservicio','$this->idparticipantes')";
+		
+		$resp=$this->db->consulta($query);
+		$this->idusuarios_servicios=$this->db->id_ultimo();
+
+	}
+
+	public function GuardarMontotipo($tipo,$monto)
+	{
+		$query="INSERT INTO usuarioscoachs 
+		(idusuarios_servicios,tipopago,monto) VALUES ('$this->idusuarios_servicios','$tipo','$monto')";
 		
 		$resp=$this->db->consulta($query);
 	}
@@ -322,7 +402,7 @@ class Servicios
 
 	public function ObtenerParticipantes($idtipo)
 	{
-		$sql="SELECT *FROM usuarios INNER JOIN usuarios_servicios ON usuarios.idusuarios=usuarios_servicios.idusuarios WHERE idservicio='$this->idservicio' AND tipo='$idtipo'";
+		$sql="SELECT *FROM usuarios INNER JOIN usuarios_servicios ON usuarios.idusuarios=usuarios_servicios.idusuarios WHERE idservicio='$this->idservicio' AND tipo='$idtipo' AND cancelacion=0";
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -342,6 +422,30 @@ class Servicios
 		return $array;
 	}
 
+
+	public function ObtenerParticipantesCoach($idtipo)
+	{
+		$sql="SELECT *FROM usuarios INNER JOIN usuarios_servicios ON usuarios.idusuarios=usuarios_servicios.idusuarios
+			LEFT JOIN usuarioscoachs ON usuarioscoachs.idusuarios_servicios=usuarios_servicios.idusuarios_servicios
+		 WHERE idservicio='$this->idservicio' AND tipo='$idtipo' AND cancelacion=0";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 	public function ObtenerZonas()
 	{
 		$sql="SELECT *FROM zonas INNER JOIN servicios_zonas ON zonas.idzona=servicios_zonas.idzona WHERE idservicio='$this->idservicio'";
@@ -404,7 +508,7 @@ class Servicios
 
 	public function ObtenerTodosServicios()
 	{
-		$sql="SELECT *FROM servicios WHERE estatus=1";
+		$sql="SELECT servicios.titulo,categorias.titulo as categoria FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio WHERE servicios.estatus=1";
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -449,10 +553,28 @@ class Servicios
 
 	
 	
-		public function ObtenerServicioActivos($value='')
+		public function ObtenerServicioActivos()
 	{
 		
-		$sql="SELECT *FROM servicios WHERE estatus=1";
+		$sql="SELECT 
+			servicios.titulo,
+			servicios.idservicio,
+			servicios.descripcion,
+			servicios.estatus,
+			servicios.idcategoriaservicio,
+			servicios.imagen,
+			servicios.fechacreacion,
+			servicios.orden,
+			servicios.fechainicial,
+			servicios.fechafinal,
+			servicios.nodedias,
+			servicios.idcategoria,
+			servicios.precio,
+			servicios.totalclases,
+			servicios.montopagarparticipante,
+			categorias.titulo AS titulocategoria,
+			categorias.descripcion AS descripcioncategoria
+			FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio WHERE servicios.estatus=1 AND categorias.avanzado=1";
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -474,7 +596,7 @@ class Servicios
 
 	public function ObtenerCuantosAsignados($idservicio)
 	{
-		$sql="SELECT *FROM usuarios_servicios INNER JOIN usuarios ON usuarios_servicios.idusuarios=usuarios.idusuarios WHERE idservicio=".$idservicio."  AND tipo=3 ";
+		$sql="SELECT *FROM usuarios_servicios INNER JOIN usuarios ON usuarios_servicios.idusuarios=usuarios.idusuarios WHERE idservicio=".$idservicio."  AND tipo=3  AND cancelacion=0";
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -502,6 +624,8 @@ class Servicios
 		$this->db->consulta($query);
 
 	}
+
+
 
 	public function EliminarPeriodos()
 	{
@@ -542,6 +666,109 @@ class Servicios
 		//echo $total;
 		return $resp;
 	}
+
+	public function Guardardescuentos()
+	{
+		$query = "INSERT INTO servicios_descuento (idservicio,iddescuento) VALUES ('$this->idservicio','$this->iddescuento')";
+		$this->db->consulta($query);
+
+	}
+
+	public function Eliminardescuentos()
+	{
+		$sql="DELETE FROM servicios_descuento WHERE idservicio='$this->idservicio'";
+		
+		$resp = $this->db->consulta($sql);
+		return $resp;
+		
+	}
+
+	public function Eliminardemembresias()
+	{
+		$sql="DELETE FROM servicios_membresia WHERE idservicio='$this->idservicio'";
+		
+		$resp = $this->db->consulta($sql);
+		return $resp;
+		
+	}
+
+	public function Eliminardeencuestas()
+	{
+		$sql="DELETE FROM servicios_encuesta WHERE idservicio='$this->idservicio'";
+		
+		$resp = $this->db->consulta($sql);
+		return $resp;
+	}
+
+	public function Guardarmembresias()
+	{
+		$query = "INSERT INTO servicios_membresia (idservicio,idmembresia) VALUES ('$this->idservicio','$this->idmembresia')";
+		$this->db->consulta($query);
+
+	}
+
+	public function Guardarencuestas()
+	{
+		$query = "INSERT INTO servicios_encuesta (idservicio,idencuesta) VALUES ('$this->idservicio','$this->idencuesta')";
+		$this->db->consulta($query);
+
+	}
+
+	public function ObtenerServicioActivosMenos($listaservicios)
+	{
+		
+		$sql="SELECT 
+			servicios.titulo,
+			servicios.idservicio,
+			servicios.descripcion,
+			servicios.estatus,
+			servicios.idcategoriaservicio,
+			servicios.imagen,
+			servicios.fechacreacion,
+			servicios.orden,
+			servicios.fechainicial,
+			servicios.fechafinal,
+			servicios.nodedias,
+			servicios.idcategoria,
+			servicios.precio,
+			servicios.totalclases,
+			servicios.montopagarparticipante,
+			categorias.titulo AS titulocategoria,
+			categorias.descripcion AS descripcioncategoria
+			FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio WHERE servicios.estatus=1 AND categorias.avanzado=1 ";
+
+		if ($listaservicios!='') {
+			$sql.=" AND idservicio NOT IN($listaservicios) ";
+		}
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerServiciosAvanzados()
+	{
+		$sql="SELECT servicios.*,categorias.titulo as nombrecategoria FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio WHERE avanzado=1 ORDER BY orden asc";
+
+	/*	$sql="SELECT * FROM servicios  ORDER BY orden asc";*/
+
+		$resp=$this->db->consulta($sql);
+		return $resp;
+	}
+
 }
 
 ?>

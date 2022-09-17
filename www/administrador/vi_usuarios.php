@@ -25,6 +25,7 @@ $bt = new Botones_permisos();
 
 $query="SELECT usuarios.idusuarios, 
 	usuarios.idperfiles, 
+	usuarios.alias, 
 	usuarios.nombre, 
 	usuarios.paterno, 
 	usuarios.materno, 
@@ -102,13 +103,15 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				<thead>
 					<tr>
 						<th>TIPO</th>
+						<th>FOTO</th>
 						<th>PERFIL</th> 
+						<th>ALIAS</th> 
+						<th>NOMBRE</th>
 						<th>USUARIO</th> 
-						<th>NOMBRE</th> 
-						<th>CELULAR</th>
-						<th>TEL&Eacute;FONO</th> 
+ 						<th>CELULAR</th>
 						<th>EMAIL</th>
-						<th>SUCURSAL</th>
+						<th>ESTATUS</th>
+
 						<th style="width: 248px;">ACCI&Oacute;N</th>
 					</tr>
 				</thead>
@@ -125,11 +128,28 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				 	?>
 				   			<tr> 
 								<td><?php echo $fu->imprimir_cadena_utf8($tipo_usuario[$rows['tipo']]); ?></td>
+										<td width="30"><?php
+						$fotoperfil=	$result_row['foto'];
+								if($fotoperfil==""){
+														$rutaperfil="images/sinfoto.png";
+													}
+													else{
+									
+														$rutaperfil="app/".$_SESSION['carpetaapp']."/php/upload/perfil/$fotoperfil";
+													}
+							 ?>
+							 <img src="<?php echo $rutaperfil; ?>" style="height: 30px;width: 30px;">
+
+							 </td>
+
+
 								<td><?php echo $fu->imprimir_cadena_utf8($rows['perfil']); ?></td> 
-								<td><?php echo $fu->imprimir_cadena_utf8($rows['usuario']); ?></td> 
+								<td><?php echo $fu->imprimir_cadena_utf8($rows['alias']); ?></td> 
 								<td><?php echo mb_strtoupper($fu->imprimir_cadena_utf8($rows['nombre']." ".$rows['paterno']." ".$rows['materno'])); ?></td>
+								<td><?php echo $fu->imprimir_cadena_utf8($rows['usuario']); ?></td> 
+								
 								<td><?php echo $fu->imprimir_cadena_utf8($rows['celular']); ?></td>
-								<td><?php echo $fu->imprimir_cadena_utf8($rows['telefono']); ?></td>
+								
 								<td><?php echo $fu->imprimir_cadena_utf8($rows['email']); ?></td>
                     			<td><?php echo $fu->imprimir_cadena_utf8($rows['est']); ?></td> 
 								<td style="text-align: center;">
@@ -168,7 +188,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 												$bt->armar_boton();
 											?>
-												<button onclick="AsignarEmpresas(<?php echo $rows['idusuarios'] ?>);" class="btn btn-primary"><i class="mdi mdi-clipboard-check" title="ASIGNAR EMPRESAS"></i></button>
+						<!-- <button onclick="AsignarEmpresas(<?php echo $rows['idusuarios'] ?>);" class="btn btn-primary"><i class="mdi mdi-clipboard-check" title="ASIGNAR EMPRESAS"></i></button> -->
 
 									<?php
 

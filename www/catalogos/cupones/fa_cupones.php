@@ -267,7 +267,7 @@ if (isset($_SESSION['permisos_acciones_erp'])) {
 						    			$valor="";
                                         $nombre=mb_strtoupper($f->imprimir_cadena_utf8($a_cliente['nombre']." ".$a_cliente['paterno']." ".$a_cliente['materno']));
 						    		?>
-									  <input  type="checkbox" value="" class="form-check-input chkcliente_<?php echo $idcupon;?>" id="inputcli_<?php echo $a_cliente['idusuarios']?>_<?php echo $idcupon;?>" <?php echo $valor; ?>>
+									  <input  type="checkbox"  value="" class="form-check-input chkcliente_<?php echo $idcupon;?>" id="inputcli_<?php echo $a_cliente['idusuarios']?>_<?php echo $idcupon;?>" <?php echo $valor; ?>>
 									  <label class="form-check-label" for="flexCheckDefault"><?php echo $nombre; ?></label>
 								</div>						    		
 						    	<?php

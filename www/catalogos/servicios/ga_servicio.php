@@ -54,6 +54,10 @@ try
 	$participantes=explode(',',  $_POST['participantes']);
 	$periodosinicial=explode(',', $_POST['v_periodoinicial']);
 	$periodosfinal=explode(',', $_POST['v_periodofinal']);
+	
+	$descuentos=explode(',', $_POST['v_descuentos']);
+	$membresias=explode(',', $_POST['v_membresias']);
+	$encuestas=explode(',', $_POST['v_encuestas']);
 
 	$lunes=$_POST['v_lunes'];
 	$martes=$_POST['v_martes'];
@@ -63,7 +67,7 @@ try
 	$sabado=$_POST['v_sabado'];
 	$domingo=$_POST['v_domingo'];
 
-	$costo=$_POST['v_costo']!=''?$_POST['v_costo']:0;
+	$costo=$_POST['v_costo']!=''?str_replace(',','',$_POST['v_costo']):0;
 	$totalclase=0;
 	$valorclase=$_POST['v_totalclase'];
 	if($valorclase!=''&& $valorclase!='undefined' ){
@@ -79,6 +83,7 @@ try
 	$categoriaservicio=$_POST['v_categoriaservicio'];
 	$arrayhorarios=explode(',', $_POST['v_arraydiaselegidos']);
 
+	$porcentajescoachs=json_decode($_POST['porcentajescoachs']);
 	$emp->lunes=$lunes;
 	$emp->martes=$martes;
 	$emp->miercoles=$miercoles;
@@ -116,7 +121,7 @@ try
 	$emp->asignadocoach=$_POST['v_asignadocoach'];
 	$emp->asignadoadmin=$_POST['v_asignadoadmin'];
 	$emp->numligarclientes=$_POST['v_numligarclientes'];
-
+	$emp->controlasistencia=$_POST['v_asistencia'];
 
 	//Validamos si hacermos un insert o un update
 	if($emp->idservicio == 0)
@@ -155,19 +160,32 @@ try
 
 				}
 
-			/*if (count($coachs)>0 && $coachs[0]!='') {
+			if (count($coachs)>0 && $coachs[0]!='') {
 				for ($i=0; $i < count($coachs); $i++) { 
 						$emp->idparticipantes=$coachs[$i];
 						$emp->Guardarparticipantes();
-					}
-				}*/
 
-			if (count($participantes)>0 && $participantes[0]!='') {
+						$tipo=$porcentajescoachs[$i]->{'tipopago'};
+						$monto=$porcentajescoachs[$i]->{'monto'};
+
+						$emp->GuardarMontotipo($tipo,$monto);	
+					}
+				}
+
+				if (count($porcentajescoachs)>0) {
+					for ($i=0; $i <count($porcentajescoachs) ; $i++) { 
+						
+
+
+					}
+				}
+
+			/*if (count($participantes)>0 && $participantes[0]!='') {
 					for ($i=0; $i < count($participantes); $i++) { 
 						$emp->idparticipantes=$participantes[$i];
 						$emp->Guardarparticipantes();
 					}
-				}
+				}*/
 
 				if (count($periodosinicial)>0 && $periodosinicial[0]!='') {
 					for ($i=0; $i < count($periodosinicial); $i++) { 
@@ -175,6 +193,31 @@ try
 						$emp->periodofinal=$periodosfinal[$i];
 
 						$emp->GuardarPeriodo();
+					}
+				}
+
+			if (count($descuentos)>0 && $descuentos[0]!='') {
+					for ($i=0; $i < count($descuentos); $i++) { 
+						$emp->iddescuento=$descuentos[$i];
+
+						$emp->Guardardescuentos();
+					}
+				}
+
+
+			if (count($membresias)>0 && $membresias[0]!='') {
+				for ($i=0; $i < count($membresias); $i++) { 
+						$emp->idmembresia=$membresias[$i];
+
+						$emp->Guardarmembresias();
+					}
+				}
+
+				if (count($encuestas)>0 && $encuestas[0]!='') {
+				for ($i=0; $i < count($encuestas); $i++) { 
+						$emp->idencuesta=$encuestas[$i];
+
+						$emp->Guardarencuestas();
 					}
 				}
 
@@ -229,6 +272,12 @@ try
 					for ($i=0; $i < count($coachs); $i++) { 
 						$emp->idparticipantes=$coachs[$i];
 						$emp->Guardarparticipantes();
+
+						
+						$tipo=$porcentajescoachs[$i]->{'tipopago'};
+						$monto=$porcentajescoachs[$i]->{'monto'};
+
+						$emp->GuardarMontotipo($tipo,$monto);	
 					}
 				}	
 
@@ -241,6 +290,35 @@ try
 						$emp->periodofinal=$periodosfinal[$i];
 
 						$emp->GuardarPeriodo();
+					}
+				}
+
+		/*$emp->Eliminardescuentos();
+
+		if (count($descuentos)>0 && $descuentos[0]!='') {
+					for ($i=0; $i < count($descuentos); $i++) { 
+						$emp->iddescuento=$descuentos[$i];
+
+						$emp->Guardardescuentos();
+					}
+				}*/
+
+		/*$emp->Eliminardemembresias();
+
+		if (count($membresias)>0 && $membresias[0]!='') {
+				for ($i=0; $i < count($membresias); $i++) { 
+						$emp->idmembresia=$membresias[$i];
+
+						$emp->Guardarmembresias();
+					}
+				}*/
+
+		$emp->Eliminardeencuestas();
+		if (count($encuestas)>0 && $encuestas[0]!='') {
+				for ($i=0; $i < count($encuestas); $i++) { 
+						$emp->idencuesta=$encuestas[$i];
+
+						$emp->Guardarencuestas();
 					}
 				}
 

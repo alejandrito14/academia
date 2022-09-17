@@ -44,6 +44,8 @@ class Usuarios
     public $v_tipoasentamiento;
     public $idnivel;
     public $iddeporte;
+    public $celular2;
+    public $idusuariotutorado;
 	public function validarTelefono()
 	{
 		 $sql_cliente = "SELECT * FROM usuarios WHERE celular='$this->celular'";
@@ -133,14 +135,14 @@ class Usuarios
         $result = $this->db->consulta($query);
 	}
 
-	public function GuardarUsuarioTutorado()
+	public function GuardarUsuarioTutorado($sincel)
 	{
-		$sql = "INSERT INTO usuarios (nombre,paterno,materno,fechanacimiento,sexo,celular,email,usuario,tipo)
-        VALUES ('$this->nombre','$this->paterno','$this->materno','$this->fecha','$this->sexo','$this->celular','$this->email','$this->usuario','$this->tipo')";
-
+		$sql = "INSERT INTO usuarios (nombre,paterno,materno,fechanacimiento,sexo,celular,email,usuario,tipo,celular2,sincel)
+        VALUES ('$this->nombre','$this->paterno','$this->materno','$this->fecha','$this->sexo','$this->celular','$this->email','$this->usuario','$this->tipo','$this->celular2','$sincel')";
+       
 
         $result  = $this->db->consulta($sql);
-        $this->idusuario=$this->db->id_ultimo();
+        $this->idusuariotutorado=$this->db->id_ultimo();
 	}
 
     public function ActualizarUsuarioTutorado()
@@ -162,9 +164,9 @@ class Usuarios
 	public function GuardarUsuarioyTutor($idusuariotutorado,$parentesco,$soysututor)
 	{
 		$sql = "INSERT INTO usuariossecundarios (idusuariostutor,idusuariotutorado,idparentesco,sututor)
-        VALUES ('$idusuariotutorado','$this->idusuario','$parentesco','$soysututor')";
+        VALUES ('$this->idusuarios','$this->idusuariotutorado','$parentesco','$soysututor')";
 
-
+     
 
         $result  = $this->db->consulta($sql);
 	}
@@ -750,7 +752,7 @@ public function validarUsuarioClienteTokenCel()
     public function obtenerUsuariosAlumnos($idusuariosservicio)
     {
          $sql = "SELECT * FROM usuarios INNER JOIN tipousuario ON tipousuario.idtipousuario=usuarios.tipo
-           WHERE tipo IN(3) AND usuario!=''";
+           WHERE tipo IN(3) ";
            
         if ($idusuariosservicio!='') {
              $sql.="AND idusuarios NOT IN($idusuariosservicio)";
@@ -828,6 +830,139 @@ public function validarUsuarioClienteTokenCel()
         $result = $this->db->consulta($query);
     }
 
+    public function obtenerCoachesActivos()
+    {
+         $sql = "SELECT * FROM usuarios 
+           WHERE usuarios.tipo IN(5) AND estatus=1";
+           
+      
+        $resp = $this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+        $array    = array();
+        $contador = 0;
+        if ($cont > 0) {
+
+            while ($objeto = $this->db->fetch_object($resp)) {
+
+                $array[$contador] = $objeto;
+                $contador++;
+            }
+        }
+        return $array;
+    }
+
+
+    public function ObtenerTutoradosSincel($value='')
+    {
+        $sql="SELECT
+        usuarios.nombre,
+        usuarios.paterno,
+        usuarios.materno,
+        usuarios.idusuarios
+        FROM
+        usuarios
+        JOIN usuariossecundarios
+        ON usuarios.idusuarios = usuariossecundarios.idusuariotutorado WHERE usuariossecundarios.idusuariostutor='$this->idusuarios' AND sincel=1";
+
+       
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+    }
+
+    public function VerificarSiesTutorado()
+    {
+        $sql="SELECT * FROM usuariossecundarios
+        WHERE usuariossecundarios.idusuariotutorado='$this->idusuarios' ";
+
+       
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+    }
+
+    public function ObtenerCategoriasServiciotutor($idtutor)
+    {
+       $sql="SELECT servicios.idservicio,
+        servicios.idcategoriaservicio,  categorias.titulo
+ FROM usuarios_servicios
+       INNER JOIN servicios ON usuarios_servicios.idservicio=servicios.idservicio
+       INNER JOIN categorias On categorias.idcategorias=servicios.idcategoriaservicio
+        WHERE usuarios_servicios.idusuarios='$idtutor' GROUP BY  servicios.idcategoriaservicio";
+
+       
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+    }
+
+    public function ObtenerserviciosTutor($idtutor)
+    {
+       
+       $sql="SELECT servicios.idservicio,
+        servicios.idcategoriaservicio,
+        servicios.titulo
+ FROM usuarios_servicios
+       INNER JOIN servicios ON usuarios_servicios.idservicio=servicios.idservicio
+        WHERE usuarios_servicios.idusuarios='$idtutor' GROUP BY  servicios.idservicio";
+       
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+    }
   
 
 }

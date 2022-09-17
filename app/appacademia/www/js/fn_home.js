@@ -51,8 +51,8 @@ function CargarDatos() {
  	classtipo='tipoalumno';
  	 $$(".tipousuario").removeClass('tipoadmin');
  	 $$(".tipousuario").removeClass('tipocoach');
-  	$$(".tipousuario").addClass(classtipo);
-
+  	 $$(".tipousuario").addClass(classtipo);
+  	 $$(".btnservicios").attr('onclick','GoToPage("serviciosasignados")');
 
 	ObtenerTableroAnuncios(1);
 	ObtenerEntradas(1);
@@ -60,6 +60,7 @@ function CargarDatos() {
 	Obtenerpublicidad(1);
 	ObtenerConfiguracion();
 	MostrarBotonServiciosActivos();
+	VerificarSiExisteTuTorados();
 
 	var promesa=getConfiguracion();
     promesa.then(r => {
@@ -70,7 +71,7 @@ function CargarDatos() {
       		  promesa2.then(r2 => {
       		  	console.log(r2);
       		  	var visto=r2.respuesta.popupmembresia;
-      		  	if (visto==1) {
+      		  	if (visto==0) {
 
       		  		ObtenerMembresiaActivas();
 

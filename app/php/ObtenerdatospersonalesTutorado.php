@@ -30,7 +30,9 @@ try
 	$obtenerparentesco=$lo->ObtenerparentescoUsuario();
 	$row=$db->fetch_assoc($obtenerparentesco);
 	$idparentesco=$row['idparentesco'];
+	$sututor=$row['sututor'];
 	$obtener[0]->idparentesco=$idparentesco;
+	$obtener[0]->sututor=$sututor;
 
 	$respuesta['respuesta']=$obtener[0];
 	

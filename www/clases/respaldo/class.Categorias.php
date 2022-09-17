@@ -216,6 +216,14 @@ class Categorias
 		return $resp;
 	}
 
+	public function BorrarHorariostipo()
+	{
+		
+		$query="DELETE FROM horariostipo WHERE idcategorias=".$this->idcategoria."";	
+		$resp=$this->db->consulta($query);
+		return $resp;
+	}
+
 	public function BorrarCategoria()
 	{
 		
@@ -252,7 +260,6 @@ class Categorias
 		public function GuardarHorarioSemana()
 	{
 		$query = "INSERT INTO horariostipo (idcategorias,dia,horainicial,horafinal) VALUES ('$this->idcategoria','$this->dia','$this->horainiciosemana','$this->horafinsemana');";
-
 		$this->db->consulta($query);
 
 	}
@@ -293,6 +300,27 @@ class Categorias
 	public function ObtenerHorariosCategoriasDia()
 	{
 		$sql="SELECT *FROM horariostipo WHERE idcategorias=".$this->idcategoria." GROUP BY dia";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerServiciosPorCategorias($categorias)
+	{
+		$sql="SELECT *FROM servicios WHERE idcategoriaservicio IN('$categorias') AND estatus=1";
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

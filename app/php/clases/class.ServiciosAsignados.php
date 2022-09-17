@@ -274,6 +274,70 @@ class ServiciosAsignados
 
 
 
+	public function ObtenerHorariosOrdenados()
+	{
+		$fechaactual=date('Y-m-d');
+		$horaactual=date('H:i:s');
+		$dia=date('w');
+		$sql="	SELECT* FROM
+					horariosservicio 
+				WHERE
+					idservicio = '$this->idservicio'  
+					AND fecha <='$fechaactual'
+					 ORDER BY fecha,dia,horainicial";
+
+				
+				
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		$newArray=array();
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+					$horaactual=date('H:i:s');
+					$dia=date('w');
+					$horaentrada=date('H:i:s',strtotime($objeto->horainicial));
+
+					
+					$datetime1 = $fechaactual.' '.$horaactual;//start time
+					$datetime2 = $objeto->fecha.' '.$objeto->horainicial;//end time
+
+					$consulta="SELECT TIMESTAMPDIFF(MINUTE,'$datetime1','$datetime2') as intervalo";
+					$resp2=$this->db->consulta($consulta);
+					$obj=$this->db->fetch_assoc($resp2);
+
+					$interval = $obj['intervalo'];
+
+
+						$objeto->diferencia=$interval;
+						
+						$array[$contador]=$objeto;
+
+						$salir=1;
+						//break;
+
+					//}
+					$contador++;
+				}
+
+
+					usort($array, function ($a, $b) {
+					    return strcmp($a->diferencia,$b->diferencia);
+						});
+					 		
+								
+
+			} 
+		
+		
+		return $array;
+
+	}
+
 	public function obtenerUsuariosServiciosAlumnosAsignados()
 	{
 		$sql="SELECT
@@ -709,4 +773,42 @@ class ServiciosAsignados
 		
 		return $array;
 	}
+
+	
+	public function BuscarAsignacionCoach()
+	{
+		
+		$sql="SELECT
+				*
+				FROM
+				usuarios_servicios
+				JOIN usuarios
+				ON usuarios_servicios.idusuarios = usuarios.idusuarios
+				JOIN tipousuario
+				ON tipousuario.idtipousuario=usuarios.tipo
+				JOIN usuarioscoachs
+				ON usuarioscoachs.idusuarios_servicios=usuarios_servicios.idusuarios_servicios
+				WHERE tipousuario.idtipousuario=5 AND 
+				usuarios_servicios.idservicio = '$this->idservicio'  AND cancelacion=0
+		 ";
+
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
 }

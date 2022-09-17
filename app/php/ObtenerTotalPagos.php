@@ -7,6 +7,7 @@ header('Access-Control-Allow-Origin: *');
 require_once("clases/conexcion.php");
 require_once("clases/class.Pagos.php");
 require_once("clases/class.Funciones.php");
+require_once("clases/class.Usuarios.php");
 
 try
 {
@@ -15,13 +16,27 @@ try
 	$db = new MySQL();
 	$lo = new Pagos();
 	$f=new Funciones();
-
+	$usuarios=new Usuarios();
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
-
+	$usuarios->db=$db;
 	$idusuarios=$_POST['id_user'];
 	$lo->idusuarios=$idusuarios;
+
+	$usuarios->idusuarios=$idusuarios;
+
+	$tutorados=$usuarios->ObtenerTutoradosSincel();
+	
+	for ($i=0; $i <count($tutorados) ; $i++) { 
+		$idusuarios.=','.$tutorados[$i]->idusuarios;
+	}
+
+	$lo->idusuarios=$idusuarios;
+
+
 	$obtener=$lo->ObtenerTotalPagos();
+
+
 
 	if ($obtener[0]->total==null) {
 		$obtener[0]->total='0.00';

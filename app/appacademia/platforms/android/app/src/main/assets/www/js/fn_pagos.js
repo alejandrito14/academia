@@ -125,6 +125,7 @@ function Pintarpagos(pagos) {
                         <div class="col-20">
 
                         <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Seleccionarcheck(`+pagos[i].idpago+`)" style="float:rigth;" />
+                        <input type="hidden" id="tipo_`+pagos[i].idpago+`" value="`+pagos[i].tipo+`"  />
                         </div>
                     </div>
                  </li>
@@ -133,7 +134,10 @@ function Pintarpagos(pagos) {
 		}
 
 		$(".listadopagos").html(html);
-	}
+	}else{
+        $(".listadopagos").css('display','none');
+
+  }
 }
 
 function SeleccionarTodos() {
@@ -170,12 +174,14 @@ function HabilitarBotonPago() {
 		 	var contador=$("#val_"+dividir).val();
 		 	suma=parseFloat(suma)+parseFloat(contador);
 		 	concepto=$("#concepto_"+dividir).text();
+      tipo=$("#tipo_"+dividir).val();
 		 	contar++;
 
 		 	var objeto={
 		 		id:dividir,
 		 		concepto:concepto.trim(),
-		 		monto:contador
+		 		monto:contador,
+        tipo:tipo
 		 	};
 		 	pagosarealizar.push(objeto);
 

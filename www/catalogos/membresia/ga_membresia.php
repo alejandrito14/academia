@@ -48,7 +48,21 @@ try
 	$emp->limite=$_POST['v_limite'];
 
 	$serviciosasignados=json_decode($_POST['serviciosasignados']);
+	$tiposerviciosasignados=json_decode($_POST['tiposerviciosasignados']);
+	$porcategoria=$_POST['porcategoria'];
+	$porservicio=$_POST['porservicio'];
+	$color=$_POST['v_color'];
+	$emp->porcategoria=$porcategoria;
+	$emp->porservicio=$porservicio;
+	$emp->color=$color;
+	$emp->depende=$_POST['dependede'];
+	$emp->membresiadepende=$_POST['membresiadepende'];
 
+	$emp->inppadre=$_POST['inppadre'];
+	$emp->inphijo=$_POST['inphijo'];
+	$emp->inpnieto=$_POST['inpnieto'];
+	$emp->v_limitemembresia=$_POST['v_limitemembresia'];
+	
 	$ruta="imagenes/".$_SESSION['codservicio'].'/';
 
 	
@@ -74,6 +88,21 @@ try
 			}
 		}
 
+
+		if ($tiposerviciosasignados!='') {
+			for ($i=0; $i <count($tiposerviciosasignados) ; $i++) { 
+				
+				$idtiposervicio=$tiposerviciosasignados[$i]->{'tiposervicio'};
+				$tipodescuento=$tiposerviciosasignados[$i]->{'selecttipo'};
+				$inputcantidad=$tiposerviciosasignados[$i]->{'inputcantidad'};
+
+				$emp->idcategorias=$idtiposervicio;
+				$emp->tipodescuento=$tipodescuento;
+				$emp->inputcantidad=$inputcantidad;
+				$emp->AsignarCategoriaMembresia();
+
+			}
+		}
 		$md->guardarMovimiento($f->guardar_cadena_utf8('membresia'),'membresia',$f->guardar_cadena_utf8('Nuevo membresia creado con el ID-'.$emp->idmembresia));
 
 	}else{
@@ -92,6 +121,26 @@ try
 				$emp->tipodescuento=$tipodescuento;
 				$emp->inputcantidad=$inputcantidad;
 				$emp->AsignarServicioMembresia();
+
+			}
+		}
+
+
+
+		if ($tiposerviciosasignados!='') {
+
+			$emp->EliminarAsignacionTipo();
+
+			for ($i=0; $i <count($tiposerviciosasignados) ; $i++) { 
+				
+				$idtiposervicio=$tiposerviciosasignados[$i]->{'tiposervicio'};
+				$tipodescuento=$tiposerviciosasignados[$i]->{'selecttipo'};
+				$inputcantidad=$tiposerviciosasignados[$i]->{'inputcantidad'};
+
+				$emp->idcategorias=$idtiposervicio;
+				$emp->tipodescuento=$tipodescuento;
+				$emp->inputcantidad=$inputcantidad;
+				$emp->AsignarCategoriaMembresia();
 
 			}
 		}

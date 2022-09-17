@@ -171,6 +171,26 @@ $mostrar = array('NO','SI' );
 
 									?>
 
+
+
+
+                  <?php
+
+                 $predeterminado= $l_Tipousuario_row['predeterminado'];
+                  //SCRIPT PARA CONSTRUIR UN BOTON
+                  $bt->titulo = "";
+                  $bt->icon = "mdi-delete-empty";
+                  $bt->funcion = "BorrarDatosTipoUsuario('".$l_Tipousuario_row['idtipousuario']."','idtipousuario','tipousuario','n','administrador/tipousuario/vi_tipousuario.php','main','$idmenumodulo')";
+                  $bt->estilos = "";
+                  $bt->permiso = $permisos;
+                  $bt->tipo = 3;
+                  $bt->title="BORRAR";
+                  if ($predeterminado==0) {
+                  	 $bt->armar_boton();
+                  }
+                 
+                ?>
+
 								</td>
 
 

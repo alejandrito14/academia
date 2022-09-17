@@ -44,8 +44,8 @@ try
 	$lo->inputleido2=$v_inputleido2;
 	$lo->idusuarios=$idusuarios;
 	$lo->idusuariodatosalud=$idusuariodatosalud;
-
-	if ($lo->idusuariodatosemergencia==0) {
+	
+	if ($lo->idusuariodatosalud == 0) {
 		
 		$lo->GuardardatoSalud();
 

@@ -113,6 +113,10 @@ function Guardarservicio2(form,regresar,donde,idmenumodulo)
 
 		});
 		var participantes=[];
+		var membresias=[];
+		var descuentos=[];
+
+
 		var zonas=[];
 		var coachs=[];
 		var periodoinicial=[];
@@ -155,6 +159,9 @@ function Guardarservicio2(form,regresar,donde,idmenumodulo)
 			periodofinal.push(valor);
 		 });
 
+		
+		
+
 		datos.append('zonas',zonas);
 		datos.append('coachs',coachs);
 		datos.append('participantes',participantes);
@@ -189,7 +196,7 @@ function Guardarservicio2(form,regresar,donde,idmenumodulo)
 		datos.append('v_sabado',sabado);
 		datos.append('v_domingo',domingo);
 		datos.append('v_numparticipantes',v_numparticipantes);
-
+	
 
 		
 		 $('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
@@ -228,7 +235,7 @@ function Guardarservicio2(form,regresar,donde,idmenumodulo)
 function BorrarServicio(idservicio,campo,tabla,valor,regresar,donde,idmenumodulo) {
 	if(confirm("\u00BFEstas seguro de querer realizar esta operaci\u00f3n?"))
 	{
-var datos='idservicio='+idservicio;
+	var datos='idservicio='+idservicio;
 	$.ajax({
 		url:'catalogos/servicios/borrarServicio.php', //Url a donde la enviaremos
 	  type:'POST', //Metodo que usaremos
@@ -444,7 +451,7 @@ function SeleccionarCategoria(idservicio) {
 	$("#multi-tab").css('display','none');
 	$("#politicas-tab").css('display','none');
 	$("#aceptacion-tab").css('display','none');
-	
+	$("#otros-tab").css('display','none');
 
 if (categoriaid>0) {
 	$.ajax({
@@ -536,6 +543,7 @@ if (categoriaid>0) {
 						$("#divdias").css('display','block');
 						}*/
 					var idmenumodulo=$("#idmenumodulo").text();
+							$(".divcategoria").css('display','none');
 
 						if (avanzado==1) {
 
@@ -546,11 +554,13 @@ if (categoriaid>0) {
 							$("#multi-tab").css('display','block');
 							$("#politicas-tab").css('display','block');
 							$("#aceptacion-tab").css('display','block');
+							$("#otros-tab").css('display','block');
 
 							$(".btnguardarservicio").attr('onclick',"Guardarservicio('f_servicio','catalogos/servicios/vi_servicios.php','main','"+idmenumodulo+"')");
  							//$(".btncontinuar").attr('onclick',"Guardarservicio('f_servicio','catalogos/servicios/vi_servicios.php','main','"+idmenumodulo+"')");
 							
  							$(".btnguardarservicio").html('<i class="mdi mdi-arrow-right-box"></i>Continuar');
+							$(".divcategoria").css('display','block');
 
 							if (idservicio>0) {
 
@@ -560,12 +570,13 @@ if (categoriaid>0) {
 							$("#coach-tab").attr('onclick','ActivarTab(this,"coaches")');
 							$("#multi-tab").attr('onclick','ActivarTab(this,"multi")');
 							$("#politicas-tab").attr('onclick','ActivarTab(this,"politicas")');
-							
-
+				
+							$(".divcategoria").css('display','block');
 							
 
 							}
 						}else{
+
 							$(".btncontinuar").css('display','none');
 							$(".btnguardarservicio").attr('onclick',"Guardarservicio2('f_servicio','catalogos/servicios/vi_servicios.php','main','"+idmenumodulo+"')");
  							$(".btnguardarservicio").html('<i class="mdi mdi-content-save"></i>Guardar');
@@ -898,6 +909,96 @@ function ObtenerCoachs(tipo,idservicio) {
 					}
 				});
 }
+
+
+function ObtenerDescuentos(idservicio) {
+ 	var datos="idservicio="+idservicio;
+	$.ajax({
+					url: 'catalogos/servicios/ObtenerDescuentos.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					dataType:'json',
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+
+						var descuentos=msj.respuesta;
+						if (descuentos.length>0) {
+
+							for (var i =0; i <descuentos.length; i++) {
+								
+								$("#inputdescuento_"+descuentos[i].iddescuento).attr('checked',true);
+							}
+						}
+
+					}
+				});
+ } 
+
+ function ObtenerMembresias(idservicio) {
+ 	var datos="idservicio="+idservicio;
+	$.ajax({
+					url: 'catalogos/servicios/ObtenerMembresias.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					dataType:'json',
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+
+						var membresias=msj.respuesta;
+						if (membresias.length>0) {
+
+							for (var i =0; i <membresias.length; i++) {
+								
+								$("#inputmembresia_"+membresias[i].idmembresia).attr('checked',true);
+							}
+						}
+
+					}
+				});
+ } 
+
+
+ function ObtenerEncuestas(idservicio) {
+ 	var datos="idservicio="+idservicio;
+	$.ajax({
+					url: 'catalogos/servicios/ObtenerEncuestas.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					dataType:'json',
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+
+						var encuestas=msj.respuesta;
+						if (encuestas.length>0) {
+
+							for (var i =0; i <encuestas.length; i++) {
+								
+								$("#inputencuesta_"+encuestas[i].idencuesta).attr('checked',true);
+							}
+						}
+
+					}
+				});
+ } 
+
 
 function SeleccionarCliente() {
 	var contador=0;
@@ -1683,7 +1784,7 @@ function PintarPeriodos(respuesta) {
 									<div class="col-md-3">
 
 										<label for="to">Fecha final</label>
-										<input type="date" id="fechafinal_`+contadorperiodos+`" class="form-control to" name="to" value="`+respuesta[i].fechainicial+`" >
+										<input type="date" id="fechafinal_`+contadorperiodos+`" class="form-control to" name="to" value="`+respuesta[i].fechafinal+`" >
 
 									</div>
 
@@ -1961,7 +2062,34 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 			periodofinal.push(valor);
 		 });
 
+		var descuentos=[];
+		var membresias=[];
+		var encuestas=[];
+		$(".chkdescuento").each(function(){
+			var valor=$(this).attr('id');
+			var id=valor.split('_')[1];
+			if ($("#"+valor).is(':checked')) {
+				descuentos.push(id);
+			}
+		});
 
+		$(".chkmembresia").each(function(){
+			var valor=$(this).attr('id');
+			var id=valor.split('_')[1];
+			if ($("#"+valor).is(':checked')) {
+				membresias.push(id);
+			}
+		});
+
+		$(".chkencuesta").each(function(){
+			var valor=$(this).attr('id');
+			var id=valor.split('_')[1];
+			if ($("#"+valor).is(':checked')) {
+				encuestas.push(id);
+			}
+		});
+
+		
 		var abiertocliente=$("#v_abiertocliente").is(':checked')?1:0;
 		var abiertocoach=$("#v_abiertocoach").is(':checked')?1:0;
 		var abiertoadmin=$("#v_abiertoadmin").is(':checked')?1:0;
@@ -1975,6 +2103,8 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 		var v_politicascancelacion=$("#v_politicascancelacion").val();
 		var v_politicasaceptacion=$("#v_politicasaceptacion").val();
 		var v_reembolso=$("#v_reembolso").is(':checked')?1:0;
+		var v_asistencia=$("#v_asistencia").is(':checked')?1:0;
+
 		var v_cantidadreembolso=$("#v_cantidadreembolso").val();
 		var v_asignadocliente=$("#v_asignadocliente").is(':checked')?1:0;
 		var v_asignadocoach=$("#v_asignadocoach").is(':checked')?1:0;
@@ -1992,7 +2122,6 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 		datos.append('id',id);
 		datos.append('v_estatus',estatus);
 		datos.append('v_categoria',categoria);
-
 		datos.append('v_costo',costo);
 		datos.append('v_totalclase',totalclase);
 		datos.append('v_modalidad',modalidad);
@@ -2032,8 +2161,11 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 		datos.append('v_asignadocoach',v_asignadocoach);
 		datos.append('v_asignadoadmin',v_asignadoadmin);
 		datos.append('v_politicasaceptacion',v_politicasaceptacion);
+		datos.append('v_descuentos',descuentos);
+		datos.append('v_membresias',membresias);
+		datos.append('v_encuestas',encuestas);
+		datos.append('v_asistencia',v_asistencia);
 
-		
 		var bandera1=1;
 		if (nombre=='') {
 			$("#lbltitulo").addClass('inputrequerido');
@@ -2236,7 +2368,7 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 
 
 		if (seccion2==1 && seccion3==1 && seccion4==1 && seccion5==1 &&seccion6==1) {
-			document.getElementById("politicas-tab").click();
+			//document.getElementById("politicas-tab").click();
 
 
 		}
@@ -2291,6 +2423,11 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 						   if (bandera1==1 && bandera2==1 && bandera3==1 && bandera4==1 && bandera5==1) {
 						   	if( resp[0] == 1 ){
 								aparecermodulos(regresar+"?ac=1&idmenumodulo="+idmenumodulo+"&msj=Operacion realizada con exito",donde);
+						 	
+								//aqui
+
+								arraydiaselegidos=[];
+								arraydiaseleccionados=[];
 						 	 }else{
 								aparecermodulos(regresar+"?ac=0&idmenumodulo="+idmenumodulo+"&msj=Error. "+msj,donde);
 						  	}
@@ -2313,8 +2450,10 @@ function Colocardescripcion() {
 	$("#v_descripcion").val(v_titulo);
 }
 
-function CambiarNumeros(numero) {
+function CambiarNumeros() {
+
 	var numero=$("#v_costo").val();
+		console.log(numero);
 	var resultado=formato_numero(numero,2,'.',','); 
 
 	$("#v_costo").val(resultado);

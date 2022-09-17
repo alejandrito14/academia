@@ -24,7 +24,7 @@ try
 	$f=new Funciones();
 	$cli->db=$db;
 	$cli->tipo=$_POST['tipos'];
-	$tipodeusuarios=$cli->ObtTipousuarioActivos();
+	$tipodeusuarios=$cli->ObtTipousuarioCliente();
 	
 	echo json_encode($tipodeusuarios);
 	

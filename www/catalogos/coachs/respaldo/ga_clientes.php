@@ -116,7 +116,8 @@ try
 
 			$bloquearediciondatos=$_POST['bloquearediciondedatos'];
 			$cli->bloquearediciondedatos=$bloquearediciondatos;
-
+			$mostraranuncios=$_POST['mostraranuncios'];
+			$cli->mostraranuncios=$mostraranuncios;
 		$cli->ModificarCliente();
 
 

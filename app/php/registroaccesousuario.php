@@ -128,7 +128,7 @@ try
 
         $obtenertipo=$lo->ObtenerTipo();
         $nombretipousuario=$obtenertipo[0]->nombretipo;
-
+       $info= $lo->ObtenerInformacionUsuario();
 
         if (count($tutorados)>0) {
             
@@ -149,7 +149,19 @@ try
                  $lo->usuario='';
                  $parentesco=$tutorados[$i]->{'v_parentescotu'};
                  $soytutor=$tutorados[$i]->{'inputsoytutor'};
-                 $lo->GuardarUsuarioTutorado();
+                 $sincel=$tutorados[$i]->{'inputsincelular'};
+
+                 if ($sincel==1) {
+                    $lo->celular2=$info[0]->celular;
+                 }
+
+                 $v_idusuario=$tutorados[$i]->{'v_idusuario'};
+                 if ($v_idusuario==''){
+                     $lo->GuardarUsuarioTutorado($sincel);
+                    }else{
+                     $lo->idusuariotutorado=$v_idusuario;
+                    }
+
                  $lo->GuardarUsuarioyTutor($idusuario,$parentesco,$soytutor);
 
              }

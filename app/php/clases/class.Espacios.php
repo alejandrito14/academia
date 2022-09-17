@@ -24,12 +24,15 @@ class Espacios
 	///funcion para objeter datos de un usuario
 	public function buscarEspacio()
 	{
+	try {
 		$query="SELECT * FROM zonas WHERE idzona=".$this->idespacio;
-		
 		$resp=$this->db->consulta($query);
 		
-		//echo $total;
-		return $resp;
+			return $resp;
+		} catch (Exception $e) {
+    		echo 'imprimir'.$this->idespacio.'Excepción capturada: ',  $e->getMessage(), "\n";
+		}
+		
 	}
 	
 	

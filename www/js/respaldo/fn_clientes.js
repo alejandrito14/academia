@@ -510,10 +510,10 @@ function BorrarCliente(idcliente,nombre,idmenumodulo,regresar) {
 
 
 
-		var datos='idcliente='+idcliente;
+		var datos='idusuarios='+idusuarios;
 
 		$.ajax({
-							url:'catalogos/clientes/eliminarcliente.php', //Url a donde la enviaremos
+							url:'catalogos/alumnos/eliminarusuario.php', //Url a donde la enviaremos
 							type:'POST', //Metodo que usaremos
 							data: datos, //Le pasamos el objeto que creamos con los archivos
 							error:function(XMLHttpRequest, textStatus, errorThrown){
@@ -526,13 +526,13 @@ function BorrarCliente(idcliente,nombre,idmenumodulo,regresar) {
 								success:function(msj){
 
 									if (msj==0) {
-										AbrirNotificacion('EL CLIENTE TIENE COMPRAS ','mdi mdi-checkbox-marked-circle');
+										AbrirNotificacion('El usuario se encuentra relacionado  ','mdi mdi-checkbox-marked-circle');
 
 									}
 
 									if (msj==1) {
 
-											AbrirNotificacion('SE HA ELIMINADO CORRECTAMENTE','mdi mdi-checkbox-marked-circle');
+											AbrirNotificacion('Se ha eliminado correctamente','mdi mdi-checkbox-marked-circle');
 
 											aparecermodulos(regresar+'?idmenumodulo='+idmenumodulo,'main');
 	

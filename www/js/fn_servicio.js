@@ -113,6 +113,10 @@ function Guardarservicio2(form,regresar,donde,idmenumodulo)
 
 		});
 		var participantes=[];
+		var membresias=[];
+		var descuentos=[];
+
+
 		var zonas=[];
 		var coachs=[];
 		var periodoinicial=[];
@@ -136,13 +140,22 @@ function Guardarservicio2(form,regresar,donde,idmenumodulo)
 		});
 
 
-		$(".chkcoach").each(function(){
-			var valor=$(this).attr('id');
-			var id=valor.split('_')[1];
+		var porcentajescoachs=[];
+		$(".nombrecoach").each(function(){
+			var id=$(this).val();
+			coachs.push(id);
 
-			if ($("#"+valor).is(':checked')) {
-				coachs.push(id);
-			}
+			var idelemento=$(this).attr('id').split('_')[1];
+			var tipopago=$("#tipo_"+idelemento).val();
+			var monto=$("#txtcantidaddescuento_"+idelemento).val();
+
+				var objeto={
+					idcoach:id,
+					tipopago:pago,
+					monto:monto
+				};
+			    porcentajescoachs.push(objeto);
+
 		});
 
 		$(".from").each(function(){
@@ -154,6 +167,9 @@ function Guardarservicio2(form,regresar,donde,idmenumodulo)
 			var valor=$(this).val();
 			periodofinal.push(valor);
 		 });
+
+		
+		
 
 		datos.append('zonas',zonas);
 		datos.append('coachs',coachs);
@@ -189,7 +205,7 @@ function Guardarservicio2(form,regresar,donde,idmenumodulo)
 		datos.append('v_sabado',sabado);
 		datos.append('v_domingo',domingo);
 		datos.append('v_numparticipantes',v_numparticipantes);
-
+		datos.append('porcentajescoachs',JSON.stringify(porcentajescoachs));
 
 		
 		 $('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
@@ -228,7 +244,7 @@ function Guardarservicio2(form,regresar,donde,idmenumodulo)
 function BorrarServicio(idservicio,campo,tabla,valor,regresar,donde,idmenumodulo) {
 	if(confirm("\u00BFEstas seguro de querer realizar esta operaci\u00f3n?"))
 	{
-var datos='idservicio='+idservicio;
+	var datos='idservicio='+idservicio;
 	$.ajax({
 		url:'catalogos/servicios/borrarServicio.php', //Url a donde la enviaremos
 	  type:'POST', //Metodo que usaremos
@@ -444,7 +460,7 @@ function SeleccionarCategoria(idservicio) {
 	$("#multi-tab").css('display','none');
 	$("#politicas-tab").css('display','none');
 	$("#aceptacion-tab").css('display','none');
-	
+	$("#otros-tab").css('display','none');
 
 if (categoriaid>0) {
 	$.ajax({
@@ -536,6 +552,7 @@ if (categoriaid>0) {
 						$("#divdias").css('display','block');
 						}*/
 					var idmenumodulo=$("#idmenumodulo").text();
+							$(".divcategoria").css('display','none');
 
 						if (avanzado==1) {
 
@@ -546,11 +563,13 @@ if (categoriaid>0) {
 							$("#multi-tab").css('display','block');
 							$("#politicas-tab").css('display','block');
 							$("#aceptacion-tab").css('display','block');
+							$("#otros-tab").css('display','block');
 
 							$(".btnguardarservicio").attr('onclick',"Guardarservicio('f_servicio','catalogos/servicios/vi_servicios.php','main','"+idmenumodulo+"')");
  							//$(".btncontinuar").attr('onclick',"Guardarservicio('f_servicio','catalogos/servicios/vi_servicios.php','main','"+idmenumodulo+"')");
 							
  							$(".btnguardarservicio").html('<i class="mdi mdi-arrow-right-box"></i>Continuar');
+							$(".divcategoria").css('display','block');
 
 							if (idservicio>0) {
 
@@ -560,12 +579,13 @@ if (categoriaid>0) {
 							$("#coach-tab").attr('onclick','ActivarTab(this,"coaches")');
 							$("#multi-tab").attr('onclick','ActivarTab(this,"multi")');
 							$("#politicas-tab").attr('onclick','ActivarTab(this,"politicas")');
-							
-
+				
+							$(".divcategoria").css('display','block');
 							
 
 							}
 						}else{
+
 							$(".btncontinuar").css('display','none');
 							$(".btnguardarservicio").attr('onclick',"Guardarservicio2('f_servicio','catalogos/servicios/vi_servicios.php','main','"+idmenumodulo+"')");
  							$(".btnguardarservicio").html('<i class="mdi mdi-content-save"></i>Guardar');
@@ -871,9 +891,49 @@ function ObtenerZonas() {
 
 
 function ObtenerCoachs(tipo,idservicio) {
+	var usuarios="";
 	var datos="tipo="+tipo+"&idservicio="+idservicio;
+ return new Promise((resolve, reject) => {
+ 			 $.ajax({
+					url: 'catalogos/servicios/ObtenerParticipantesCoach.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					dataType:'json',
+					async:false,
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+
+						 usuarios=msj.respuesta;
+						if (usuarios.length>0) {
+
+							for (var i =0; i <usuarios.length; i++) {
+								
+								AgregarNuevoCoach2(usuarios[i].idusuarios,usuarios[i].tipopago,usuarios[i].monto);
+							
+							}
+							resolve(usuarios);
+
+						
+						}
+
+					}
+				});
+	
+ 			});
+	
+}
+
+
+function ObtenerDescuentos(idservicio) {
+ 	var datos="idservicio="+idservicio;
 	$.ajax({
-					url: 'catalogos/servicios/ObtenerParticipantes.php', //Url a donde la enviaremos
+					url: 'catalogos/servicios/ObtenerDescuentos.php', //Url a donde la enviaremos
 					type: 'POST', //Metodo que usaremos
 					data:datos,
 					dataType:'json',
@@ -886,18 +946,78 @@ function ObtenerCoachs(tipo,idservicio) {
 					},	
 					success: function (msj) {
 
-						var usuarios=msj.respuesta;
-						if (usuarios.length>0) {
+						var descuentos=msj.respuesta;
+						if (descuentos.length>0) {
 
-							for (var i =0; i <usuarios.length; i++) {
+							for (var i =0; i <descuentos.length; i++) {
 								
-								$("#inputcoach_"+usuarios[i].idusuarios).attr('checked',true);
+								$("#inputdescuento_"+descuentos[i].iddescuento).attr('checked',true);
 							}
 						}
 
 					}
 				});
-}
+ } 
+
+ function ObtenerMembresias(idservicio) {
+ 	var datos="idservicio="+idservicio;
+	$.ajax({
+					url: 'catalogos/servicios/ObtenerMembresias.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					dataType:'json',
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+
+						var membresias=msj.respuesta;
+						if (membresias.length>0) {
+
+							for (var i =0; i <membresias.length; i++) {
+								
+								$("#inputmembresia_"+membresias[i].idmembresia).attr('checked',true);
+							}
+						}
+
+					}
+				});
+ } 
+
+
+ function ObtenerEncuestas(idservicio) {
+ 	var datos="idservicio="+idservicio;
+	$.ajax({
+					url: 'catalogos/servicios/ObtenerEncuestas.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					dataType:'json',
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+
+						var encuestas=msj.respuesta;
+						if (encuestas.length>0) {
+
+							for (var i =0; i <encuestas.length; i++) {
+								
+								$("#inputencuesta_"+encuestas[i].idencuesta).attr('checked',true);
+							}
+						}
+
+					}
+				});
+ } 
+
 
 function SeleccionarCliente() {
 	var contador=0;
@@ -1179,12 +1299,20 @@ Resumenfechas();
 			              weekdays: ['dom','lun','mar','mier','jue','vier','sab'],
 			           	 isMultiple: true,
 
-			           	 /* onClickNavigator: function(ev, instance) {
+			           	  onClickNavigator: function(ev, instance) {
 							HorariosDisponibles2();
-			           	  }*/
+			           	  }
 
 
 						});
+
+
+						 
+
+						/*  $('.btncalendario').click(function(){
+						  	HorariosDisponibles();
+						  });*/
+
 
 						 var fechas=msj.arrayfechasdias[0];
 						PintarFechasCalendario(fechas);
@@ -1683,7 +1811,7 @@ function PintarPeriodos(respuesta) {
 									<div class="col-md-3">
 
 										<label for="to">Fecha final</label>
-										<input type="date" id="fechafinal_`+contadorperiodos+`" class="form-control to" name="to" value="`+respuesta[i].fechainicial+`" >
+										<input type="date" id="fechafinal_`+contadorperiodos+`" class="form-control to" name="to" value="`+respuesta[i].fechafinal+`" >
 
 									</div>
 
@@ -1942,13 +2070,22 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 		});
 */
 
-		$(".chkcoach").each(function(){
-			var valor=$(this).attr('id');
-			var id=valor.split('_')[1];
+		var porcentajescoachs=[];
+		$(".nombrecoach").each(function(){
+			var id=$(this).val();
+			coachs.push(id);
 
-			if ($("#"+valor).is(':checked')) {
-				coachs.push(id);
-			}
+			var idelemento=$(this).attr('id').split('_')[1];
+			var tipopago=$("#tipo_"+idelemento).val();
+			var monto=$("#txtcantidaddescuento_"+idelemento).val();
+
+				var objeto={
+					idcoach:id,
+					tipopago:tipopago,
+					monto:monto
+				};
+			    porcentajescoachs.push(objeto);
+
 		});
 
 		$(".from").each(function(){
@@ -1961,7 +2098,34 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 			periodofinal.push(valor);
 		 });
 
+		var descuentos=[];
+		var membresias=[];
+		var encuestas=[];
+		$(".chkdescuento").each(function(){
+			var valor=$(this).attr('id');
+			var id=valor.split('_')[1];
+			if ($("#"+valor).is(':checked')) {
+				descuentos.push(id);
+			}
+		});
 
+		$(".chkmembresia").each(function(){
+			var valor=$(this).attr('id');
+			var id=valor.split('_')[1];
+			if ($("#"+valor).is(':checked')) {
+				membresias.push(id);
+			}
+		});
+
+		$(".chkencuesta").each(function(){
+			var valor=$(this).attr('id');
+			var id=valor.split('_')[1];
+			if ($("#"+valor).is(':checked')) {
+				encuestas.push(id);
+			}
+		});
+
+		
 		var abiertocliente=$("#v_abiertocliente").is(':checked')?1:0;
 		var abiertocoach=$("#v_abiertocoach").is(':checked')?1:0;
 		var abiertoadmin=$("#v_abiertoadmin").is(':checked')?1:0;
@@ -1975,6 +2139,8 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 		var v_politicascancelacion=$("#v_politicascancelacion").val();
 		var v_politicasaceptacion=$("#v_politicasaceptacion").val();
 		var v_reembolso=$("#v_reembolso").is(':checked')?1:0;
+		var v_asistencia=$("#v_asistencia").is(':checked')?1:0;
+
 		var v_cantidadreembolso=$("#v_cantidadreembolso").val();
 		var v_asignadocliente=$("#v_asignadocliente").is(':checked')?1:0;
 		var v_asignadocoach=$("#v_asignadocoach").is(':checked')?1:0;
@@ -1992,7 +2158,6 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 		datos.append('id',id);
 		datos.append('v_estatus',estatus);
 		datos.append('v_categoria',categoria);
-
 		datos.append('v_costo',costo);
 		datos.append('v_totalclase',totalclase);
 		datos.append('v_modalidad',modalidad);
@@ -2032,8 +2197,12 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 		datos.append('v_asignadocoach',v_asignadocoach);
 		datos.append('v_asignadoadmin',v_asignadoadmin);
 		datos.append('v_politicasaceptacion',v_politicasaceptacion);
+		datos.append('v_descuentos',descuentos);
+		datos.append('v_membresias',membresias);
+		datos.append('v_encuestas',encuestas);
+		datos.append('v_asistencia',v_asistencia);
+		datos.append('porcentajescoachs',JSON.stringify(porcentajescoachs));
 
-		
 		var bandera1=1;
 		if (nombre=='') {
 			$("#lbltitulo").addClass('inputrequerido');
@@ -2236,7 +2405,7 @@ function Guardarservicio(form,regresar,donde,idmenumodulo)
 
 
 		if (seccion2==1 && seccion3==1 && seccion4==1 && seccion5==1 &&seccion6==1) {
-			document.getElementById("politicas-tab").click();
+			//document.getElementById("politicas-tab").click();
 
 
 		}
@@ -2318,8 +2487,10 @@ function Colocardescripcion() {
 	$("#v_descripcion").val(v_titulo);
 }
 
-function CambiarNumeros(numero) {
+function CambiarNumeros() {
+
 	var numero=$("#v_costo").val();
+		console.log(numero);
 	var resultado=formato_numero(numero,2,'.',','); 
 
 	$("#v_costo").val(resultado);
@@ -2354,4 +2525,606 @@ function PintarFechasCalendario(fechas) {
 		$(".fecha_"+nuevafecha).css('border','0');	 
 
 	}
+}
+
+function AgregarNuevoCoach() {
+
+
+	var valorcoach=[];
+	 $(".nombrecoach" ).each(function( index ) {
+       var valor=$(this).val(); 
+       valorcoach.push(valor);    
+  	});
+	
+	VerificarSihayCoach().then(r => {
+	contadorcoach=parseFloat($(".multiplecoach").length)+1;
+
+		tabindex=parseFloat(6)+parseFloat(contadorcoach);
+
+if (r.length>valorcoach.length) {
+	var html=`
+			<div class="row multiplecoach" id="contadorcoach_`+contadorcoach+`" style=" background: #dee1e4;border-radius: 10px;padding: 1em;margin-bottom:1em;">
+	
+										<div class="col-md-4">
+											<label>COACH</label>
+											<select name=""  class="form-control nombrecoach" id="nombrecoach_`+contadorcoach+`" style="padding-top:1em;" class="form-control">`;
+
+										for (var i = 0; i <r.length; i++) {
+
+												var encontrado=0;
+												for (var j = 0; j < valorcoach.length; j++) {
+													if(r[i].idusuarios=valorcoach[j]){
+
+														encontrado=1;
+														break;
+													}
+												}
+												if (encontrado==0) {
+
+													html+=`<option value="`+r[i].idusuarios+`">`+r[i].nombre+` `+r[i].paterno+` `+r[i].materno+`</option>`;
+		
+												}
+
+											}
+
+										html+=`</select> 
+
+										</div>
+
+										<div class="col-md-2">
+											<label>PAGO</label>
+											<select name=""  class="form-control tipo" id="tipo_`+contadorcoach+`" style="padding-top:1em;" class="form-control">
+											<option value="0">PORCENTAJE</option>
+											<option value="1">MONTO</option>
+											</select> 
+
+										</div>
+
+										<div class="col-md-2">
+										<label for="from">CANTIDAD</label>
+											<input type="number" id="txtcantidaddescuento_`+contadorcoach+`" class="form-control monto" name="monto">
+
+										</div>
+
+
+									<div class="col-md-1" style="text-align:right;">
+										<button type="button"  style="margin-top: 2em;" onclick="EliminarCoah(`+contadorcoach+`)" class="btn btn_rojo"><i class="mdi mdi-delete-empty"></i></button>
+
+
+									</div>
+										</div>
+
+									</div>
+
+						
+								</div>
+							
+
+					</div>
+					
+
+	`;
+
+
+	$("#listadocoaches").append(html);
+	}else{
+
+
+		alert('El límite de los coaches registrados es de'+r.length);
+	}
+	});
+		//Obtenerparentescomultiple(contadormultipleparentesco);
+		//ObtenerSelectCoachs(contadorcoach);
+}
+
+function EliminarCoah(contador) {
+
+	$("#contadorcoach_"+contador).remove();
+}
+
+function ObtenerSelectCoachs(contador) {
+
+	
+			$.ajax({
+					url: 'catalogos/servicios/ObtenerCoachs.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					dataType:'json',
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+						var respuesta=msj.respuesta;
+						if (respuesta.length>0) {
+							ColocarCoach(respuesta,contador);
+						}
+						
+
+					}
+				});
+
+}
+
+function ColocarCoach(respuesta,contador) {
+	var html="";
+	if (respuesta.length>0) {
+
+		for (var i = 0; i <respuesta.length; i++) {
+			html+=`<option value="`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`</option>>`;
+		}
+	}
+
+	$("#nombrecoach_"+contador).html(html);
+}
+
+function VerificarSihayCoach() {
+	 return new Promise(function(resolve, reject) {
+
+	 		$.ajax({
+					url: 'catalogos/servicios/ObtenerCoachs.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					dataType:'json',
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+						var respuesta=msj.respuesta;
+						var contador=0;
+						if (respuesta.length>0) {
+							contador=respuesta.length;
+						}
+						resolve(respuesta);
+						
+
+					}
+				});
+
+
+	 });
+}
+
+function AgregarNuevoCoach2(idusuarios,tipo,monto) {
+
+
+	var valorcoach=[];
+	 $(".nombrecoach" ).each(function( index ) {
+       var valor=$(this).val(); 
+       valorcoach.push(valor);    
+  	});
+	
+	VerificarSihayCoach().then(r => {
+	contadorcoach=parseFloat($(".multiplecoach").length)+1;
+
+		tabindex=parseFloat(6)+parseFloat(contadorcoach);
+
+	var html=`
+			<div class="row multiplecoach" id="contadorcoach_`+contadorcoach+`" style=" background: #dee1e4;border-radius: 10px;padding: 1em;margin-bottom:1em;">
+	
+										<div class="col-md-4">
+											<label>COACH</label>
+											<select name=""  class="form-control nombrecoach" id="nombrecoach_`+contadorcoach+`" style="padding-top:1em;" class="form-control">`;
+
+										for (var i = 0; i <r.length; i++) {
+
+												var encontrado=0;
+												for (var j = 0; j < valorcoach.length; j++) {
+													if(r[i].idusuarios=valorcoach[j]){
+
+														encontrado=1;
+														break;
+													}
+												}
+												if (encontrado==0) {
+
+													html+=`<option value="`+r[i].idusuarios+`">`+r[i].nombre+` `+r[i].paterno+` `+r[i].materno+`</option>`;
+		
+												}
+
+											}
+
+										html+=`</select> 
+
+										</div>
+
+										<div class="col-md-2">
+											<label>PAGO</label>
+											<select name=""  class="form-control tipo" id="tipo_`+contadorcoach+`" style="padding-top:1em;" class="form-control">
+											<option value="0">PORCENTAJE</option>
+											<option value="1">MONTO</option>
+											</select> 
+
+										</div>
+
+										<div class="col-md-2">
+										<label for="from">CANTIDAD</label>
+											<input type="number" id="txtcantidaddescuento_`+contadorcoach+`" class="form-control monto" name="monto">
+
+										</div>
+
+
+									<div class="col-md-1" style="text-align:right;">
+										<button type="button"  style="margin-top: 2em;" onclick="EliminarCoah(`+contadorcoach+`)" class="btn btn_rojo"><i class="mdi mdi-delete-empty"></i></button>
+
+
+									</div>
+										</div>
+
+									</div>
+
+						
+								</div>
+							
+
+					</div>
+					
+
+	`;
+
+
+	$("#listadocoaches").append(html);
+	$("#nombrecoach_"+contadorcoach).val(idusuarios);
+	$("#tipo_"+contadorcoach).val(tipo);
+	$("#txtcantidaddescuento_"+contadorcoach).val(monto);
+
+
+	
+	});
+		//Obtenerparentescomultiple(contadormultipleparentesco);
+		//ObtenerSelectCoachs(contadorcoach);
+}
+
+
+function AbrirModalClonarServicio(idservicio,campo,tabla,valor,regresar,donde,idmenumodulo,titulo) {
+	
+
+
+		$("#modalclonado").modal();
+		$("#tituloclonado").html('CLONAR SERVICIO '+titulo);
+		$("#txttituloclonado").val('COPIA '+titulo);
+		$("#clonadoservicio").attr('onclick','Siguiente1('+idservicio+',"'+campo+'","'+tabla+'","'+valor+'","'+regresar+'","'+donde+'","'+idmenumodulo+'")');
+		$("#divclonado1").css('display','block');
+	
+		$("#divclonado2").css('display','none');
+		$("#divclonado3").css('display','none');
+		arraydiaselegidos=[];
+		arraydiaseleccionados=[];
+		$("#clonadoservicio").text('SIGUIENTE');
+		$("#v_fechainicial").val('');
+		$("#v_fechafinal").val('');
+		$(".myc-day-time-container").html();
+
+
+	}
+function Siguiente1(idservicio,campo,tabla,valor,regresar,donde,idmenumodulo) {
+	
+	var general=$("#v_general").is(':checked')?1:0;
+	var costos=$("#v_costos").is(':checked')?1:0;
+	var v_politicasmensajes=$("#v_politicasmensajes").is(':checked')?1:0;
+	var v_reglas=$("#v_costos").is(':checked')?1:0;
+	var v_coachs=$("#v_coachs").is(':checked')?1:0;
+
+	var datos="general="+general+"&costos="+costos+"&v_politicasmensajes="+v_politicasmensajes+"&v_reglas="+v_reglas+"&v_coachs="+v_coachs+"&idservicio="+idservicio;
+
+
+	$.ajax({
+				url: 'catalogos/servicios/ObtenerServicio.php', //Url a donde la enviaremos
+				type: 'POST', //Metodo que usaremos
+				dataType:'json',
+				data:datos,
+				error: function (XMLHttpRequest, textStatus, errorThrown) {
+					var error;
+					console.log(XMLHttpRequest);
+					if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+					if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+					$("#divcomplementos").html(error);
+				},	
+					success: function (msj) {
+
+						$("#divclonado1").css('display','none');
+						$("#divclonado2").css('display','block');
+						
+							var respuesta=msj.respuesta[0];
+							$("#v_categoria").val(respuesta.idcategoriaservicio);
+							$("#v_categoriaservicio").val(respuesta.idcategoria);
+							var lunes=respuesta.lunes;
+							var martes=respuesta.martes;
+							var miercoles=respuesta.miercoles;
+							var jueves=respuesta.jueves;
+							var viernes=respuesta.viernes;
+							var sabado=respuesta.sabado;
+							var domingo=respuesta.domingo;
+							$(".lbllunes").removeClass('active');
+							$(".lblmartes").removeClass('active');
+							$(".lblmiercoles").removeClass('active');
+							$(".lbljueves").removeClass('active');
+							$(".lblviernes").removeClass('active');
+							$(".lblsabado").removeClass('active');
+							$(".lbldomingo").removeClass('active');
+
+						
+								if (lunes==1) {
+									//$("#Lunes").attr('checked',true);
+									$(".lbllunes").addClass('active');
+								}
+								if (martes==1) {
+									//$("#Martes").attr('checked',true);
+									$(".lblmartes").addClass('active');
+								}
+								if (miercoles==1) {
+									//$("#Miercoles").attr('checked',true);
+									$(".lblmiercoles").addClass('active');
+
+								}
+								if (jueves==1) {
+									//$("#Jueves").attr('checked',true);
+									$(".lbljueves").addClass('active');
+
+								}
+								if (viernes==1) {
+									//$("#Viernes").attr('checked',true);
+									$(".lblviernes").addClass('active');
+
+								}
+								if (sabado==1) {
+									//$("#Sabado").attr('checked',true);
+									$(".lblsabado").addClass('active');
+
+								}
+								if (domingo==1) {
+									//$("#Domingo").attr('checked',true);
+									$(".lbldomingo").addClass('active');
+
+								}
+
+								$("#clonadoservicio").attr('onclick','Siguiente2('+idservicio+',"'+campo+'","'+tabla+'","'+valor+'","'+regresar+'","'+donde+'","'+idmenumodulo+'")');
+
+
+					}
+				});
+}
+
+
+function Siguiente2(idservicio,campo,tabla,valor,regresar,donde,idmenumodulo) {
+	$("#divclonado2").css('display','none');
+    $("#divclonado3").css('display','block');
+
+    ObtenerAlumnosServicios(idservicio);
+	$("#clonadoservicio").attr('onclick','GuardarClonado('+idservicio+',"'+campo+'","'+tabla+'","'+valor+'","'+regresar+'","'+donde+'","'+idmenumodulo+'")');
+	$("#clonadoservicio").text('GUARDAR');
+}
+
+function ObtenerAlumnosServicios(idservicio) {
+		var datos="idservicio="+idservicio;
+		$.ajax({
+					url: 'catalogos/servicios/ObtenerAlumnos.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					dataType:'json',
+					data:datos,
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+						var respuesta=msj.respuesta;
+						var asignados=msj.asignados;
+
+						PintarAlumnosNoAsignados(respuesta);
+						PintarUsuariosAsignados(asignados);
+
+
+				        $('#btnRight').click(function (e) {
+				            $('select').moveToListAndDelete('#lstBox1', '#lstBox2');
+				            e.preventDefault();
+				        });
+
+				        $('#btnAllRight').click(function (e) {
+				            $('select').moveAllToListAndDelete('#lstBox1', '#lstBox2');
+				            e.preventDefault();
+				        });
+
+				        $('#btnLeft').click(function (e) {
+				           var opts = $('#lstBox2' + ' option:selected');
+				           $('select').moveToListAndDelete('#lstBox2', '#lstBox1');
+				 
+				            e.preventDefault();
+				        });
+
+				        $('#btnAllLeft').click(function (e) {
+				            $('select').moveAllToListAndDelete('#lstBox2', '#lstBox1');
+				            e.preventDefault();
+				        });
+					}
+				});
+}
+function PintarAlumnosNoAsignados(respuesta) {
+	var html="";
+	if (respuesta.length>0) {
+		for (var i = 0; i < respuesta.length; i++) {
+		html+=`
+			<option value="`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`</option>
+		`;	
+
+		}
+	}
+	$("#lstBox1").html(html);
+
+}
+
+function PintarUsuariosAsignados(respuesta) {
+	var html="";
+	if (respuesta.length>0) {
+
+		for (var i = 0; i < respuesta.length; i++) {
+		console.log(respuesta[i].idusuarios);
+		html+=`
+			<option value= "`+respuesta[i].idusuarios+`">`+respuesta[i].nombre +` `+respuesta[i].paterno+` `+respuesta[i].materno+`</option>
+		`;	
+
+		}
+	}
+	$("#lstBox2").html(html);
+}
+
+function GuardarClonado(idservicio,campo,tabla,valor,regresar,donde,idmenumodulo) {
+	var general=$("#v_general").is(':checked')?1:0;
+	var costos=$("#v_costos").is(':checked')?1:0;
+	var v_politicasmensajes=$("#v_politicasmensajes").is(':checked')?1:0;
+	var v_reglas=$("#v_costos").is(':checked')?1:0;
+	var v_coachs=$("#v_coachs").is(':checked')?1:0;
+
+
+	var titulonuevo=$("#txttituloclonado").val();
+	var idalumnos=[];
+	 $("#lstBox2 option").each(function(){
+       idalumnos.push($(this).val());
+     });
+
+     var domingo=0,lunes=0,martes=0,miercoles=0,jueves=0,Viernes=0,sabado=0;
+		if($(".lbldomingo").hasClass('active')){
+
+		 domingo=1;
+		}
+		 if($(".lbllunes").hasClass('active')){
+
+		 lunes=1;
+		}
+		 if($(".lblmartes").hasClass('active')){
+
+		 martes=1;
+		}
+		 if($(".lblmiercoles").hasClass('active')){
+
+		 miercoles=1;
+		}
+		 if($(".lbljueves").hasClass('active')){
+
+		 jueves=1;
+		}
+		 if($(".lblviernes").hasClass('active')){
+
+		 Viernes=1;
+		}
+		 if($(".lblsabado").hasClass('active')){
+
+		 sabado=1;
+		}	
+
+	var fechainicial=$("#v_fechainicial").val();
+	var fechafinal=$("#v_fechafinal").val();
+
+	var datos="titulonuevo="+titulonuevo+"&general="+general+"&costos="+costos+"&v_politicasmensajes="+v_politicasmensajes+"&v_reglas="+v_reglas+"&v_coachs="+v_coachs+"&idservicio="+idservicio+"&v_arraydiaselegidos="+arraydiaselegidos+"&idalumnos="+idalumnos;
+	datos+="&v_sabado="+sabado+"&v_viernes="+Viernes+"&v_jueves="+jueves+"&v_miercoles="+miercoles+"&v_martes="+martes+"&v_lunes="+lunes+"&v_domingo="+domingo;
+	datos+="&v_fechainicial="+fechainicial+"&v_fechafinal="+fechafinal;
+	VerificariondeAlumnosConHorarios(datos).then(r => {
+
+		if (r.usuariosnoagregados.length==0) {
+
+			GuardarServicioClonado(datos,campo,tabla,valor,regresar,donde,idmenumodulo);
+		
+
+
+			}else{
+
+		 var respuesta=r.respuesta;
+		 var usuariosnoagregados=r.usuariosnoagregados;
+
+		 if (usuariosnoagregados.length>0) {
+		 		var html="";
+		 			for (var i = 0; i <usuariosnoagregados.length; i++) {
+		 				html+=`<span>
+		 				El usuario `+usuariosnoagregados[i].nombre +' '+usuariosnoagregados[i].paterno+` `+usuariosnoagregados[i].materno+`
+		 				no puede ser asignado a este servicio debido a que pertenece a otro servicio en el mismo horario
+
+		 				</span>`;
+
+		 				var serviciosasignados=usuariosnoagregados[i].servicioscruzados;
+		 				for (var j =0; j < serviciosasignados.length; j++) {
+		 					html+=`<p>`+serviciosasignados[j].titulo+`</p>`
+		 				}
+		 				html+=`</br>`;
+
+
+		 			}
+
+
+			AbrirNotificacion(""+html,"mdi-checkbox-marked-circle ")
+
+		 }
+
+
+		}
+
+
+	});
+
+
+}
+
+function VerificariondeAlumnosConHorarios(datos){
+
+	 return new Promise((resolve, reject) => {
+	 	
+	 		$.ajax({
+					url: 'catalogos/servicios/VerificarAsignacionHorarios.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					dataType:'json',
+					data:datos,
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+						
+						resolve(msj);
+
+					}
+				});
+
+	 });
+}
+
+function GuardarServicioClonado(datos,campo,tabla,valor,regresar,donde,idmenumodulo,titulo) {
+
+	$.ajax({
+					url: 'catalogos/servicios/GuardarServicioClonado.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+						var resp=msj.split('|');
+
+						  	if(resp[0] == 1 ){
+
+						  		$("#modalclonado").modal('hide');
+						  		$(".modal-backdrop").removeClass('show');
+						  		$(".modal-backdrop").remove();
+								aparecermodulos(regresar+"?ac=1&idmenumodulo="+idmenumodulo+"&msj=Operacion realizada con exito",donde);
+						 	
+								arraydiaselegidos=[];
+								arraydiaseleccionados=[];
+
+							}
+						
+
+					}
+				});
 }

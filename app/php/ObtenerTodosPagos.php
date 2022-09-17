@@ -8,6 +8,7 @@ require_once("clases/conexcion.php");
 require_once("clases/class.Pagos.php");
 require_once("clases/class.Funciones.php");
 require_once("clases/class.Fechas.php");
+require_once("clases/class.Usuarios.php");
 
 try
 {
@@ -17,12 +18,27 @@ try
 	$lo = new Pagos();
 	$f=new Funciones();
 	$fechas=new Fechas();
+	$usuarios=new Usuarios();
 
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
 
 	$idusuarios=$_POST['id_user'];
 	$lo->idusuarios=$idusuarios;
+
+
+	$usuarios->db=$db;
+	$usuarios->idusuarios=$idusuarios;
+	$tutorados=$usuarios->ObtenerTutoradosSincel();
+	
+	for ($i=0; $i <count($tutorados) ; $i++) { 
+		$idusuarios.=','.$tutorados[$i]->idusuarios;
+	}
+
+
+	$lo->idusuarios=$idusuarios;
+
+
 	$obtener=$lo->ListadopagosNopagados();
 
 	for ($i=0; $i < count($obtener); $i++) { 

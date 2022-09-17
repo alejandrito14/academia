@@ -106,7 +106,6 @@ class Pagos
 		$resp=$this->db->consulta($query);
 	}
 
-	
 
 }
 

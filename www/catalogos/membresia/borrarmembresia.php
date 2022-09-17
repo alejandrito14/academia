@@ -39,15 +39,19 @@ try
     $verificarrelacion =$emp->VerificarRelacionmembresia();
     $numrow=$db->num_rows($verificarrelacion);
 
-    if ($numrow>0) {
-    	echo 1;
-    }
+   // if ($numrow>0) {
+
+    	$emp->EliminarAsignacion();
+		$emp->EliminarAsignacionTipo();
+		$emp->Borrarmembresia();
+		echo 0;
+   /* }
     else{
 
     	$emp->Borrarmembresia();
     	echo 0;
     }
-
+*/
 	$db->commit();
 
 	

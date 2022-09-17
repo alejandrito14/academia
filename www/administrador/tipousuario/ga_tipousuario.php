@@ -43,10 +43,11 @@ try
 	$tipousuario->idtipousuario = trim($_POST['id']);
 	$tipousuario->nombre = trim($f->guardar_cadena_utf8($_POST['v_tipousuario']));
 	$tipousuario->estatus=trim($f->guardar_cadena_utf8($_POST['v_estatus']));
-	
-	
+	$tipousuario->mostrarenapp=$_POST['mostrarc'];
+	$tipousuario->sistema=$_POST['sistemac'];
+	$edicion=$_POST['edicion'];
 	//Validamos si hacermos un insert o un update
-	if($tipousuario->idtipousuario == 0)
+	if($edicion == 0)
 	{
 		//guardando
 		$tipousuario->Guardartipousuario();

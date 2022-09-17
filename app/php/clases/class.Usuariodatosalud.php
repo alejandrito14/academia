@@ -32,7 +32,7 @@ class Usuariodatosalud
 	public function ActualizardatoSalud()
 	{
 		$sql="
-		UPDATE `usuariodatosemergencia` 
+		UPDATE `usuariodatosalud` 
 		SET `estatura` = '$this->peso',
 		 `patologias` = '$this->patologia', 
 		 `cirugias` = '$this->cirugia', 
@@ -41,10 +41,10 @@ class Usuariodatosalud
 		  `medicamentos` = '$this->medicamento',
 		  `aceptopoliticas` = $this->inputleido,
 		  `datosverdaderos` = $this->inputleido2, 
-		  `idusuarios` = $this->idusuarios,
+		  `idusuarios` = $this->idusuarios
 		      WHERE `idusuariodatosalud` = '$this->idusuariodatosalud'
 		";
-
+		
 		
         $resp = $this->db->consulta($sql);
 

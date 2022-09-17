@@ -415,16 +415,7 @@ window.addEventListener('beforeinstallprompt', function (e) {
 
 
 $$(document).on('page:init', '.page[data-name="home"]', function (e) {
-//ValidacionUsuario();
 
- // var promesa=getValidacionUsuario();
-   /* promesa.then(r => {
-      var existe=r.existe;
-
-      if (existe==1) {*/
-           
- 
-     /* }else{*/
  getValidacionUsuario().then(r => {
 
         var existe=r.existe;
@@ -982,9 +973,10 @@ $$('#btnlistadopagados').attr('onclick','VerListadoPagados()')
 });
 
 $$(document).on('page:init', '.page[data-name="listadopagos"]', function (e) {
-  $(".regreso").attr('href','/pagos/');
+  $(".regreso").attr("onclick","GoToPage('pagos')");
 
   ObtenerTodosPagos();
+  ObtenerPagosMembresia();
   $(".seleccionar" ).each(function( index ) {
        $(this).attr('checked',true);     
   });
@@ -1005,13 +997,7 @@ ObtenerPagosPagados();
 });
 
 
-$$(document).on('page:init', '.page[data-name="membresia"]', function (e) {
 
-regresohome();
-
-CargarInformacionMembresia();
-
-});
 
 $$(document).on('page:init', '.page[data-name="datosemergencia"]', function (e) {
 
@@ -1698,6 +1684,32 @@ CargarCalendario();
   $("#btnaplicarcalendario").attr('onclick','DesplegarCalendario()');
 });
 
+$$(document).on('page:init', '.page[data-name="membresia"]', function (e) {
+
+regresohome();
+
+CargarInformacionMembresia();
+
+
+});
+
+$$(document).on('page:init', '.page[data-name="pagomembresia"]', function (e) {
+
+CargarInformacionMembresia();
+ Cargartipopago(0);
+
+  $$("#tipopago").attr('onchange','CargarOpcionesTipopago()');
+  $(".divtransferencia").css('display','none');
+  $("#divagregartarjeta").css('display','none');
+  $("#divlistadotarjetas").css('display','none');
+
+  $$("#btnpagarresumen").attr('disabled',true);
+  $$("#btnatras").attr('onclick','Atras()');
+  $$("#btnatras").css('display','none');
+
+});
+
+ 
 /*$$(document).on('page:init', '.page[data-name="messages"]', function (e) {
 
 });*/

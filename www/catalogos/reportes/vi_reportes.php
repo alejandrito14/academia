@@ -103,7 +103,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						<select name="v_id_reportes" id="v_id_reportes" class="form-control"  onchange="CargarFiltrosreportes($(this).val())">
 							  <option value="0">ESCOGER REPORTE</option>
 
-							<?php
+							<?php 
 
 								if ($l_reportes_num==0) { ?>
 
@@ -128,12 +128,33 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					</div>
 
 				</div>
-				<div class="row" id="sucursales">
+				<div class="row" id="servicios">
 				  <div class="col-md-6">
 
 				  	<div class="form-group m-t-20">
-				  	<label>Sucursales</label>
-				  	<select id="v_idsucursales" class="form-control">
+				  	<label>SERVICIOS</label>
+				  	<select id="v_servicios" class="form-control">
+				  		
+				  	</select>
+				   	</div>
+				  </div>
+
+
+				   <div class="col-md-6" id="alumnos">
+				  	<div class="form-group m-t-20">
+				  	<label>ALUMNOS:</label>
+				  	<select id="v_alumnos" class="form-control">
+				  		
+				  	</select>
+				   	</div>
+				  </div>
+
+
+				  <div class="col-md-6" id="estatuspago">
+
+				  	<div class="form-group m-t-20">
+				  	<label>ESTATUS DE PAGO:</label>
+				  	<select id="v_estatuspago" class="form-control">
 				  		
 				  	</select>
 				   	</div>
@@ -149,7 +170,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
  -->
 				  <div class="col-md-6" id="fechainicio">
 				  	<div class="form-group">
-				  		<label>Fecha inicio</label>
+				  		<label>FECHA INICIO:</label>
 
 			            <div class='input-group date' id='datetimepicker1'>
 			               <input type='date' class="form-control" id="fechainicio1" />
@@ -165,7 +186,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 				  <div class="col-md-6" id="horainicio">
 				  	<div class="form-group">
-				  		<label>Hora inicio</label>
+				  		<label>HORA INICIO:</label>
 
 			            <div class='input-group date' id='datetimepicker1'>
 			               <input type='time' class="form-control" id="v_horainicio" />
@@ -180,7 +201,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 				   <div class="col-md-6" id="fechafinal">
 				   	<div class="form-group">
-				  		 <label>Fecha fin</label>
+				  		 <label>FECHA FIN:</label>
 
 			            <div class='input-group date' id='datetimepicker2'>
 			               <input type='date' class="form-control" id="fechafin" />
@@ -194,7 +215,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 				<div class="col-md-6" id="horafin">
 				  	<div class="form-group">
-				  		<label>Hora fin</label>
+				  		<label>HORA FIN:</label>
 
 			            <div class='input-group date' id='datetimepicker1'>
 			               <input type='time' class="form-control" id="v_horafin" />
@@ -204,16 +225,29 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 			            </div>
 				  </div>
 				</div>
+			</div>
 
 				<div class="row">
-					<div class="col-md-4" style="
+
+					<div class="col-md-2" style="
 					    float: left;
-					"></div>
+					">
+						
+					
+
+					</div>
 					<div class="col-md-2" style="
 					    float: right;
 					">
 						
-						<button style="display: none;margin-left:3em;" id="btngenerar" class="btn btn-primary" onclick="">Generar reporte</button>
+						<button style="display: none;margin-left:3em;" id="btnpantalla" class="btn btn-success" onclick="">VER EN PANTALLA</button>
+
+					</div>
+					<div class="col-md-2" style="
+					    float: right;
+					">
+						
+						<button style="display: none;margin-left:2.5em;" id="btngenerar" class="btn btn-primary" onclick="">GENERAR REPORTE</button>
 
 					</div>
 
@@ -239,9 +273,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 <!--  Funcion para llenar el list de sucursales dependiendo el id de empresa  -->
 <script type="text/javascript">
-	$("#sucursales").css('display','none');
+	$("#servicios").css('display','none');
 	$("#fechainicio").css('display','none');
 	$("#fechafinal").css('display','none');
+	$("#alumnos").css('display','none');
 	//CargarSucursales();
 //	CargarCategorias();
 	

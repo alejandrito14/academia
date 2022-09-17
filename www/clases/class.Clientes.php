@@ -71,7 +71,7 @@ class Clientes
 	public $lista_empresas;
 	public $edad;
 	public $celular;
-	
+	public $alias;
 	//VARIABLES PARA PODER GUARDAR LAS DIRECCIONES DE ENVIO.
 	
 	public $idclientes_envios;

@@ -70,8 +70,13 @@ $navegador = $f->navegador();
     <link rel="stylesheet" type="text/css" href="dist/css/modalfull.css">
     
     <link href="assets/libs/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css" rel="stylesheet">
-   
-   
+
+  <link href="assets/extra-libs/fullcalendar/css/fullcalendar.css" rel="stylesheet">
+
+    
+    <link rel="stylesheet" type="text/css" href="dist/css/mark-your-calendar.css">
+ <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    -->
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -111,12 +116,12 @@ $navegador = $f->navegador();
                     <!-- ============================================================== -->
                     <!-- Logo -->
                     <!-- ============================================================== -->
-                    <a class="navbar-brand" href="." style="background: #000000">
+                    <a class="navbar-brand" href="." style="background: #021836">
                         <!-- Logo icon -->
                         <b class="logo-icon p-l-10">
                             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                             <!-- Dark Logo icon -->
-                            <!--<img src="assets/images/logo-icon.png" alt="homepage" class="light-logo" />-->
+                            <img src="images/WOOLIS.png" alt="homepage" class="light-logo" />
 
                         </b>
                         <!--End Logo icon -->
@@ -272,7 +277,7 @@ $navegador = $f->navegador();
                         <!-- User profile and search -->
                         <!-- ============================================================== -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark pro-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i  alt="user" class="fa fa-user-circle" style=" font-size: 40px;margin-top: .2em;"></i></a>
+                            <a class="nav-link dropdown-toggle  waves-effect waves-dark pro-pic" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i  alt="user" class="fa fa-user-circle" style=" font-size: 40px;margin-top: .2em;"></i></a>
                             <div class="dropdown-menu dropdown-menu-right user-dd animated">
                                 <a class="dropdown-item" href="javascript:void(0)"><i class="ti-user m-r-5 m-l-5"></i> Mi perfil</a>
                                 <!--<a class="dropdown-item" href="javascript:void(0)"><i class="ti-wallet m-r-5 m-l-5"></i> My Balance</a>
@@ -298,12 +303,12 @@ $navegador = $f->navegador();
             <!-- ============================================================== -->
             <!-- Left Sidebar - style you can find in sidebar.scss  -->
             <!-- ============================================================== -->
-            <aside class="left-sidebar" data-sidebarbg="skin5">
+            <aside class="left-sidebar" style="background: #021836;" data-sidebarbg="skin5">
                 <!-- Sidebar scroll-->
                 <div class="scroll-sidebar">
                     <!-- Sidebar navigation-->
-                    <nav class="sidebar-nav">
-                        <ul id="sidebarnav" class="p-t-30">
+                    <nav class="sidebar-nav" >
+                        <ul id="sidebarnav" class="p-t-30" style="background: #021836;">
                             <?php include("menu.php");?>
                         </ul>
                     </nav>
@@ -419,7 +424,7 @@ $navegador = $f->navegador();
         <!-- ============================================================== -->
         <!-- footer -->
         <!-- ============================================================== -->
-        <footer class="footer text-center">
+        <footer class="footer text-center" style="color: #bdc3c8;">
            Copyright &copy; 2022 Innovative Software Services (ISS). Todos los derechos reservados.
 
 
@@ -1142,6 +1147,10 @@ $navegador = $f->navegador();
 <script src="assets/extra-libs/DataTables/datatables.min.js"></script>
 <script src="assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 
+<script src="assets/extra-libs/fullcalendar/js/moment.min.js"></script>
+
+<script src="assets/extra-libs/fullcalendar/js/fullcalendar.js"></script>
+<script src="assets/extra-libs/fullcalendar/js/locale/es.js"></script>
 
 <script src="assets/libs/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 
@@ -1224,6 +1233,20 @@ $navegador = $f->navegador();
 <script src="js/fn_membresia.js"></script>
 <script src="js/fn_categoriasservicios.js"></script>
 <script src="js/fn_asignarusuarioservicio.js"></script>
+<script src="js/fn_tutor.js"></script>
+<script src="js/fn_clasificacion.js"></script>
+<script src="js/fn_nivel.js?<?php echo time(); ?>"></script>
+<script src="js/fn_deportes.js?<?php echo time(); ?>"></script>
+<script src="js/fn_descuento.js?<?php echo time(); ?>"></script>
+<script src="js/fn_usuarioservicio.js?<?php echo time(); ?>"></script>
+<script src="js/fn_asignardescuentos.js?<?php echo time(); ?>"></script>
+<script src="js/fn_asignarmembresias.js?<?php echo time(); ?>"></script>
+<script src="js/fn_encuesta.js?<?php echo time(); ?>"></script>
+<script src="js/fn_tipousuario.js?<?php echo time(); ?>"></script>
+
+ <!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    -->
+    <script type="text/javascript" src="js/mark-your-calendar.js"></script>
 
 <!-- <script src="js/fn_espacios.js?<?php echo time(); ?>"></script>
 <script src="js/fn_cupones.js?<?php echo time(); ?>"></script>
@@ -1233,7 +1256,7 @@ $navegador = $f->navegador();
 <script src="js/fn_pagos.js?<?php echo time(); ?>"></script>
 <script src="js/fn_tipojuego.js?<?php echo time(); ?>"></script>
 <script src="js/fn_posicion.js?<?php echo time(); ?>"></script>
-<script src="js/fn_nivel.js?<?php echo time(); ?>"></script>
+
 <script src="js/fn_torneo.js?<?php echo time(); ?>"></script>
 <script src="js/fn_juego.js?<?php echo time(); ?>"></script>
 -->
@@ -1244,16 +1267,16 @@ $navegador = $f->navegador();
 
 <script src="js/fn_codigopostal.js?<?php echo time(); ?>"></script>
 
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-<script src="https://cdn.ckeditor.com/4.14.1/standard-all/ckeditor.js"></script>
+<!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
+<!-- <script src="https://cdn.ckeditor.com/4.14.1/standard-all/ckeditor.js"></script> -->
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css"> -->
 
 <!-- Latest compiled and minified JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script> -->
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.13.4/jquery.mask.min.js"></script>
-
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.13.4/jquery.mask.min.js"></script>
+ -->
 
 <div class="alert alert-primary" role="alert" style="display: none">
   A simple primary alert with <a href="#" class="alert-link">an example link</a>. Give it a click if you like.
