@@ -4,7 +4,7 @@
   	public $mes;
 	public $anio;
 	public $fecha;
-	  public $diasSemana = array('domingo','lunes','marte','miercoles','jueves','viernes','sabado');
+	  public $diasSemana = array('domingo','lunes','martes','miercoles','jueves','viernes','sabado');
 	  public $mesesAnho = array('Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre');
 	  public $mesesAnho3 = array('Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic');
 	  public $mesessms = array('','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre');
@@ -283,6 +283,28 @@
 		
 		$m = $this->mesesAnho[$m-1];
 		$f = $d." de ".$m." del ".$a;
+		return $f;
+	}
+
+	public function fecha_texto4($fecha)
+	{
+				
+
+		$a = $this->elano($fecha);
+		//$m = $this->mesdelano();
+		$d = $this->diadelmes($fecha);
+		
+		
+	
+		$m = $this->mesesAnho[date("n",strtotime($fecha))-1];
+
+		//echo "dia".date('w', strtotime($fecha));die();
+		$diatexto=$this->diasSemana[date('w', strtotime($fecha))];
+
+
+		
+		$f = $diatexto." ".$d." de ".$m.", ".$a;
+
 		return $f;
 	}
 	

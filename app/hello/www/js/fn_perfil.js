@@ -850,9 +850,12 @@ function VerificarAsociacion() {
 		success: function(datos){
 
 			if (datos.respuesta==1) {
-				$(".coltutorados").css('display','none');
+				$(".coltutorados").css('display','block');
+				$("#btnasociados").attr("onclick","GoToPage('datosdependencia')")
+
 			}else{
 				$(".coltutorados").css('display','block');
+				$("#btnasociados").attr("onclick","GoToPage('registrotutorados')")
 
 			}
 

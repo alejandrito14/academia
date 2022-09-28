@@ -58,6 +58,32 @@ var app = new Framework7({
 
     },
   },
+
+
+    methods: {
+        onBackKeyDown: function() {
+
+            var leftp = app.panel.left && app.panel.left.opened;
+            var rightp = app.panel.right && app.panel.right.opened;
+
+            if ( leftp || rightp ) {
+
+                app.panel.close();
+                return false;
+            }else if ($$('.modal-in').length > 0) {
+              
+                app.dialog.close();
+                app.popup.close();
+                return false;
+            } else if (app.views.main.router.url == '/home/' || app.views.main.router.url == '/homeadmin/' || app.views.main.router.url == '/homecoach/') {
+
+                    navigator.app.exitApp();
+            } else {
+
+                mainView.router.back();
+           }
+         }
+       }
 });
 
  var pictureSource;   // picture source
@@ -634,10 +660,13 @@ var tipoUsuario=localStorage.getItem('tipoUsuario');
 
   Cargarperfilfoto();
   CargarFoto();
+  ObtenerMembresiaActivaUsuario();
   $$('#btncerrarsesion').attr('onclick','salir_app()')
   $$("#datosacceso").attr('onclick','Datosacceso()');
   $$(".badgefoto").attr('onclick','AbrirModalFoto()');
   $$('#btncambiaralias').attr('onclick','AbrirModalAlias()')
+  $$("#btnmembresia").attr('onclick','GoToPage("membresiaactiva")');
+
   VerificarAsociacion();
 
   regresohome();
@@ -875,7 +904,8 @@ ObtenerParentesco();
       $("#tituloventana").html('Editar <span style="color: #0abe68;">tutorado</span>');
     }
          
-
+  $("#inputtutor").attr('onchange','SoyTutor()');
+  $("#inputsincelular").attr('onchange','SinCelular()');
 
           var v=$("#v_idtu").val();
 
@@ -1310,11 +1340,10 @@ $$(document).on('page:init', '.page[data-name="asignaralumnos"]', function (e) {
 });
 
 $$(document).on('page:init', '.page[data-name="serviciosasignados"]', function (e) {
-  regresohome();
 
 
   if (localStorage.getItem('idtipousuario')==3) {
-    // $(".regreso").attr('href','/detalleservicio/');
+  
       ObtenerServiciosAsignados();
    }
    if (localStorage.getItem('idtipousuario')==5){
@@ -1324,6 +1353,17 @@ $$(document).on('page:init', '.page[data-name="serviciosasignados"]', function (
 
    }
 
+  regresohome();
+
+});
+
+$$(document).on('page:init', '.page[data-name="serviciospendientesasignados"]', function (e) {
+  regresohome();
+
+  ObtenerServiciosAsignadospendientes();
+ 
+ 
+
 });
 
 
@@ -1332,7 +1372,7 @@ $$(document).on('page:init', '.page[data-name="aceptacionservicio"]', function (
  ObtenerServicioAsignado();
  $$("#btnaceptartermino").attr('onclick','AceptarTerminos()');
  $$("#btnrechazartermino").attr('onclick','PantallaRechazarTerminos()');
- $(".regreso").attr('href','/serviciosasignados/');
+ $(".regreso").attr('href','/serviciospendientesasignados/');
 
  
   
@@ -1728,7 +1768,24 @@ regresohome();
 ObtenerServiciosTutorado();
 
 });
- 
+
+$$(document).on('page:init', '.page[data-name="datosdependencia"]', function (e) {
+
+regresohome();
+ObtenerDatosDependencia();
+
+$("#btnquitarasociacion").attr('onclick','DesasociarUsuario()');
+
+});
+ $$(document).on('page:init', '.page[data-name="membresiaactiva"]', function (e) {
+
+regresohome();
+
+ PintardatosMembresia();
+});
+
+
+
 /*$$(document).on('page:init', '.page[data-name="messages"]', function (e) {
 
 });*/

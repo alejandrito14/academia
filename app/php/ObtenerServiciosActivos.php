@@ -77,7 +77,8 @@ try
 		$obtenerserviciosActivos[$i]->zonacolor='';
 		$obtenerserviciosActivos[$i]->fechahora='';
 		$obtenerserviciosActivos[$i]->horainicial='';
-		$obtenerserviciosActivos[$i]->horafinal='';horafinal;
+		$obtenerserviciosActivos[$i]->horafinal='';
+
 		if (count($obtenerhorarios)==0) {
 			
 		//horarios pasados
@@ -88,7 +89,7 @@ try
 		}
 
 
-if (count($obtenerhorarios)==0) {
+//if (count($obtenerhorarios)==0) {
 
 		$diasemana=$fechas->diaarreglocorto($obtenerhorarios[0]->dia);
 
@@ -126,7 +127,7 @@ if (count($obtenerhorarios)==0) {
 		$obtenerserviciosActivos[$i]->fechahora=$fecha.' '.$obtenerhorarios[0]->horainicial;
 		$obtenerserviciosActivos[$i]->porpasar=$porpasar;
 
-	}
+//	}
 
 		$calificacion->idservicio=$asignados->idservicio;
 		$obtenercalificacion=$calificacion->ObtenerCalificacion();

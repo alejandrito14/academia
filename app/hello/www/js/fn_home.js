@@ -47,6 +47,7 @@ function CargarDatos() {
 	$$(".tipousuario").text(tipousuario);
 	$$(".btnmisservicios").attr('onclick','MisServiciosAlumno()');
     $$(".btnserviciosactivos").attr('onclick','ServiciosActivos()');
+	$$(".btnmisserviciospendientes").attr('onclick','MisServiciosPendientesAlumno()');
 
  	classtipo='tipoalumno';
  	 $$(".tipousuario").removeClass('tipoadmin');
@@ -54,6 +55,7 @@ function CargarDatos() {
   	 $$(".tipousuario").addClass(classtipo);
   	 $$(".btnservicios").attr('onclick','GoToPage("serviciosasignados")');
   	 $$(".btnserviciostutorados").attr('onclick','GoToPage("listadotutoservicios")');
+
 	ObtenerTableroAnuncios(1);
 	ObtenerEntradas(1);
 	//ObtenerServiciosAsignados();
@@ -61,6 +63,7 @@ function CargarDatos() {
 	ObtenerConfiguracion();
 	MostrarBotonServiciosActivos();
 	VerificarSiExisteTuTorados();
+	VerificarServiciosAsignadospendientes();
 	var promesa=getConfiguracion();
     promesa.then(r => {
       var activarpopupmembresia=r.respuesta.activarpopupmembresia;
@@ -254,7 +257,19 @@ function MisServiciosCoah() {
 }
 
 function MisServiciosAlumno() {
+	localStorage.setItem('servicio',1);
 		GoToPage('serviciosasignados');
+
+}
+
+function MisServiciosPendientesAlumno() {
+	localStorage.setItem('servicio',2);
+		GoToPage('serviciospendientesasignados');
+
+}
+
+function MisServiciosPendientes() {
+		GoToPage('serviciospendientes');
 
 }
 
@@ -639,6 +654,65 @@ function ObtenerServiciosAsignados() {
 		});
 }
 
+function VerificarServiciosAsignadospendientes() {
+	var idusuario=localStorage.getItem('id_user');
+	var datos="idusuario="+idusuario;
+	var pagina = "ObtenerServiciosAsignadosPendientes.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+
+			var respuesta=datos.respuesta;
+
+			if (respuesta.length>0) {
+				$(".serviciospendientes").css('display','block');
+			}else{
+				$(".serviciospendientes").css('display','none');
+	
+			}
+			
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+function ObtenerServiciosAsignadospendientes() {
+	var idusuario=localStorage.getItem('id_user');
+	var datos="idusuario="+idusuario;
+	var pagina = "ObtenerServiciosAsignadosPendientes.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+
+			var respuesta=datos.respuesta;
+			var fechaactual=datos.fechaactual;
+			console.log(datos);
+			PintarServiciosAsignados3(respuesta,fechaactual);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+
 function PintarServiciosAsignados(respuesta) {
 	
 		var html="";
@@ -849,10 +923,134 @@ function PintarServiciosAsignados2(respuesta,fechaactual) {
 	}
 }
 
+
+function PintarServiciosAsignados3(respuesta,fechaactual) {
+	
+		var html="";
+
+	if (respuesta.length>0) {
+		var contadorpasado=0;
+		for (var i = 0; i <respuesta.length; i++) {
+			
+			var imagen='';
+			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null && respuesta[i].imagen!='null') {
+
+				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;"/>';
+			}else{
+
+				urlimagen=urlimagendefaultservicio;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;"/>';
+			}
+
+
+
+			if (respuesta[i].porpasar==0 && contadorpasado==0) {
+
+
+				html+=`<div class="row">
+				<div class="linea"><span>Hoy `+fechaactual+`</span></div>
+
+				</div>`;
+				contadorpasado++;
+
+
+			}
+			var clasecomentario="vacio";
+			var clasechat="vacio";
+			var clasecalificacion="vacio";
+			if (respuesta[i].concalificacion==1){
+				clasecalificacion="convalor";
+			}
+			if (respuesta[i].conchat==1){
+				clasechat="convalor";
+			}
+			if (respuesta[i].concomentarios==1) {
+				clasecomentario="convalor";
+			}
+
+
+			html+=`
+				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+                <div class="row">
+                  <div class="col-100" style="padding:0;" >
+                    <div class="" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+imagen+`
+                      
+                    </div>
+                  </div>
+                  </div>
+                  <div class="row" style="height:10em;">
+                  <div class="col-100" >
+                   <div class="row" style="margin-top:.5em;">
+                    `;
+                  //  horarios=respuesta[i].horarios;
+                    	var horarioshtml="";
+                    	//for (var j = 0; j < horarios.length; j++) {
+                    		if (respuesta[i].fechaproxima!='') {
+                    		horarioshtml+=`<span style="color:black;font-size:18px;">`+respuesta[i].fechaproxima+` </span><br><span style="margin-top:.5em;font-size:16px;">`+respuesta[i].horainicial+` - `+respuesta[i].horafinal+` Hrs.</span>`;
+                    		}
+                    	//}
+
+                    html+=`
+                     <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</span>
+                     <span class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].zonanombre+`</span>
+
+ 					<span class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</span>
+                  
+
+                  </div>
+                  <div class="row" style="margin-top:1em;">
+                  	<div class="col" style="text-align:center;" >`;
+
+
+                  	html+=`<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos `+clasecomentario+`" onclick="OpinionesServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-chat-square-dots"></i></div>`;
+                    html+=`	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos `+clasechat+`" onclick="ParticipantesServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-chat-left-quote-fill"></i></div>`;
+                  	html+=`	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos `+clasecalificacion+`" onclick="AbirCalificarServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-star"></i></div>`;
+
+
+                  	html+=`</div>
+                  
+                                  
+
+                  </div>
+
+               	</div>
+                  
+                </div>
+              </div>
+              </div>
+              </div>
+
+			`;
+
+
+
+
+		}
+
+		$$(".serviciosasignados").html(html);
+	}else{
+
+
+		/*html+=`
+			 <div class="list-item">
+                <div class="row text-color-theme">
+                  <h4 style="text-align:center;">En breve el administrador te asignará tus servicios</h4>
+                </div>
+              </div>
+
+
+		`;*/
+
+				$$(".serviciosasignados").html(html);
+
+	}
+}
+
 function ObtenerServiciosAsignadosCoach() {
 	var idusuario=localStorage.getItem('id_user');
 	var datos="idusuario="+idusuario;
-	var pagina = "ObtenerServiciosAsignados.php";
+	var pagina = "ObtenerServiciosAsignadosCoach.php";
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
@@ -1715,15 +1913,15 @@ function regresohome() {
 			if (id_user>0) {
 
                     if (idtipousuario==0) {
-                        ruta='/homeadmin/';
+                        ruta='homeadmin';
 
                     }
                     if (idtipousuario==3) {
-                       ruta='/home/';
+                       ruta='home';
 
                     }
                     if (idtipousuario==5) {
-                       ruta='/homecoach/';
+                       ruta='homecoach';
 
                     }
 
@@ -1731,12 +1929,12 @@ function regresohome() {
 
                   }else{
 
-                  	  ruta='/login/';
+                  	  ruta='login';
 
 
                   }
                  
-           $(".regreso").attr('href',ruta);
+           $(".regreso").attr('onclick','GoToPage("'+ruta+'")');
 
 
 }

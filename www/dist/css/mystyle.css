@@ -180,3 +180,6 @@ input[type=number] { -moz-appearance:textfield; }
     background-color: #4c32e9;
     border-color: #4226e8;
 }
+.seleccionado{
+  background:#1167f6;
+}

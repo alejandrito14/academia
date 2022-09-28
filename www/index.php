@@ -1122,16 +1122,31 @@ $navegador = $f->navegador();
 <!-- All Jquery -->
 <!-- ============================================================== -->
 
-<script src="assets/libs/jquery/dist/jquery.min.js"></script>
+
 <!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.min.css" /> -->
 
 <!-- <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.5/dist/fullcalendar.min.js"></script> -->
 
 
-<script src="assets/extra-libs/fullcalendar/js/fullcalendar.js"></script>
+<!-- <script src="assets/extra-libs/fullcalendar/js/fullcalendar.js"></script>
+
+ -->
 
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.0/moment-with-locales.min.js"></script>
 
+<!-- <script src="https://fullcalendar.io/js/fullcalendar-3.8.0/lib/moment.min.js"></script>
+ -->
+ 
+<!--  <script src='https://cdn.jsdelivr.net/npm/moment@2.27.0/min/moment.min.js'></script>
+ -->
+<!--  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.0.0/fullcalendar.css" integrity="sha512-kvxIstXlukhQB/oPQQAqb5BPx5uPUeOTJd2tuhKRT6gbWpj1QQcB3kUFXUZ2TICS0xfcIfCehyqfkswhWLiH9g==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.2.1/moment.min.js" integrity="sha512-OmCXUvilBhA1ZlyhmlKnAC/tBOtgkVtvGT5MN7w3Vj8JUIbDeM+VlX3I0bTCWaiQHyWSw8jpNBsR8JFrCe0exg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="assets/libs/jquery/dist/jquery.min.js"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.0.0/fullcalendar.js" ></script>
 
 <!-- Bootstrap tether Core JavaScript -->
 <script src="assets/libs/popper.js/dist/umd/popper.min.js"></script>
@@ -1184,8 +1199,8 @@ $navegador = $f->navegador();
 <script src="js/fn_notificacion.js"></script>
 <script src="js/modal.js"></script>
 
-<!-- <script src="https://fullcalendar.io/js/fullcalendar-3.8.0/lib/moment.min.js"></script>
-<script src="https://fullcalendar.io/js/fullcalendar-3.8.0/locale-all.js"></script> -->
+
+<!-- <script src="https://fullcalendar.io/js/fullcalendar-3.8.0/locale-all.js"></script> -->
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.js"></script>
  -->
  <!-- <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.5/dist/fullcalendar.min.js"></script>
@@ -1242,7 +1257,7 @@ $navegador = $f->navegador();
 <script src="js/fn_asignarmembresias.js?<?php echo time(); ?>"></script>
 <script src="js/fn_encuesta.js?<?php echo time(); ?>"></script>
 <script src="js/fn_tipousuario.js?<?php echo time(); ?>"></script>
-
+<script src="js/fn_pagos.js?<?php echo time(); ?>"></script>
  <!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     -->
     <script type="text/javascript" src="js/mark-your-calendar.js"></script>
@@ -1253,7 +1268,7 @@ $navegador = $f->navegador();
 <script src="js/fn_horario.js?<?php echo time(); ?>"></script>
 <script src="js/fn_tipopartido.js?<?php echo time(); ?>"></script>
 <script src="js/fn_partidos.js?<?php echo time(); ?>"></script>
-<script src="js/fn_pagos.js?<?php echo time(); ?>"></script>
+
 <script src="js/fn_tipojuego.js?<?php echo time(); ?>"></script>
 <script src="js/fn_posicion.js?<?php echo time(); ?>"></script>
 

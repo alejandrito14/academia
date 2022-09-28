@@ -173,13 +173,14 @@ try
 
 		if (count($objetomultiparentesco)>0) {
 			for ($i=0; $i <count($objetomultiparentesco) ; $i++) { 
-					$cantfamiliares=$objetomultiparentesco[$i]->{'cantfamiliares'};
+					$rangoinicial=$objetomultiparentesco[$i]->{'rangoinicial'};
+					$rangofinal=$objetomultiparentesco[$i]->{'rangofinal'};
 					$idparentesco=$objetomultiparentesco[$i]->{'idparentesco'};
 					$textoparentesco=$objetomultiparentesco[$i]->{'textoparentesco'};
 					$tipodes=$objetomultiparentesco[$i]->{'tipodes'};
 					$txtcantidaddescuento=$objetomultiparentesco[$i]->{'txtcantidaddescuento'};
 
-					$descuento->GuardarMultiparentesco($cantfamiliares,$idparentesco,$textoparentesco,$tipodes,$txtcantidaddescuento);
+					$descuento->GuardarMultiparentesco($rangoinicial,$rangofinal,$idparentesco,$textoparentesco,$tipodes,$txtcantidaddescuento);
 					
 
 			}

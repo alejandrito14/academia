@@ -196,6 +196,31 @@ class Dashboard
 	}
 
 
+public function ObtenerHorariosFechaEspecificaOrdenHorainicial()
+	{
+		$query="
+		SELECT
+		*FROM horariosservicio 
+		INNER JOIN zonas ON horariosservicio.idzona=zonas.idzona
+		INNER JOIN servicios ON horariosservicio.idservicio=servicios.idservicio
+			 WHERE fecha='$this->fechainicial' ORDER BY zonas.idzona,horariosservicio.horainicial
+		";
+
+		$resp = $this->db->consulta($query);
+		$cont = $this->db->num_rows($resp);
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+			while ($objeto=$this->db->fetch_object($resp)) {
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+
+
 }
 
  ?>

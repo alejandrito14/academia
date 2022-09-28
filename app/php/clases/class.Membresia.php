@@ -200,13 +200,14 @@ class Membresia
 	public function ObtenerMembresiasDisponibles($idmembresias)
 	{
 		$sql="SELECT *
-		FROM membresia WHERE inppadre=1 and depende=0";
+		FROM membresia WHERE inppadre=1 OR depende=0 AND estatus=1";
 
 		if ($idmembresias!='') {
 			$sql.=" AND idmembresia 
 			 NOT IN('$this->idmembresias')";
 		}
-		
+		$sql.=" ORDER BY orden";
+
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -228,13 +229,20 @@ class Membresia
 
 	public function ObtenerMembresiasDependen($idmembresiapadre,$inphijo,$inpnieto){
 		$sql="SELECT *
-		FROM membresia WHERE depende=1 OR inphijo='$inphijo' AND inpnieto='$inpnieto'";
+		FROM membresia WHERE depende=1 AND estatus=1";
+		if ($inphijo!='') {
+			$sql.= " AND inphijo='$inphijo'";
+
+		}
+
+		if ($inpnieto!='') {
+			$sql.=" AND inpnieto='$inpnieto'";
+			}
 
 		if ($idmembresiapadre!='') {
-
 			$sql.=" AND idmembresiadepende='$idmembresiapadre'";
 		}
-		
+		$sql.=" ORDER BY orden";
 		
 
 		$resp=$this->db->consulta($sql);
@@ -422,5 +430,27 @@ class Membresia
 		return $array;
 	}
 
+		public function ObtenerMembresiaUsuarioActiva()
+	{
+		$sql="SELECT *
+		FROM usuarios_membresia WHERE idusuarios='$this->idusuarios' and estatus=1 and pagado=1 and idmembresia='$this->idmembresia'";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 }
 ?>

@@ -514,15 +514,15 @@ function RegistrarAcceso() {
 
 				    		if (tipousuario==3) {
 
-				    			GoToPage('home');	
+				    			GoToPageHistory('home');	
 				    		}
 							if (tipousuario==2) {
 								
-								GoToPage('homeadmin');
+								GoToPageHistory('homeadmin');
 							}
 
 							if (tipousuario==5) {
-								GoToPage('homecoach');
+								GoToPageHistory('homecoach');
 							}
 							
 				    	
@@ -2148,7 +2148,7 @@ function ValidarCelular() {
 				alerta('','El número celular que ingresaste ya fue asignado a un usuario')
 			}else{
 
-				GoToPage('token');
+				GoToPageHistory('token');
 	
 			}
 			//
@@ -2214,7 +2214,7 @@ function ValidarToken(){
 			if (respuesta==1) {
 				
 				$("#botoncontinuartoken").css('display','block');
-				$("#botoncontinuartoken").attr('href','/registrofoto/');
+				$("#botoncontinuartoken").attr('onclick','GoToPageHistory("registrofoto")');
 
 			}else{
 
@@ -2290,17 +2290,17 @@ function Bienvenida(){
 
 function Datospersonales(){
 
-	GoToPage('datospersonales');
+	GoToPageHistory('datospersonales');
 }
 
 function identificacionoficial(){
 
-	GoToPage('identificacionoficial');
+	GoToPageHistory('identificacionoficial');
 }
 
 function fotodeperfil(){
 
-	GoToPage('fotoperfil');
+	GoToPageHistory('fotoperfil');
 }
 function licenciafoto(argument) {
 
@@ -2448,7 +2448,7 @@ function Validarcaja(elemento) {
 
 
 function RegresarAcceso() {
-	GoToPage('registrar')
+	GoToPageHistory('registrar')
 }
 function SolicitarMembresia() {
 	GoToPage('solicitarmembresia');
@@ -2586,24 +2586,54 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
                               <input type="hidden" name="v_idtu" id="v_idtu" class="input-with-value" />
                               <input type="hidden" name="v_idusuario" id="v_idusuario" class="input-with-value" />
 
-              <div class=" no-margin margin-bottom" >
+              <!---<div class=" no-margin margin-bottom" >
               	<div>
 	            <div class="item-content lipoliticas" >
 		            <div class="item-inner" style="    display: flex;justify-content: left;height: 50px;">
-		            <input type="checkbox" id="inputtutor">
+		            <input type="checkbox" id="inputtutor" onchange="SoyTutor()">
 		            <span style="margin-left:1em;margin-top: 0.8em;">Soy tutor</span>
 		            </div>
 	            </div>
-            </div>
+            </div>¡--->
 
-            <div>
-	            <div class="item-content lipoliticas" >
+            <div class="" style="    margin-top: 1em; margin-bottom: 1em;">
+            	<div class="row">
+                                <div class="col-auto">
+                                    <label class="toggle toggle-init color-theme">
+                                        <input type="checkbox" id="inputtutor" onchange="SoyTutor()">
+                                        <span class="toggle-icon"></span>
+                                    </label>
+                                </div>
+                                <div class="col" style="margin: 0; padding: 0;
+    justify-content: left;
+    display: flex;">
+                                    <h5 class="no-margin-bottom">Soy tutor</h5>
+                                </div>
+                            </div>
+             </div>
+
+              <div class=" lisincelular" style="display:none;margin-bottom: 1em;">
+            	<div class="row">
+                                <div class="col-auto">
+                                    <label class="toggle toggle-init color-theme">
+                                        <input type="checkbox" id="inputsincelular" onchange="SinCelular()">
+                                        <span class="toggle-icon"></span>
+                                    </label>
+                                </div>
+                                <div class="col" style="    margin: 0;padding: 0;justify-content: left;display: flex;">
+                                    <h5 class="no-margin-bottom">Sin celular</h5>
+                                </div>
+                            </div>
+             </div>
+
+          <!---  <div>
+	            <div class="item-content lisincelular" style="display:none;" >
 		            <div class="item-inner" style="  display: flex;  justify-content: left;height: 50px;">
 		            <input type="checkbox" id="inputsincelular" onchange="SinCelular()">
 		            <span style="margin-left:1em;margin-top: 0.8em;">Sin celular</span>
 		            </div>
 	            </div>
-            </div>
+            </div>¡--->
 
             <div class="list form-list no-margin margin-bottom" >
               	
@@ -2859,9 +2889,22 @@ function SinCelular() {
 
 	if($("#inputsincelular").is(':checked')){
 		$("#v_celulartu").attr('disabled',true);
+		$(".licelulartu").css('display','none');
 	}else{
 		$("#v_celulartu").attr('disabled',false);
+		$(".licelulartu").css('display','block');
+
 	}
+	
+}
+
+function SoyTutor() {
+
+	if($("#inputtutor").is(':checked')){
+		$(".lisincelular").css('display','block');
+	}else{
+		$(".lisincelular").css('display','none');
+		}
 	
 }
 
@@ -3224,14 +3267,15 @@ if (inputsincelular==0) {
 		if (isValidDate(v_fechatu)==false) {
 			bandera=0;
 		}
-		if (idcontador=='-1') {
+		/*if (idcontador=='-1') {
 			if (ValidarIdusuario(v_idusuario)) {
 
 				bandera=0;
 			}
-		}
+		}*/
 
 
+	//	alert('bandera'+bandera+"idcontador"+idcontador);
 
 	if (bandera==1) {
 
@@ -3260,6 +3304,8 @@ if (inputsincelular==0) {
 
 		 		  guardarObjetoLocalStorage(tutorado);
 			 }else{
+
+			 	//console.log(tutorado);
 
 		 		  guardarObjetoLocalStorage(tutorado);
 		 }
@@ -4499,6 +4545,7 @@ function BuscarUsuario() {
 	var datos="id_user="+iduser+"&celularbuscar="+celularbuscar;
 	var pagina="ObtenerUsuarioCelular.php";
 
+	if (celularbuscar.length>10) {
 		$.ajax({
 			type: 'POST',
 			dataType: 'json',
@@ -4612,6 +4659,7 @@ function BuscarUsuario() {
 					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
 				}
 		});
+	}
 }
 
 function ValidarIdusuario(idusuario) {

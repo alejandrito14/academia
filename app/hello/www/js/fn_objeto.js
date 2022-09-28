@@ -358,12 +358,16 @@ function LlenarFormulario(producto,idcontador) {
 
 	if (producto.inputsoytutor==1) {
 		$("#inputtutor").attr('checked',true);
+		
 	}
 
 	if (producto.inputsincelular==1) {
-		$("#inputtutor").attr('checked',true);
+		$("#inputsincelular").attr('checked',true);
+
 	}
 	
+	SoyTutor();
+	SinCelular();
 	ObtenerParentesco(producto.v_parentescotu);
 
 	if (producto.v_idusuario!='') {

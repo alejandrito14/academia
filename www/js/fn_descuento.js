@@ -85,14 +85,17 @@ function Guardardescuento(form,regresar,donde,idmenumodulo)
 			var valor=$(this).attr('id');
 			var dividir=valor.split('_');
 
-			var cantfamiliares=$("#txtcantidad_"+dividir[1]).val();
+			var rangoinicial=$("#txtrangoinicial_"+dividir[1]).val();
+			var rangofinal=$("#txtrangofinal_"+dividir[1]).val();
+
 			var idparentesco=$("#opciones_"+dividir[1]).val();
 			var textoparentesco=$( "#opciones_"+dividir[1]+" option:selected" ).text();
 			var tipodes=$("#tipo_"+dividir[1]).val();
 			var txtcantidaddescuento=$("#txtcantidaddescuento_"+dividir[1]).val();
 
 			var objeto={
-				cantfamiliares:cantfamiliares,
+				rangoinicial:rangoinicial,
+				rangofinal:rangofinal,
 				idparentesco:idparentesco,
 				textoparentesco:textoparentesco,
 				tipodes:tipodes,
@@ -353,7 +356,7 @@ function EliminarPeriodoDescuento(contadorperiodos) {
 
 }
 
-function AgregarMultiplesParentesco2(cantfamiliares,idparentesco,tipodescuento,cantidad) {
+function AgregarMultiplesParentesco2(rangoinicial,rangofinal,idparentesco,tipodescuento,cantidad) {
 	
 	contadormultipleparentesco=parseFloat($(".multipleparentesco").length)+1;
 
@@ -365,8 +368,14 @@ function AgregarMultiplesParentesco2(cantfamiliares,idparentesco,tipodescuento,c
 	var html=`
 			<div class="row multipleparentesco" id="contadorpe_`+contadormultipleparentesco+`" style=" background: #dee1e4;border-radius: 10px;padding: 1em;margin-bottom:1em;">
 										<div class="col-md-2">
-										<label for="from">CANT. FAMILIARES</label>
-											<input type="text" id="txtcantidad_`+contadormultipleparentesco+`" class="form-control pregunta" name="pregunta">
+										<label for="from">RANGO INICIAL</label>
+											<input type="text" id="txtrangoinicial_`+contadormultipleparentesco+`" class="form-control rangoinicial" name="rangoinicial">
+
+										</div>
+
+										<div class="col-md-2">
+										<label for="from">RANGO FINAL</label>
+											<input type="text" id="txtrangofinal_`+contadormultipleparentesco+`" class="form-control rangofinal" name="rangofinal">
 
 										</div>
 										<div class="col-md-2">
@@ -419,9 +428,9 @@ function AgregarMultiplesParentesco2(cantfamiliares,idparentesco,tipodescuento,c
 
 	`;
 
-
 		$("#multipleparentesco").append(html);
-		$("#txtcantidad_"+contadormultipleparentesco).val(cantfamiliares);
+		$("#txtrangoinicial_"+contadormultipleparentesco).val(rangoinicial);
+		$("#txtrangofinal_"+contadormultipleparentesco).val(rangofinal);
 		$("#opciones_"+contadormultipleparentesco).val(idparentesco);
 		$("#tipo_"+contadormultipleparentesco).val(tipodescuento);
 		$("#txtcantidaddescuento_"+contadormultipleparentesco).val(cantidad);
@@ -443,10 +452,16 @@ function AgregarMultiplesParentesco() {
 	var html=`
 			<div class="row multipleparentesco" id="contadorpe_`+contadormultipleparentesco+`" style=" background: #dee1e4;border-radius: 10px;padding: 1em;margin-bottom:1em;">
 										<div class="col-md-2">
-										<label for="from">CANT. FAMILIARES</label>
-											<input type="text" id="txtcantidad_`+contadormultipleparentesco+`" class="form-control pregunta" name="pregunta">
+											<label for="from">RANGO INICIAL</label>
+											<input type="text" id="txtrangoinicial_`+contadormultipleparentesco+`" class="form-control rangoinicial" name="rangoinicial">
 
 										</div>
+										<div class="col-md-2">
+											<label for="from">RANGO FINAL</label>
+											<input type="text" id="txtrangofinal_`+contadormultipleparentesco+`" class="form-control rangofinal" name="rangofinal">
+
+										</div>
+
 										<div class="col-md-2">
 											<label>PARENTESCO</label>
 											<select name=""  class="form-control opciones" id="opciones_`+contadormultipleparentesco+`" style="padding-top:1em;" class="form-control">`;
@@ -909,7 +924,7 @@ function PintarMultipleParentesco(respuesta) {
 	
 	if (respuesta.length>0) {
 		for (var i =0; i <respuesta.length; i++) {
-			AgregarMultiplesParentesco2(respuesta[i].cantfamiliar,respuesta[i].idparentesco,respuesta[i].tipodes,respuesta[i].txtcantidaddescuento);
+			AgregarMultiplesParentesco2(respuesta[i].rangoinicial,respuesta[i].rangofinal,respuesta[i].idparentesco,respuesta[i].tipodes,respuesta[i].txtcantidaddescuento);
 
 		}
 	}

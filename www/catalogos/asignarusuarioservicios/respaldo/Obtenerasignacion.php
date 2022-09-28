@@ -41,6 +41,9 @@ try
 	$obtener=$servicio->ObtenerParticipantes($idtipo);
 
 	$datos=$servicio->ObtenerServicio();
+	$datos[0]->fechainicialformato=date('d-m-Y',strtotime($datos[0]->fechainicial));
+	$datos[0]->fechafinalformato=date('d-m-Y',strtotime($datos[0]->fechafinal));
+
 	$respuesta['respuesta']=$obtener;
 	$respuesta['servicio']=$datos;
 

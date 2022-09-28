@@ -272,7 +272,7 @@ class Usuarios
 
 	public function ObtenerUsuariosAlumno()
 	{
-		$sql_cliente = "SELECT * FROM usuarios WHERE tipo=3 AND usuario!=''";
+		$sql_cliente = "SELECT * FROM usuarios WHERE tipo=3 ";
 		
 		$result_cliente = $this->db->consulta($sql_cliente);
 
@@ -293,7 +293,7 @@ class Usuarios
 
 	public function ObtenerUsuariosAlumnos()
 	{
-		$sql="SELECT *FROM usuarios WHERE tipo=3 AND usuario!='' AND clave!=''";
+		$sql="SELECT *FROM usuarios WHERE tipo=3 ";
 
 		$resp = $this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -665,6 +665,122 @@ class Usuarios
         }
         return $array;
     }
+
+
+
+    public function ObtenerTutoradosSincel()
+    {
+        $sql="SELECT
+        usuarios.nombre,
+        usuarios.paterno,
+        usuarios.materno,
+        usuarios.idusuarios
+        FROM
+        usuarios
+        JOIN usuariossecundarios
+        ON usuarios.idusuarios = usuariossecundarios.idusuariotutorado WHERE usuariossecundarios.idusuariostutor='$this->idusuarios' AND sincel=1";
+
+       
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+    }
+
+
+    
+    public function VerificarSiesTutorado()
+    {
+        $sql="SELECT * FROM usuariossecundarios
+        WHERE usuariossecundarios.idusuariotutorado='$this->idusuarios' ";
+
+       
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+    }
+
+    public function ObtenerCategoriasServiciotutor($idtutor)
+    {
+       $sql="SELECT servicios.idservicio,
+        servicios.idcategoriaservicio,  categorias.titulo
+ FROM usuarios_servicios
+       INNER JOIN servicios ON usuarios_servicios.idservicio=servicios.idservicio
+       INNER JOIN categorias On categorias.idcategorias=servicios.idcategoriaservicio
+        WHERE usuarios_servicios.idusuarios='$idtutor' GROUP BY  servicios.idcategoriaservicio";
+
+       
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+    }
+
+    public function ObtenerserviciosTutor($idtutor)
+    {
+       
+       $sql="SELECT servicios.idservicio,
+        servicios.idcategoriaservicio,
+        servicios.titulo
+ FROM usuarios_servicios
+       INNER JOIN servicios ON usuarios_servicios.idservicio=servicios.idservicio
+        WHERE usuarios_servicios.idusuarios='$idtutor' GROUP BY  servicios.idservicio";
+       
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+    }
+
 
 
 }

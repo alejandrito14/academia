@@ -238,7 +238,7 @@ try
 				$numdia=$arreglodiasfechas[$i]['numdia'];
 				$problema=0;
 				for ($j=0; $j <count($arreglodiasfechas[$i]['horasposibles'][0]) ; $j++) { 
-					$horainicial=substr($arreglodiasfechas[$i]['horasposibles'][0][$j]['horainicial'], 0, 5); ;
+					$horainicial=substr($arreglodiasfechas[$i]['horasposibles'][0][$j]['horainicial'], 0, 5);
 
 					$horafinal=substr($arreglodiasfechas[$i]['horasposibles'][0][$j]['horafinal'],0,5);
 					$horarioservicio->dia=$numdia;

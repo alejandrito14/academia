@@ -79,9 +79,38 @@ class Pagos
 
 		public function ListadopagosNopagados()
 		{
-			$sql = "SELECT * FROM pagos WHERE estatus=0 AND pagado=0 AND idusuarios IN($this->idusuarios) ORDER BY idpago ";
-
-	
+			$sql = "SELECT 
+					pagos.idpago,
+					pagos.idusuarios,
+					pagos.idservicio,
+					pagos.idmembresia,
+					pagos.tipo,
+					pagos.monto,
+					pagos.estatus,
+					pagos.fechapago,
+					pagos.tarjeta,
+					pagos.fechacreacion,
+					pagos.pagado,
+					pagos.validadoporusuario,
+					pagos.digitostarjeta,
+					pagos.tipopago,
+					pagos.fechaevento,
+					pagos.dividido,
+					pagos.fechainicial,
+					pagos.fechafinal,
+					pagos.concepto,
+					pagos.idtipopago,
+					pagos.tipodepago,
+					pagos.descuento,
+					pagos.folio,
+					usuarios.nombre,
+					usuarios.paterno,
+					usuarios.materno,
+					usuarios.email,
+					usuarios.celular
+			    FROM pagos
+				LEFT JOIN usuarios ON usuarios.idusuarios=pagos.idusuarios
+			    WHERE pagos.estatus=0 AND pagos.pagado=0 AND pagos.idusuarios  IN($this->idusuarios) GROUP BY idpago,idusuarios ORDER BY idpago ";
 			$resp = $this->db->consulta($sql);
 			$cont = $this->db->num_rows($resp);
 
@@ -170,6 +199,7 @@ class Pagos
 			}
 			return $array;
 		}
+
 
 
 }

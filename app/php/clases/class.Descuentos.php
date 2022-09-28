@@ -426,12 +426,17 @@ class Descuentos
 		return $array;
 	}
 
-	public function ObtenerTodosParentescoUsuario($idusuariotutor,$idparentesco)
+	public function ObtenerTodosParentescoUsuario($idusuariotutor,$idparentesco,$categoria)
 	{
 		$sql="SELECT * FROM usuariossecundarios
-		 WHERE idusuariostutor='$idusuariotutor'
+		 INNER JOIN usuarios_servicios ON 
+		 idusuarios=usuariossecundarios.idusuariotutorado
+		 INNER JOIN servicios ON usuarios_servicios.idservicio=servicios.idservicio
+		 WHERE idusuariostutor='$idusuariotutor'  AND servicios.idcategoriaservicio='$categoria'  ORDER BY usuariossecundarios.idusuariossecundario
+
 
 		 ";
+		
 
 		 if ($idparentesco!=0) {
 		 	$sql.=" AND idparentesco='$idparentesco'";

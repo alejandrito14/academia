@@ -267,7 +267,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
                               <div id="picker2"></div>
 
                             </div>
-
+ 
                             <div class="col-xl-3 col-md-6">
                                 <div class="card  text-white mb-4">
                                   <div class="card-title" id="txttitle" style="color: black;font-size: 16px;text-align: center;padding-top: 1em;">Horarios</div>
@@ -276,6 +276,65 @@ if(isset($_SESSION['permisos_acciones_erp'])){
                                     </div>
                                     
                                 </div>
+                            </div>
+
+
+                             <div class="col-md-12">
+                              <div class="row">
+
+                                <div class="col-md-3" style="    display: flex;justify-content: start;padding: 0;">
+                                   <span onclick="ObtenerHorariosDia(1)" class="fc-button fc-button-prev fc-state-default fc-corner-left" >
+                                  <span class="fc-icon fc-icon-left-single-arrow">
+                                    
+                                  </span>
+                               </span>
+                                </div>
+                                <div class="col-md-6" id="" style="font-size: 26px;font-weight: bold;">
+                                  
+                                  <div id="fechaactualdiv"  style="float: left;"></div>
+                               
+                                </div>
+
+                                 <div class="col-md-3" style="    display: flex;justify-content: end">
+                                   
+                                
+                                 <span class="fc-button fc-button-next fc-state-default fc-corner-right" onclick="ObtenerHorariosDia(2)">
+                                  <span class="fc-icon fc-icon-right-single-arrow">
+                                    
+                                  </span>
+                               </span>
+
+                                 </div>
+
+                              </div>
+                              <div class="row">
+
+                                <div class="col-2" style="border: 1px solid #eaebf1;">
+                                  <div class="row">
+                                    <div class="col-md-12" style="padding-right: 1em;padding-top: 1em;width: 100px;    height: 50px;background: #eaebf1;"></div>
+                                  </div>
+                                  <div class="row" id="intervalos" style=" background: #eaebf1;font-weight: bold;">
+                                 <!-- <div class="col-md-12">12am</div> -->
+                                    <!-- <div class="col-md-12">1am</div>
+                                       <div class="col-md-12">2am</div>
+                                          <div class="col-md-12">3am</div>
+                                             <div class="col-md-12">4am</div>
+                                          <div class="col-md-12">5am</div> -->
+                                        </div>
+                                </div>
+                                <div class="col" style="overflow: scroll;width: 820px;">
+                            <div class="row" style="width: 820px;background: #eaebf1;" id="zonasdiv">
+                               
+                           </div>
+
+                                    <div class="row" id="espacios" style="width: 800px;"></div>
+                                  
+                                </div>
+                                
+
+
+                              </div>
+
                             </div>
                             <!-- <div class="col-xl-3 col-md-6">
                                 <div class="card bg-danger text-white mb-4">
@@ -287,6 +346,35 @@ if(isset($_SESSION['permisos_acciones_erp'])){
                                 </div>
                             </div> -->
                         </div>
+
+
+  <div class="modal" tabindex="-1" role="dialog" id="modalfecha">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">FILTRAR FECHA</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+        <form>
+          <div class="form-group">
+            <label for="">SELECCIONAR FECHA:</label>
+            <input type="date" class="form-control" id="txtfechabuscar">
+            
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="BuscarFecha()">ACEPTAR</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <style>
 #picker2 table {
@@ -419,14 +507,14 @@ text-align: center!important;
 .fc-icon-left-single-arrow:after {
     content: "\2039";
     font-weight: bold;
-    font-size: 200%;
+    font-size: 100%;
     top: -7%;
 }
 
 .fc-icon-right-single-arrow:after {
     content: "\203A";
     font-weight: bold;
-    font-size: 200%;
+    font-size: 100%;
     top: -7%;
 }
 
@@ -498,9 +586,13 @@ color: white;
 
 .fc-button-prev{
 cursor: pointer;
+width: 50px;
+    height: 30px;
 }
 .fc-button-next{
 cursor: pointer;
+width: 50px;
+    height: 30px;
 
 }
 .fc-border-separate tbody tr.fc-first td, .fc-border-separate tbody tr.fc-first th {
@@ -541,6 +633,10 @@ display: flex;
 
  min-height: 20px!important;
 }
+.fc-header-right{
+      display: flex;
+    justify-content: end;
+}
 </style>
 
 <script>
@@ -553,7 +649,8 @@ display: flex;
   ObtenerCoaches();
   ObtenerServicios();
   PintarCalendario2();
-
+  PintarHorarioDisponible();
+  //PintarDisponible();
 
   
 

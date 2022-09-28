@@ -1275,7 +1275,7 @@ Resumenfechas();
 	var v_fechafinal=$("#v_fechafinal").val();
 
 		var datos="domingo="+domingo+"&lunes="+lunes+"&martes="+martes+"&miercoles="+miercoles+"&jueves="+jueves+"&viernes="+Viernes+"&sabado="+sabado+"&v_categoria="+v_categoria+"&v_tipocategoria="+v_tipocategoria+"&v_fechainicial="+v_fechainicial+"&v_fechafinal="+v_fechafinal+"&v_zonas="+v_zonas;
-
+	
 			$.ajax({
 					url: 'catalogos/servicios/ObtenerHorarios.php', //Url a donde la enviaremos
 					type: 'POST', //Metodo que usaremos

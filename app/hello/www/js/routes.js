@@ -245,12 +245,32 @@ var routes = [
     path: '/registro/',
     componentUrl: './pages/registro.html',
   },
+  {
+    path: '/datosdependencia/',
+    componentUrl: './pages/datosdependencia.html',
+  },
+
+  
   //servicios asignados
-   {
+  /* {
     path: '/serviciosasignados/',
     componentUrl: './pages/serviciosasignados.html',
   
+  },*/
+
+   {
+
+    path: '/serviciosasignados/',
+    
+    url: './pages/serviciosasignados.html',
   },
+   {
+    path: '/serviciospendientesasignados/',
+    componentUrl: './pages/serviciospendientesasignados.html',
+  
+  },
+
+  
   {
 
     path: '/serviciosregistrados/',
@@ -404,6 +424,13 @@ var routes = [
     componentUrl:'./pages/membresia.html',
 
   },
+       // membresia
+  {
+    path: '/membresiaactiva/',
+    componentUrl:'./pages/membresiaactiva.html',
+
+  },
+
        // pagomembresia
   {
     path: '/pagomembresia/',

@@ -18,6 +18,7 @@ $pagos->db=$db;
 
 $iduser=$_POST['id_user'];
 $pagoselegidos=json_decode($_POST['pagos']);
+$descuentosaplicados=json_decode($_POST['descuentosaplicados']);
 
 	$membresias->idusuarios=$iduser;
 	$obtenermembresiausuario=$membresias->ObtenerMembresiaUsuario();
@@ -48,6 +49,23 @@ $pagoselegidos=json_decode($_POST['pagos']);
 		for ($i=0; $i <count($pagoselegidos) ; $i++) { 
 			$idpago=$pagoselegidos[$i]->{'id'};
 			$montopago=$pagoselegidos[$i]->{'monto'};
+			$pagoselegidos[$i]->{'montosindescuento'}=$montopago;
+
+				for ($l=0; $l < count($descuentosaplicados); $l++) { 
+					
+					if ($descuentosaplicados[$l]->idpago==$pagoselegidos[$i]->{'id'}) {
+						$montoadescontar=$descuentosaplicados[$l]->montoadescontar;
+						
+						$montopago=$montopago-$montoadescontar;
+					
+						//$pagoselegidos[$i]->montocondescuento=$montopago;
+
+						$pagoselegidos[$i]->{'monto'}=$montopago;
+					}
+
+				}
+
+				$montopago=$pagoselegidos[$i]->{'monto'};
 				$pagos->idpago=$idpago;
 				$buscar=$pagos->ObtenerPago();
 
@@ -71,7 +89,8 @@ $pagoselegidos=json_decode($_POST['pagos']);
 
 								$obtenercategoriamembresia[$j]->idpago=$idpago;
 								$obtenercategoriamembresia[$j]->montopago=$montopago;
-								
+									
+
 								array_push($descuentosmembresia,$obtenercategoriamembresia[$j]);
 								break;
 								}
@@ -123,6 +142,8 @@ $pagoselegidos=json_decode($_POST['pagos']);
 	
 		$monto=$descuentosmembresia[$i]->monto;
 		$total=$descuentosmembresia[$i]->montopago;
+
+
 		if ($tipo==0) {
 		 	$descuento=$monto;
 		 	$montoadescontar=($total*$descuento)/100;

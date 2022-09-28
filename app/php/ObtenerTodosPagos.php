@@ -46,7 +46,8 @@ try
 		$fecha=$obtener[$i]->fechafinal;
 		$dianumero=explode('-',$fecha);
 		$obtener[$i]->fechaformato=$dianumero[2].'/'.$fechas->mesesAnho3[$fechas->mesdelano($fecha)-1];
-
+		$fecha=date('d-m-Y',$obtener[$i]->fechafinal);
+		$obtener[$i]->fechafinal=$fecha;
 		}
 
 

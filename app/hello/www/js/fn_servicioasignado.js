@@ -110,7 +110,7 @@ function AceptarTerminos() {
 	var pagina = "AceptarTerminos.php";
 	var id_user=localStorage.getItem('id_user');
 	var datos="id_user="+id_user+"&idusuarios_servicios="+idusuarios_servicios;
-	
+	  app.dialog.preloader('Guardando...');
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
@@ -119,6 +119,7 @@ function AceptarTerminos() {
 		cache: false,
 		data:datos,
 		success: function(datos){
+		  app.dialog.close();
 
 			if (datos.respuesta==1) {
 				
@@ -810,67 +811,66 @@ function ObtenerParticipantesAlumnos() {
 function PintarParticipantesAlumnos(respuesta) {
 
 	if (respuesta.length>0) {
-
+		$(".listadoalumnos").css('display','block');
 		var html="";
 		for (var i =0; i < respuesta.length; i++) {
 			var imagen="";
-			if (respuesta[i].foto!='' && respuesta[i].foto!=null) {
+			if (respuesta[i].foto!='' && respuesta[i].foto!=null  && respuesta[i].foto!='null') {
 
 				urlimagen=urlphp+`upload/perfil/`+respuesta[i].foto;
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:60px;height:60px;"/>';
 			}else{
 
 				urlimagen="img/icon-usuario.png";
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:60px;height:60px;"/>';
 			}
 
 			
-			html+=`
-				  
+		
 
-                <li style="background: white;
+html+=`
+         <li style="background: white;
     border-radius: 10px;margin-bottom: 1em;">
             <label class="label-radio item-content">                                                                               
-              <div class="item-inner" style="width:80%;">
+              <div class="item-inner" style="width:90%;">
              
                 <div class="row">
-                <div class="item-media">
-              		  <div class="col-30">
-                        <figure class="avatar  rounded-10">
-                        <img src="`+urlimagen+`" alt="" style="width:80px;height:80px;" />
+                <div class="row">
+              		  <div class="col-20">
+                        <figure class="avatar   rounded-10">
+                      `+imagen+`
                         </figure>
                         </div>
                         
-                        	<div class="col-100">
-                        	 <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
-
-
-             		   </div>
-             		   <div class="row">
-             		     <div class="col-100 item-text" style="font-size:18px;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].usuario+`
-             		     </div>
-             		   </div>
-             		   <div class="row">
-                        	  <div class="item-text">`+respuesta[i].nombretipo+`</div>
-                    </div>
-
-                    <div class="row">
-                        	 
-                    </div>
-                        	</div>
-                        	
-                        	</div>
+                    <div class="col-80">
+                         <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
+                         </div>
+             		 
+	             		 <div class="col-100 item-text" style="font-size:18px;    margin-left: 1em;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].usuario+`
+	             		 	</div>
+             		
+                        	  <div class=" col-100 item-text" style="    margin-left: 1em;">`+respuesta[i].nombretipo+`</div>
+                    		  </div>
                         </div>
+
+                    <div class="col-10">
+
+                    </div>
+                        	
+                     </div>
+               
              		 
               </div>
 
-            </label>
-          </li>
-
+            
+          </div></label></li>
 
 			`;
 		}
 		$("#divparticipantesalumnos").html(html);
+
+	}else{
+				$(".listadoalumnos").css('display','none');
 
 	}
 }

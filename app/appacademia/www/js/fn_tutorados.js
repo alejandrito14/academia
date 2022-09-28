@@ -443,6 +443,10 @@ function PintarDatosRegistroTutorado(respuesta) {
 	if (respuesta.sututor==1) {
 		$("#inputtutor").prop('checked',true);
 	}
+
+	if (respuesta.sututor==1) {
+		$("#inputsincelular").prop('checked',true);
+	}
 	localStorage.removeItem('idtutorado');
 }
 function EliminarTutorado(idusuario) {

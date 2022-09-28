@@ -34,19 +34,48 @@
             <form style="" >
               <input type="hidden" name="v_idtu" id="v_idtu" class="input-with-value" />
              <input type="hidden" name="v_idusuario" id="v_idusuario" class="input-with-value" />
-              <div>
+              <!-- <div>
               <div class="item-content lipoliticas">
                  <div class="item-inner" style="  display: flex;  justify-content: left;height: 50px;">
                 <input type="checkbox" id="inputtutor"/><span style="margin-left:1em;margin-top: 1em;">Soy su tutor</span>
                 </div>
-              </div>
-            </div>
-             <div class="item-content lipoliticas" >
+              </div> 
+            </div> -->
+
+             <div class="" style="    margin-top: 1em; margin-bottom: 1em;">
+              <div class="row">
+                                <div class="col-auto">
+                                    <label class="toggle toggle-init color-theme">
+                                 <input type="checkbox" id="inputtutor" onchange="SoyTutor()" />
+                                        <span class="toggle-icon"></span>
+                                    </label>
+                                </div>
+                                <div class="col" style="    margin-top: 0.2em; padding: 0;
+    justify-content: left; display: flex;">
+                                    <h5 class="no-margin-bottom">Soy tutor</h5>
+                                </div>
+                            </div>
+             </div>
+
+              <div class=" lisincelular" style="display:none;margin-bottom: 1em;">
+              <div class="row">
+                                <div class="col-auto">
+                                    <label class="toggle toggle-init color-theme">
+                                        <input type="checkbox" id="inputsincelular"  />
+                                        <span class="toggle-icon"></span>
+                                    </label>
+                                </div>
+                                <div class="col" style="        margin-top: 0.2em;padding: 0;justify-content: left;display: flex;">
+                                    <h5 class="no-margin-bottom">Sin celular</h5>
+                                </div>
+                            </div>
+             </div>
+            <!--  <div class="item-content lipoliticas" >
                 <div class="item-inner" style="  display: flex;  justify-content: left;height: 50px;">
                 <input type="checkbox" id="inputsincelular" />
                 <span style="margin-left:1em;margin-top: 1em;">Sin celular</span>
                 </div>
-              </div>
+              </div> -->
 
               <div class="list form-list no-margin margin-bottom">
 

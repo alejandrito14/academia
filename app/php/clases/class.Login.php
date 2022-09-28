@@ -46,7 +46,7 @@ class Login
 
 	   public function validar_credenciales_cliente()
 	   {
-	   	$sql = "SELECT * FROM usuarios us WHERE us.usuario = '$this->usuario' AND us.clave = '$this->password'  "; 
+	   	$sql = "SELECT * FROM usuarios us WHERE us.usuario = '$this->usuario' AND us.clave = '$this->password' AND estatus=1 "; 
 	
 		$result = $this->db->consulta($sql);
 		return $result;
@@ -54,14 +54,14 @@ class Login
 	
 	public function validar_credenciales_email()
 	   {
-	   	$sql = "SELECT * FROM usuarios us WHERE us.email = '$this->usuario' AND us.clave = '$this->password'  "; 
+	   	$sql = "SELECT * FROM usuarios us WHERE us.email = '$this->usuario' AND us.clave = '$this->password'  AND estatus=1 "; 
 	
 		$result = $this->db->consulta($sql);
 		return $result;
 	   }
 	public function validar_celular()
 	   {
-	   	$sql = "SELECT * FROM usuarios us WHERE us.celular = '$this->usuario' AND us.clave = '$this->password'  "; 
+	   	$sql = "SELECT * FROM usuarios us WHERE us.celular = '$this->usuario' AND us.clave = '$this->password'   AND estatus=1"; 
 	
 		$result = $this->db->consulta($sql);
 		return $result;

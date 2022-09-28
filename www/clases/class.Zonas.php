@@ -192,6 +192,26 @@ class Zonas
 		$resp = $this->db->consulta($sql);
 		return $resp;
 	}
+
+	public function ObtZonasActivosOrdenadas()
+	{
+		$sql = "SELECT * FROM zonas WHERE estatus = 1 ORDER BY idzona";
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
 	
 
 }

@@ -7,6 +7,8 @@ require_once("clases/class.Descuentos.php");
 require_once("clases/class.Pagos.php");
 require_once("clases/class.Servicios.php");
 require_once("clases/class.Fechas.php");
+require_once("clases/class.Usuarios.php");
+
 
 
 $db = new MySQL();
@@ -18,6 +20,9 @@ $servicios->db=$db;
 
 $descuento=new Descuentos();
 $descuento->db=$db;
+
+$usuarios=new Usuarios();
+$usuarios->db=$db;
 
 $pagoselegidos=json_decode($_POST['pagos']);
 $iduser=$_POST['id_user'];
@@ -34,14 +39,17 @@ $descuento->idusuario=$iduser;
 		$montopago=$pagoselegidos[$i]->{'monto'};
 		$pagos->idpago=$idpago;
 		$buscar=$pagos->ObtenerPago();
-		$idservicio=$buscar[0]->idservicio;
-		$servicios->idservicio=$idservicio;
-		$datosservicio=$servicios->ObtenerServicio();
-		$idcategoriatipo=$datosservicio[0]->idcategoriaservicio;
 
-		$descuento->idservicio=$idservicio;
-		$obtenerdescuentos=$descuento->ObtenerDescuentos();
+		if (count($buscar)>0) {
+			# code...
+		
+			$idservicio=$buscar[0]->idservicio;
+			$servicios->idservicio=$idservicio;
+			$datosservicio=$servicios->ObtenerServicio();
+			$idcategoriatipo=$datosservicio[0]->idcategoriaservicio;
 
+			$descuento->idservicio=$idservicio;
+			$obtenerdescuentos=$descuento->ObtenerDescuentos();
 			for ($j=0; $j <count($obtenerdescuentos) ; $j++) { 
 				
 				$iddescuento=$obtenerdescuentos[$j]->iddescuento;
@@ -66,9 +74,16 @@ $descuento->idusuario=$iduser;
 				$porniveljerarquico=$obtenerdescuentos[$j]->porniveljerarquico;
 				$porclientenoasociado=$obtenerdescuentos[$j]->porclientenoasociado;
 
+
 				$inpadre=$obtenerdescuentos[$j]->inppadre;
 				$innieto=$obtenerdescuentos[$j]->inpnieto;
 				$inhijo=$obtenerdescuentos[$j]->inphijo;
+
+
+				$porcaracteristicasasociador=$obtenerdescuentos[$j]->caracteristicaasociador;
+
+				$caracteristicasporservicio=$obtenerdescuentos[$j]->caracteristicasporservicio;
+				$caracteristicaportiposervicio=$obtenerdescuentos[$j]->caracteristicaportiposervicio;
 
 				$descuento->iddescuento=$iddescuento;
 				if ($convigencia==1) {
@@ -104,8 +119,10 @@ $descuento->idusuario=$iduser;
 
 			}
 
-			if ($estatus==1 && $validado==1) {
-					$validado=0;
+			if ($estatus==1 ) {
+					if ($validado==1) {
+						# code...
+					
 
 					if ($porcantidadservicio==1) {
 			
@@ -119,7 +136,8 @@ $descuento->idusuario=$iduser;
 						}
 
 					}
-
+				}
+if ($validado==1) {
 		if ($porhorarioservicio==1) {
 					
 						$fechaactual=date('Y-m-d');
@@ -138,6 +156,8 @@ $descuento->idusuario=$iduser;
 								}
 
 				}
+			}
+			if ($validado==1) {
 
 				if ($portiposervicio==1) {
 					
@@ -163,7 +183,9 @@ $descuento->idusuario=$iduser;
 					
 
 				}
+}
 
+if ($validado==1) {
 
 				if ($porservicio==1) {
 					$obtenerserviciosdescuento=$descuento->ObtenerServiciosDescuentos();
@@ -183,37 +205,35 @@ $descuento->idusuario=$iduser;
 					}
 
 				}
+}
 
+if ($validado==1) {
 				if ($porparentesco==1) {
 					
+					
 					$obtenerparentescosdescuento=$descuento->ObtenerDescuentoParentesco();
-
-					$obtenerparentescosusuario=$descuento->ObtenerParentescoUsuario();
+					
+					
 				
 					$encontrado=0;
 					for ($m=0; $m < count($obtenerparentescosdescuento); $m++) {
 
-								for ($n=0; $n <count($obtenerparentescosusuario); $n++) {
-										if ($obtenerparentescosdescuento[$m]->idparentesco!=0) {
+						$idparentesco=$obtenerparentescosdescuento[$m]->idparentesco;
+						$cantidadfam=$obtenerparentescosdescuento[$m]->cantfamiliar;
 
-													if ($obtenerparentescosdescuento[$m]->idparentesco==$obtenerparentescosusuario[$n]->idparentesco) {
-														$encontrado=1;
+						$obtenerparentescosusuario=$descuento->ObtenerParentescoUsuario();
 
-															$obtenerdescuentos[$i]->monto=$obtenerparentescosdescuento[$m]->txtcantidaddescuento;
-															$obtenerdescuentos[$i]->tipo=$obtenerparentescosdescuento[$m]->tipodes;
+						$obtenerUsuariosTutor=$descuento->ObtenerTodosParentescoUsuario($obtenerparentescosusuario[0]->idusuariostutor,$idparentesco);
 
-														  break;
-													}
+							if (count($obtenerUsuariosTutor)==$cantidadfam) {
+									$encontrado=1;
+									$obtenerdescuentos[$j]->monto=$obtenerparentescosdescuento[$m]->txtcantidaddescuento;
+									$obtenerdescuentos[$j]->tipo=$obtenerparentescosdescuento[$m]->tipodes;
 
-											}else{
+										break;
+							}
 
-												  $encontrado=1;
-														$obtenerdescuentos[$i]->monto=$obtenerparentescosdescuento[$m]->txtcantidaddescuento;
-														$obtenerdescuentos[$i]->tipo=$obtenerparentescosdescuento[$m]->tipodes;
-												  	break;
-											}
-
-								}
+						
 						
 					}
 
@@ -226,7 +246,9 @@ $descuento->idusuario=$iduser;
 					}
 
 				}
+			}
 
+if ($validado==1) {
 				if ($porniveljerarquico==1) {
 
 						if($inpadre==1){
@@ -264,7 +286,9 @@ $descuento->idusuario=$iduser;
 						}
 						
 					}
+}
 
+if ($validado==1) {
 				
 
 			if ($porclientenoasociado==1) {
@@ -272,14 +296,14 @@ $descuento->idusuario=$iduser;
 						$obtenermultinoasociados=$descuento->ObtenerMultinoAsociados();
 
 						$obtenercantidadpersonasservicios=$descuento->ObtenerAsignadosServicio();
-	
+						$validado=0;
 						$cantidad=$obtenercantidadpersonasservicios[0]->cantidad;
-							for ($j=0; $j < count($obtenermultinoasociados); $j++) { 
-								if ($cantidad==$obtenermultinoasociados[$j]->cantidad) {
+							for ($o=0; $o < count($obtenermultinoasociados); $o++) { 
+								if ($cantidad==$obtenermultinoasociados[$o]->cantidad) {
 
 								 	$validado=1;
-										$obtenerdescuentos[$i]->monto=$obtenermultinoasociados[$j]->txtcantidaddesc;
-										$obtenerdescuentos[$i]->tipo=$obtenermultinoasociados[$j]->tipodescuento;
+										$obtenerdescuentos[$j]->monto=$obtenermultinoasociados[$o]->txtcantidaddesc;
+										$obtenerdescuentos[$j]->tipo=$obtenermultinoasociados[$o]->tipodescuento;
 										 break;
 									
 								}
@@ -288,24 +312,120 @@ $descuento->idusuario=$iduser;
 				}
 
 	
-				
+				}
+
+			if ($validado==1) {
+				if($porcaracteristicasasociador==1){
+
+					
+			$usuarios->idusuarios=$iduser;
+			$verificarsiestutorado=$usuarios->VerificarSiesTutorado();
+		
+				if (count($verificarsiestutorado)==1) {
+					$idtutor=$verificarsiestutorado[0]->idusuariostutor;
+
+					if($caracteristicaportiposervicio==1){
+
+						$obtenercategoriasserviciotutor=$usuarios->ObtenerCategoriasServiciotutor($idtutor);
+						;
+
+$obtenertiposervicioasociador=$descuento->ObtenerTipoDescuentoAsociador();
+						$encontradocategoria=0;
+				for ($a=0; $a <count($obtenertiposervicioasociador) ; $a++) { 
+							
+						for ($b=0; $b < count($obtenercategoriasserviciotutor); $b++) { 
+								
+						
+
+					if($obtenertiposervicioasociador[$a]->idcategorias==$obtenercategoriasserviciotutor[$b]->idcategoriaservicio){
+
+								$encontradocategoria=1;
+								
+								break;
+
+								}
+
+							}
+						}
+
+
+					}
+
+
+				 if($caracteristicasporservicio==1){
+
+				 	$obtenerserviciotutor=$usuarios->ObtenerserviciosTutor($idtutor);
+
+				 	$obtenerservicioasociador=$descuento->ObtenerServicioAsociador();
+				 	$encontradoservicio=0;
+				 		for ($c=0; $c < count($obtenerservicioasociador); $c++) { 
+
+
+				 			for ($d=0; $d < count($obtenerserviciotutor); $d++) { 
+				 				if ($obtenerservicioasociador[$c]->idservicio==$obtenerserviciotutor[$d]->idservicio) {
+				 					$encontradoservicio=1;
+				 					break;
+				 				}
+				 			}
+				 			
+				 		}
+
+
+					}
+					$validado=0;
+					if($caracteristicaportiposervicio==1 && $caracteristicasporservicio==1){
+
+					if($encontradocategoria==1 && $encontradoservicio)
+
+						$validado=1;
+
+					}else if($caracteristicaportiposervicio==1){
+
+						if ($encontradocategoria==1) {
+							$validado=1;
+						}
+					}else if($caracteristicasporservicio==1){
+
+						if ($encontradoservicio==1) {
+							$validado=1;
+						}
+
+					}else{
+						$validado=0;
+					}
+
+					
+
+					}else{
+
+						$validado=0;
+					}
+
+
+
+					}
+
+
+				}
 
 						if ($validado==1) {
-							$obtenerdescuentos[$i]->montopago=$montopago;
+							$obtenerdescuentos[$j]->montopago=$montopago;
+							$obtenerdescuentos[$j]->idpago=$idpago;
 
-							$descuentospagos=$obtenerdescuentos[$i];
+							$descuentospagos=$obtenerdescuentos[$j];
 
 							array_push($arraydescuentos, $descuentospagos);
 							
 						}
 
+				}
+
 			}
-
-
 		}
+	//}
 
-
-	}
+	
+}
 
 
 

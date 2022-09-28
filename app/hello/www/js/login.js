@@ -237,16 +237,16 @@ function validar_login()
 
 										if (datos['tipo']==3 ) {
 											
-											 GoToPage("home");
+											 GoToPageHistory("home");
 
 										}
 										       
 										if (datos['tipo']==0) {
-											GoToPage("homeadmin");
+											GoToPageHistory("homeadmin");
 										}
 
 										if (datos['tipo']==5) {
-											GoToPage("homecoach");
+											GoToPageHistory("homecoach");
 										}
 
 									}else{

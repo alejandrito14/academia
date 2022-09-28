@@ -22,6 +22,8 @@ function ObtenerMembresiaActivas() {
         $(".divmembresia").css('display','block');
       var colormembresia=datos.membresias[0].color;
       $(".spanmembresia").css('color',colormembresia);
+
+      $(".colmembresia").css('display','block');
       }
       
     }
@@ -332,4 +334,89 @@ function EliminarMembresiaSeleccionada(valor) {
   $("#list_"+dividir).remove();
   localStorage.removeItem('membresiaelegida');
   HabilitarBotonPago();
+}
+var datosmembresia=[];
+
+function ObtenerMembresiaActivaUsuario() {
+datosmembresia=[];
+  var id_user=localStorage.getItem('id_user');
+  var datos="idusuario="+id_user;
+  var pagina = "ObtenerMembresiaActivas.php";
+    $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+    data:datos,
+    async:false,
+    success: function(datos){
+      if (datos.respuesta.length>0) {
+      /* $(".divmembresia").css('display','none');
+
+      PintarModalMembresias(datos.respuesta);*/
+    }else{
+
+      if (datos.membresias.length>0) {
+        datosmembresia=datos.membresias;
+      $(".colmembresia").css('display','block');
+
+
+
+      }
+      
+    }
+
+    },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+      var error;
+        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+    }
+
+  });
+}
+
+function PintardatosMembresia() {
+    imagen=urlimagenes+`membresia/imagenes/`+codigoserv+datosmembresia[0].imagen;
+     
+      $("#imgmembresia").attr('src',imagen);
+
+      $(".titulo").text(datosmembresia[0].titulo);
+      ObtenerVencimientoMembresia();
+      //$(".descripcion").text(datosmembresia[0].descripcion);
+
+}
+
+function ObtenerVencimientoMembresia() {
+  var id_user=localStorage.getItem('id_user');
+  var datos="idusuario="+id_user+"&idmembresia="+datosmembresia[0].idmembresia;
+  var pagina = "ObtenerVencimientoMembresia.php";
+    $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+    data:datos,
+    async:false,
+    success: function(resul){
+    
+      var fecha=resul.respuesta[0].fechaexpiracion;
+      var html="";
+      var dividirfecha=fecha.split('-');
+
+      html+=`
+      <p>Fecha de expiración:`+dividirfecha[2].split(' ')[0]+`/`+dividirfecha[1]+`/`+dividirfecha[0]+`</p>
+
+      `;
+      $(".vencimiento").html(html);
+    
+
+    },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+      var error;
+        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+    }
+
+  });
 }

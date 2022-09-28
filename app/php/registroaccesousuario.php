@@ -161,8 +161,8 @@ try
                     }else{
                      $lo->idusuariotutorado=$v_idusuario;
                     }
-
-                 $lo->GuardarUsuarioyTutor($idusuario,$parentesco,$soytutor);
+                    $orden=$i+1;
+                 $lo->GuardarUsuarioyTutor($idusuario,$parentesco,$soytutor,$orden);
 
              }
         }

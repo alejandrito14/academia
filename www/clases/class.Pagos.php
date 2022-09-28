@@ -41,27 +41,38 @@ class Pagos
 
 	public function ObtTodosPagos()
 	{
-		$sql = "SELECT
-		torneocliente.idtorneocliente,
-		torneocliente.estatus,
-		torneo.idtorneo,
-		torneocliente.fecha,
-		torneocliente.cantidad,
-		torneocliente.foto,
-		torneo.fechainicial,
-		torneo.fechafinal,
-		clientes.nombre,
-		clientes.paterno,
-		clientes.materno,
-		torneocliente.idcliente,
-		clientes.email,
-		torneo.nombre AS nombretorneo
-		FROM
-		torneo
-		JOIN torneocliente
-		ON torneo.idtorneo = torneocliente.idtorneo 
-		JOIN clientes
-		ON torneocliente.idcliente = clientes.idcliente";
+		$sql = "SELECT 
+					pagos.idpago,
+					pagos.idusuarios,
+					pagos.idservicio,
+					pagos.idmembresia,
+					pagos.tipo,
+					pagos.monto,
+					pagos.estatus,
+					pagos.fechapago,
+					pagos.tarjeta,
+					pagos.fechacreacion,
+					pagos.pagado,
+					pagos.validadoporusuario,
+					pagos.digitostarjeta,
+					pagos.tipopago,
+					pagos.fechaevento,
+					pagos.dividido,
+					pagos.fechainicial,
+					pagos.fechafinal,
+					pagos.concepto,
+					pagos.idtipopago,
+					pagos.tipodepago,
+					pagos.descuento,
+					pagos.folio,
+					usuarios.nombre,
+					usuarios.paterno,
+					usuarios.materno,
+					usuarios.email,
+					usuarios.celular
+			    FROM pagos
+				LEFT JOIN usuarios ON usuarios.idusuarios=pagos.idusuarios
+			    GROUP BY idpago,idusuarios ORDER BY idpago ";
 		
 		$resp = $this->db->consulta($sql);
 		
@@ -107,6 +118,81 @@ class Pagos
 	}
 
 
+	
+		public function ListadopagosNopagados()
+		{
+			$sql = "SELECT 
+					pagos.idpago,
+					pagos.idusuarios,
+					pagos.idservicio,
+					pagos.idmembresia,
+					pagos.tipo,
+					pagos.monto,
+					pagos.estatus,
+					pagos.fechapago,
+					pagos.tarjeta,
+					pagos.fechacreacion,
+					pagos.pagado,
+					pagos.validadoporusuario,
+					pagos.digitostarjeta,
+					pagos.tipopago,
+					pagos.fechaevento,
+					pagos.dividido,
+					pagos.fechainicial,
+					pagos.fechafinal,
+					pagos.concepto,
+					pagos.idtipopago,
+					pagos.tipodepago,
+					pagos.descuento,
+					pagos.folio,
+					usuarios.nombre,
+					usuarios.paterno,
+					usuarios.materno,
+					usuarios.email,
+					usuarios.celular
+			    FROM pagos
+				LEFT JOIN usuarios ON usuarios.idusuarios=pagos.idusuarios
+			    WHERE pagos.estatus=0 AND pagos.pagado=0 AND pagos.idusuarios  IN($this->idusuarios) GROUP BY idpago,idusuarios ORDER BY idpago ";
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
+		}
+
+		
+	
+	public function ObtenerPago()
+	{
+		$sql="SELECT *FROM pagos WHERE idpago='$this->idpago'";
+	
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 }
 
 ?>

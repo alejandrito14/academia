@@ -63,10 +63,11 @@ try
 	$obtenerzonas=$zonas->ObtZonasActivosConcat();
 	$v_zonas=explode(',',$obtenerzonas[0]->idzonas);
 	$fecha=$_POST['fecha'];
-	$v_fechainicial=$fechas->Primerdia_mes_fecha($fecha);
-	$v_fechafinal=$fechas->Ultimodia_mes_fecha($fecha);
+	/*$v_fechainicial=$fechas->Primerdia_mes_fecha($fecha);
+	$v_fechafinal=$fechas->Ultimodia_mes_fecha($fecha);*/
 
-
+	$v_fechainicial=$_POST['fechainicial'];
+	$v_fechafinal=$_POST['fechafinal'];
 
 	$dias="";
 
@@ -144,6 +145,7 @@ try
 	$peridos=array();
 
 	array_push($peridos,$arrayperiodos);
+	
 
 	$arrayfechasdias=array();
 	for ($i=0; $i < count($peridos); $i++) { 

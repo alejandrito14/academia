@@ -279,6 +279,78 @@ class Membresia
 	}
 
 
+
+	public function ObtenerMembresiaUsuario()
+	{
+		$sql="SELECT *
+		FROM usuarios_membresia WHERE idusuarios='$this->idusuarios' and estatus=1 and pagado=1";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerCategoriasMembresia()
+	{
+		$sql="SELECT *FROM categorias_membresia WHERE idmembresia='$this->idmembresia'";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	
+	public function ObtenerMembresia()
+	{
+		$sql="SELECT *
+		FROM membresia WHERE idmembresia='$this->idmembresia'";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
 }
 
  ?>

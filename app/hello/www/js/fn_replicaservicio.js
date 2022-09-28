@@ -3,6 +3,27 @@ var fechasglobal="";
 function ReplicaServicio() {
 	GoToPage('replicaservicio');
 }
+
+function funcionFechaFlecha() {
+	var serviciosreplica=$("#serviciosreplica").val();
+	var v_fechainicial=$("#v_fechainicial").val();
+	var v_fechafinal=$("#v_fechafinal").val();
+	var bandera=1;
+	if (serviciosreplica==0) {
+		bandera=0;
+	}
+
+	if (v_fechainicial=='') {
+		bandera=0;
+	}
+	if (v_fechafinal=='') {
+		bandera=0;
+	}
+
+	if (bandera==1) {
+	HorariosDiasCalendario(1);
+	}
+}
 function CargarCalendario() {
 	// Inline with custom toolbar
       var monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -42,12 +63,15 @@ function CargarCalendario() {
           	 $('.calendar-custom-toolbar .left .link').on('click', function () {
               calendarInline2.prevMonth();
              // CargarFechasRefrescar1(calendarInline);
-             HorariosDiasCalendario();
+            	
+             funcionFechaFlecha();
+             
             });
             $('.calendar-custom-toolbar .right .link').on('click', function () {
               calendarInline2.nextMonth();
              // CargarFechasRefrescar1(calendarInline);
-             HorariosDiasCalendario();
+            // HorariosDiasCalendario();
+             funcionFechaFlecha();
             });
 
 
@@ -329,14 +353,40 @@ function PintarServiciosReplica(respuesta) {
 }
 
 function DesplegarCalendario() {
-	HorariosDiasCalendario();
+
+	var serviciosreplica=$("#serviciosreplica").val();
+	var v_fechainicial=$("#v_fechainicial").val();
+	var v_fechafinal=$("#v_fechafinal").val();
+	var bandera=1;
+	if (serviciosreplica==0) {
+		bandera=0;
+	}
+
+	if (v_fechainicial=='') {
+		bandera=0;
+	}
+	if (v_fechafinal=='') {
+		bandera=0;
+	}
+
+	if (bandera==1) {
+
+		app.dialog.preloader();
+	HorariosDiasCalendario(0);
 	 arraydiaselegidos=[];
 	 arraydiaseleccionados=[];
 	var titulo=$("#serviciosreplica option:selected").html();
 	$("#v_titulo").val('COPIA '+titulo);
+		app.dialog.close();
+
+	}else{
+
+
+		alerta('','Falta por completar campos');
+	}
 
 }
-function HorariosDiasCalendario() {
+function HorariosDiasCalendario(flecha) {
 	var idservicio=$("#serviciosreplica").val();
 	var mes=(calendarInline2.currentMonth+1)>9?(calendarInline2.currentMonth+1):'0'+(calendarInline2.currentMonth+1);
 	var anio=calendarInline2.currentYear;
@@ -390,7 +440,9 @@ function HorariosDiasCalendario() {
 					
 
 						 }
+						 if (flecha==0) {
 						 calendarInline2.setYearMonth(anioinicial, mesinicial, 2);
+						}
 						 calendarInline2.params.events = eventos;
 						calendarInline2.update();
 						 $(".calendar-day-today .calendar-day-number").addClass('diaactual');

@@ -446,6 +446,8 @@ if (respuesta.sututor==1) {
 	if (respuesta.sincel==1) {
 		$("#inputsincelular").prop('checked',true);
 	}
+	SoyTutor();
+	SinCelular();
 	localStorage.removeItem('idtutorado');
 }
 function EliminarTutorado(idusuario) {
@@ -573,7 +575,7 @@ function PintarSelecttutorados(respuesta) {
 
 			html+=`
 
-			<div class="row">
+			<div class="row" style="margin-bottom: 1em;">
                                 <div class="col-auto">
                                     <div class="form-check avatar">
                                        
@@ -759,3 +761,77 @@ function PintarServiciosTutorado(respuesta,fechaactual) {
 
 	}
 }
+
+function ObtenerDatosDependencia() {
+	var idusuario=localStorage.getItem('id_user');
+	var datos="idusuario="+idusuario;
+	var pagina = "ObtenerDependenciaUsuario.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+
+			Pintardependencia(datos);
+
+			
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+
+function Pintardependencia(datos) {
+	var html="";
+	var depende=datos.depende[0];
+
+	html+=`
+	<h2>Te encuentras asociado con <span style="color: #0abe68;"> `+depende.nombre+` `+depende.paterno+` `+depende.materno+` </span></h2>` ;
+	
+	$("#divdependencia").html(html);
+}
+
+function DesasociarUsuario() {
+		app.dialog.confirm('','¿Seguro de realizar la acción?', function () {
+
+	var idusuario=localStorage.getItem('id_user');
+	var datos="idusuario="+idusuario;
+	var pagina = "DesasociarUsuario.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(resul){
+
+			console.log(resul);
+
+			if (resul.respuesta==1) {
+				alerta('','Se realizó acción correctamente');
+				GoToPage('profile');
+			}else{
+				
+			alerta('','Lo sentimos,para la desasociacion debe cubrir los pagos faltantes');
+
+			}
+			
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+	});
+}
+

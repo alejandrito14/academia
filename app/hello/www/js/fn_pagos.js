@@ -115,11 +115,13 @@ function Pintarpagos(pagos) {
 				<li class="list-item">
                     <div class="row">
                         <div class="col-80">
-                            <p class="text-muted small" id="concepto_`+pagos[i].idpago+`">
+                            <p class="text-muted " id="concepto_`+pagos[i].idpago+`">
                                Pago de `+pagos[i].concepto+`
                             </p>
 
-                          <p class="text-muted ">Vencimiento `+pagos[i].fechaformato+`</p>
+                          <p class="text-muted small">Vencimiento `+pagos[i].fechaformato+`</p>
+                          <p class="text-muted small"> `+pagos[i].nombre+` `+pagos[i].paterno+` `+pagos[i].materno+`</p>
+   
                           <p class="text-muted small">$`+pagos[i].monto+`</p>
                           <input type="hidden" value="`+pagos[i].monto+`" class="montopago" id="val_`+pagos[i].idpago+`">
                         </div>
@@ -210,7 +212,7 @@ function HabilitarBotonPago() {
 
 function ResumenPago() {
 
-	GoToPage('resumenpago');
+	GoToPageHistory('resumenpago');
 }
 
 function CargarPagosElegidos() {
@@ -452,7 +454,7 @@ function AplicarMonedero() {
 
 function ObtenerMonedero() {
 	var id_user=localStorage.getItem('id_user');
-    var pagina = "obtenermonedero.php";
+    var pagina = "ObtenerMonedero.php";
     var datos="id_user="+id_user;
     $.ajax({
     type: 'POST',
@@ -1094,8 +1096,50 @@ function VisualizarImagen(foto) {
 
 }
 
+function ValidacionCargosTutorados() {
+
+  var iduser=localStorage.getItem('id_user');
+  var pagina = "ValidacionCargosTutor.php";
+  var datos= 'pagos='+localStorage.getItem('pagos')+"&id_user="+iduser;
+  pagina = urlphp+pagina;
+
+   return new Promise(function(resolve, reject) {
+
+     $.ajax({
+      url: pagina,
+      type: 'post',
+      dataType: 'json',
+      data:datos,
+      async:false,
+      success: function(resp) {
+        
+        resolve(resp);
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+                        var error;
+                        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+                        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                                                 //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                         app.dialog.alert('Error leyendo fichero jsonP '+error,'Error');
+                     $(".check-list").css('display','none');
+                     $("#aparecerimagen").css('display','none');
+                    }
+                                       
+
+          }); 
+
+   });
+
+}
+
 function RealizarCargo() {
-    var respuesta=0;
+ app.dialog.confirm('','¿Está seguro  de realizar el pago?' , function () {
+
+  ValidacionCargosTutorados().then(r => {
+
+    console.log(r);
+    if (r.pagosadeudados==0) {
+       var respuesta=0;
      var mensaje='';
      var pedido='';
      var informacion='';
@@ -1115,10 +1159,9 @@ function RealizarCargo() {
    var datos= 'pagos='+localStorage.getItem('pagos')+"&id_user="+iduser+"&constripe="+constripe+"&idtipodepago="+idtipodepago+"&descuentocupon="+descuentocupon+"&codigocupon="+codigocupon+"&descuentosaplicados="+JSON.stringify(descuentosaplicados)+"&sumatotalapagar="+sumatotalapagar+"&comision="+comision+"&comisionmonto="+comisionmonto+"&comisiontotal="+comisiontotal+"&impuestototal="+impuestototal+"&subtotalsincomision="+subtotalsincomision+"&impuesto="+impuesto+"&descuentosmembresia="+JSON.stringify(descuentosmembresia);
     pagina = urlphp+pagina;
 
- app.dialog.confirm('','¿Está seguro  de realizar el pago?' , function () {
           $(".dialog-buttons").css('display','none');
           CrearModalEspera();
-    var promise= $.ajax({
+    var promise = $.ajax({
       url: pagina,
       type: 'post',
       dataType: 'json',
@@ -1142,7 +1185,7 @@ function RealizarCargo() {
                     }
                                        
 
-          }); 
+          });
 
 
 
@@ -1260,19 +1303,27 @@ function RealizarCargo() {
                }
 
                 
-          }); 
+        
 
-       
+          });
+        
+         }else{
+
+                alerta('','Para poder realizar el pago, el tutor debe pagar los pagos acumulados');
+
+              }
+        })
 
 
-          },function () {
+      },function () {
 
           
            
 
-          });
-
+    });
         
+
+         //  });
 
         
 }
@@ -1493,11 +1544,11 @@ function PintarpagosPagados(pagos) {
         <li class="list-item">
                     <div class="row">
                         <div class="col-80">
-                            <p class="text-muted small" id="concepto_`+pagos[i].idpago+`">
+                            <p class="text-muted " id="concepto_`+pagos[i].idpago+`">
                                Pago de `+pagos[i].concepto+`
                             </p>
 
-                          <p class="text-muted ">Pagado `+pagos[i].fechaformatopago+`</p>
+                          <p class="text-muted small">Pagado `+pagos[i].fechaformatopago+`</p>
                           <p class="text-muted small">$`+pagos[i].monto+`</p>
                         </div>
                         <div class="col-20">
@@ -1516,7 +1567,7 @@ function PintarpagosPagados(pagos) {
 function ObtenerDescuentoMembresia() {
   var pagina = "ObtenerMembresiaUsuario.php";
   var id_user=localStorage.getItem('id_user');
-  var datos= 'pagos='+localStorage.getItem('pagos')+"&id_user="+iduser;
+  var datos= 'pagos='+localStorage.getItem('pagos')+"&id_user="+id_user+"&descuentosaplicados="+JSON.stringify(descuentosaplicados);
   $.ajax({
     type: 'POST',
     dataType: 'json',

@@ -358,6 +358,29 @@
 
 		return $f;
 	}
+
+public function fecha_texto4($fecha)
+	{
+				
+
+		$a = $this->elano($fecha);
+		//$m = $this->mesdelano();
+		$d = $this->diadelmes($fecha);
+		
+		
+	
+		$m = $this->mesesAnho[date("n",strtotime($fecha))];
+
+
+		$diatexto=$this->diasSemana[date('N', strtotime($fecha))];
+
+
+		
+		$f = $diatexto." ".$d." de ".$m.", ".$a.' '.date('H:i:s',strtotime($fecha));
+
+		return $f;
+	}
+
 	
 	public function fecha_textoguion($fecha)
 	{

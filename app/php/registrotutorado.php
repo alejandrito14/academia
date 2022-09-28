@@ -65,9 +65,10 @@ try
                      $lo->idusuariotutorado=$v_idusuario;
                     }
 
-
+                    $ObtenerOrdenTutorado=$lo->ObtenerOrdenTutorado($idusuariotutor);
+                    $orden=$ObtenerOrdenTutorado;
               //   $lo->GuardarUsuarioTutorado();
-                 $lo->GuardarUsuarioyTutor($idusuariotutor,$parentesco,$inputtutor);
+                 $lo->GuardarUsuarioyTutor($idusuariotutor,$parentesco,$inputtutor,$orden);
         }else{
 
 

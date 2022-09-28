@@ -50,7 +50,13 @@ try
 		//grupo
 		$obtenerparticipantes=$servicios->ObtenerParticipantes(3);
 		$cantidadparticipantes=count($obtenerparticipantes);
-		$montoapagar=$costo/$cantidadparticipantes;
+		$costo=$obtenerservicio[0]->precio;
+
+		$obtenerhorarios=$servicios->ObtenerHorariosSemana();
+
+		$monto=$costo*count($obtenerhorarios);
+
+		$montoapagar=$monto/$cantidadparticipantes;
 
 	}
 

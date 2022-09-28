@@ -16,7 +16,23 @@ function GoToPage(page)
 		app.views.main.router.navigate("/",{reloadCurrent: false});
 	
 	else{
+		app.views.main.router.navigate("/"+page+"/",{reloadCurrent: false});
+    	//	app.views.main.router.navigate("/"+page+"/",{reloadCurrent: false,clearPreviousHistory:true,});
+
+    //GoToPage("/"+page+"/",{reloadCurrent: false});
+	}
+}
+
+function GoToPageHistory(page)
+{
+	if (page == "/")
+		app.views.main.router.navigate("/",{reloadCurrent: false});
+	
+	else{
+		
 		app.views.main.router.navigate("/"+page+"/",{reloadCurrent: false,clearPreviousHistory:true,});
+    	//	app.views.main.router.navigate("/"+page+"/",{reloadCurrent: false,clearPreviousHistory:true,});
+
     //GoToPage("/"+page+"/",{reloadCurrent: false});
 	}
 }

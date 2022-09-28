@@ -86,24 +86,11 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 	<div class="card-body">
 		<h5 class="card-title" style="float: left;">ASIGNAR USUARIOS A SERVICIOS</h5>
 		
-		<div style="float:right;">
+		<div style="float: right;position:fixed!important;z-index:10;right:0;margin-right:2em;width: 20%;">
 		
-			
-			<?php
-		
-				//SCRIPT PARA CONSTRUIR UN BOTON
-				$bt->titulo = "NUEVO NIVEL";
-				$bt->icon = "mdi-plus-circle";
-				$bt->funcion = "aparecermodulos('catalogos/nivel/fa_nivel.php?idmenumodulo=$idmenumodulo','main');";
-				$bt->estilos = "float: right; margin-right:10px;";
-				$bt->permiso = $permisos;
-				$bt->tipo = 5;
-				$bt->title="NUEVO NIVEL";
-				
+			<button class="btn btn-success btnguardar" ><i class="mdi mdi-content-save"></i>GUARDAR</button>
 
-				//$bt->armar_boton();
-			
-			?>
+			<button class="btn btn-primary"><i class="mdi mdi-content-cancel"></i>CANCELAR</button>
 			
 			<div style="clear: both;"></div>
 		</div>
@@ -138,9 +125,8 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 								<span class="col-md-4">
 									<span style="    border-radius: 30px;
                                         background: #3e5569;color: white;    padding-top: 5px;
-    padding-right: 10px;
-    padding-left: 10px;
-    padding-bottom: 5px;"><?php echo $contar; ?></span></span>
+    									padding-right: 10px;padding-left: 10px;padding-bottom: 5px;"><?php echo $contar; ?></span>
+    								</span>
 								</div>
 
 
@@ -162,10 +148,18 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 			<div class="col-md-8" id="listausuarios" style="float: right;display: none;">
 				<div class="card">
 					<div class="card-header">
-						<div class="card-title tituloseleccionado">USUARIOS</div>
+						<div class="card-title tituloseleccionado"></div>
 					</div>
 					<div class="">
 					<div class="card-body" id="lclientesdiv" style="display: block; padding: 0;">
+
+						<div class="form-group m-t-20 mostrar" style="margin-left: 20px;">
+							<p><span class="descripcionseleccionado"></span></p>
+							<p>FECHA INICIAL: <span id="periodoinicial" style="font-weight: bold;"></span></p>
+							<p>FECHA FINAL: <span id="periodofinal" style="font-weight: bold;"></span></p>
+							<button style="display: none;" class="btn btn_colorgray" id="btnconsultar">CONSULTAR HORARIOS</button>
+							<p></p>
+						</div>
                 	
                     <div class="form-group m-t-20 mostrar" style="margin: 20px;display: none;">	 
 						<input type="text" class="form-control" name="buscadorcli_1" id="buscadorcli_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadorcli_','.cli_')">
@@ -195,9 +189,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 						    		
 						    	</div>
 						    	<div class="col-md-4" style="float: right;margin: 20px;justify-content: right;display: flex;">
-						    		<button class="btn btn-success btnguardar" >GUARDAR</button>
-
-						    		<button class="btn btn-primary">CANCELAR</button>
+						    	
 						    	</div>
 						    </div>
 		                </div> 
@@ -207,7 +199,28 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 				</div>
 		</div>
 	</div>
+<div id="myModalHorarios" class="modal fade" role="dialog">
+  <div class="modal-dialog">
 
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        
+      </div>
+      <div class="modal-body">
+       <div id="picker"></div>
+
+
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 
 

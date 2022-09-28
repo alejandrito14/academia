@@ -18,6 +18,55 @@ class ServiciosAsignados
 	public function obtenerServiciosAsignados()
 	{
 		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(1)
+			AND cancelacion=0
+		 ";
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+public function obtenerServiciosAsignadosPendientes()
+	{
+		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0)
+			AND cancelacion=0
+		 ";
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function obtenerServiciosAsignadosTuto()
+	{
+		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
 		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
 			AND cancelacion=0
 		 ";
@@ -39,6 +88,29 @@ class ServiciosAsignados
 		return $array;
 	}
 
+	public function obtenerServiciosAsignadosCoach()
+	{
+		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
+			AND cancelacion=0
+		 ";
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 
 	public function ObtenerHorariosServicio()
 	{

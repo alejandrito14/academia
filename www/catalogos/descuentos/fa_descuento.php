@@ -996,7 +996,7 @@ if(caracteristicasdelasociador==1){
   $("#caracteristicasdelasociador").prop('checked',true);
   HabilitarAsociador();
 
-  alert('a');
+
   if (caracteristicaportiposervicio==1) {
 
     $("#portiposervicio2").prop('checked',true);

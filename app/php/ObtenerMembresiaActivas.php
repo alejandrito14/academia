@@ -45,14 +45,14 @@ try
 
 				if ($verificarsiestutorado[0]->sututor==1) {
 					$inpnieto=1;
-					$inphijo=0;
+					$inphijo="";
 				}else{
-					$inpnieto=0;
+					$inpnieto="";
 					$inphijo=1;
 				}
 
 				if ($buscarSiTutorTieneMembresia[0]->pagado==1) {
-					
+					 
 					$obtenerMembresias=$lo->ObtenerMembresiasDependen($idmembresiapadre,$inphijo,$inpnieto);
 
 					for ($i=0; $i <count($obtenerMembresias) ; $i++) { 

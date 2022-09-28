@@ -3230,7 +3230,6 @@ if (inputsincelular==0) {
 		}
 
 
-
 	if (bandera==1) {
 
 		var tutorado={
