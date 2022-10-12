@@ -8,7 +8,8 @@ function ObtenerServicioAsignado() {
 	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
 	var pagina = "ObtenerServicioAsignado.php";
 	var id_user=localStorage.getItem('id_user');
-	var datos="id_user="+id_user+"&idusuarios_servicios="+idusuarios_servicios;
+	var idtipousuario=localStorage.getItem('idtipousuario');
+	var datos="id_user="+id_user+"&idusuarios_servicios="+idusuarios_servicios+"&idtipousuario="+idtipousuario;
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
@@ -17,10 +18,14 @@ function ObtenerServicioAsignado() {
 		cache: false,
 		data:datos,
 		success: function(datos){
+			var invitado=datos.invitado;
 			var respuesta=datos.respuesta;
 			var imagen=respuesta.imagen;
 			var horarios=datos.horarios;
 			var idservicio=respuesta.idservicio;
+			var puedeinvitar=datos.puedeinvitar;
+			var invitados=datos.invitados;
+			var habilitarcancelacion=datos.habilitarcancelacion;
 			localStorage.setItem('idservicio',idservicio);
 			if (imagen!=null && imagen!='') {
 
@@ -29,9 +34,9 @@ function ObtenerServicioAsignado() {
 			}else{
 
 
-				imagen=localStorage.getItem('logo');
+				imagen=urlimagendefaultservicio;
 			}
-			$("#imgservicioasignado").attr('src',imagen);
+			$(".imgservicioasignado").attr('src',imagen);
 
 			$(".tituloservicio").text(respuesta.titulo);
 
@@ -57,10 +62,31 @@ function ObtenerServicioAsignado() {
 				$("#permisoasignaralumno").css('display','none');
 			if (localStorage.getItem('idtipousuario')==3) {
 
-				if (respuesta.ligarcliente==1) {
+				if (respuesta.ligarcliente==1 && invitado==0 && puedeinvitar==0) {
 
 				$("#permisoasignaralumno").css('display','block');
 				}
+
+				if (puedeinvitar==1) {
+
+					if (invitados.length>0) {
+						var html="";
+						for (var i = 0; i <invitados.length; i++) {
+						html+=`
+								<div class="col">
+									`+invitados[i].nombre+`
+								</div>
+								`;
+
+
+						}
+
+						$("#permisoasignaralumno").html(html);
+					}
+
+				}
+
+
 			}
 		if (localStorage.getItem('idtipousuario')==5) {
 
@@ -80,6 +106,14 @@ function ObtenerServicioAsignado() {
 			if (respuesta.controlasistencia==1) {
 				
 				$(".divasistencia").css('display','block');
+
+			}
+
+			if (habilitarcancelacion==1) {
+
+				$(".divcancelar").css('display','block');
+			}else{
+				$(".divcancelar").css('display','none');
 
 			}
 
@@ -123,7 +157,7 @@ function AceptarTerminos() {
 
 			if (datos.respuesta==1) {
 				
-				GoToPage('detalleservicio');
+				GoToPage('serviciosasignados');
 			}
 			
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -476,7 +510,15 @@ function PintarParticipantes(respuesta) {
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
 			}else{
 
-				urlimagen='img/icon-usuario.png';
+				if (respuesta[i].sexo=='M') {
+
+                    urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarmujer');
+    
+                }else{
+                    urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarhombre');
+        
+                }
+
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
 			}
 			html+=`
@@ -739,6 +781,43 @@ function Verificarcantidadhorarios() {
 
 		});
 }
+
+function VerificarcantidadhorariosAdmin() {
+	var idusuarios_servicios=localStorage.getItem('idservicio');
+	var pagina = "ObtenerHorariosServicioAdmin.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user+"&idservicio="+idusuarios_servicios;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+			var horarios=datos.respuesta;
+			
+			
+             if(horarios.length>1){
+
+             	$("#btncalendario").css('display','block');
+             }else{
+
+             	$("#btncalendario").css('display','none');
+
+             }
+			
+             
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+}
 function CargarHorarios() {
 	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
 	var pagina = "ObtenerHorariosServicio.php";
@@ -794,7 +873,11 @@ function ObtenerParticipantesAlumnos() {
 		data:datos,
 		success: function(datos){
 			var respuesta=datos.respuesta;
-			$(".cantidadalumnos").text(respuesta.length);
+			var cantidad=respuesta.length;
+			if (localStorage.getItem('idtipousuario')==3) {
+				cantidad=cantidad+1;
+			}
+			$(".cantidadalumnos").text(cantidad);
 			PintarParticipantesAlumnos(respuesta);
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -821,15 +904,28 @@ function PintarParticipantesAlumnos(respuesta) {
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:60px;height:60px;"/>';
 			}else{
 
-				urlimagen="img/icon-usuario.png";
+				if (respuesta[i].sexo=='M') {
+                    urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarmujer');
+    
+                }else{
+                    urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarhombre');
+       
+                }
+
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:60px;height:60px;"/>';
 			}
 
+
+			var background="";
+			if (localStorage.getItem('idtipousuario')!=3) {
+			if (respuesta[i].pagado==0){
+				background="color:red;";
+				}
+			}
 			
-		
 
 html+=`
-         <li style="background: white;
+         <li style="
     border-radius: 10px;margin-bottom: 1em;">
             <label class="label-radio item-content">                                                                               
               <div class="item-inner" style="width:90%;">
@@ -843,13 +939,13 @@ html+=`
                         </div>
                         
                     <div class="col-80">
-                         <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
+                         <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;`+background+`" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
                          </div>
              		 
-	             		 <div class="col-100 item-text" style="font-size:18px;    margin-left: 1em;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].usuario+`
+	             		 <div class="col-100 item-text" style="font-size:18px;    margin-left: 1em;`+background+`" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].usuario+`
 	             		 	</div>
              		
-                        	  <div class=" col-100 item-text" style="    margin-left: 1em;">`+respuesta[i].nombretipo+`</div>
+                        	  <div class=" col-100 item-text" style="    margin-left: 1em;`+background+`">`+respuesta[i].nombretipo+`</div>
                     		  </div>
                         </div>
 
@@ -919,7 +1015,14 @@ function PintarAlumnosAdmin(respuesta) {
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
 			}else{
 
-				urlimagen="img/icon-usuario.png";
+				if (respuesta[i].sexo=='M') {
+                    urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarmujer');
+    
+                }else{
+                    urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarhombre');
+        
+                }
+
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
 			}
 
@@ -1371,7 +1474,7 @@ $.ajax({
 		cache: false,
 		data:datos,
 		success: function(datos){
-
+  
 			if (datos.cupodisponible==0) {
 				usuariosquitados=[];
 				usuariosagregados=[];
@@ -1726,13 +1829,22 @@ function AgregarElementoArray() {
 				}
 
 
-			if (resultado.foto!='' && resultado.foto!=null) {
+			if (resultado.foto!='' && resultado.foto!=null && resultado.foto!='null') {
 
 				urlimagen=urlphp+`upload/perfil/`+resultado.foto;
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
 			}else{
 
-				urlimagen="img/icon-usuario.png";
+				if (resultado.sexo=='M') {
+
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarmujer');
+	
+				}else{
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarhombre');
+		
+				}
+
+				//urlimagen="img/icon-usuario.png";
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
 			}
 			html+=`
@@ -1781,7 +1893,7 @@ function AgregarElementoArray() {
 
 			}
 
-		$("#divparticipantesalumnos").append(html);
+		$("#divparticipantesalumnosasig").append(html);
 		$("#btnpasar2").text('Agregar elementos');
 		 toastTop = app.toast.create({
           text: 'Se agregaron '+idusua.length+' elemento(s)',
@@ -1833,7 +1945,14 @@ function QuitarElemento() {
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
 			}else{
 
-				urlimagen="img/icon-usuario.png";
+				if (resultado.sexo=='M') {
+
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarmujer');
+	
+				}else{
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarhombre');
+		
+				}
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
 			}
 

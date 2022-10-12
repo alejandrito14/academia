@@ -52,6 +52,14 @@ var routes = [
     ]
   },
 
+   {
+    path:'/serviciosporvalidar/',
+    componentUrl: './pages/serviciosporvalidar.html',
+    name: 'serviciosporvalidar',
+    routes: [
+    ]
+  },
+
   {
     path:'/serviciosactivoscoach/',
     componentUrl: './pages/serviciosactivoscoach.html',
@@ -78,12 +86,19 @@ var routes = [
     componentUrl: './pages/nuevoservicio.html',
 
   },
+
+   {
+    path: '/imagenesinformativas/',
+    componentUrl: './pages/imagenesinformativas.html',
+  },
   //replica servicio
    {
     path: '/replicaservicio/',
     componentUrl: './pages/replicaservicio.html',
 
   },
+
+ 
   
   //cambiocontra
    {
@@ -327,6 +342,10 @@ var routes = [
     path: '/asistenciaservicio/',
     componentUrl: './pages/asistenciaservicio.html',
   },
+   {
+    path: '/cancelacionservicio/',
+    componentUrl: './pages/cancelacionservicio.html',
+  },
 
    { 
     
@@ -405,7 +424,10 @@ var routes = [
     path:'/resumenpago/',
     componentUrl: './pages/resumenpago.html',
   },
-  
+    {
+    path: '/detallepago/',
+    componentUrl:'./pages/detallepago.html',
+  },
   //registrotutorados
 
    {

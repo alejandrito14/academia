@@ -32,7 +32,7 @@ function PintarServiciosAdicionales(respuesta) {
 				
 
 						imagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
-
+ 
 				html+=`
 					 <div class="col-100 medium-50 margin-bottom">
 		                <div class="row">
@@ -79,22 +79,22 @@ function ObtenerServicioAdmin() {
 		data:datos,
 		success: function(datos){
 			
-			console.log(datos);
 			var respuesta=datos.respuesta[0];
 			var imagen=respuesta.imagen;
 			var horarios=datos.horarios;
 			var idservicio=respuesta.idservicio;
+			var habilitarcancelacion=respuesta.habilitarcancelacion;
 			localStorage.setItem('idservicio',idservicio);
-			if (imagen!=null && imagen!='') {
+			if (imagen!=null && imagen!='' && imagen!='null') {
 
 				imagen=urlimagenes+`servicios/imagenes/`+codigoserv+imagen;
 	
 			}else{
 
 
-				imagen=localStorage.getItem('logo');
+				imagen=urlimagendefaultservicio;
 			}
-			$("#imgservicioasignado").attr('src',imagen);
+			$(".imgservicioasignado").attr('src',imagen);
 
 			$(".tituloservicio").text(respuesta.titulo);
 			
@@ -142,6 +142,14 @@ function ObtenerServicioAdmin() {
 
 			}
 
+			if (habilitarcancelacion==1) {
+
+			$(".divcancelar").css('display','block');
+			}else{
+			$(".divcancelar").css('display','none');
+	
+			}
+
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
 		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
@@ -184,5 +192,693 @@ function ObtenerParticipantesAlumnosAdmin() {
 }
 
 
+function ImagenesInformativas() {
+	GoToPage('imagenesinformativas');
+}
+
+function ObtenerImagenesInformativas() {
+
+	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
+	var pagina = "ObtenerImagenesInformativas.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user+"&idusuarios_servicios="+idusuarios_servicios;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+			var imagenesinformativas=datos.imagenesinformativas;
+			PintarImagenesinformativas(imagenesinformativas);
+
+		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+
+}
+var imagenesinformativas=[];
+function PintarImagenesinformativas(respuesta) {
+	var html="";
+	if (respuesta.length>0) {
+		imagenesinformativas=respuesta;
+		for (var i = 0; i <respuesta.length; i++) {
+			var imagen="";
+		imagen=urlimagenes+`servicios/imagenesinformativas/`+codigoserv+respuesta[i].imagen;
+
+		classe="";
+		if (i==0) {
+			classe="swiper-slide-active";
+		}
+
+	
+
+		html+=`
+		  <div class="swiper-slide `+classe+`" role="group"   style="    padding: 0;
+    margin: 0; "  id="slider_`+i+`">
+   			 <div onclick="AbrirImagen(`+i+`)">
+              <img class="row h-100" src="`+imagen+`" style="height:100%;width:100%;"/>
+				</div>
+              <div class="textolandig">
+              <div class="">
+              <div class="">`
+
+      
+             html+=` </div>
+              <div class="">
+              <div class="">`;
+              if (respuesta[i].tituloimagen!='') {
+              	html+=`<h1 class="text-color-theme margin-bottom" style="font-size:30px;">
+             `+respuesta[i].tituloimagen+`
+             </h1>`;
+
+              }
+              
+           
+            
+             
+                     html+=  `</div>
+                         </div>
+                        </div>
+                       </div>
+                     </div>
+
+          </div>
+
+		`;
+
+		}
+
+		$("#swiper-wrapper-imagenes").html(html);
+
+			 var swiper = new Swiper('.swiper-imagenes', {
+
+				      pagination: {
+				        el: '.swiper-pagination',
+				       dynamicBullets:true,
+				      },
+				     /* slideToClickedSlide: true,
+				      lazyLoading:true,*/
+				   		
+
+				    });
+
+	}
+}
 
 
+function AbrirImagen(posicion) {
+
+		var nombre=imagenesinformativas[posicion].imagen;
+		imagen=urlimagenes+`servicios/imagenesinformativas/`+codigoserv+nombre;
+
+	   var myPhotoBrowser = app.photoBrowser.create({
+       
+        photos: [
+         imagen
+            ]
+      });
+      //Open photo browser on click
+      myPhotoBrowser.open();
+      $(".popup-close").text('Cerrar');
+     
+}
+
+
+
+function CancelarServicio() {
+		app.dialog.confirm('','¿Seguro que desea cancelar el servicio?' , function () {
+
+	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
+	var pagina = "CancelarServicio.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user+"&idusuarios_servicios="+idusuarios_servicios;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(resp){
+
+			if (resp.respuesta==1) {
+				alerta('','Se ha cancelado el servicio');
+				GoToPage('serviciosasignados');
+
+			}
+		
+		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+
+	});
+}
+
+
+function PantallaCancelarServicio() {
+	GoToPage('cancelacionservicio');
+}
+
+
+function ObtenerParticipantesAlumnosCancelacion() {
+	var idservicio=localStorage.getItem('idservicio');
+	var pagina = "ObtenerParticipantesAlumnosAdmin.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user+"&idservicio="+idservicio;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+			var respuesta=datos.respuesta;
+
+			PintarParticipantesAlumnosCancela(respuesta);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+}
+function PintarParticipantesAlumnosCancela(respuesta) {
+	
+	var html="";
+	if (respuesta.length>0) {
+		for (var i = 0; i < respuesta.length; i++) {
+			if (respuesta[i].foto!='' && respuesta[i].foto!=null && respuesta[i].foto!='null') {
+
+				urlimagen=urlphp+`upload/perfil/`+respuesta[i].foto;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+			}else{
+
+			if (respuesta[i].sexo=='M') {
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarmujer');
+	
+				}else{
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarhombre');
+		
+				}
+
+				//urlimagen="img/icon-usuario.png";
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+			}
+			html+=`
+				  
+
+                <li style="background: white;
+    border-radius: 10px;margin-bottom: 1em;">
+            <label class="label-radio item-content">                                                                               
+              <div class="item-inner" style="width:90%;">
+             
+                <div class="row">
+                <div class="row">
+              		  <div class="col-20">
+                        <figure class="avatar   rounded-10">
+                        <img src="`+urlimagen+`" alt="" style="width:40px;height:40px;" />
+                        </figure>
+                        </div>
+                        
+                    <div class="col-60">
+                        <div class="col-100 item-text" style="font-size:18px;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
+             		   	</div>
+             		   <div class="row">
+	             		     <div class="col-100 item-text" style="font-size:18px;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].usuario+`
+							 </div>
+             		   </div>
+             		   <div class="row">
+                        	  <div class="item-text">`+respuesta[i].nombretipo+`</div>
+                    		  </div>
+                        </div>
+
+                    <div class="col-10">`;
+                    var disabled='';
+                    if (respuesta[i].pagado==0) {
+                    	disabled='disabled';
+                    }
+
+					html+=`<input type="checkbox" name="my-opcion" class="idusuariosasistencia" id="idusuarios_`+respuesta[i].idusuarios+`" style="height:20px;width:20px;" onchange="VerificarSeleccion()"  `+disabled+`> `;                 	
+                 
+
+                  html+=`</div>
+                        	
+                     </div>
+               
+             		 
+              </div>
+
+            </label>
+          </li>
+
+
+			`;
+		}
+			$("#divalumnoscancelacion").html(html);
+
+				
+			}
+}
+
+function GuardarCancelarServicio() {
+	
+	var idusuarioscancela=[];
+	var idusuariosnocancela=[];
+	$(".idusuariosasistencia" ).each(function( index ) {
+	  	var id=$(this).attr('id');
+	   	var dividir=id.split('_');
+	   if($(this).is(':checked')){
+	   
+	   	idusuarioscancela.push(dividir[1]);
+	   	
+	   }else{
+
+	   	idusuariosnocancela.push(dividir[1]);
+	   }
+	});
+
+	var id_user=localStorage.getItem('id_user');
+	var idservicio=localStorage.getItem('idservicio');
+	var fechaasistencia=localStorage.getItem('fechaasistencia');
+	var datos="id_user="+id_user+"&idusuarioscancela="+idusuarioscancela+"&idusuariosnocancela="+idusuariosnocancela+"&fecha="+fechaasistencia+"&idservicio="+idservicio;
+app.dialog.confirm('','¿Seguro que desea cancelar el servicio a los usuarios seleccionados?' , function () {
+
+	var pagina="GuardarMultiCancelacion.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+			
+			alerta('','Se guardaron datos existosamente');
+			ObtenerParticipantesAlumnosCancelacion();
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+
+	});
+}
+
+function ObtenerServicioNuevo(valor) {
+			
+
+	var pagina = "ObtenerServicioNuevo.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user+"&idservicio="+valor;
+	
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+ 		
+		var respuesta=datos.respuesta;
+		var idcategoriaservicio=respuesta.idcategoriaservicio;
+		var idservicio=respuesta.idservicio;
+		var idcategoria=respuesta.idcategoria;
+		var titulo=respuesta.titulo;
+		var descripcion=respuesta.descripcion;
+		var politicasaceptacion=respuesta.politicasaceptacion;
+		$("#v_categoria").val(idcategoriaservicio);
+
+		$("#v_categoriaservicio").val(idcategoria);
+		$("#v_titulo").val(titulo);
+		$("#v_descripcion").val(descripcion);
+		// Obtenerparticipantes(3,idservicio);
+		// ObtenerZonas(idservicio);
+		// ObtenerCoachs(5,idservicio);
+
+		//VerificarSihaypago(idservicio);
+		//ObtenerCoachs(5,idservicio);
+
+		 //ObtenerDescuentos(idservicio);
+		// ObtenerMembresias(idservicio);
+		SeleccionarCategoria(valor);
+		 ObtenerEncuestas(idservicio);
+
+		 var modalidad=respuesta.modalidad;
+
+		 if (modalidad==1) {
+		 	 $("#v_individual").attr('checked',true);
+		 }
+
+		 if (modalidad==2) {
+		 	 $("#v_grupal").attr('checked',true);
+		 }
+
+		 
+		 var numparticipantes=respuesta.numeroparticipantes;
+		 var numparticipantesmax=respuesta.numeroparticipantesmax;
+
+		//var totalclases='<?php echo $totalclases; ?>';
+		//var montopagarparticipante='<?php echo $montopagarparticipante; ?>';
+		//var montopagargrupo	='<?php echo $montopagargrupo ?>';
+		var precio	=respuesta.precio;
+		//$("#v_totalclase").val(totalclases);
+		$("#v_costo").val(precio);
+		//$("#v_montopagarparticipante").val(montopagarparticipante);
+		//$("#v_montopagargrupo").val(montopagargrupo);
+		$("#v_numparticipantesmin").val(numparticipantes);
+		$("#v_numparticipantesmax").val(numparticipantesmax);
+
+		var modalidadpago=respuesta.modalidadpago;
+		//var periodo='<?php echo $periodo; ?>';
+
+		 if (modalidadpago==1) {
+		 	 $("#v_habilitarevento").attr('checked',true);
+		 	 $("#v_periodo").val(0);
+		 }
+
+		 if (modalidadpago==2) {
+		 	 $("#v_habilitarperiodo").attr('checked',true);
+		 	 $("#v_periodo").val(periodo);
+		 }
+
+
+		 var lunes= respuesta.lunes;
+		var martes=respuesta.martes;
+		var miercoles=respuesta.miercoles;
+		var jueves=respuesta.jueves;
+		var viernes=respuesta.viernes;
+		var sabado=respuesta.sabado;
+		var domingo=respuesta.domingo;
+		$("#Lunes").attr('checked',false);
+		if (lunes==1) {
+			$("#Lunes").attr('checked',true);
+			//$(".lbllunes").addClass('active');
+		}
+	   $("#Martes").attr('checked',false);
+
+		if (martes==1) {
+			$("#Martes").attr('checked',true);
+			//$(".lblmartes").addClass('active');
+		}
+				$("#Miercoles").attr('checked',false);
+
+		if (miercoles==1) {
+			$("#Miercoles").attr('checked',true);
+			//$(".lblmiercoles").addClass('active');
+
+		}
+				$("#Jueves").attr('checked',false);
+
+		if (jueves==1) {
+			$("#Jueves").attr('checked',true);
+			//$(".lbljueves").addClass('active');
+
+		}
+			$("#Viernes").attr('checked',false);
+
+		if (viernes==1) {
+			$("#Viernes").attr('checked',true);
+			//$(".lblviernes").addClass('active');
+
+		}
+		$("#Sabado").attr('checked',false);
+		if (sabado==1) {
+			$("#Sabado").attr('checked',true);
+			//$(".lblsabado").addClass('active');
+
+		}
+		$("#Domingo").attr('checked',false);
+
+		if (domingo==1) {
+			$("#Domingo").attr('checked',true);
+			//$(".lbldomingo").addClass('active');
+
+		}
+
+		var fechainicial=respuesta.fechainicial; 
+		var fechafinal=respuesta.fechafinal;
+		
+		$("#v_fechainicial").val(fechainicial);
+		$("#v_fechafinal").val(fechafinal);
+		$("#v_politicasaceptacion").val(politicasaceptacion);
+
+		ObtenerHorariosSemana(idservicio);
+		//ObtenerHorariosServicioComprobacion(idservicio);
+		ObtenerPeriodos(idservicio);
+		ObtenerCoachesServicio(idservicio);
+	abiertocliente=respuesta.abiertocliente;
+	abiertocoach=respuesta.abiertocoach;
+	abiertoadmin=respuesta.abiertoadmin;
+	ligarcliente=respuesta.ligarcliente;
+	reembolso=respuesta.reembolso; 
+	asistencia=respuesta.asistencia;
+	//cantidadreembolso='<?php echo $cantidadreembolso; ?>';
+	asignadocliente=respuesta.asignadocliente;
+	asignadocoach=respuesta.asignadocoach;
+	asignadoadmin=respuesta.asignadoadmin;
+	/*tiempoaviso='<?php echo $tiempoaviso; ?>';
+	tituloaviso='<?php echo $tituloaviso; ?>';
+	descripcionaviso='<?php echo $descripcionaviso; ?>';
+	politicasca='<?php echo $politicasca; ?>';*/
+
+		if (abiertocliente==1) {
+			$("#v_abiertocliente").attr('checked',true);
+		}
+
+		if (abiertocoach==1) {
+			$("#v_abiertocoach").attr('checked',true);
+		}
+		if (abiertoadmin==1) {
+
+			$("#v_abiertoadmin").attr('checked',true);
+		}
+
+		if (ligarcliente==1) {
+			
+			$("#v_ligarclientes").attr('checked',true);
+		}
+
+		if (reembolso==1) {
+			
+			$("#v_reembolso").attr('checked',true);
+		}
+
+		if (asignadocliente==1) {
+			
+			$("#v_asignadocliente").attr('checked',true);
+		}
+
+		if (asignadoadmin==1) {
+			
+			$("#v_asignadoadmin").attr('checked',true);
+		}
+		if (asignadocoach==1) {
+			
+			$("#v_asignadocoach").attr('checked',true);
+		}
+
+		if (asistencia==1) {
+		$("#v_asistencia").attr('checked',true);
+	
+		}
+
+	//	Permitirligar();
+		//HabilitarcantidadReembolso();
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+}
+
+ function ObtenerEncuestas(idservicio) {
+ 	var datos="idservicio="+idservicio;
+	$.ajax({
+					url: urlphp+'ObtenerEncuestas.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					dataType:'json',
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+
+						var encuestas=msj.respuesta;
+						if (encuestas.length>0) {
+
+							for (var i =0; i <encuestas.length; i++) {
+								
+								$("#inputencuesta_"+encuestas[i].idencuesta).attr('checked',true);
+							}
+						}
+
+					}
+				});
+ } 
+
+function ObtenerHorariosSemana(idservicio) {
+	var datos="idservicio="+idservicio;
+
+
+		$.ajax({
+					url: urlphp+'ObtenerHorariosSemana.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					dataType:'json',
+					async:false,
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+
+						var horarios=msj.respuesta;
+						var servicio=msj.servicio;
+						 zonasarray=msj.zonas;
+						 arraydiaseleccionados=[];
+						arraydiaselegidos=[];
+						if (horarios.length>0) {
+							PintarHorariosServicio(horarios,servicio);
+							Resumenfechas();
+						}
+
+
+					}
+				});
+}
+
+function ObtenerPeriodos(idservicio) {
+	var datos="idservicio="+idservicio;
+			$.ajax({
+					url: urlphp+'ObtenerPeriodos.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					dataType:'json',
+
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+						asignacionperiodos=[];
+					var respuesta=msj.respuesta;
+					//alert('a');
+					if (respuesta.length>0) {
+						for (var i = 0; i < respuesta.length; i++) {
+							var objeto={
+								fechainicial:respuesta[i].fechainicial,
+								fechafinal:respuesta[i].fechafinal
+							};
+							asignacionperiodos.push(objeto);
+						}
+						PintarPeriodos();
+
+					}
+					
+					
+
+					}
+				});
+}
+
+
+function PintarHorariosServicio(horarios,servicio) {
+
+		for (var i = 0; i <horarios.length; i++) {
+				var fecha=horarios[i].fecha;
+				var dividir=fecha.split('-');
+				var id=dividir[2]+'-'+dividir[1]+'-'+dividir[0]+'-'+horarios[i].horainicial+'-'+horarios[i].horafinal+'-'+horarios[i].idzona;
+			
+				//10-10-2022-19:00-20:00-6
+				arraydiaselegidos.push(id);
+				var iddividido = id.split('-');
+				var color=horarios[i].color;
+									
+				var dividirfecha=id.split('-');
+					var objeto={
+						id:id,
+						fecha:dividirfecha[0]+'-'+dividirfecha[2]+'-'+dividirfecha[3],
+						idzona:dividirfecha[5],
+						horainicial:dividirfecha[3],
+						horafinal:dividirfecha[4],
+						color:color,
+
+					};
+				arraydiaseleccionados.push(objeto);
+				}
+}	
+
+function ObtenerCoachesServicio(idservicio) {
+	var datos="idservicio="+idservicio;
+			$.ajax({
+					url: urlphp+'ObtenerCoaches.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					dataType:'json',
+
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+						asignacioncoach=[];
+					var respuesta=msj.respuesta;
+					
+					for (var i = 0; i < respuesta.length; i++) {
+				
+							var objeto={
+							idcoach:respuesta[i].idusuarios,
+							textonombre:respuesta[i].nombre+' '+respuesta[i].paterno+' '+respuesta[i].materno,
+							tipopago:respuesta[i].tipopago,
+							monto:respuesta[i].monto
+							};
+						asignacioncoach.push(objeto);
+
+					}
+					PintarCoaches();
+
+					}
+				});
+}

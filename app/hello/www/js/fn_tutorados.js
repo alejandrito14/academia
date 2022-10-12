@@ -569,7 +569,16 @@ function PintarSelecttutorados(respuesta) {
 				imagen='<img src="'+urlimagen+'" alt="" />';
 				}else{
 
-	       			urlimagen="img/icon-usuario.png";
+
+				if (respuesta[i].sexo=='M') {
+
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarmujer');
+	
+				}else{
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarhombre');
+		
+				}
+
 					imagen='<img src="'+urlimagen+'" alt=""  />';
 				}
 

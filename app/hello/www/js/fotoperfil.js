@@ -323,13 +323,16 @@ function CargarFoto() {
 
   }else{
 
-    $("#imagenusuario").attr('src','img/icon-usuario.png');
-    $("#imagenusuario2").attr('src','img/icon-usuario.png');
+  
+  	foto=localStorage.getItem('avatar');
+  	
+    $("#imagenusuario").attr('src',urlphp+"imagenesapp/"+foto);
+    $("#imagenusuario2").attr('src',urlphp+"imagenesapp/"+foto);
 
-    $("#imagencliente").attr('src','img/icon-usuario.png');
-    $("#imagencliente2").attr('src','img/icon-usuario.png');
+    $("#imagencliente").attr('src',urlphp+"imagenesapp/"+foto);
+    $("#imagencliente2").attr('src',urlphp+"imagenesapp/"+foto);
 
-    $(".imagencliente2").attr('src','img/icon-usuario.png');
+    $(".imagencliente2").attr('src',urlphp+"imagenesapp/"+foto);
 
   }
 

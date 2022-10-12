@@ -42,7 +42,15 @@ function PintarAlumnosAsistencia(respuesta) {
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
 			}else{
 
-				urlimagen="img/icon-usuario.png";
+				if (respuesta[i].sexo=='M') {
+
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarmujer');
+	
+				}else{
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarhombre');
+		
+				}
+
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
 			}
 			html+=`
@@ -73,10 +81,16 @@ function PintarAlumnosAsistencia(respuesta) {
                     		  </div>
                         </div>
 
-                    <div class="col-10">
+                    <div class="col-10">`;
+                    var disabled='';
+                    if (respuesta[i].pagado==0) {
+                    	disabled='disabled';
+                    }
 
-						<input type="checkbox" name="my-opcion" class="idusuariosasistencia" id="idusuarios_`+respuesta[i].idusuarios+`" style="height:20px;width:20px;" onchange="VerificarSeleccion()">                        	
-                    </div>
+					html+=`<input type="checkbox" name="my-opcion" class="idusuariosasistencia" id="idusuarios_`+respuesta[i].idusuarios+`" style="height:20px;width:20px;" onchange="VerificarSeleccion()"  `+disabled+`> `;                 	
+                 
+
+                  html+=`</div>
                         	
                      </div>
                

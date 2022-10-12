@@ -39,6 +39,8 @@ function CargarInicio() {
                 }
 }
 function CargarDatos() {
+	localStorage.setItem('valor','');
+
 	localStorage.setItem('variable',0);
 	localStorage.setItem('idusuertutorado','');
   var nombreusuario= localStorage.getItem('alias');
@@ -64,26 +66,26 @@ function CargarDatos() {
 	MostrarBotonServiciosActivos();
 	VerificarSiExisteTuTorados();
 	VerificarServiciosAsignadospendientes();
-	var promesa=getConfiguracion();
-    promesa.then(r => {
-      var activarpopupmembresia=r.respuesta.activarpopupmembresia;
+	/*var promesa=getConfiguracion();
+    promesa.then(r => {*/
+      var activarpopupmembresia=localStorage.getItem('activarpopupmembresia');
 
       if (activarpopupmembresia==1) {
-      		var promesa2=getUsuario();
+      	/*	var promesa2=getUsuario();
       		  promesa2.then(r2 => {
       		  
       		  	var visto=r2.respuesta.popupmembresia;
       		  	if (visto==0) {
-
+*/
       		  		ObtenerMembresiaActivas();
 
-      		  	}
+      		  //	}
 
-      		  });
+      		//  });
 
       }
 
-    });
+   // });
 
 	var iduser=localStorage.getItem('id_user');
 	socket=io.connect(globalsockect, { transports : ["websocket"],rejectUnauthorized: false });
@@ -113,6 +115,7 @@ $$('.messages-content').scrollTop( $('.messages-content').get(0).scrollHeight, 4
 
 function CargarDatosAdmin(argument) {
 	localStorage.setItem('variable',0);
+localStorage.setItem('valor','');
 
 	 var nombreusuario= localStorage.getItem('nombre')
 	$$(".nombreusuario").text(nombreusuario);
@@ -126,7 +129,11 @@ function CargarDatosAdmin(argument) {
     $$(".tipousuario").addClass(classtipo);
     $$(".btnnuevoservicio").attr('onclick','NuevoServicio()');
     $$(".btnreplicaservicio").attr('onclick','ReplicaServicio()');
+    $$(".btnserviciosporvalidar").attr('onclick','ServiciosporValidar()');
+	VerificarServiciosporValidarAdmin();
 
+  //  ObtenerCantidadNuevas();
+      identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 3000);
 
 
  	 const promesa=ObtenerTableroAnuncios(0)
@@ -184,6 +191,7 @@ function MisServiciosAdmin() {
 
 function CargarDatosCoach() {
 	localStorage.setItem('variable',0);
+	localStorage.setItem('valor','');
 
   var nombreusuario= localStorage.getItem('alias');
 	$$(".nombreusuario").text(nombreusuario);
@@ -197,11 +205,14 @@ function CargarDatosCoach() {
     $$(".btnserviciosactivos").attr('onclick','ServiciosActivosCoach()');
     $$(".btnnuevoservicio").attr('onclick','NuevoServicio()');
     $$(".btnreplicaservicio").attr('onclick','ReplicaServicio()');
-
+    $$(".btnserviciosporvalidar").attr('onclick','ServiciosporValidar()');
 	ObtenerTableroAnuncios(1);
 	ObtenerEntradas();
 	MostrarBotonServiciosActivosCoach();
+   
+     identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 3000);
 
+	ExistenServiciosporvalidar();
 	//ObtenerServiciosAsignadosCoach();
 	//Obtenerpublicidad();
 	ObtenerConfiguracion();
@@ -655,6 +666,7 @@ function ObtenerServiciosAsignados() {
 }
 
 function VerificarServiciosAsignadospendientes() {
+
 	var idusuario=localStorage.getItem('id_user');
 	var datos="idusuario="+idusuario;
 	var pagina = "ObtenerServiciosAsignadosPendientes.php";
@@ -1879,6 +1891,7 @@ function ObtenerConfiguracion() {
 			
 			Colocar(datos.respuesta.nombrenegocio1,datos.respuesta.logo);
 
+			localStorage.setItem('activarpopupmembresia',datos.respuesta.activarpopupmembresia);
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
@@ -2261,7 +2274,7 @@ function CambiarEstatusEntrada(identrada) {
 }
 
 
-function Cargarperfilfoto(argument) {
+function Cargarperfilfoto() {
 	
 	var pagina = "Obtenerdatospersonales.php";
 	var id_user=localStorage.getItem('id_user');
@@ -2276,14 +2289,27 @@ function Cargarperfilfoto(argument) {
 		success: function(datos){
 
 			var respuesta=datos.respuesta;
-			if (respuesta.foto!='') {
+			var confi=datos.confi;
+		
+			if (respuesta.foto!='' && respuesta.foto!='null' && respuesta.foto!=null ) {
 
 				localStorage.setItem('foto',respuesta.foto)
 
 			}else{
-						localStorage.setItem('foto','');
+				if (respuesta.sexo=='M') {
+					foto=confi.avatarmujer;
+				}
+				else{
+					foto=confi.avatarhombre;
+				}
+
+				localStorage.setItem('avatar',foto);
+
+				localStorage.setItem('foto','');
 
 			}
+
+			CargarFoto();
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
@@ -2312,13 +2338,34 @@ function DetalleServicioAsignado(idusuarios_servicios) {
 			localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
 
 			var respuesta=datos.respuesta;
+			var pagado=datos.pagado;
+			var dentroperiodo=datos.dentroperiodo;
 			if (respuesta==0) {
 
 				GoToPage('aceptacionservicio');
  
 			}else{
 
-					GoToPage('detalleservicio');
+					if (pagado==1 && dentroperiodo==1) {
+
+							GoToPage('detalleservicio');
+
+					}else{
+						var msj="";
+
+						if (pagado==0) {
+
+							msj+="El pago es requerido<br>";
+						}
+
+						if (dentroperiodo==0) {
+							msj+="El servicio esta fuera del periodo<br>";
+
+						}
+
+						alerta('',msj);
+					}
+
 
 			}
 
@@ -2800,6 +2847,232 @@ function ObtenerServiciosActivos() {
 
 }
 
+function ServiciosporValidar() {
+	GoToPage('serviciosporvalidar');
+}
+function ObtenerServiciosporValidar() {
+
+	var pagina = "ObtenerServiciosporValidar.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user;
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(res){
+			console.log(datos);
+			var respuesta=res.respuesta;
+			var fechaactual=res.fechaactual;
+			if (respuesta.length>0) {
+
+			PintarServicioporvalidar(respuesta,fechaactual);
+		
+			}
+
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+
+function ExistenServiciosporvalidar() {
+	var pagina = "ObtenerServiciosporValidar.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user;
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(res){
+			$("#divpendientes").css('display','none');
+			var respuesta=res.respuesta;
+			if (respuesta.length>0) {
+				$("#divpendientes").css('display','block');
+			}
+
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+
+function PintarServicioporvalidar(respuesta,fechaactual) {
+	
+	
+	var html="";
+
+	if (respuesta.length>0) {
+		var contadorpasado=0;
+		var contadorporpasar=0;
+		for (var i = 0; i <respuesta.length; i++) {
+			
+			var imagen='';
+			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null && respuesta[i].imagen!='null') {
+
+				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;"/>';
+			}else{
+
+				urlimagen=urlimagendefaultservicio;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;"/>';
+			}
+
+
+			var clasecantidad="colorred";
+
+		if (respuesta[i].cantidadalumnos!='' && respuesta[i].numeroparticipantesmax!='') {
+			
+				if (respuesta[i].cantidadalumnos==respuesta[i].numeroparticipantesmax) {
+				clasecantidad="colorgreen";
+				
+				}
+
+			}
+
+			var opacidad="";
+			if (respuesta[i].fechaproxima=='') {
+				opacidad="opacity:0.6;"
+			}
+
+
+			if (respuesta[i].porpasar==0 && contadorpasado==0) {
+
+
+				html+=`<div class="row">
+				<div class="linea"><span>Hoy `+fechaactual+`</span></div>
+
+				</div>`;
+				contadorpasado++;
+
+
+			}else{
+
+				contadorporpasar++;
+			}
+			var clasecomentario="vacio";
+			var clasechat="vacio";
+			var clasecalificacion="vacio";
+			if (respuesta[i].concalificacion==1){
+				clasecalificacion="convalor";
+			}
+			if (respuesta[i].conchat==1){
+				clasechat="convalor";
+			}
+			if (respuesta[i].concomentarios==1) {
+				clasecomentario="convalor";
+			}
+
+			var colocarnumero="";
+              if(respuesta[i].numeroparticipantesmax=='' ) {
+				respuesta[i].numeroparticipantesmax=0;
+              }
+               if(respuesta[i].numeroparticipantesmin=='' ) {
+				respuesta[i].numeroparticipantesmin=0;
+              }
+               /* colocarnumero+=`<div style="text-align:center;`+opacidad+`" class="textoarribaizquierda `+clasecantidad+`">`;
+						                 
+                 colocarnumero+=`<span>`+respuesta[i].cantidadalumnos+ ` </span>de<span> `+respuesta[i].numeroparticipantesmax+`</span></div>`;
+                  	*/	
+               
+
+
+
+			html+=`
+				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+                <div class="row">
+                  <div class="col-100" style="padding:0;" >
+                     `+colocarnumero+`
+                    <div class="" >`+imagen+`
+                      
+                    </div>
+                   
+                  </div>
+                  </div>
+                  <div class="row" style="height:10em;">
+                  <div class="col-100" >
+                   <div class="row" style="margin-top:.5em;">
+                    `;
+                    	var horarioshtml="";
+                    		if (respuesta[i].fechaproxima!='') {
+                    		horarioshtml+=`<span style="color:black;font-size:18px;">`+respuesta[i].fechaproxima+` </span><br><span style="margin-top:.5em;font-size:16px;">`+respuesta[i].horainicial+` - `+respuesta[i].horafinal+` Hrs.</span>`;
+                    		}
+
+                    html+=`
+                     <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;">`+horarioshtml+`</span>
+                     <span class="text-color-theme size-12" style="text-align:center;" >`+respuesta[i].zonanombre+`</span>
+
+ 					<span class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;" >`+respuesta[i].titulo+`</span>
+                  
+
+                  </div>
+                  <div class="row" style="margin-top:1em;">
+                  	<div class="col" style="text-align:center;" >`;
+
+
+                  	html+=`</div>
+                  
+                                  
+
+                  </div>
+
+               	</div>
+                  
+                </div>
+              </div>
+              </div>
+              </div>
+
+			`;
+
+
+
+
+		}
+
+
+		if (respuesta.length==contadorporpasar) {
+
+				html+=`<div class="row">
+				<div class="linea"><span>Hoy `+fechaactual+`</span></div>
+				</div>`;
+			}
+
+		$$(".serviciosporvalidar").html(html);
+	}else{
+
+
+		html+=`
+			 <div class="list-item">
+                <div class="row text-color-theme">
+                  <h4 style="text-align:center;">En breve el administrador te asignará tus servicios</h4>
+                </div>
+              </div>
+
+
+		`;
+
+				$$(".serviciosporvalidar").html(html);
+
+	}
+}
 function PintarServicioActivos(respuesta) {
 	
 	var html="";
@@ -3372,6 +3645,233 @@ function PintarServicioActivosCoach2(respuesta,fechaactual) {
 		}
 
 }
+
+
+
+function ObtenerServiciosporValidarAdmin() {
+	
+	var pagina = "ObtenerServiciosporValidarAdmin.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user;
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(res){
+			console.log(datos);
+			var respuesta=res.respuesta;
+			var fechaactual=res.fechaactual;
+			if (respuesta.length>0) {
+
+			PintarServicioporvalidarAdmin(respuesta,fechaactual);
+		
+			}
+
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+
+function VerificarServiciosporValidarAdmin() {
+	var pagina = "ObtenerServiciosporValidarAdmin.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user;
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(res){
+			var respuesta=res.respuesta;
+			var fechaactual=res.fechaactual;
+			if (respuesta.length>0) {
+				$("#divpendientes").css('display','block');	
+			}
+
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+
+function PintarServicioporvalidarAdmin(respuesta,fechaactual) {
+	
+	
+	var html="";
+
+	if (respuesta.length>0) {
+		var contadorpasado=0;
+		var contadorporpasar=0;
+		for (var i = 0; i <respuesta.length; i++) {
+			
+			var imagen='';
+			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null && respuesta[i].imagen!='null') {
+
+				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;"/>';
+			}else{
+
+				urlimagen=urlimagendefaultservicio;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;"/>';
+			}
+
+
+			var clasecantidad="colorred";
+
+		if (respuesta[i].cantidadalumnos!='' && respuesta[i].numeroparticipantesmax!='') {
+			
+				if (respuesta[i].cantidadalumnos==respuesta[i].numeroparticipantesmax) {
+				clasecantidad="colorgreen";
+				
+				}
+
+			}
+
+			var opacidad="";
+			if (respuesta[i].fechaproxima=='') {
+				opacidad="opacity:0.6;"
+			}
+
+
+			if (respuesta[i].porpasar==0 && contadorpasado==0) {
+
+
+				html+=`<div class="row">
+				<div class="linea"><span>Hoy `+fechaactual+`</span></div>
+
+				</div>`;
+				contadorpasado++;
+
+
+			}else{
+
+				contadorporpasar++;
+			}
+			var clasecomentario="vacio";
+			var clasechat="vacio";
+			var clasecalificacion="vacio";
+			if (respuesta[i].concalificacion==1){
+				clasecalificacion="convalor";
+			}
+			if (respuesta[i].conchat==1){
+				clasechat="convalor";
+			}
+			if (respuesta[i].concomentarios==1) {
+				clasecomentario="convalor";
+			}
+
+			var colocarnumero="";
+              if(respuesta[i].numeroparticipantesmax=='' ) {
+				respuesta[i].numeroparticipantesmax=0;
+              }
+               if(respuesta[i].numeroparticipantesmin=='' ) {
+				respuesta[i].numeroparticipantesmin=0;
+              }
+            
+
+
+			html+=`
+				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+                <div class="row">
+                  <div class="col-100" style="padding:0;" >
+                     `+colocarnumero+`
+                    <div class="" onclick="EditarServicio(`+respuesta[i].idservicio+`)" >`+imagen+`
+                      
+                    </div>
+                   
+                  </div>
+                  </div>
+                  <div class="row" style="height:10em;">
+                  <div class="col-100" >
+                   <div class="row" style="margin-top:.5em;">
+                    `;
+                    	var horarioshtml="";
+                    		if (respuesta[i].fechaproxima!='') {
+                    		horarioshtml+=`<span style="color:black;font-size:18px;">`+respuesta[i].fechaproxima+` </span><br><span style="margin-top:.5em;font-size:16px;">`+respuesta[i].horainicial+` - `+respuesta[i].horafinal+` Hrs.</span>`;
+                    		}
+
+                    html+=`
+                     <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="EditarServicio(`+respuesta[i].idservicio+`)">`+horarioshtml+`</span>
+                     <span class="text-color-theme size-12" style="text-align:center;" onclick="EditarServicio(`+respuesta[i].idservicio+`)" >`+respuesta[i].zonanombre+`</span>
+
+ 					<span class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;" onclick="EditarServicio(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</span>
+                  
+
+                  </div>
+                  <div class="row" style="margin-top:1em;">
+                  	<div class="col" style="text-align:center;" >`;
+
+
+                  	html+=`</div>
+                  
+                                  
+
+                  </div>
+
+               	</div>
+                  
+                </div>
+              </div>
+              </div>
+              </div>
+
+			`;
+
+
+
+
+		}
+
+
+		if (respuesta.length==contadorporpasar) {
+
+				html+=`<div class="row">
+				<div class="linea"><span>Hoy `+fechaactual+`</span></div>
+				</div>`;
+			}
+
+		$$(".serviciosporvalidar").html(html);
+	}else{
+
+
+		html+=`
+			 <div class="list-item">
+                <div class="row text-color-theme">
+                  <h4 style="text-align:center;">En breve el administrador te asignará tus servicios</h4>
+                </div>
+              </div>
+
+
+		`;
+
+				$$(".serviciosporvalidar").html(html);
+
+	}
+}
+
+function EditarServicio(idservicio) {
+	localStorage.setItem('valor',idservicio);
+	GoToPage('nuevoservicio');
+}
+
 
 
 

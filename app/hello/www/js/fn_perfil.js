@@ -7,14 +7,12 @@ function Cargardatospersonales(argument) {
 		type: 'POST',
 		dataType: 'json',
 		url: urlphp+pagina,
-		crossDomain: true,
-		cache: false,
 		data:datos,
 		success: function(datos){
 
 			var respuesta=datos.respuesta;
 			
-			Pintardatos(respuesta);
+			PintardatosU(respuesta);
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
@@ -25,7 +23,7 @@ function Cargardatospersonales(argument) {
 			}
 		});
 }
-function Pintardatos(respuesta) {
+function PintardatosU(respuesta) {
 	$$("#v_nombre").val(respuesta.nombre);
 	$$("#v_nombre").addClass('input-with-value');
 	$$(".linombre").addClass('item-input-with-value');
@@ -99,6 +97,70 @@ function Datosacceso() {
 
 			}
 			
+
+
+		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+			var error;
+				if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+								console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+		}
+
+	});
+
+        },function (username, password) {
+			
+        }
+        );
+
+		$(".dialog-input").attr("placeholder", " ");
+
+}
+
+function EliminarCuenta(argument) {
+	var iduser = localStorage.getItem("id_user");
+	var usuario= localStorage.getItem("usuario");
+	var pagina = "EliminarCuenta.php";
+
+	//$("input[name='dialog-password']").attr('placeholder','Contraseña');
+
+	app.dialog.password('Confirma tu contraseña','Eliminar cuenta', function (username, coincidePassword) {
+		var pass=$(".dialog-input").val();
+		var datos="idusuario="+iduser+"&usuario="+usuario+"&password="+pass;
+
+		$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		data:datos,
+		async:false,
+
+		success: function(res){
+			var d=res.respuesta;
+			var encontrado=res.encontrado;
+			
+			if (encontrado==1) {
+				alerta('','Se ha eliminado la cuenta');
+				var id = localStorage.getItem("id_user");
+    
+				localStorage.setItem('session',0);
+				localStorage.setItem('pregunta',0);
+				localStorage.removeItem('datosextras');
+				localStorage.removeItem("nombre");
+				localStorage.removeItem("paterno");
+				localStorage.removeItem("materno");
+				localStorage.removeItem('tipoUsuario');
+				localStorage.removeItem('correo');
+				localStorage.setItem("foto", '');
+				localStorage.removeItem("idopcionespedido");
+				localStorage.removeItem("iddireccion");
+				localStorage.removeItem("correo");
+				localStorage.removeItem("passwordisuoder");
+				localStorage.removeItem("id_user");
+
+				GoToPage("/");
+			}
 
 
 		},error: function(XMLHttpRequest, textStatus, errorThrown){ 

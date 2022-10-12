@@ -511,6 +511,7 @@ function RegistrarAcceso() {
 				    		var datos=respuesta.usuario[0];
 				    		localStorage.setItem('foto',datos.foto);
 				    		localStorage.setItem('alias',datos.alias);
+				    		localStorage.setItem('sexo',datos.sexo);
 
 				    		if (tipousuario==3) {
 

@@ -117,10 +117,12 @@ function Pintarpagos(pagos) {
                         <div class="col-80">
                             <p class="text-muted " id="concepto_`+pagos[i].idpago+`">
                                Pago de `+pagos[i].concepto+`
-                            </p>
+                            </p>`;
+                          if(pagos[i].fechaformato!=''){
 
-                          <p class="text-muted small">Vencimiento `+pagos[i].fechaformato+`</p>
-                          <p class="text-muted small"> `+pagos[i].nombre+` `+pagos[i].paterno+` `+pagos[i].materno+`</p>
+                             html+=`<p class="text-muted small">Vencimiento `+pagos[i].fechaformato+`</p>`;
+                          }
+                        html+=`<p class="text-muted small"> `+pagos[i].nombre+` `+pagos[i].paterno+` `+pagos[i].materno+`</p>
    
                           <p class="text-muted small">$`+pagos[i].monto+`</p>
                           <input type="hidden" value="`+pagos[i].monto+`" class="montopago" id="val_`+pagos[i].idpago+`">
@@ -466,6 +468,7 @@ function ObtenerMonedero() {
 
     var respuesta=datos.respuesta;
     $("#monedero").text(respuesta);
+    $(".monederotxt").text(respuesta);
 
     },error: function(XMLHttpRequest, textStatus, errorThrown){ 
       var error;
@@ -477,6 +480,8 @@ function ObtenerMonedero() {
 
   });
 }
+
+
 function AbrirModalcupon() {
 	
        var html=`
@@ -1156,7 +1161,23 @@ function RealizarCargo() {
    var impuestototal=localStorage.getItem('impuestotal');
    var subtotalsincomision=localStorage.getItem('subtotalsincomision');
    var impuesto=localStorage.getItem('impuesto');
-   var datos= 'pagos='+localStorage.getItem('pagos')+"&id_user="+iduser+"&constripe="+constripe+"&idtipodepago="+idtipodepago+"&descuentocupon="+descuentocupon+"&codigocupon="+codigocupon+"&descuentosaplicados="+JSON.stringify(descuentosaplicados)+"&sumatotalapagar="+sumatotalapagar+"&comision="+comision+"&comisionmonto="+comisionmonto+"&comisiontotal="+comisiontotal+"&impuestototal="+impuestototal+"&subtotalsincomision="+subtotalsincomision+"&impuesto="+impuesto+"&descuentosmembresia="+JSON.stringify(descuentosmembresia);
+   var monedero=localStorage.getItem('monedero');
+   var opcion=0;
+   var idopcion=0;
+     $(".opccard").each(function(){
+              if($(this).is(':checked')){
+
+                opcion=1;
+                idopcion=$(this).attr('id');
+              }
+          });
+    var datostarjeta="";
+    var datostarjeta2="";
+     if (opcion==1) {
+        datostarjeta=$("#datostarjeta_"+idopcion).html();
+        datostarjeta2=$("#datostarjetaspan_"+idopcion).text();
+      }
+   var datos='pagos='+localStorage.getItem('pagos')+"&id_user="+iduser+"&constripe="+constripe+"&idtipodepago="+idtipodepago+"&descuentocupon="+descuentocupon+"&codigocupon="+codigocupon+"&descuentosaplicados="+JSON.stringify(descuentosaplicados)+"&sumatotalapagar="+sumatotalapagar+"&comision="+comision+"&comisionmonto="+comisionmonto+"&comisiontotal="+comisiontotal+"&impuestototal="+impuestototal+"&subtotalsincomision="+subtotalsincomision+"&impuesto="+impuesto+"&descuentosmembresia="+JSON.stringify(descuentosmembresia)+'&datostarjeta='+datostarjeta+'&datostarjeta2='+datostarjeta2+"&monedero="+monedero;
     pagina = urlphp+pagina;
 
           $(".dialog-buttons").css('display','none');
@@ -1544,8 +1565,8 @@ function PintarpagosPagados(pagos) {
         <li class="list-item">
                     <div class="row">
                         <div class="col-80">
-                            <p class="text-muted " id="concepto_`+pagos[i].idpago+`">
-                               Pago de `+pagos[i].concepto+`
+                            <p class="text-muted " onclick="Detallepago(`+pagos[i].idnotapago+`)" id="concepto_`+pagos[i].idnotapago+`">
+                               Pago #`+pagos[i].concepto+`
                             </p>
 
                           <p class="text-muted small">Pagado `+pagos[i].fechaformatopago+`</p>
@@ -1636,4 +1657,9 @@ function PintarDescuentosMembresia(respuesta) {
 
  $("#uldescuentos").append(html);
 
+}
+
+function Detallepago(idnotapago) {
+  localStorage.setItem('idnotapago',idnotapago);
+  GoToPage('detallepago');
 }

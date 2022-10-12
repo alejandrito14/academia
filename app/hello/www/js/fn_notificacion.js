@@ -153,8 +153,8 @@ function Remover() {
 
 }
 
-function ObtenerCantidadNuevas() {
 
+function ObtenerCantidadNuevas() {
 
 	var iduser=localStorage.getItem('id_user');
 	
@@ -173,11 +173,11 @@ function ObtenerCantidadNuevas() {
 
 			if (resultado.respuesta>0) {
 
-				$('.badge6').css('display','block');
+				$('.badge6').css('visibility','visible');
 
 			}else{
 
-			$('.badge6').css('display','none');
+			$('.badge6').css('visibility','hidden');
 	
 			}
 			
@@ -196,12 +196,10 @@ function ObtenerCantidadNuevas() {
 
 
 function ObtenerListadoNotificaciones() {
-	
-
-	var iduser=localStorage.getItem('id_user');
+		var iduser=localStorage.getItem('id_user');
 	
 		var datos="iduser="+iduser;
-		var pagina = "ObtenerNotificacionesCliente.php";
+		var pagina = "ObtenerNotificacionesUsuario.php";
 
 		$.ajax({
 		type: 'POST',
@@ -236,12 +234,12 @@ function PintarNotificaciones(r) {
 			if (r[i].estatus==0) {
 
 				background='background: #ececec';
-				palomita='<span style="color: red;"  class="material-icons material-icons-round">fiber_manual_record</span>';
+				palomita='<i style="color:red;" class="bi bi-circle"></i>';
 				negritas='font-weight: bold;';
 			}else{
  
 				background='background: #fefefe';
-				palomita='<span style="color: green;" class="material-icons material-icons-round">check_circle</span>';
+				palomita='<i style="color:green;" class="bi bi-check-circle"></i>';
 				negritas='';
 			}
 
@@ -266,7 +264,7 @@ function PintarNotificaciones(r) {
                 <div onclick="CambiarEstatusNotificacion(`+r[i].idnotificacioncliente+`)">
                 	
                 	<div class="item-subtitle" style="`+negritas+`white-space: break-spaces;">`+dividir[1]+`</div> 
-                	<div id="informacion_`+r[i].idnotificacioncliente+`" style="display:none;">
+                	<div id="informacion_`+r[i].idnotificacioncliente+`" style="">
                 		<div class="item-subtitle" style="`+negritas+`white-space: break-spaces;">`+dividir[2]+`</div>
                 		<div class="item-subtitle" style="`+negritas+`white-space: break-spaces;">`+r[i].fechaformato+`</div>
                 	</div>
@@ -275,9 +273,9 @@ function PintarNotificaciones(r) {
               </div>
 
                <div class="item-after">
-          		<span id="span_`+r[i].idnotificacioncliente+`" class="material-icons material-icons-outlined" onclick="Visualizarpagina(\'`+r[i].ruta+`\',`+r[i].valor+`,`+r[i].idnotificacioncliente+`)" style="
+          		<span id="span_`+r[i].idnotificacioncliente+`" class="" onclick="Visualizarpagina(\'`+r[i].ruta+`\',`+r[i].valor+`,`+r[i].idnotificacioncliente+`)" style="
 				    float: right;
-				   	">add_circle</span>
+				   	"></span>
 				</div>
 
             </div>
@@ -305,7 +303,7 @@ function PintarNotificaciones(r) {
 
 	if (localStorage.getItem('idnotificacioncliente')!=0 && localStorage.getItem('idnotificacioncliente')!='') {
 			var idnotificacioncliente=localStorage.getItem('idnotificacioncliente');
-			$("#span_"+idnotificacioncliente).text('remove_circle');
+			//$("#span_"+idnotificacioncliente).text('remove_circle');
 			$("#informacion_"+idnotificacioncliente).css('display','block');
 
 
@@ -342,12 +340,13 @@ function CambiarEstatusNotificacion(idnotificacioncliente) {
 		data:datos,
 		async:false,
 		success: function(resultado){
-		
+			var resp=resultado.notificacion;
 			ObtenerListadoNotificaciones();
-			$("#informacion_"+idnotificacioncliente).css('display','block');
-			$("#span_"+idnotificacioncliente).text('remove_circle');
-			localStorage.setItem('idnotificacioncliente',idnotificacioncliente);
-
+			localStorage.setItem('valor',idnotificacioncliente);
+			if (resp.ruta!='') {
+				localStorage.setItem('valor',resp.valor);
+				GoToPage(resp.ruta);
+			}
 		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 			var error;
 				if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 

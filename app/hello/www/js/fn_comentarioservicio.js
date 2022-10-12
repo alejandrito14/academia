@@ -36,7 +36,16 @@ function PintarListadoComentarios(resultado) {
         imagen='<img src="'+urlimagen+'" alt=""  style=""/>';
       }else{
 
-                urlimagen="img/icon-usuario.png";
+        if (resultado[i].sexo=='M') {
+
+                    urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarmujer');
+    
+                }else{
+                    urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarhombre');
+        
+                }
+
+               // urlimagen="img/icon-usuario.png";
                 imagen='<img src="'+urlimagen+'" alt="" />';
             }
 

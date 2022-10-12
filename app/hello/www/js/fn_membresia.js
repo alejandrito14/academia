@@ -10,6 +10,11 @@ function ObtenerMembresiaActivas() {
 		data:datos,
 		async:false,
 		success: function(datos){
+      var usuario=datos.usuario;
+       
+      if (usuario.popupmembresia==0) {
+
+
       if (datos.respuesta.length>0) {
 			 $(".divmembresia").css('display','none');
 
@@ -27,6 +32,7 @@ function ObtenerMembresiaActivas() {
       }
       
     }
+  }
 
 		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 			var error;

@@ -521,7 +521,7 @@ function GuardarReplica() {
 	var titulonuevo=$("#v_titulo").val();
 	var fechainicial='';
 	var fechafinal='';
-	var iduser=localStorage.getItem('id_user');
+	//var iduser=localStorage.getItem('id_user');
 	var iduser=localStorage.getItem('id_user');
 	var idtipousuario=localStorage.getItem('idtipousuario');
 	var idservicio=$("#serviciosreplica").val();		
@@ -598,7 +598,7 @@ function GuardarServicioClonado(datos) {
 								GoToPage('homeadmin');
 							}
 							
-							if (localStorage.getItem('idtipousuario')==0) {
+							if (localStorage.getItem('idtipousuario')==5) {
 								GoToPage('homecoach');
 							}
 

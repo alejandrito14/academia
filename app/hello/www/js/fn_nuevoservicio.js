@@ -445,6 +445,7 @@ if (categoriaid>0) {
 					type: 'POST', //Metodo que usaremos
 					data:datos,
 					dataType:'json',
+					async:false,
 					error: function (XMLHttpRequest, textStatus, errorThrown) {
 						var error;
 						console.log(XMLHttpRequest);
@@ -477,12 +478,14 @@ if (categoriaid>0) {
 						if (avanzado==1) {
 							$("#profile-tab").css('display','block');
 							$("#contact-tab").css('display','block');
-							$("#costos-tab").css('display','block');
-							$("#coach-tab").css('display','block');
-							$("#multi-tab").css('display','block');
-							$("#politicas-tab").css('display','block');
-							$("#aceptacion-tab").css('display','block');
-							$("#otros-tab").css('display','block');
+							if(localStorage.getItem('idtipousuario')==0) {
+								$("#costos-tab").css('display','block');
+								$("#coach-tab").css('display','block');
+								$("#multi-tab").css('display','block');
+								$("#politicas-tab").css('display','block');
+								$("#aceptacion-tab").css('display','block');
+								$("#otros-tab").css('display','block');
+							}
 							$("#btnguardarservicio").attr('onclick',"Guardarservicio()");
 							$("#avanzado").val(1);
 
@@ -1925,6 +1928,7 @@ function GuardarservicioNuevo2() {
 								arraydiaseleccionados=[];
 								asignacionperiodos=[];
 								asignacioncoach=[];
+								localStorage.setItem('valor','');
 								localStorage.setItem('fotoimagenservicio','');
 									if (localStorage.getItem('idtipousuario')== 0) {
 										GoToPage('homeadmin');
@@ -2175,7 +2179,7 @@ function GuardarservicioNuevo() {
 		});
 */
 
-		var porcentajescoachs=[];
+		 porcentajescoachs=[];
 		$(".nombrecoach").each(function(){
 			var id=$(this).val();
 			coachs.push(id);
@@ -2564,6 +2568,7 @@ function GuardarservicioNuevo() {
 					success:function(msj){
 						var resp = msj.respuesta;
 							$("#id").val(resp.idservicio);
+								localStorage.setItem('valor','');
 
 							
 						   console.log("El resultado de msj es: "+msj);
@@ -3036,52 +3041,51 @@ var bandera=1;
 			$(".liseleccionafechas").addClass('requerido2');
 
 			}
+	if (localStorage.getItem('idtipousuario')== 0) {
 
-		var costo=$("#v_costo").val();
-		if (costo=='') {
+			var costo=$("#v_costo").val();
 
-			bandera=0;
-		  $(".licosto").addClass('requerido');
+			if (costo=='') {
 
-		}
+				bandera=0;
+			  $(".licosto").addClass('requerido');
 
-
-		var modalidad=0;
-		  if(document.querySelector('input[name="v_grupo"]:checked')) { 
-		     	modalidad=$('input[name="v_grupo"]:checked').val();
-		     }
-
-		if (modalidad==0) {
-			bandera=0;
-			$(".limonto").addClass('requerido2');
-		}
+			}
 
 
-		var numeroparticipantesmin=$("#v_numparticipantesmin").val();
-		var numeroparticipantesmax=$("#v_numparticipantesmax").val();
-		if ( numeroparticipantesmin=='') {
-			bandera=0;
-			
-			$(".linumparticipantesmin").addClass('requerido');
+			var modalidad=0;
+			  if(document.querySelector('input[name="v_grupo"]:checked')) { 
+			     	modalidad=$('input[name="v_grupo"]:checked').val();
+			     }
 
-		}
-		if (numeroparticipantesmax=='') {
-			bandera=0;
-			$(".linumparticipantesmax").addClass('requerido');
+			if (modalidad==0) {
+				bandera=0;
+				$(".limonto").addClass('requerido2');
+			}
 
-		}
+			var numeroparticipantesmin=$("#v_numparticipantesmin").val();
+			var numeroparticipantesmax=$("#v_numparticipantesmax").val();
+			if ( numeroparticipantesmin=='') {
+				bandera=0;
+				
+				$(".linumparticipantesmin").addClass('requerido');
 
-		var politicasaceptacion=$("#v_politicasaceptacion").val();
-		if (politicasaceptacion == '') {
-			bandera=0;
-			$(".lidescripcionpoliticas").addClass('requerido');
+			}
+			if (numeroparticipantesmax=='') {
+				bandera=0;
+				$(".linumparticipantesmax").addClass('requerido');
 
-		}
+			}
 
+			var politicasaceptacion=$("#v_politicasaceptacion").val();
+			if (politicasaceptacion == '') {
+				bandera=0;
+				$(".lidescripcionpoliticas").addClass('requerido');
 
-
+			}
 
 	}
+}
 
 	/*if (bandera==1) {
 		$("#divflotantea").css('display','block');

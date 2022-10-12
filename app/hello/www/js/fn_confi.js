@@ -34,7 +34,6 @@ function ObtenerConfiEmpresa() {
     	
     	$(".texto1").text(datos.respuesta.texto1);
 
-    	
 
 		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 			var error;
@@ -429,7 +428,7 @@ function getUsuario() {
 		data:datos,
 		async:false,
 		success: function(datos){
-
+			
 			resolve(datos);
 
 		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -487,7 +486,9 @@ function getConfiguracion() {
     	
     	$(".texto1").text(datos.respuesta.texto1);
 
-    	
+    	localStorage.setItem('avatarhombre',datos.respuesta.avatarhombre);
+    	localStorage.setItem('avatarmujer',datos.respuesta.avatarmujer);
+
 
 		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 			var error;
