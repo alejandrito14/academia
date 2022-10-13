@@ -726,10 +726,13 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				</div>
 				<div class="card-body">
 					<div class="row">
-								<div class="col-md-6">
-									<div class="card-body" id="lclientesdiv" style="display: block; padding: 0;">
+					  <div class="col-md-12">
+					<div class="card-body" id="lclientesdiv" style="display: block; padding: 0;">
+						<button class="btn btn-primary" type="button" style="margin-bottom: 1em;" onclick="AgregarNuevoCoach()" id="btncoach">AGREGAR COACH</button>
+
+						<div id="listadocoaches"></div>
                 
-                    <div class="form-group m-t-20">	 
+                   <!--  <div class="form-group m-t-20">	 
 						<input type="text" class="form-control" name="buscadorcoachs_1" id="buscadorcoachs_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadorcoachs_','.coachs_')">
 				    </div>
                     <div class="clientes"  style="overflow:scroll;height:100px;overflow-x: hidden" id="clientes_<?php echo $a_cliente['idcliente'];?>">
@@ -749,7 +752,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						    		} while ($a_coach = $db->fetch_assoc($r_coach));
      					    	 ?>
 						    	<?php } ?>    
-				    </div>
+				    </div> -->
                 </div> 
 								</div>
 							</div>
@@ -898,7 +901,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				</div>
 			</div>
 
-					<div class="card" style="" id="divpoliticas">
+					<div class="card" style="display: none;" id="divpoliticas">
 							<div class="card-header" style="margin-top: 1em;">
 								<h5>DESCUENTOS</h5>
 
@@ -936,7 +939,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				</div>
 
 
-	<div class="card" style="" id="divpoliticas">
+	<div class="card" id="divpoliticas" style="display: none;">
 							<div class="card-header" style="margin-top: 1em;">
 								<h5>MEMBRESÍAS</h5>
 
@@ -1127,9 +1130,13 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		$("#v_categoriaservicio").val(idcategoria);
 
 		 SeleccionarCategoria(idservicio);
-		 Obtenerparticipantes(3,idservicio);
+		// Obtenerparticipantes(3,idservicio);
 		 ObtenerZonas(idservicio);
-		 ObtenerCoachs(5,idservicio);
+		// ObtenerCoachs(5,idservicio);
+
+		VerificarSihaypago(idservicio);
+		ObtenerCoachs(5,idservicio);
+
 		 ObtenerDescuentos(idservicio);
 		 ObtenerMembresias(idservicio);
 		 ObtenerEncuestas(idservicio);
@@ -1223,7 +1230,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		$("#v_fechafinal").val(fechafinal);
 
 		ObtenerHorariosSemana(idservicio);
-
+		ObtenerHorariosServicioComprobacion(idservicio);
 		ObtenerPeriodos(idservicio);
 
 	abiertocliente='<?php echo $abiertocliente; ?>';
@@ -1281,13 +1288,16 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		$("#v_asistencia").attr('checked',true);
 	
 		}
+
 	Permitirligar();
 	HabilitarcantidadReembolso();
 	}else{
 		arraydiaseleccionados=[];
+		horarioscomparacion=[];
 		AgregarPeriodo();
 	}
 	CambioPeriodo();
+
 	
 	    function SubirImagenservicio() {
 	 	// body...

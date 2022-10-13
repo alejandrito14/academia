@@ -732,4 +732,11 @@ z-index:0;
     margin-top: 0.3em;
   
 }
+.numeros{
+      background: red;
+    border-radius: 20px;
+    margin-left: 1em;
+    width: 30px;
+}
+}
 

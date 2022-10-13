@@ -92,9 +92,10 @@ function ObtenerServicioAdmin() {
 			}else{
 
 
-				imagen=localStorage.getItem('logo');
+				imagen=urlimagendefaultservicio;
 			}
-			$("#imgservicioasignado").attr('src',imagen);
+			
+			$(".imgservicioasignado").attr('src',imagen);
 
 			$(".tituloservicio").text(respuesta.titulo);
 			
@@ -109,10 +110,14 @@ function ObtenerServicioAdmin() {
 
              if (respuesta.fechaproxima!='') {
              	horarioshtml+=`<span>`+respuesta.fechaproxima+` `+respuesta.horainicial+` - `+respuesta.horafinal+` Hrs.</span></br>`;
+            	$(".colocarhorarios").html(horarioshtml);
+            	$(".divcomienza").css('display','none');
              }
 
              $(".descripcionpoliticas").text(respuesta.politicasaceptacion);
-			$(".colocarhorarios").html(horarioshtml);
+			
+
+
 
 			$(".cantidadtotal").text(respuesta.numeroparticipantesmax);
 

@@ -171,21 +171,17 @@ function ObtenerServicios() {
 				});
 }
 
-function PintarCalendario(argument) {
+/*function PintarCalendario(argument) {
 		 $('#picker').markyourcalendar({
 	          			 startDate: new Date(),
 			             months: ['ene','feb','mar','abr','may','jun','jul','agos','sep','oct','nov','dic'],
 			              weekdays: ['dom','lun','mar','mier','jue','vier','sab'],
 			           	 isMultiple: true,
 
-			           	 /* onClickNavigator: function(ev, instance) {
-							HorariosDisponibles2();
-			           	  }*/
-
 
 						});
 
-}
+}*/
 
 function addZero(i) {
     if (i < 10) {
@@ -211,113 +207,39 @@ dd=addZero(dd);
 mm=addZero(mm);
 
 function PintarCalendario2() {
+   // var calendarEl = document.getElementById('picker');
 
-
-
-	 $('#picker').fullCalendar({
+   // var calendar = new FullCalendar.Calendar(calendarEl, {
+	$('#picker').fullCalendar({
         header: {
             left: 'prev,next',
             center: 'title',
-           /* right: 'month,agendaWeek,agendaDay'*/
         },
+        	monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio","Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+			monthNamesShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Agost","Sept", "Oct", "Nov", "Dic"],
+			dayNames: ['Domingo', 'Lunes', 'Martes', 'Miercoles','Jueves', 'Viernes', 'Sabado'],
+			dayNamesShort: ["Dom", "Lun", "Mar", "Mier", "Jue", "Vier", "Sab", "Dom"],
+        firstDay:0,
         defaultDate: yyyy+'-'+mm+'-'+dd,
-       /* buttonIcons: true,*/ // show the prev/next text
-       /* weekNumbers: false,*/
-       /* editable: true,*/
-        eventLimit: true, // allow "more" link when too many events 
+       eventLimit: true, // allow "more" link when too many events 
         events: [
-            /*{
-                title: 'All Day Event',
-                description: 'Lorem ipsum 1...',
-                start: yyyy+'-'+mm+'-01',
-                color: '#3A87AD',
-                textColor: '#ffffff',
-            },
-            {
-                title: 'Long Event',
-                description: 'Lorem ipsum 2...',
-                start:  yyyy+'-'+mm+'-07',
-                end:  yyyy+'-'+mm+'-10',
-                color: '#3A87AD',
-                textColor: '#ffffff',
-            },
-            {
-                title: 'Repeating Event',
-                description: 'Lorem ipsum 3...',
-                start:  yyyy+'-'+mm+'-09T16:00:00',
-                color: '#3A87AD',
-                textColor: '#ffffff',
-            },
-            {
-                title: 'Repeating Event',
-                description: 'Lorem ipsum 4...',
-                start:  yyyy+'-'+mm+'-16T16:00:00',
-                color: '#3A87AD',
-                textColor: '#ffffff',
-            },
-            {
-                title: 'Conference',
-                description: 'Lorem ipsum 5...',
-                start:  yyyy+'-'+mm+'-11',
-                end:  yyyy+'-'+mm+'-13',
-                color: '#3A87AD',
-                textColor: '#ffffff',
-            },
-            {
-                title: 'Meeting',
-                description: 'Lorem ipsum 6...',
-                start:  yyyy+'-'+mm+'-12T10:30:00',
-                end:  yyyy+'-'+mm+'-12T12:30:00',
-                color: '#3A87AD',
-                textColor: '#ffffff',
-            },
-            {
-                title: 'Lunch',
-                description: 'Lorem ipsum 7...',
-                start:  yyyy+'-'+mm+'-12T12:00:00',
-                color: '#3A87AD',
-                textColor: '#ffffff',
-            },
-            {
-                title: 'Meeting',
-                description: 'Lorem ipsum 8...',
-                start:  yyyy+'-'+mm+'-12T14:30:00',
-                color: '#3A87AD',
-                textColor: '#ffffff',
-            },
-            {
-                title: 'Happy Hour',
-                description: 'Lorem ipsum 9...',
-                start:  yyyy+'-'+mm+'-12T17:30:00',
-                color: '#3A87AD',
-                textColor: '#ffffff',
-            },
-            {
-                title: 'Dinner',
-                description: 'Lorem ipsum 10...',
-                start:  yyyy+'-'+mm+'-12T20:00:00',
-                color: '#3A87AD',
-                textColor: '#ffffff',
-            },
-            {
-                title: 'Birthday Party',
-                description: 'Lorem ipsum 11...',
-                start:  yyyy+'-'+mm+'-13T07:00:00',
-                color: '#3A87AD',
-                textColor: '#ffffff',
-            },
-            {
-                title: 'Event with link',
-                description: 'Lorem ipsum 12...',
-                url: 'http://www.jose-aguilar.com/',
-                start:  yyyy+'-'+mm+'-28',
-                color: '#3A87AD',
-                textColor: '#ffffff',
-            }*/
+           
         ],
         dayClick: function (date, jsEvent, view) {
-           // alert('Has hecho click en: '+ date.format());
-            var fecha=date.format();
+           console.log('Has hecho click en: '+ date);
+           var  evento=new Date(date);
+           var anio=evento.getFullYear();
+           var mes=evento.getMonth()+1;
+           var dia=evento.getDate();
+           if(dia<10) {
+				    dia='0'+dia;
+				} 
+				if(mes<10) {
+				    mes='0'+mes;
+				}
+
+            var fecha=anio+'-'+mes+'-'+dia;
+
             ObtenerHorariosFechaEspe(fecha);
         }, 
         eventClick: function (calEvent, jsEvent, view) {
@@ -330,27 +252,62 @@ function PintarCalendario2() {
        
 	});
 
+  //  calendar.render();
 	 var fecha=new Date();
 	 var f=fecha.toISOString().split('T')[0];
+
 	 ObtenerHorariosFecha(f);
 	 $("#txttitle").css('display','none');
 
 
-	// $('.fc-prev-button').attr('onclick','ObtenerTodosHorariosFecha()');
-	// $('.fc-next-button').attr('onclick','ObtenerTodosHorariosFecha()');
- $('.fc-prev-button').click(function(){
+ $('.fc-button-prev').click(function(){
        var moment = $('#picker').fullCalendar('getDate');
-	   var fecha= moment.format("YYYY-MM-DD");
+       var anio=moment.getFullYear();
+           var mes=moment.getMonth()+1;
+           var dia=moment.getDate();
+           if(dia<10) {
+				    dia='0'+dia;
+				} 
+				if(mes<10) {
+				    mes='0'+mes;
+				}
+
+            var fecha=anio+'-'+mes+'-'+dia;
 	   ObtenerHorariosFecha(fecha);
+
+	   $("#txttitle").css('display','none');
+	   $(".horarios").css('display','none');
   });
 
-  $('.fc-next-button').click(function(){
+  $('.fc-button-next').click(function(){
      var moment = $('#picker').fullCalendar('getDate');
-    var fecha= moment.format("YYYY-MM-DD");
-    ObtenerHorariosFecha(fecha);
+        var anio=moment.getFullYear();
+           var mes=moment.getMonth()+1;
+           var dia=moment.getDay();
+           if(dia<10) {
+				    dia='0'+dia;
+				} 
+				if(mes<10) {
+				    mes='0'+mes;
+				}
+
+            var fecha=anio+'-'+mes+'-'+dia;
+	    ObtenerHorariosFecha(fecha);
+	     $("#txttitle").css('display','none');
+	     $(".horarios").css('display','none');
   });
+
+
+  $(".fc-rigid").css('height','30px');
+  $(".fc-day-grid-container").css('height','144.9px');
+  $(".fc-day-top .fc-day-number").css({'cssText':'margin: 5em!important;'});
+
+  $(".fc-day-header").css('text-align','center');
+  $(".fc-day-top ").css({'cssText':'text-align: center!important;'});
+
 }
 function ObtenerHorariosFecha(fecha) {
+
 	var datos="fecha="+fecha;
 	$.ajax({
 					url: 'catalogos/dashboard/ObtenerHorariosFecha.php', //Url a donde la enviaremos
@@ -372,18 +329,21 @@ function ObtenerHorariosFecha(fecha) {
 
 								for (var i = 0; i <respuesta.length; i++) {
 									
-									$(".fc-day-top").each(function( index ) {
-									  console.log( index + ": " + $(this).data('date') );
+									$(".fc-day").each(function( index ) {
+									 // console.log( index + ": " + $(this).data('date') );
 									  var fechadiv=$(this).data('date');
-									 
+									 var elemento=$(this);
+									
 									  	if (respuesta[i].fecha == fechadiv) {
 									  		
-									  		$(this).css({'cssText': 'background: gray !important'});
+									  		$(elemento).children().eq(0).css({'cssText': 'background: gray !important;border-radius: 30px;color: white; cursor:pointer;margin: auto;width:20%;padding-right: 1em;padding-left:1em;justify-content:center;display:flex;'});
+
 									  	}
 
 									});
 								}
-	
+
+						
 					}
 				});
 
@@ -404,7 +364,11 @@ function ObtenerHorariosFechaEspe(fecha) {
 					},	
 					success: function (msj) {
 	 $("#txttitle").css('display','block');
+	     $(".horarios").css('display','block');
 
+	 var dividirfecha=fecha.split('-');
+	 var nueva=dividirfecha[2]+'/'+dividirfecha[1]+'/'+dividirfecha[0];
+	 $("#txttitle").text('Horarios '+nueva)
 						var respuesta=msj.respuesta;
 
 					
@@ -413,7 +377,7 @@ function ObtenerHorariosFechaEspe(fecha) {
 									html+=`
 
 										  <li class="list-group-item" style="color:black;">
-										  <p>`+respuesta[i].titulo+`</p>
+										  <p style="font-weight:bold;">`+respuesta[i].titulo+`</p>
 										  <p>`+respuesta[i].horainicial+`-`+respuesta[i].horafinal+`</p>
 										  <span>`+respuesta[i].nombre+`</span>
 										  <div style="background:`+respuesta[i].color+`;border-radius:10px;width:10px;height: 10px;float: right;"></div>
@@ -425,4 +389,38 @@ function ObtenerHorariosFechaEspe(fecha) {
 							$('.horarios').html(html);
 					}
 				});
+}
+
+
+function ListadoAlumnos() {
+	
+
+
+	$("#mostraralumnos").css('display','block');
+}
+
+function CerrarAlumnos() {
+	$("#mostraralumnos").css('display','none');
+}
+
+function ListadoCoaches() {
+	$("#mostrarcoaches").css('display','block');
+
+	
+}
+function CerrarCoaches(argument) {
+	$("#mostrarcoaches").css('display','none');
+
+}
+
+function CerrarServicios() {
+	
+	$("#mostrarservicios").css('display','none');
+
+}
+
+function ListadoServicios(argument) {
+
+	$("#mostrarservicios").css('display','block');
+
 }

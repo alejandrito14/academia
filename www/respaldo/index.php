@@ -71,8 +71,8 @@ $navegador = $f->navegador();
     
     <link href="assets/libs/bootstrap-datetimepicker-master/css/bootstrap-datetimepicker.css" rel="stylesheet">
 
-  <link href="assets/extra-libs/fullcalendar/css/fullcalendar.css" rel="stylesheet">
-
+ <!--  <link href="assets/extra-libs/fullcalendar/css/fullcalendar.css" rel="stylesheet">
+ -->
     
     <link rel="stylesheet" type="text/css" href="dist/css/mark-your-calendar.css">
  <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -1121,7 +1121,33 @@ $navegador = $f->navegador();
 <!-- ============================================================== -->
 <!-- All Jquery -->
 <!-- ============================================================== -->
+
+
+<!-- <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.min.css" /> -->
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.5/dist/fullcalendar.min.js"></script> -->
+
+
+<!-- <script src="assets/extra-libs/fullcalendar/js/fullcalendar.js"></script>
+
+ -->
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.0/moment-with-locales.min.js"></script>
+
+<!-- <script src="https://fullcalendar.io/js/fullcalendar-3.8.0/lib/moment.min.js"></script>
+ -->
+ 
+<!--  <script src='https://cdn.jsdelivr.net/npm/moment@2.27.0/min/moment.min.js'></script>
+ -->
+<!--  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.0.0/fullcalendar.css" integrity="sha512-kvxIstXlukhQB/oPQQAqb5BPx5uPUeOTJd2tuhKRT6gbWpj1QQcB3kUFXUZ2TICS0xfcIfCehyqfkswhWLiH9g==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.2.1/moment.min.js" integrity="sha512-OmCXUvilBhA1ZlyhmlKnAC/tBOtgkVtvGT5MN7w3Vj8JUIbDeM+VlX3I0bTCWaiQHyWSw8jpNBsR8JFrCe0exg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="assets/libs/jquery/dist/jquery.min.js"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.0.0/fullcalendar.js" ></script>
+
 <!-- Bootstrap tether Core JavaScript -->
 <script src="assets/libs/popper.js/dist/umd/popper.min.js"></script>
 <script src="assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -1147,15 +1173,12 @@ $navegador = $f->navegador();
 <script src="assets/extra-libs/DataTables/datatables.min.js"></script>
 <script src="assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
 
-<script src="assets/extra-libs/fullcalendar/js/moment.min.js"></script>
 
-<script src="assets/extra-libs/fullcalendar/js/fullcalendar.js"></script>
-<script src="assets/extra-libs/fullcalendar/js/locale/es.js"></script>
 
 <script src="assets/libs/bootstrap-datetimepicker-master/js/bootstrap-datetimepicker.js"></script>
 
-<script src="assets/libs/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.es.js"></script>
-
+<!-- <script src="assets/libs/bootstrap-datetimepicker-master/js/locales/bootstrap-datetimepicker.es.js"></script>
+ -->
 <script src="assets/libs/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
 <script src="assets/libs/magnific-popup/meg.init.js"></script>
 
@@ -1170,19 +1193,18 @@ $navegador = $f->navegador();
 <script src="js/fn_Administrador.js" type="text/javascript"></script>
 <script src="js/fn_Configuracion.js"></script>
 <script src="js/fn_LoginTime.js"></script>
-<script src="js/fn_productos.js"></script>
 <!-- <script src="js/fn_presentacion.js"></script>
  -->
  <script src="js/fn_categorias.js"></script>
-<script src="js/fn_unidad_medida.js"></script>
 <script src="js/fn_notificacion.js"></script>
 <script src="js/modal.js"></script>
-<script src="js/fn_sucursales.js"></script>
-<script src="js/fn_proveedores.js"></script>
 
-<script src="js/fn_clientes.js?<?php echo time(); ?>"></script>
-<script src="js/fn_costoenvio.js"></script>
 
+<!-- <script src="https://fullcalendar.io/js/fullcalendar-3.8.0/locale-all.js"></script> -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.js"></script>
+ -->
+ <!-- <script src="https://cdn.jsdelivr.net/npm/fullcalendar@3.10.5/dist/fullcalendar.min.js"></script>
+ -->
 
 <script src="js/fn_tipodepago.js?<?php echo time(); ?>"></script>
 <script src="js/fn_subirarchivos.js?<?php echo time(); ?>"></script>
@@ -1197,31 +1219,23 @@ $navegador = $f->navegador();
 <script src="js/fn_categoriasrecetas.js"></script>
 <script src="js/fn_recetas.js"></script> -->
 <script src="js/fn_PagConfig.js"></script>
-<script src="js/fn_Cotizaciones.js"></script>
-<script src="js/fn_marcas.js"></script>
-<script src="js/fn_prospectos.js"></script>
-<script src="js/fn_Comisionistas.js"></script>
-<script src="js/fn_VentasProgramadas.js"></script>      
 <script src="js/fn_reportes.js"></script>
-<script src="js/fn_pago.js?<?php echo time(); ?>"></script>
 <script src="js/fn_funcionesextras.js?<?php echo time(); ?>"></script>
-<script src="js/fn_datofiscal.js?<?php echo time(); ?>"></script>
+
 
 <!-- <script src="js/fn_monedero.js?<?php echo time(); ?>"></script>
 <script src="js/fn_paginas.js?<?php echo time(); ?>"></script>
 <script src="js/fn_contacto.js?<?php echo time(); ?>"></script> -->
-<script src="js/fn_paquetes.js?<?php echo time(); ?>"></script>
+
 <script src="js/fn_grupo.js?<?php echo time(); ?>"></script>
-<script src="js/fn_paquetessucursales.js?<?php echo time(); ?>"></script>
-<script src="js/fn_estadomuni.js?<?php echo time(); ?>"></script>
+
+
 <script src="js/fn_opcionpedido.js?<?php echo time(); ?>"></script>
-<script src="js/fn_precios.js?<?php echo time(); ?>"></script>
+
 <script src="js/fn_cupones.js?<?php echo time(); ?>"></script>
 <script src="js/fn_notificaciones.js"></script>
 <script src="js/fn_seccion.js"></script>
-<script src="js/fn_dashboard.js"></script>
 <script src="js/fn_anuncios.js"></script>
-<script src="js/fn_anunciosclientes.js"></script>
 <script src="js/fn_servicio.js"></script>
 <script src="js/fn_entradas.js"></script>
 <script src="js/fn_anuncios.js"></script>
@@ -1243,17 +1257,18 @@ $navegador = $f->navegador();
 <script src="js/fn_asignarmembresias.js?<?php echo time(); ?>"></script>
 <script src="js/fn_encuesta.js?<?php echo time(); ?>"></script>
 <script src="js/fn_tipousuario.js?<?php echo time(); ?>"></script>
-
+<script src="js/fn_pagos.js?<?php echo time(); ?>"></script>
  <!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     -->
     <script type="text/javascript" src="js/mark-your-calendar.js"></script>
+<script src="js/fn_dashboard.js?<?php echo time(); ?>"></script>
 
 <!-- <script src="js/fn_espacios.js?<?php echo time(); ?>"></script>
 <script src="js/fn_cupones.js?<?php echo time(); ?>"></script>
 <script src="js/fn_horario.js?<?php echo time(); ?>"></script>
 <script src="js/fn_tipopartido.js?<?php echo time(); ?>"></script>
 <script src="js/fn_partidos.js?<?php echo time(); ?>"></script>
-<script src="js/fn_pagos.js?<?php echo time(); ?>"></script>
+
 <script src="js/fn_tipojuego.js?<?php echo time(); ?>"></script>
 <script src="js/fn_posicion.js?<?php echo time(); ?>"></script>
 
@@ -1265,7 +1280,6 @@ $navegador = $f->navegador();
 <script src="js/fn_reportes_Bitacora_Programos.js?<?php echo time(); ?>"></script>
 <script src="js/fn_facturacion.js?<?php echo time(); ?>"></script> -->
 
-<script src="js/fn_codigopostal.js?<?php echo time(); ?>"></script>
 
 <!-- <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
 <!-- <script src="https://cdn.ckeditor.com/4.14.1/standard-all/ckeditor.js"></script> -->

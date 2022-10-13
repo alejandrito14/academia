@@ -544,7 +544,15 @@ function ObtenerServicioNuevo(valor) {
 
 		 //ObtenerDescuentos(idservicio);
 		// ObtenerMembresias(idservicio);
-		SeleccionarCategoria(valor);
+		//SeleccionarCategoria(valor).then((message) => {
+
+
+	 var demo = new Promise((resolve, reject) => {
+      resolve(SeleccionarCategoria(valor));
+    });
+
+	 demo.then(()=>{
+   	
 		 ObtenerEncuestas(idservicio);
 
 		 var modalidad=respuesta.modalidad;
@@ -706,6 +714,8 @@ function ObtenerServicioNuevo(valor) {
 	
 		}
 
+		  }
+    );
 	//	Permitirligar();
 		//HabilitarcantidadReembolso();
 

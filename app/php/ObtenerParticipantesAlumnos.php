@@ -10,7 +10,7 @@ require_once("clases/class.Funciones.php");
 require_once("clases/class.Encuesta.php");
 
 try
-{
+{ 
 	
 	//Declaramos objetos de clases
 	$db = new MySQL();
@@ -38,6 +38,16 @@ try
 			$idusuarios=$participantes[$i]->idusuarios;
 			$encuesta->idusuarios=$idusuarios;
 			$encuestastotal=array();
+			$lo->idusuario=$idusuarios;
+			$pagadoservicio=$lo->VerificarSihaPagado();
+
+			if (count($pagadoservicio)>0) {
+				$pagado=1;
+			}else{
+				$pagado=0;
+			}
+			$participantes[$i]->pagado=$pagado;
+
 		for ($j=0; $j <count($obtenerEvaluaciones); $j++) {
 
 			 $idencuesta=$obtenerEvaluaciones[$j]->idencuesta;

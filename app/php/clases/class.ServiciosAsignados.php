@@ -68,7 +68,7 @@ public function obtenerServiciosAsignadosPendientes()
 	{
 		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
 		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
-			AND cancelacion=0
+			AND cancelacion=0 and servicios.estatus=1
 		 ";
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -92,7 +92,7 @@ public function obtenerServiciosAsignadosPendientes()
 	{
 		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
 		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
-			AND cancelacion=0
+			AND cancelacion=0 AND servicios.validaradmin=1 GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios
 		 ";
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -243,7 +243,8 @@ public function obtenerServiciosAsignadosPendientes()
 				usuarios.idusuarios,
 				usuarios.foto,
 				usuarios.tipo,
-				tipousuario.nombretipo
+				tipousuario.nombretipo,
+				usuarios.sexo
 				FROM
 				usuarios_servicios
 				JOIN usuarios
@@ -424,7 +425,8 @@ public function obtenerServiciosAsignadosPendientes()
 				usuarios.foto,
 				usuarios.tipo,
 				tipousuario.nombretipo,
-				usuarios.alias
+				usuarios.alias,
+				usuarios.sexo
 				FROM
 				usuarios_servicios
 				JOIN usuarios
@@ -881,6 +883,123 @@ public function obtenerServiciosAsignadosPendientes()
 		}
 		
 		return $array;
+	}
+
+	public function CancelarServicio()
+	{
+		$fecha=date('Y-m-d H:i:s');
+		$sql="UPDATE usuarios_servicios SET 
+		estatus=2,
+		cancelacion=1,
+		aceptarterminos=0,
+		fechacancelacion='$fecha'
+		WHERE idusuarios_servicios='$this->idusuarios_servicios'";
+		$resp=$this->db->consulta($sql);
+
+	}
+
+
+
+
+	public function VerificarSihaPagado()
+	{
+		$sql="SELECT * FROM pagos
+			WHERE  idservicio = '$this->idservicio' 
+			AND pagado=1 AND idusuarios='$this->idusuario'
+		 ";
+
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerUsuariosServiciosaCancelar($idusuariosacancelar)
+	{
+		$sql="SELECT
+			*FROM usuarios_servicios WHERE
+			usuarios_servicios.idservicio = '$this->idservicio' AND usuarios_servicios.idusuarios IN($idusuariosacancelar) ";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerUltimopago()
+	{
+		$sql = "SELECT 
+					pagos.idpago,
+					pagos.idusuarios,
+					pagos.idservicio,
+					pagos.idmembresia,
+					pagos.tipo,
+					pagos.monto,
+					pagos.estatus,
+					pagos.fechapago,
+					pagos.tarjeta,
+					pagos.fechacreacion,
+					pagos.pagado,
+					pagos.validadoporusuario,
+					pagos.digitostarjeta,
+					pagos.tipopago,
+					pagos.fechaevento,
+					pagos.dividido,
+					pagos.fechainicial,
+					pagos.fechafinal,
+					pagos.concepto,
+					pagos.idtipopago,
+					pagos.tipodepago,
+					pagos.descuento,
+					pagos.folio,
+					usuarios.nombre,
+					usuarios.paterno,
+					usuarios.materno,
+					usuarios.email,
+					usuarios.celular
+			    FROM pagos
+				LEFT JOIN usuarios ON usuarios.idusuarios=pagos.idusuarios
+			    WHERE pagos.estatus=2 and pagos.pagado=1 AND pagos.idusuarios  IN($this->idusuarios) AND idservicio='$this->idservicio' GROUP BY idpago,idusuarios ORDER BY idpago ";
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
 	}
 
 }

@@ -18,6 +18,55 @@ class ServiciosAsignados
 	public function obtenerServiciosAsignados()
 	{
 		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(1)
+			AND cancelacion=0
+		 ";
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+public function obtenerServiciosAsignadosPendientes()
+	{
+		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0)
+			AND cancelacion=0
+		 ";
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function obtenerServiciosAsignadosTuto()
+	{
+		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
 		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
 			AND cancelacion=0
 		 ";
@@ -39,6 +88,29 @@ class ServiciosAsignados
 		return $array;
 	}
 
+	public function obtenerServiciosAsignadosCoach()
+	{
+		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
+			AND cancelacion=0 AND servicios.validaradmin=1 GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios
+		 ";
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 
 	public function ObtenerHorariosServicio()
 	{
@@ -171,7 +243,8 @@ class ServiciosAsignados
 				usuarios.idusuarios,
 				usuarios.foto,
 				usuarios.tipo,
-				tipousuario.nombretipo
+				tipousuario.nombretipo,
+				usuarios.sexo
 				FROM
 				usuarios_servicios
 				JOIN usuarios
@@ -274,6 +347,70 @@ class ServiciosAsignados
 
 
 
+	public function ObtenerHorariosOrdenados()
+	{
+		$fechaactual=date('Y-m-d');
+		$horaactual=date('H:i:s');
+		$dia=date('w');
+		$sql="	SELECT* FROM
+					horariosservicio 
+				WHERE
+					idservicio = '$this->idservicio'  
+					AND fecha <='$fechaactual'
+					 ORDER BY fecha,dia,horainicial";
+
+				
+				
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		$newArray=array();
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+					$horaactual=date('H:i:s');
+					$dia=date('w');
+					$horaentrada=date('H:i:s',strtotime($objeto->horainicial));
+
+					
+					$datetime1 = $fechaactual.' '.$horaactual;//start time
+					$datetime2 = $objeto->fecha.' '.$objeto->horainicial;//end time
+
+					$consulta="SELECT TIMESTAMPDIFF(MINUTE,'$datetime1','$datetime2') as intervalo";
+					$resp2=$this->db->consulta($consulta);
+					$obj=$this->db->fetch_assoc($resp2);
+
+					$interval = $obj['intervalo'];
+
+
+						$objeto->diferencia=$interval;
+						
+						$array[$contador]=$objeto;
+
+						$salir=1;
+						//break;
+
+					//}
+					$contador++;
+				}
+
+
+					usort($array, function ($a, $b) {
+					    return strcmp($a->diferencia,$b->diferencia);
+						});
+					 		
+								
+
+			} 
+		
+		
+		return $array;
+
+	}
+
 	public function obtenerUsuariosServiciosAlumnosAsignados()
 	{
 		$sql="SELECT
@@ -288,7 +425,8 @@ class ServiciosAsignados
 				usuarios.foto,
 				usuarios.tipo,
 				tipousuario.nombretipo,
-				usuarios.alias
+				usuarios.alias,
+				usuarios.sexo
 				FROM
 				usuarios_servicios
 				JOIN usuarios
@@ -709,4 +847,159 @@ class ServiciosAsignados
 		
 		return $array;
 	}
+
+	
+	public function BuscarAsignacionCoach()
+	{
+		
+		$sql="SELECT
+				*
+				FROM
+				usuarios_servicios
+				JOIN usuarios
+				ON usuarios_servicios.idusuarios = usuarios.idusuarios
+				JOIN tipousuario
+				ON tipousuario.idtipousuario=usuarios.tipo
+				JOIN usuarioscoachs
+				ON usuarioscoachs.idusuarios_servicios=usuarios_servicios.idusuarios_servicios
+				WHERE tipousuario.idtipousuario=5 AND 
+				usuarios_servicios.idservicio = '$this->idservicio'  AND cancelacion=0
+		 ";
+
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function CancelarServicio()
+	{
+		$fecha=date('Y-m-d H:i:s');
+		$sql="UPDATE usuarios_servicios SET 
+		estatus=2,
+		cancelacion=1,
+		aceptarterminos=0,
+		fechacancelacion='$fecha'
+		WHERE idusuarios_servicios='$this->idusuarios_servicios'";
+		$resp=$this->db->consulta($sql);
+
+	}
+
+
+
+
+	public function VerificarSihaPagado()
+	{
+		$sql="SELECT * FROM pagos
+			WHERE  idservicio = '$this->idservicio' 
+			AND pagado=1 AND idusuarios='$this->idusuario'
+		 ";
+
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerUsuariosServiciosaCancelar($idusuariosacancelar)
+	{
+		$sql="SELECT
+			*FROM usuarios_servicios WHERE
+			usuarios_servicios.idservicio = '$this->idservicio' AND usuarios_servicios.idusuarios IN($idusuariosacancelar) ";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerUltimopago()
+	{
+		$sql = "SELECT 
+					pagos.idpago,
+					pagos.idusuarios,
+					pagos.idservicio,
+					pagos.idmembresia,
+					pagos.tipo,
+					pagos.monto,
+					pagos.estatus,
+					pagos.fechapago,
+					pagos.tarjeta,
+					pagos.fechacreacion,
+					pagos.pagado,
+					pagos.validadoporusuario,
+					pagos.digitostarjeta,
+					pagos.tipopago,
+					pagos.fechaevento,
+					pagos.dividido,
+					pagos.fechainicial,
+					pagos.fechafinal,
+					pagos.concepto,
+					pagos.idtipopago,
+					pagos.tipodepago,
+					pagos.descuento,
+					pagos.folio,
+					usuarios.nombre,
+					usuarios.paterno,
+					usuarios.materno,
+					usuarios.email,
+					usuarios.celular
+			    FROM pagos
+				LEFT JOIN usuarios ON usuarios.idusuarios=pagos.idusuarios
+			    WHERE pagos.estatus=2 and pagos.pagado=1 AND pagos.idusuarios  IN($this->idusuarios) AND idservicio='$this->idservicio' GROUP BY idpago,idusuarios ORDER BY idpago ";
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
+	}
+
 }

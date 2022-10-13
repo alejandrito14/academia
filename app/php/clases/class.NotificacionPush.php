@@ -13,6 +13,7 @@ class NotificacionPush
     public $valor;
     public $navpage;
     public $idcliente;
+    public $idnotificacioncliente;
 	public function EnviarNotificacion($listatokens,$titulo,$mensaje)
 	{
 
@@ -59,19 +60,39 @@ class NotificacionPush
 
     public function AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus)
     {
-       $sql="INSERT INTO notificacionadmin(idusuario,texto,ruta,valor,estatus) VALUES('$idusuario','$texto','$ruta','$valor','$estatus')";
+       $sql="INSERT INTO notificacioncliente(idusuario,texto,ruta,valor,estatus) VALUES('$idusuario','$texto','$ruta','$valor','$estatus')";
 
      
         $resp=$this->db->consulta($sql);
 
     }
 
-    public function Cambiarestatusnotificacion()
+    public function CambiarEstatusNotificacion()
     {
-          $query = "UPDATE notificacionadmin SET estatus = '$this->estatus' WHERE idnotificacionadmin = '$this->idnotificacionadmin'";
+          $query = "UPDATE notificacioncliente SET estatus = '$this->estatus' WHERE idnotificacioncliente = '$this->idnotificacioncliente'";
         $this->db->consulta($query);
     }
 
+    public function ObtenerNotificacion()
+    {
+       $sql = "SELECT *FROM notificacioncliente WHERE idnotificacioncliente='$this->idnotificacioncliente'  ";
+
+            $resp = $this->db->consulta($sql);
+            $cont = $this->db->num_rows($resp);
+
+
+            $array=array();
+            $contador=0;
+            if ($cont>0) {
+
+                while ($objeto=$this->db->fetch_object($resp)) {
+
+                    $array[$contador]=$objeto;
+                    $contador++;
+                } 
+            }
+            return $array;
+    }
 
 	
 }

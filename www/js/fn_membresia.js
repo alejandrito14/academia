@@ -1,7 +1,7 @@
 
 
 function Guardarmembresia(form,regresar,donde,idmenumodulo)
-{
+{ 
 	if(confirm("\u00BFDesea realizar esta operaci\u00f3n?"))
 	{			
 		//recibimos todos los datos..
@@ -32,7 +32,8 @@ function Guardarmembresia(form,regresar,donde,idmenumodulo)
 				var objeto={
 					servicio:idservicio,
 					selecttipo:selecttipo_,
-					inputcantidad:inputcantidad_
+					inputcantidad:inputcantidad_,
+					idelemento:dividir
 
 				};
 
@@ -53,17 +54,50 @@ function Guardarmembresia(form,regresar,donde,idmenumodulo)
 				var objeto={
 					tiposervicio:idtiposervicio,
 					selecttipo:selecttipo_,
-					inputcantidad:inputcantidad_
-
+					inputcantidad:inputcantidad_,
+					idelemento:dividir
 				};
 
 				tiposerviciosasignados.push(objeto);
 
 			});
+			var bandera=1;
 
-			var porcategoria=$("#v_tiposervicio").is(':checked')?1:0;
-			var porservicio=$("#v_servicio").is(':checked')?1:0;
-			var v_color=$("#v_color").val();
+			if (serviciosasignados.length>0) {
+				for (var i = 0; i < serviciosasignados.length; i++) {
+
+					if (serviciosasignados[i].inputcantidad=='') {
+						bandera=0;
+						$("#inputcantidad_"+serviciosasignados[i].idelemento).css('border-color','red');
+					}
+
+					if (serviciosasignados[i].selecttipo == 0) {
+						bandera=0;
+						$("#selecttipo_"+serviciosasignados[i].idelemento).css('border-color','red');
+
+					}
+				}
+			}
+
+			if (tiposerviciosasignados.length>0) {
+			for (var i = 0; i < tiposerviciosasignados.length;i++) {
+				if (tiposerviciosasignados[i].inputcantidad == '') {
+					bandera=0;
+					$("#inputcantidad2_"+tiposerviciosasignados[i].idelemento).css('border-color','red');
+
+				}
+
+				if (tiposerviciosasignados[i].selecttipo == 0) {
+					bandera=0;
+					$("#selecttipo2_"+tiposerviciosasignados[i].idelemento).css('border-color','red');
+
+				}
+			}
+		}
+
+		var porcategoria=$("#v_tiposervicio").is(':checked')?1:0;
+		var porservicio=$("#v_servicio").is(':checked')?1:0;
+		var v_color=$("#v_color").val();
 		var id=$("#id").val();
 		var datos = new FormData();
 
@@ -98,8 +132,9 @@ function Guardarmembresia(form,regresar,donde,idmenumodulo)
 		datos.append('v_limitemembresia',v_limitemembresia);
 
 
-		 $('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
-				
+			if (bandera==1) {
+	$('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
+
 		setTimeout(function(){
 				  $.ajax({
 					url:'catalogos/membresia/ga_membresia.php', //Url a donde la enviaremos
@@ -128,6 +163,15 @@ function Guardarmembresia(form,regresar,donde,idmenumodulo)
 					  	}
 				  });				  					  
 		},1000);
+
+		}else{
+
+
+			if (bandera==0) {
+
+			AbrirNotificacion('Datos incompletos',"mdi-close-circle");			
+			}
+		}
 	 }
 }
 

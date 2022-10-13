@@ -201,6 +201,127 @@ class Pagos
 		}
 
 
+		public function ObtenerdescuentosPagos()
+		{
+			$sql = "SELECT * FROM pagodescuento
+			INNER JOIN descuento ON descuento.iddescuento=pagodescuento.iddescuento
+			 WHERE idpago='$this->idpago' ORDER BY idpago ";
+
+	
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
+		}
+
+		public function Obtenerdescuentosmembresia()
+		{
+			$sql = "SELECT * FROM pagodescuentomembresia
+			INNER JOIN membresia ON membresia.idmembresia=pagodescuentomembresia.idmembresia
+			 WHERE idpago='$this->idpago' ORDER BY idpago ";
+
+	
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;		
+		}
+
+		public function Listadopagospagadosstripe()
+		{
+			$sql = "SELECT
+				pagos_pagostripe.idpagostripe,
+				pagostripe.monto,
+				pagostripe.idusuarios,
+				pagostripe.idtransaccion,
+				pagostripe.fechatransaccion,
+				pagostripe.fecha,
+				pagostripe.tipo,
+				pagostripe.comision,
+				pagostripe.comisiontotal,
+				pagostripe.comisionmonto,
+				pagostripe.impuestototal,
+				pagostripe.subtotalsincomision,
+				pagostripe.total,
+				pagostripe.idpagostripe,
+
+				(SELECT GROUP_CONCAT(concepto)as concepto FROM pagos_pagostripe 
+				INNER JOIN pagos ON pagos_pagostripe.idpago=pagos.idpago
+				WHERE idpagostripe=pagostripe.idpagostripe
+
+				)as concepto
+				FROM
+				pagostripe
+				JOIN pagos_pagostripe
+				ON pagostripe.idpagostripe = pagos_pagostripe.idpagostripe 
+				JOIN pagos
+				ON pagos_pagostripe.idpago = pagos.idpago
+				LEFT JOIN usuarios ON usuarios.idusuarios=pagos.idusuarios
+			    WHERE pagos.estatus=2 AND pagos.pagado=1 AND pagos.idusuarios  IN($this->idusuarios) GROUP BY pagos.idpago,idusuarios ORDER BY pagos.idpago ";
+	
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
+		}
+
+
+	public function ListadoNotaspagospagados()
+		{
+			$sql = "SELECT *FROM
+					notapago		
+			    	WHERE notapago.idusuario  
+			    	IN($this->idusuarios) AND estatus=1 ORDER BY idnotapago DESC";
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
+		}
+
 
 }
 

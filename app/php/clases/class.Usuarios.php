@@ -980,7 +980,7 @@ public function validarUsuarioClienteTokenCel()
             FROM usuariossecundarios
             INNER JOIN usuarios ON usuariossecundarios.idusuariostutor=usuarios.idusuarios
         WHERE usuariossecundarios.idusuariotutorado='$this->idusuarios' ";
-      
+     
         $resp=$this->db->consulta($sql);
         $cont = $this->db->num_rows($resp);
 
@@ -1038,6 +1038,84 @@ public function validarUsuarioClienteTokenCel()
         
         return $orden;
     }
+
+  public function ActualizarCelRespaldo($celular)
+    {
+        $query = "UPDATE usuarios SET
+         celular = '',
+         celularrespaldo='$celular',
+         estatus=0
+        WHERE idusuarios = '$this->idusuarios' ";
+
+         $result = $this->db->consulta($query);
+
+    }  
+
+     public function ObtenerAdministradores()
+    {
+       $sql="SELECT *from usuarios WHERE tipo=0 AND estatus=1 ";
+      
+        $resp = $this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+        $array    = array();
+        $contador = 0;
+        if ($cont > 0) {
+
+            while ($objeto = $this->db->fetch_object($resp)) {
+
+                $array[$contador] = $objeto;
+                $contador++;
+            }
+        }
+        return $array;
+    }
+
+
+
+
+    public function ObtenerNotificacionesNoleidas()
+    {
+        $sql = "SELECT *FROM notificacioncliente WHERE idusuario='$this->idusuarios' and estatus=0 ORDER BY idnotificacioncliente DESC";
+
+        $resp = $this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+        $array    = array();
+        $contador = 0;
+        if ($cont > 0) {
+
+            while ($objeto = $this->db->fetch_object($resp)) {
+
+                $array[$contador] = $objeto;
+                $contador++;
+            }
+        }
+        return $array;
+    }
+
+    public function ObtenerTodasNotificaciones()
+    {
+        $sql = "SELECT *FROM notificacioncliente WHERE idusuario='$this->idusuarios' ORDER BY idnotificacioncliente DESC";
+
+        $resp = $this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+        $array    = array();
+        $contador = 0;
+        if ($cont > 0) {
+
+            while ($objeto = $this->db->fetch_object($resp)) {
+
+                $array[$contador] = $objeto;
+                $contador++;
+            }
+        }
+        return $array;
+
+    }
+
+
 
 }
 

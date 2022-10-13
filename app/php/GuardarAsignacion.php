@@ -9,6 +9,7 @@ require_once("clases/class.Funciones.php");
 require_once("clases/class.ServiciosAsignados.php");
 require_once("clases/class.Usuarios.php");
 require_once("clases/class.Servicios.php");
+require_once("clases/class.Invitacion.php");
 
 
 try
@@ -22,6 +23,8 @@ try
 	$usuarios->db=$db;
 	$emp=new Servicios();
 	$emp->db=$db;
+	$invitacion=new Invitacion();
+	$invitacion->db=$db;
 	$db->begin();
 
 	//Enviamos la conexion a la clase
@@ -31,6 +34,8 @@ try
 	$idusuarios=explode(',', $_POST['usuariosagregados']);
 	$idservicio=$_POST['idservicio'];
 	$iduser=$_POST['id_user'];
+
+
 	$serviciosasignados->idservicio=$idservicio;
 	$obtenerdatosservicio=$serviciosasignados->ObtenerServicio();
 	$usuariosquitados=$_POST['usuariosquitados'];
@@ -139,8 +144,14 @@ try
 		
 		$consulta=$serviciosasignados->BuscarAsignacion();
 
+		$invitacion->idservicio=$idservicioasignar;
+		$invitacion->idusuarioinvitado=$idusuarios[$i];
+		$invitacion->idusuarioinvita=$iduser;
+
+		$invitacion->EliminarInvitacion();
 		if (count($consulta)==0) {
 		$serviciosasignados->GuardarAsignacion();
+		$invitacion->GuardarInvitacion();
 
 		}
 	}

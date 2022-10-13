@@ -44,6 +44,7 @@ try
 	$zonas->db=$db;
 	$fecharecibida=$_POST['fecha'];
 	$fecha=date('Y-m-d',strtotime($fecharecibida));
+	$intervaloconf=$dashboard->ObtenerIntervalo();
 
 	$operacion=$_POST['operacion'];
 
@@ -65,7 +66,7 @@ try
 
 	$obtenerfecha=$fechas->fecha_texto4($fecha);
 	
-	$obtenerintervalos=$fechas->intervaloHora('00:00:00','23:59:00',30);
+	$obtenerintervalos=$fechas->intervaloHora('00:00:00','23:59:00',$intervaloconf);
 
 	$obtenerzonas=$zonas->ObtZonasActivosOrdenadas();
 
@@ -106,6 +107,9 @@ try
 
 						array_push($obtenerzonas[$i]->intervalos, $arrayintervalo);
 
+
+					
+
 				}
 
 
@@ -115,14 +119,21 @@ try
 	}
 
 
+/*	$obtenerintervaloscon=$fechas->intervaloHora('00:00:00','23:59:00',$intervaloconf);
+
+*/
+
+	/**/
+
+
 	$respuesta['respuesta']=1;
 	$respuesta['fechaactual']=$obtenerfecha;
 	$respuesta['horarios']=$obtener;
 	$respuesta['intervalos']=$obtenerintervalos;
-	$respuesta['pxintervalo']=30+10;
+	$respuesta['pxintervalo']=$intervaloconf+10;
 	$respuesta['zonas']=$obtenerzonas;
 	$respuesta['fecha']=$fecha;
-
+	$respuesta['intervaloconf']=$intervaloconf;
 	echo json_encode($respuesta);
 
 

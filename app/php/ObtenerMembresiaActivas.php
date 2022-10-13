@@ -24,6 +24,7 @@ try
 	$lo->idusuarios=$_POST['idusuario'];
 	$usuarios->idusuarios=$lo->idusuarios;
 	$verificarsiestutorado=$usuarios->VerificarSiesTutorado();
+	$obterusuario=$usuarios->ObtenerUsuario();
 	
 	$obtenertablero=$lo->ObtenerUsuarioMembresias();
 	$idmembresias="";
@@ -38,7 +39,7 @@ try
 				$idtutor=$verificarsiestutorado[0]->idusuariostutor;
 
 				$buscarSiTutorTieneMembresia=$lo->buscarSiTutorTieneMembresia($idtutor);
-
+				
 				if (count($buscarSiTutorTieneMembresia)>0) {
 					$idmembresiapadre=$buscarSiTutorTieneMembresia[0]->idmembresia;
 				
@@ -81,6 +82,7 @@ try
 
 	$respuesta['respuesta']=$obtenerMembresias;
 	$respuesta['membresias']=$obtenertablero;
+	$respuesta['usuario']=$obterusuario[0];
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);
 	echo $myJSON;

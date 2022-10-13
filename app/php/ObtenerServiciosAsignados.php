@@ -50,7 +50,7 @@ try
 	 	$participantes=$lo->obtenerUsuariosServiciosAlumnosAsignados();
 		$obtenerservicios[$i]->cantidadalumnos=count($participantes);
 		$porpasar=1;
-
+		
 		if (count($obtenerhorarios)==0) {
 			
 		//horarios pasados

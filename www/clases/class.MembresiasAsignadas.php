@@ -57,8 +57,8 @@ class MembresiasAsignadas
 
 	public function EliminarAsignacionesMembresiasNoPagadas()
 	{
-		$sql = "DELETE FROM usuarios_membresia WHERE idusuarios='$this->idusuarios' AND pagado=0 AND tarjeta IS NULL ";
-
+		$sql = "DELETE FROM usuarios_membresia WHERE idusuarios='$this->idusuarios' AND pagado=0  ";
+		
 		$resp=$this->db->consulta($sql);
 		
 		return $resp;

@@ -1319,19 +1319,19 @@ $$(document).on('page:init', '.page[data-name="asignaralumnos"]', function (e) {
   if (localStorage.getItem('idtipousuario')==0) {
      $(".regreso").attr('href','/detalleservicioadmin/');
     ObtenerAlumnosAdmin();
-    ObtenerParticipantesAlumnosServicio();
+   // ObtenerParticipantesAlumnosServicio();
    }
 
   if (localStorage.getItem('idtipousuario')==3) {
      $(".regreso").attr('href','/detalleservicio/');
      ObtenerAlumnos();
-    ObtenerParticipantesAlumnosServicio();
+    //ObtenerParticipantesAlumnosServicio();
 
    }
    if (localStorage.getItem('idtipousuario')==5){
       $(".regreso").attr('href','/detalleserviciocoach/');
    ObtenerAlumnos();
-   ObtenerParticipantesAlumnosServicio();
+   //ObtenerParticipantesAlumnosServicio();
     }
 
 

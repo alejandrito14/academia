@@ -69,7 +69,7 @@ class NotificacionPushCliente
         $this->db->consulta($query);
     }
 
-
+   
 	
 }
 

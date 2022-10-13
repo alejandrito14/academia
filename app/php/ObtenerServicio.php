@@ -29,9 +29,25 @@ try
 	$lo->db = $db;
 	$asignar->db=$db;
 	$lo->idservicio=$_POST['idservicio'];
+	$habilitarcancelacion=0;
 
 	
 	$obtenerservicio=$lo->ObtenerServicio();
+	if ($obtenerservicio[0]->asignadoadmin==1) {
+			$habilitarcancelacion=1;
+		}
+
+	if ($habilitarcancelacion==1) {
+		$fechaactual=date('Y-m-d');
+		$obtenerperiodos=$lo->FechadentrodePeriodos($fechaactual);
+
+		if (count($obtenerperiodos)>0) {
+			$habilitarcancelacion=1;
+		}else{
+			$habilitarcancelacion=0;
+		}
+
+	}
 
 		$asignar->idservicio=$obtenerservicio[0]->idservicio;
 	$arreglohorarios=array();
@@ -78,7 +94,7 @@ try
 
 
 	$respuesta['respuesta']=$obtenerservicio;
-	
+	$respuesta['habilitarcancelacion']=$habilitarcancelacion;
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);
 	echo $myJSON;

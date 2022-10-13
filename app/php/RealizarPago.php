@@ -18,6 +18,7 @@ require_once("clases/class.ClienteStripe.php");
 require_once("clases/class.Tipodepagos.php");
 require_once("clases/class.PagConfig.php");
 require_once("clases/class.Membresia.php");
+require_once("clases/class.Notapago.php");
 
 include 'stripe-php-7.93.0/init.php';
 $folio = "";
@@ -35,6 +36,9 @@ $comisionmonto=$_POST['comisionmonto'];
 $comisiontotal=$_POST['comisiontotal'];
 $impuestototal=$_POST['impuestototal'];
 $impuesto=$_POST['impuesto'];
+$montomonedero=$_POST['monedero']==''?0:$_POST['monedero'];
+$datostarjeta=$_POST['datostarjeta'];
+$datostarjeta2=$_POST['datostarjeta2'];
 
 $subtotalsincomision=$_POST['subtotalsincomision'];
 
@@ -45,11 +49,17 @@ try {
 	 $obj->db=$db;
      $db->begin();
      $f = new Funciones();
-    
+   $lo=new ServiciosAsignados();
+   $lo->db=$db;
  	 $paginaconfi     = new PagConfig();
      $paginaconfi->db = $db;
      $obtenerconfiguracion=$paginaconfi->ObtenerInformacionConfiguracion();
 	 $obj->idusuarios=$iduser;
+
+    $contador=$lo->ActualizarConsecutivo();
+    $fecha = explode('-', date('d-m-Y'));
+    $anio = substr($fecha[2], 2, 4);
+    $folio = $fecha[0].$fecha[1].$anio.$contador;
 
 
 
@@ -58,13 +68,17 @@ try {
             $tipopago->db=$db;
             $tipopago->idtipodepago=$idtipodepago;
             $obtenertipopago=$tipopago->ObtenerTipodepago2();
+
+            if ($obtenertipopago[0]->constripe==1) {
+              # code...
+            
             $skey=$obtenertipopago[0]->claveprivada;
             $pub_key=$obtenertipopago[0]->clavepublica;
             $obj->skey=$skey;
 
              $cantidadintentos=$obtenerconfiguracion['intentostarjeta'];
             $monto =  $sumatotalapagar*100;  
-            $descripcion = "Pago servicio ".$obtenerconfiguracion['nombrenegocio1'];
+            $descripcion = "Pago servicio ".$obtenerconfiguracion['nombrenegocio1'].' '.$folio;
 
                 $obj->idTransaccion = '';
                 $obj->monto = $monto;
@@ -194,6 +208,10 @@ try {
 
           }
 
+        }else{
+          $estatusdeproceso=1;
+        }
+
           if ($estatusdeproceso==1) {
           	   $db = new MySQL();
           	   $db->begin();
@@ -205,6 +223,29 @@ try {
                $lo->db=$db;
                $membresia= new Membresia();
                $membresia->db=$db;
+
+               $notapago=new Notapago();
+               $notapago->db=$db;
+
+         $notapago->idusuario=$iduser;
+         $notapago->subtotal=$subtotalsincomision;
+         $notapago->iva=0;
+         $notapago->total=$sumatotalapagar;
+         $notapago->comisiontotal=$comisiontotal;
+         $notapago->montomonedero=$montomonedero;
+         $notapago->estatus=0;
+         $notapago->tipopago=$obtenertipopago[0]->tipo;
+         $notapago->idtipopago=$idtipodepago;
+         $notapago->confoto=0;
+         $notapago->datostarjeta=$datostarjeta;
+         $notapago->datostarjeta2=$datostarjeta2;
+         $notapago->idpagostripe=0;
+         $notapago->folio=$folio;
+         $notapago->descuento=0;
+         $notapago->descuentomembresia=0;
+         $notapago->CrearNotapago();
+
+
 
           	for ($i=0; $i < count($pagosconsiderados); $i++) { 
           		
@@ -242,10 +283,7 @@ try {
                       $pagos->fechainicial='';
                       $pagos->fechafinal='';
                       $pagos->concepto=$obtenermembresia[0]->titulo;
-                      $contador=$lo->ActualizarConsecutivo();
-                          $fecha = explode('-', date('d-m-Y'));
-                        $anio = substr($fecha[2], 2, 4);
-                        $folio = $fecha[0].$fecha[1].$anio.$contador;
+                     
                         
                       $pagos->folio=$folio;
                       $pagos->CrearRegistroPago();
@@ -253,44 +291,68 @@ try {
 
 
 
+                  }else{
+                      $membresia->idmembresia=$buscarpago[0]->idmembresia;
+                      $obtenermembresia=$membresia->ObtenerMembresia();
                   }
                    $pagos->estatus=2;
                    $pagos->ActualizarEstatus();
                    $pagos->ActualizarPagado();
 
                    $membresia->idusuarios=$iduser;
+                 
                   $buscarmembresiausuario=$membresia->buscarMembresiaUsuario();
-
+                
 
                    $dias=$obtenermembresia[0]->cantidaddias;
                    $date = date("d-m-Y");
                    $mod_date = strtotime($date."+ ".$dias." days");
                    $membresia->fechaexpiracion= date("Y-m-d",$mod_date).' 23:59:59';
 
+                 
+                   $membresia->renovacion=0;
                    if (count($buscarmembresiausuario)>0) {
                       $membresia->idusuarios_membresia= $buscarmembresiausuario[0]->idusuarios_membresia;
-                      $membresia->estatus=0;
-                      $membresia->ActualizarEstatusMembresiaUsuario();
-
-                      $membresia->renovacion=1;
+               
                       $membresia->estatus=1;
                       $membresia->pagado=1;
 
                    }else{
 
-                      $membresia->renovacion=0;
+                     
                       $membresia->estatus=1;
                       $membresia->pagado=1;
+
+                      $ChecarVencidas=$membresia->ObtenerMembresiasVencidas();
+
+                      if (count($ChecarVencidas)>0) {
+                          $membresia->renovacion=1;
+                        }
+
+                      $membresia->CrearRegistroMembresiaUsuario();
                    }
 
-                    $membresia->CrearRegistroMembresiaUsuario();
+                  $membresia->ActualizarEstatusMembresiaUsuarioPagado();
 
           	   }
-          		$pagos->GuardarpagosStripe();
+               //creacion de descripcion de pago
+              $buscarpago=$pagos->ObtenerPago();
+              $notapago->descripcion=$buscarpago[0]->concepto;
+              $notapago->cantidad=1;
+              $notapago->monto=$buscarpago[0]->monto;
+              $notapago->idpago=$buscarpago[0]->idpago;
+               $notapago->Creardescripcionpago();
+          	
+
+
+            	$pagos->GuardarpagosStripe();
 
 
           		}
 
+               $notapago->idpagostripe=$obj->idintento;
+               $notapago->descuento=0;
+               $notapago->descuentomembresia=0;
 
           		if (count($descuentosaplicados)>0) {
           		
@@ -303,9 +365,9 @@ try {
           		$descuentos->tipo=$descuentosaplicados[$i]->tipo;
           		$descuentos->monto=$descuentosaplicados[$i]->monto;
 
-
+               
           		$descuentos->GuardarDescuentoPago();
-
+              $notapago->descuento= $notapago->descuento+$descuentosaplicados[$i]->montoadescontar;
           			}
 
           		}
@@ -321,9 +383,34 @@ try {
                   $membresia->monto=$descuentosmembresia[$i]->monto;
                   $membresia->montoadescontar=$descuentosmembresia[$i]->montoadescontar;
                   $membresia->GuardarPagoDescuentoMembresia();
+                  $notapago->descuentomembresia=$notapago->descuentomembresia+$descuentosmembresia[$i]->montoadescontar;
                 }
               }
+              $notapago->estatus=1;
+              $notapago->ActualizarNotapago();
 
+
+
+
+  if ($montomonedero!='' && $montomonedero!=0) {
+            $usuarios=new Usuarios();
+            $usuarios->db=$db;
+              
+    $usuarios->idusuarios = $iduser;
+    $row_cliente = $usuarios->ObtenerUsuario();
+    $saldo_anterior = $row_cliente[0]->monedero;
+    
+    //Calculamos nuevo saldo
+    $nuevo_saldo = $saldo_anterior - $montomonedero;
+    $sql = "UPDATE usuarios SET monedero = '$nuevo_saldo' WHERE idusuarios = '$iduser'";
+    
+    $db->consulta($sql);
+    //Guardamos el movimiento en tabla cliente_monedero
+    $tipo=1;
+    $concepto="Cargo";
+    $sql_movimiento = "INSERT INTO monedero (idusuarios,monto,modalidad,tipo,saldo_ant,saldo_act,concepto) VALUES ('$iduser','$montomonedero','2','$tipo','$saldo_anterior','$nuevo_saldo','$concepto');";
+     $db->consulta($sql_movimiento);
+   }
 
           		$db->commit();
 

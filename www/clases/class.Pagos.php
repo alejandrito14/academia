@@ -14,7 +14,11 @@ class Pagos
 	public $fechafinal;
 	public $estatus;
 	
-
+	public $idusuarios;
+	public $idservicio;
+	public $idmembresia;
+	public $monto;
+	public $concepto;
 	
 	//Funcion para obtener todos los niveles activos
 	public function ObtPagosActivos()
@@ -192,6 +196,16 @@ class Pagos
 		}
 		
 		return $array;
+	}
+
+
+	public function CrearRegistroPago()
+	{
+		$sql="INSERT INTO pagos(idusuarios, idservicio, idmembresia, tipo, monto, estatus,fechainicial,fechafinal,pagado,concepto,folio) VALUES ( '$this->idusuarios','$this->idservicio','$this->idmembresia','$this->tipo','$this->monto', '$this->estatus','$this->fechainicial','$this->fechafinal',0,'$this->concepto','$this->folio')";
+		
+		$resp=$this->db->consulta($sql);
+		$this->idpago=$this->db->id_ultimo();
+
 	}
 }
 

@@ -100,3 +100,14 @@ function isValidDate (value) {
   }
   return valid;
 }
+
+function fechaformato(fecha) {
+  var monthNamesShort= ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Agost","Sept", "Oct", "Nov", "Dic"];
+
+  var f=new Date(fecha);
+  var mes =f.getMonth();
+  var anio=f.getFullYear();
+
+  //console.log(monthNamesShort[mes]+' '+anio);
+  return monthNamesShort[mes]+' '+anio;
+}

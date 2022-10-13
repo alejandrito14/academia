@@ -11,7 +11,7 @@
 	
 	public function Fechas()
 	{
-		date_default_timezone_set("UTC");
+		date_default_timezone_set("america/mexico_city");
 	}  
 		
 	
@@ -304,6 +304,28 @@
 
 		
 		$f = $diatexto." ".$d." de ".$m.", ".$a;
+
+		return $f;
+	}
+
+	public function fecha_texto5($fecha)
+	{
+				
+
+		$a = $this->elano($fecha);
+		//$m = $this->mesdelano();
+		$d = $this->diadelmes($fecha);
+		
+		
+	
+		$m = $this->mesesAnho[date("n",strtotime($fecha))-1];
+
+		//echo "dia".date('w', strtotime($fecha));die();
+		$diatexto=$this->diasSemana[date('w', strtotime($fecha))];
+		//echo date('w', strtotime($fecha));die();
+
+		
+		$f = $diatexto." ".$d." de ".$m." de ".$a;
 
 		return $f;
 	}

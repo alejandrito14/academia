@@ -319,7 +319,6 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
         // Events
         on: {
           open: function (sheet) {
-            console.log('Sheet open');
 
            var htmlhorarios="";
 	  HorariosDisponiblesFecha(date).then(r => {
@@ -347,7 +346,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 				           		 <p class="text-muted size-14 no-margin-bottom" style="font-weight:bold;">`+fechaformada+`</p>
 
 				                <p class="text-muted size-14 no-margin-bottom">`+r[i].nombrezona+`</p>
-				                <p>Horario `+r[i].horasposibles[0][j].horainicial.slice(0,5)+` - `+r[i].horasposibles[0][j].horafinal.slice(0,5) + `</p>
+				                <p>Horario <span style="font-weight:bold;">`+r[i].horasposibles[0][j].horainicial.slice(0,5)+` - `+r[i].horasposibles[0][j].horafinal.slice(0,5) + `</span></p>
 				              </div>
 				              <div class="col-20">
 
@@ -455,7 +454,6 @@ if (categoriaid>0) {
 					},	
 					success: function (msj) {
 						var dias=msj.horarios;
-						console.log(dias);
 						var horarios=msj.respuesta.horarios;
 						var zonas=msj.respuesta.zonas;
 						var participantes=msj.respuesta.participantes;
@@ -1399,7 +1397,6 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
         // Events
         on: {
           open: function (sheet) {
-            console.log('Sheet open');
 
             ObtenerCoaches().then(r => {
             	var html="";
@@ -3099,7 +3096,7 @@ var bandera=1;
 }
 
 function CambiarColor(ele) {
-		console.log(ele);
+		
 	$('.'+ele).removeClass("requerido");
 	$('.'+ele).addClass("posicionblue");
 

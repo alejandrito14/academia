@@ -117,6 +117,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 <div class="card">
 	<div class="card-body">
 		<div class="table-responsive" id="contenedor_descuentos">
+		
 			<table id="tbl_descuentos" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
 				<thead>
 					<tr>

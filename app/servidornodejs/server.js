@@ -279,14 +279,16 @@ function EnviarMensajeSoportes(data) {
 
       var arrayusuarios=data.arrayusuarios;
 
-
+      if (arrayusuarios.length>0) {
       for (var i = 0; i < arrayusuarios.length; i++) {
           var idusuario=arrayusuarios[i];
           console.log('envio'+idusuario);
           const resultado = clientes.find( cliente => cliente.Iduser ===  idusuario);
+          if (resultado!=undefined) {
           io.in(resultado.clientId).emit('nuevomensaje',data);
-
+        }
       }
+    }
    /* for (var i = 0; i < clientes.length; i++) {
          // if (clientes[i].tipo == 2) {
   console.log("enviar soportes"+data+""+clientes[i].clientId);

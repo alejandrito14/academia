@@ -56,6 +56,7 @@ class Servicios
 	public $politicascancelacion;
 	public $reembolso;
 	public $cantidadreembolso;
+	public $tiporeembolso;
 	public $asignadocliente;
 	public $asignadocoach;
 	public $asignadoadmin;
@@ -147,9 +148,10 @@ class Servicios
 		asignadoadmin,
 		numligarclientes,
 		politicasaceptacion,
-		controlasistencia
+		controlasistencia,
+		tiporeembolso
 
-		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes','$this->politicasaceptacion','$this->controlasistencia')";
+		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes','$this->politicasaceptacion','$this->controlasistencia','$this->tiporeembolso')";
 		
 		$resp=$this->db->consulta($query);
 		$this->idservicio = $this->db->id_ultimo();
@@ -199,7 +201,8 @@ class Servicios
 		asignadocoach='$this->asignadocoach',
 		asignadoadmin='$this->asignadoadmin',
 		politicasaceptacion='$this->politicasaceptacion',
-		controlasistencia='$this->controlasistencia'
+		controlasistencia='$this->controlasistencia',
+		tiporeembolso='$this->tiporeembolso'
 		WHERE idservicio=$this->idservicio";
 
 		
@@ -767,6 +770,79 @@ class Servicios
 
 		$resp=$this->db->consulta($sql);
 		return $resp;
+	}
+
+	public function ObtenerServiciosFiltrado($tiposervicio,$coach)
+	{
+		$sql="SELECT servicios.idservicio,servicios.titulo,servicios.imagen,categorias.titulo as nombrecategoria,categorias.idcategorias,servicios.orden,servicios.estatus FROM servicios ";
+		$filtro="";
+		if ($tiposervicio>=0) {
+		$sql.=" INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio ";
+			if ($tiposervicio>0) {
+		$filtro.="AND categorias.idcategorias='$tiposervicio'";
+			}
+		}
+
+		if ($coach>0 && $coach!='t') {
+		$sql.=" INNER JOIN usuarios_servicios ON usuarios_servicios.idservicio = servicios.idservicio
+		INNER JOIN usuarios ON usuarios.idusuarios=usuarios_servicios.idusuarios ";
+
+		if ($tiposervicio>0 && $coach>-1 && $coach!='t') {
+		$filtro.=" AND usuarios.tipo='5'";
+
+			}
+			if ($coach>0) {
+			$filtro.=" AND usuarios.idusuarios='$coach'";
+
+			}
+		}
+
+
+		if ($filtro!='') {
+			$sql.="WHERE 1=1 ";
+		}
+		$sql.=$filtro;
+
+		$sql.=" GROUP BY idservicio";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerSiHayPago()
+	{
+		$sql="SELECT *FROM pagos WHERE idservicio='$this->idservicio'";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
 	}
 
 }

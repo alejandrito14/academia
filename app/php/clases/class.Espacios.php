@@ -26,6 +26,7 @@ class Espacios
 	{
 	try {
 		$query="SELECT * FROM zonas WHERE idzona=".$this->idespacio;
+	
 		$resp=$this->db->consulta($query);
 		
 			return $resp;

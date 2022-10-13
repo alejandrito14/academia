@@ -27,8 +27,8 @@ try
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
 	$serviciosasignados->db=$db;
-	$idusuariosparaasignar=$_POST['idusuarios'];
-	$idusuarios=explode(',', $_POST['idusuarios']);
+	$idusuariosparaasignar=$_POST['usuariosagregados'];
+	$idusuarios=explode(',', $_POST['usuariosagregados']);
 	$idservicio=$_POST['idservicio'];
 	$iduser=$_POST['id_user'];
 	$serviciosasignados->idservicio=$idservicio;
@@ -148,7 +148,7 @@ try
 
 	$obtenerusuarioscancelacion=$serviciosasignados->BuscarAsignacionCancelacion($idusuariosparaasignar);
 
-	if (count($obtenerusuarioscancelacion)>0) {
+	/*if (count($obtenerusuarioscancelacion)>0) {
 		for ($i=0; $i < count($obtenerusuarioscancelacion); $i++) { 
 
 			$idusuariocancelado=$obtenerusuarioscancelacion[$i]->idusuarios;
@@ -181,7 +181,7 @@ try
 			}
 			
 		}
-	}
+	}*/
 	}
 }
 

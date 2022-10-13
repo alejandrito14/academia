@@ -91,24 +91,24 @@ if(isset($_SESSION['permisos_acciones_erp'])){
                                       </div>
                                   </div>
                               </div> -->
-                            <div class="col-xl-3 col-md-4">
-                                <div class="card bg-azul text-white mb-4">
-                                    <div class="card-body">ALUMNOS</div>
-                                    <div class="card-footer ">
+                <div class="col-xl-3 col-md-4">
+                <div class="card bg-azul text-white mb-4">
+                <div class="card-body">ALUMNOS</div>
+                <div class="card-footer ">
                 <a class=" text-white " onclick="ListadoAlumnos()" style="width: 100%;cursor: pointer;">
-                                        	<h3>
-	                                        	<span class="mdi  mdi-account"></span></span>
-	                                        	<span id="alumnosregistrados">0</span>
-	                                        	</h3>
+                    <h3>
+	                   <span class="mdi  mdi-account"></span></span>
+	                   <span id="alumnosregistrados">0</span>
+	                 </h3>
 
-                                        </a>
-                                        <div class="small text-white"><!-- <i class="fas fa-angle-right"></i> Font Awesome fontawesome.com -->
+                </a>
+              <div class="small text-white"><!-- <i class="fas fa-angle-right"></i> Font Awesome fontawesome.com -->
                                          
-     <div id="mostraralumnos">
+          <div id="mostraralumnos">
             <div id="" class="panel-actions">
             <span style="    justify-content: right;
-    display: flex;font-size: 15px;" onclick="CerrarAlumnos()" class="actions "><span class="mdi mdi-close-circle"></span>
-   </span>
+              display: flex;font-size: 15px;" onclick="CerrarAlumnos()" class="actions "><span class="mdi mdi-close-circle"></span>
+             </span>
           </div>
 
             <div class="table-responsive">
@@ -208,17 +208,17 @@ if(isset($_SESSION['permisos_acciones_erp'])){
                             </div>
                            </div>
 
-                               <div class="col-xl-3 col-md-4">
-                                <div class="card bg-success text-white mb-4">
-                                    <div class="card-body">SERVICIOS</div>
-                                    <div class="card-footer ">
-                                        <a class="small text-white stretched-link" onclick="ListadoServicios()" style="width: 100%;cursor: pointer;">
-                                          <h3>
-                                            <span class="mdi mdi-checkbox-blank-circle"></span></span>
-                                            <span id="cantidadservicios">0</span>
-                                            </h3>
-                                        </a>
-                                        <div class="small text-white">
+                          <div class="col-xl-3 col-md-4">
+                          <div class="card bg-success text-white mb-4">
+                            <div class="card-body">SERVICIOS</div>
+                              <div class="card-footer ">
+                            <a class="small text-white stretched-link" onclick="ListadoServicios()" style="width: 100%;cursor: pointer;">
+                              <h3>
+                             <span class="mdi mdi-checkbox-blank-circle"></span></span>
+                              <span id="cantidadservicios">0</span>
+                             </h3>
+                           </a>
+                       <div class="small text-white">
                                          
               <div id="mostrarservicios">
 
@@ -270,7 +270,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
  
                             <div class="col-xl-3 col-md-6">
                                 <div class="card  text-white mb-4">
-                                  <div class="card-title" id="txttitle" style="color: black;font-size: 16px;text-align: center;padding-top: 1em;">Horarios</div>
+                                 <!--  <div class="card-title" id="txttitle" style="color: black;font-size: 16px;text-align: center;padding-top: 1em;">Horarios</div> -->
                                     <div class="card-body">
                                       <div class="horarios"></div>
                                     </div>
@@ -279,8 +279,23 @@ if(isset($_SESSION['permisos_acciones_erp'])){
                             </div>
 
 
-                             <div class="col-md-12">
-                              <div class="row">
+                       <div class="col-md-12 divintervaloshorarios" style="display: none;">
+                        <div class="row" style="margin-bottom:10px; ">
+                          <div class="col-md-9"></div>
+                          <div class="col-md-3">
+                            <label for="">Intervalos</label>
+                            <select name="v_intervalo" id="v_intervalo" class="form-control" onchange="ColocarIntervalo()">
+                              <option value="15">15min</option>
+                              <option value="30">30min</option>
+                              <option value="60">60min</option>
+                            </select>
+                        
+                          <div class=""></div>
+                        </div>
+                        </div>
+
+                        <div class="divintervaloshorarios" style="display: none;">
+                        <div class="row " id="" style="margin-bottom: 1em;">
 
                                 <div class="col-md-3" style="    display: flex;justify-content: start;padding: 0;">
                                    <span onclick="ObtenerHorariosDia(1)" class="fc-button fc-button-prev fc-state-default fc-corner-left" >
@@ -291,7 +306,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
                                 </div>
                                 <div class="col-md-6" id="" style="font-size: 26px;font-weight: bold;">
                                   
-                                  <div id="fechaactualdiv"  style="float: left;"></div>
+                                  <div id="fechaactualdiv" style="    text-align: center;"></div>
                                
                                 </div>
 
@@ -307,7 +322,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
                                  </div>
 
                               </div>
-                              <div class="row">
+                              <div class="row " style="" >
 
                                 <div class="col-2" style="border: 1px solid #eaebf1;">
                                   <div class="row">
@@ -334,6 +349,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
                               </div>
+
+                            </div>
 
                             </div>
                             <!-- <div class="col-xl-3 col-md-6">
@@ -376,13 +393,45 @@ if(isset($_SESSION['permisos_acciones_erp'])){
   </div>
 </div>
 
+
+
+<div class="modal fade" id="modalServicios" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <table class="table table-striped table-bordered ">
+        <thead>
+          <tr>
+            <th>ALUMNO</th>
+            <th>PAGADO</th>
+          </tr>
+        </thead>
+        <tbody id="usuariosinscritos">
+          
+        </tbody>
+       </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
 <style>
 #picker2 table {
   /*  border-collapse: collapse;*/
     table-layout: fixed;
     width:100%;
-    box-shadow: 0px 0px 1px rgba(0,0,0,0.2);
-    background-color: #fff;
+/*    box-shadow: 0px 0px 1px rgba(0,0,0,0.2);
+*/    background-color: #fff;
     position: relative;
     top: 0;
     left: 0;
@@ -651,7 +700,7 @@ display: flex;
   PintarCalendario2();
   PintarHorarioDisponible();
   //PintarDisponible();
-
+  ObtenerFechaActual();
   
 
    $('#tbltablealumnos').DataTable( {  

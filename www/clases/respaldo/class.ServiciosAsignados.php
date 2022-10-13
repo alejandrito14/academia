@@ -297,8 +297,7 @@ class ServiciosAsignados
 				WHERE
 				usuarios_servicios.idservicio='$this->idservicio' AND usuarios.idusuarios NOT IN('$this->idusuario') AND usuarios.tipo=3 and usuarios_servicios.cancelacion=0 ORDER BY usuarios.tipo DESC 
 		 ";
-
-		 
+		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -374,7 +373,7 @@ class ServiciosAsignados
 				JOIN tipousuario
 				ON tipousuario.idtipousuario=usuarios.tipo
 				WHERE tipousuario.idtipousuario=3 AND 
-				usuarios_servicios.idservicio = '$this->idservicio' AND usuarios.idusuarios='$this->idusuario'
+				usuarios_servicios.idservicio = '$this->idservicio' AND usuarios.idusuarios='$this->idusuario' AND cancelacion=0
 		 ";
 
 		
@@ -669,6 +668,8 @@ class ServiciosAsignados
 
 		$encontrado=false;
 
+		//var_dump($array);
+
 		if (count($array)>0) {
 			# code...
 		
@@ -684,6 +685,140 @@ class ServiciosAsignados
 
 		return $encontrado;
 
+	}
+
+
+	public function BuscarAsignacionCancelacionUsuarios($idusuariosnoconsiderados)
+	{
+		$sql="SELECT
+				*
+				FROM
+				usuarios_servicios
+				JOIN usuarios
+				ON usuarios_servicios.idusuarios = usuarios.idusuarios
+				JOIN tipousuario
+				ON tipousuario.idtipousuario=usuarios.tipo
+				WHERE tipousuario.idtipousuario=3 AND cancelacion=0 and 
+				usuarios_servicios.idservicio = '$this->idservicio' AND usuarios_servicios.idusuarios  IN($idusuariosnoconsiderados)
+		 ";
+
+		
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+		public function obtenerUsuariosServiciosAsignadosAgrupadosAlumnos()
+	{
+		$sql="SELECT
+				
+				GROUP_CONCAT(usuarios.idusuarios) as idusuarios
+				
+				FROM
+				usuarios_servicios
+				JOIN usuarios
+				ON usuarios_servicios.idusuarios = usuarios.idusuarios
+				JOIN tipousuario
+				ON tipousuario.idtipousuario=usuarios.tipo
+				WHERE
+				usuarios_servicios.idservicio='$this->idservicio' AND usuarios.idusuarios  AND cancelacion=0 ORDER BY usuarios.tipo DESC 
+		 ";
+		
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function EvaluarHorarioFechaServicio($fechae,$horainicale,$horafinale)
+	{
+
+		$datetime1 = $this->fecha;
+		$datetime2 = $fechae;
+
+
+		if($datetime1==$datetime2){
+
+			
+			if ($this->horainicial>=$horainicale && $this->horafinal<=$horafinale ) {
+
+				return true;
+			}else{
+				return false;
+			}
+
+		}else{
+
+			return false;
+		}
+		
+		
+	}
+
+
+
+	public function BuscarAsignacionCoach()
+	{
+		
+		$sql="SELECT
+				*
+				FROM
+				usuarios_servicios
+				JOIN usuarios
+				ON usuarios_servicios.idusuarios = usuarios.idusuarios
+				JOIN tipousuario
+				ON tipousuario.idtipousuario=usuarios.tipo
+				JOIN usuarioscoachs
+				ON usuarioscoachs.idusuarios_servicios=usuarios_servicios.idusuarios_servicios
+				WHERE tipousuario.idtipousuario=5 AND 
+				usuarios_servicios.idservicio = '$this->idservicio'  AND cancelacion=0
+		 ";
+
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
 	}
 
 

@@ -160,8 +160,8 @@ if($vigente == 1)
 					$se->crearSesion('entradaSAS',time());	
 
 
-					
-					$ruta=array('catalogos/categoriasproducto/imagenes','catalogos/configuracion/imagenes','catalogos/paquetes/imagenespaquete','catalogos/sucursales/imagenes','catalogos/sucursales/imagenesticket','catalogos/secciones/imagenes','catalogos/secciones/imagenesrevista','catalogos/secciones/imagenespromo','catalogos/secciones/imagenesnoticias','catalogos/secciones/imagenesfecha');
+
+					$ruta=array('catalogos/categorias/imagenes','catalogos/configuracion/imagenes','catalogos/anuncios/imagenes','catalogos/anuncios/publicidad','catalogos/entradas/imagenes','catalogos/entradas/videos','catalogos/servicios/imagenes','catalogos/tableroanuncios/imagenes','catalogos/membresia/imagenes');
 
 
 					for ($i=0; $i < count($ruta); $i++) { 

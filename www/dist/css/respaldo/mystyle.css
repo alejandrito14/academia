@@ -170,3 +170,16 @@ input[type=number] { -moz-appearance:textfield; }
 .bg-azul {
   background-color: #007aff  !important; }
 
+.iconofecha{
+
+  background: gray;
+  border-radius: 10px;
+}
+.active1{
+  color: #fff;
+    background-color: #4c32e9;
+    border-color: #4226e8;
+}
+.seleccionado{
+  background:#1167f6;
+}

@@ -117,6 +117,7 @@ try
 	$emp->politicasaceptacion=$_POST['v_politicasaceptacion'];
 	$emp->reembolso=$_POST['v_reembolso'];
 	$emp->cantidadreembolso=$_POST['v_cantidadreembolso'];
+	$emp->tiporeembolso=$_POST['v_tiporeembolso'];
 	$emp->asignadocliente=$_POST['v_asignadocliente'];
 	$emp->asignadocoach=$_POST['v_asignadocoach'];
 	$emp->asignadoadmin=$_POST['v_asignadoadmin'];

@@ -161,10 +161,10 @@ class Usuarios
         $result = $this->db->consulta($query);
     }
 
-	public function GuardarUsuarioyTutor($idusuariotutorado,$parentesco,$soysututor)
+	public function GuardarUsuarioyTutor($idusuariotutorado,$parentesco,$soysututor,$orden)
 	{
-		$sql = "INSERT INTO usuariossecundarios (idusuariostutor,idusuariotutorado,idparentesco,sututor)
-        VALUES ('$this->idusuarios','$this->idusuariotutorado','$parentesco','$soysututor')";
+		$sql = "INSERT INTO usuariossecundarios (idusuariostutor,idusuariotutorado,idparentesco,sututor,orden)
+        VALUES ('$this->idusuarios','$this->idusuariotutorado','$parentesco','$soysututor','$orden')";
 
      
 
@@ -883,7 +883,174 @@ public function validarUsuarioClienteTokenCel()
         
         return $array;
     }
+
+    public function VerificarSiesTutorado()
+    {
+        $sql="SELECT * FROM usuariossecundarios
+        WHERE usuariossecundarios.idusuariotutorado='$this->idusuarios' ";
+
+       
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+    }
+
+    public function ObtenerCategoriasServiciotutor($idtutor)
+    {
+       $sql="SELECT servicios.idservicio,
+        servicios.idcategoriaservicio,  categorias.titulo
+ FROM usuarios_servicios
+       INNER JOIN servicios ON usuarios_servicios.idservicio=servicios.idservicio
+       INNER JOIN categorias On categorias.idcategorias=servicios.idcategoriaservicio
+        WHERE usuarios_servicios.idusuarios='$idtutor' GROUP BY  servicios.idcategoriaservicio";
+
+       
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+    }
+
+    public function ObtenerserviciosTutor($idtutor)
+    {
+       
+       $sql="SELECT servicios.idservicio,
+        servicios.idcategoriaservicio,
+        servicios.titulo
+ FROM usuarios_servicios
+       INNER JOIN servicios ON usuarios_servicios.idservicio=servicios.idservicio
+        WHERE usuarios_servicios.idusuarios='$idtutor' GROUP BY  servicios.idservicio";
+       
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+    }
   
+    public function ObtenerDependencia()
+    {
+            $sql="SELECT 
+                usuarios.nombre,
+                usuarios.paterno,
+                usuarios.materno,
+                usuarios.celular,
+                usuarios.usuario,
+                usuariossecundarios.idusuariossecundario,
+                usuariossecundarios.idusuariostutor,
+                usuariossecundarios.idusuariotutorado,
+                usuariossecundarios.idparentesco,
+                usuariossecundarios.sututor
+            FROM usuariossecundarios
+            INNER JOIN usuarios ON usuariossecundarios.idusuariostutor=usuarios.idusuarios
+        WHERE usuariossecundarios.idusuariotutorado='$this->idusuarios' ";
+     
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+    }
+
+    public function EliminarAsociacionUsuario()
+    {
+         $query = "DELETE FROM usuariossecundarios 
+        WHERE idusuariotutorado = '$this->idusuarios' ";
+    
+        $result = $this->db->consulta($query);
+    }
+
+
+    public function ObtenerOrdenTutorado($idusuariotutor)
+    {
+        $sql="SELECT 
+                MAX(orden) AS orden
+            FROM usuariossecundarios
+            INNER JOIN usuarios ON usuariossecundarios.idusuariostutor=usuarios.idusuarios
+        WHERE usuariossecundarios.idusuariostutor='$idusuariotutor' ";
+       
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+
+        $orden=1;
+        if (count($array)>0) {
+          $orden = $array[0]->orden+1;
+        }
+        
+        return $orden;
+    }
+
+  public function ActualizarCelRespaldo($celular)
+    {
+        $query = "UPDATE usuarios SET
+         celular = '',
+         celularrespaldo='$celular',
+         estatus=0
+        WHERE idusuarios = '$this->idusuarios' ";
+
+         $result = $this->db->consulta($query);
+
+    }  
+
 
 }
 

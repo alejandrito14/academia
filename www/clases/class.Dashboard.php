@@ -220,6 +220,36 @@ public function ObtenerHorariosFechaEspecificaOrdenHorainicial()
 		return $array;
 	}
 
+	public function GuardarIntervalo($intervalo)
+	{
+	
+		$query="UPDATE pagina_configuracion SET 
+		intervalohorarios='$intervalo'";
+
+		$resp=$this->db->consulta($query);
+	
+	}
+
+	public function ObtenerIntervalo()
+	{
+		$query="
+		SELECT intervalohorarios FROM pagina_configuracion
+		";
+
+		$resp = $this->db->consulta($query);
+		$cont = $this->db->num_rows($resp);
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+			while ($objeto=$this->db->fetch_object($resp)) {
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array[0]->intervalohorarios;
+	}
+
 
 }
 

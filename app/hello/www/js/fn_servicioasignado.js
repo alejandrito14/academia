@@ -27,7 +27,7 @@ function ObtenerServicioAsignado() {
 			var invitados=datos.invitados;
 			var habilitarcancelacion=datos.habilitarcancelacion;
 			localStorage.setItem('idservicio',idservicio);
-			if (imagen!=null && imagen!='') {
+			if (imagen!=null && imagen!='' && imagen!='null') {
 
 				imagen=urlimagenes+`servicios/imagenes/`+codigoserv+imagen;
 	
@@ -926,7 +926,7 @@ function PintarParticipantesAlumnos(respuesta) {
 
 html+=`
          <li style="
-    border-radius: 10px;margin-bottom: 1em;">
+    border-radius: 10px;margin-bottom: 1em;background: white;border-radius: 10px;">
             <label class="label-radio item-content">                                                                               
               <div class="item-inner" style="width:90%;">
              
@@ -1033,7 +1033,7 @@ function PintarAlumnosAdmin(respuesta) {
 			html+=`
 				  
 
-                <li class="lista_" id="lista_`+respuesta[i].idusuarios+`" >
+              <li class="lista_" id="lista_`+respuesta[i].idusuarios+`"  style="background:white;border-radius: 10px;margin-bottom: 1em;">
             <label class="label-radio item-content">                                                                               
               <div class="item-inner" style="width:80%;">
              
@@ -1041,7 +1041,7 @@ function PintarAlumnosAdmin(respuesta) {
                 <div class="item-media">
               		  <div class="col-30">
                         <figure class="avatar  rounded-10">
-                        <img src="`+urlimagen+`" alt="" style="width:80px;height:80px;" />
+                       `+imagen+`
                         </figure>
                         </div>
                         
@@ -1126,13 +1126,27 @@ function PintarAlumnos(respuesta) {
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
 			}else{
 
-				urlimagen="img/icon-usuario.png";
+				if (respuesta[i].sexo == 'M') {
+
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarmujer');
+	
+				}else{
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarhombre');
+		 
+				}
+
+
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+			}
+
+			if (respuesta[i].alias==null) {
+				respuesta[i].alias="";
+
 			}
 			html+=`
 				  
 
-                <li class="lista_" id="lista_`+respuesta[i].idusuarios+`" style="border-radius: 10px;margin-bottom: 1em;">
+                <li class="lista_" id="lista_`+respuesta[i].idusuarios+`"  style="background: white;border-radius: 10px;margin-bottom: 1em;">
             <label class="label-radio item-content">                                                                               
               <div class="item-inner" style="width:80%;">
              
@@ -1190,22 +1204,24 @@ function SeleccionarAsignado(idusuarios) {
 	if (contar>0) {
 		$("#btnpasar2").text('Agregar ('+contar+') elemento(s)');
 		$("#btnpasar2").css('display','block');
+		$(".divflotanteasignacion").css('display','block');
 
 	}else{
 
 		$("#btnpasar2").text('Agregar elementos');
 		$("#btnpasar2").css('display','none');
+		$(".divflotanteasignacion").css('display','none');
 
 	}
 
-	if (contar>0) {
+	/*if (contar>0) {
 
 		$("#btnguardarasignacion").css('display','block');
 	}else{
 
 		$("#btnguardarasignacion").css('display','none');
 	
-	}
+	}*/
 }
 function SeleccionarUsuarioAsignado(argument) {
 	var contar=0;
@@ -1248,20 +1264,23 @@ function GuardarAsignacion() {
 
 	var idusuarios=[];
 	
-	$(".listaa_" ).each(function( index ) {
-	  	//if ($(this).is(':checked')) {
-	  		var id=$(this).attr('id');
-	  		var dividir=id.split('_')[1];
+	$(".lista_" ).each(function( index ) {
+		var id=$(this).attr('id');
+		var dividir=id.split('_')[1];
+		console.log(dividir);
+	  	if($("#idusuarios_"+dividir).is(':checked')) {
+	  		
 	  		idusuarios.push(dividir);
+	  	}
 	});
-
+	console.log(idusuarios);
 	var datos="id_user="+id_user+"&idusuarios="+idusuarios+"&idservicio="+idservicio+"&usuariosquitados="+usuariosquitados;
 	
 	
 	var usuariosparaquitar="";
 	var usuariosparagregar="";
 
-	for (var i = 0; i < usuariosquitados.length; i++) {
+	/*for (var i = 0; i < usuariosquitados.length; i++) {
 		
 		var id=usuariosquitados[i];
 		var resultado = participastesalumnosservicio.find( usuarios => usuarios.idusuarios === id );
@@ -1273,18 +1292,18 @@ function GuardarAsignacion() {
 
 			usuariosparaquitar+=`<p style="text-align:center;font-size:18px;">`+(i+1)+`.- `+resultado.nombre+` `+ resultado.paterno+`</p>`;
 
-	}
+	}*/
 
-
-	for (var i = 0; i < usuariosagregados.length; i++) {
+	console.log(listaalumnos);
+	for (var i = 0; i < idusuarios.length; i++) {
 		
-		var id=usuariosagregados[i];
-		var resultado = participastesalumnosservicio.find( usuarios => usuarios.idusuarios === id );
-			
-				if (resultado == undefined) {
+		var id=idusuarios[i];
+		var resultado = listaalumnos.find( usuarios => usuarios.idusuarios == id );
+			console.log(resultado);
+				/*if (resultado == undefined) {
 					 resultado = listaalumnos.find( usuarios => usuarios.idusuarios === id );
 		
-				}
+				}*/
 
 			usuariosparagregar+=`<p style="text-align:center;font-size:18px;">`+(i+1)+`.- `+resultado.nombre+` `+ resultado.paterno+`</p>`;
 
@@ -1326,23 +1345,14 @@ function GuardarAsignacion() {
 	   							  <div class="">
 		   							  <div class="block" style="margin-right:1em;margin-left:1em;">
 
-		   							  	<h3 style="text-align:center;font-size:22px;margin-bottom:1em;">Se realizaran las siguientes acciones</h3>`;
- 							if (usuariosquitados.length>0) {
-		   							  html+=`
-		   							  <div class="row" style="margin-bottom:1em;">
-		   							  <h4 style="text-align:center;border-radius: 10px;color: red;padding: 0.5em;font-weight: bold;">Usuarios a cancelar el servicio</h4>`;
-		   							
-		   							     html+=usuariosparaquitar +`</div>`;
-		
-			   							
+		   							  	<h3 style="text-align:center;font-size:22px;margin-bottom:1em;">Se realizarán las siguientes acciones</h3>`;
+ 				
 
-		   							}
-
-		   						if (usuariosagregados.length>0) {
+		   						if (idusuarios.length>0) {
 
 		   							 html+=`
 		   							 <div class="row" style="margin-bottom:1em;">
-		   							 <h4 style="text-align:center;border-radius: 10px;color: rgb(89, 193, 88);padding: 0.5em;font-weight: bold;">Usuarios a agregar el servicio</h4>`;
+		   							 <h4 style="text-align:center;border-radius: 10px;color: rgb(89, 193, 88);padding: 0.5em;font-weight: bold;">Usuarios por agregar al servicio</h4>`;
 		   						     html+=usuariosparagregar+`</div>`;
 
 		   							}
@@ -1391,11 +1401,13 @@ function GuardarAsignaciones() {
 
 	var idusuarios=[];
 	
-	$(".listaa_" ).each(function( index ) {
-	  	//if ($(this).is(':checked')) {
-	  		var id=$(this).attr('id');
-	  		var dividir=id.split('_')[1];
-	  		idusuarios.push(dividir);
+	$(".lista_" ).each(function( index ) {
+		var id=$(this).attr('id');
+		var dividir=id.split('_')[1];
+		console.log(dividir);
+	  	if($("#idusuarios_"+dividir).is(':checked')) {
+	  		usuariosagregados.push(dividir);
+	  	}
 	});
 
 	var datos="id_user="+id_user+"&idusuarios="+idusuarios+"&idservicio="+idservicio+"&usuariosquitados="+usuariosquitados+"&usuariosagregados="+usuariosagregados;
@@ -1665,9 +1677,9 @@ function ObtenerParticipantesAlumnosServicio() {
 
 function PintarParticipantesAlumnosServicio(respuesta) {
 var html="";
+
 	if (respuesta.length>0) {
 		participastesalumnosservicio=respuesta;
-		html="";
 
 		for (var i =0; i < respuesta.length; i++) {
 
@@ -1677,7 +1689,16 @@ var html="";
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
 			}else{
 
-				urlimagen="img/icon-usuario.png";
+				
+			if (respuesta[i].sexo == 'M') {
+
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarmujer');
+	
+				}else{
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarhombre');
+		 
+				}
+	
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
 			}
 
@@ -1696,7 +1717,7 @@ var html="";
                 <div class="item-media">
               		  <div class="col-30">
                         <figure class="avatar  rounded-10">
-                        <img src="`+urlimagen+`" alt="" style="width:80px;height:80px;" />
+                       `+imagen+`
                         </figure>
                         </div>
                         

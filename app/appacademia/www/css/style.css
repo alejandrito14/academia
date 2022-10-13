@@ -2291,9 +2291,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   color: orange;
 }
 
+
 .badge6{
-  
-    background-color: #000;
+     background-color: #000;
     color: #fff;
     display: inline-block;
     padding-left: 0.6em;
@@ -2302,8 +2302,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     border-radius: 50%;
     color: #fff!important;
     position: absolute;
-    background-color: #9a9ea7!important;
+    background-color:red!important;
     top: 0.5em;
+    right: 3em;
 
 }
 .tipoalumno{

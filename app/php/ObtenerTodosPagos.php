@@ -44,10 +44,42 @@ try
 	for ($i=0; $i < count($obtener); $i++) { 
 		
 		$fecha=$obtener[$i]->fechafinal;
+		$lo->idpago=$obtener[$i]->idpago;
+		$obtener[$i]->fechaformato='';
+		if ($fecha!='') {
+			# code...
+		
 		$dianumero=explode('-',$fecha);
 		$obtener[$i]->fechaformato=$dianumero[2].'/'.$fechas->mesesAnho3[$fechas->mesdelano($fecha)-1];
-		$fecha=date('d-m-Y',$obtener[$i]->fechafinal);
-		$obtener[$i]->fechafinal=$fecha;
+
+
+			$fecha=date('d-m-Y',$obtener[$i]->fechafinal);
+			$obtener[$i]->fechafinal=$fecha;
+			}
+
+
+/*
+			$obtenerdescuentospagos=$lo->ObtenerdescuentosPagos();
+			$descuentos=0;
+			for ($j=0; $j <count($obtenerdescuentospagos) ; $j++) { 
+				
+
+				$descuentos=$descuentos+$obtenerdescuentospagos[$j]->montoadescontar;
+			}
+
+			$obtenerdescuentosmembresia=$lo->Obtenerdescuentosmembresia();
+			$descuentosmembresia=0;
+			for ($k=0; $k < count($obtenerdescuentosmembresia); $k++) { 
+				$descuentosmembresia=$descuentosmembresia+$obtenerdescuentosmembresia[$k]->montoadescontar;
+			}
+
+			
+
+			$comisiontotal=$obtener[$i]->comisiontotal;
+			
+			$obtener[$i]->montopago=$obtener[$i]->montopago-$descuentos-$descuentosmembresia+$comisiontotal;
+
+*/
 		}
 
 

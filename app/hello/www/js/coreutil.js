@@ -253,7 +253,7 @@ class MediaList {
 
 
 		var buscador=$(idbuscador).val().toLowerCase();
-		console.log(buscador);
+		//console.log(buscador);
 		//var datos="idsucursal="+idsucursal+"&buscador="+buscador;
 	
 		$(clista).each(function(){
@@ -261,7 +261,7 @@ class MediaList {
 				obtener=$('#'+id).text().toLowerCase();
 				cadena=$(this).text().toLowerCase();
 
-				console.log(cadena);
+				//console.log(cadena);
 					  if (obtener.indexOf(buscador.toLowerCase())!=-1 ) {
 						  $('#'+id).css('display','block');	
 					  }else{

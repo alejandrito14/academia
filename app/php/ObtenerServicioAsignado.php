@@ -8,6 +8,8 @@ require_once("clases/conexcion.php");
 require_once("clases/class.ServiciosAsignados.php");
 require_once("clases/class.Funciones.php");
 require_once("clases/class.Fechas.php");
+require_once("clases/class.Invitacion.php");
+require_once("clases/class.Servicios.php");
 
 try
 {
@@ -17,14 +19,85 @@ try
 	$lo = new ServiciosAsignados();
 	$f=new Funciones();
 	$fechas=new Fechas();
+	$invitacion=new Invitacion();
+	$servicios=new Servicios();
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
-
+	$invitacion->db=$db;
+	$servicios->db=$db;
 	$lo->idusuarios_servicios=$_POST['idusuarios_servicios'];
-
-	
+	$id_user=$_POST['id_user'];
+	$idtipousuario=$_POST['idtipousuario'];
 	$obtenerservicio=$lo->ObtenerServicioAsignado();
 	$lo->idservicio=$obtenerservicio[0]->idservicio;
+	$servicios->idservicio=$lo->idservicio;
+	$invitado=0;
+	$puedeinvitar=0;
+	$obtenerinvitaciones=array();
+	$habilitarcancelacion=0;
+	if ($idtipousuario==3) {
+
+
+		if ($obtenerservicio[0]->asignadocliente==1) {
+			$habilitarcancelacion=1;
+		}
+
+		$invitacion->idusuarioinvitado=$obtenerservicio[0]->idusuarios;
+		$invitacion->idservicio=$lo->idservicio;
+		$esinvitado=$invitacion->ObtenerInvitado();
+
+		if (count($esinvitado)>0) {
+			$invitado=1;
+		}
+
+
+		if ($obtenerservicio[0]->ligarcliente==1) {
+			# code...
+		
+		$invitacion->idusuarioinvita=$obtenerservicio[0]->idusuarios;
+		$obtenerinvitaciones=$invitacion->ObtenerInvitaciones();
+		//echo $obtenerservicio[0]->numligarclientes.''.count($obtenerinvitaciones);
+
+			if (count($obtenerinvitaciones) == $obtenerservicio[0]->numligarclientes) {
+					$puedeinvitar=1;
+				}else{
+
+					$puedeinvitar=0;
+				}
+
+			}
+
+
+	}
+
+	if ($idtipousuario==0) {
+
+		if ($obtenerservicio[0]->asignadoadmin==1) {
+			$habilitarcancelacion=1;
+		}
+	}
+
+	if ($idtipousuario==5) {
+
+		if ($obtenerservicio[0]->asignadocoach==1) {
+			$habilitarcancelacion=1;
+		}
+	}
+
+
+	if ($habilitarcancelacion==1) {
+		$fechaactual=date('Y-m-d');
+		$obtenerperiodos=$servicios->FechadentrodePeriodos($fechaactual);
+
+		if (count($obtenerperiodos)>0) {
+			$habilitarcancelacion=1;
+		}else{
+			$habilitarcancelacion=0;
+		}
+
+	}
+
+	
 	$obtenerhorarios=$lo->ObtenerHorariosServicio();
 	$arreglohorarios=array();
 
@@ -71,6 +144,10 @@ try
 
 	$respuesta['respuesta']=$obtenerservicio[0];
 	$respuesta['horarios']=$arreglohorarios;
+	$respuesta['invitado']=$invitado;
+	$respuesta['invitados']=$obtenerinvitaciones;
+	$respuesta['puedeinvitar']=$puedeinvitar;
+	$respuesta['habilitarcancelacion']=$habilitarcancelacion;
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);
 	echo $myJSON;

@@ -508,7 +508,7 @@ class Servicios
 
 	public function ObtenerTodosServicios()
 	{
-		$sql="SELECT servicios.titulo,categorias.titulo as categoria FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio WHERE servicios.estatus=1";
+		$sql="SELECT servicios.idservicio,servicios.titulo,categorias.titulo as categoria FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio WHERE servicios.estatus=1";
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -767,6 +767,79 @@ class Servicios
 
 		$resp=$this->db->consulta($sql);
 		return $resp;
+	}
+
+	public function ObtenerServiciosFiltrado($tiposervicio,$coach)
+	{
+		$sql="SELECT servicios.idservicio,servicios.titulo,servicios.imagen,categorias.titulo as nombrecategoria,servicios.orden,servicios.estatus FROM servicios ";
+		$filtro="";
+		if ($tiposervicio>=0) {
+		$sql.=" INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio ";
+			if ($tiposervicio>0) {
+		$filtro.="AND categorias.idcategorias='$tiposervicio'";
+			}
+		}
+
+		if ($coach>0 && $coach!='t') {
+		$sql.=" INNER JOIN usuarios_servicios ON usuarios_servicios.idservicio = servicios.idservicio
+		INNER JOIN usuarios ON usuarios.idusuarios=usuarios_servicios.idusuarios ";
+
+		if ($tiposervicio>0 && $coach>-1 && $coach!='t') {
+		$filtro.=" AND usuarios.tipo='5'";
+
+			}
+			if ($coach>0) {
+			$filtro.=" AND usuarios.idusuarios='$coach'";
+
+			}
+		}
+
+
+		if ($filtro!='') {
+			$sql.="WHERE 1=1 ";
+		}
+		$sql.=$filtro;
+
+		$sql.=" GROUP BY idservicio";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerSiHayPago()
+	{
+		$sql="SELECT *FROM pagos WHERE idservicio='$this->idservicio'";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
 	}
 
 }

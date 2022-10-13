@@ -127,7 +127,7 @@ class Servicios
 		FROM
 		categorias
 		JOIN servicios
-		ON categorias.idcategorias = servicios.idcategoriaservicio WHERE categorias.avanzado=1
+		ON categorias.idcategorias = servicios.idcategoriaservicio WHERE categorias.avanzado=1 and servicios.validaradmin=1 and servicios.estatus=1
 		ORDER BY
 		servicios.orden ASC";
 
@@ -248,7 +248,7 @@ class Servicios
 	public function ObtenerPeriodosPagos()
 	{
 		$sql="SELECT *FROM periodoservicio  WHERE idservicio='$this->idservicio'";
-
+		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -589,7 +589,8 @@ class Servicios
 		asignadocoach='$this->asignadocoach',
 		asignadoadmin='$this->asignadoadmin',
 		politicasaceptacion='$this->politicasaceptacion',
-		controlasistencia='$this->controlasistencia'
+		controlasistencia='$this->controlasistencia',
+		validaradmin='$this->validaradmin'
 		WHERE idservicio=$this->idservicio";
 
 		
@@ -870,7 +871,164 @@ public function Eliminardeencuestas()
 		return $resp;
 	}
 
+	public function FechadentrodePeriodos($fechaactual)
+	{
+		$sql="SELECT * FROM periodoservicio WHERE
+		'$fechaactual'>=fechainicial AND '$fechaactual'<=fechafinal AND idservicio='$this->idservicio' ";
+	
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
 
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerServiciosporvalidar($serviciosasignados)
+	{
+		$fechaactual=date('Y-m-d');
+		$sql="SELECT 
+			servicios.idservicio,
+			servicios.titulo,
+			servicios.descripcion,
+			servicios.estatus,
+			servicios.idcategoriaservicio,
+			servicios.imagen,
+			servicios.fechacreacion,
+			servicios.orden,
+			servicios.fechainicial,
+			servicios.fechafinal,
+			servicios.nodedias,
+			servicios.idcategoria,
+			servicios.precio,
+			servicios.totalclases,
+			categorias.idcategorias,
+			servicios.validaradmin,
+			servicios.agregousuario,
+			categorias.titulo AS titulocategoria,
+			categorias.descripcion AS descripcioncategoria,
+			servicios.validaradmin,
+			servicios.numeroparticipantesmax
+		FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio WHERE 
+			categorias.avanzado IN(0,1) AND servicios.estatus=1 AND servicios.validaradmin=0";
+
+			if($serviciosasignados!=''){
+
+			$sql.=" AND  servicios.idservicio NOT IN(".$serviciosasignados.") ";
+			
+			}
+
+			$sql.=" AND servicios.agregousuario='$this->idusuarios'";
+
+			$sql.=" ORDER BY servicios.orden asc";
+			
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerServiciosporvalidarAdmin()
+	{
+		$fechaactual=date('Y-m-d');
+		$sql="SELECT 
+			servicios.idservicio,
+			servicios.titulo,
+			servicios.descripcion,
+			servicios.estatus,
+			servicios.idcategoriaservicio,
+			servicios.imagen,
+			servicios.fechacreacion,
+			servicios.orden,
+			servicios.fechainicial,
+			servicios.fechafinal,
+			servicios.nodedias,
+			servicios.idcategoria,
+			servicios.precio,
+			servicios.totalclases,
+			categorias.idcategorias,
+			servicios.validaradmin,
+			servicios.agregousuario,
+			categorias.titulo AS titulocategoria,
+			categorias.descripcion AS descripcioncategoria,
+			servicios.numeroparticipantesmax
+		FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio WHERE 
+			categorias.avanzado IN(0,1) AND servicios.estatus=1 AND servicios.validaradmin=0";
+
+			if($serviciosasignados!=''){
+
+			$sql.=" AND  servicios.idservicio NOT IN(".$serviciosasignados.") ";
+			
+			}
+
+
+			$sql.=" ORDER BY servicios.orden asc";
+			
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+		
+	public function ObtenerParticipantesCoach($idtipo)
+	{
+		$sql="SELECT *FROM usuarios INNER JOIN usuarios_servicios ON usuarios.idusuarios=usuarios_servicios.idusuarios
+			LEFT JOIN usuarioscoachs ON usuarioscoachs.idusuarios_servicios=usuarios_servicios.idusuarios_servicios
+		 WHERE idservicio='$this->idservicio' AND tipo='$idtipo' AND cancelacion=0";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+	
 }
 
 ?>

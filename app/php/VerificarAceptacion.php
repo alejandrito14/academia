@@ -7,6 +7,7 @@ header('Access-Control-Allow-Origin: *');
 require_once("clases/conexcion.php");
 require_once("clases/class.ServiciosAsignados.php");
 require_once("clases/class.Funciones.php");
+require_once("clases/class.Servicios.php");
 
 try
 {
@@ -15,9 +16,11 @@ try
 	$db = new MySQL();
 	$lo = new ServiciosAsignados();
 	$f=new Funciones();
+	$servicios=new Servicios();
 
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
+	$servicios->db=$db;
 
 	$lo->idusuarios_servicios=$_POST['idusuarios_servicios'];
 
@@ -25,8 +28,30 @@ try
 	$obtenerservicio=$lo->ObtenerServicioAsignado();
 
 	$servicio=$obtenerservicio[0]->aceptarterminos;
+	$idusuario=$obtenerservicio[0]->idusuarios;
+	$idservicio=$obtenerservicio[0]->idservicio;
+	$lo->idusuario=$idusuario;
+	$lo->idservicio=$idservicio;
+	$servicios->idservicio=$idservicio;
+	$pagadoservicio=$lo->VerificarSihaPagado();
+
+	if (count($pagadoservicio)>0) {
+				$pagado=1;
+			}else{
+				$pagado=0;
+			}
+			$fechaactual=date('Y-m-d');
+	$verificarsiestaenperiodo=$servicios->FechadentrodePeriodos($fechaactual);
+	$dentroperiodo=0;
+	if (count($verificarsiestaenperiodo)>0) {
+		$dentroperiodo=1;
+	}
+
 
 	$respuesta['respuesta']=$servicio;
+	$respuesta['pagado']=$pagado;
+	$respuesta['dentroperiodo']=$dentroperiodo;
+
 	
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);

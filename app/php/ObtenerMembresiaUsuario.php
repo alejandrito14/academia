@@ -51,6 +51,9 @@ $descuentosaplicados=json_decode($_POST['descuentosaplicados']);
 			$montopago=$pagoselegidos[$i]->{'monto'};
 			$pagoselegidos[$i]->{'montosindescuento'}=$montopago;
 
+			if (count($descuentosaplicados)>0) {
+				# code...
+			
 				for ($l=0; $l < count($descuentosaplicados); $l++) { 
 					
 					if ($descuentosaplicados[$l]->idpago==$pagoselegidos[$i]->{'id'}) {
@@ -64,6 +67,7 @@ $descuentosaplicados=json_decode($_POST['descuentosaplicados']);
 					}
 
 				}
+			}
 
 				$montopago=$pagoselegidos[$i]->{'monto'};
 				$pagos->idpago=$idpago;
@@ -137,14 +141,14 @@ $descuentosaplicados=json_decode($_POST['descuentosaplicados']);
 
 
 	for ($i=0; $i < count($descuentosmembresia); $i++) {	
-		$tipo=$descuentosmembresia[$i]->tipo;
+		$tipo=$descuentosmembresia[$i]->descuento;
 
 	
 		$monto=$descuentosmembresia[$i]->monto;
 		$total=$descuentosmembresia[$i]->montopago;
 
 
-		if ($tipo==0) {
+		if ($tipo==2) {
 		 	$descuento=$monto;
 		 	$montoadescontar=($total*$descuento)/100;
 		 } 

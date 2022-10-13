@@ -188,6 +188,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 		</div>
 
 		<div class="table-responsive" id="contenedor_descuentos" style="display: none;">
+			<label for="">DESCUENTOS QUE APLICA:</label>
 			<table id="tbl_descuentos" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
 				<thead>
 					
@@ -200,6 +201,8 @@ $estatuspago = array('NO PAGADO','PAGADO');
 
 
 		<div class="table-responsive" id="contenedor_descuentos_membresia" style="display: none;">
+			<label for="">DESCUENTOS DE MEMBRESÍA:</label>
+
 			<table id="tbl_descuentos_membresia" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
 				<thead>
 					
@@ -220,9 +223,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 				<div class="card-body" style="display: none;">
 					<label for="" class="active">FORMA DE PAGO</label>
 					<div class="">
-						<select name="v_tipopago" id="v_tipopago" class="form-control">
-							<option value="0">SELECCIONAR FORMA DE PAGO</option>
-						</select>
+						
 					</div>
 				</div>
 			</div>
@@ -281,14 +282,45 @@ $estatuspago = array('NO PAGADO','PAGADO');
 	<div class="col-md-2"></div>
 
 		<div class="col-md-5">
-			<button type="button" class="btn  btn-success btn-lg btn-block">PAGAR</button>
+			<button type="button" class="btn  btn-success btn-lg btn-block" id="btnpagar" disabled>PAGAR</button>
 		</div>
 
 
 </div>
 
 
-
+<div class="modal" id="modalmetodopago" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">PAGO</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<div class="row">
+      		<div class="col-md-6">
+      			<form>
+			  <div class="form-group">
+			    <label for="exampleInputEmail1">FORMA DE PAGO</label>
+			  	<select name="v_tipopago" id="v_tipopago" onchange="CargarOpcionesTipopago()" class="form-control">
+							<option value="0">SELECCIONAR FORMA DE PAGO</option>
+						</select>
+			  </div>
+			</form>
+      		</div>
+      		<div class="col-md-6"></div>
+      	</div>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">PAGAR</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script type="text/javascript">
 	

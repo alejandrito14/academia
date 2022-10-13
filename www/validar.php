@@ -161,7 +161,7 @@ if($vigente == 1)
 
 
 
-					$ruta=array('catalogos/categorias/imagenes','catalogos/configuracion/imagenes','catalogos/anuncios/imagenes','catalogos/anuncios/publicidad','catalogos/entradas/imagenes','catalogos/entradas/videos','catalogos/servicios/imagenes','catalogos/tableroanuncios/imagenes','catalogos/membresia/imagenes');
+					$ruta=array('catalogos/categorias/imagenes','catalogos/configuracion/imagenes','catalogos/anuncios/imagenes','catalogos/anuncios/publicidad','catalogos/entradas/imagenes','catalogos/entradas/videos','catalogos/servicios/imagenes','catalogos/tableroanuncios/imagenes','catalogos/membresia/imagenes','catalogos/servicios/imagenesinformativas');
 
 
 					for ($i=0; $i < count($ruta); $i++) { 

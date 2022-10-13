@@ -28,6 +28,7 @@ $constripe=$_POST['constripe'];
 $sumatotalapagar=$_POST['sumatotalapagar'];
 $iduser=$_POST['id_user'];
 $descuentosaplicados=json_decode($_POST['descuentosaplicados']);
+$descuentosmembresia=json_decode($_POST['descuentosmembresia']);
 
 $comision=$_POST['comision'];
 $comisionmonto=$_POST['comisionmonto'];
@@ -252,37 +253,48 @@ try {
 
 
 
+                  }else{
+                      $membresia->idmembresia=$buscarpago[0]->idmembresia;
+                      $obtenermembresia=$membresia->ObtenerMembresia();
                   }
-                   $pagos->estatus=1;
+                   $pagos->estatus=2;
                    $pagos->ActualizarEstatus();
                    $pagos->ActualizarPagado();
 
                    $membresia->idusuarios=$iduser;
+                 
                   $buscarmembresiausuario=$membresia->buscarMembresiaUsuario();
-
+//                  var_dump($buscarmembresiausuario);die();
 
                    $dias=$obtenermembresia[0]->cantidaddias;
                    $date = date("d-m-Y");
                    $mod_date = strtotime($date."+ ".$dias." days");
                    $membresia->fechaexpiracion= date("Y-m-d",$mod_date).' 23:59:59';
 
+                 
+                   $membresia->renovacion=0;
                    if (count($buscarmembresiausuario)>0) {
                       $membresia->idusuarios_membresia= $buscarmembresiausuario[0]->idusuarios_membresia;
-                      $membresia->estatus=0;
-                      $membresia->ActualizarEstatusMembresiaUsuario();
-
-                      $membresia->renovacion=1;
+               
                       $membresia->estatus=1;
                       $membresia->pagado=1;
 
                    }else{
 
-                      $membresia->renovacion=0;
+                     
                       $membresia->estatus=1;
                       $membresia->pagado=1;
+
+                      $ChecarVencidas=$membresia->ObtenerMembresiasVencidas();
+
+                      if (count($ChecarVencidas)>0) {
+                          $membresia->renovacion=1;
+                        }
+
+                      $membresia->CrearRegistroMembresiaUsuario();
                    }
 
-                    $membresia->CrearRegistroMembresiaUsuario();
+                  $membresia->ActualizarEstatusMembresiaUsuarioPagado();
 
           	   }
           		$pagos->GuardarpagosStripe();
@@ -308,6 +320,20 @@ try {
           			}
 
           		}
+
+              if (count($descuentosmembresia)>0) {
+                
+                for ($i=0; $i <count($descuentosmembresia) ; $i++) { 
+                  $membresia->idpago=$descuentosmembresia[$i]->idpago;
+                  $membresia->idmembresia=$descuentosmembresia[$i]->idmembresia;
+
+                  $membresia->idservicio=$descuentosmembresia[$i]->idservicio;
+                  $membresia->descuento=$descuentosmembresia[$i]->descuento;
+                  $membresia->monto=$descuentosmembresia[$i]->monto;
+                  $membresia->montoadescontar=$descuentosmembresia[$i]->montoadescontar;
+                  $membresia->GuardarPagoDescuentoMembresia();
+                }
+              }
 
 
           		$db->commit();

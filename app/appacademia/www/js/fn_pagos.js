@@ -1501,3 +1501,284 @@ function PintarpagosPagados(pagos) {
   }
 }
 
+
+ function PintarlistaImagen() {
+
+    var html="";
+      localStorage.setItem('comentarioimagenes',arraycomentarios);
+
+     $(".check-list").css('display','none');
+
+
+      if (localStorage.getItem('rutacomprobante')!=undefined && localStorage.getItem('rutacomprobante')!='') {
+     
+          var comprobante=localStorage.getItem('rutacomprobante');
+          var comprobante1=comprobante.split(',');
+
+          $$("#btnpagarresumen").prop('disabled',true);
+     
+      if (comprobante1.length) {
+        $$("#btnpagarresumen").prop('disabled',false);
+
+         $(".check-list").css('display','block')
+        for (var i = 0; i < comprobante1.length; i++) {
+                      ruta=urlphp+`upload/comprobante/`+comprobante1[i];
+
+
+                    
+                     
+            html+=`<li>
+            <label class="label-radio item-content">
+              <div class="item-inner">
+            
+                <div class="item-text"  style="margin-left: 1em;color:#757575;font-size: 14px;" id="">
+                <label>
+
+                    <img onclick="VisualizarImagen(\'`+ruta+`\')"  class="bordesredondeados" src="`+ruta+`" width="80">
+                    </label>
+                  </div>
+
+                  <div class="item-subtitle"></div>
+                       <div class="item-title letrablack" >
+                           <div class="item-text" >
+                           
+                            </div>
+
+
+                       </div>
+
+                  
+                </div>
+
+                <div class="item-after">
+
+                 <span class="botoneditar " onclick="ColocarComentarioComprobante(`+i+`);" >
+                
+                <i class="icon material-icons ">edit</i>
+                <span class="if-not-md"></span>
+
+                </span>
+               
+                   <span class="botoneliminar" style="margin-rigth:1em;" onclick="EliminarimagenComprobante(\'`+comprobante1[i]+`\')" >
+                    
+                      <i class="icon material-icons ">delete_forever</i>
+                      <span class="if-not-md"></span>
+
+                  </span>
+                </div>
+
+               </label> 
+          </li>
+          <li>
+
+
+            <label  class="item-content">
+
+            <div class="item-row"> 
+            `;
+
+
+            var visible="display:none";
+              if (arraycomentarios[i]!='') {
+             visible="display:block";
+
+              }
+                      html+=`<span style="font-weight:bold;vertical-align:text-top;margin-right: 4px;`+visible+`" id="comentariocomprobante_`+i+`">
+
+                       Comentario:
+                           </span>
+                           <span style="color:#757575;" id="textocomprobante_`+i+`">`+arraycomentarios[i]+`</span>
+         
+                  </div>
+          </label>
+          </li>
+
+
+          `;
+            }
+      }else{
+
+        html+=`<li class="" onclick="">
+            <a href="#" class="item-link item-content"> <div class="item-media"></div>
+              <div class="item-inner">
+                <div class="item-title-row">
+                
+                </div>
+                <div class="item-subtitle"></div>
+                 <div class="item-title letrablack"></div>
+                  <div class="item-after"></div>
+                <div class="item-text">
+                   No se encontraron imagenes
+                </div>
+              </div>
+            </a></li>`;
+
+
+
+      }
+
+    }else{
+
+
+       html+=`<li class="" onclick="">
+            <a href="#" class="item-link item-content"> <div class="item-media"></div>
+              <div class="item-inner">
+                <div class="item-title-row">
+                
+                </div>
+                <div class="item-subtitle"></div>
+                 <div class="item-title letrablack"></div>
+                  <div class="item-after"></div>
+                <div class="item-text">
+                   No se encontraron imagenes
+                </div>
+              </div>
+            </a></li>`;
+
+    }
+
+      $("#lista-imagenescomprobante").html(html);
+  }
+
+ 
+var imagenes=[];
+ function EliminarimagenComprobante(imagen) {
+   
+    app.dialog.confirm('','¿Está seguro  de eliminar la imagen?' , function () {
+
+    var datos="imageneliminar="+imagen;
+
+    var pagina = "eliminarimagen.php";
+      $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: urlphp+pagina,
+      data:datos,
+      async:false,
+      success: function(datos){
+
+          
+             removeItemFromArr(resultimagencomprobante,imagen);
+
+
+             PintarlistaImagen();
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                  //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                  console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+            }
+      });
+
+     });
+
+ }
+
+
+
+ function removeItemFromArr(arr,item) {
+
+    var i = arr.indexOf(item);
+ 
+    if (i!== -1) {
+        arr.splice( i, 1);
+    
+      if (arr.length>0) {
+
+          localStorage.setItem('rutacomprobante',arr);
+
+          arraycomentarios.splice(i,1);
+      }else{
+
+          localStorage.setItem('rutacomprobante','');
+
+          arraycomentarios=[];
+      }
+
+
+    }
+}
+
+var dynamicSheet ='';
+function ColocarComentarioComprobante(i) {
+
+  var obtenercomentario=$("#textocomprobante_"+i).text();
+
+
+        dynamicSheet = app.sheet.create({
+        content: `
+          <div class="sheet-modal modalcomprobante">
+            <div class="toolbar">
+              <div class="toolbar-inner estilostoolbar" >
+                <div class="left"></div>
+                <div class="right">
+                  <a class="link sheet-close" id="cerrar">x</a>
+                </div>
+              </div>
+            </div>
+            <div class="sheet-modal-inner">
+              <div class="block">
+            <label style="font-weight: bold;font-size: 15px;margin-left: 1.5em;">Comentario del comprobante</label>
+            <div class="item-input-wrap">
+             <textarea id="comentariocomprobante" style="height: 4em;width: 100%;">`+obtenercomentario+`</textarea>
+           </div>
+        <button type="button" class="button gradient signinbuttn md-elevation-6 botonesredondeado botones" style="margin: auto;
+    width: 90%;
+    margin-top: 1em;" onclick="GuardarComentario(`+i+`)">Guardar</button>
+        <div>
+
+        </div>
+              </div>
+            </div>
+          </div>
+        `,
+        // Events
+        on: {
+          open: function (sheet) {
+            console.log('Sheet open');
+          },
+          opened: function (sheet) {
+            console.log('Sheet opened');
+          },
+        }
+      });
+
+      dynamicSheet.open();
+}
+
+function GuardarComentario(i) {
+   var comentario= $("#comentariocomprobante").val();
+
+    arraycomentarios[i]=comentario;
+
+      dynamicSheet.close();
+
+      PintarlistaImagen();
+
+//alert(JSON.stringify(arraycomentarios));
+
+}
+
+
+
+
+function Buscarposcion(posicion) {
+
+      if (arraycomentarios.length>0) {
+
+        if (arraycomentarios[posicion]!='') {
+
+          return true;
+        }else{
+
+          return false;
+        }
+
+      }else{
+
+        return false;
+      }
+    
+}
+

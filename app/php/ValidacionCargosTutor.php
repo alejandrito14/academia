@@ -30,22 +30,30 @@ for ($j=0; $j <count($pagoselegidos); $j++) {
 
 		$buscar=$lo->ObtenerPago();
 		$usua->idusuarios=$buscar[0]->idusuarios;
-
+		if (count($buscar)>0) {
+			# code...
+		
 		$depende=$usua->ObtenerDependencia();
+		
+		if (count($depende)>0) {
+			# code...
 		$lo->idusuarios=$depende[0]->idusuariostutor;
-		//var_dump($depende);die();
+
 		$obteneradeudos=$lo->ListadopagosNopagados();
 
-		if (count($obteneradeudos)) {
-			for ($i=0; $i <count($obteneradeudos) ; $i++) { 
+				if (count($obteneradeudos)) {
+					for ($i=0; $i <count($obteneradeudos) ; $i++) { 
+							
 					
-			
-				if ($obteneradeudos[$i]->idpago==$pagoselegidos[$j]->{'id'}) {
-						unset($obteneradeudos[$i]);
-					}else{
-					$contarpagos++;	
+						if ($obteneradeudos[$i]->idpago==$pagoselegidos[$j]->{'id'}) {
+								unset($obteneradeudos[$i]);
+							}else{
+							$contarpagos++;	
+							}
+							
+						}
 					}
-					
+
 				}
 			}
 		}

@@ -23,13 +23,17 @@ try
 
 	$idusuarios=$_POST['id_user'];
 	$lo->idusuarios=$idusuarios;
-	$obtener=$lo->Listadopagospagados();
+	$obtener=$lo->ListadoNotaspagospagados();
 
 	for ($i=0; $i < count($obtener); $i++) { 
 		
-		$fecha=$obtener[$i]->fechapago;
+		$fecha=$obtener[$i]->fecha;
 		$dianumero=explode('-',$fecha);
 		$obtener[$i]->fechaformatopago=explode(' ',$dianumero[2])[0].'/'.$fechas->mesesAnho3[$fechas->mesdelano($fecha)-1].' '.$dianumero[0];
+			$obtener[$i]->monto=$obtener[$i]->total;
+			
+			$obtener[$i]->concepto=$obtener[$i]->folio;
+
 
 		}
 

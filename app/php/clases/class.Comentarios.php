@@ -19,7 +19,6 @@ class Comentarios
 			INNER JOIN usuarios ON usuarios.idusuarios=comentariosusuarios.idusuarios
 		 WHERE comentariosusuarios.estatus=1 AND idservicio='$this->idservicio' ORDER BY idcomentariosusuarios";
 
-
 			$resp = $this->db->consulta($sql);
 			$cont = $this->db->num_rows($resp);
 

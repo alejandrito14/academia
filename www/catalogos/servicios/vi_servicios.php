@@ -117,6 +117,32 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
 <div class="card">
 	<div class="card-body">
+		<div class="row">
+			<div class="col-md-4">
+				 <div class="form-group">
+			    <label for="">FORMATO DE SERVICIO</label>
+			   	<select class="form-control" id="v_categoria"></select>
+			   
+			  </div>
+			</div>
+			<div class="col-md-4">
+				 <div class="form-group">
+			    <label for="">COACH</label>
+			   	<select class="form-control" id="v_coach"></select>
+			   
+			  </div>
+			</div>
+			<div class="col-md-4">
+				 <div class="form-group" style="margin: 2em;display: flex;">
+			    <button class="btn btn-primary" onclick="FiltrarServicios(<?php echo $idmenumodulo;?> )">FILTRAR SERVICIOS</button>
+			</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="card divservicios"  style="display: none;" >
+	<div class="card-body">
 		<div class="table-responsive" id="contenedor_Servicios">
 			<table id="tbl_Servicios" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
 				<thead>
@@ -132,7 +158,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 						<th style="text-align: center;">ACCI&Oacute;N</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody id="tblservicios">
 					
 					<?php
 					if($l_Servicios_num== 0){
@@ -214,6 +240,18 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 						$bt->armar_boton();
 					?>
 
+					<?php
+						//SCRIPT PARA CONSTRUIR UN clonar
+						$bt->titulo = "";
+						$bt->icon = "mdi-account-multiple";
+						$bt->funcion = "AbrirModalUsuarios('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$l_Servicios_row['titulo']."')";
+
+						/*$bt->permiso = $permisos;*/
+						$bt->tipo = 4;
+						$bt->title="ALUMNOS INSCRITOS";
+
+						$bt->armar_boton();
+					?>
 
 								</td>
 
@@ -458,6 +496,109 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
   </div>
 </div>
+
+
+<div class="modal fade" id="modalAlumnosServicios" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <table class="table table-striped table-bordered ">
+       	<thead>
+       		<tr>
+       			<th>ALUMNO</th>
+       			<th>PAGADO</th>
+       		</tr>
+       	</thead>
+       	<tbody id="usuariosinscritos">
+       		
+       	</tbody>
+       </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+       	
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal" id="modalimagenservicio" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Subir imágenes</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+      	<div class="row">
+      		<div class="col-md-6"></div>
+      		<div class="col-md-6">
+      			
+      			<button type="button" id="btnnuevaimagen" onclick="NuevaImagen()" class="btn btn_azul" style="float: right; margin-right:10px;" title="NUEVO">
+				<i class="mdi mdi-plus-circle"></i>NUEVO</button>
+      		</div>
+
+      	</div>
+       
+       <input type="hidden" id="idservicio" value="">
+       			 <img class="card-img-top" src="">
+				 <div id="d_foto" style="text-align:center; ">
+				<img src="<?php echo $ruta; ?>" class="card-img-top" alt="" style="border: 1px #777 solid"/> 
+				</div>
+
+        	<div class="formimagen" style="display: none;">
+                    <form method="post" action="" enctype="multipart/form-data" id="uploadForm" >
+                   
+                   
+                        <input type="file" class=" inputfile inputfile-1 form-control"   name="file" id="imageninformativa" />
+
+
+                  <div class="form-group">
+                  	  <label class="form-check-label" for="exampleCheck1">Título</label>
+				    <input type="text" class="form-control" id="txttituloimagen">
+				  
+				  </div>
+                     
+
+
+                    <p></p>
+
+		             <div id="contador"></div>
+                    <div id="cargado"></div>
+                      <div id='salidaImagen'></div>
+
+                  </form>
+</div>
+
+
+                    <div class="vfileNames" class="row"></div>
+
+
+       <div class="tbl"></div>
+      </div>
+      <div class="modal-footer">
+          <button type="button" style="display: none;" class="btn btn-success btnguadarimagen">GUARDAR</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+	ObtenerTipoServicios2();
+	ObtenerCoachs();
+</script>
    <script src="js/jquery.selectlistactions.js"></script>
 
 <script type="text/javascript">
@@ -465,7 +606,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 		 	"pageLength": 100,
 			"oLanguage": {
 						"sLengthMenu": "Mostrar _MENU_ ",
-						"sZeroRecords": "NO EXISTEN PROVEEDORES EN LA BASE DE DATOS.",
+						"sZeroRecords": "NO SE ENCONTRARON REGISTROS EN LA BASE DE DATOS.",
 						"sInfo": "Mostrar _START_ a _END_ de _TOTAL_ Registros",
 						"sInfoEmpty": "desde 0 a 0 de 0 records",
 						"sInfoFiltered": "(filtered desde _MAX_ total Registros)",
@@ -478,11 +619,10 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 									 }
 						},
 		   "sPaginationType": "full_numbers", 
-		 	"paging":   true,
 		 	"ordering": false,
-        	"info":     false
 
-
+        	  "paging": false,
+    		"searching": true,
 		} );
 </script>
 <style>
@@ -572,4 +712,62 @@ $estatus=array('DESACTIVADO','ACTIVADO');
   margin-bottom: 5px;
 }
 
+</style>
+
+
+<script>	
+       $(function(){
+
+    //file input field trigger when the drop box is clicked
+    $("#seleccionar").click(function(){
+        $("#imageninformativa").click();
+    });
+    
+    //prevent browsers from opening the file when its dragged and dropped
+    $(document).on('drop dragover', function (e) {
+        e.preventDefault();
+    });
+
+    //call a function to handle file upload on select file
+    $('#imageninformativa').on('change', SubirImagenservicioInformativa);
+});
+</script>
+
+<style>
+/*.inputfile {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+
+.inputfile + label {
+    max-width: 80%;
+    font-size: 1.25rem;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    display: inline-block;
+    overflow: hidden;
+    padding: 0.625rem 1.25rem;
+}
+
+.inputfile + label svg {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    fill: currentColor;
+    margin-top: -0.25em;
+    margin-right: 0.25em;
+}
+*/
+.iborrainputfile {
+    font-size:16px; 
+    font-weight:normal;
+    font-family: 'Lato';
+}
 </style>

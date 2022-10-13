@@ -125,10 +125,8 @@ function CargarDatosAdmin(argument) {
     $$(".tipousuario").addClass(classtipo);
     $$(".btnnuevoservicio").attr('onclick','NuevoServicio()');
     $$(".btnreplicaservicio").attr('onclick','ReplicaServicio()');
-
-
-
- 	 const promesa=ObtenerTableroAnuncios(0)
+    
+ 	 const promesa=ObtenerTableroAnuncios(0);
 
  	 promesa.then(val =>{
 
@@ -304,12 +302,18 @@ function PintarTableroAnuncios(respuesta) {
 
               <div class="swiper-slide" >
                 <div class="card" style="width: 200px;">
-                  <div class="card-content card-content-padding ">
-                   <div class="seleccionador" style="position: absolute;right: 0;display:none" > <label>
+                  <div class="card-content card-content-padding ">`;
+                 
+                  if (localStorage.getItem('idtipousuario')==0) {
+                 	 html+=` <div class="seleccionador" style="position: absolute;right: 0;" > <label>
                    <input type="checkbox" class="" style="margin-right: 1.4em;height: 15px;width: 20px;
 				    transform: scale(1.5);" id="cambio_`+respuesta[i].idtableroanuncio+`" onchange="CambioEstatusTablero(`+respuesta[i].idtableroanuncio+`)" `+checked+`> 
 				    </label>
-				    </div>
+				    </div>`;
+					}
+
+                    html+=`
+
                     <div class="row margin-bottom ">
                       <div class="col-auto align-self-center">
                         <img src="`+imagen+`" alt="" onclick="VerDetallesTablero(`+respuesta[i].idtableroanuncio+`)"  style="width: 100%;border-radius: 10px"/>
@@ -1682,7 +1686,6 @@ function ObtenerConfiguracion() {
 
 			
 			Colocar(datos.respuesta.nombrenegocio1,datos.respuesta.logo);
-
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
@@ -3176,4 +3179,8 @@ function PintarServicioActivosCoach2(respuesta,fechaactual) {
 
 		}
 
+}
+
+function ObtenerNotificaciones() {
+	// body...
 }

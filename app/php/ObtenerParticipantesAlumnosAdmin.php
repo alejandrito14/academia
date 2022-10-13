@@ -10,7 +10,7 @@ require_once("clases/class.Funciones.php");
 
 try
 {
-	
+	 
 	//Declaramos objetos de clases
 	$db = new MySQL();
 	$lo = new ServiciosAsignados();
@@ -24,6 +24,19 @@ try
 	$idservicio=$_POST['idservicio'];
 	$lo->idservicio=$idservicio;
 	$participantes=$lo->obtenerUsuariosServiciosAlumnosAsignados();
+
+	for ($i=0; $i < count($participantes); $i++) { 
+			$idusuarios=$participantes[$i]->idusuarios;
+			$lo->idusuario=$idusuarios;
+			$pagadoservicio=$lo->VerificarSihaPagado();
+
+			if (count($pagadoservicio)>0) {
+				$pagado=1;
+			}else{
+				$pagado=0;
+			}
+			$participantes[$i]->pagado=$pagado;
+	}
 	
 	$respuesta['respuesta']=$participantes;
 	

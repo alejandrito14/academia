@@ -16,28 +16,34 @@ if(!isset($_SESSION['se_SAS']))
 
 //Importamos las clases que vamos a utilizar
 require_once("../../clases/conexcion.php");
-require_once("../../clases/class.Tipodepagos.php");
+require_once("../../clases/class.Dashboard.php");
 
 require_once("../../clases/class.Funciones.php");
 require_once('../../clases/class.MovimientoBitacora.php');
+require_once("../../clases/class.Fechas.php");
 
 try
 {
 	//declaramos los objetos de clase
 	$db = new MySQL();
-	$tipopagos = new Tipodepagos();
+	$dashboard = new Dashboard();
 	$f = new Funciones();
 	$md = new MovimientoBitacora();
-	
+	$fechas=new Fechas();
 	//enviamos la conexión a las clases que lo requieren
-	$tipopagos->db=$db;
+	$dashboard->db=$db;
 	$md->db = $db;	
 
-	$obtener=$tipopagos->ObttipodepagoActivos();
+	$fecha=$_POST['fecha'];
+	$fechas->fecha=$fecha;
+
+	$dashboard->fechainicial=$fecha;
+	//echo $primerdiames.''.$ultimodiames;die();
+	$obtener=$dashboard->ObtenerHorariosFechaEspecifica();
+	
 
 
 	$respuesta['respuesta']=$obtener;
-	$respuesta['servicio']=$datos;
 
 	echo json_encode($respuesta);
 
