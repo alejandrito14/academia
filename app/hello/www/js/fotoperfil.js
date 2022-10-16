@@ -338,3 +338,16 @@ function CargarFoto() {
 
 }
 
+function CargarFotodefault() {
+	foto=localStorage.getItem('avatarhombre');
+  	
+    $("#imagenusuario").attr('src',urlphp+"imagenesapp/"+foto);
+    $("#imagenusuario2").attr('src',urlphp+"imagenesapp/"+foto);
+
+    $("#imagencliente").attr('src',urlphp+"imagenesapp/"+foto);
+    $("#imagencliente2").attr('src',urlphp+"imagenesapp/"+foto);
+
+    $(".imagencliente2").attr('src',urlphp+"imagenesapp/"+foto);
+
+}
+

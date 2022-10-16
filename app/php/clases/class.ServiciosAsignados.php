@@ -67,7 +67,7 @@ public function obtenerServiciosAsignadosPendientes()
 	public function obtenerServiciosAsignadosTuto()
 	{
 		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
-		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(1)
 			AND cancelacion=0 and servicios.estatus=1
 		 ";
 		$resp=$this->db->consulta($sql);
@@ -744,7 +744,17 @@ public function obtenerServiciosAsignadosPendientes()
   		OR
   		(horainicial BETWEEN '$this->horainicial' AND '$this->horafinal');";
 */
-  		$sql="SELECT * FROM horariosservicio WHERE  fecha='$this->fecha' and '$this->horainicial'<=horafinal AND '$this->horafinal'>=horainicial AND idservicio = '$idservicioasignar'";
+  		/*$sql="SELECT * FROM horariosservicio WHERE  fecha='$this->fecha' and '$this->horainicial'<=horafinal AND '$this->horafinal'>=horainicial AND idservicio = '$idservicioasignar'";*/
+  		
+  		$sql="SELECT * FROM horariosservicio WHERE  fecha='$this->fecha' and  idservicio = '$idservicioasignar'
+  			 and
+			(
+			DATE_ADD(CAST(CONCAT('$this->fecha',' ','$this->horainicial') AS DATETIME),INTERVAL 1 MINUTE) <= CAST(CONCAT(fecha,' ',horafinal) AS DATETIME) 
+			AND 
+			DATE_SUB(CAST(CONCAT('$this->fecha',' ','$this->horafinal') AS DATETIME),INTERVAL 1 MINUTE) >= CAST(CONCAT(fecha,' ',horainicial) AS DATETIME)
+			);
+
+  		";
   		
   		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

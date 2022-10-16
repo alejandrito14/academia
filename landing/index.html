@@ -41,13 +41,13 @@
                             <!-- to get an API token!-->
                             <form class="form-subscribe" id="contactForm" data-sb-form-api-token="API_TOKEN">
                                 <!-- Email address input-->
-                                <div class="row">
+                                <div class="row" style="display: none;">
                                     <div class="col">
                                         <input class="form-control form-control-lg" id="emailAddress" type="email" placeholder="Email Address" data-sb-validations="required,email" />
                                         <div class="invalid-feedback text-white" data-sb-feedback="emailAddress:required">Email Address is required.</div>
                                         <div class="invalid-feedback text-white" data-sb-feedback="emailAddress:email">Email Address Email is not valid.</div>
                                     </div>
-                                    <div class="col-auto"><button class="btn btn-primary btn-lg disabled" id="submitButton" type="submit">Submit</button></div>
+                                    <div class="col-auto"><button class="btn btn-primary btn-lg disabled" id="submitButton" type="submit">Enviar</button></div>
                                 </div>
                                 <!-- Submit success message-->
                                 <!---->
@@ -72,7 +72,7 @@
             </div>
         </header>
         <!-- Icons Grid-->
-        <section class="features-icons bg-light text-center" style="">
+        <section class="features-icons bg-light text-center" style="display: none;">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-4">
@@ -103,20 +103,20 @@
         <section class="showcase">
             <div class="container-fluid p-0">
                 <div class="row g-0">
-                    <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url('assets/img/bg-showcase-1.jpg')"></div>
+                    <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url('assets/img/tienda.jpeg')"></div>
                     <div class="col-lg-6 order-lg-1 my-auto showcase-text">
-                        <h2>Fully Responsive Design</h2>
-                        <p class="lead mb-0">When you use a theme created by Start Bootstrap, you know that the theme will look great on any device, whether it's a phone, tablet, or desktop the page will behave responsively!</p>
+                        <h2>Tienda</h2>
+                        <p class="lead mb-0">Contamos con gran variedad de productos</p>
                     </div>
                 </div>
                 <div class="row g-0">
-                    <div class="col-lg-6 text-white showcase-img" style="background-image: url('assets/img/bg-showcase-2.jpg')"></div>
+                    <div class="col-lg-6 text-white showcase-img" style="background-image: url('assets/img/restaurant.jpeg')"></div>
                     <div class="col-lg-6 my-auto showcase-text">
-                        <h2>Updated For Bootstrap 5</h2>
-                        <p class="lead mb-0">Newly improved, and full of great utility classes, Bootstrap 5 is leading the way in mobile responsive web development! All of the themes on Start Bootstrap are now using Bootstrap 5!</p>
+                        <h2>Restaurant</h2>
+                        <p class="lead mb-0">Prueba nuestros deliciosos platillos</p>
                     </div>
                 </div>
-                <div class="row g-0">
+                <div class="row g-0" style="display: none;">
                     <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url('assets/img/bg-showcase-3.jpg')"></div>
                     <div class="col-lg-6 order-lg-1 my-auto showcase-text">
                         <h2>Easy to Use & Customize</h2>
@@ -126,7 +126,7 @@
             </div>
         </section>
         <!-- Testimonials-->
-        <section class="testimonials text-center bg-light">
+        <section class="testimonials text-center bg-light" style="display: none;">
             <div class="container">
                 <h2 class="mb-5">What people are saying...</h2>
                 <div class="row">
@@ -159,7 +159,7 @@
             <div class="container position-relative">
                 <div class="row justify-content-center">
                     <div class="col-xl-6">
-                        <h2 class="mb-4">Ready to get started? Sign up now!</h2>
+                        <h2 class="mb-4">Contáctanos</h2>
                         <!-- Signup form-->
                         <!-- * * * * * * * * * * * * * * *-->
                         <!-- * * SB Forms Contact Form * *-->
@@ -176,7 +176,7 @@
                                     <div class="invalid-feedback text-white" data-sb-feedback="emailAddressBelow:required">Email Address is required.</div>
                                     <div class="invalid-feedback text-white" data-sb-feedback="emailAddressBelow:email">Email Address Email is not valid.</div>
                                 </div>
-                                <div class="col-auto"><button class="btn btn-primary btn-lg disabled" id="submitButton" type="submit">Submit</button></div>
+                                <div class="col-auto"><button class="btn btn-primary btn-lg disabled" id="submitButton" type="submit">Enviar</button></div>
                             </div>
                             <!-- Submit success message-->
                             <!---->
@@ -199,12 +199,48 @@
                 </div>
             </div>
         </section>
+
+        <section class="testimonials text-white text-center">
+            
+ <div class="container position-relative">
+
+    <div class="row justify-content-center">
+        <div class="col-xl-6">
+                 <h2 style="color:white; text-align:center">Preguntas Frecuentes</h2>
+    <div class="layout">
+        <div class="accordion">
+            <div class="accordion__question">
+                <p>¿Como descargar la app oficial?</p>
+  
+            </div>
+            <div class="accordion__answer">
+                <p>La app oficial se encontrará disponible en la play store y app store</p>
+  
+            </div>
+        </div>
+        <div class="accordion">
+            <div class="accordion__question">
+                <p>¿Como me registró?</p>
+  
+            </div>
+            <div class="accordion__answer">
+                <p>
+                 Al abrir la aplicación encontrarás la pantalla de entrada , al darle click en el botón regístrate,podrás iniciar el registro
+                </p>
+  
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+            </div>
+        </section>
         <!-- Footer-->
         <footer class="footer bg-light">
             <div class="container">
-                <div class="row">
+                <div class="row" style="">
                     <div class="col-lg-6 h-100 text-center text-lg-start my-auto">
-                        <ul class="list-inline mb-2">
+                        <ul class="list-inline mb-2" style="display: none;">
                             <li class="list-inline-item"><a href="#!">About</a></li>
                             <li class="list-inline-item">⋅</li>
                             <li class="list-inline-item"><a href="#!">Contact</a></li>
@@ -213,10 +249,10 @@
                             <li class="list-inline-item">⋅</li>
                             <li class="list-inline-item"><a href="#!">Privacy Policy</a></li>
                         </ul>
-                        <p class="text-muted small mb-4 mb-lg-0">&copy; Your Website 2022. All Rights Reserved.</p>
+                        <p class="text-muted small mb-4 mb-lg-0">&copy; Copyright © 2022 Innovative Software Services (ISS). 2022. Todos los derechos reservados.</p>
                     </div>
                     <div class="col-lg-6 h-100 text-center text-lg-end my-auto">
-                        <ul class="list-inline mb-0">
+                        <ul class="list-inline mb-0" style="display: none;">
                             <li class="list-inline-item me-4">
                                 <a href="#!"><i class="bi-facebook fs-3"></i></a>
                             </li>
@@ -241,4 +277,58 @@
         <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
         <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
     </body>
+     <style>
+        body{
+            background-color: #335ea6;
+        }
+        .layout{
+            width:100%;
+            margin: auto;
+        }
+        .accordion{
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            background: rgb(105, 206, 105);
+            border-radius: 10px;
+        }
+        .accordion__question p{
+            margin: 5px;
+            padding: 0;
+            font-family: Verdana;
+            font-size: 20px;
+        }
+        .accordion__answer p{
+            margin: 5px;
+            padding: 10px;
+            font-size: large;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            color: rgb(255, 255, 255);
+            background: rgb(82, 170, 122);
+            border-radius: 10px; 
+        }
+        .accordion:hover{
+            cursor: pointer;
+        }
+        .accordion__answer {
+            display: none;
+        } 
+        .accordion.active .accordion__answer {
+            display: block;
+        }
+    </style>
+
+    <script>
+        let answers=document.querySelectorAll(".accordion");
+        answers.forEach((event)=>{
+            event.addEventListener('click',()=>{
+                if(event.classList.contains("active")){
+                    event.classList.remove("active");
+                }
+                else{
+                    event.classList.add("active");
+                }
+            })
+        })
+    </script>
 </html>

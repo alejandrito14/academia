@@ -33,7 +33,12 @@ function Pintardetallepago() {
 			if (descuentosmembresia.length>0) {
 				Pintardescuentomembresiadetalle(descuentosmembresia);
 			}
-			
+
+			var imagenescomprobante=resp.imagenescomprobante;
+
+			if (imagenescomprobante.length > 0) {
+				PintarImagenesComprobante(imagenescomprobante);
+			}
 
 		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 			var error;
@@ -148,4 +153,86 @@ function Pintardescuentomembresiadetalle(respuesta) {
 
  $("#uldescuentos").append(html);
 
+	}
+
+	function PintarImagenesComprobante(respuesta) {
+		var html="";
+		if (respuesta.length>0) {
+
+
+			for (var i = 0; i <respuesta.length; i++) {
+                var ruta=urlphp+`upload/comprobante/`+respuesta[i].rutacomprobante;
+				/*html+=`
+
+			<li>
+            <label class="label-radio item-content">
+	              <div class="item-inner">
+	            
+	                <div class="item-text"  style="margin-left: 1em;color:#757575;font-size: 14px;" id="">
+	                <label>
+
+	                    <img onclick="VisualizarImagen(\'`+ruta+`\')"  class="bordesredondeados" src="`+ruta+`" width="80">
+	                    </label>
+	                  </div>
+
+	                  <div class="item-subtitle"></div>
+	                       <div class="item-title letrablack" >
+	                           <div class="item-text" >
+	                           
+	                            </div>
+	                       		</div>
+	               		 	</div>
+	               		 </div>
+	                	</div>
+                	</label>
+                </li>
+
+				`;*/
+				visible="display:none;";
+				if (respuesta[i].comentario!='' && respuesta[i].comentario!=null) {
+					visible="display:block;";
+				}
+
+				html+=`
+					<div class="col-100">
+					<div class="card">
+					<div class="card-content card-content-padding ">
+            <div class="row">
+              <div class="col-auto">
+                  <div class=" ">
+                  <img src="`+ruta+`" alt=""  onclick="VisualizarImagen(\'`+ruta+`\')" width="80" style="border-radius:10px;" >
+                  </div>
+                </div>
+                <div class="col align-self-center no-padding-left">
+                  
+                </div>
+                <div class="col align-self-center text-align-right">
+                  <div class="row">
+                   
+                  
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+              <div style="`+visible+`">
+                  <span style="font-weight:bold;vertical-align:text-top;margin-right: 4px;" id="comentariocomprobante_`+i+`">
+
+                         Comentario:
+                  </span>
+                 <span style="color:#757575;" id="textocomprobante_`+i+`">`+respuesta[i].comentario+`</span>
+           
+               </div>
+              </div>
+
+               </div>
+              </div>
+            </div>
+
+
+				`;
+			}
+		}
+
+		$("#lista-imagenescomprobante").html(html);
 	}

@@ -1518,7 +1518,7 @@ function onPhotoDataSuccessIne(imageData) {
 				var error = 'code: '    + error.code    + '\n' +
 							'message: ' + error.message + '\n';
 					//alert(error);
-			alerta('','No se puedo geolocalizar, intente de nuevo');
+			//alerta('','No se puedo geolocalizar, intente de nuevo');
 
 			}
 

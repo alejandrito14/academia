@@ -122,7 +122,7 @@ $(document).ready(function() {
   
 
 
-var produccion = 0;
+var produccion = 1;
 
 var lhost = "localhost:8888";
 var rhost = "issoftware1.com.mx";
@@ -199,6 +199,7 @@ function Cargar() {
   localStorage.setItem('cont',-1);
 localStorage.setItem('valor','');
 localStorage.setItem('avatar','');
+
   /* pictureSource=navigator.camera.PictureSourceType;
    destinationType=navigator.camera.DestinationType;
 */
@@ -454,8 +455,9 @@ $$(document).on('page:init', '.page[data-name="home"]', function (e) {
       CargarDatos();
      $$(".iniciotab").attr('onclick','CargarInicio()');
      // ObtenerMembresiaActivas();
- 
-
+  
+     IniciarSeguimientoGeo();
+    TerminarSeguimientoGeo();
 
   var pregunta=localStorage.getItem('pregunta');
 
@@ -717,7 +719,7 @@ $$(document).on('page:init', '.page[data-name="registrofoto"]', function (e) {
   $$(".badgefoto").attr('onclick','AbrirModalFoto()');
   $$('#btnregistrardeportenivel').attr('onclick','AbrirModalDeporte()')
   ObtenerdatosRegistro();
-  CargarFoto();
+  CargarFotodefault();
 
   $$('#v_alias').attr('onfocus',"Cambiar(this)");
   $$('#v_alias').attr('onblur',"Cambiar2(this);QuitarEspacios(this);");
@@ -1571,7 +1573,7 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
  ObtenerDescuentosRelacionados();
  ObtenerDescuentoMembresia();
   CalcularTotales();
-
+//PintarlistaImagen();
   $$("#tipopago").attr('onchange','CargarOpcionesTipopago()');
   $(".divtransferencia").css('display','none');
   $("#divagregartarjeta").css('display','none');

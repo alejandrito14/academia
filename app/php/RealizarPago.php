@@ -30,7 +30,8 @@ $sumatotalapagar=$_POST['sumatotalapagar'];
 $iduser=$_POST['id_user'];
 $descuentosaplicados=json_decode($_POST['descuentosaplicados']);
 $descuentosmembresia=json_decode($_POST['descuentosmembresia']);
-
+$rutacomprobante=$_POST['rutacomprobante'];
+$comentariosimagenes=$_POST['comentariosimagenes'];
 $comision=$_POST['comision'];
 $comisionmonto=$_POST['comisionmonto'];
 $comisiontotal=$_POST['comisiontotal'];
@@ -41,7 +42,8 @@ $datostarjeta=$_POST['datostarjeta'];
 $datostarjeta2=$_POST['datostarjeta2'];
 
 $subtotalsincomision=$_POST['subtotalsincomision'];
-
+$confoto=$_POST['confoto'];
+$constripe=$_POST['constripe'];
 try {
 	 $db = new MySQL();
 	 $obj = new ClienteStripe();
@@ -67,7 +69,9 @@ try {
             $tipopago=new Tipodepagos();
             $tipopago->db=$db;
             $tipopago->idtipodepago=$idtipodepago;
+           
             $obtenertipopago=$tipopago->ObtenerTipodepago2();
+
 
             if ($obtenertipopago[0]->constripe==1) {
               # code...
@@ -212,6 +216,9 @@ try {
           $estatusdeproceso=1;
         }
 
+
+      
+
           if ($estatusdeproceso==1) {
           	   $db = new MySQL();
           	   $db->begin();
@@ -236,7 +243,7 @@ try {
          $notapago->estatus=0;
          $notapago->tipopago=$obtenertipopago[0]->tipo;
          $notapago->idtipopago=$idtipodepago;
-         $notapago->confoto=0;
+         $notapago->confoto=$confoto;
          $notapago->datostarjeta=$datostarjeta;
          $notapago->datostarjeta2=$datostarjeta2;
          $notapago->idpagostripe=0;
@@ -246,17 +253,26 @@ try {
          $notapago->CrearNotapago();
 
 
-
+        
           	for ($i=0; $i < count($pagosconsiderados); $i++) { 
-          		
-                $pagos->pagado=1;
+               $pagos->pagado=1;
+          		  if ($confoto==1) {
+                  $pagos->pagado=0;
+                }
+               
+
+              
                 $pagos->fechapago=date('Y-m-d H:i:s');
                 $pagos->idpagostripe=$obj->idintento;
               if ($pagosconsiderados[$i]->tipo==1) {
                   $pagos->estatus=2;
+                  if ($confoto==1) {
+                      $pagos->estatus=1;
+
+                   }
                   $pagos->idpago=$pagosconsiderados[$i]->id;
                  
-                
+               
                   $pagos->ActualizarEstatus();
                   $pagos->ActualizarPagado();
               }
@@ -296,6 +312,11 @@ try {
                       $obtenermembresia=$membresia->ObtenerMembresia();
                   }
                    $pagos->estatus=2;
+
+                   if ($confoto==1) {
+                      $pagos->estatus=1;
+
+                   }
                    $pagos->ActualizarEstatus();
                    $pagos->ActualizarPagado();
 
@@ -344,13 +365,18 @@ try {
                $notapago->Creardescripcionpago();
           	
 
+               if ($constripe==1) {
+             
+            	   $pagos->GuardarpagosStripe();
 
-            	$pagos->GuardarpagosStripe();
+                 }
 
 
           		}
-
+              $notapago->idpagostripe=0;
+              if ($constripe==1) {
                $notapago->idpagostripe=$obj->idintento;
+             }
                $notapago->descuento=0;
                $notapago->descuentomembresia=0;
 
@@ -410,7 +436,32 @@ try {
     $concepto="Cargo";
     $sql_movimiento = "INSERT INTO monedero (idusuarios,monto,modalidad,tipo,saldo_ant,saldo_act,concepto) VALUES ('$iduser','$montomonedero','2','$tipo','$saldo_anterior','$nuevo_saldo','$concepto');";
      $db->consulta($sql_movimiento);
+
+
+
    }
+
+    if ($confoto == 1) {
+
+        $nombreimagenes = explode(',', $rutacomprobante);
+        $comentariosimagenes = explode(',', $comentariosimagenes);
+
+        for ($i = 0; $i < count($nombreimagenes); $i++) {
+
+            $imagen      = $nombreimagenes[$i];
+            $comentario  = $comentariosimagenes[$i];
+            $sqlimagenes = "INSERT INTO notapago_comprobante(rutacomprobante,idnotapago,comentario,estatus) VALUES('$imagen',$notapago->idnotapago,'$comentario','0') ";
+          
+            $db->consulta($sqlimagenes);
+
+
+        }
+
+         $notapago->estatus=0;
+         $notapago->ActualizarNotapago();
+
+      
+        }
 
           		$db->commit();
 
@@ -423,6 +474,7 @@ try {
     $respuesta['rutacomprobante'] = $nombreimagenes;
     $respuesta['mensaje']         = "";
     $respuesta['output']=$output;
+    $respuesta['idnotapago']=$notapago->idnotapago;
 
     //Retornamos en formato JSON
     $myJSON = json_encode($respuesta);
@@ -507,7 +559,7 @@ catch (\Stripe\Exception\CardException $err) {
      $array->resultado = "Error: Unknown error occurred";
      $array->msg = "Error al ejecutar el php";
      $array->id = '0';
-     $array->respuesta=1;
+     $array->respuesta=$e;
      $array->output=$output;
               //Retornamos en formato JSON 
      $myJSON = json_encode($array);

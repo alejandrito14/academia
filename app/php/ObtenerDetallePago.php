@@ -30,7 +30,7 @@ try
     $resultado=$lo->Obtenernota();
     $descuentos=array();
     $descuentosmembresia=array();
-    if ($resultado[0]->idtipopago==3) {
+    if ($resultado[0]->idpagostripe!=0) {
 
     	$idpagostripe=$resultado[0]->idpagostripe;
     	$lo->idpagostripe=$idpagostripe;
@@ -63,13 +63,27 @@ try
  	    }
     }
    
+    if ($resultado[0]->confoto==1) {
+        
+        $obtenerpagosstripe=$lo->ObtenerdescripcionNota();
+        $obtenerimagenes=$lo->ObtenerImagenesComprobante();
+    }
 
+    if ($resultado[0]->confoto==0 && $resultado[0]->idpagostripe==0 ) {
+          $obtenerpagosstripe=$lo->ObtenerdescripcionNota();
+         /* $sumatotal=0;
+          for ($i=0; $i <count($obtenerpagosstripe) ; $i++) { 
+              $sumatotal=$sumatotal+$obtenerpagosstripe[$i]->monto;
+          }
+*/
+    }
     
 
     $respuesta['respuesta'] = $resultado;
     $respuesta['pagos']=$obtenerpagosstripe;
     $respuesta['descuentos']=$descuentos;
     $respuesta['descuentosmembresia']=$descuentosmembresia;
+    $respuesta['imagenescomprobante']=$obtenerimagenes;
 
     //Retornamos en formato JSON
     $myJSON = json_encode($respuesta);

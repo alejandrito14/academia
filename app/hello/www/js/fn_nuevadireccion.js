@@ -2,7 +2,7 @@
   var watchIDactividades = "";
 
     function ObtenerPosicionGeo(position) {
-        
+        app.dialog.close();
         var coordenada = 'Latitude: '  + position.coords.latitude      + '<br />' +
                         'Longitude: ' + position.coords.longitude     + '<br />' ;
 		
@@ -10,7 +10,7 @@
 
          //alert(lonylat);
 		
-		    localStorage.setItem("lonylat", lonylat);    //Longitud y latitud.   
+		  localStorage.setItem("lonylat", lonylat);    //Longitud y latitud.   
 		     
 	direccion(position.coords.longitude,position.coords.latitude);
 		
@@ -37,7 +37,7 @@
 	 	function ErrorGeoSeguimiento(error) {
 				var error = 'code: '    + error.code    + '\n' +
 							'message: ' + error.message + '\n';
-					alerta('','No se puedo geolocalizar, intente de nuevo');
+						//alerta('','No se puedo geolocalizar, intente de nuevo');
 			}
 
 
@@ -51,7 +51,7 @@
 
 	function direccion(long,latitude){
 		TerminarSeguimientoGeo();
-				var claveapi=localStorage.getItem('claveapi');
+		var claveapi=localStorage.getItem('claveapi');
 
 	var content = document.getElementById("geolocation-test");
 	//var url="https://maps.googleapis.com/maps/api/geocode/json?latlng="+latitude+","+long+"&key=AIzaSyBI-XaZRFtjHqMRdnUJnRtnkB6yxTVUfTo";
@@ -88,9 +88,7 @@
 
     		}else{
     			   app.preloader.hide();
-
-
-    			alerta('','No se ha podido geolocalizar su ubicación');
+    			   alerta('','No se puedo geolocalizar, intente de nuevo');
     		}
 
     

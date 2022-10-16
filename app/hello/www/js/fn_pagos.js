@@ -1,5 +1,6 @@
 var descuentosaplicados=[];
 var descuentosmembresia=[];
+var arraycomentarios=[];
 function ObtenerTotalPagos() {
 	var pagina = "ObtenerTotalPagos.php";
 	var id_user=localStorage.getItem('id_user');
@@ -371,6 +372,11 @@ function CalcularTotales() {
 	  localStorage.setItem('sumatotalapagar',sumaconcomision.toFixed(2));
 	  $(".lblresumen").text(formato_numero(resta,2,'.',','));
     $(".lbltotal").text(formato_numero(sumaconcomision,2,'.',','));
+    var suma=localStorage.getItem('sumatotalapagar');
+    if (suma==0) {
+
+      $("#btnpagarresumen").attr('disabled',false);
+    }
 }
 
 
@@ -678,6 +684,13 @@ function CargarOpcionesTipopago() {
     $("#divagregartarjeta").css('display','none');
     $("#divlistadotarjetas").css('display','none');
     $$("#btnpagarresumen").prop('disabled',true);
+    $("#aparecerimagen").css('display','none');
+      localStorage.setItem('comisionmonto',0);
+      localStorage.setItem('comisionporcentaje',0);
+      localStorage.setItem('impuesto',0);
+      localStorage.setItem('comision',0);
+      localStorage.setItem('comisiontotal',0);
+      localStorage.setItem('impuestotal',0);
 
   if (idtipopago>0) {
   
@@ -689,7 +702,7 @@ function CargarOpcionesTipopago() {
       async:false,
       success: function(respuesta){
       var resultado=respuesta.respuesta;
-      console.log(resultado);
+     
      	HabilitarOpcionespago(resultado.idtipodepago,resultado.habilitarfoto,resultado.constripe,resultado.habilitarcampomonto,resultado.habilitarcampomontofactura);
     if (resultado.habilitarfoto==1) {
      		$(".divtransferencia").css('display','block');
@@ -704,11 +717,9 @@ function CargarOpcionesTipopago() {
 
               html+=` <div class="cuentas" id="cuenta_`+resultado.idtipodepago+`" style="" >
               <label class="">
-                <div class="">
+                <div class="row">
                  
-                  <div class="" style="     margin-left: 1em;
-      margin-right: 1em;text-align: justify;-webkit-line-clamp: 200;display: inline-block;" >
-
+                  <div class="" style="text-align: justify;-webkit-line-clamp: 200;display: inline-block;" >
                     <div style="    padding-left: 1em;padding-right: 1em;padding-top: .2em;padding-bottom: .2em;background: #dfdfdf;border-radius: 10px;font-size:16px;">
                   `+
                   html1
@@ -783,9 +794,9 @@ function CargarOpcionesTipopago() {
         	$(".btnnuevatarjeta").attr('onclick','NuevaTarjetaStripe()');
 
             HabilitarBotonPagar();
-            CalcularTotales();
+           
         }
-        
+         CalcularTotales();
 
       },error: function(XMLHttpRequest, textStatus, errorThrown){ 
         var error;
@@ -796,6 +807,9 @@ function CargarOpcionesTipopago() {
       }
 
     });
+  }else{
+
+    CalcularTotales();
   }
 }
 
@@ -896,8 +910,6 @@ function AbrirModalFotoComprobante() {
     
     options.params = params;
 
-    
-    
     var ft = new FileTransfer();
 
     //ft.upload(fichero, "http://192.168.1.69/svnonline/iasistencia/registroasistencia/php/asistencia_fotos_g_actividad.php", respuesta, fail, options);
@@ -960,9 +972,8 @@ function onPhotoDataSuccessComprobante(imageData) {
 
     var datos= 'imagen='+imageData;
 
-
     var pagina = urlphp+pagina;
-      app.dialog.preloader('Cargando...');
+     // app.dialog.preloader('Cargando...');
 
     $.ajax({
       url: pagina,
@@ -972,25 +983,20 @@ function onPhotoDataSuccessComprobante(imageData) {
       async:false,
       beforeSend: function() {
         // setting a timeout
-
+       app.dialog.preloader('Cargando...');
     },
 
     success: function(data) {
-
-
-
       app.dialog.close();
 
       ruta=data.ruta;
-      
+     
       if (localStorage.getItem('rutacomprobante')!==undefined) {
 
           localStorage.setItem('rutacomprobante','');
       }
       //var jsonimagen=JSON.parse(localStorage.getItem('rutacomprobante'));
-
       resultimagencomprobante.push(ruta);
-
 
      localStorage.setItem('rutacomprobante',resultimagencomprobante);
 
@@ -1020,7 +1026,6 @@ function onPhotoDataSuccessComprobante(imageData) {
       navigator.camera.getPicture(onPhotoDataSuccessComprobante, onError, { quality: 50,
         destinationType: destinationType.DATA_URL,
         sourceType: source });
-
     }
 
 //Funcion para reportar error al usar la camara del phone
@@ -1093,14 +1098,14 @@ function VisualizarImagen(foto) {
     foto,
     ],
     type: 'popup',
-    theme: 'dark',
+    //theme: 'dark',
   });
 
   $(".link .popup-close .icon-only > i").remove('icon icon-back ');
 
 
   myPhotoBrowserPopupDark.open();
-
+  $(".popup-close").html('<span>Cerrar</span>');
 }
 
 function ValidacionCargosTutorados() {
@@ -1144,7 +1149,7 @@ function RealizarCargo() {
 
   ValidacionCargosTutorados().then(r => {
 
-    console.log(r);
+ 
     if (r.pagosadeudados==0) {
        var respuesta=0;
      var mensaje='';
@@ -1166,6 +1171,9 @@ function RealizarCargo() {
    var monedero=localStorage.getItem('monedero');
    var opcion=0;
    var idopcion=0;
+   var confoto=localStorage.getItem('llevafoto');
+   var bandera=1;
+
      $(".opccard").each(function(){
               if($(this).is(':checked')){
 
@@ -1179,9 +1187,18 @@ function RealizarCargo() {
         datostarjeta=$("#datostarjeta_"+idopcion).html();
         datostarjeta2=$("#datostarjetaspan_"+idopcion).text();
       }
-   var datos='pagos='+localStorage.getItem('pagos')+"&id_user="+iduser+"&constripe="+constripe+"&idtipodepago="+idtipodepago+"&descuentocupon="+descuentocupon+"&codigocupon="+codigocupon+"&descuentosaplicados="+JSON.stringify(descuentosaplicados)+"&sumatotalapagar="+sumatotalapagar+"&comision="+comision+"&comisionmonto="+comisionmonto+"&comisiontotal="+comisiontotal+"&impuestototal="+impuestototal+"&subtotalsincomision="+subtotalsincomision+"&impuesto="+impuesto+"&descuentosmembresia="+JSON.stringify(descuentosmembresia)+'&datostarjeta='+datostarjeta+'&datostarjeta2='+datostarjeta2+"&monedero="+monedero;
-    pagina = urlphp+pagina;
+     var rutacomprobante=localStorage.getItem('rutacomprobante');
+     var comentarioimagenes=localStorage.getItem('comentarioimagenes');
+      if (confoto==1) {
 
+        if (localStorage.getItem('rutacomprobante')=='') {
+          bandera=0;
+        }
+      }
+   var datos='pagos='+localStorage.getItem('pagos')+"&id_user="+iduser+"&constripe="+constripe+"&idtipodepago="+idtipodepago+"&descuentocupon="+descuentocupon+"&codigocupon="+codigocupon+"&descuentosaplicados="+JSON.stringify(descuentosaplicados)+"&sumatotalapagar="+sumatotalapagar+"&comision="+comision+"&comisionmonto="+comisionmonto+"&comisiontotal="+comisiontotal+"&impuestototal="+impuestototal+"&subtotalsincomision="+subtotalsincomision+"&impuesto="+impuesto+"&descuentosmembresia="+JSON.stringify(descuentosmembresia)+'&datostarjeta='+datostarjeta+'&datostarjeta2='+datostarjeta2+"&monedero="+monedero;
+      datos+='&confoto='+confoto+"&rutacomprobante="+rutacomprobante+"&comentarioimagenes="+comentarioimagenes;
+    pagina = urlphp+pagina;
+    if (bandera==1) {
           $(".dialog-buttons").css('display','none');
           CrearModalEspera();
     var promise = $.ajax({
@@ -1194,7 +1211,7 @@ function RealizarCargo() {
         informacion=data;
         respuesta=data.respuesta;
         mensaje=data.mensaje;
-        pedido=data.idnota;
+        pedido=data.idnotapago;
 
       
       },error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -1220,7 +1237,7 @@ function RealizarCargo() {
 
                 
 
-                      console.log(informacion);                   
+                     // console.log(informacion);                   
 
                       var stripe=localStorage.getItem('constripe');
                       if(stripe==1){
@@ -1247,15 +1264,15 @@ function RealizarCargo() {
                                         $(".mensajeexito").css('display','none');
                                         $(".butonok").css('display','none');
                                         $(".butoerror").css('display','block');
-                    // PagoNorealizado(mensaje,output.paymentIntent,idpedido);
-                          alerta('',mensaje);
+                    // PagoNorealizado(mensaje,output.paymentIntent,notapago);
+                         // alerta('',mensaje);
 
                     }
                     else if (output.error==1) {
                   
                       var mensaje = "Opps, La tarjeta fue bloqueada, ha excedido los "+output.intentos+" intentos";
-                     // PagoNorealizado(mensaje,output.paymentIntent,idpedido);
-                      alerta('',mensaje);
+                    //  PagoNorealizado(mensaje,output.paymentIntent,notapago);
+                     // alerta('',mensaje);
                                         $(".mensajeproceso").css('display','none');
                                         $(".mensajeerror").css('display','block');
                                         $(".mensajeerror").text(mensaje);
@@ -1265,8 +1282,8 @@ function RealizarCargo() {
                     }
                      else if (output.error) {
                       var mensaje = "La tarjeta fue declinada";
-                   //   PagoNorealizado(mensaje,output.paymentIntent,idpedido);
-                      alerta('',mensaje);
+                    // PagoNorealizado(mensaje,output.paymentIntent,notapago);
+                      //alerta('',mensaje);
                                         $(".mensajeproceso").css('display','none');
                                         $(".mensajeerror").css('display','block');
                                         $(".mensajeerror").text(mensaje);
@@ -1290,7 +1307,7 @@ function RealizarCargo() {
 
                     // alerta('',mensaje);
 
-                      //PagoRealizado(mensaje,output.paymentIntent,idpedido);
+                      //PagoRealizado(mensaje,output.paymentIntent,notapago);
 
                     }
 
@@ -1329,6 +1346,18 @@ function RealizarCargo() {
         
 
           });
+
+          }else{
+
+
+              if (bandera==0) {
+
+                    if (localStorage.getItem('rutacomprobante')=='') {
+                        alerta('','Falta por subir comprobante');
+                      }
+              }
+
+          }
         
          }else{
 
@@ -1337,7 +1366,7 @@ function RealizarCargo() {
               }
         })
 
-
+  
       },function () {
 
           
@@ -1345,7 +1374,7 @@ function RealizarCargo() {
 
     });
         
-
+  
          //  });
 
         
@@ -1669,27 +1698,77 @@ function Detallepago(idnotapago) {
  function PintarlistaImagen() {
     var html="";
       localStorage.setItem('comentarioimagenes',arraycomentarios);
+      $$("#btnpagarresumen").prop('disabled',true);
 
      $(".check-list").css('display','none');
-
 
       if (localStorage.getItem('rutacomprobante')!=undefined && localStorage.getItem('rutacomprobante')!='') {
      
           var comprobante=localStorage.getItem('rutacomprobante');
           var comprobante1=comprobante.split(',');
 
-          $$("#btnpagarresumen").prop('disabled',true);
      
       if (comprobante1.length) {
         $$("#btnpagarresumen").prop('disabled',false);
 
          $(".check-list").css('display','block')
         for (var i = 0; i < comprobante1.length; i++) {
-                      ruta=urlphp+`upload/comprobante/`+comprobante1[i];
+        ruta=urlphp+`upload/comprobante/`+comprobante1[i];
 
+          var visible="display:none";
+              if (arraycomentarios[i]!='' && arraycomentarios[i]!=undefined) {
+             visible="display:block";
+
+              }
+
+          html+=`
+           <div class="col-100">
+          <div class="card">
+          <div class="card-content card-content-padding ">
+            <div class="row">
+              <div class="col-auto">
+                  <div class=" ">
+                  <img src="`+ruta+`" alt=""  onclick="VisualizarImagen(\'`+ruta+`\')" width="80" style="border-radius:10px;" >
+                  </div>
+                </div>
+                <div class="col align-self-center no-padding-left">
+                  
+                </div>
+                <div class="col align-self-center text-align-right">
+                  <div class="row">
+                    <div class="col">
+                      <span class="botoneditar " onclick="ColocarComentarioComprobante(`+i+`);" >
+                      <i class="bi-pencil"></i>
+                      </span>
+                    </div>
+                    <div class="col">
+                       <span class="botoneliminar" style="margin-rigth:1em;" onclick="EliminarimagenComprobante(\'`+comprobante1[i]+`\')" >
+                      <i class="bi-trash-fill"></i>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+              <div style="`+visible+`">
+                  <span style="font-weight:bold;vertical-align:text-top;margin-right: 4px;" id="comentariocomprobante_`+i+`">
+
+                         Comentario:
+                  </span>
+                 <span style="color:#757575;" id="textocomprobante_`+i+`">`+arraycomentarios[i]+`</span>
+           
+               </div>
+              </div>
+            </div>
+            </div>
+            </div>
+            </div>
+
+          `;
 
                     
-                     
+          /*           
             html+=`<li>
             <label class="label-radio item-content">
               <div class="item-inner">
@@ -1713,19 +1792,15 @@ function Detallepago(idnotapago) {
                   
                 </div>
 
-                <div class="item-after">
+                <div class="">
 
-                 <span class="botoneditar " onclick="ColocarComentarioComprobante(`+i+`);" >
-                
-                <i class="icon material-icons ">edit</i>
-                <span class="if-not-md"></span>
-
-                </span>
+                       <span class="botoneditar " onclick="ColocarComentarioComprobante(`+i+`);" >
+                      <i class="bi-pencil"></i>
+                      </span>
                
                    <span class="botoneliminar" style="margin-rigth:1em;" onclick="EliminarimagenComprobante(\'`+comprobante1[i]+`\')" >
                     
-                      <i class="icon material-icons ">delete_forever</i>
-                      <span class="if-not-md"></span>
+                  <i class="bi-trash-fill"></i>
 
                   </span>
                 </div>
@@ -1741,11 +1816,7 @@ function Detallepago(idnotapago) {
             `;
 
 
-            var visible="display:none";
-              if (arraycomentarios[i]!='') {
-             visible="display:block";
-
-              }
+          
                       html+=`<span style="font-weight:bold;vertical-align:text-top;margin-right: 4px;`+visible+`" id="comentariocomprobante_`+i+`">
 
                        Comentario:
@@ -1757,11 +1828,11 @@ function Detallepago(idnotapago) {
           </li>
 
 
-          `;
+          `;*/
             }
       }else{
 
-        html+=`<li class="" onclick="">
+       /* html+=`<li class="" onclick="">
             <a href="#" class="item-link item-content"> <div class="item-media"></div>
               <div class="item-inner">
                 <div class="item-title-row">
@@ -1774,7 +1845,7 @@ function Detallepago(idnotapago) {
                    No se encontraron imagenes
                 </div>
               </div>
-            </a></li>`;
+            </a></li>`;*/
 
 
 
@@ -1783,24 +1854,11 @@ function Detallepago(idnotapago) {
     }else{
 
 
-       html+=`<li class="" onclick="">
-            <a href="#" class="item-link item-content"> <div class="item-media"></div>
-              <div class="item-inner">
-                <div class="item-title-row">
-                
-                </div>
-                <div class="item-subtitle"></div>
-                 <div class="item-title letrablack"></div>
-                  <div class="item-after"></div>
-                <div class="item-text">
-                   No se encontraron imagenes
-                </div>
-              </div>
-            </a></li>`;
+       html+=``;
 
     }
 
-      $("#lista-imagenescomprobante").html(html);
+    $("#lista-imagenescomprobante").html(html);
   }
 
  
@@ -1867,7 +1925,9 @@ var dynamicSheet ='';
 function ColocarComentarioComprobante(i) {
 
   var obtenercomentario=$("#textocomprobante_"+i).text();
-
+  if (obtenercomentario==undefined || obtenercomentario=='undefined') {
+    obtenercomentario="";
+  }
 
         dynamicSheet = app.sheet.create({
         content: `
@@ -1876,13 +1936,13 @@ function ColocarComentarioComprobante(i) {
               <div class="toolbar-inner estilostoolbar" >
                 <div class="left"></div>
                 <div class="right">
-                  <a class="link sheet-close" id="cerrar">x</a>
+                  <a class="link sheet-close" id="cerrar" onclick="CerrarModalC()">x</a>
                 </div>
               </div>
             </div>
             <div class="sheet-modal-inner">
               <div class="block">
-            <label style="font-weight: bold;font-size: 15px;margin-left: 1.5em;">Comentario del comprobante</label>
+            <p style="font-weight: bold;font-size: 15px;text-align:center;">Comentario del comprobante</p>
             <div class="item-input-wrap">
              <textarea id="comentariocomprobante" style="height: 4em;width: 100%;">`+obtenercomentario+`</textarea>
            </div>
@@ -1923,6 +1983,9 @@ function GuardarComentario(i) {
 
 }
 
+function CerrarModalC() {
+  dynamicSheet.close();
+}
 
 
 
@@ -1943,5 +2006,94 @@ function Buscarposcion(posicion) {
         return false;
       }
     
+}
+
+
+
+function LimpiarVariables2(argument) {
+ 
+                 
+                  localStorage.setItem('metodopago','');
+                  localStorage.setItem('formapago','');
+                  localStorage.setItem('usocfdi','');
+                  localStorage.setItem('rutacomprobante','');
+                  localStorage.setItem('comentarioimagenes','');
+                  localStorage.setItem('conmensaje','');
+                  localStorage.setItem('factura',0);
+                  localStorage.setItem('validacioncupon',0);
+
+                  localStorage.setItem('nuevototal',0);
+                  localStorage.setItem('idcupon',0);
+                  localStorage.setItem('codigocupon','');
+                  localStorage.setItem('montodescontado',0);
+                  localStorage.setItem('idsucursalproveedorcodigo','');
+                  localStorage.setItem('montocliente','');
+                  localStorage.setItem('metodopago','');
+                  localStorage.setItem('formapago','');
+                  localStorage.setItem('usocfdi','');
+                  localStorage.setItem('observacionpedido','');
+
+                  localStorage.setItem('montoafacturar',0);
+                  localStorage.setItem('ivapaquetes',0);
+                  localStorage.setItem('comisionporcentaje',0);
+                  localStorage.setItem('comisionmonto',0);
+                  localStorage.setItem('montoafacturar',0);
+                  localStorage.setItem('datostarjeta','');
+                  localStorage.setItem('datostarjeta2','');
+                  localStorage.setItem('ivapaquetes2',0);
+                  localStorage.setItem('ivapaquetes',0);
+                  localStorage.setItem('enviovariable','');
+                  localStorage.setItem('costoenvio',0);
+                  localStorage.setItem('sumatotalapagar','');
+
+                  resultimagencomprobante=[];
+                  arraycomentarios=[];
+
+
+}
+
+
+function PagoNorealizado(mensaje,idpayment,idnota) {
+
+
+  var datos="idnota="+idnota+"&idpayment="+idpayment;
+
+        var pagina = "Cambiodeestatusnorealizado.php";
+        pagina = urlphp+pagina;
+
+          $.ajax({
+            url: pagina,
+            type: 'post',
+            dataType: 'json',
+            data:datos,
+            async:false,
+
+             beforeSend: function(){
+                 
+
+                 },
+          success: function(data) {
+            modaldialogo.close();
+
+            alerta('',mensaje);
+
+            GoToPage("listadopagos");
+
+
+            },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+                var error;
+                if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+                if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                                                       //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                   app.dialog.alert('Error leyendo fichero jsonP '+error,'Error');
+                   $(".check-list").css('display','none');
+                   $("#aparecerimagen").css('display','none');
+
+                           
+                   }
+                                             
+
+                }); 
+
 }
 
