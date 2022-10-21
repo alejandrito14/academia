@@ -512,8 +512,9 @@ function RegistrarAcceso() {
 				    		localStorage.setItem('foto',datos.foto);
 				    		localStorage.setItem('alias',datos.alias);
 				    		localStorage.setItem('sexo',datos.sexo);
-
+				    		 GuardarTokenBase(0); 
 				    		if (tipousuario==3) {
+				    			  
 
 				    			GoToPageHistory('home');	
 				    		}

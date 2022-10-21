@@ -160,6 +160,23 @@ function PintarMensajes(mensajes) {
             html+='<div class="messages-title" style="font-weight: bold;" >'+mensajes[i].fecha+'</div>'
 
             }*/
+
+              if (mensajes[i].sexo=='M') {
+                foto=localStorage.getItem('avatarmujer');
+              }else{
+                foto=localStorage.getItem('avatarhombre');
+       
+              }
+
+               rutaimagen=urlphp+"imagenesapp/"+foto;
+
+              if (mensajes[i].foto!='null' && mensajes[i].foto!=null && mensajes[i].foto!='') {
+
+              rutaimagen=urlphp+"upload/perfil/"+mensajes[i].foto;
+
+
+              }
+
             if (mensajes[i].idusuarioenvio==id_user) {
 
               html+='<div class="message message-sent message-first message-last message-tail" id="msj_'+mensajes[i].idmensaje+'"'
@@ -169,7 +186,9 @@ function PintarMensajes(mensajes) {
               }else{
               html+=' onclick="MenuOpciones('+mensajes[i].idmensaje+')">'
               }
-              html+=' <div class="message-avatar" style="background-image:url(img/iconousuario.png)"> '
+          
+
+              html+=` <div class="message-avatar" style="background-image:url('`+rutaimagen+`')"> `;
               html+='    </div> '
               html+='<div class="message-content" style="padding-left:2px;">'
               html+='<div class="message-name">'
@@ -198,7 +217,7 @@ function PintarMensajes(mensajes) {
             }else{
 
             html+=' <div class="message message-received message-first message-last message-tail">'
-            html+='  <div class="message-avatar" style="background-image:url(img/iconosoporte.jpg);margin-right:0px;">'
+              html+=` <div class="message-avatar" style="background-image:url('`+rutaimagen+`')"> `;
             html+='  </div>'
             html+=' <div class="message-content" style="padding-left:2px;">'
             html+=' <div class="message-name">'+mensajes[i].nombre+'</div>'

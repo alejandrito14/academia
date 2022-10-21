@@ -317,32 +317,31 @@ var handleNotificationMessage = function(message){
         msg += " (tapped in " + message.tap + ")";
         if (message.navigation && localStorage.id_user) {
 
-           // alert(localStorage.id_user+''+message.idcliente);
+          // alert(localStorage.id_user+''+message.idcliente);
                 if (localStorage.id_user == message.idcliente) {
-
-            
+                   
                     if (message.tap == "background") {
                         localStorage.pushnav = message.navigation;
                         localStorage.valor=message.valor;
 
                          if (localStorage.valor!='') {
-                                localStorage.setItem('pedido',localStorage.valor);
+                                localStorage.setItem('idservicio',localStorage.valor);
                             }
-                        mainView.router.navigate("/"+localStorage.pushnav+"/", {reloadCurrent: true} );
+                       // mainView.router.navigate("/"+localStorage.pushnav+"/", {reloadCurrent: true} );
                         //var view=app.views.current;
                         //view.router.navigate("/"+message.navigation+"/", {reloadCurrent: true} );
                         //view.router.navigate("/"+message.navigation+"/", {reloadCurrent: true} );
-                        //GoToPage(message.navigation);
+                        GoToPage(message.navigation);
                     }
                     else{
                         localStorage.pushnav = message.navigation;
                         localStorage.valor=message.valor;
                             if (localStorage.valor!='') {
-                                localStorage.setItem('pedido',localStorage.valor);
+                                localStorage.setItem('idservicio',localStorage.valor);
                             }
 
-                        mainView.router.navigate("/"+localStorage.pushnav+"/", {reloadCurrent: true} );
-                      
+                        //mainView.router.navigate("/"+localStorage.pushnav+"/", {reloadCurrent: true} );
+                       GoToPage(message.navigation);
                     }
                 }
         }

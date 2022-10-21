@@ -261,14 +261,23 @@ function PintarNotificaciones(r) {
                 <div class="item-title-row">
                   <div class="item-title"></div>
                 </div>
-                <div onclick="CambiarEstatusNotificacion(`+r[i].idnotificacioncliente+`)">
+                <div onclick="CambiarEstatusNotificacion(`+r[i].idnotificacioncliente+`)">`;
                 	
-                	<div class="item-subtitle" style="`+negritas+`white-space: break-spaces;">`+dividir[1]+`</div> 
-                	<div id="informacion_`+r[i].idnotificacioncliente+`" style="">
-                		<div class="item-subtitle" style="`+negritas+`white-space: break-spaces;">`+dividir[2]+`</div>
-                		<div class="item-subtitle" style="`+negritas+`white-space: break-spaces;">`+r[i].fechaformato+`</div>
-                	</div>
-               </div>
+                	for (var j = 0; j < dividir.length; j++) {
+                	    
+                	    html+=`<div class="item-subtitle" style="`+negritas+`white-space: break-spaces;">`+dividir[j]+`</div> `
+							if (j==1) {
+								html+=`<div class="item-subtitle" style="`+negritas+`white-space: break-spaces;">`+r[i].fechaformato+`</div>`;
+							}
+                	}
+                	
+
+                	 html+=`
+                	</div>`
+
+
+
+              html+=` </div>
 
               </div>
 

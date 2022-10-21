@@ -8,6 +8,8 @@ require_once("clases/conexcion.php");
 require_once("clases/class.Servicios.php");
 require_once("clases/class.Funciones.php");
 require_once("clases/class.Fechas.php");
+require_once("clases/class.Usuarios.php");
+require_once("clases/class.NotificacionPush.php");
 
 
 try
@@ -16,6 +18,10 @@ try
 	$db = new MySQL();
 	$emp = new Servicios();
 	$f = new Funciones();
+	$usuarios=new Usuarios();
+	$usuarios->db=$db;
+	$notificaciones=new NotificacionPush();
+	$notificaciones->db=$db;
 	//$md = new MovimientoBitacora();
 	
 	//enviamos la conexión a las clases que lo requieren
@@ -118,16 +124,51 @@ try
 	$emp->idusuarios=$_POST['iduser'];
 	$tipousuario=$_POST['idtipousuario'];
 		$validaradmin=1;
+	$nombrequienagrega="";
 	if ($tipousuario==5) {
 		$validaradmin=0;
+		$usuarios->idusuarios=$emp->idusuarios;
+		$obtenerusuario=$usuarios->ObtenerUsuario();
+		array_push($porcentajescoachs,$obtenerusuario[0]);
+
+		$nombrequienagrega="Coach: ".$obtenerusuario[0]->nombre." ".$obtenerusuario[0]->paterno;
 	}
+	$arraytokens=array();
+	$titulonotificacion="";
 	$emp->validaradmin=$validaradmin;
 	//Validamos si hacermos un insert o un update
 	if($emp->idservicio == 0)
 	{
+	$titulonotificacion="Solicitud de nuevo servicio ".$nombrequienagrega;
+
 		//guardando 
 		$emp->GuardarServicio();
 		/*$md->guardarMovimiento($f->guardar_cadena_utf8('Servicio'),'Servicio',$f->guardar_cadena_utf8('Nuevo Servicio creado con el ID-'.$emp->idservicio));*/
+
+		if ($tipousuario==5) {
+		# code...
+	
+		$obtenerusuarios=$usuarios->ObtenerAdministradores();
+		
+		for ($i=0; $i <count($obtenerusuarios) ; $i++) { 
+			$idusuario=$obtenerusuarios[$i]->idusuarios;
+			$ruta='nuevoservicio';
+			$valor=$emp->idservicio;
+			$texto='|Solicitud de nuevo servicio|'.$emp->titulo.'|'.$nombrequienagrega.'|Periodo: '.date('d-m-Y',strtotime($emp->fechainicial)).' '.date('d-m-Y',strtotime($emp->fechafinal));
+			$estatus=0;
+			$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
+			$notificaciones->idusuario=$idusuario;
+			$obtenertokenusuario=$notificaciones->Obtenertoken();
+			array_push($arraytokens, $obtenertokenusuario[0]->token);
+
+		}
+
+	}
+
+	
+
+	
+
 
 		if (count($arrayhorarios)>0 && $arrayhorarios[0]!='') {
 			# code...
@@ -160,25 +201,20 @@ try
 				}
 
 			if (count($porcentajescoachs)>0 ) {
+				
 				for ($i=0; $i < count($porcentajescoachs); $i++) { 
 
-						$emp->idparticipantes=$porcentajescoachs[$i]->{'idcoach'};
+						$emp->idparticipantes=$porcentajescoachs[$i]->idusuarios;
 						$emp->Guardarparticipantes();
 
-						$tipo=$porcentajescoachs[$i]->{'tipopago'};
-						$monto=$porcentajescoachs[$i]->{'monto'};
+						$tipo=0;
+						$monto=0;
 
 						$emp->GuardarMontotipo($tipo,$monto);	
 					}
 				}
 
-				if (count($porcentajescoachs)>0) {
-					for ($i=0; $i <count($porcentajescoachs) ; $i++) { 
-						
-
-
-					}
-				}
+			
 
 		
 				if (count($periodos)>0) {
@@ -190,22 +226,22 @@ try
 					}
 				}
 
-			if (count($descuentos)>0 && $descuentos[0]!='') {
+			/*if (count($descuentos)>0 && $descuentos[0]!='') {
 					for ($i=0; $i < count($descuentos); $i++) { 
 						$emp->iddescuento=$descuentos[$i];
 
 						$emp->Guardardescuentos();
 					}
-				}
+				}*/
 
 
-			if (count($membresias)>0 && $membresias[0]!='') {
+			/*if (count($membresias)>0 && $membresias[0]!='') {
 				for ($i=0; $i < count($membresias); $i++) { 
 						$emp->idmembresia=$membresias[$i];
 
 						$emp->Guardarmembresias();
 					}
-				}
+				}*/
 
 				if (count($encuestas)>0 && $encuestas[0]!='') {
 				for ($i=0; $i < count($encuestas); $i++) { 
@@ -216,8 +252,123 @@ try
 				}
 
 
+		if ($tipousuario==0) {
+				$obtenercoachesservicio=$emp->ObtenerParticipantesCoach(5);
+
+		for ($i=0; $i <count($obtenercoachesservicio) ; $i++) { 
+					
+
+			$idusuario=$obtenercoachesservicio[$i]->idusuarios;
+			$ruta='nuevoservicio';
+			$valor=$emp->idservicio;
+			$texto='|Nuevo servicio|'.$emp->titulo.'|';
+			$estatus=0;
+			$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
+
+			$notificaciones->idusuario=$idusuario;
+				$obtenertokenusuario=$notificaciones->Obtenertoken();
+			array_push($arraytokens,$obtenertokenusuario[0]->token);
+
+			$titulonotificacion="Nuevo servicio ".$emp->titulo;
+
+				}
+
+			
+			}
+
+
 	}else{
-		$emp->ModificarServicio();	
+		$titulonotificacion="Edicion servicio";
+		$emp->ModificarServicio();
+
+		$obtenerser=$emp->ObtenerServicio();
+
+		if ($tipousuario==0) {
+			$idusuario=$obtenerser[0]->agregousuario;
+			$ruta='nuevoservicio';
+			$valor=$emp->idservicio;
+			$texto='|Confirmacion de servicio|'.$emp->titulo.'|';
+			$estatus=0;
+			$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
+
+			$notificaciones->idusuario=$idusuario;
+				$obtenertokenusuario=$notificaciones->Obtenertoken();
+			array_push($arraytokens,$obtenertokenusuario[0]->token);
+
+			$titulonotificacion="Confirmacion de servicio ".$emp->titulo;
+		
+				}
+		
+
+
+		if (count($arrayhorarios)>0 && $arrayhorarios[0]!='') {
+			# code...
+			$emp->EliminarHorarioSemana();
+
+		for ($i=0; $i < count($arrayhorarios); $i++) { 
+			$dividircadena=explode('-', $arrayhorarios[$i]);
+			$fecha=$dividircadena[0].'-'.$dividircadena[1].'-'.$dividircadena[2];
+				 $horainicial=substr($dividircadena[3],0,5);
+				 $horafinal=substr($dividircadena[4],0,5);
+				 $idzona=$dividircadena[5];
+				 $numdia=date('w',strtotime($fecha));
+
+				$emp->dia=$numdia;
+				$emp->horainiciosemana=$horainicial;
+				$emp->horafinsemana=$horafinal;
+				$emp->fecha=date('Y-m-d',strtotime($fecha));
+				$emp->idzona=$idzona;
+
+				$emp->GuardarHorarioSemana();
+			}
+		}
+
+			if (count($zonas)>0 && $zonas[0]!='') {
+				for ($i=0; $i < count($zonas); $i++) { 
+
+						$emp->idzona=$zonas[$i];
+					$emp->GuardarZona();
+					}
+
+				}
+				$emp->EliminarCoachs();
+
+			if (count($porcentajescoachs)>0 ) {
+				for ($i=0; $i < count($porcentajescoachs); $i++) { 
+
+					$emp->idparticipantes=$porcentajescoachs[$i]->{'idcoach'};
+					$emp->Guardarparticipantes();
+
+					$tipo=$porcentajescoachs[$i]->{'tipopago'};
+					$monto=$porcentajescoachs[$i]->{'monto'};
+
+						$emp->GuardarMontotipo($tipo,$monto);	
+					}
+				}
+
+			
+
+			$emp->EliminarPeriodos();
+
+				if (count($periodos)>0) {
+					for ($i=0; $i < count($periodos); $i++) { 
+						$emp->periodoinicial=$periodos[$i]->{'fechainicial'};
+						$emp->periodofinal=$periodos[$i]->{'fechafinal'};
+
+						$emp->GuardarPeriodo();
+					}
+				}
+
+					$emp->Eliminardeencuestas();
+
+				if (count($encuestas)>0 && $encuestas[0]!='') {
+
+				for ($i=0; $i < count($encuestas); $i++) { 
+						$emp->idencuesta=$encuestas[$i];
+
+						$emp->Guardarencuestas();
+					}
+				}	
 		/*$md->guardarMovimiento($f->guardar_cadena_utf8('Servicio'),'Servicio',$f->guardar_cadena_utf8('Modificación del Servicio -'.$emp->idservicio));*/
 /*
 	if (count($arrayhorarios)>0 && $arrayhorarios[0]!='') {
@@ -336,6 +487,15 @@ try
 	}
 
 	$db->commit();
+
+
+		if (count($arraytokens)>0) {
+			$texto='';
+
+			 $notificaciones->navpage="serviciosporvalidar";
+
+			$notificaciones->EnviarNotificacion($arraytokens,$texto,$titulonotificacion);
+		}
 
 	$respuesta['respuesta']=1;
 	$respuesta['idservicio']=$emp->idservicio;

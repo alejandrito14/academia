@@ -246,7 +246,7 @@ function VerificarUsuarioActivo() {
 
 
 function ObtenerConfiVersion() {
-
+	
 		var pagina = "Obtenerdatosconfi.php";
 
 		$.ajax({
@@ -393,7 +393,7 @@ function GuardarTokenBase(idcliente) {
 	 var tokenfirebase=localStorage.getItem('tokenfirebase');
 	 var idcliente=localStorage.getItem('id_user');
 	 var uuid=localStorage.getItem('UUID');
-	// alerta('','sistema'+sistema+'id '+idcliente+' uuid'+uuid);
+	
 	 var datos="sistema="+sistema+"&tokenfirebase="+tokenfirebase+"&idusuario="+idcliente+"&uuid="+uuid;
 	 var pagina = "GuardarTokenBase.php";
 	 

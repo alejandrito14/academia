@@ -362,7 +362,7 @@
 
 
 
-function ObtenerImagenesGrupal(){
+function ObtenerImagenesGrupalServicio(){
     var idservicio=localStorage.getItem('idservicio');
     var datos="idservicio="+idservicio;
     var pagina = "ObtenerServicioImagenes.php";
@@ -377,7 +377,13 @@ function ObtenerImagenesGrupal(){
         success: function(datos){
 
             var respuesta=datos.respuesta;
-            PintarimagengrupalListado(respuesta);
+            $(".galeriagrupal").css('display','none');
+
+            if (respuesta.length>0) {
+                $(".galeriagrupal").css('display','block');
+                 PintarimagengrupalListado(respuesta);
+            }
+           
 
             },error: function(XMLHttpRequest, textStatus, errorThrown){ 
                 var error;
@@ -395,16 +401,18 @@ function PintarimagengrupalListado(resultado) {
   if (resultado.length>0) {
     for (var i = 0; i < resultado.length; i++) {
 
-    if (resultado[i].foto!='' && resultado[i].foto!='null') {
+    if (resultado[i].foto!='' && resultado[i].foto!='null' && resultado[i].foto!=null) {
 
         urlimagen=urlphp+`upload/imagengrupal/`+resultado[i].foto;
         imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;"/>';
+      
       }else{
 
         urlimagen=localStorage.getItem('logo');
         imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;"/>';
       }
       
+
       html+=`
          
 
@@ -413,7 +421,7 @@ function PintarimagengrupalListado(resultado) {
                     <div class="card-content card-content-padding">
                         <div class="row">
                             <div class="col-100">
-                                <div class="h-190  rounded-10 coverimg margin-bottom" style="background-image: url('`+urlimagen+`');">
+                                <div class="h-190  rounded-10 coverimg margin-bottom" onclick="VisualizarImagen(\'`+urlimagen+`\')" style="background-image: url('`+urlimagen+`');">
                                     
                                 </div>
                             </div>
@@ -430,10 +438,10 @@ function PintarimagengrupalListado(resultado) {
 
     }
 
-    $(".listadoimagenes").html(html);
   }
 
     
+    $(".listadoimagenes").html(html);
 
 }
 

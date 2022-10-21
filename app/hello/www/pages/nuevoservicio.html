@@ -5,10 +5,10 @@
         <div class="navbar-bg"></div>
         <div class="navbar-inner">
             <div class="left">
-                <a class="button button-fill text-color-theme bg-color-white button-44 regreso"
+               <!--  <a class="button button-fill text-color-theme bg-color-white button-44 regreso"
                     >
                     <i class="bi bi-arrow-left"></i>
-                </a>
+                </a> -->
             </div>
             <div class="title">
               
@@ -20,10 +20,16 @@
         </div>
     </div>
 
-    <div class="fab fab-extended fab-center-bottom divflotantea" style="width: 92%;">
-    <a  style="    border-radius: 10px;
-    height: 60px;" class="button button-fill button-large button-raised margin-bottom color-theme" id="btnguardarservicio">
-      <div class="fab-text">Guardar</div>
+      <div class="fab fab-left-bottom  " style="bottom: 4em; ">
+    <a class="btnregreso regreso" style="">
+     <i class="bi bi-arrow-left" style=""></i>
+    </a>
+  </div>
+
+    <div class="fab  fab-right-bottom divflotantea" style="" style="bottom: 4em; ">
+    <a  style="" class="color-theme" id="btnguardarservicio">
+    <i class="bi-check-circle-fill"></i>
+     <!--  <div class="fab-text">Guardar</div> -->
     </a>
   <!--   <a  style="    border-radius: 10px;
     height: 60px;" class="button button-fill button-large button-raised margin-bottom color-theme" id="btnsiguiente">
@@ -50,7 +56,7 @@
           </div></div>
         </div> -->
 
-      <div class="col-100 fotoimagen" >
+      <!-- <div class="col-100 fotoimagen" >
         <div class="card margin-bottom overflow-hidden  text-color-white" 
         style="margin: 1em;height: 200px;">
         <div class="coverimg h-100 width-100 position-absolute">
@@ -61,7 +67,15 @@
           </div>
         </div>
         </div>
-      </div>
+      </div> -->
+
+
+
+      <div class="">
+        <div class="col-100">
+          <img src="" alt="" class="imglogoimagenservicio" style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;border-radius: 10px;" />
+        </div>
+        </div>
 
 
 
@@ -143,13 +157,13 @@
                   </div>
               </div>
               
-             <div class="item-content item-input item-input-with-value" style="display: none;">
+             <div class="item-content item-input item-input-with-value" style="display: none;" id="contentestatus">
                   <div class="item-inner liestatus">
                    <div class="item-title item-label">Estatus</div>
                     <div class="item-input-wrap">
                       <select id="v_estatus">
                        <option value="0">Desactivado</option>
-                       <option value="1" selected="selected">Activo</option>
+                       <option value="1" selected="selected">Activado</option>
                     </select>
                     </div>
                   </div>
@@ -407,12 +421,12 @@
 
                </div>
 
-                <div class="row" style="margin-top: 1em;">
+                <div class="row" style="margin-top: 1em;display: none;">
                 <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Avisos</p>
 
               </div>
 
-               <div class="row">
+               <div class="row" style="display: none;">
                 <div class="item-content item-input item-input-with-value">
                   <div class="item-inner litiempoavisos">
                         <div class="item-title item-label">Tiempo de avisos</div>
@@ -427,7 +441,7 @@
 
                </div>
 
-                <div class="row">
+                <div class="row" style="display: none;">
                 <div class="item-content item-input item-input-with-value">
                   <div class="item-inner litituloavisos">
                         <div class="item-title item-label">Título de avisos</div>
@@ -442,7 +456,7 @@
 
                </div>
 
-                  <div class="row">
+                  <div class="row" style="display: none;">
                 <div class="item-content item-input item-input-with-value">
                   <div class="item-inner lidescripcionavisos">
                         <div class="item-title item-label">Descripción</div>

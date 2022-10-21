@@ -4,10 +4,10 @@
         <div class="navbar-bg"></div>
         <div class="navbar-inner">
             <div class="left">
-                <a class="button button-fill text-color-theme bg-color-white button-44 regreso"
+                <!-- <a class="button button-fill text-color-theme bg-color-white button-44 regreso"
                     >
                     <i class="bi bi-arrow-left"></i>
-                </a>
+                </a> -->
             </div>
             <div class="title">
               
@@ -19,12 +19,26 @@
         </div>
     </div>
 
-    <div class="fab fab-extended fab-center-bottom divflotantea" style="width: 92%;">
+      <div class="fab fab-left-bottom  " style="bottom: 4em; ">
+    <a class="btnregreso regreso" style="">
+     <i class="bi bi-arrow-left" style=""></i>
+    </a>
+  </div>
+
+    <!-- <div class="fab fab-extended fab-center-bottom divflotantea" style="width: 92%;">
     <a  style="    border-radius: 10px;
     height: 60px;" class="button button-fill button-large button-raised margin-bottom color-theme" id="btnguardarservicioreplica">
       <div class="fab-text">Guardar</div>
     </a>
  
+  </div> -->
+
+
+  <div class="fab  fab-right-bottom divflotantea" style="" style="bottom: 4em; ">
+    <a  style="" class="color-theme" id="btnguardarservicioreplica">
+    <i class="bi-check-circle-fill"></i>
+     <!--  <div class="fab-text">Guardar</div> -->
+    </a>
   </div>
 
     <div class="page-content">
@@ -69,16 +83,17 @@
 
 
                  <input type="hidden" name="v_servicio"  id="v_servicio" value="0" />
-
+                 <div class="calendario" style="display: none;">
                  <div class="row" style="margin-top: 1em;">
                   <p class="liselecciona">Selecciona la fecha y el horario</p>
                  </div>
                  <div class="row" style="margin-top: 1em;">
-                 <div id="demo-calendar" style=""></div>
+                        <div id="demo-calendar" style=""></div>
                   </div>
                    <div class="row" id="selected-dates" style="margin-top: 1em;">
                     
                   </div>
+                </div>
               
            
          

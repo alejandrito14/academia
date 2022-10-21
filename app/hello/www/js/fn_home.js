@@ -39,6 +39,8 @@ function CargarInicio() {
                 }
 }
 function CargarDatos() {
+
+	GuardarTokenBase();
 	localStorage.setItem('valor','');
 
 	localStorage.setItem('variable',0);
@@ -50,18 +52,19 @@ function CargarDatos() {
 	$$(".btnmisservicios").attr('onclick','MisServiciosAlumno()');
     $$(".btnserviciosactivos").attr('onclick','ServiciosActivos()');
 	$$(".btnmisserviciospendientes").attr('onclick','MisServiciosPendientesAlumno()');
-
+	$$(".inicioenlace").attr('onclick','GoToPage("home")');
  	classtipo='tipoalumno';
  	 $$(".tipousuario").removeClass('tipoadmin');
  	 $$(".tipousuario").removeClass('tipocoach');
   	 $$(".tipousuario").addClass(classtipo);
   	 $$(".btnservicios").attr('onclick','GoToPage("serviciosasignados")');
   	 $$(".btnserviciostutorados").attr('onclick','GoToPage("listadotutoservicios")');
-
+  	 $$(".lipagos").attr('href','/pagos/');
 	ObtenerTableroAnuncios(1);
 	ObtenerEntradas(1);
 	Obtenerpublicidad(1);
 	ObtenerConfiguracion();
+      identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 3000);
 
 	VerificarSiExisteTuTorados();
 	//botones
@@ -115,15 +118,17 @@ $$('.messages-content').scrollTop( $('.messages-content').get(0).scrollHeight, 4
 }
 
 function CargarDatosAdmin(argument) {
+	GuardarTokenBase();
 	localStorage.setItem('variable',0);
 	localStorage.setItem('valor','');
+	$$(".inicioenlace").attr('onclick','GoToPage("homeadmin")');
 
 	 var nombreusuario= localStorage.getItem('nombre')
 	$$(".nombreusuario").text(nombreusuario);
 	var tipousuario=localStorage.getItem('tipoUsuario');
 	$$(".tipousuario").text(tipousuario);
-	$("#lipagos").css('display','none');
-	var idtipousuario=localStorage.getItem('idtipousuario');
+	//$("#lipagos").css('display','none');
+	 var idtipousuario=localStorage.getItem('idtipousuario');
 
    
       classtipo='tipoadmin';
@@ -133,27 +138,19 @@ function CargarDatosAdmin(argument) {
     $$(".btnserviciosporvalidar").attr('onclick','ServiciosporValidar()');
 	VerificarServiciosporValidarAdmin();
 	VerificarServicios();
+	$$(".lipagos").attr('href','/listadopagosadmin/');
   //  ObtenerCantidadNuevas();
       identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 3000);
 
-
- 	 const promesa=ObtenerTableroAnuncios(0)
-
- 	 promesa.then(val =>{
-
-		ObtenerEntradas(0);
-
 		Obtenerpublicidad(0);
+ 		ObtenerTableroAnuncios(0);
+ 	 	ObtenerEntradas(0);
+
+
+
 		ObtenerConfiguracion();
 
- 	 }).then(val =>{
 
- 	 	$(".seleccionador").each(function(index) {
-				$(this).css('display','block');
-		});
- 	 }).catch(err => { console.log(err) });
-
-	
 
 	//ObtenerServiciosRegistrados();
 	$$(".btnmisservicios").attr('onclick','MisServiciosAdmin()');
@@ -255,14 +252,17 @@ function MisServiciosAdmin() {
 
 
 function CargarDatosCoach() {
+	GuardarTokenBase();
 	localStorage.setItem('variable',0);
 	localStorage.setItem('valor','');
+	$$(".inicioenlace").attr('onclick','GoToPage("homecoach")');
+  	 $$(".lipagos").attr('href','/pagos/');
 
   var nombreusuario= localStorage.getItem('alias');
 	$$(".nombreusuario").text(nombreusuario);
 	var tipousuario=localStorage.getItem('tipoUsuario');
 	$$(".tipousuario").text(tipousuario);
-	$("#lipagos").css('display','none');
+	//$("#lipagos").css('display','none');
 	$$(".tipousuario").addClass('tipocoach');
 	$$(".btnmisservicios").attr('onclick','MisServiciosCoah()');
   classtipo='tipocoach';
@@ -384,7 +384,7 @@ function VerificarServiciosAsignadosCoach() {
 
 function ObtenerTableroAnuncios(estatus) {
 
-	return new Promise((resolve, reject) => {
+	//return new Promise((resolve, reject) => {
  
 	var datos="estatus="+estatus;
 	var pagina = "ObtenerTableroAnuncios.php";
@@ -393,11 +393,12 @@ function ObtenerTableroAnuncios(estatus) {
 		dataType: 'json',
 		url: urlphp+pagina,
 		data:datos,
+		async:false,
 		success: function(datos){
 
 			var respuesta=datos.respuesta;
 			PintarTableroAnuncios(respuesta);
-			resolve(respuesta);
+			//resolve(respuesta);
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
 				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
@@ -407,7 +408,7 @@ function ObtenerTableroAnuncios(estatus) {
 			}
 		});
 
-	});
+	//});
 }
 
 
@@ -427,7 +428,8 @@ function PintarTableroAnuncios(respuesta) {
               <div class="swiper-slide" >
                 <div class="card" style="width: 200px;">
                   <div class="card-content card-content-padding ">
-                   <div class="seleccionador" style="position: absolute;right: 0;display:none" > <label>
+                   <div class="seleccionadoranuncio" style="position: absolute;right: 0; display:none;" > 
+                   <label>
                    <input type="checkbox" class="" style="margin-right: 1.4em;height: 15px;width: 20px;
 				    transform: scale(1.5);" id="cambio_`+respuesta[i].idtableroanuncio+`" onchange="CambioEstatusTablero(`+respuesta[i].idtableroanuncio+`)" `+checked+`> 
 				    </label>
@@ -471,6 +473,14 @@ function PintarTableroAnuncios(respuesta) {
 		    pagination: false
 		  });
 			$(".divtableroauncios").css('display','block');
+
+			if (localStorage.getItem('idtipousuario')==0) {
+				$(".seleccionadoranuncio").each(function(index) {
+				$(this).css('display','block');
+				});	
+			}
+
+
 
 	}else{
 
@@ -637,7 +647,6 @@ function PintarEntradas(respuesta) {
 						}
 
 			html+=`
-
 			<div class="card margin-bottom overflow-hidden theme-bg text-color-white" style="margin: 1em;height: 200px;">
                    
 					<div class="seleccionador" style="position: absolute;right: 0; display:none;z-index:3;" > 
@@ -725,6 +734,13 @@ function PintarEntradas(respuesta) {
 			multiplicar=respuesta.length*220;
 			$$(".entradas").css('height',multiplicar+'px');
 		}
+
+		if (localStorage.getItem('idtipousuario')==0) {
+			$(".seleccionador").each(function(index) {
+				$(this).css('display','block');
+		});	
+		}
+	
 
 
 		$(".divblog").css('display','block');
@@ -832,6 +848,7 @@ function PintarServiciosAsignados(respuesta) {
 		for (var i = 0; i <respuesta.length; i++) {
 			
 			var imagen='';
+			
 			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null && respuesta[i].imagen!='null') {
 
 				urlimagen=urlimagenes+`servicios/imagenes/`+codigoserv+respuesta[i].imagen;
@@ -865,10 +882,9 @@ function PintarServiciosAsignados(respuesta) {
                      <p class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</p>
                      <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].zonanombre+`</p>
 
- 					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</p>
-                  
-
-                  </div>
+ 					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</p>`;
+                
+                html+=`  </div>
                   <div class="row" style="margin-top:1em;">
                   	<div class="col" style="text-align:center;" >
                   		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle iconos" onclick="OpinionesServicio(`+respuesta[i].idusuarios_servicios+`)"><i class="bi bi-chat-square-dots"></i></div>
@@ -1040,6 +1056,7 @@ function PintarServiciosAsignados3(respuesta,fechaactual) {
 		var html="";
 
 	if (respuesta.length>0) {
+
 		var contadorpasado=0;
 		for (var i = 0; i <respuesta.length; i++) {
 			
@@ -1581,7 +1598,7 @@ function Pintarpublicidad(respuesta) {
 			}
 			html+=`
 				<div class="swiper-slide coverimg" >
-				<div class="seleccionador" style="position: absolute;right: 0;z-index:3;display:none;" > <label><input type="checkbox" class="" style="    margin-right: 1.4em;
+				<div class="seleccionadorpublicidad" style="position: absolute;right: 0;z-index:3;display:none;" > <label><input type="checkbox" class="" style="    margin-right: 1.4em;
 				    transform: scale(1.5);    height: 15px;width: 20px;" id="cambiopubli_`+respuesta[i].idpublicidad+`" onchange="CambioEstatusPublicidad(`+respuesta[i].idpublicidad+`)" `+checked+`>
 				     </label>
 				    </div>
@@ -1615,6 +1632,13 @@ function Pintarpublicidad(respuesta) {
 		    pagination: false,
 		    
 		  });
+
+
+		$(".seleccionadorpublicidad").each(function(index) {
+	
+					$(this).css('display','block');
+		});
+
 	}else{
 
 		var swiper2 = new Swiper(".cardpublicidad", {
@@ -3829,8 +3853,13 @@ function VerificarServiciosporValidarAdmin() {
 		success: function(res){
 			var respuesta=res.respuesta;
 			var fechaactual=res.fechaactual;
+
+				$("#divpendientes").css('display','none');	
+
 			if (respuesta.length>0) {
-				$("#divpendientes").css('display','block');	
+				$("#divpendientes").css('display','block');
+				$("#numeropendientesadmin").html(respuesta.length);
+
 			}
 
 
@@ -3853,7 +3882,7 @@ function PintarServicioporvalidarAdmin(respuesta,fechaactual) {
 		var contadorpasado=0;
 		var contadorporpasar=0;
 		for (var i = 0; i <respuesta.length; i++) {
-			
+			var coaches=respuesta[i].coaches;
 			var imagen='';
 			if (respuesta[i].imagen!='' && respuesta[i].imagen!=null && respuesta[i].imagen!='null') {
 
@@ -3944,10 +3973,15 @@ function PintarServicioporvalidarAdmin(respuesta,fechaactual) {
                      <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="EditarServicio(`+respuesta[i].idservicio+`)">`+horarioshtml+`</span>
                      <span class="text-color-theme size-12" style="text-align:center;" onclick="EditarServicio(`+respuesta[i].idservicio+`)" >`+respuesta[i].zonanombre+`</span>
 
- 					<span class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;" onclick="EditarServicio(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</span>
-                  
+ 					<span class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;" onclick="EditarServicio(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</span>`;
+                  	if (coaches.length>0) {
+                  		for (var j = 0; j <coaches.length; j++) {
+                  			
+                  	html+=`<span class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;" onclick="EditarServicio(`+respuesta[i].idservicio+`)">`+coaches[j].nombre+' '+coaches[j].paterno+`</span>`;		
+                  		}
+                  	}
 
-                  </div>
+               html+=`   </div>
                   <div class="row" style="margin-top:1em;">
                   	<div class="col" style="text-align:center;" >`;
 

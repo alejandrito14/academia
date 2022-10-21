@@ -269,3 +269,7 @@ class MediaList {
 					  }
 			});
 }
+
+function myStopFunction(variable) {
+  clearInterval(variable);
+}

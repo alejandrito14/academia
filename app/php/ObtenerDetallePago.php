@@ -62,7 +62,7 @@ try
 
  	    }
     }
-   
+   $obtenerimagenes=array();
     if ($resultado[0]->confoto==1) {
         
         $obtenerpagosstripe=$lo->ObtenerdescripcionNota();

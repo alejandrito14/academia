@@ -12,6 +12,7 @@ require_once("clases/class.Invitacion.php");
 //require_once("clases/class.Monedero.php");
 require_once("clases/class.Usuarios.php");
 require_once("clases/class.Servicios.php");
+require_once("clases/class.NotificacionPush.php");
 
 try
 {
@@ -24,6 +25,8 @@ try
 	$servicios=new Servicios();
 	$servicios->db=$db;
 	$usuarios->db=$db;
+	$notificaciones=new NotificacionPush();
+	$notificaciones->db=$db;
 	$db->begin();
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
@@ -37,7 +40,10 @@ try
 	$lo->CancelarServicio();
 	$servicios->idservicio=$lo->idservicio;
 	$obtener=$servicios->ObtenerServicio();
-
+	$arraytokens=array();
+	$notificaciones->idusuario=$obtenerservicio[0]->idusuario;
+	$obtenertokenusuario=$notificaciones->Obtenertoken();
+	array_push($arraytokens,$obtenertokenusuario[0]->token);
 	if ($obtener[0]->reembolso==1) {
 		$lo->idusuarios=$id_user;
 		$obtenerpago=$lo->ObtenerUltimopago();
@@ -78,6 +84,20 @@ try
 		}
 
 	}
+
+
+			$idusuario=$obtenerservicio[0]->idusuario;
+			$ruta="";
+			$texto='|Cancelacion de servicio|'.$obtener[0]->titulo.'|';
+			$estatus=0;
+			$valor="";
+			$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
+
+	if (count($arraytokens)>0) {
+			$texto='';
+			$titulonotificacion="Cancelacion de servicio ".$obtener[0]->titulo;
+			$notificaciones->EnviarNotificacion($arraytokens,$texto,$titulonotificacion);
+		}
 
     $db->commit();
 

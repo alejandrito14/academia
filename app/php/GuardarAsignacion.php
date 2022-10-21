@@ -10,6 +10,7 @@ require_once("clases/class.ServiciosAsignados.php");
 require_once("clases/class.Usuarios.php");
 require_once("clases/class.Servicios.php");
 require_once("clases/class.Invitacion.php");
+require_once("clases/class.NotificacionPush.php");
 
 
 try
@@ -25,6 +26,8 @@ try
 	$emp->db=$db;
 	$invitacion=new Invitacion();
 	$invitacion->db=$db;
+	$notificaciones=new NotificacionPush();
+	$notificaciones->db=$db;
 	$db->begin();
 
 	//Enviamos la conexion a la clase
@@ -34,15 +37,17 @@ try
 	$idusuarios=explode(',', $_POST['usuariosagregados']);
 	$idservicio=$_POST['idservicio'];
 	$iduser=$_POST['id_user'];
-
-
+	$usuarios->idusuarios=$iduser;
+	$obtenerUsu=$usuarios->ObtenerUsuario();
+	
 	$serviciosasignados->idservicio=$idservicio;
 	$obtenerdatosservicio=$serviciosasignados->ObtenerServicio();
 	$usuariosquitados=$_POST['usuariosquitados'];
 	$usuariosparaquitar=explode(',', $_POST['usuariosquitados']);
 	$idservicioasignar=$idservicio;
 	$usuariosnoagregados=array();
-	
+	$arraytokens=array();
+	$titulonotificacion="";
 	/*$obtenerhorariosservicio=$serviciosasignados->ObtenerHorariosServicioZona();*/
 
 			$emp->idservicio=$idservicio;
@@ -154,8 +159,23 @@ try
 		$invitacion->GuardarInvitacion();
 
 		}
+
+
+		$notificaciones->idusuario=$idusuarios[$i];
+		$obtenertokenusuario=$notificaciones->Obtenertoken();
+		array_push($arraytokens,$obtenertokenusuario[0]->token);
+
+			$idusuario=$idusuarios[$i];
+			$ruta="serviciospendientesasignados";
+			$texto='|Asignacion de servicio|'.$obtenerdatosservicio[0]->titulo.'|';
+			$estatus=0;
+			$valor=$obtenerdatosservicio[0]->idservicio;
+			$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
+
+	
 	}
 
+	$titulonotificacion=$obtenerUsu[0]->nombre." ".$obtenerUsu[0]->paterno." te ha asignado a ".$obtenerdatosservicio[0]->titulo;
 
 	$obtenerusuarioscancelacion=$serviciosasignados->BuscarAsignacionCancelacion($idusuariosparaasignar);
 
@@ -243,6 +263,26 @@ try
 	}
 	
 	$db->commit();
+
+
+	if (count($arraytokens)>0) {
+			$texto='';
+			for ($i=0; $i <count($arraytokens) ; $i++) { 
+
+				//if ($arraytokens[$i]!='') {
+					# code...
+				
+				$idusuario=$idusuarios[$i];
+				$notificaciones->navpage="serviciospendientesasignados";
+			 	$notificaciones->idcliente=$idusuario;
+			 	$notificaciones->valor="";
+			 	$array=array();
+			 	array_push($array,$arraytokens[$i]);
+			$notificaciones->EnviarNotificacion($array,$texto,$titulonotificacion);
+				//}
+
+			}
+		}
 
 	$respuesta['respuesta']=1;
 	$respuesta['usuariosnoagregados']=$usuariosnoagregados;

@@ -41,11 +41,11 @@ try
 				$pagado=0;
 			}
 			$fechaactual=date('Y-m-d');
-	$verificarsiestaenperiodo=$servicios->FechadentrodePeriodos($fechaactual);
-	$dentroperiodo=0;
-	if (count($verificarsiestaenperiodo)>0) {
+	/*$verificarsiestaenperiodo=$servicios->FechadentrodePeriodos($fechaactual);*/
+	$dentroperiodo=1;
+	/*if (count($verificarsiestaenperiodo)>0) {
 		$dentroperiodo=1;
-	}
+	}*/
 
 
 	$respuesta['respuesta']=$servicio;

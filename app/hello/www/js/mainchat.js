@@ -201,7 +201,18 @@ function EnviaMensaje(text) {
   var mensaje=text;
   var conimagen="0";
 var idusuario=localStorage.getItem('id_user');
+  var imagenperfil="";
+  var ruta=0;
+       if(localStorage.getItem('foto')==''){
 
+        imagenperfil=localStorage.getItem('avatar');
+        ruta=1;
+       }else{
+         imagenperfil=localStorage.getItem('foto');
+         ruta=2
+       }
+
+        
 localStorage.setItem('nombrechat',nombre);
 var datos= 'usuario='+idusuario+'&soporte='+idsoporte+'&nombre='+nombre+'&correo='+correo+'&mensaje='+mensaje+'&conimagen='+conimagen;
 var pagina="EnviarMensaje.php";
@@ -217,7 +228,7 @@ var pagina="EnviarMensaje.php";
       //localStorage.setItem('idsoporte',data.soporte);
          
             var arrayusuarios=localStorage.getItem('usuariossala');
-          Envio(nombre,correo,mensaje,data.soporte,data.imagen,data.idmensaje,arrayusuarios,idsoporte);
+          Envio(nombre,correo,mensaje,data.soporte,data.imagen,data.idmensaje,arrayusuarios,idsoporte,imagenperfil,ruta);
 
 
          
@@ -226,7 +237,7 @@ var pagina="EnviarMensaje.php";
 
 }
 
-function Envio(nombre,correo,mensaje,soporte,imagen,idmensaje,arrayusuarios,idsoporte) {
+function Envio(nombre,correo,mensaje,soporte,imagen,idmensaje,arrayusuarios,idsoporte,imagenperfil,ruta) {
 
 
   //app.dialog.alert(""+imagen);
@@ -241,8 +252,17 @@ function Envio(nombre,correo,mensaje,soporte,imagen,idmensaje,arrayusuarios,idso
    html+=' onclick="MenuOpciones2('+idmensaje+',\''+imagen.trim()+ '\')">'
 
    }
+   var foto=imagenperfil;
+    if (ruta==1) {
+    rutaimagen=urlphp+"imagenesapp/"+foto;
 
-    html+=' <div class="message-avatar" style="background-image:url(img/iconousuario.png)"> '
+   }
+   if (ruta==2) {
+    rutaimagen=urlphp+"upload/perfil/"+foto;
+   }
+
+  
+    html+=` <div class="message-avatar" style="background-image:url('`+rutaimagen+`')">`;
     html+= '  </div>'
     html+='<div class="message-content" style="padding-left:2px;">'
       html+='<div class="message-name">'+nombre+'</div>'
@@ -283,7 +303,7 @@ function Envio(nombre,correo,mensaje,soporte,imagen,idmensaje,arrayusuarios,idso
 */
   
 
-   var JSon={"idusuario":idusuario,"soporte":idsoporte,"socketid":socket.id,"nombre":nombre,"mensaje":mensaje,"imagen":imagen,"idmensaje":idmensaje,"arrayusuarios":JSON.parse(arrayusuarios)};
+   var JSon={"idusuario":idusuario,"soporte":idsoporte,"socketid":socket.id,"nombre":nombre,"mensaje":mensaje,"imagen":imagen,"idmensaje":idmensaje,"arrayusuarios":JSON.parse(arrayusuarios),"rutaimagen":rutaimagen};
    console.log(JSon);
   Mandarmensaje(JSon);
 
@@ -356,7 +376,7 @@ function PintarMensaje(data) {
   
 
       var html='<div class="message message-received message-first message-last message-tail" >'
-      html+='  <div class="message-avatar" style="background-image:url(img/icon-usuario.png);margin-right:0px;">'
+      html+='  <div class="message-avatar" style="background-image:url('+data.rutaimagen+');margin-right:0px;">'
       html+='</div>'
       html+='<div class="message-content" style="padding-left:2px;">'
       html+='<div class="message-name">'+data.nombre+'</div>'

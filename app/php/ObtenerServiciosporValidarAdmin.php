@@ -153,7 +153,11 @@ try
 		}
 
 
+		$lo->idservicio=$asignados->idservicio;
+		$obtenescoachesServicios=$lo->ObtenerParticipantesCoach(5);
 
+
+		$obtenerserviciosActivos[$i]->coaches=$obtenescoachesServicios;
 
 
 	}

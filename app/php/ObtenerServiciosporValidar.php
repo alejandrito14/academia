@@ -152,9 +152,12 @@ try
 			$obtenerserviciosActivos[$i]->conchat=1;
 		}
 
+		
+		$lo->idservicio=$asignados->idservicio;
+		$obtenescoachesServicios=$lo->ObtenerParticipantesCoach(5);
 
 
-
+		$obtenerserviciosActivos[$i]->coaches=$obtenescoachesServicios;
 
 	}
 

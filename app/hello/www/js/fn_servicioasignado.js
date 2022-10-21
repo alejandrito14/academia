@@ -17,6 +17,7 @@ function ObtenerServicioAsignado() {
 		crossDomain: true,
 		cache: false,
 		data:datos,
+		async:false,
 		success: function(datos){
 			var invitado=datos.invitado;
 			var respuesta=datos.respuesta;
@@ -27,6 +28,140 @@ function ObtenerServicioAsignado() {
 			var invitados=datos.invitados;
 			var habilitarcancelacion=datos.habilitarcancelacion;
 			localStorage.setItem('idservicio',idservicio);
+			  ObtenerImagenesGrupalServicio();
+
+			if (imagen!=null && imagen!='' && imagen!='null') {
+
+				imagen=urlimagenes+`servicios/imagenes/`+codigoserv+imagen;
+	
+			}else{
+
+
+				imagen=urlimagendefaultservicio;
+			}
+			$(".imgservicioasignado").attr('src',imagen);
+
+			$(".tituloservicio").text(respuesta.titulo);
+
+			var fechainicial=respuesta.fechainicial.split('-');
+			var fechafinal=respuesta.fechafinal.split('-');
+			var fechai=fechainicial[2]+'/'+fechainicial[1]+'/'+fechainicial[0];
+			var fechaf=fechafinal[2]+'/'+fechafinal[1]+'/'+fechafinal[0];
+
+			$(".fechasservicio").text(fechai+' - '+fechaf);
+
+			var horarioshtml="";
+
+             if (respuesta.fechaproxima!='') {
+             	horarioshtml+=`<span>`+respuesta.fechaproxima+` `+respuesta.horainicial+` - `+respuesta.horafinal+` Hrs.</span></br>`;
+             }
+
+             $(".descripcionpoliticas").text(respuesta.politicasaceptacion);
+			$(".colocarhorarios").html(horarioshtml);
+
+			$(".cantidadtotal").text(respuesta.numeroparticipantesmax);
+
+
+				$("#permisoasignaralumno").css('display','none');
+			if (localStorage.getItem('idtipousuario')==3) {
+
+				if (respuesta.ligarcliente==1 && invitado==0 && puedeinvitar==0) {
+
+				$("#permisoasignaralumno").css('display','block');
+				}
+
+				if (puedeinvitar==1) {
+
+					if (invitados.length>0) {
+						var html="";
+						for (var i = 0; i <invitados.length; i++) {
+						html+=`
+								<div class="col">
+									`+invitados[i].nombre+`
+								</div>
+								`;
+
+
+						}
+
+						$("#permisoasignaralumno").html(html);
+					}
+
+				}
+
+
+			}
+		if (localStorage.getItem('idtipousuario')==5) {
+
+				if (respuesta.abiertocoach == 1) {
+					$("#permisoasignaralumno").css('display','block');
+				}
+			}
+
+	if (localStorage.getItem('idtipousuario')==0) {
+
+
+			if (respuesta.abiertoadmin == 1) {
+				$("#permisoasignaralumno").css('display','block');
+			}
+		}
+			
+			if (respuesta.controlasistencia==1) {
+				
+				$(".divasistencia").css('display','block');
+
+			}
+
+			if (habilitarcancelacion==1) {
+
+				$(".divcancelar").css('display','block');
+			}else{
+				$(".divcancelar").css('display','none');
+
+			}
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+}
+
+
+function ObtenerServicioAsignadoCoach() {
+	var pagina = "ObtenerServicioAsignadoCoach.php";
+	var idservicio=localStorage.getItem('idservicio');
+
+	//var pagina = "ObtenerServicioAsignado.php";
+	var id_user=localStorage.getItem('id_user');
+	var idtipousuario=localStorage.getItem('idtipousuario');
+	var datos="id_user="+id_user+"&idservicio="+idservicio+"&idtipousuario="+idtipousuario;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		async:false,
+		success: function(datos){
+			var invitado=datos.invitado;
+			var respuesta=datos.respuesta;
+			var imagen=respuesta.imagen;
+			var horarios=datos.horarios;
+			var idservicio=respuesta.idservicio;
+			var puedeinvitar=datos.puedeinvitar;
+			var invitados=datos.invitados;
+			var habilitarcancelacion=datos.habilitarcancelacion;
+			var idusuarios_servicios=datos.idusuarios_servicios;
+			localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
+			localStorage.setItem('idservicio',idservicio);
+			  ObtenerImagenesGrupalServicio();
+
 			if (imagen!=null && imagen!='' && imagen!='null') {
 
 				imagen=urlimagenes+`servicios/imagenes/`+codigoserv+imagen;
@@ -939,21 +1074,44 @@ html+=`
                         </div>
                         
                     <div class="col-80">
-                         <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;`+background+`" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
+                         <div class="col-100 item-text" style="margin-left: 1em;font-size:14px;`+background+`" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
                          </div>
              		 
-	             		 <div class="col-100 item-text" style="font-size:18px;    margin-left: 1em;`+background+`" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].usuario+`
+	             		 <div class="col-100 item-text" style="font-size:14px;margin-left: 1em;`+background+`" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].usuario+`
 	             		 	</div>
              		
-                        	  <div class=" col-100 item-text" style="    margin-left: 1em;`+background+`">`+respuesta[i].nombretipo+`</div>
-                    		  </div>
-                        </div>
+                        	  <div class=" col-100 item-text" style="font-size:14px;margin-left: 1em;`+background+`">`+respuesta[i].nombretipo+`</div>
+               
+                        </div>`;
 
-                    <div class="col-10">
+            
+                    if (localStorage.getItem('idtipousuario')!=3) {
+                    	html+=`
+                    		<div class="col-30">`;
+                    		var aceptoback="#c2c2c2";
+                    		if (respuesta[i].aceptarterminos==1){
 
-                    </div>
-                        	
-                     </div>
+                    			aceptoback="#007aff";
+                    		}
+                    		var pagadoback="red";
+                    	if (respuesta[i].pagado==1){
+
+                    			pagadoback="#59c158";
+                    		}
+
+                        html+=`<span style="
+							    background:`+aceptoback+` ;
+							" class="divaceptado"></span>`;
+
+                       html+=` <span style="
+							    background:`+pagadoback+` ;" class="divaceptado"></span>`;
+
+                       html+=`</div>`;
+
+                    	
+                    }
+
+                    html+=` </div>
                
              		 
               </div>

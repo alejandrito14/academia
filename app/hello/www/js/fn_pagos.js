@@ -1595,16 +1595,16 @@ function PintarpagosPagados(pagos) {
       html+=`
         <li class="list-item">
                     <div class="row">
-                        <div class="col-80">
-                            <p class="text-muted " onclick="Detallepago(`+pagos[i].idnotapago+`)" id="concepto_`+pagos[i].idnotapago+`">
+                        <div class="col-70">
+                            <p class="text-muted "  id="concepto_`+pagos[i].idnotapago+`">
                                Pago #`+pagos[i].concepto+`
                             </p>
 
                           <p class="text-muted small">Pagado `+pagos[i].fechaformatopago+`</p>
                           <p class="text-muted small">$`+pagos[i].monto+`</p>
                         </div>
-                        <div class="col-20">
-                        
+                        <div class="col-30">
+                        <a id="btncalendario" style=" color: #007aff!important;text-align: center;justify-content: center;display: flex;" onclick="Detallepago(`+pagos[i].idnotapago+`)">Ver detalle</a>
                         </div>
                     </div>
                  </li>

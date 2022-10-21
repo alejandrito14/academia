@@ -293,9 +293,8 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
 		   							 		</div>
 		   							 		<div class="row" >
-		   							 			<div id="horarios" class="page-content" style="overflow: scroll;height: 20em;"></div>
-		   							 			<a style="    border-radius: 10px;
-    height: 60px;" class="button button-fill button-large button-raised margin-bottom color-theme" id="btnguardarhorarios" onclick="GuardarHorarios()"><div class="fab-text">Guardar</div></a>
+		   							 			<div id="horarios" class="page-content" style="overflow: scroll;height: 30em;"></div>
+		   							 		
 		   							 		</div>
 		   					
 
@@ -306,7 +305,10 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
    							 </div>
 
    				</div>
-                
+                <div class="fab  fab-right-bottom ">
+                <a style="" class=" color-theme" id="btnguardarhorarios" onclick="GuardarHorarios()">
+                <i class="bi bi-check-circle-fill"></i>
+                </a></div>
               </div>
             </div>
           </div>`;
@@ -1138,7 +1140,7 @@ function Resumenfechas() {
 				}
 				idzonaante=idzona;
 			}
-		
+			
 			var htmlfechas=`<div class="list-group-item" class="fechas" style="background: white;border-radius: 20px;margin-bottom: 0.5em;">
 						<div class="row" style="">
 						
@@ -1146,7 +1148,7 @@ function Resumenfechas() {
 								<div class="col-md-4" style="font-weight:bold;">`+dia+`</div>
 							
 								<div class="col-md-4">
-									`+fecha+`
+									`+fecha2+`
 								</div>
 								<div class="col-md-4">
 								 `+horainicial+`-`+horafinal+`
@@ -1918,7 +1920,7 @@ function GuardarservicioNuevo2() {
 					success:function(msj){
 							var resp = msj.respuesta;
 							$("#id").val(resp.idservicio);
-
+							 porcentajescoachs=[];
 						   	if( resp == 1 ){
 								alerta('','Se realizó el registro correctamente');
 								arraydiaselegidos=[];
@@ -2193,6 +2195,8 @@ function GuardarservicioNuevo() {
 			    porcentajescoachs.push(objeto);
 
 		});
+
+		console.log(porcentajescoachs);
 
 		$(".from").each(function(){
 			var valor=$(this).val();

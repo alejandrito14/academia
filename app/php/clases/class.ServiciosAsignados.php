@@ -252,7 +252,7 @@ public function obtenerServiciosAsignadosPendientes()
 				JOIN tipousuario
 				ON tipousuario.idtipousuario=usuarios.tipo
 				WHERE
-				usuarios_servicios.idservicio='$this->idservicio' AND usuarios.idusuarios NOT IN('$this->idusuario') ORDER BY usuarios.tipo DESC 
+				usuarios_servicios.idservicio='$this->idservicio' AND usuarios.idusuarios NOT IN('$this->idusuario') AND cancelacion=0 ORDER BY usuarios.tipo DESC 
 		 ";
 
 
@@ -426,7 +426,8 @@ public function obtenerServiciosAsignadosPendientes()
 				usuarios.tipo,
 				tipousuario.nombretipo,
 				usuarios.alias,
-				usuarios.sexo
+				usuarios.sexo,
+				usuarios_servicios.aceptarterminos
 				FROM
 				usuarios_servicios
 				JOIN usuarios
@@ -1010,6 +1011,44 @@ public function obtenerServiciosAsignadosPendientes()
 				} 
 			}
 			return $array;
+	}
+
+
+
+	public function BuscarAsignacionCoachUsuario()
+	{
+		
+		$sql="SELECT
+				*
+				FROM
+				usuarios_servicios
+				JOIN usuarios
+				ON usuarios_servicios.idusuarios = usuarios.idusuarios
+				JOIN tipousuario
+				ON tipousuario.idtipousuario=usuarios.tipo
+				JOIN usuarioscoachs
+				ON usuarioscoachs.idusuarios_servicios=usuarios_servicios.idusuarios_servicios
+				WHERE tipousuario.idtipousuario=5 AND 
+				usuarios_servicios.idservicio = '$this->idservicio' AND usuarios_servicios.idusuarios='$this->idusuario' AND cancelacion=0
+		 ";
+
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
 	}
 
 }

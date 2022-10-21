@@ -293,6 +293,9 @@ var routes = [
   
   },
 
+
+
+
   //servicios
    {
     path: '/servicios/',
@@ -315,6 +318,11 @@ var routes = [
     path: '/detalleserviciocoach/',
     componentUrl: './pages/detalleserviciocoach.html',
   },
+
+   {
+    path: '/detalleserviciocoach2/',
+    componentUrl: './pages/detalleserviciocoach.html',
+   },
    {
     path: '/detalleservicioadmin/',
     componentUrl: './pages/detalleservicioadmin.html',
@@ -414,6 +422,12 @@ var routes = [
   {
     path:'/listadopagos/',
     componentUrl: './pages/listadopagos.html',
+  },
+
+   {
+    path: '/listadopagosadmin/',
+    componentUrl: './pages/listadopagosadmin.html',
+  
   },
 
    {

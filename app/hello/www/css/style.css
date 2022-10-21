@@ -1216,7 +1216,7 @@ html.with-panel-left-reveal .framework7-root .views .page {
 
 /* 7. navbar*/
 .navbar {
-  height: 76px;
+  height: 50px;
 }
 
 .navbar .navbar-inner {
@@ -1246,7 +1246,7 @@ html.with-panel-left-reveal .framework7-root .views .page {
 }
 
 .view.view-main .page-content {
-  padding-top: 86px;
+  padding-top: 76px;
 }
 
 .toolbar.template,
@@ -1489,7 +1489,7 @@ label.small {
   z-index: 1;*/
 
     position: absolute;
-    top: 30px;
+    bottom: 30px;
     right: 15px;
     z-index: 100;
     font-size: 16px;
@@ -2433,4 +2433,38 @@ background: white;
     border-radius: 10px;
     padding: 0.5em;
     margin-right: 0.5em;
+}
+.btnservicios{
+  background: #4b4b4b!important;
+}
+.btnservicios i{
+  color: white;
+}
+.btnregreso{
+    background: black!important;
+
+}
+
+.btnregreso i{
+  color: white;
+}
+
+.ios {
+    --f7-ptr-preloader-size: 20px!important;
+    --f7-ptr-size: 72px!important;
+}
+
+.divaceptado{
+      height: 40px;
+    width: 40px;
+    font-size: 10px;
+    margin: 1px;
+    border-radius: 10px;
+    color: white;
+    padding-top: 0.5px;
+    padding-left: 14px;
+    padding-bottom: 0.5px;
+    padding-right: 14px;
+  border-radius: 10px;
+  
 }

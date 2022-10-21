@@ -193,9 +193,8 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
 		   							 		</div>
 		   							 		<div class="row" >
-		   							 			<div id="horarios" class="page-content" style="overflow: scroll;height: 20em;"></div>
-		   							 			<a style="    border-radius: 10px;
-    height: 60px;" class="button button-fill button-large button-raised margin-bottom color-theme" id="btnguardarhorarios" onclick="GuardarHorarios()"><div class="fab-text">Guardar</div></a>
+		   							 			<div id="horarios" class="page-content" style="overflow: scroll;height: 30em;"></div>
+		   							 			
 		   							 		</div>
 		   					
 
@@ -207,6 +206,10 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
    				</div>
                 
+                 <div class="fab  fab-right-bottom ">
+                <a style="" class=" color-theme" id="btnguardarhorarios" onclick="GuardarHorarios()">
+                <i class="bi bi-check-circle-fill"></i>
+                </a></div>
               </div>
             </div>
           </div>`;
@@ -378,6 +381,7 @@ function DesplegarCalendario() {
 	var titulo=$("#serviciosreplica option:selected").html();
 	$("#v_titulo").val('COPIA '+titulo);
 		app.dialog.close();
+		$(".calendario").css('display','block');
 
 	}else{
 

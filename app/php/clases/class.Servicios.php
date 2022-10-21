@@ -920,7 +920,7 @@ public function Eliminardeencuestas()
 			servicios.validaradmin,
 			servicios.numeroparticipantesmax
 		FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio WHERE 
-			categorias.avanzado IN(0,1) AND servicios.estatus=1 AND servicios.validaradmin=0";
+			categorias.avanzado IN(0,1) AND servicios.estatus IN(0,1) AND servicios.validaradmin=0";
 
 			if($serviciosasignados!=''){
 
@@ -975,7 +975,7 @@ public function Eliminardeencuestas()
 			categorias.descripcion AS descripcioncategoria,
 			servicios.numeroparticipantesmax
 		FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio WHERE 
-			categorias.avanzado IN(0,1) AND servicios.estatus=1 AND servicios.validaradmin=0";
+			categorias.avanzado IN(0,1) AND servicios.estatus IN (0,1) AND servicios.validaradmin=0";
 
 			if($serviciosasignados!=''){
 

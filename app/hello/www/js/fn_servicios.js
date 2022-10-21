@@ -83,8 +83,9 @@ function ObtenerServicioAdmin() {
 			var imagen=respuesta.imagen;
 			var horarios=datos.horarios;
 			var idservicio=respuesta.idservicio;
-			var habilitarcancelacion=respuesta.habilitarcancelacion;
+			var habilitarcancelacion=datos.habilitarcancelacion;
 			localStorage.setItem('idservicio',idservicio);
+			ObtenerImagenesGrupalServicio();
 			if (imagen!=null && imagen!='' && imagen!='null') {
 
 				imagen=urlimagenes+`servicios/imagenes/`+codigoserv+imagen;
@@ -144,9 +145,10 @@ function ObtenerServicioAdmin() {
 
 			if (habilitarcancelacion==1) {
 
-			$(".divcancelar").css('display','block');
+				$(".divcancelar").css('display','block');
 			}else{
-			$(".divcancelar").css('display','none');
+
+				$(".divcancelar").css('display','none');
 	
 			}
 
@@ -453,10 +455,12 @@ function PintarParticipantesAlumnosCancela(respuesta) {
 
 			`;
 		}
-			$("#divalumnoscancelacion").html(html);
 
 				
 			}
+
+	$("#divalumnoscancelacion").html(html);
+
 }
 
 function GuardarCancelarServicio() {
@@ -494,6 +498,16 @@ app.dialog.confirm('','¿Seguro que desea cancelar el servicio a los usuarios se
 			
 			alerta('','Se guardaron datos existosamente');
 			ObtenerParticipantesAlumnosCancelacion();
+
+			if (datos.respuesta==1) {
+				if (localStorage.getItem('idtipousuario')==5){
+				      GoToPage('detalleserviciocoach');
+				   }
+			  	 if (localStorage.getItem('idtipousuario')==0){
+			      	 GoToPage('detalleservicioadmin');
+			 		 }
+
+				}
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
 		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
@@ -530,6 +544,8 @@ function ObtenerServicioNuevo(valor) {
 		var titulo=respuesta.titulo;
 		var descripcion=respuesta.descripcion;
 		var politicasaceptacion=respuesta.politicasaceptacion;
+		var estatus=respuesta.estatus;
+		$("#v_estatus").val(estatus);
 		$("#v_categoria").val(idcategoriaservicio);
 
 		$("#v_categoriaservicio").val(idcategoria);
@@ -712,6 +728,10 @@ function ObtenerServicioNuevo(valor) {
 		if (asistencia==1) {
 		$("#v_asistencia").attr('checked',true);
 	
+		}
+
+		if (localStorage.getItem('idtipousuario')==0) {
+			$("#contentestatus").css('display','block');
 		}
 
 		  }

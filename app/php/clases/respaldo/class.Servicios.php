@@ -248,7 +248,7 @@ class Servicios
 	public function ObtenerPeriodosPagos()
 	{
 		$sql="SELECT *FROM periodoservicio  WHERE idservicio='$this->idservicio'";
-		echo $sql;die();
+		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -920,7 +920,7 @@ public function Eliminardeencuestas()
 			servicios.validaradmin,
 			servicios.numeroparticipantesmax
 		FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio WHERE 
-			categorias.avanzado IN(0,1) AND servicios.estatus=1 AND servicios.validaradmin=0";
+			categorias.avanzado IN(0,1) AND servicios.estatus IN(0,1) AND servicios.validaradmin=0";
 
 			if($serviciosasignados!=''){
 
