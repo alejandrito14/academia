@@ -213,7 +213,9 @@ try
 				}
 			}
 
-
+			if ($caracteristicasdelasociador==1) {
+				# code...
+			
 
 			if($portiposervicio2==1){
 
@@ -232,6 +234,7 @@ try
 			}
 		}
 
+	}
 				
 	$db->commit();
 	echo "1|".$descuento->iddescuento;

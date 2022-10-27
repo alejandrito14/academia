@@ -26,25 +26,25 @@ $lista_empresas = $_SESSION['se_liempresas']; //variables de sesion
 
 //Importación de clase conexión
 require_once("../../clases/conexcion.php");
-require_once("../../clases/class.Pagos.php");
+require_once("../../clases/class.Notapago.php");
 require_once("../../clases/class.Botones.php");
 require_once("../../clases/class.Funciones.php");
 
 //Declaración de objeto de clase conexión
 $db = new MySQL();
-$pagos = new Pagos();
+$notapago = new Notapago();
 $bt = new Botones_permisos(); 
 $f = new Funciones();
 
-$pagos->db = $db;
+$notapago->db = $db;
 
 
 //obtenemos todas las empreas que puede visualizar el usuario.
 
-$pagos->tipo_usuario = $tipousaurio;
-$pagos->lista_empresas = $lista_empresas;
+$notapago->tipo_usuario = $tipousaurio;
+$notapago->lista_empresas = $lista_empresas;
 
-$l_pagos = $pagos->ObtTodosPagos();
+$l_pagos = $notapago->ObtTodosNotaPagos();
 $l_pagos_row = $db->fetch_assoc($l_pagos);
 
 
@@ -80,13 +80,13 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 
-$estatus=array('PENDIENTE','PROCESO','ACEPTADO','RECHAZADO','REEMBOLSO','SIN REEMBOLSO');
+$estatus=array('PENDIENTE','ACEPTADO','CANCELADO');
 $estatuspago = array('NO PAGADO','PAGADO');
 ?>
 
 <div class="card">
 	<div class="card-body">
-		<h5 class="card-title" style="float: left;">LISTADO DE PAGOS</h5>
+		<h5 class="card-title" style="float: left;">LISTADO DE NOTA DE PAGOS</h5>
 		
 		<div style="float:right;">
 			<button type="button" onClick="abrir_filtro('modal-filtros');" class="btn btn-primary" style="float: right;display: none;"><i class="mdi mdi-account-search"></i>  BUSCAR</button>			
@@ -121,10 +121,11 @@ $estatuspago = array('NO PAGADO','PAGADO');
 				<thead>
 					<tr>
 						 
-						<th style="text-align: center;">CONCEPTO </th> 
+						<th style="text-align: center;">FOLIO </th> 
 						<th style="text-align: center;">ALUMNO</th>
 						<th style="text-align: center;">FECHA</th>
-						<th style="text-align: center;">CANTIDAD</th>
+						<th style="text-align: center;">MÉTODO DE PAGO</th>
+						<th style="text-align: center;">MONTO</th>
 						<th style="text-align: center;">ESTATUS</th>
 
 						<th style="text-align: center;">ACCI&Oacute;N</th>
@@ -149,28 +150,30 @@ $estatuspago = array('NO PAGADO','PAGADO');
 							
 						
 							
-							<td style="text-align: center;"><?php echo 'Pago de '.$l_pagos_row['concepto'];?></td>
+							<td style="text-align: center;"><?php echo $l_pagos_row['folio'];?></td>
 
 							<td style="text-align: center;"><?php echo $l_pagos_row['nombre'].' '.$l_pagos_row['paterno'].' '.$l_pagos_row['materno'];?></td>
 
-							<td style="text-align: center;"><?php echo date('d-m-Y H:i:s',strtotime($l_pagos_row['fechapago']));?></td>
-							<td style="text-align: center;">$<?php echo $l_pagos_row['monto'];?></td>
+							<td style="text-align: center;"><?php echo date('d-m-Y H:i:s',strtotime($l_pagos_row['fecha']));?></td>
+							<td style="text-align: center;"><?php echo $l_pagos_row['tipopago'];?></td>
+
+							<td style="text-align: center;">$<?php echo $l_pagos_row['total'];?></td>
 						
-							<td style="text-align: center;"><?php echo $estatuspago[$l_pagos_row['pagado']];?></td>
+							<td style="text-align: center;"><?php echo $estatus[$l_pagos_row['estatus']];?></td>
 
 							<td style="text-align: center; font-size: 15px;">
 
 									<?php
 													//SCRIPT PARA CONSTRUIR UN BOTON
 									$bt->titulo = "";
-									$bt->icon = "mdi-table-edit";
-									$bt->funcion = "aparecermodulos('catalogos/pagos/fa_pagos.php?idmenumodulo=$idmenumodulo&idpagos=".$l_pagos_row['idpagos']."','main')";
+									$bt->icon = "mdi-eye";
+									$bt->funcion = "AbrirModalDetalle('".$l_pagos_row['idnotapago']."','".$l_pagos_row['idusuario']."')";
 									$bt->estilos = "";
 									$bt->permiso = $permisos;
 									$bt->tipo = 2;
-									$bt->title="EDITAR";
-									$bt->class='btn btn_colorgray';
-									//$bt->armar_boton();
+									$bt->title="VER DETALLE";
+									$bt->class='btn btn_accion';
+									$bt->armar_boton();
 
 
 									?>
@@ -187,6 +190,40 @@ $estatuspago = array('NO PAGADO','PAGADO');
 			</table>
 		</div>
 	</div>
+</div>
+
+
+<div class="modal" id="modaldetallenota" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">DETALLE DE NOTA DE PAGO </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<table class="table table-striped table-bordered ">
+      		<tbody class="listadopagos"></tbody>
+      	</table>
+       
+       	<table class="table table-striped table-bordered ">
+      		<tbody class="listadodescuentos"></tbody>
+      	</table>
+
+      		<table class="table table-striped table-bordered ">
+      		<tbody class="listadodescuentosmembresia"></tbody>
+      	</table>
+
+      	      	<div class="modaldetalle"></div>
+
+      </div>
+      <div class="modal-footer">
+        
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 

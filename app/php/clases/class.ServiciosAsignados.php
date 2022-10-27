@@ -1028,8 +1028,8 @@ public function obtenerServiciosAsignadosPendientes()
 				ON tipousuario.idtipousuario=usuarios.tipo
 				JOIN usuarioscoachs
 				ON usuarioscoachs.idusuarios_servicios=usuarios_servicios.idusuarios_servicios
-				WHERE tipousuario.idtipousuario=5 AND 
-				usuarios_servicios.idservicio = '$this->idservicio' AND usuarios_servicios.idusuarios='$this->idusuario' AND cancelacion=0
+				WHERE tipousuario.idtipousuario=5 AND
+				usuarios_servicios.idservicio = '$this->idservicio' AND usuarios_servicios.idusuarios='$this->idusuario' 
 		 ";
 
 		

@@ -41,6 +41,7 @@ class Descuentos
 
 	public $portiposervicio2;
 	public $porservicio2;
+	public $idnotapago;
 
 	public function ObtenerTodosdescuentos()
 	{
@@ -784,7 +785,15 @@ public function EliminarCaracteristicasTipoServicio()
 		return $array;
 	}
 
+	public function GuardarDescuentoPago()
+	{
 
+		$sql="INSERT INTO pagodescuento( iddescuento, montopago, montoadescontar, tipo, monto, idpago,idnotapago) VALUES ('$this->iddescuento', '$this->montopago', '$this->montoadescontar', '$this->tipo', '$this->monto', '$this->idpago','$this->idnotapago')";
+		
+		$resp=$this->db->consulta($sql);
+
+
+	}
 /*
 	public function ObtenerTipoDescuentoAsociador()
 		{

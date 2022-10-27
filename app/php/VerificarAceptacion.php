@@ -35,11 +35,16 @@ try
 	$servicios->idservicio=$idservicio;
 	$pagadoservicio=$lo->VerificarSihaPagado();
 
+	$pagado=1;
+	if ($obtenerservicio[0]->precio>0) {
+	
 	if (count($pagadoservicio)>0) {
 				$pagado=1;
 			}else{
 				$pagado=0;
 			}
+
+		}
 			$fechaactual=date('Y-m-d');
 	/*$verificarsiestaenperiodo=$servicios->FechadentrodePeriodos($fechaactual);*/
 	$dentroperiodo=1;

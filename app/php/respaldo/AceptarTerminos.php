@@ -9,6 +9,7 @@ require_once("clases/class.ServiciosAsignados.php");
 require_once("clases/class.Funciones.php");
 require_once("clases/class.Servicios.php");
 require_once("clases/class.Pagos.php");
+require_once("clases/class.Invitacion.php");
 
 try
 {
@@ -21,6 +22,8 @@ try
 	$f=new Funciones();
 	$pagos= new Pagos();
 	$pagos->db=$db;
+	$invitacion=new Invitacion();
+	$invitacion->db=$db;
 	$db->begin();
 
 	//Enviamos la conexion a la clase
@@ -34,6 +37,9 @@ try
 
 	$idservicio=$obtenerservicioasignado[0]->idservicio;
 	$idusuarios=$obtenerservicioasignado[0]->idusuarios;
+	$invitacion->idservicio=$idservicio;
+	$invitacion->idusuarioinvitado=$idusuarios;
+	$invitacion->ActualizarInvitacion();
 
 	$servicios->idservicio=$idservicio;
 	$obtenerservicio=$servicios->ObtenerServicio();

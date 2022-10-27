@@ -2204,12 +2204,12 @@ function CambioEstatusTablero(idtableroanuncio) {
 				}
 	var html=`
          
-              <div class="block">
+              <div class="">
                <div class="row" style="">
 
                 </div>
 
-                <div class="row" style="padding-top:1em;">
+                <div class="row" style="">
                 	<label style="font-size:16px;padding:1px;">¿Desea cambiar el estatus del anuncio?</label>
                 	
                 </div>
@@ -2286,12 +2286,12 @@ function CambioEstatusPublicidad(idpublicidad) {
 
 	var html=`
          
-              <div class="block">
+              <div class="">
                <div class="row" style="">
 
                 </div>
 
-                <div class="row" style="padding-top:1em;">
+                <div class="row" style="">
                 	<label style="font-size:16px;padding:1px;">¿Desea cambiar el estatus de la publicidad?</label>
                 </div>
               </div>
@@ -2359,12 +2359,12 @@ function CambiarEstatusEntrada(identrada) {
 	}
 	var html=`
          
-              <div class="block">
+              <div class="">
                <div class="row" style="">
 
                 </div>
 
-                <div class="row" style="padding-top:1em;">
+                <div class="row" style="">
                 	<label style="font-size:16px;padding:1px;">¿Desea cambiar el estatus del blog?</label>
                 </div>
               </div>

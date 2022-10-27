@@ -390,7 +390,7 @@ try {
           		$descuentos->idpago=$descuentosaplicados[$i]->idpago;
           		$descuentos->tipo=$descuentosaplicados[$i]->tipo;
           		$descuentos->monto=$descuentosaplicados[$i]->monto;
-
+              $descuentos->idnotapago= $notapago->idnotapago;
                
           		$descuentos->GuardarDescuentoPago();
               $notapago->descuento= $notapago->descuento+$descuentosaplicados[$i]->montoadescontar;
@@ -408,6 +408,8 @@ try {
                   $membresia->descuento=$descuentosmembresia[$i]->descuento;
                   $membresia->monto=$descuentosmembresia[$i]->monto;
                   $membresia->montoadescontar=$descuentosmembresia[$i]->montoadescontar;
+
+                   $membresia->idnotapago=$notapago->idnotapago;
                   $membresia->GuardarPagoDescuentoMembresia();
                   $notapago->descuentomembresia=$notapago->descuentomembresia+$descuentosmembresia[$i]->montoadescontar;
                 }

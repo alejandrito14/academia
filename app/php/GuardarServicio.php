@@ -303,7 +303,7 @@ try
 		$nombrequienagrega="Por: ".$obtenerusuario[0]->nombre." ".$obtenerusuario[0]->paterno;
 
 			$idusuario=$obtenerser[0]->agregousuario;
-			$ruta='nuevoservicio';
+			$ruta='detalleserviciocoach2';
 			$valor=$emp->idservicio;
 			$texto='|Confirmacion de servicio|'.$emp->titulo.'|'.$nombrequienagrega.'|Periodo: '.date('d-m-Y',strtotime($emp->fechainicial)).' '.date('d-m-Y',strtotime($emp->fechafinal));
 			$estatus=0;
@@ -327,7 +327,7 @@ try
 			$notificaciones->navpage="detalleserviciocoach2";
 		}
 
-		var_dump($arraytokens);die();
+		
 
 		if (count($arrayhorarios)>0 && $arrayhorarios[0]!='') {
 			# code...
@@ -525,7 +525,7 @@ try
 			$notificaciones->EnviarNotificacion($arraytokens,$texto,$titulonotificacion);
 		}
 */
-
+		
 		if (count($arraytokens)>0) {
 			$texto='';
 			for ($i=0; $i <count($arraytokens) ; $i++) { 

@@ -311,6 +311,7 @@ function salir_app()
 		  $(".popup").remove();
 
 */
+	EliminarClienteUuid();
 	var id = localStorage.getItem("id_user");
     
 	localStorage.setItem('session',0);

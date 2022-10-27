@@ -70,11 +70,15 @@ try
 
 
 			if ($pasa==0) {
-				
+							
+
 				$fechaactual=date('Y-m-d H:i');
 			for ($i=0; $i < count($arrayelegidos); $i++) { 
-			 $fechaelegida=date('Y-m-d H:i',$arrayelegidos[$i]->{'fecha'}.' '.$arrayelegidos[$i]->{'horainicial'});
 
+
+				// var_dump($arrayelegidos[$i]->{'fecha'});die();
+			 $fechaelegida=date('Y-m-d H:i',strtotime($arrayelegidos[$i]->{'fecha'}.' '.$arrayelegidos[$i]->{'horainicial'}));
+			// echo $fechaelegida.'<'.$fechaactual.'<br>';
 				if ($fechaelegida<$fechaactual) {
 					$fechaspasadas++;
 				}

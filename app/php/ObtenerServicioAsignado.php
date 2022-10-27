@@ -98,7 +98,7 @@ try
 	}
 
 	
-	$obtenerhorarios=$lo->ObtenerHorariosServicio();
+	$obtenerhorarios1=$lo->ObtenerHorariosServicio();
 	$arreglohorarios=array();
 
 	
@@ -143,7 +143,7 @@ try
 
 
 	$respuesta['respuesta']=$obtenerservicio[0];
-	$respuesta['horarios']=$arreglohorarios;
+	$respuesta['horarios']=$obtenerhorarios1;
 	$respuesta['invitado']=$invitado;
 	$respuesta['invitados']=$obtenerinvitaciones;
 	$respuesta['puedeinvitar']=$puedeinvitar;

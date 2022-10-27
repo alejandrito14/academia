@@ -917,7 +917,7 @@ public function validarUsuarioClienteTokenCel()
        INNER JOIN categorias On categorias.idcategorias=servicios.idcategoriaservicio
         WHERE usuarios_servicios.idusuarios='$idtutor' GROUP BY  servicios.idcategoriaservicio";
 
-       
+     
         $resp=$this->db->consulta($sql);
         $cont = $this->db->num_rows($resp);
 
@@ -1115,6 +1115,7 @@ public function validarUsuarioClienteTokenCel()
 
     }
 
+  
 
 
 }

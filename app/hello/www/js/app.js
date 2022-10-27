@@ -122,7 +122,7 @@ $(document).ready(function() {
   
 
 
-var produccion = 1;
+var produccion = 0;
 
 var lhost = "localhost:8888";
 var rhost = "issoftware1.com.mx";
@@ -138,6 +138,7 @@ var intervalo3=0;
 var intervalo4=0;
 var intervalo5=0;
 var intervalo6=0;
+var identificadorDeTemporizador=0;
 if (produccion == 0) {
     var codigoserv="106/";
     var urlphp = "http://localhost:8888/is-academia/app/php/"; 
@@ -992,7 +993,7 @@ ProximopagoaVencer();
 $$('#btnlistadopagos').attr('onclick','VerListadoPago()')
 $$('#btnlistadopagados').attr('onclick','VerListadoPagados()')
 ObtenerMonedero();
-
+myStopFunction(identificadorDeTemporizador);
 
 });
 
@@ -1235,7 +1236,6 @@ $$(document).on('page:init', '.page[data-name="detalleserviciocoach2"]', functio
   
   //regresohome();
   $(".regreso").attr('href','/serviciosasignados/');
-
 
   ObtenerServicioAsignadoCoach();
   

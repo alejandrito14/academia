@@ -19,6 +19,8 @@ require_once("../../clases/conexcion.php");
 require_once("../../clases/class.Descuentos.php");
 require_once("../../clases/class.Funciones.php");
 require_once('../../clases/class.MovimientoBitacora.php');
+require_once('../../clases/class.Descuentosasignados.php');
+
 
 try
 {
@@ -28,6 +30,8 @@ try
 	$f = new Funciones();
 	$md = new MovimientoBitacora();
 	
+	$asignar=new Descuentosasignados();
+	$asignar->db=$db;
 	//enviamos la conexión a las clases que lo requieren
 	$emp->db=$db;
 	$md->db = $db;	
@@ -50,6 +54,10 @@ try
     	$emp->BorrarCategoriasDescuento();
         $emp->EliminarPeriodosVigencia();
         $emp->BorrarServiciosDescuento();
+        $asignar->EliminarAsignacionesDescuentos();
+
+		$emp->EliminarCaracteristicasServicio();
+		$emp->EliminarCaracteristicasTipoServicio();
     	$emp->BorrarDescuento();
 
     	/*$md->guardarMovimiento($f->guardar_cadena_utf8('descuento'),'descuento',$f->guardar_cadena_utf8('borrado de descuento -'.$descuento->iddescuento));

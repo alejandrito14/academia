@@ -37,8 +37,9 @@ try
 	$idusuarios=explode(',', $_POST['usuariosagregados']);
 	$idservicio=$_POST['idservicio'];
 	$iduser=$_POST['id_user'];
-
-
+	$usuarios->idusuarios=$iduser;
+	$obtenerUsu=$usuarios->ObtenerUsuario();
+	
 	$serviciosasignados->idservicio=$idservicio;
 	$obtenerdatosservicio=$serviciosasignados->ObtenerServicio();
 	$usuariosquitados=$_POST['usuariosquitados'];
@@ -165,7 +166,7 @@ try
 		array_push($arraytokens,$obtenertokenusuario[0]->token);
 
 			$idusuario=$idusuarios[$i];
-			$ruta="serviciosasignados";
+			$ruta="serviciospendientesasignados";
 			$texto='|Asignacion de servicio|'.$obtenerdatosservicio[0]->titulo.'|';
 			$estatus=0;
 			$valor=$obtenerdatosservicio[0]->idservicio;
@@ -174,7 +175,7 @@ try
 	
 	}
 
-	$titulonotificacion="Asignacion a servicio ".$obtenerdatosservicio[0]->titulo;
+	$titulonotificacion=$obtenerUsu[0]->nombre." ".$obtenerUsu[0]->paterno." Te ha asignado a ".$obtenerdatosservicio[0]->titulo;
 
 	$obtenerusuarioscancelacion=$serviciosasignados->BuscarAsignacionCancelacion($idusuariosparaasignar);
 
@@ -266,8 +267,21 @@ try
 
 	if (count($arraytokens)>0) {
 			$texto='';
+			for ($i=0; $i <count($arraytokens) ; $i++) { 
 
-			$notificaciones->EnviarNotificacion($arraytokens,$texto,$titulonotificacion);
+				//if ($arraytokens[$i]!='') {
+					# code...
+				
+				$idusuario=$idusuarios[$i];
+				$notificaciones->navpage="serviciospendientesasignados";
+			 	$notificaciones->idcliente=$idusuario;
+			 	$notificaciones->valor="";
+			 	$array=array();
+			 	array_push($array,$arraytokens[$i]);
+			$notificaciones->EnviarNotificacion($array,$texto,$titulonotificacion);
+				//}
+
+			}
 		}
 
 	$respuesta['respuesta']=1;

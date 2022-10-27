@@ -155,7 +155,7 @@ class Pagos
 	public function ActualizarEstatus()
 	{
 		$sql="UPDATE pagos SET  estatus = '$this->estatus' WHERE idpago = '$this->idpago'";
-
+		
 		$resp=$this->db->consulta($sql);
 
 	}

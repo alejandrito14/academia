@@ -144,12 +144,12 @@ $estatuspago = array('NO PAGADO','PAGADO');
               if ($r_clientes_num>0) {  
                   do {
             ?>
-                  <div onclick="SeleccionarClientePagos(<?php echo $a_cliente['idusuarios'];?>)" class="form-check cli_"  id="cli_<?php echo $a_cliente['idusuarios'];?>_<?php echo $a_cliente['idcliente'];?>">
+                  <div  class="form-check cli_"  id="cli_<?php echo $a_cliente['idusuarios'];?>_<?php echo $a_cliente['idcliente'];?>">
                       <?php   
                       $valor="";
                      $nombre=mb_strtoupper($f->imprimir_cadena_utf8($a_cliente['nombre']." ".$a_cliente['paterno']." ".$a_cliente['materno']));
                     ?>
-                    <input  type="checkbox" style="display: none;" onchange="ValidaChecked('<?php echo $a_cliente['idusuarios'];?>')" value="" class="form-check-input chkcliente_<?php echo $idcupon;?>" id="inputcli_<?php echo $a_cliente['idusuarios']?>_<?php echo $idcupon;?>" <?php echo $valor; ?>>
+                    <input  type="checkbox" style="" onchange="SeleccionarClientePagos('<?php echo $a_cliente['idusuarios'];?>')" value="" class="form-check-input chkcliente_<?php echo $idcupon;?>" id="inputcli_<?php echo $a_cliente['idusuarios']?>_<?php echo $idcupon;?>" <?php echo $valor; ?>>
                     <label class="form-check-label" for="flexCheckDefault" ><?php echo $nombre; ?></label>
                 </div>                    
                   <?php
@@ -164,12 +164,28 @@ $estatuspago = array('NO PAGADO','PAGADO');
 		
 
 	</div>
-	<div class="col-md-12" style="">
-		
+	<div class="col-md-8" style="">
+		<!-- <div class="">
+			<div class="card">
+			<div class="card-body">
+				<div class="col-md-6" style="float: left;"></div>
+				<div class="col-md-6" style="float: right;">
+					<button class="btn btn_azul">NUEVO PAGO</button>
+				</div>
+			</div>
+			</div>
+	
+		</div> -->
 
 		<div class="card">
 	<div class="card-body">
+		<div class="col-md-6" style="float: left;"></div>
+				<div class="col-md-6" style="float: right;">
+					<button style="float: right;display: none;" class="btn btnnuevopago btn_azul" onclick="AbrirModalNuevoPago()">NUEVO PAGO</button>
+				</div>
+
 		<div class="table-responsive" id="contenedor_Pagos">
+			<label for="">PAGOS</label>
 			<table id="tbl_pagos" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
 				<thead>
 					<tr style="text-align: center;">
@@ -216,7 +232,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 </div>
 
 	</div>
-		<div class="col-md-6">
+		<!-- <div class="col-md-6">
 		<div class="row">
 			<div class="col-md-12">
 				<div class="card">
@@ -235,19 +251,34 @@ $estatuspago = array('NO PAGADO','PAGADO');
 		
 
 
+	</div> -->
+<div class="col-md-4">
+	<div class="row" style="margin-top: 40px;">
+	
+	<div class="col-md-12">
+		<button type="button" class="btn  btn-success btn-lg btn-block"  style="display: none;" id="btnmonederodisponible" disabled>MONEDERO $<span id="monederodisponible">0.00</span></button>
 	</div>
-
-	<div class="col-md-4">
-		<div class="row">
+</div>
+	<div class="row">
+	<div class="col-md-6" style="
+    margin: 0;
+    padding: 0;
+">
+		<div class="">
 			<div class="col-md-12">
 				<div class="card">
 				<div class="card-body">
 			<div class="row" style="
-			    margin-left: 1em;">
-				<div class="col-md-12" style="text-align: right;">SUBTOTAL: </div>
-				<div class="col-md-12" style="text-align: right;">DESCUENTO: </div>
-				<div class="col-md-12" style="text-align: right;">DESCUENTO MEMBRESÍA: </div>
-				<div class="col-md-12"  style="text-align: right;">TOTAL:</div>
+			    /* margin-left: 1em; */
+			    ">
+			    	<div class="col-md-12" style="text-align: right;font-size: 16px;">SUBTOTAL: </div>
+			    	<div class="col-md-12" style="text-align: right;font-size: 16px;">MONEDERO: </div>
+			
+				<div class="col-md-12" style="text-align: right;font-size: 16px;">DESCUENTO: </div>
+				<div class="col-md-12" style="text-align: right;font-size: 16px;">DESCUENTO MEMBRESÍA: </div>
+					<div class="col-md-12 divcomision" style="text-align: right;font-size: 16px;display: none;">COMISIÓN: </div>
+
+				<div class="col-md-12" style="text-align: right;font-size: 20px;">TOTAL:</div>
 
 			</div>
 		</div>
@@ -255,34 +286,284 @@ $estatuspago = array('NO PAGADO','PAGADO');
 	</div>
 	</div>
 </div>
-	<div class="col-md-2">
+	<div class="col-md-6">
 
 		<div class="row">
 			<div class="col-md-12">
 				<div class="card">
-				<div class="card-body">
-			<div class="row" style="
-			    margin-left: 1em;">
-				<div  class="col-md-12" style="text-align: right;">$<span id="subtotal">0.00</span></div>
-				<div  class="col-md-12" style="text-align: right;">$<span id="descuento">0.00</span>
+				<div class="card-body" style="    padding-left: 0;
+    padding-right: 1px;">
+			<div class="row" >
+				<div class="col-md-12" style="text-align: right;">$<span id="subtotal" style="
+    font-size: 16px;
+">0.00</span></div>
+						<div class="col-md-12" style="text-align: right;">$<span id="monedero" style="
+    font-size: 16px;
+">0.00</span></div>
+				
+				<div class="col-md-12" style="text-align: right;">$<span id="descuento" style="
+    font-size: 16px;
+">0.00</span>
 				</div>
-				<div  class="col-md-12" style="text-align: right;">$<span id="descuentomembresia">0.00</span>
-				</div>
-				<div class="col-md-12" style="text-align: right;">$<span  id="total">0.00</span></div></div>
+				<div class="col-md-12" style="text-align: right;padding-top: 24px;">$<span id="descuentomembresia" style="
+    font-size: 16px;
+">0.00</span><br>
+				</div><br>
+
+	<div class="col-md-12 divcomision" style="text-align: right;display: none;">$<span id="comision" style="
+    font-size: 16px;">0.00</span></div>
+
+
+				<div class="col-md-12" style="text-align: right;font-size: 20px;/* padding-top: 6px; */">$<span id="total">0.00</span></div></div>
 
 			</div>
 		</div>
 	</div>
 	</div>
 		</div>
+	</div>
+	<div class="row">
+		
+		<div class="col-md-12">
+			<div class="form-group">
+			<select name="" id="tipopago" class="form-control" onchange="CargarOpcionesTipopago()" style="width: 100%;">
+				<option value="0">SELECCIONAR MÉTODO DE PAGO</option>
+			</select>
+		</div>
+		</div>
+		
+	</div>
 
 
+	<div class="">
+			
+		 <div class="divtransferencia" style="display: none;">
+      <div  >
+        <div class="list media-list" style="list-style: none;">
+           <div class="informacioncuenta"></div>
+        </div>
+        
+
+       </div>
+     </div>
+       <div id="campomonto" style="display: none;">
+    <div class="subdivisiones" style="margin-top: 1.5em;width: 12em!important;" >
+      <span style="margin-top: .5em;margin-left: .5em;">¿Con cuanto pagas?</span>
+    </div>
+
+    <div class="list media-list sortable">
+     <div  style="list-style: none;">
+      
+
+          <div>
+            
+            <div class="label-radio item-content">
+              
+              <div class="item-inner">
+             
+                <div class="">
+
+                  <input type="number" name="montovisual" class="form-control" id="montovisual" style="font-size: 18px;float: left;" placeholder="$0.00"  />
+                  <input type="number" name="montocliente" id="montocliente"  style="font-size: 18px;float: left;width: 60%;    margin-left: 1.2em;display: none;" placeholder="$0.00"   />
+
+                 
+                </div>
+
+                </div>
+
+
+                <div class="item-after" style="">
+                 
+
+
+                   <span class="botoneditar" style="margin-right:.10em;" >
+                  
+                  <i class="bi bi-pencil "></i>
+                  <span class="if-not-md"></span>
+
+                  </span>
+
+
+                     <span class="botoneditar" onclick="" style="visibility: collapse;">
+                  
+                      <i class="bi bi-pencil"></i>
+
+                  </span>
+                 
+                </div>
+
+              
+            </div>
+
+
+            </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+	<div class="col-md-12">
+		<label class="">Cambio de $<span id="cambio">0.00</span></label>
+	</div>
+	
+</div>
+</div> 
+
+
+
+    <div class=" row">
+              <div style="background-color:#dfdfdf;border-radius:10px;padding-top: .5px;padding-bottom: .5px;display: none;" id="aparecerimagen">
+              <div class="">
+                  <div class="row no-gap" style="text-align: center;"> 
+                   <img src="" id="imagencomprobante" width="60" />
+                  </div>
+                </div>
+
+                 <div class="block "> 
+                     <div class="list media-list sortable" id="" style="">           
+
+                    <ul id="lista-imagenescomprobante">
+                        
+                    </ul>
+                </div> 
+              </div>
+
+
+        </div>
+
+      </div>
+       
+       
+
+        <div class=" divtarjetas" >
+          <div class="" id="divlistadotarjetas">
+
+      <div class="divisiones2" style="display: none;"><span style="margin-top: .5em;margin-left: .5em;">Seleccionar tarjeta</span></div>
+      <div class="">
+        <div class="">
+          
+          <div style="text-align: center;" id="categorianombre" class="categorianombre"></div>
+          <div class="swiper-container  demo-swiper">
+            <div class="swiper-wrapper" id="slidecategoria">
+
+            </div>
+          </div>
+
+          <div class="list simple-list li">
+            <ul id="listadotarjetas">
+              
+            </ul>
+            <div class="divisiones2 divnueva" style="display: none;">
+              <a class="btn btn-warning botonesredondeado botones btnnuevatarjeta"  style="color: black!important;background: #FFC830!important;margin-right: 1em; margin-top: 1em;margin-bottom: 10px; width: 100%;">Nueva Tarjeta</a>
+            </div>    
+          </div>
+              
+        </div>
+      </div>
+    </div>
+    <div class="" id="divagregartarjeta" style="display: none;">
+
+      <div class="divisiones2" style="    margin-bottom: 1em;
+    margin-top: 1em;font-weight: bold;display: none;"><span style="">Introduce la información de la tarjeta</span></div>
+
+      <div class="divisiones2" style="">
+
+         <div class="">
+         <div class="list form-list no-margin margin-bottom" id="my-form">
+           <div>
+            
+              <div>
+                <div class="item-content item-input">
+                <div class="item-inner">
+                <div class="item-title item-label" >*Nombre en la tarjeta</div> 
+
+                <div class="item-input-wrap" style="font-size: 15px;">
+                  <input type="text" name="cardholder-name" placeholder="TITULAR DE LA TARJETA" class="mayusculas place form-control" id="v_cardholder-name" />
+                  <span class="input-clear-button"></span>
+                </div>
+                  <label for="" id="lblnombre" class="lbl" style="color:red;"></label>
+                </div>
+                </div>
+              </div>
+              <div>
+                <div class="item-content item-input">
+                <div class="item-inner">
+                <div class="item-title item-label">*Número de tarjeta</div>
+                <div class="item-input-wrap" style="font-size: 15px;">
+                  <div class="sr-input sr-element sr-card-element" id="v_card-number" style="margin-top: .5em;" >
+                    <!-- A Stripe card Element will be inserted here. -->
+                  </div>
+                  <span class="input-clear-button"></span>
+                </div>
+                <label for="" id="lblntarjeta" class="lbl" style="color:red;"></label>
+                </div>
+                </div>
+              </div> 
+              <div>
+                <div class="item-content item-input">
+                <div class="item-inner">
+                <div class="item-title item-label">*Fecha de vencimiento</div>
+                <div class="item-input-wrap" style="font-size: 15px;">
+                  <div class="sr-input sr-element sr-card-element" id="v_card-expiry" style="margin-top: .5em;">
+                    <!-- A Stripe card Element will be inserted here. -->
+                  </div>
+                  <span class="input-clear-button"></span>
+                </div>
+                <label for="" id="lblntarjeta" class="lbl" style="color:red;"></label>
+                </div>
+                </div>
+
+              </div> 
+
+              <div>
+                <div class="item-content item-input">
+                <div class="item-inner">
+                <div class="item-title item-label">*CVC</div>
+                <div class="item-input-wrap" style="font-size: 15px;">
+                  <div class="sr-input sr-element sr-card-element" id="v_card-cvc" style="margin-top: .5em;">
+                    <!-- A Stripe card Element will be inserted here. -->
+                  </div>
+                  <span class="input-clear-button"></span>
+                </div>
+                <label for="" id="lblcvc" class="lbl" style="color:red;"></label>
+                </div>
+                </div>
+              </div>
+          </div>
+          <div class="sr-field-error " id="card-errors" role="alert" style="color:#E25950;"></div>
+          <div class=" ">
+            <a class="btn btn-warning" onclick="" id="submit-card" style="margin-bottom: 1em;width: 100%; color: white!important;
+    background: #FFC830!important;">Guardar Tarjeta</a>
+
+
+
+     <a class="btn btn-danger botonesredondeado botones"  id="btnatras" style="
+    color: white!important;
+    background: red!important;
+    margin-top: 1em;margin-bottom: 1em;">Cancelar</a>
+          </div>  
+        </div>
+         </div> 
+      </div>
+    </div>  	
+
+
+	</div>
+</div>
+
+<div class="row">
+	
+	<div class="col-md-12">
+		<button type="button" class="btn  btn-success btn-lg btn-block" id="btnpagarresumen" disabled onclick="RealizarpagoCliente()">PAGAR</button>
+	</div>
+</div>
+</div>
 
 	<div class="col-md-5"></div>
 	<div class="col-md-2"></div>
 
 		<div class="col-md-5">
-			<button type="button" class="btn  btn-success btn-lg btn-block" id="btnpagar" disabled>PAGAR</button>
+			
 		</div>
 
 
@@ -322,6 +603,178 @@ $estatuspago = array('NO PAGADO','PAGADO');
   </div>
 </div>
 
+
+<div class="modal" id="modalimagencomprobante" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">SUBIR IMAGEN COMPROBANTE</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<div class="row">
+      		<div class="col-md-12">
+      			<form>
+			  <div class="form-group">
+			   <div class="card" style="width: 18rem;margin: auto;margin-top: 3em;">
+								        <img class="card-img-top" src="">
+								        <div id="d_foto" style="text-align:center; ">
+											<img src="images/sinfoto.png" class="card-img-top" alt="" style="border: 1px #777 solid"> 
+										</div>
+								        <div class="card-body">
+								            <h5 class="card-title"></h5>
+								           
+								            <div class="form-group">
+								               
+								                <input type="file" class="form-control-file" name="image" id="image" onchange="SubirImagenComprobante()">
+								            </div>
+								          <!--   <input type="button" class="btn btn-primary upload" value="Subir"> -->
+								        </div>
+								    </div>
+			  </div>
+			</form>
+      		</div>
+      		<div class="col-md-6"></div>
+      	</div>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" onclick="GuardarImagen()">GUARDAR</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal" id="modalmonedero" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">MONEDERO DISPONIBLE</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<div class="row">
+      		<div class="col-md-12">
+      			<form>
+			  <div class="form-group">
+			  <!-- 	<label for="">MONEDERO DISPONIBLE</label>
+			  	<span id="monederodisponible"></span> -->
+
+			  	<label for="">MONEDERO A USAR</label>
+			  	<input type="number" id="monederoausar" placeholder="$0.00" class="form-control">
+			  </div>
+			</form>
+      		</div>
+      		<div class="col-md-6"></div>
+      	</div>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" onclick="GuardarMonedero()">GUARDAR</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal" id="modalespera" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+       
+      </div>
+      <div class="modal-body" id="divespera">
+      
+       
+      </div>
+      <div class="modal-footer">
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal" id="modalnuevopago" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">NUEVO PAGO</h5>
+       
+      </div>
+      <div class="modal-body" id="">
+      	<div class="row">
+      		<div class="col-md-12">
+      			<form>
+			  <div class="form-group">
+			  	<label for="">CONCEPTO</label>
+			  	<input type="text" id="txtconcepto" class="form-control">
+			  </div>
+
+			   <div class="form-group">
+			  	<label for="">MONTO $</label>
+			  	<input type="number" id="txtmonto" class="form-control">
+			  </div>
+
+			  <div class="form-check">
+			    <input type="checkbox" id="opcion_1" class="opciones form-check-input " style="top: -0.3em;" onchange="HabilitarOpcion(1)">
+			    <label for="" class="form-check-label">SERVICIO</label>
+
+			   </div>
+
+			   <div class="form-check">
+			    <input type="checkbox" id="opcion_2" class="opciones form-check-input " style="top: -0.3em;" onchange="HabilitarOpcion(2)">
+			    <label for="" class="form-check-label">MEMBRESÍA</label>
+
+			   </div>
+
+
+			    <div class="form-check">
+			    <input type="checkbox" id="opcion_3" class="opciones form-check-input " style="top: -0.3em;"onchange="HabilitarOpcion(3)">
+			    <label for="" class="form-check-label">OTROS</label>
+
+			   </div>
+
+
+
+			</form>
+
+			<div id="listado" style="display: none;margin-top: 1em;">
+				 <div class="form-group">
+				 	<div id="divmembresia" style="display: none;">
+					<label for="">MEMBRESÍAS</label>
+					<select id="membresiaslistado" class="form-control" style="display: none;"></select>
+					</div>
+
+					<div id="divservicios" style="display: none;">
+					<label for="">SERVICIOS:</label>
+					<select name="" id="servicioslistado" class="form-control" style="display: none;"></select></div>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+       
+      </div>
+      <div class="modal-footer">
+      	 <button type="button" class="btn btn-success" onclick="GuardarPago()">GUARDAR</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script type="text/javascript">
-	
+	ObtenerTipodepagos();
 </script>

@@ -27,16 +27,19 @@ try
 	$f=new Funciones();
 	$fechas=new Fechas();
 	$usuarios=new Usuarios();
+	$usuarios->db=$db;
 
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
 
 	$idusuarios=$_POST['idcliente'];
+
+	$se->crearSesion('usuariopago',$idusuarios);
 	$lo->idusuarios=$idusuarios;
+	$usuarios->id_usuario=$idusuarios;
 
+	$datosusuario=$usuarios->ObtenerDatosUsuario();
 
-	$usuarios->db=$db;
-	$usuarios->idusuarios=$idusuarios;
 	$tutorados=$usuarios->ObtenerTutoradosSincel();
 	
 	for ($i=0; $i <count($tutorados) ; $i++) { 
@@ -52,14 +55,21 @@ try
 	for ($i=0; $i < count($obtener); $i++) { 
 		
 		$fecha=$obtener[$i]->fechafinal;
+
+		if ($fecha!='') {
+			# code...
+		
 		$dianumero=explode('-',$fecha);
 		$obtener[$i]->fechaformato=$dianumero[2].'/'.$fechas->mesesAnho3[$fechas->mesdelano($fecha)-1];
 		$fecha=date('d-m-Y',strtotime($obtener[$i]->fechafinal));
 		$obtener[$i]->fechafinal=$fecha;
+
+			}
 		}
 
 
 	$respuesta['respuesta']=$obtener;
+	$respuesta['monedero']=$datosusuario['monedero'];
 	
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);

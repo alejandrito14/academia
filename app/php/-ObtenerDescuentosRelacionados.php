@@ -31,7 +31,7 @@ $arrayservicio=array();
 $arraydescuentos=array();
 	$descuento->idusuario=$iduser;
 	$obtenerdescuentosUsuario=$descuento->ObtenerDescuentosUsuario();
-$descuento->idusuario=$iduser;	
+	
 
 
 	for ($i=0; $i <count($pagoselegidos) ; $i++) { 
@@ -42,7 +42,9 @@ $descuento->idusuario=$iduser;
 
 		if (count($buscar)>0) {
 			# code...
-		
+			$descuento->idusuario=$buscar[0]->idusuarios;
+			$usuarios->idusuarios=$descuento->idusuario;
+
 			$idservicio=$buscar[0]->idservicio;
 			$servicios->idservicio=$idservicio;
 			$datosservicio=$servicios->ObtenerServicio();
@@ -212,20 +214,34 @@ if ($validado==1) {
 					
 					
 					$obtenerparentescosdescuento=$descuento->ObtenerDescuentoParentesco();
-					
-					
+					//$descuento->idusuario=$iduser;
+					//var_dump($obtenerparentescosdescuento);die();
 				
 					$encontrado=0;
 					for ($m=0; $m < count($obtenerparentescosdescuento); $m++) {
 
 						$idparentesco=$obtenerparentescosdescuento[$m]->idparentesco;
-						$cantidadfam=$obtenerparentescosdescuento[$m]->cantfamiliar;
-
+						$rangoinicial=$obtenerparentescosdescuento[$m]->rangoinicial;
+						$rangofinal=$obtenerparentescosdescuento[$m]->rangofinal;
 						$obtenerparentescosusuario=$descuento->ObtenerParentescoUsuario();
+						if (count($obtenerparentescosusuario)>0) {
+							# code...
+						
+						$obtenerUsuariosTutor=$descuento->ObtenerTodosParentescoUsuario($obtenerparentescosusuario[0]->idusuariostutor,$idparentesco,$idcategoriatipo);
+						//var_dump($obtenerUsuariosTutor);die();
+						//echo ''.count($obtenerUsuariosTutor).'=='.$cantidadfam;die();
 
-						$obtenerUsuariosTutor=$descuento->ObtenerTodosParentescoUsuario($obtenerparentescosusuario[0]->idusuariostutor,$idparentesco);
+						//echo $obtenerparentescosusuario[0]->orden.'>='.$rangoinicial .'&&'. $obtenerparentescosusuario[0]->orden.'<='.$rangofinal.'<br>';
+						$orden=0;
+						for ($a=0; $a < count($obtenerUsuariosTutor); $a++) { 
+							if ($obtenerUsuariosTutor[$a]->idusuarios==$descuento->idusuario) {
+								$orden=$a;
+								break;
+							}
+						}
 
-							if (count($obtenerUsuariosTutor)==$cantidadfam) {
+						
+							if ($orden>=$rangoinicial && $orden<=$rangofinal) {
 									$encontrado=1;
 									$obtenerdescuentos[$j]->monto=$obtenerparentescosdescuento[$m]->txtcantidaddescuento;
 									$obtenerdescuentos[$j]->tipo=$obtenerparentescosdescuento[$m]->tipodes;
@@ -233,6 +249,11 @@ if ($validado==1) {
 										break;
 							}
 
+
+
+
+
+						}
 						
 						
 					}
@@ -247,7 +268,7 @@ if ($validado==1) {
 
 				}
 			}
-
+			//echo 'validado'.$validado;
 if ($validado==1) {
 				if ($porniveljerarquico==1) {
 
@@ -318,7 +339,7 @@ if ($validado==1) {
 				if($porcaracteristicasasociador==1){
 
 					
-			$usuarios->idusuarios=$iduser;
+			//$usuarios->idusuarios=$iduser;
 			$verificarsiestutorado=$usuarios->VerificarSiesTutorado();
 		
 				if (count($verificarsiestutorado)==1) {

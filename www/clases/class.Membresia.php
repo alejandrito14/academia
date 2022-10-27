@@ -30,6 +30,7 @@ class Membresia
 	public $tipodescuento;
 	public $inputcantidad;
 	public $idcategoria;
+	public $idnotapago;
 
 
 	public function ObtenerTodosmembresia()
@@ -189,7 +190,6 @@ class Membresia
 			$sql.=" AND idmembresia NOT IN($listamembresia) ";
 		}
 
-		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -370,6 +370,14 @@ class Membresia
 		
 	}
 
+	
+	public function GuardarPagoDescuentoMembresia()
+	{
+		$sql="INSERT INTO pagodescuentomembresia
+		(idpago, idmembresia, idservicio, descuento, monto,montoadescontar,idnotapago) VALUES ('$this->idpago', '$this->idmembresia','$this->idservicio', '$this->descuento', '$this->monto','$this->montoadescontar','$this->idnotapago')";
+		$resp=$this->db->consulta($sql);
+
+	}
 
 }
 

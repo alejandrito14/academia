@@ -321,7 +321,8 @@ var routes = [
 
    {
     path: '/detalleserviciocoach2/',
-    componentUrl: './pages/detalleserviciocoach.html',
+    componentUrl: './pages/detalleserviciocoach2.html',
+
    },
    {
     path: '/detalleservicioadmin/',

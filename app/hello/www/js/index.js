@@ -319,7 +319,7 @@ var handleNotificationMessage = function(message){
 
           // alert(localStorage.id_user+''+message.idcliente);
                 if (localStorage.id_user == message.idcliente) {
-                   
+                  
                     if (message.tap == "background") {
                         localStorage.pushnav = message.navigation;
                         localStorage.valor=message.valor;

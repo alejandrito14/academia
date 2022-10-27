@@ -746,7 +746,7 @@ function CargarOpcionesTipopago() {
                                              </div>
                
 
-                      <div class="block m-0"> 
+                       <div class="block m-0"> 
                        <div class="list media-list sortable" id="" style="">           
 
                       <div id="lista-imagenescomprobante">

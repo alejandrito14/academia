@@ -10,6 +10,8 @@ require_once("clases/class.Funciones.php");
 require_once("clases/class.Servicios.php");
 require_once("clases/class.Pagos.php");
 require_once("clases/class.Invitacion.php");
+require_once("clases/class.Usuarios.php");
+require_once("clases/class.NotificacionPush.php");
 
 try
 {
@@ -24,6 +26,10 @@ try
 	$pagos->db=$db;
 	$invitacion=new Invitacion();
 	$invitacion->db=$db;
+	$usuarios=new Usuarios();
+	$usuarios->db=$db;
+	$notificaciones=new NotificacionPush();
+	$notificaciones->db=$db;
 	$db->begin();
 
 	//Enviamos la conexion a la clase
@@ -96,10 +102,67 @@ try
 
 		}
 	}
+
+	
+	$usuarios->idusuarios=$idusuarios;
+	$obtenerusuario=$usuarios->ObtenerUsuario();
+	$nombrequienacepta=$obtenerusuario[0]->nombre." ".$obtenerusuario[0]->paterno;
+	$obtenerInvitacion=$invitacion->ObtenerInvitado();
+if (count($obtenerInvitacion)>0) {
+	$idusuarioinvita=$obtenerInvitacion[0]->idusuarioinvita;
+
+	$notificaciones->idusuario=$idusuarioinvita;
+	$obtenertokenusuario=$notificaciones->Obtenertoken();
+	$arraytokens=array();
+	for ($i=0; $i < count($obtenertokenusuario); $i++) { 
+			if ($obtenertokenusuario[$i]->token!=null) {
+				# code...
+			
+				$dato=array('idusuario'=>$idusuarioinvita,'token'=>$obtenertokenusuario[$i]->token);
+
+					array_push($arraytokens,$dato);
+				}
+		}
+
+		
+	$titulonotificacion=$nombrequienacepta." acepto la asignacion al servicio ".$obtenerservicio[0]->titulo;
+
+	$texto='|Aceptó la asignación|'.$obtenerservicio[0]->titulo.'|'.$nombrequienacepta;
+	$estatus=0;
+	$ruta="";
+	$valor="";
+
+	
+		$notificaciones->AgregarNotifcacionaUsuarios($idusuarioinvita,$texto,$ruta,$valor,$estatus);
+	}
+	
+
+		
+				
+
+	$db->commit();
+
+	if (count($arraytokens)>0) {
+			$texto='';
+			for ($i=0; $i <count($arraytokens) ; $i++) { 
+
+				//if ($arraytokens[$i]!='') {
+					# code...
+				
+			 $idusuario=$arraytokens[$i]['idusuario'];
+			
+			 $notificaciones->idcliente=$idusuario;
+			 $notificaciones->valor='';
+			 $array=array();
+			 array_push($array,$arraytokens[$i]['token']);
+			$notificaciones->EnviarNotificacion($array,$texto,$titulonotificacion);
+				//}
+
+			}
+		}
 	
 
 	$respuesta['respuesta']=1;
-	$db->commit();
 
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);

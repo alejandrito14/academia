@@ -33,7 +33,7 @@ try
 	$tipopagos->db=$db;
 	$md->db = $db;	
 
-	$obtener=$tipopagos->ObttipodepagoActivos();
+	$obtener=$tipopagos->ObttipodepagoActivosWeb();
 
 
 	$respuesta['respuesta']=$obtener;

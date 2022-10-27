@@ -359,12 +359,12 @@ if ($validado==1) {
 		
 				if (count($verificarsiestutorado)==1) {
 					$idtutor=$verificarsiestutorado[0]->idusuariostutor;
-
+//print('a'+$caracteristicaportiposervicio);die();
 					if($caracteristicaportiposervicio==1){
 
 						$obtenercategoriasserviciotutor=$usuarios->ObtenerCategoriasServiciotutor($idtutor);
 						;
-
+						
 $obtenertiposervicioasociador=$descuento->ObtenerTipoDescuentoAsociador();
 						$encontradocategoria=0;
 				for ($a=0; $a <count($obtenertiposervicioasociador) ; $a++) { 

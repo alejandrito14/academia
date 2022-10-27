@@ -49,7 +49,7 @@ $arraydescuentos=array();
 			$servicios->idservicio=$idservicio;
 			$datosservicio=$servicios->ObtenerServicio();
 			$idcategoriatipo=$datosservicio[0]->idcategoriaservicio;
-
+			$fechacreacionservicio=$datosservicio[0]->fechacreacion;
 			$descuento->idservicio=$idservicio;
 			$obtenerdescuentos=$descuento->ObtenerDescuentos();
 			for ($j=0; $j <count($obtenerdescuentos) ; $j++) { 
@@ -142,12 +142,12 @@ $arraydescuentos=array();
 if ($validado==1) {
 		if ($porhorarioservicio==1) {
 					
-						$fechaactual=date('Y-m-d');
+				$fechaactual=date('Y-m-d',strtotime($fechacreacionservicio));
 
-						$fechaantes = date('Y-m-d',strtotime($fechaactual."- ".$cantidaddias." days"));
+				$fechades = date('Y-m-d',strtotime($fechaactual."+ ".$cantidaddias." days"));
 
-					$cantidadhorariosServicio=$descuento->ObtenerCantidadHorarios($fechaantes,$fechaactual);
-			
+					$cantidadhorariosServicio=$descuento->ObtenerCantidadHorarios($fechaactual,$fechades);
+					//var_dump($cantidadhorariosServicio);die();
 					$canthorarios=$cantidadhorariosServicio[0]->cantidadhorarios;
 					
 

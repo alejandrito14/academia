@@ -35,7 +35,7 @@ class Membresia
 	public $descuento;
 	public $monto;
 	public $montoadescontar;
-	
+	public $idnotapago;
 
 	public function ObtenerTodosmembresia()
 	{
@@ -377,7 +377,7 @@ class Membresia
 	public function GuardarPagoDescuentoMembresia()
 	{
 		$sql="INSERT INTO pagodescuentomembresia
-		(idpago, idmembresia, idservicio, descuento, monto,montoadescontar) VALUES ( '$this->idpago', '$this->idmembresia','$this->idservicio', '$this->descuento', '$this->monto','$this->montoadescontar')";
+		(idpago, idmembresia, idservicio, descuento, monto,montoadescontar,idnotapago) VALUES ( '$this->idpago', '$this->idmembresia','$this->idservicio', '$this->descuento', '$this->monto','$this->montoadescontar','$this->idnotapago')";
 		$resp=$this->db->consulta($sql);
 
 	}

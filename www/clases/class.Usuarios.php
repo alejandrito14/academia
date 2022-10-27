@@ -102,7 +102,7 @@ class Usuarios
 	{
 
 		$query="SELECT * FROM usuarios WHERE idusuarios=".$this->id_usuario;
-
+		
 		$resp=$this->db->consulta($query);
 
 		$rows=$this->db->fetch_assoc($resp);
@@ -317,9 +317,23 @@ class Usuarios
 	{
 		
 		$sql="SELECT *FROM usuarios WHERE idusuarios='$this->id_usuario'";
-		
+	
 		$resp=$this->db->consulta($sql);
-		return	 $resp;
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
 
 	}
 	  public function obtenerServicios()
@@ -678,7 +692,7 @@ class Usuarios
         FROM
         usuarios
         JOIN usuariossecundarios
-        ON usuarios.idusuarios = usuariossecundarios.idusuariotutorado WHERE usuariossecundarios.idusuariostutor='$this->idusuarios' AND sincel=1";
+        ON usuarios.idusuarios = usuariossecundarios.idusuariotutorado WHERE usuariossecundarios.idusuariostutor='$this->id_usuario' AND sincel=1";
 
        
         $resp=$this->db->consulta($sql);
@@ -733,7 +747,7 @@ class Usuarios
        INNER JOIN servicios ON usuarios_servicios.idservicio=servicios.idservicio
        INNER JOIN categorias On categorias.idcategorias=servicios.idcategoriaservicio
         WHERE usuarios_servicios.idusuarios='$idtutor' GROUP BY  servicios.idcategoriaservicio";
-
+  
        
         $resp=$this->db->consulta($sql);
         $cont = $this->db->num_rows($resp);

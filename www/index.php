@@ -1259,6 +1259,10 @@ $navegador = $f->navegador();
 <script src="js/fn_encuesta.js?<?php echo time(); ?>"></script>
 <script src="js/fn_tipousuario.js?<?php echo time(); ?>"></script>
 <script src="js/fn_pagos.js?<?php echo time(); ?>"></script>
+<script src="js/fn_pagotarjeta.js?<?php echo time(); ?>"></script>
+
+  <script src="https://js.stripe.com/v3/"></script>
+
  <!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     -->
     <script type="text/javascript" src="js/mark-your-calendar.js"></script>

@@ -129,8 +129,47 @@ class Tipodepagos
 		return $array;
 	}
 
+public function ObtenerTipodepago2()
+	{
+		$query="SELECT * FROM tipodepago WHERE idtipodepago=".$this->idtipodepago."";
+		
+		$resp = $this->db->consulta($query);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
 
 	
+	public function ObttipodepagoActivosWeb()
+	{
+		$sql = "SELECT * FROM tipodepago WHERE estatus = 1 AND habilitarweb=1";
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
 
 }
 

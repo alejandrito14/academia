@@ -28,10 +28,11 @@ try
 	/*$lo->idusuarios_servicios=$_POST['idusuarios_servicios'];*/
 	$id_user=$_POST['id_user'];
 	$idtipousuario=$_POST['idtipousuario'];
-	//$obtenerservicio=$lo->ObtenerServicioAsignado();
+	
 	$lo->idservicio=$_POST['idservicio'];
-	$lo->idu
+	$lo->idusuario=$id_user;
 	$servicios->idservicio=$lo->idservicio;
+	$obtenerservicio=$servicios->ObtenerServicio();
 	$invitado=0;
 	$puedeinvitar=0;
 	$obtenerinvitaciones=array();
@@ -44,7 +45,7 @@ try
 			$habilitarcancelacion=1;
 		}
 
-		$invitacion->idusuarioinvitado=$obtenerservicio[0]->idusuarios;
+		$invitacion->idusuarioinvitado=$obtenerasigacion[0]->idusuarios;
 		$invitacion->idservicio=$lo->idservicio;
 		$esinvitado=$invitacion->ObtenerInvitado();
 
@@ -56,7 +57,7 @@ try
 		if ($obtenerservicio[0]->ligarcliente==1) {
 			# code...
 		
-		$invitacion->idusuarioinvita=$obtenerservicio[0]->idusuarios;
+		$invitacion->idusuarioinvita=$obtenerasigacion[0]->idusuarios;
 		$obtenerinvitaciones=$invitacion->ObtenerInvitaciones();
 		//echo $obtenerservicio[0]->numligarclientes.''.count($obtenerinvitaciones);
 

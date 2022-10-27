@@ -1607,6 +1607,8 @@ function CargarEventoSeleccionador() {
 									var color=zonaelegida.color;
 									
 						 			var dividirfecha=id.split('-');
+
+						 			console.log(dividirfecha);
 						 			var objeto={
 						 				id:id,
 						 				fecha:dividirfecha[0]+'-'+dividirfecha[2]+'-'+dividirfecha[3],

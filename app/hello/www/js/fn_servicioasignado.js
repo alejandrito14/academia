@@ -29,7 +29,8 @@ function ObtenerServicioAsignado() {
 			var habilitarcancelacion=datos.habilitarcancelacion;
 			localStorage.setItem('idservicio',idservicio);
 			  ObtenerImagenesGrupalServicio();
-
+			var cantidadhorarios=horarios.length;
+			$(".cantidadhorarios").text(cantidadhorarios);
 			if (imagen!=null && imagen!='' && imagen!='null') {
 
 				imagen=urlimagenes+`servicios/imagenes/`+codigoserv+imagen;
@@ -135,7 +136,6 @@ function ObtenerServicioAsignado() {
 function ObtenerServicioAsignadoCoach() {
 	var pagina = "ObtenerServicioAsignadoCoach.php";
 	var idservicio=localStorage.getItem('idservicio');
-
 	//var pagina = "ObtenerServicioAsignado.php";
 	var id_user=localStorage.getItem('id_user');
 	var idtipousuario=localStorage.getItem('idtipousuario');
@@ -162,6 +162,8 @@ function ObtenerServicioAsignadoCoach() {
 			localStorage.setItem('idservicio',idservicio);
 			  ObtenerImagenesGrupalServicio();
 
+			  var cantidadhorarios=horarios.length;
+			$(".cantidadhorarios").text(cantidadhorarios);
 			if (imagen!=null && imagen!='' && imagen!='null') {
 
 				imagen=urlimagenes+`servicios/imagenes/`+codigoserv+imagen;

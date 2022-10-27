@@ -84,6 +84,9 @@ function ObtenerServicioAdmin() {
 			var horarios=datos.horarios;
 			var idservicio=respuesta.idservicio;
 			var habilitarcancelacion=datos.habilitarcancelacion;
+			var horarios=datos.horarios;
+			var cantidadhorarios=horarios.length;
+			$(".cantidadhorarios").text(cantidadhorarios);
 			localStorage.setItem('idservicio',idservicio);
 			ObtenerImagenesGrupalServicio();
 			if (imagen!=null && imagen!='' && imagen!='null') {

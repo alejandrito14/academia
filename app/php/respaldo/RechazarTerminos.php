@@ -8,6 +8,7 @@ require_once("clases/conexcion.php");
 require_once("clases/class.ServiciosAsignados.php");
 require_once("clases/class.Funciones.php");
 require_once("clases/class.Servicios.php");
+require_once("clases/class.Invitacion.php");
 
 try
 {
@@ -18,6 +19,8 @@ try
 	$servicios = new Servicios();
 	$servicios->db=$db;
 	$f=new Funciones();
+	$invitacion=new Invitacion();
+	$invitacion->db=$db;
 	
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
@@ -28,7 +31,12 @@ try
 	$lo->cancelacion=1;
 	$lo->estatus=2;
 	$lo->GuardarCancelacion();
-	
+	$obtenerservicioasignado=$lo->ObtenerServicioAsignado();
+	$idservicio=$obtenerservicioasignado[0]->idservicio;
+	$idusuarios=$obtenerservicioasignado[0]->idusuarios;
+	$invitacion->idservicio=$idservicio;
+	$invitacion->idusuarioinvitado=$idusuarios;
+	$invitacion->EliminarInvitacion();
 
 	$respuesta['respuesta']=1;
 	

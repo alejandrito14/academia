@@ -99,8 +99,7 @@ class NotificacionPush
     {
         $fechaactual=date('Y-m-d');
         $sql = "SELECT  DISTINCT token,uuid FROM usuariotoken WHERE idusuario='$this->idusuario' and  token!='null' 
-       AND DATE(fecharegistro)='$fechaactual'
-        ORDER BY idusuariotoken DESC  ";
+        ORDER BY idusuariotoken DESC LIMIT 3 ";
      
             $resp = $this->db->consulta($sql);
             $cont = $this->db->num_rows($resp);
