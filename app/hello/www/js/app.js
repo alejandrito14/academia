@@ -147,6 +147,7 @@ if (produccion == 0) {
     var urlimagenlogo="http://localhost:8888/is-academia/www/images/sinimagenlogo.png";
     var globalsockect="http://localhost:3400/";
     var imagenesbancos="http://localhost:8888/is-academia/www/assets/images/";
+    var urlimagendefaultservicio="https://issoftware1.com.mx/IS-ACADEMIA/images/sin-servicio.jpg"
 
 }else{
     var codigoserv="109/";
@@ -1811,6 +1812,31 @@ CargarCalendario();
 
   $("#btnguardarservicioreplica").attr('onclick','GuardarReplica()');
   $("#btnaplicarcalendario").attr('onclick','DesplegarCalendario()');
+});
+
+$$(document).on('page:init', '.page[data-name="reagendarservicio"]', function (e) {
+regresohome();
+ ObtenerTipoServicios();
+ ObtenerCategoriaServicios();
+
+ if (localStorage.getItem('idtipousuario')==0){
+      
+     ObtenerServiciosReplica();
+
+   }
+
+    if (localStorage.getItem('idtipousuario')==5){
+      
+     ObtenerServiciosCoach();
+
+   }
+  
+
+  $("#serviciosreplica").attr('onchange','ObtenerDatosServicio()');
+
+  $("#btnguardarservicioreagendar").attr('onclick','GuardarReagendado()');
+  $("#btnaplicarcalendario").attr('onclick','AplicarFechasReagendado()');
+
 });
 
 $$(document).on('page:init', '.page[data-name="membresia"]', function (e) {

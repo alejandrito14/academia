@@ -549,24 +549,14 @@ function ObtenerServicioNuevo(valor) {
 		var politicasaceptacion=respuesta.politicasaceptacion;
 		var estatus=respuesta.estatus;
 		$("#v_estatus").val(estatus);
-		$("#v_categoria").val(idcategoriaservicio);
-
-		$("#v_categoriaservicio").val(idcategoria);
 		$("#v_titulo").val(titulo);
 		$("#v_descripcion").val(descripcion);
-		// Obtenerparticipantes(3,idservicio);
-		// ObtenerZonas(idservicio);
-		// ObtenerCoachs(5,idservicio);
-
-		//VerificarSihaypago(idservicio);
-		//ObtenerCoachs(5,idservicio);
-
-		 //ObtenerDescuentos(idservicio);
-		// ObtenerMembresias(idservicio);
-		//SeleccionarCategoria(valor).then((message) => {
 
 
 	 var demo = new Promise((resolve, reject) => {
+	 	$("#v_categoria").val(idcategoriaservicio);
+		$("#v_categoriaservicio").val(idcategoria);
+
       resolve(SeleccionarCategoria(valor));
     });
 
@@ -869,7 +859,7 @@ function PintarHorariosServicio(horarios,servicio) {
 				var dividirfecha=id.split('-');
 					var objeto={
 						id:id,
-						fecha:dividirfecha[0]+'-'+dividirfecha[2]+'-'+dividirfecha[3],
+						fecha:dividirfecha[0]+'-'+dividirfecha[1]+'-'+dividirfecha[2],
 						idzona:dividirfecha[5],
 						horainicial:dividirfecha[3],
 						horafinal:dividirfecha[4],

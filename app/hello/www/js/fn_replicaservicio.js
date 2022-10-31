@@ -1,5 +1,5 @@
-let calendarInline2="";
-var fechasglobal="";
+//var calendarInline2;
+var fechasglobal;
 function ReplicaServicio() {
 	GoToPage('replicaservicio');
 }
@@ -183,6 +183,12 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 				   							 		<div class="col-100">
 				   							 		</div>
 			   							 		</div>
+
+			   							 		<div class="row">
+		   							 		<label style="text-align:center;">Filtrar por zona:</label>
+		   							 		 <select name="v_zonafiltro" style="text-align:center;" id="v_zonafiltro" onchange="FiltrarPorZona()"></select>
+		   							 		</div>
+
 		   							 		<div class="row">
 		   							 			<div class="col">
 		   							 			<div class="colocartodoshorarios"></div>
@@ -237,7 +243,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 			  				var fecha=r[i].fecha.split('-');
 			  				var fechaformada=fecha[2]+'-'+fecha[1]+'-'+fecha[0];
 			  			htmlhorarios +=`
-			  			<div class="col-100 ">
+			  			<div class="col-100 horarios zonadiv_`+r[i].idzona+`">
 				        <div class="card shadow-sm margin-bottom-half inputdia" id="`+fechaformada+'-'+r[i].horasposibles[0][j].horainicial.slice(0,5)+`-`+r[i].horasposibles[0][j].horafinal.slice(0,5) +'-'+r[i].idzona+`" >
 				          <div class="card-content card-content-padding">
 				            <div class="row">
@@ -271,7 +277,12 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
 			  	}
 			  	
+			 }).then(r => {
+
+			 	ObtenerTodasZonas();
 			 });
+
+
 
           },
           opened: function (sheet) {
@@ -448,6 +459,7 @@ function HorariosDiasCalendario(flecha) {
 						 calendarInline2.setYearMonth(anioinicial, mesinicial, 2);
 						}
 						 calendarInline2.params.events = eventos;
+					
 						calendarInline2.update();
 						 $(".calendar-day-today .calendar-day-number").addClass('diaactual');
 
@@ -469,7 +481,6 @@ function HorariosDiasCalendario(flecha) {
 
 
 function HorariosDiasCalendarioFecha(fechaseleccionada) {
-	console.log(fecha);
 
 	return new Promise((resolve, reject) => {
 
@@ -495,15 +506,15 @@ function HorariosDiasCalendarioFecha(fechaseleccionada) {
 					},	
 					success: function (msj) {
 
-						 var v_fechainicial=msj.fechadia;
+						var v_fechainicial=msj.fechadia;
 						var dividirfechaini=v_fechainicial.split('-');
 						anioinicial=dividirfechaini[0];
 						mesinicial=(dividirfechaini[1].replace(/^(0+)/g, '')-1);
-						 var fechas=msj.arrayfechasdias[0];
-						 zonasarray=msj.zonas;
+						var fechas=msj.arrayfechasdias[0];
+						zonasarray=msj.zonas;
 
-						 var respuesta=msj.respuesta;
-						 resolve(respuesta);
+						var respuesta=msj.respuesta;
+						resolve(respuesta);
 
 					}
 				});

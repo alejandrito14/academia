@@ -97,9 +97,13 @@ var routes = [
     componentUrl: './pages/replicaservicio.html',
 
   },
-
+//reagendarservicio
  
-  
+   {
+    
+    path: '/reagendarservicio/',
+    componentUrl: './pages/reagendarservicio.html',
+  },
   //cambiocontra
    {
     path:'/cambiocontra/',

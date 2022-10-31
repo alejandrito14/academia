@@ -563,23 +563,7 @@ function AplicarCupon() {
 function HabilitarOpcionespago(idtipodepago,foto,stripe,habilitarcampo,habilitarcampomontofactura) {
 
 
-     anterior=localStorage.getItem('idtipodepago');
-
-  if (anterior==idtipodepago) {
-
-   $("#tipodepago_"+idtipodepago).prop('checked',false);
-    localStorage.setItem('idtipodepago',0);
-
-
-  }else{
-
-    $(".opcionestipodepago").prop('checked',false);
-    $("#tipodepago_"+idtipodepago).prop('checked',true);
-    localStorage.setItem('idtipodepago',idtipodepago);
-
-  }
-
-  idtipodepago=localStorage.getItem('idtipodepago');
+ 
     if (idtipodepago>0) {
 
   
@@ -640,9 +624,11 @@ function HabilitarOpcionespago(idtipodepago,foto,stripe,habilitarcampo,habilitar
       localStorage.setItem('montocliente',sumatotalapagar1);
 
       $("#campomonto").css('display','block');
-
        localStorage.setItem('datostarjeta2','');
        localStorage.setItem('datostarjeta','');
+
+        $(".botoneditar").attr('onclick','EditarMontoCliente()');
+        $("#btnpagarresumen").attr('disabled',false);
 
     }else{
         $("#campomonto").css('display','none');
@@ -767,8 +753,7 @@ function CargarOpcionesTipopago() {
 
         if (resultado.habilitarcampo==1) {
 
-
-
+         
 
         }
 
@@ -1173,6 +1158,9 @@ function RealizarCargo() {
    var idopcion=0;
    var confoto=localStorage.getItem('llevafoto');
    var bandera=1;
+   var campomonto=localStorage.getItem('campomonto');
+   var montovisual=localStorage.getItem('montocliente');
+   var cambiomonto=localStorage.getItem('cambio');
 
      $(".opccard").each(function(){
               if($(this).is(':checked')){
@@ -1197,6 +1185,7 @@ function RealizarCargo() {
       }
    var datos='pagos='+localStorage.getItem('pagos')+"&id_user="+iduser+"&constripe="+constripe+"&idtipodepago="+idtipodepago+"&descuentocupon="+descuentocupon+"&codigocupon="+codigocupon+"&descuentosaplicados="+JSON.stringify(descuentosaplicados)+"&sumatotalapagar="+sumatotalapagar+"&comision="+comision+"&comisionmonto="+comisionmonto+"&comisiontotal="+comisiontotal+"&impuestototal="+impuestototal+"&subtotalsincomision="+subtotalsincomision+"&impuesto="+impuesto+"&descuentosmembresia="+JSON.stringify(descuentosmembresia)+'&datostarjeta='+datostarjeta+'&datostarjeta2='+datostarjeta2+"&monedero="+monedero;
       datos+='&confoto='+confoto+"&rutacomprobante="+rutacomprobante+"&comentarioimagenes="+comentarioimagenes;
+      datos+='&campomonto='+campomonto+'&montovisual='+montovisual+'&cambiomonto='+cambiomonto;
     pagina = urlphp+pagina;
     if (bandera==1) {
           $(".dialog-buttons").css('display','none');
@@ -2021,7 +2010,7 @@ function LimpiarVariables2(argument) {
                   localStorage.setItem('conmensaje','');
                   localStorage.setItem('factura',0);
                   localStorage.setItem('validacioncupon',0);
-
+                  localStorage.setItem('cambio',0);
                   localStorage.setItem('nuevototal',0);
                   localStorage.setItem('idcupon',0);
                   localStorage.setItem('codigocupon','');
@@ -2097,3 +2086,70 @@ function PagoNorealizado(mensaje,idpayment,idnota) {
 
 }
 
+
+function EditarMontoCliente() {
+
+  var sumatotalapagar1=localStorage.getItem('montocliente');
+  app.dialog.create({
+        title: '',
+        text:'Captura el monto ',
+        content: '<div class="dialog-input-field item-input"><div class=""><input type="number" id="txtmontocliente2" style="height: 4em;width: 100%;text-align:center;" placeholder="$0.00" value="'+round(sumatotalapagar1)+'"></div></div>',
+
+            buttons: [
+              {
+              text: 'Cerrar',
+              },
+              {
+              text: 'Guardar',
+                },
+                
+            ],
+
+              onClick: function (dialog, index) {
+
+                  if(index === 0){
+
+                    CancelarMonto();
+                      //Button 1 clicked
+
+                      //alert(enlace);
+                    // window.open(enlace);
+                  }
+                  else if(index === 1){
+                      //Button 2 clicked
+                   GuardarMonto2();
+                  }
+                
+              },
+              verticalButtons: false,
+            }).open();
+      
+}
+
+
+function GuardarMonto2() {
+  var valor=$("#txtmontocliente2").val();
+
+  localStorage.setItem('montocliente',valor);
+
+  $("#montocliente").val(round(valor));
+  $("#montovisual").val('$'+formato_numero(round(valor),2,'.',','));
+
+  var sumatotalapagar=parseFloat(localStorage.getItem('sumatotalapagar'));
+  var montovisual=parseFloat(valor);
+  if (montovisual>=sumatotalapagar) {
+
+    $("#btnpagarresumen").attr('disabled',false);
+    var resta=montovisual-sumatotalapagar;
+
+    localStorage.setItem('cambio',resta);
+  }else{
+
+    alerta('Monto menor al total');
+  }
+//editar
+}
+
+function CancelarMonto() {
+   app.dialog.close();
+}

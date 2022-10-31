@@ -135,6 +135,8 @@ function CargarDatosAdmin(argument) {
     $$(".tipousuario").addClass(classtipo);
     $$(".btnnuevoservicio").attr('onclick','NuevoServicio()');
     $$(".btnreplicaservicio").attr('onclick','ReplicaServicio()');
+    $$(".btnreagendarservicio").attr('onclick','ReagendarServicio()');
+
     $$(".btnserviciosporvalidar").attr('onclick','ServiciosporValidar()');
 	VerificarServiciosporValidarAdmin();
 	VerificarServicios();
@@ -271,6 +273,8 @@ function CargarDatosCoach() {
     $$(".btnnuevoservicio").attr('onclick','NuevoServicio()');
     $$(".btnreplicaservicio").attr('onclick','ReplicaServicio()');
     $$(".btnserviciosporvalidar").attr('onclick','ServiciosporValidar()');
+    $$(".btnreagendarservicio").attr('onclick','ReagendarServicio()');
+
 	ObtenerTableroAnuncios(1);
 	ObtenerEntradas();
    
@@ -381,6 +385,7 @@ function VerificarServiciosAsignadosCoach() {
 			}
 		});
 }
+
 
 function ObtenerTableroAnuncios(estatus) {
 
@@ -4040,6 +4045,30 @@ function EditarServicio(idservicio) {
 
 
 
+function ObtenerServiciosCoach() {
+	var idusuario=localStorage.getItem('id_user');
+	var datos="idusuario="+idusuario;
+	var pagina = "ObtenerServiciosAsignadosCoach.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(msj){
+ 				var respuesta=msj.respuesta;
+				PintarServiciosReplica(respuesta);
+		
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
 
 
 

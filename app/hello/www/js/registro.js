@@ -4562,10 +4562,19 @@ function BuscarUsuario() {
 				var sexotu=resp.genero;
 				var v_idusuario=resp.id;
 				var esasociado=resp.esasociado;
+				var estutor=resp.estutor;
+
 				var propio=resp.propio;
+						$("#v_nombretu").val('');
+						$("#v_paternotu").val('');
+						$("#v_maternotu").val('');
+						$("#v_fechatu").val('');
+						$("#v_sexotu").val('');
+						$("#v_idusuario").val('');	
+
 				if (resp.resultado==1) {
 
-					if (esasociado==1) {
+					if (estutor==1) {
 
 						alerta('','El celular ya se encuentra asociado');
 						$("#v_celulartu").val('');
@@ -4580,7 +4589,7 @@ function BuscarUsuario() {
 					}else{
 
 
-				if (esasociado==0 && propio==0) {
+				if (esasociado==0 || esasociado==1 && propio==0 && estutor==0) {
 
 						$(".licelulartu").addClass('item-input-with-value');
 						$(".linombretu").addClass('item-input-with-value');
@@ -4636,6 +4645,12 @@ function BuscarUsuario() {
 
 					
 					if (esasociado==1) {
+
+						alerta('','El celular ya se encuentra asociado');
+						$("#v_celulartu").val('');
+
+					}
+					if (estutor==1) {
 
 						alerta('','El celular ya se encuentra asociado');
 						$("#v_celulartu").val('');

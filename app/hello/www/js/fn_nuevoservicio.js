@@ -236,7 +236,8 @@ function ConsultarFechaHorariosDisponibles(fecha) {
 	
 	var date=fecha.split('-');
 	fechaformato=date[2]+'-'+date[1]+'-'+date[0];
-	
+	console.log('consultar');
+	console.log(arraydiaselegidos);
 		if(BuscarfechaArray2(fecha)){
 
 var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: none;">
@@ -292,6 +293,10 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 		   							 		</div>
 
 		   							 		</div>
+		   							 		<div class="row">
+		   							 		<label style="text-align:center;">Filtrar por zona:</label>
+		   							 		 <select name="v_zonafiltro" style="text-align:center;" id="v_zonafiltro" onchange="FiltrarPorZona()"></select>
+		   							 		</div>
 		   							 		<div class="row" >
 		   							 			<div id="horarios" class="page-content" style="overflow: scroll;height: 30em;"></div>
 		   							 		
@@ -335,7 +340,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 			  				var fecha=r[i].fecha.split('-');
 			  				var fechaformada=fecha[2]+'-'+fecha[1]+'-'+fecha[0];
 			  			htmlhorarios +=`
-			  			<div class="col-100 ">
+			  			<div class="col-100 horarios zonadiv_`+r[i].idzona+`">
 				        <div class="card shadow-sm margin-bottom-half inputdia" id="`+fechaformada+'-'+r[i].horasposibles[0][j].horainicial.slice(0,5)+`-`+r[i].horasposibles[0][j].horafinal.slice(0,5) +'-'+r[i].idzona+`" >
 				          <div class="card-content card-content-padding">
 				            <div class="row">
@@ -369,6 +374,9 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
 			  	}
 			  	
+			 }).then(r => {
+
+			 	ObtenerTodasZonas();
 			 });
 
           },
@@ -387,6 +395,38 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
        dynamicSheet1.open();
 
    }
+}
+
+
+function ObtenerTodasZonas() {
+		
+	$.ajax({
+					url: urlphp+'ObtenerZonas.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					dataType:'json',
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+
+						var zonas=msj.respuesta;
+						if (zonas.length>0) {
+							var html="";
+							html+=`<option value="0">Todas</option>`;
+
+							for (var i = 0; i <zonas.length; i++) {
+								html+=`<option value="`+zonas[i].idzona+`">`+zonas[i].nombre+`</option>`;
+							}
+							$("#v_zonafiltro").html(html);
+							
+						}
+
+					}
+				});
 }
 function ObtenerTipoServicios() {
 
@@ -1028,7 +1068,7 @@ function CargarEventoSeleccionador() {
 						 			var dividirfecha=id.split('-');
 						 			var objeto={
 						 				id:id,
-						 				fecha:dividirfecha[0]+'-'+dividirfecha[2]+'-'+dividirfecha[3],
+						 				fecha:dividirfecha[0]+'-'+dividirfecha[1]+'-'+dividirfecha[2],
 						 				idzona:dividirfecha[5],
 						 				horainicial:dividirfecha[3],
 						 				horafinal:dividirfecha[4],
@@ -1097,6 +1137,8 @@ function Resumenfechas() {
 		$("#selected-dates").html('');
 		let days = ['Domingo','Lunes','Martes','Miércoles', 'Jueves', 'Viernes', 'Sábado','Domingo'];
 		
+		console.log('resumenfechas');
+		console.log(arraydiaseleccionados);
 		var ordenado =arraydiaseleccionados.sort(generateSortFn([{name: 'idzona'}, {name: 'fecha',reverse: false}]));
 
 
@@ -1106,6 +1148,7 @@ function Resumenfechas() {
 			
 			var id=ordenado[i].id;
 			var dividircadena=id.split('-');
+
 			var fecha=dividircadena[2]+'-'+dividircadena[1]+'-'+dividircadena[0];
 			var horainicial=dividircadena[3];
 			var horafinal=dividircadena[4];
