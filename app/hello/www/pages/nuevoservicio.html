@@ -99,11 +99,11 @@
           </a>
           <div class="accordion-item-content" style="font-size: 16px;" aria-hidden="true">
             <div class="block" style="background: white">
-                <div class="item-content item-input is-valid ">
+                <div class="item-content item-input  item-input-with-value  itemtitulo">
                   <div class="item-inner lititulo">
                         <div class="item-title item-floating-label">Titulo</div>
                     <div class="item-input-wrap">
-                      <input name="v_titulo" id="v_titulo" type="text" placeholder="" class="input-with-value"/>
+                      <input name="v_titulo" id="v_titulo" type="text" placeholder="" />
                       <span class="input-clear-button"></span>
                     </div>
                   </div>
@@ -161,11 +161,19 @@
                   <div class="item-inner liestatus">
                    <div class="item-title item-label">Estatus</div>
                     <div class="item-input-wrap">
-                      <select id="v_estatus">
+                      <!-- <select id="v_estatus">
                        <option value="0">Desactivado</option>
                        <option value="1" selected="selected">Activado</option>
-                    </select>
+                    </select> -->
+
+                     <label class="toggle toggle-init color-blue">
+                      <input id="v_estatus" type="checkbox"  />
+                      <span class="toggle-icon"></span>
+                    </label>
+
                     </div>
+
+
                   </div>
             </div>
 
@@ -273,6 +281,12 @@
                    <button class="link button " style="font-size: 17px;background: white;" id="btnaplicar" style="">Aplicar</button>
                 </div>
               
+              </div>
+              <div class="row" style="margin-bottom:1em;">
+                <div class="col">
+                 <span style="font-weight: bold;">Horarios:</span> <span id="cantidadhorarios">0</span>
+               </div>
+               
               </div>
               <div class="row">
                <div id="demo-calendar" style="display: none;"></div>
@@ -406,12 +420,20 @@
 
               </div>
 
+
+              <div class="row">
+                <div class="item-content item-input item-input-with-value">
+                  <div class="item-inner">
+                    <select name="" id="v_politicaaceptacionseleccion"></select>
+                  </div>
+                </div>
+              </div>
                 <div class="row">
                 <div class="item-content item-input item-input-with-value">
                   <div class="item-inner lidescripcionpoliticas">
                         <div class="item-title item-label">Descripcion</div>
                       <div class="item-input-wrap">
-                        <input name="v_politicasaceptacion" id="v_politicasaceptacion" type="text" placeholder="" class="input-with-value"/>
+                        <input name="v_politicasaceptacion" id="v_politicasaceptacion" type="text" placeholder="" class="input-with-value" disabled />
                         <span class="input-clear-button"></span>
                       </div>
                     </div>
@@ -509,11 +531,27 @@
                         </div>
 
 
+
+                 <div class="row divcantidadreembolso" style="display: none;">
+
+                    <div class="item-content item-input item-input-with-value">
+                  <div class="item-inner litiporeembolso">
+                        <div class="item-title item-label">Tipo de reembolso</div>
+                      <div class="item-input-wrap">
+                        <select name="v_tiporeembolso" id="v_tiporeembolso">
+                          <option value="0">Porcentaje</option>
+                          <option value="1">Monto</option>
+                        </select>
+                      </div>
+                    </div>
+              </div> 
+            </div>
+
                    <div class="row divcantidadreembolso" style="display: none;">
 
                     <div class="item-content item-input item-input-with-value">
                   <div class="item-inner licantidadreembolso">
-                        <div class="item-title item-label">Cantidad $</div>
+                        <div class="item-title item-label">Cantidad</div>
                       <div class="item-input-wrap">
                        
                        <input type="number" id="v_cantidadreembolso" class="input-with-value"   /> 

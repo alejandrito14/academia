@@ -111,7 +111,12 @@ function CargarFechasNuevoServicio() {
           //	ConsultarFechaDisponibles(fecha);
           },
           calendarDayClick:function(c){
+          	$(".calendar-day-has-events").each(function(){
+				$(this).removeClass('calendar-day-selected');
+			});
+          	calendarInline.on('calendarChange()');
 
+   
 
           /*	var fechaac=new Date();
           	var mes=fechaac.getMonth()+1;
@@ -230,14 +235,20 @@ function CargarFechasNuevoServicio() {
 
 function GuardarHorarios() {
 	dynamicSheet1.close();
+CantidadHorarios();
+	
+}
+
+function CantidadHorarios() {
+	var cantidadhorarios=arraydiaseleccionados.length;
+	$("#cantidadhorarios").text(cantidadhorarios);
 }
 
 function ConsultarFechaHorariosDisponibles(fecha) {
 	
 	var date=fecha.split('-');
 	fechaformato=date[2]+'-'+date[1]+'-'+date[0];
-	console.log('consultar');
-	console.log(arraydiaselegidos);
+
 		if(BuscarfechaArray2(fecha)){
 
 var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: none;">
@@ -294,8 +305,8 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
 		   							 		</div>
 		   							 		<div class="row">
-		   							 		<label style="text-align:center;">Filtrar por zona:</label>
-		   							 		 <select name="v_zonafiltro" style="text-align:center;" id="v_zonafiltro" onchange="FiltrarPorZona()"></select>
+		   							 		<label style="text-align:center;">Filtrar por espacio:</label>
+		   							 		 <select name="v_zonafiltro" style="text-align:center;background: #c6c6c6;margin-right: 1em;margin-left: 1em;margin-bottom: 1em;" id="v_zonafiltro" onchange="FiltrarPorZona()"></select>
 		   							 		</div>
 		   							 		<div class="row" >
 		   							 			<div id="horarios" class="page-content" style="overflow: scroll;height: 30em;"></div>
@@ -339,6 +350,10 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 			  			if (r[i].horasposibles[0][j].disponible==1 && r[i].horasposibles[0][j].horafinal!=null) {
 			  				var fecha=r[i].fecha.split('-');
 			  				var fechaformada=fecha[2]+'-'+fecha[1]+'-'+fecha[0];
+			  		
+			  				var fechaformada2=fecha[2]+'-'+fecha[1]+'-'+fecha[0]+'-'+r[i].horasposibles[0][j].horainicial.slice(0,5)+`-`+r[i].horasposibles[0][j].horafinal.slice(0,5) +'-'+r[i].idzona;
+
+			  				if (!BuscarfechaenArrayElegidos(fechaformada2)) {
 			  			htmlhorarios +=`
 			  			<div class="col-100 horarios zonadiv_`+r[i].idzona+`">
 				        <div class="card shadow-sm margin-bottom-half inputdia" id="`+fechaformada+'-'+r[i].horasposibles[0][j].horainicial.slice(0,5)+`-`+r[i].horasposibles[0][j].horafinal.slice(0,5) +'-'+r[i].idzona+`" >
@@ -365,6 +380,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 				      </div>
 
 			  			`;
+			  				}
 			  				}
 			  			}
 			  		}
@@ -416,7 +432,7 @@ function ObtenerTodasZonas() {
 						var zonas=msj.respuesta;
 						if (zonas.length>0) {
 							var html="";
-							html+=`<option value="0">Todas</option>`;
+							html+=`<option value="0">Todos</option>`;
 
 							for (var i = 0; i <zonas.length; i++) {
 								html+=`<option value="`+zonas[i].idzona+`">`+zonas[i].nombre+`</option>`;
@@ -470,7 +486,7 @@ function SeleccionarCategoria(idservicio) {
 	var categoriaid=$("#v_categoria").val();
 	var datos="categoriaid="+categoriaid;
 
-$("#profile-tab").css('display','none');
+	$("#profile-tab").css('display','none');
 	$("#contact-tab").css('display','none');
 	$("#costos-tab").css('display','none');
 	$("#coach-tab").css('display','none');
@@ -478,7 +494,6 @@ $("#profile-tab").css('display','none');
 	$("#politicas-tab").css('display','none');
 	$("#aceptacion-tab").css('display','none');
 	$("#otros-tab").css('display','none');
-
 
 if (categoriaid>0) {
 	$.ajax({
@@ -516,8 +531,8 @@ if (categoriaid>0) {
 							$(".divcategoria").css('display','none');
 
 						if (avanzado==1) {
-							$("#profile-tab").css('display','block');
-							$("#contact-tab").css('display','block');
+								$("#profile-tab").css('display','block');
+								$("#contact-tab").css('display','block');
 							if(localStorage.getItem('idtipousuario')==0) {
 								$("#costos-tab").css('display','block');
 								$("#coach-tab").css('display','block');
@@ -660,6 +675,259 @@ if (categoriaid>0) {
 				});
 	}
 }
+
+
+function SeleccionarCategoriaReagendar(idservicio,lunesx,martesx,miercolesx,juevesx,viernesx,sabadox,domingox) {
+	var categoriaid=$("#v_categoria").val();
+	var datos="categoriaid="+categoriaid;
+
+	$("#profile-tab").css('display','none');
+	$("#contact-tab").css('display','none');
+	$("#costos-tab").css('display','none');
+	$("#coach-tab").css('display','none');
+	$("#multi-tab").css('display','none');
+	$("#politicas-tab").css('display','none');
+	$("#aceptacion-tab").css('display','none');
+	$("#otros-tab").css('display','none');
+
+if (categoriaid>0) {
+	$.ajax({
+					url: urlphp+'ObtenerCategoria.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					dataType:'json',
+					async:false,
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+						var dias=msj.horarios;
+						var horarios=msj.respuesta.horarios;
+						var zonas=msj.respuesta.zonas;
+						var participantes=msj.respuesta.participantes;
+						 cantidadparticipantes=msj.respuesta.cantidad;
+						var coachs=msj.respuesta.coachs;
+
+						var asignarcostos=msj.respuesta.configurarcostos;
+						var habilitarmodalidad=msj.respuesta.habilitarmodalidad;
+						var campototalclases=msj.respuesta.campototalclases;
+						var campopreciounitario=msj.respuesta.campopreciounitario;
+						var campomontoporparticipante=msj.respuesta.campomontoporparticipante;
+						var campomontogrupo=msj.respuesta.campomontoporgrupo;
+						var habilitarmodalidadpago=msj.respuesta.habilitarmodalidadpago;
+						var asignarcategoria=msj.respuesta.asignarcategoria;
+						var asignardias=msj.respuesta.asignardias;
+						var avanzado=msj.respuesta.avanzado;
+
+							$(".divcategoria").css('display','none');
+
+						if (avanzado==1) {
+								$("#profile-tab").css('display','block');
+								$("#contact-tab").css('display','block');
+							if(localStorage.getItem('idtipousuario')==0) {
+								$("#costos-tab").css('display','block');
+								$("#coach-tab").css('display','block');
+								$("#multi-tab").css('display','block');
+								$("#politicas-tab").css('display','block');
+								$("#aceptacion-tab").css('display','block');
+								$("#otros-tab").css('display','block');
+							}
+							$("#btnguardarservicio").attr('onclick',"Guardarservicio()");
+							$("#avanzado").val(1);
+
+							$(".divcategoria").css('display','block');
+
+							if (idservicio>0) {
+
+							$(".divcategoria").css('display','block');
+							
+
+							}
+						}else{
+
+							//$(".btncontinuar").css('display','none');
+							$("#btnguardarservicio").attr('onclick',"Guardarservicio2()");
+ 							//$(".btnguardarservicio").html('<i class="mdi mdi-content-save"></i>Guardar');
+
+						}
+						$(".diasckeckbox").attr('disabled',true);
+						$(".lbldomingo").addClass('btn_colorgray3');
+						$(".lbllunes").addClass('btn_colorgray3');
+						$(".lblmartes").addClass('btn_colorgray3');
+						$(".lblmiercoles").addClass('btn_colorgray3');
+						$(".lbljueves").addClass('btn_colorgray3');
+						$(".lblviernes").addClass('btn_colorgray3');
+						$(".lblsabado").addClass('btn_colorgray3');
+
+						$("#Domingo").attr('disabled',true);
+						$("#Lunes").attr('disabled',true);
+						$("#Martes").attr('disabled',true);
+						$("#Miercoles").attr('disabled',true);
+						$("#Jueves").attr('disabled',true);
+						$("#Viernes").attr('disabled',true);
+						$("#Sabado").attr('disabled',true);
+
+						$("#Domingo").attr('checked',false);
+						$("#Lunes").attr('checked',false);
+						$("#Martes").attr('checked',false);
+						$("#Miercoles").attr('checked',false);
+						$("#Jueves").attr('checked',false);
+						$("#Viernes").attr('checked',false);
+						$("#Sabado").attr('checked',false);
+
+
+						var diasdisponibles=[];
+						for (var i = 0; i < dias.length; i++) {
+								
+
+								if (dias[i].dia ==0 ) {
+									$(".lbldomingo").removeClass('btn_colorgray3');
+									$(".lbldomingo").addClass('btn_colorgray2');
+									$("#Domingo").attr('disabled',false);
+									//$("#Domingo").attr('checked',true);
+									diasdisponibles.push('Domingo');
+								}
+
+								
+								if (dias[i].dia==1) {
+								$(".lbllunes").removeClass('btn_colorgray3');
+								$(".lbllunes").addClass('btn_colorgray2');
+									
+								$("#Lunes").attr('disabled',false);
+/*								$("#Lunes").attr('checked',true);
+*/											diasdisponibles.push('Lunes');
+
+								}
+								if (dias[i].dia==2 ) {
+								$(".lblmartes").removeClass('btn_colorgray3');
+								$(".lblmartes").addClass('btn_colorgray2');
+									$("#Martes").attr('disabled',false);
+
+/*									$("#Martes").attr('checked',true);
+*/									diasdisponibles.push('Martes');
+
+								}
+						        if (dias[i].dia==3) {
+						        $(".lblmiercoles").removeClass('btn_colorgray3');
+									$(".lblmiercoles").addClass('btn_colorgray2');
+						               $("#Miercoles").attr('disabled',false);
+
+/*									$("#Miercoles").attr('checked',true);
+*/									diasdisponibles.push('Miercoles');
+
+								}
+								if (dias[i].dia==4) {
+									$(".lbljueves").removeClass('btn_colorgray3');
+									$(".lbljueves").addClass('btn_colorgray2');
+									$("#Jueves").attr('disabled',false);
+
+/*									$("#Jueves").attr('checked',true);
+*/									diasdisponibles.push('Jueves');
+
+								}
+								if (dias[i].dia==5 ) {
+								$(".lblviernes").removeClass('btn_colorgray3');
+								$(".lblviernes").addClass('btn_colorgray2');
+								$("#Viernes").attr('disabled',false);
+
+/*									$("#Viernes").attr('checked',true);
+*/								diasdisponibles.push('Viernes');
+
+								}
+
+								if (dias[i].dia==6 ) {
+									$(".lblsabado").removeClass('btn_colorgray3');
+									$(".lblsabado").addClass('btn_colorgray2');
+									$("#Sabado").attr('disabled',false);
+/*									$("#Sabado").attr('checked',true);
+*/									diasdisponibles.push('Sábado');
+
+								}
+							
+						}
+
+						if(domingox==1) {
+									$(".lbldomingo").removeClass('btn_colorgray3');
+									$(".lbldomingo").addClass('btn_colorgray2');
+									$("#Domingo").attr('disabled',false);
+									$("#Domingo").attr('checked',true);
+
+								}
+
+						if(lunesx==1) {
+								$(".lbllunes").removeClass('btn_colorgray3');
+								$(".lbllunes").addClass('btn_colorgray2');
+									
+								$("#Lunes").attr('disabled',false);
+								$("#Lunes").attr('checked',true);
+							}
+
+							if(martesx==1) {
+								$(".lblmartes").removeClass('btn_colorgray3');
+								$(".lblmartes").addClass('btn_colorgray2');
+								$("#Martes").attr('disabled',false);
+								$("#Martes").attr('checked',true);
+
+								}
+
+						if(miercolesx==1) {
+						        $(".lblmiercoles").removeClass('btn_colorgray3');
+								$(".lblmiercoles").addClass('btn_colorgray2');
+						        $("#Miercoles").attr('disabled',false);
+
+								$("#Miercoles").attr('checked',true);
+								}
+
+						if(juevesx==1) {
+								$(".lbljueves").removeClass('btn_colorgray3');
+								$(".lbljueves").addClass('btn_colorgray2');
+								$("#Jueves").attr('disabled',false);
+
+								$("#Jueves").attr('checked',true);
+								}
+
+
+							if(viernesx==1) {
+								$(".lblviernes").removeClass('btn_colorgray3');
+								$(".lblviernes").addClass('btn_colorgray2');
+								$("#Viernes").attr('disabled',false);
+								$("#Viernes").attr('checked',true);
+
+								}
+
+								if(sabadox==1) {
+									$(".lblsabado").removeClass('btn_colorgray3');
+									$(".lblsabado").addClass('btn_colorgray2');
+									$("#Sabado").attr('disabled',false);
+									$("#Sabado").attr('checked',true);
+								}
+						if (diasdisponibles.length>0) {
+
+							var uniqueArray = uArray(diasdisponibles);
+							
+							var dias='';
+							for (var i = 0; i <uniqueArray.length; i++) {
+
+								if (i>0) {
+									dias+=', ';
+								}
+								dias+=uniqueArray[i];
+							}
+
+							$("#leyenda").html('Los dias disponibles son: <span style="font-weight:bold;">'+dias+'<span>');
+						}
+
+
+
+					}	
+				});
+	}
+}
+
 
 function uArray(array) {
     var out = [];
@@ -1296,7 +1564,7 @@ function EliminarHorario(idhorario) {
 	      BorrarElemento(idhorario);
 				BorrarElementoObjeto(idhorario);
 				Resumenfechas();
-
+				CantidadHorarios();
             }
 
         },
@@ -1747,7 +2015,7 @@ function GuardarservicioNuevo2() {
 		var nombre =$("#v_titulo").val();
 		var descripcion=$("#v_descripcion").val();
 		var orden=$("#v_orden").val();
-		var estatus=$("#v_estatus").val();
+		var estatus=$("#v_estatus").is(':checked')?1:0;
 		var categoria=$("#v_categoria").val();
 		var costo=$("#v_costo").val();
 
@@ -1789,7 +2057,6 @@ function GuardarservicioNuevo2() {
 		var ligarclientes=$("#v_ligarclientes").is(':checked')?1:0;
 		var v_numligarclientes=$("#v_numligarclientes").val();
 
-	
 		datos.append('abiertocliente',abiertocliente);
 		datos.append('abiertocoach',abiertocoach);
 		datos.append('abiertoadmin',abiertoadmin);
@@ -1798,8 +2065,10 @@ function GuardarservicioNuevo2() {
 		var v_politicascancelacion=$("#v_politicascancelacion").val();
 		var v_politicasaceptacion=$("#v_politicasaceptacion").val();
 		var v_reembolso=$("#v_reembolso").is(':checked')?1:0;
-		var v_asistencia=$("#v_asistencia").is(':checked')?1:0;
+		var v_tiporeembolso=$("#v_tiporeembolso").val();
 		var v_cantidadreembolso=$("#v_cantidadreembolso").val();
+
+		var v_asistencia=$("#v_asistencia").is(':checked')?1:0;
 		var v_asignadocliente=$("#v_asignadocliente").is(':checked')?1:0;
 		var v_asignadocoach=$("#v_asignadocoach").is(':checked')?1:0;
 		var v_asignadoadmin=$("#v_asignadoadmin").is(':checked')?1:0;
@@ -1810,7 +2079,7 @@ function GuardarservicioNuevo2() {
 		datos.append('v_asignadoadmin',v_asignadoadmin);
 		datos.append('v_politicasaceptacion',v_politicasaceptacion);
 		datos.append('v_asistencia',v_asistencia);
-
+		datos.append('v_tiporeembolso',v_tiporeembolso);
 	/*	var archivos = document.getElementById("image"); //Damos el valor del input tipo file
 		var archivo = archivos.files; //Obtenemos el valor del input (los arcchivos) en modo de arreglo
 
@@ -2127,7 +2396,7 @@ function GuardarservicioNuevo() {
 		var nombre =$("#v_titulo").val();
 		var descripcion=$("#v_descripcion").val();
 		var orden=$("#v_orden").val();
-		var estatus=$("#v_estatus").val();
+		var estatus=$("#v_estatus").is(':checked')?1:0;
 		var categoria=$("#v_categoria").val();
 		var costo=$("#v_costo").val();
 		var id=$("#id").val();
@@ -2293,6 +2562,7 @@ function GuardarservicioNuevo() {
 		var v_politicasaceptacion=$("#v_politicasaceptacion").val();
 		var v_reembolso=$("#v_reembolso").is(':checked')?1:0;
 		var v_asistencia=$("#v_asistencia").is(':checked')?1:0;
+		var v_tiporeembolso=$("#v_tiporeembolso").val();
 
 		var v_cantidadreembolso=$("#v_cantidadreembolso").val();
 		var v_asignadocliente=$("#v_asignadocliente").is(':checked')?1:0;
@@ -2348,6 +2618,8 @@ function GuardarservicioNuevo() {
 		datos.append('v_descripcionaviso',v_descripcionaviso);
 		datos.append('v_politicascancelacion',v_politicascancelacion);
 		datos.append('v_reembolso',v_reembolso);
+		datos.append('v_tiporeembolso',v_tiporeembolso);
+		
 		datos.append('v_cantidadreembolso',v_cantidadreembolso);
 		datos.append('v_asignadocliente',v_asignadocliente);
 		datos.append('v_asignadocoach',v_asignadocoach);
@@ -3174,4 +3446,76 @@ function BuscarfechaArray2(fecha) {
 
 		return false;
 	}
+}
+
+function ObtenerPoliticasaceptacion() {
+			 $.ajax({
+					url:urlphp+'ObtenerPoliticasaceptacion.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos
+					dataType:'json',
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+					  },
+					success:function(msj){
+						var resp = msj.respuesta;
+							
+							if (resp.length>0) {
+								var html="";
+								html+=`<option value="0">SELECCIONAR POLÍTICA DE ACEPTACIÓN</option>`;
+
+								for (var i = 0; i <resp.length; i++) {
+									html+=`<option value="`+resp[i].idpoliticasaceptacion+`">`+resp[i].nombre+`</option>`;
+								}
+								$("#v_politicaaceptacionseleccion").html(html);
+							}										
+					  	}
+				  });		
+}
+
+function SeleccionarPolitica() {
+	var idpoliticasaceptacion=$("#v_politicaaceptacionseleccion").val();
+	var datos="idpoliticasaceptacion="+idpoliticasaceptacion;
+	
+			 $.ajax({
+					url:urlphp+'ObtenerPoliticaaceptacion.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos
+					dataType:'json',
+					data:datos,
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+					  },
+					success:function(msj){
+
+						var resp=msj.respuesta;
+
+						if (resp.length>0) {
+							var descripcion=resp[0].descripcion;						}
+						   $("#v_politicasaceptacion").val(descripcion);							
+					  	}
+				  });	
+}
+
+function BuscarfechaenArrayElegidos(fechaformada) {
+	var encontrado=false;
+	if (arraydiaselegidos.length>0) {
+		for (var i = 0; i < arraydiaselegidos.length; i++) {
+			if (arraydiaselegidos[i]==fechaformada) {
+				encontrado=true;
+				break;
+			}
+			
+		}
+	}
+
+	return encontrado;
 }

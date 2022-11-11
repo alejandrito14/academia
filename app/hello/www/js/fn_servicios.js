@@ -39,7 +39,7 @@ function PintarServiciosAdicionales(respuesta) {
 		                    <div class="col-100">
 		                        <figure class="rounded-15 position-relative h-190 width-100 no-margin overflow-hidden">
 		                            <div class="coverimg h-100 width-100 position-absolute start-0 top-0">
-		                                <img src="`+imagen+`" alt=""  style="width:100%;"/>
+		                                <img src="`+imagen+`" alt=""  style="width:100%;border-radius:10px;"/>
 		                            </div>
 		                        </figure>
 		                    </div>
@@ -548,7 +548,15 @@ function ObtenerServicioNuevo(valor) {
 		var descripcion=respuesta.descripcion;
 		var politicasaceptacion=respuesta.politicasaceptacion;
 		var estatus=respuesta.estatus;
-		$("#v_estatus").val(estatus);
+		var tiporeembolso=respuesta.tiporeembolso;
+		//$("#v_estatus").val(estatus);
+
+		if (estatus==1) {
+			$("#v_estatus").prop('checked',true);
+		}else{
+		$("#v_estatus").prop('checked',false);
+	
+		}
 		$("#v_titulo").val(titulo);
 		$("#v_descripcion").val(descripcion);
 
@@ -727,6 +735,8 @@ function ObtenerServicioNuevo(valor) {
 			$("#contentestatus").css('display','block');
 		}
 
+		$("#cantidadhorarios").text(arraydiaselegidos.length);
+
 		  }
     );
 	//	Permitirligar();
@@ -904,4 +914,73 @@ function ObtenerCoachesServicio(idservicio) {
 
 					}
 				});
+}
+
+
+ 
+function PintarServiciosnoAvanzados() {
+
+
+var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: none;">
+            <div class="toolbar">
+              <div class="toolbar-inner">
+                <div class="left"></div>
+                <div class="right">
+                  <a class="link sheet-close"></a>
+                </div>
+              </div>
+            </div>
+            <div class="sheet-modal-inner" style="background: white;border-top-left-radius: 20px;border-top-right-radius:20px; ">
+            	 <div class="iconocerrar link sheet-close" style="z-index:10;">
+	 									<span class="bi bi-x-circle-fill"></span>
+	   						    	 </div>
+              <div class="page-content" style="height: 100%;">
+                <div style="background: white; height: 100%;width: 100%;border-radius: 20px;">
+   						     <div class="row">
+	   						     <div class="col-20">
+	   						      	
+	   						    </div>
+
+   						    	 <div class="col-60">
+   						    	 <span class="titulomodal"></span>
+   						    	 </div>
+   						    	 <div class="col-20">
+   						    	 <span class="limpiarfiltros"></span>
+   						    	 </div>
+   							 </div>
+   							 <div class="" style="position: absolute;top:2em;width: 100%;">
+   							 	
+	   							  <div class="">
+		   							  <div class="block" style="margin-right:1em;margin-left:1em;">`;
+		   							  	html+=` <div class="row listadoserviciosadicionales"></div>`;
+		   					
+		   							 	html+=`</div>
+
+	   							 	</div>
+
+   							 </div>
+
+   				</div>
+                
+              </div>
+            </div>
+          </div>`;
+          
+	 var dynamicSheet1 = app.sheet.create({
+        content: html,
+
+    	swipeToClose: true,
+        backdrop: true,
+        // Events
+        on: {
+          open: function (sheet) {
+            ObtenerServiciosAdicionales();
+          },
+          opened: function (sheet) {
+            console.log('Sheet opened');
+          },
+        }
+      });
+
+       dynamicSheet1.open();
 }

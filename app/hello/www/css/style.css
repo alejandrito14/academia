@@ -2468,3 +2468,39 @@ background: white;
   border-radius: 10px;
   
 }
+.ios .subnavbar{
+    height: calc(var(--f7-subnavbar-height) + 1px);
+    margin-top: 0px;
+    padding-top: 0px;
+    top: 2.5em;
+}
+.tituloserviciolista{
+  color: #781eed!important;
+  font-weight: bold;
+}
+.notaaceptado{
+    background:#59c158;
+    border-radius: 10px;
+    padding: 3px;
+    font-size: 12px;
+    color: white!important;
+}
+.notapendiente{
+    background:#ebc418;
+    border-radius: 10px;
+    padding: 3px;
+    font-size: 12px;
+    color: white!important;
+}
+
+.notacancelado{
+    background:red;
+    border-radius: 10px;
+    padding: 3px;
+    font-size: 12px;
+    color: white!important;
+}
+.searchbar{
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}

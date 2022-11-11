@@ -2118,15 +2118,18 @@ function validarEmail(valor) {
 function ValidarCelular() {
 
 	var telefono=$("#telefono").val();
+	var inputleido=$("#inputleido").is(':checked')?1:0;
 	//GoToPage('colocartoken');
 	if (telefono!='') {
+	if (inputleido==1) {
+	
 
-		      app.dialog.confirm('','¿Es correcto tu número celular '+telefono+'?' , function () {
+		app.dialog.confirm('','¿Es correcto tu número celular '+telefono+'?' , function () {
 
 
 		var sistema=localStorage.getItem('SO');
 		var uuid=localStorage.getItem('UUID');
-		var datos="telefono="+telefono+"&sistema="+sistema+"&uuid="+uuid;
+		var datos="telefono="+telefono+"&sistema="+sistema+"&uuid="+uuid+"&inputleido="+inputleido;
 
 		var pagina = "validaciontelefono.php";
 
@@ -2161,17 +2164,21 @@ function ValidarCelular() {
 				if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
 				//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
 				console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+
+		});
+
+		}else{
+			alerta('','Antes de continuar, haz click en políticas y condiciones de servicio');
+
 		}
-
-	});
-
-	});
-
 	}else{
 
-		alerta('','Ingresa celular');
-	}
+			alerta('','Ingresa celular');
 
+	}
 
 }
 
@@ -3645,7 +3652,7 @@ function PintarDatosRegistro(datos) {
 	
 	$("#v_alias").val(datos.alias);
 	$("#v_correo").val(datos.email);
-
+	$("#v_usuario").val(datos.usuario);
 	localStorage.setItem('foto',datos.foto);
 
 }
@@ -4649,7 +4656,7 @@ function BuscarUsuario() {
 						alerta('','El celular ya se encuentra asociado');
 						$("#v_celulartu").val('');
 
-					}
+					} 
 					if (estutor==1) {
 
 						alerta('','El celular ya se encuentra asociado');

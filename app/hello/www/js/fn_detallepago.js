@@ -12,10 +12,11 @@ function Pintardetallepago() {
 		async:false,
 		success: function(resp){
 			var resultado=resp.respuesta[0];
-			$(".lblresumen").text(resultado.subtotal);
-			$(".lblcomision").text(resultado.comisiontotal);
-			$(".lbltotal").text(resultado.total);
-			$(".monedero").text(resultado.montomonedero);
+			$("#lblnumeronota").text(resultado.folio);
+			$(".lblresumen").text(formato_numero(resultado.subtotal,2,'.',','));
+			$(".lblcomision").text(formato_numero(resultado.comisiontotal,2,'.',','));
+			$(".lbltotal").text(formato_numero(resultado.total,2,'.',','));
+			$(".monedero").text(formato_numero(resultado.montomonedero,2,'.',','));
 			$(".metodopago").text(resultado.tipopago);
 			if (resultado.datostarjeta!='') {
 			$(".datostarjeta").html(resultado.datostarjeta);
@@ -24,6 +25,8 @@ function Pintardetallepago() {
 			}
 			var pagos=resp.pagos;
 			Pintarpagosdetalle(pagos);
+			 $("#visualizardescuentos").css('display','none');
+
 			var descuentos=resp.descuentos;
 			if (descuentos.length>0) {
 			Pintardescuentosdetalle(descuentos);	
@@ -54,14 +57,20 @@ function Pintardetallepago() {
 function Pintarpagosdetalle(listado) {
 	var html="";
 for (var i = 0; i <listado.length; i++) {
+
+	var color='';
+      if (listado[i].monto<0) {
+        color='red';
+      }
+
 			html+=`
-				<li class="list-item">
+				<li class="list-item" style="color:`+color+`">
                     <div class="row">
                         <div class="col-80" style="padding:0;">
                             <p class="text-muted small" style="font-size:18px;" id="concepto_`+listado[i].idpago+`">
                               Pago de `+listado[i].concepto+`
                             </p>
-                            <p class="text-muted " style="font-size:30px;text-align:right;">$`+listado[i].monto+`</p>
+                            <p class="text-muted " style="font-size:30px;text-align:right;">$`+formato_numero(listado[i].monto,2,'.',',')+`</p>
 
                           <input type="hidden" value="`+listado[i].monto+`" class="montopago" id="val_`+listado[i].idpago+`">
                         </div>
@@ -109,8 +118,6 @@ function Pintardescuentosdetalle(respuesta) {
 	    `;
 
 	  }
-	 }else{
-	  $("#visualizardescuentos").css('display','none');
 	 }
 
 

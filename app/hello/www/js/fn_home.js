@@ -60,6 +60,7 @@ function CargarDatos() {
   	 $$(".btnservicios").attr('onclick','GoToPage("serviciosasignados")');
   	 $$(".btnserviciostutorados").attr('onclick','GoToPage("listadotutoservicios")');
   	 $$(".lipagos").attr('href','/pagos/');
+  	 $$(".serviciosnoavanzados").attr('onclick','PintarServiciosnoAvanzados()');
 	ObtenerTableroAnuncios(1);
 	ObtenerEntradas(1);
 	Obtenerpublicidad(1);
@@ -129,6 +130,7 @@ function CargarDatosAdmin(argument) {
 	$$(".tipousuario").text(tipousuario);
 	//$("#lipagos").css('display','none');
 	 var idtipousuario=localStorage.getItem('idtipousuario');
+  	 $$(".serviciosnoavanzados").attr('onclick','PintarServiciosnoAvanzados()');
 
    
       classtipo='tipoadmin';
@@ -259,6 +261,7 @@ function CargarDatosCoach() {
 	localStorage.setItem('valor','');
 	$$(".inicioenlace").attr('onclick','GoToPage("homecoach")');
   	 $$(".lipagos").attr('href','/pagos/');
+  	 $$(".serviciosnoavanzados").attr('onclick','PintarServiciosnoAvanzados()');
 
   var nombreusuario= localStorage.getItem('alias');
 	$$(".nombreusuario").text(nombreusuario);
@@ -887,7 +890,7 @@ function PintarServiciosAsignados(respuesta) {
                      <p class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</p>
                      <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].zonanombre+`</p>
 
- 					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</p>`;
+ 					<p class="text-muted no-margin-bottom tituloserviciolista"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</p>`;
                 
                 html+=`  </div>
                   <div class="row" style="margin-top:1em;">
@@ -979,7 +982,7 @@ function PintarServiciosAsignados2(respuesta,fechaactual) {
 
 
 			html+=`
-				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;" id="servicio_`+respuesta[i].idservicio+`">
                 <div class="row">
                   <div class="col-100" style="padding:0;" >
                     <div class="" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+imagen+`
@@ -1003,7 +1006,7 @@ function PintarServiciosAsignados2(respuesta,fechaactual) {
                      <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</span>
                      <span class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].zonanombre+`</span>
 
- 					<span class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</span>
+ 					<span class="text-muted no-margin-bottom tituloserviciolista"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</span>
                   
 
                   </div>
@@ -1104,7 +1107,7 @@ function PintarServiciosAsignados3(respuesta,fechaactual) {
 
 
 			html+=`
-				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;" id="servicio_`+respuesta[i].idservicio+`">
                 <div class="row">
                   <div class="col-100" style="padding:0;" >
                     <div class="" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+imagen+`
@@ -1128,7 +1131,7 @@ function PintarServiciosAsignados3(respuesta,fechaactual) {
                      <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</span>
                      <span class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].zonanombre+`</span>
 
- 					<span class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</span>
+ 					<span class="text-muted no-margin-bottom tituloserviciolista"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</span>
                   
 
                   </div>
@@ -1264,10 +1267,23 @@ function PintarServiciosAsignadosCoach2(respuesta,fechaactual) {
 
 		if (respuesta[i].cantidadalumnos!='' && respuesta[i].numeroparticipantesmax!='') {
 			
+				
+			if (respuesta[i].cantidadalumnos==0) {
+				clasecantidad="colorred";
+				
+				}
+
+		
+				if (respuesta[i].cantidadalumnos<respuesta[i].numeroparticipantesmax) {
+				clasecantidad="coloryellow";
+				
+				}
+
 				if (respuesta[i].cantidadalumnos==respuesta[i].numeroparticipantesmax) {
 				clasecantidad="colorgreen";
 				
 				}
+
 
 			}
 
@@ -1317,7 +1333,7 @@ function PintarServiciosAsignadosCoach2(respuesta,fechaactual) {
 
 
 			html+=`
-				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;" id="servicio_`+respuesta[i].idservicio+`">
                 <div class="row">
                   <div class="col-100" style="padding:0;" >
                      `+colocarnumero+`
@@ -1343,7 +1359,7 @@ function PintarServiciosAsignadosCoach2(respuesta,fechaactual) {
                      <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</span>
                      <span class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].zonanombre+`</span>
 
- 					<span class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</span>
+ 					<span class="text-muted no-margin-bottom tituloserviciolista"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</span>
                   
 
                   </div>
@@ -1410,6 +1426,17 @@ function PintarServiciosAsignadosCoach(respuesta) {
 
 		if (respuesta[i].cantidadalumnos!='' && respuesta[i].numeroparticipantesmax!='') {
 			
+				if (respuesta[i].cantidadalumnos==0) {
+				clasecantidad="colorred";
+				
+				}
+
+		
+				if (respuesta[i].cantidadalumnos<respuesta[i].numeroparticipantesmax) {
+				clasecantidad="coloryellow";
+				
+				}
+
 				if (respuesta[i].cantidadalumnos==respuesta[i].numeroparticipantesmax) {
 				clasecantidad="colorgreen";
 				
@@ -1472,7 +1499,7 @@ function PintarServiciosAsignadosCoach(respuesta) {
                     <p class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</p>
                      <p class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].zonanombre+`</p>
 
- 					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</p>
+ 					<p class="text-muted no-margin-bottom tituloserviciolista"  style="text-align: center;opacity: 0.6;font-size: 12px;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</p>
                   
 
                   </div>`;
@@ -1691,7 +1718,7 @@ function VerDetallesTablero(idtableroanuncio) {
 		});
 }
 
-
+ 
 function PintarAnuncioTablero(respuesta) {
 
 	urlimagen=urlimagenes+`tableroanuncios/imagenes/`+codigoserv+respuesta.imagen;
@@ -1770,6 +1797,9 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
        dynamicSheet1.open();
 }
+
+
+
 function VerDetalles(idservicio) {
 	var datos="idservicio="+idservicio;
 	var pagina = "ObtenerServicio.php";
@@ -2052,6 +2082,30 @@ function ObtenerConfiguracion() {
 			Colocar(datos.respuesta.nombrenegocio1,datos.respuesta.logo);
 
 			localStorage.setItem('activarpopupmembresia',datos.respuesta.activarpopupmembresia);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+
+function ObtenerPolitica() {
+	var pagina = "ObtenerConfiguracion.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		async:false,
+		success: function(datos){
+
+			
+			var cadena =datos.respuesta.politicaprivacidad;
+
+			$(".textopoliticas").html('<p style="text-align:justify;">'+cadena+'</p>');
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
@@ -2500,6 +2554,7 @@ function DetalleServicioAsignado(idusuarios_servicios) {
 			var respuesta=datos.respuesta;
 			var pagado=datos.pagado;
 			var dentroperiodo=datos.dentroperiodo;
+			var enproceso=datos.enproceso;
 			if (respuesta==0) {
 
 				GoToPage('aceptacionservicio');
@@ -2513,9 +2568,14 @@ function DetalleServicioAsignado(idusuarios_servicios) {
 					}else{
 						var msj="";
 
-						if (pagado==0) {
+						if (pagado==0  && enproceso==0) {
 
 							msj+="El pago es requerido<br>";
+						}
+
+						if (pagado==0 && enproceso==1) {
+							msj+="El pago está pendiente de validación<br>";
+
 						}
 
 						if (dentroperiodo==0) {
@@ -2523,7 +2583,8 @@ function DetalleServicioAsignado(idusuarios_servicios) {
 
 						}
 
-						alerta('',msj);
+						//alerta('',msj);
+						PantallaModal(msj,pagado,enproceso);
 					}
 
 
@@ -2540,6 +2601,63 @@ function DetalleServicioAsignado(idusuarios_servicios) {
 
 
 	
+}
+
+function PantallaModal(mensaje,pagado,enproceso) {
+	 var html=`
+         
+              <div class="">
+                <div class="row" style="padding-top:1em;">
+                	<label style="font-size:16px;padding:1px;font-weight:bold;">`+mensaje+`</label>
+                	
+                </div>
+              </div>
+         
+        `;
+      var dia= app.dialog.create({
+          title: '',
+           
+          //text: 'Dialog with vertical buttons',
+          content:html,
+          buttons: [
+           
+            {
+              text: 'Ok',
+            },
+            
+          ],
+           onClick: function (dialog, index) {
+              if(index === 0){
+               if (pagado==0  && enproceso==0) {
+             		dia.close();
+             		GoToPage('pagos');
+							
+				}
+
+				if (pagado==0  && enproceso==1) {
+             		dia.close();
+             		GoToPage('listadopagospagados');
+							
+				}
+          }
+          else if(index === 1){
+             	
+             	
+
+            }
+           
+        },
+          verticalButtons: false,
+
+		on: {
+		    opened: function () {
+		     
+		    },
+        },
+    }).open();
+
+
+
 }
 
 function DetalleServicioAsignadoCoach(idusuarios_servicios) {
@@ -2603,8 +2721,22 @@ function PintarServiciosRegistrados(respuesta) {
 			var clasecantidad="colorred";
 
 			if (respuesta[i].cantidadalumnos!='' && respuesta[i].numeroparticipantesmax!='') {
+				if (respuesta[i].cantidadalumnos==0) {
+				clasecantidad="colorred";
+				
+				}
+
+		
+				if (respuesta[i].cantidadalumnos<respuesta[i].numeroparticipantesmax) {
+				clasecantidad="coloryellow";
+				
+				}
+
+
+
 				if (respuesta[i].cantidadalumnos==respuesta[i].numeroparticipantesmax) {
 				clasecantidad="colorgreen";
+				
 				}	
 			}else{
 
@@ -2723,6 +2855,20 @@ function PintarServiciosRegistrados2(respuesta,fechaactual) {
 
 		if (respuesta[i].cantidadalumnos!='' && respuesta[i].numeroparticipantesmax!='') {
 			
+				
+				if (respuesta[i].cantidadalumnos==0) {
+				clasecantidad="colorred";
+				
+				}
+
+		
+				if (respuesta[i].cantidadalumnos<respuesta[i].numeroparticipantesmax) {
+				clasecantidad="coloryellow";
+				
+				}
+
+				
+
 				if (respuesta[i].cantidadalumnos==respuesta[i].numeroparticipantesmax) {
 				clasecantidad="colorgreen";
 				
@@ -2776,7 +2922,7 @@ function PintarServiciosRegistrados2(respuesta,fechaactual) {
 
 
 			html+=`
-				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;" id="servicio_`+respuesta[i].idservicio+`">
                 <div class="row">
                   <div class="col-100" style="padding:0;" >
                      `+colocarnumero+`
@@ -2802,8 +2948,9 @@ function PintarServiciosRegistrados2(respuesta,fechaactual) {
                      <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">`+horarioshtml+`</span>
                      <span class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">`+respuesta[i].zonanombre+`</span>
 
- 					<span class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</span>
+ 					<span class="text-muted no-margin-bottom tituloserviciolista "  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</span>
                   
+
 
                   </div>
                   <div class="row" style="margin-top:1em;">
@@ -2816,6 +2963,8 @@ function PintarServiciosRegistrados2(respuesta,fechaactual) {
                   		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle `+clasecomentario+` iconos" style="`+opacidad+`" onclick="OpinionesServicioAdmin(`+respuesta[i].idservicio+`)"><i class="bi bi-chat-square-dots"></i></div>
                   	
                   	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle `+clasechat+` iconos" style="`+opacidad+`" onclick="ParticipantesServicio(`+respuesta[i].idservicio+`)"><i class="bi bi-chat-left-quote-fill"></i></div>
+
+                  	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle convalor iconos" style="`+opacidad+`" onclick="EditarServicio(`+respuesta[i].idservicio+`)"><i class="bi bi-pencil"></i></div>
 
                   	</div>
    
@@ -3157,7 +3306,7 @@ function PintarServicioporvalidar(respuesta,fechaactual) {
 
 
 			html+=`
-				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;" id="servicio_`+respuesta[i].idservicio+`">
                 <div class="row">
                   <div class="col-100" style="padding:0;" >
                      `+colocarnumero+`
@@ -3180,7 +3329,7 @@ function PintarServicioporvalidar(respuesta,fechaactual) {
                      <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;">`+horarioshtml+`</span>
                      <span class="text-color-theme size-12" style="text-align:center;" >`+respuesta[i].zonanombre+`</span>
 
- 					<span class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;" >`+respuesta[i].titulo+`</span>
+ 					<span class="text-muted no-margin-bottom tituloserviciolista"  style="text-align: center;opacity: 0.6;font-size: 12px;" >`+respuesta[i].titulo+`</span>
                   
 
                   </div>
@@ -3269,7 +3418,7 @@ function PintarServicioActivos(respuesta) {
 			
 			
 			html+=`
-			 <div class="list-item" style="background: white; margin: 1em;padding: 1em;border-radius: 10px;`+opacidad+`" >
+			 <div class="list-item" style="background: white; margin: 1em;padding: 1em;border-radius: 10px;`+opacidad+`" id="servicio_`+respuesta[i].idservicio+`" >
                 <div class="row">
                   <div class="col-30">
                   	<div class="">
@@ -3295,7 +3444,7 @@ function PintarServicioActivos(respuesta) {
                     		}*/
 
                     html+=`
- 					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;" onclick="DetalleServicioActivo(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</p>
+ 					<p class="text-muted no-margin-bottom tituloserviciolista"  style="text-align: center;opacity: 0.6;font-size: 12px;" onclick="DetalleServicioActivo(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</p>
                  
  					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;" onclick="DetalleServicioActivo(`+respuesta[i].idservicio+`)">`+respuesta[i].fechai+` `+respuesta[i].fechaf +`</p>
 
@@ -3407,7 +3556,7 @@ function PintarServicioActivos2(respuesta,fechaactual) {
 
 
 			html+=`
-				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;" id="servicio_`+respuesta[i].idservicio+`">
                 <div class="row">
                   <div class="col-100" style="padding:0;" >
                      `+colocarnumero+`
@@ -3430,7 +3579,7 @@ function PintarServicioActivos2(respuesta,fechaactual) {
                      <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioActivo(`+respuesta[i].idservicio+`)">`+horarioshtml+`</span>
                      <span class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioActivo(`+respuesta[i].idservicio+`)">`+respuesta[i].zonanombre+`</span>
 
- 					<span class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioActivo(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</span>
+ 					<span class="text-muted no-margin-bottom tituloserviciolista"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioActivo(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</span>
                   
 
                   </div>
@@ -3613,7 +3762,7 @@ function PintarServicioActivosCoach(respuesta) {
 			
 			
 			html+=`
-			 <div class="list-item" style="background: white; margin: 1em;padding: 1em;border-radius: 10px;`+opacidad+`" >
+			 <div class="list-item" style="background: white; margin: 1em;padding: 1em;border-radius: 10px;`+opacidad+`" id="servicio_`+respuesta[i].idservicio+`">
                 <div class="row">
                   <div class="col-30">
                   	<div class="">
@@ -3639,7 +3788,7 @@ function PintarServicioActivosCoach(respuesta) {
                     		}*/
 
                     html+=`
- 					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;" onclick="DetalleServicioActivoCoach(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</p>
+ 					<p class="text-muted no-margin-bottom tituloserviciolista"  style="text-align: center;opacity: 0.6;font-size: 12px;" onclick="DetalleServicioActivoCoach(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</p>
                  
  					<p class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;" onclick="DetalleServicioActivoCoach(`+respuesta[i].idservicio+`)">`+respuesta[i].fechai+` `+respuesta[i].fechaf +`</p>
 
@@ -3745,7 +3894,7 @@ function PintarServicioActivosCoach2(respuesta,fechaactual) {
 
 
 			html+=`
-				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;" id="servicio_`+respuesta[i].idservicio+`">
                 <div class="row">
                   <div class="col-100" style="padding:0;" >
                      `+colocarnumero+`
@@ -3767,7 +3916,7 @@ function PintarServicioActivosCoach2(respuesta,fechaactual) {
                     html+=`
                      <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioActivoCoach(`+respuesta[i].idservicio+`)">`+horarioshtml+`</span>
                      <span class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioActivoCoach(`+respuesta[i].idservicio+`)">`+respuesta[i].zonanombre+`</span>
- 					<span class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioActivoCoach(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</span>
+ 					<span class="text-muted no-margin-bottom tituloserviciolista"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioActivoCoach(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</span>
                   
 
                   </div>
@@ -3900,14 +4049,26 @@ function PintarServicioporvalidarAdmin(respuesta,fechaactual) {
 			}
 
 
-			var clasecantidad="colorred";
+			var clasecantidad="";
 
 		if (respuesta[i].cantidadalumnos!='' && respuesta[i].numeroparticipantesmax!='') {
-			
+
+			if (respuesta[i].cantidadalumnos==0) {
+				clasecantidad="colorred";
+				
+				}
+
+		
+				if (respuesta[i].cantidadalumnos<respuesta[i].numeroparticipantesmax) {
+				clasecantidad="coloryellow";
+				
+				}
+
 				if (respuesta[i].cantidadalumnos==respuesta[i].numeroparticipantesmax) {
 				clasecantidad="colorgreen";
 				
 				}
+
 
 			}
 
@@ -3955,7 +4116,7 @@ function PintarServicioporvalidarAdmin(respuesta,fechaactual) {
 
 
 			html+=`
-				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;">
+				 <div class="list-item"  style="background: white; margin: 1em;border-bottom-left-radius: 10px;border-bottom-right-radius: 10px;" id="servicio_`+respuesta[i].idservicio+`">
                 <div class="row">
                   <div class="col-100" style="padding:0;" >
                      `+colocarnumero+`
@@ -3978,7 +4139,7 @@ function PintarServicioporvalidarAdmin(respuesta,fechaactual) {
                      <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="EditarServicio(`+respuesta[i].idservicio+`)">`+horarioshtml+`</span>
                      <span class="text-color-theme size-12" style="text-align:center;" onclick="EditarServicio(`+respuesta[i].idservicio+`)" >`+respuesta[i].zonanombre+`</span>
 
- 					<span class="text-muted no-margin-bottom"  style="text-align: center;opacity: 0.6;font-size: 12px;" onclick="EditarServicio(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</span>`;
+ 					<span class="text-muted no-margin-bottom tituloserviciolista"  style="text-align: center;opacity: 0.6;font-size: 12px;" onclick="EditarServicio(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</span>`;
                   	if (coaches.length>0) {
                   		for (var j = 0; j <coaches.length; j++) {
                   			

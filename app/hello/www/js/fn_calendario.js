@@ -94,7 +94,7 @@ function CargarFechas() {
           	var mes=(fechaac.getMonth() + 1)<10?'0'+(fechaac.getMonth() + 1):(fechaac.getMonth() + 1);
          	var dia=fechaac.getDate()<10?'0'+fechaac.getDate():fechaac.getDate();
          	fecha=fechaac.getFullYear()+'-'+ mes+'-'+dia;
-          	ConsultarFecha(fecha);
+          	//ConsultarFecha(fecha);
           },
          calendarChange:function (c) {
          
@@ -774,4 +774,36 @@ function RefrescarFechas(fechaelegida) {
 /*   	$(".calendar-day-selected .calendar-day-number").css('cssText', 'background: #none!important;color:none;');
 */ 	/*$(".calendar-day-today .calendar-day-number").css('cssText', 'background: #46b2e2!important');*/
 //$(".calendar-day-today .calendar-day-number").css('cssText', 'background: #46b2e2');
+}
+
+
+function ConsultarTodosHorarios() {
+	var idservicio=localStorage.getItem('idservicio');
+	var datos="idservicio="+idservicio;
+
+	var id_user=localStorage.getItem('id_user');
+	var pagina="ObtenerTodosHorarios.php";
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(respuesta){
+			
+
+			var respuesta=respuesta.respuesta;
+			PintarEventos(respuesta);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
 }

@@ -3,6 +3,14 @@
     var usuariosquitados=[];
     var usuariosagregados=[];
     var dynamicSheet2="";
+
+    function MensajeNoacceso() {
+    	alerta('','No se encuentran opiniones registradas');
+    }
+
+    function MensajeNoaccesoEvaluacion() {
+    	alerta('','No se encuentran evaluaciones registradas');
+    }
 function ObtenerServicioAsignado() {
 	
 	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
@@ -27,8 +35,13 @@ function ObtenerServicioAsignado() {
 			var puedeinvitar=datos.puedeinvitar;
 			var invitados=datos.invitados;
 			var habilitarcancelacion=datos.habilitarcancelacion;
+			var opiniones=datos.opiniones;
+			var evaluaciones=datos.evaluaciones;
 			localStorage.setItem('idservicio',idservicio);
 			  ObtenerImagenesGrupalServicio();
+			  ObtenerImagenesIndividualServicioUsuario();
+			   VerificarcantidadhorariosAdmin();
+
 			var cantidadhorarios=horarios.length;
 			$(".cantidadhorarios").text(cantidadhorarios);
 			if (imagen!=null && imagen!='' && imagen!='null') {
@@ -61,8 +74,19 @@ function ObtenerServicioAsignado() {
 			$(".colocarhorarios").html(horarioshtml);
 
 			$(".cantidadtotal").text(respuesta.numeroparticipantesmax);
+			$(".comentariosservicio").attr('onClick','MensajeNoacceso()');
 
+			if (opiniones.length>0) {
+				$(".comentariosservicio").attr('onClick','GoToPage("comentariosservicio")');
+				$(".divopiniones").addClass('iconos');
+			}
+			$(".evaluacionservicio").attr('onClick','MensajeNoaccesoEvaluacion()');
 
+			if (evaluaciones.length>0) {
+				$(".divevaluacionesicono").addClass('iconos');
+				$(".evaluacionservicio").attr('onClick','GoToPage("evaluacionesservicio")');
+		
+			}
 				$("#permisoasignaralumno").css('display','none');
 			if (localStorage.getItem('idtipousuario')==3) {
 
@@ -277,11 +301,12 @@ function PintarHorarios(horarios) {
 }
 
 function AceptarTerminos() {
+	 app.dialog.confirm('','¿Está seguro  de realizar la acción?' , function () {
 	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
 	var pagina = "AceptarTerminos.php";
 	var id_user=localStorage.getItem('id_user');
 	var datos="id_user="+id_user+"&idusuarios_servicios="+idusuarios_servicios;
-	  app.dialog.preloader('Guardando...');
+	 app.dialog.preloader('Guardando...');
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
@@ -306,16 +331,19 @@ function AceptarTerminos() {
 			}
 
 		});
+	 });
 }
+
 
 function PantallaRechazarTerminos() {
 	 var html=`
          
-              <div class="block">
+              <div class="">
 
                 <div class="row" style="padding-top:1em;">
                 	<label style="font-size:16px;padding:1px;">Motivo:</label>
                 	<textarea name="" id="txtcomentariorechazo" cols="30" rows="3"></textarea>
+               	<span class="mensajemotivo"></span>
                 </div>
               </div>
            
@@ -357,6 +385,7 @@ function RechazarTerminos() {
 	var motivo=$("#txtcomentariorechazo").val();
 	var datos="id_user="+id_user+"&idusuarios_servicios="+idusuarios_servicios+"&motivocancelacion="+motivo;
 	
+	if (motivo!='' && motivo.length>10) {
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
@@ -367,7 +396,7 @@ function RechazarTerminos() {
 		success: function(datos){
 
 			if (datos.respuesta==1) {
-
+			
 				alerta('','Operación realizada');
 				GoToPage('home');
 			}
@@ -381,6 +410,10 @@ function RechazarTerminos() {
 			}
 
 		});
+	}else{
+
+		alerta('','Para continuar coloque un motivo de rechazo');
+	}
 }
 
 
@@ -897,15 +930,18 @@ function Verificarcantidadhorarios() {
 		success: function(datos){
 			var horarios=datos.respuesta;
 			
-			
-             if(horarios.length>1){
+				$("#btncalendario").css('display','none');
+                $(".btncalendario").css('display','none');
+
+             if(horarios.length>0){
 
              	$("#btncalendario").css('display','block');
-             }else{
-
-             	$("#btncalendario").css('display','none');
+                $(".btncalendario").css('display','block');
 
              }
+
+             
+             
 			
              
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -934,14 +970,14 @@ function VerificarcantidadhorariosAdmin() {
 		success: function(datos){
 			var horarios=datos.respuesta;
 			
-			
-             if(horarios.length>1){
+			$(".btncalendario").css('display','none');
+			$("#btncalendario").css('display','none');
+
+             if(horarios.length>0){
 
              	$("#btncalendario").css('display','block');
-             }else{
-
-             	$("#btncalendario").css('display','none');
-
+                $(".btncalendario").css('display','block');
+   
              }
 			
              
@@ -1075,7 +1111,7 @@ html+=`
                         </figure>
                         </div>
                         
-                    <div class="col-80">
+                    <div class="col-60">
                          <div class="col-100 item-text" style="margin-left: 1em;font-size:14px;`+background+`" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
                          </div>
              		 
@@ -1084,7 +1120,17 @@ html+=`
              		
                         	  <div class=" col-100 item-text" style="font-size:14px;margin-left: 1em;`+background+`">`+respuesta[i].nombretipo+`</div>
                
-                        </div>`;
+                        </div>
+
+                        <div class="col-20">
+                         <div class="col"> 
+	                        <button id="" class="button " style="font-size: 26px;" onclick="SubirFotoIndividual(`+respuesta[i].idusuarios+`)">
+	                       		 <i class="bi bi-card-image"></i>
+	                        </button>
+                        </div>
+                        </div>
+
+                        `;
 
             
                     if (localStorage.getItem('idtipousuario')!=3) {
@@ -1131,6 +1177,10 @@ html+=`
 	}
 }
 
+function SubirFotoIndividual(idusuarioseleccionado) {
+	localStorage.setItem('idusuarioseleccionado',idusuarioseleccionado);
+	GoToPage('imagenesindividuales');
+}
 
 function ObtenerAlumnosAdmin() {
 	var idservicio=localStorage.getItem('idservicio');
@@ -1433,7 +1483,7 @@ function GuardarAsignacion() {
 	  		idusuarios.push(dividir);
 	  	}
 	});
-	console.log(idusuarios);
+	//console.log(idusuarios);
 	var datos="id_user="+id_user+"&idusuarios="+idusuarios+"&idservicio="+idservicio+"&usuariosquitados="+usuariosquitados;
 	
 	
@@ -1454,7 +1504,7 @@ function GuardarAsignacion() {
 
 	}*/
 
-	console.log(listaalumnos);
+//	console.log(listaalumnos);
 	for (var i = 0; i < idusuarios.length; i++) {
 		
 		var id=idusuarios[i];

@@ -52,8 +52,10 @@
                <div class="block" style="background: white">
                 <ul>
                 <li>
-                <div class="item-content item-input is-valid">
-                  <div class="item-inner liservicio"><div class="item-title item-floating-label" style="    margin-left: 1em;"></div>
+                <div class="item-content item-input item-input-with-value is-valid liservicio">
+                  <div class="item-inner liservicio">
+                    <div class="item-title item-floating-label" style="    ">Servicio</div>
+                 
                   <div class="item-input-wrap">
                    <select id="serviciosreplica"></select>
                    </div>
@@ -142,7 +144,7 @@
                     <div class="item-input-wrap">
                       <input name="v_orden" type="number" id="v_orden" placeholder="" class="input-with-value"/>
                       <span class="input-clear-button"></span>
-                    </div>
+                     </div>
                   </div>
               </div>
               
@@ -163,15 +165,15 @@
 
   
         </li>
-
-        <li class="accordion-item" id="cantidad-tab" style="    background: white;
+ 
+       <!--  <li class="accordion-item" id="cantidad-tab" style="    background: white;
     font-weight: bold;display: none;">
           <a href="" class="item-link item-content">
             <div class="item-inner">
               Horarios asignados <span id="numerodehorarios"></span>
             </div>
           </a>
-        </li>
+        </li> -->
 
 
          <li class="accordion-item" id="profile-tab" style="display: none;">
@@ -273,6 +275,14 @@
                 </div>
               
               </div>
+
+              <div class="row" style="    margin-bottom: 1em;">
+                <div class="col">
+                 <span style="font-weight: bold;">Horarios:</span> <span id="cantidadhorarios">0</span>
+               </div>
+               
+              </div>
+
               <div class="row">
                <div id="demo-calendar" style="display: none;"></div>
               </div>

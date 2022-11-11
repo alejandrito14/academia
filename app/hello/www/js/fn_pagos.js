@@ -224,14 +224,18 @@ function CargarPagosElegidos() {
 	console.log(listado);
 	var html="";
 	for (var i = 0; i <listado.length; i++) {
+   var color='';
+      if (listado[i].monto<0) {
+        color='red';
+      }
 			html+=`
-				<li class="list-item">
+				<li class="list-item" style="color:`+color+`">
                     <div class="row">
                         <div class="col-80" style="padding:0;">
                             <p class="text-muted small" style="font-size:18px;" id="concepto_`+listado[i].id+`">
                               `+listado[i].concepto+`
                             </p>
-                            <p class="text-muted " style="font-size:30px;text-align:right;">$`+listado[i].monto+`</p>
+                            <p class="text-muted " style="font-size:30px;text-align:right;">$`+formato_numero(listado[i].monto,2,'.',',')+`</p>
 
                           <input type="hidden" value="`+listado[i].monto+`" class="montopago" id="val_`+listado[i].id+`">
                         </div>
@@ -1407,6 +1411,7 @@ function ObtenerDescuentosRelacionados() {
 
 function PintarDescuentos(respuesta) {
    var html="";
+  $("#visualizardescuentos").css('display','none');
 
  if (respuesta.length>0) {
     descuentosaplicados=respuesta;
@@ -1436,8 +1441,6 @@ function PintarDescuentos(respuesta) {
     `;
 
   }
- }else{
-  $("#visualizardescuentos").css('display','none');
  }
 
 
@@ -1581,8 +1584,22 @@ function PintarpagosPagados(pagos) {
     var html="";
    
     for (var i = 0; i <pagos.length; i++) {
+
+      var claseestatus="";
+
+      if (pagos[i].estatus==0) {
+        claseestatus="notapendiente";
+      }
+       if (pagos[i].estatus==1) {
+        claseestatus="notaaceptado";
+      }
+
+       if (pagos[i].estatus==2) {
+        claseestatus="notacancelado";
+      }
+
       html+=`
-        <li class="list-item">
+        <li class="list-item" id="pago_`+pagos[i].idnotapago+`">
                     <div class="row">
                         <div class="col-70">
                             <p class="text-muted "  id="concepto_`+pagos[i].idnotapago+`">
@@ -1591,6 +1608,9 @@ function PintarpagosPagados(pagos) {
 
                           <p class="text-muted small">Pagado `+pagos[i].fechaformatopago+`</p>
                           <p class="text-muted small">$`+pagos[i].monto+`</p>
+                          <span class="text-muted small `+claseestatus+`">`+pagos[i].textoestatus+`</span>
+
+
                         </div>
                         <div class="col-30">
                         <a id="btncalendario" style=" color: #007aff!important;text-align: center;justify-content: center;display: flex;" onclick="Detallepago(`+pagos[i].idnotapago+`)">Ver detalle</a>

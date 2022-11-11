@@ -352,10 +352,10 @@ function CambiarEstatusNotificacion(idnotificacioncliente) {
 			var resp=resultado.notificacion;
 			ObtenerListadoNotificaciones();
 			localStorage.setItem('valor',idnotificacioncliente);
-			if (resp.ruta!='') {
+			/*if (resp.ruta!='') {
 				localStorage.setItem('valor',resp.valor);
 				GoToPage(resp.ruta);
-			}
+			}*/
 		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 			var error;
 				if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 

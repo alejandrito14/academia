@@ -85,7 +85,14 @@ function CargarCalendario() {
           calendarDayClick:function(c){
 
         	
-		calendarInline2.on('calendarChange()');
+			$(".calendar-day-has-events").each(function(){
+				$(this).removeClass('calendar-day-selected');
+			
+			});
+			
+          	calendarInline2.on('calendarChange()');
+
+   
           },
          calendarChange:function (c) {
          
@@ -185,8 +192,8 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 			   							 		</div>
 
 			   							 		<div class="row">
-		   							 		<label style="text-align:center;">Filtrar por zona:</label>
-		   							 		 <select name="v_zonafiltro" style="text-align:center;" id="v_zonafiltro" onchange="FiltrarPorZona()"></select>
+		   							 		<label style="text-align:center;">Filtrar por espacio:</label>
+		   							 		 <select name="v_zonafiltro" style="text-align:center;background: #c6c6c6;margin-right: 1em;margin-left: 1em;margin-bottom: 1em;" id="v_zonafiltro" onchange="FiltrarPorZona()"></select>
 		   							 		</div>
 
 		   							 		<div class="row">
@@ -242,6 +249,11 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 			  			if (r[i].horasposibles[0][j].disponible==1 && r[i].horasposibles[0][j].horafinal!=null) {
 			  				var fecha=r[i].fecha.split('-');
 			  				var fechaformada=fecha[2]+'-'+fecha[1]+'-'+fecha[0];
+			  			
+			  				var fechaformada2=fecha[2]+'-'+fecha[1]+'-'+fecha[0]+'-'+r[i].horasposibles[0][j].horainicial.slice(0,5)+`-`+r[i].horasposibles[0][j].horafinal.slice(0,5) +'-'+r[i].idzona;
+
+			  				if (!BuscarfechaenArrayElegidos(fechaformada2)) {
+
 			  			htmlhorarios +=`
 			  			<div class="col-100 horarios zonadiv_`+r[i].idzona+`">
 				        <div class="card shadow-sm margin-bottom-half inputdia" id="`+fechaformada+'-'+r[i].horasposibles[0][j].horainicial.slice(0,5)+`-`+r[i].horasposibles[0][j].horafinal.slice(0,5) +'-'+r[i].idzona+`" >
@@ -268,6 +280,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 				      </div>
 
 			  			`;
+			  					}
 			  				}
 			  			}
 			  		}

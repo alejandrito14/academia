@@ -371,9 +371,19 @@ var routes = [
     componentUrl: './pages/nuevaimagengrupal.html',
   },
 
+  {
+    path: '/nuevaimagenindividual/',
+    componentUrl: './pages/nuevaimagenindividual.html',
+  },
+
    {
     path: '/nuevovideogrupal/',
     componentUrl: './pages/nuevovideogrupal.html',
+  },
+
+  {
+    path: '/imagenesindividuales/',
+    componentUrl: './pages/imagenesindividuales.html',
   },
   //datospersonales
   {
@@ -621,8 +631,8 @@ var routes = [
     
   // Terms and conditions
   {
-    path: '/termsandconditions/',
-    url: './pages/termsandconditions.html',
+    path: '/politicas/',
+    componentUrl: './pages/politicas.html',
   },
   
   {

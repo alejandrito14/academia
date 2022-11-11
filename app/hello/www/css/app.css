@@ -690,11 +690,21 @@ z-index:0;
 
   .colorgreen{
     text-align: center;
-    background: #59c158;
+    background: #59c158!important;
     border-radius: 10px;
     margin-top: 1em;
     color: white;
   }
+
+
+  .coloryellow{
+    text-align: center;
+    background: #ebc418!important;
+    border-radius: 10px;
+    margin-top: 1em;
+    color: white;
+  }
+
 
  .form-list ul .item-input.is-blue:before {
 

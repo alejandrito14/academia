@@ -215,11 +215,24 @@ function PintarDatosAcceso2(datos) {
     $("#v_contra2").val(datos.clave);
     $("#v_tipousuario").val(datos.tipo);
     $("#v_tipousuario").attr('disabled',true);
-    $("#span1").css('display','block');
-    $("#span2").css('display','block');
- 	$(".datocorreo").css('display','none');
 
-	$("#v_correo").attr('disabled',true);
+    $$("#v_correo").addClass('input-with-value');
+	$$(".licorreo").addClass('item-input-with-value');
+
+    $$("#v_usuario").addClass('input-with-value');
+	$$(".liusuario").addClass('item-input-with-value');
+
+	$$("#v_contra1").addClass('input-with-value');
+	$$(".licontra1").addClass('item-input-with-value');
+
+	$$("#v_contra2").addClass('input-with-value');
+	$$(".licontra2").addClass('item-input-with-value');
+
+    /*$("#span1").css('display','block');
+    $("#span2").css('display','block');
+ 	$(".datocorreo").css('display','none');*/
+
+	//$("#v_correo").attr('disabled',true);
 
 }
 
@@ -236,9 +249,10 @@ function GuardarDatosacceso(argument) {
 	var v_email=$("#v_correo").val();
 	var v_contra1=$("#v_contra1").val();
 	var v_contra2=$("#v_contra2").val();
+	var v_usuario=$("#v_usuario").val();
 	//var datos="iduser="+iduser+"&v_nombre="+v_nombre+"&v_paterno="+v_paterno+"&v_materno="+v_materno+"&v_sexo="+v_sexo+"&v_telefono="+v_telefono+"&v_email="+v_email;
 	
-	var datos="iduser="+iduser+"&v_email="+v_email+"&v_contra1="+v_contra1;
+	var datos="iduser="+iduser+"&v_email="+v_email+"&v_contra1="+v_contra1+"&v_usuario="+v_usuario;
 	var pagina = "Actualizarclienteacceso.php";
 
 	var msj="";

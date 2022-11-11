@@ -22,6 +22,7 @@ function ObtenerDatosServicio() {
 		crossDomain: true,
 		cache: false,
 		data:datos,
+		async:false,
 		success: function(datos){
  		
 		var respuesta=datos.respuesta;
@@ -32,6 +33,7 @@ function ObtenerDatosServicio() {
 		var descripcion=respuesta.descripcion;
 		var politicasaceptacion=respuesta.politicasaceptacion;
 		var estatus=respuesta.estatus;
+		
 		$("#v_estatus").val(estatus);
 		$("#v_titulo").val(titulo);
 		$("#v_descripcion").val(descripcion);
@@ -42,6 +44,13 @@ function ObtenerDatosServicio() {
 		$("#v_fechainicial").val(respuesta.fechainicial);
 		$("#v_fechafinal").val(respuesta.fechafinal);
 		$("#demo-calendar").html('');
+		var lunes= respuesta.lunes;
+		var martes=respuesta.martes;
+		var miercoles=respuesta.miercoles;
+		var jueves=respuesta.jueves;
+		var viernes=respuesta.viernes;
+		var sabado=respuesta.sabado;
+		var domingo=respuesta.domingo;
 		CargarCalendarioAgendar();
 
 		$("#demo-calendar").css('display','block');
@@ -49,64 +58,13 @@ function ObtenerDatosServicio() {
 	 var demo = new Promise((resolve, reject) => {
 	 	$("#v_categoria").val(idcategoriaservicio);
 		$("#v_categoriaservicio").val(idcategoria);
-
-      resolve(SeleccionarCategoria(valor));
+      resolve(SeleccionarCategoriaReagendar(valor,lunes,martes,miercoles,jueves,viernes,sabado,domingo));
     });
 
 	 demo.then(()=>{
 
-		 var lunes= respuesta.lunes;
-		var martes=respuesta.martes;
-		var miercoles=respuesta.miercoles;
-		var jueves=respuesta.jueves;
-		var viernes=respuesta.viernes;
-		var sabado=respuesta.sabado;
-		var domingo=respuesta.domingo;
-		$("#Lunes").attr('checked',false);
-		if (lunes==1) {
-			$("#Lunes").attr('checked',true);
-			//$(".lbllunes").addClass('active');
-		}
-	   $("#Martes").attr('checked',false);
+		
 
-		if (martes==1) {
-			$("#Martes").attr('checked',true);
-			//$(".lblmartes").addClass('active');
-		}
-				$("#Miercoles").attr('checked',false);
-
-		if (miercoles==1) {
-			$("#Miercoles").attr('checked',true);
-			//$(".lblmiercoles").addClass('active');
-
-		}
-				$("#Jueves").attr('checked',false);
-
-		if (jueves==1) {
-			$("#Jueves").attr('checked',true);
-			//$(".lbljueves").addClass('active');
-
-		}
-			$("#Viernes").attr('checked',false);
-
-		if (viernes==1) {
-			$("#Viernes").attr('checked',true);
-			//$(".lblviernes").addClass('active');
-
-		}
-		$("#Sabado").attr('checked',false);
-		if (sabado==1) {
-			$("#Sabado").attr('checked',true);
-			//$(".lblsabado").addClass('active');
-
-		}
-		$("#Domingo").attr('checked',false);
-
-		if (domingo==1) {
-			$("#Domingo").attr('checked',true);
-			//$(".lbldomingo").addClass('active');
-
-		}
 
 		var fechainicial=respuesta.fechainicial; 
 		var fechafinal=respuesta.fechafinal;
@@ -120,8 +78,56 @@ function ObtenerDatosServicio() {
 		CamposDisables();
 		$("#profile-tab").css('display','block');
 		$("#cantidad-tab").css('display','block');
-			  }
-   			 );
+
+		
+
+
+		/*$("#Lunes").attr('checked',false);
+		if(lunes == 1) {
+			$("#Lunes").attr('checked',true);
+			//$(".lbllunes").addClass('active');
+		}
+	   $("#Martes").attr('checked',false);
+
+		if(martes == 1) {
+			$("#Martes").attr('checked',true);
+			//$(".lblmartes").addClass('active');
+		}
+		$("#Miercoles").attr('checked',false);
+
+		if(miercoles == 1) {
+			$("#Miercoles").attr('checked',true);
+			//$(".lblmiercoles").addClass('active');
+
+		}
+		$("#Jueves").attr('checked',false);
+
+		if(jueves == 1) {
+			$("#Jueves").attr('checked',true);
+			//$(".lbljueves").addClass('active');
+
+		}
+			$("#Viernes").attr('checked',false);
+
+		if(viernes==1) {
+			$("#Viernes").attr('checked',true);
+			//$(".lblviernes").addClass('active');
+
+		}
+		$("#Sabado").attr('checked',false);
+		if(sabado==1) {
+			$("#Sabado").attr('checked',true);
+			//$(".lblsabado").addClass('active');
+
+		}
+		$("#Domingo").attr('checked',false);
+
+		if(domingo==1) {
+			$("#Domingo").attr('checked',true);
+			//$(".lbldomingo").addClass('active');
+
+		}*/
+			  });
 	//	Permitirligar();
 		//HabilitarcantidadReembolso();
 
@@ -198,9 +204,13 @@ function CargarCalendarioAgendar() {
           },
           calendarDayClick:function(c){
 
+       
+          	$(".calendar-day-has-events").each(function(){
+				$(this).removeClass('calendar-day-selected');
+			});
           	calendarInline.on('calendarChange()');
 
-        
+   
           },
          calendarChange:function (c) {
          
@@ -283,7 +293,8 @@ function ObtenerHorariosSemanaR(idservicio) {
 							PintarHorariosServicio(horarios,servicio);
 						
 							Resumenfechas();
-							$("#numerodehorarios").text(horarios.length);
+							CantidadHorarios();
+							//$("#numerodehorarios").text(horarios.length);
 						}
 
 
@@ -596,7 +607,7 @@ function GuardarservicioReagendar() {
 					  },
 					success:function(msj){
 						var resp = msj.respuesta;
-							$("#id").val(resp.idservicio);
+							$("#id").val(msj.idservicio);
 								localStorage.setItem('valor','');
 
 							
@@ -606,8 +617,14 @@ function GuardarservicioReagendar() {
 						 	
 								arraydiaselegidos=[];
 								arraydiaseleccionados=[];
+								localStorage.setItem('idservicio',msj.idservicio);
 		
-									
+									if (localStorage.getItem('idtipousuario')== 0) {
+										GoToPage('detalleservicioadmin');
+									}
+									if(localStorage.getItem('idtipousuario')== 5) {
+										GoToPage('detalleserviciocoach');
+									}
 									
 						 	 }else{
 									alerta('','Error.Intente nuevamente');

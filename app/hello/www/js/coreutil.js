@@ -272,4 +272,10 @@ class MediaList {
 
 function myStopFunction(variable) {
   clearInterval(variable);
+  variable=null;
+  identificadorDeTemporizador=null;
+}
+
+function LimpiarResultado(clista) {
+	$(clista).css('display','block');
 }
