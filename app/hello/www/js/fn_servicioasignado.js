@@ -185,7 +185,9 @@ function ObtenerServicioAsignadoCoach() {
 			localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
 			localStorage.setItem('idservicio',idservicio);
 			  ObtenerImagenesGrupalServicio();
-
+			  ObtenerParticipantesAlumnos();
+			  VerificarcantidadhorariosAdmin();
+			  VerificarSihayEvaluacion();
 			  var cantidadhorarios=horarios.length;
 			$(".cantidadhorarios").text(cantidadhorarios);
 			if (imagen!=null && imagen!='' && imagen!='null') {

@@ -559,17 +559,25 @@ function ObtenerServicioNuevo(valor) {
 		}
 		$("#v_titulo").val(titulo);
 		$("#v_descripcion").val(descripcion);
+		 var lunes= respuesta.lunes;
+		var martes=respuesta.martes;
+		var miercoles=respuesta.miercoles;
+		var jueves=respuesta.jueves;
+		var viernes=respuesta.viernes;
+		var sabado=respuesta.sabado;
+		var domingo=respuesta.domingo;
+		ObtenerTipoServicios(idcategoriaservicio);
 
-
-	 var demo = new Promise((resolve, reject) => {
-	 	$("#v_categoria").val(idcategoriaservicio);
+		//ObtenerTipoServicios(idcategoriaservicio);
+		//ObtenerCategoriaServicios(idcategoria);
+		$("#v_categoria").val(idcategoriaservicio);
 		$("#v_categoriaservicio").val(idcategoria);
-
-      resolve(SeleccionarCategoria(valor));
+	 var demo = new Promise((resolve, reject) => {
+	 resolve(ObtenerCategoriaServicios(idcategoria));
+      
     });
-
 	 demo.then(()=>{
-   	
+   	SeleccionarCategoriaNuevo2(idcategoriaservicio,valor,lunes,martes,miercoles,jueves,viernes,sabado,domingo);
 		 ObtenerEncuestas(idservicio);
 
 		 var modalidad=respuesta.modalidad;
@@ -611,58 +619,8 @@ function ObtenerServicioNuevo(valor) {
 		 }
 
 
-		 var lunes= respuesta.lunes;
-		var martes=respuesta.martes;
-		var miercoles=respuesta.miercoles;
-		var jueves=respuesta.jueves;
-		var viernes=respuesta.viernes;
-		var sabado=respuesta.sabado;
-		var domingo=respuesta.domingo;
-		$("#Lunes").attr('checked',false);
-		if (lunes==1) {
-			$("#Lunes").attr('checked',true);
-			//$(".lbllunes").addClass('active');
-		}
-	   $("#Martes").attr('checked',false);
-
-		if (martes==1) {
-			$("#Martes").attr('checked',true);
-			//$(".lblmartes").addClass('active');
-		}
-				$("#Miercoles").attr('checked',false);
-
-		if (miercoles==1) {
-			$("#Miercoles").attr('checked',true);
-			//$(".lblmiercoles").addClass('active');
-
-		}
-				$("#Jueves").attr('checked',false);
-
-		if (jueves==1) {
-			$("#Jueves").attr('checked',true);
-			//$(".lbljueves").addClass('active');
-
-		}
-			$("#Viernes").attr('checked',false);
-
-		if (viernes==1) {
-			$("#Viernes").attr('checked',true);
-			//$(".lblviernes").addClass('active');
-
-		}
-		$("#Sabado").attr('checked',false);
-		if (sabado==1) {
-			$("#Sabado").attr('checked',true);
-			//$(".lblsabado").addClass('active');
-
-		}
-		$("#Domingo").attr('checked',false);
-
-		if (domingo==1) {
-			$("#Domingo").attr('checked',true);
-			//$(".lbldomingo").addClass('active');
-
-		}
+		
+		
 
 		var fechainicial=respuesta.fechainicial; 
 		var fechafinal=respuesta.fechafinal;

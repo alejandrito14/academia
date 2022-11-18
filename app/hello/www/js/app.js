@@ -122,7 +122,7 @@ $(document).ready(function() {
   
 
 
-var produccion = 0;
+var produccion = 1;
 
 var lhost = "localhost:8888";
 var rhost = "issoftware1.com.mx";
@@ -1246,10 +1246,7 @@ $$(document).on('page:init', '.page[data-name="detalleserviciocoach2"]', functio
  // $$("#abrirpantallacali").attr('onclick','PantallaCalificacion()');
   $$("#Abrirchat").attr('onclick','ElegirParticipantesChat()');
   $$("#btncalendario").attr('onclick','FechasServicio()');
-  ObtenerParticipantesAlumnos();
-  
-  VerificarcantidadhorariosAdmin();
-  VerificarSihayEvaluacion();
+
 
   $$(".btnasistencia").attr('onclick','Asistencia()');
   $$("#btnpermisoasignaralumno").attr('onclick','VerificarTotalAlumnos()');
@@ -1755,12 +1752,23 @@ $$(document).on('page:init', '.page[data-name="serviciosactivoscoach"]', functio
 $$(document).on('page:init', '.page[data-name="nuevoservicio"]', function (e) {
   
   regresohome();
-  CargarFechasNuevoServicio();
-  ObtenerTipoServicios();
+
+   var demo1 = new Promise((resolve, reject) => {
+     
+     resolve(ObtenerOrdenServicio());
+
+    }).then(()=>{
+       
+        ObtenerPoliticasaceptacion();
+
+       
+    }).then(()=>{
+
+       CargarFechasNuevoServicio();
   $("#v_costo").attr('onkeyup','');
   $("#v_categoria").attr('onchange','SeleccionarCategoria(0)');
    porcentajescoachs=[];
-  ObtenerCategoriaServicios();
+ // ObtenerCategoriaServicios();
   $("#btnaplicar").attr('onclick','AplicarFechas()');
   $("#v_reembolso").attr('onchange','HabilitarcantidadReembolso()');
   ObtenerTodasEncuestas();
@@ -1769,8 +1777,7 @@ $$(document).on('page:init', '.page[data-name="nuevoservicio"]', function (e) {
   $$(".fotoimagen").attr('onclick','AbrirModalFotoimagenservicio()');
   $("#btnguardarservicio").attr('onclick','Guardarservicio()');
   $("#btnagregarperiodo").attr('onclick','NuevoPeriodo()');
-  ObtenerOrdenServicio();
-  ObtenerPoliticasaceptacion();
+  
   $("#v_politicaaceptacionseleccion").attr('onchange','SeleccionarPolitica()');
   $(".imglogoimagenservicio").attr('src',urlimagendefaultservicio);
   
@@ -1821,19 +1828,31 @@ $$(document).on('page:init', '.page[data-name="nuevoservicio"]', function (e) {
   $$('#v_numparticipantesmax').attr('onfocus',"CambiarColor('linumparticipantesmax');");
      
 
-     if (localStorage.getItem('idtipousuario')==5) {
+
+    }).then(()=>{
+        if (localStorage.getItem('idtipousuario')==5) {
       //$("#v_estatus").val(0);
       $("#v_estatus").prop('checked',false);
      }
     if (localStorage.getItem('valor')!=null && localStorage.getItem('valor')!='') {
        porcentajescoachs=[];
-      ObtenerServicioNuevo(localStorage.getItem('valor'));
+       
+         ObtenerServicioNuevo(localStorage.getItem('valor'));
+    
       $("#id").val(localStorage.getItem('valor'));
       $("#txtpagina").html('Editar <span style="color: #0abe68;">servicio</span>');
      $(".lititulo").addClass('item-input-with-value');
      $(".lidescripcion").addClass('item-input-with-value');
 
+    }else{
+
+      ObtenerTipoServicios(0)
+      ObtenerCategoriaServicios(0);
     }
+   });
+ 
+
+     
   app.on('accordionOpened', function (el) {
        if (el.id=='general-tab') {
         $("#v_titulo").focus();
@@ -1851,11 +1870,13 @@ myStopFunction(identificadorDeTemporizador);
 });
 $$(document).on('page:init', '.page[data-name="replicaservicio"]', function (e) {
 regresohome();
+ ObtenerTipoServicios(0);
+ ObtenerCategoriaServicios(0);
 
-ObtenerServiciosReplica();
-CargarCalendario();
+ ObtenerServiciosReplica();
+ CargarCalendario();
 
-//$("#serviciosreplica").attr('onchange','DesplegarCalendario()');
+  $("#serviciosreplica").attr('onchange','ObtenerServicioNuevo(this.value)');
 
   $("#btnguardarservicioreplica").attr('onclick','GuardarReplica()');
   $("#btnaplicarcalendario").attr('onclick','DesplegarCalendario()');
@@ -1863,8 +1884,8 @@ CargarCalendario();
 
 $$(document).on('page:init', '.page[data-name="reagendarservicio"]', function (e) {
 regresohome();
- ObtenerTipoServicios();
- ObtenerCategoriaServicios();
+ ObtenerTipoServicios(0);
+ ObtenerCategoriaServicios(0);
 
  if (localStorage.getItem('idtipousuario')==0){
       

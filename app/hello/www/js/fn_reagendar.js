@@ -33,10 +33,11 @@ function ObtenerDatosServicio() {
 		var descripcion=respuesta.descripcion;
 		var politicasaceptacion=respuesta.politicasaceptacion;
 		var estatus=respuesta.estatus;
-		
+		var precio=respuesta.precio;
 		$("#v_estatus").val(estatus);
 		$("#v_titulo").val(titulo);
 		$("#v_descripcion").val(descripcion);
+		$("#v_costo").val(precio);
 
 
 	 	$("#v_categoria").val(idcategoriaservicio);

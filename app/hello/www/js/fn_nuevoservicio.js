@@ -444,7 +444,7 @@ function ObtenerTodasZonas() {
 					}
 				});
 }
-function ObtenerTipoServicios() {
+function ObtenerTipoServicios(valor) {
 
 	var pagina="ObtenerTipoServicios.php";
 	  $.ajax({
@@ -456,6 +456,11 @@ function ObtenerTipoServicios() {
            
         	var res=resp.respuesta;
         	PintarTipoServicios(res);
+
+        	if (valor>0) {
+        		$("#v_categoria").val(valor);
+	
+        	}
 
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             var error;
@@ -653,6 +658,511 @@ if (categoriaid>0) {
 							
 						}
 
+						if (diasdisponibles.length>0) {
+
+							var uniqueArray = uArray(diasdisponibles);
+							
+							var dias='';
+							for (var i = 0; i <uniqueArray.length; i++) {
+
+								if (i>0) {
+									dias+=', ';
+								}
+								dias+=uniqueArray[i];
+							}
+
+							$("#leyenda").html('Los dias disponibles son: <span style="font-weight:bold;">'+dias+'<span>');
+						}
+
+
+
+					}	
+				});
+	}
+}
+
+
+
+function SeleccionarCategoriaNuevo(idservicio,lunesx,martesx,miercolesx,juevesx,viernesx,sabadox,domingox) {
+	var categoriaid=$("#v_categoria").val();
+	var datos="categoriaid="+categoriaid;
+
+	$("#profile-tab").css('display','none');
+	$("#contact-tab").css('display','none');
+	$("#costos-tab").css('display','none');
+	$("#coach-tab").css('display','none');
+	$("#multi-tab").css('display','none');
+	$("#politicas-tab").css('display','none');
+	$("#aceptacion-tab").css('display','none');
+	$("#otros-tab").css('display','none');
+
+if (categoriaid>0) {
+	$.ajax({
+					url: urlphp+'ObtenerCategoria.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					dataType:'json',
+					async:false,
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+						var dias=msj.horarios;
+						var horarios=msj.respuesta.horarios;
+						var zonas=msj.respuesta.zonas;
+						var participantes=msj.respuesta.participantes;
+						 cantidadparticipantes=msj.respuesta.cantidad;
+						var coachs=msj.respuesta.coachs;
+
+						var asignarcostos=msj.respuesta.configurarcostos;
+						var habilitarmodalidad=msj.respuesta.habilitarmodalidad;
+						var campototalclases=msj.respuesta.campototalclases;
+						var campopreciounitario=msj.respuesta.campopreciounitario;
+						var campomontoporparticipante=msj.respuesta.campomontoporparticipante;
+						var campomontogrupo=msj.respuesta.campomontoporgrupo;
+						var habilitarmodalidadpago=msj.respuesta.habilitarmodalidadpago;
+						var asignarcategoria=msj.respuesta.asignarcategoria;
+						var asignardias=msj.respuesta.asignardias;
+						var avanzado=msj.respuesta.avanzado;
+
+							$(".divcategoria").css('display','none');
+
+						if (avanzado==1) {
+								$("#profile-tab").css('display','block');
+								$("#contact-tab").css('display','block');
+							if(localStorage.getItem('idtipousuario')==0) {
+								$("#costos-tab").css('display','block');
+								$("#coach-tab").css('display','block');
+								$("#multi-tab").css('display','block');
+								$("#politicas-tab").css('display','block');
+								$("#aceptacion-tab").css('display','block');
+								$("#otros-tab").css('display','block');
+							}
+							$("#btnguardarservicio").attr('onclick',"Guardarservicio()");
+							$("#avanzado").val(1);
+
+							$(".divcategoria").css('display','block');
+
+							if (idservicio>0) {
+
+							$(".divcategoria").css('display','block');
+							
+
+							}
+						}else{
+
+							//$(".btncontinuar").css('display','none');
+							$("#btnguardarservicio").attr('onclick',"Guardarservicio2()");
+ 							//$(".btnguardarservicio").html('<i class="mdi mdi-content-save"></i>Guardar');
+
+						}
+						$(".diasckeckbox").attr('disabled',true);
+						$(".lbldomingo").addClass('btn_colorgray3');
+						$(".lbllunes").addClass('btn_colorgray3');
+						$(".lblmartes").addClass('btn_colorgray3');
+						$(".lblmiercoles").addClass('btn_colorgray3');
+						$(".lbljueves").addClass('btn_colorgray3');
+						$(".lblviernes").addClass('btn_colorgray3');
+						$(".lblsabado").addClass('btn_colorgray3');
+
+						$("#Domingo").attr('disabled',true);
+						$("#Lunes").attr('disabled',true);
+						$("#Martes").attr('disabled',true);
+						$("#Miercoles").attr('disabled',true);
+						$("#Jueves").attr('disabled',true);
+						$("#Viernes").attr('disabled',true);
+						$("#Sabado").attr('disabled',true);
+
+						$("#Domingo").attr('checked',false);
+						$("#Lunes").attr('checked',false);
+						$("#Martes").attr('checked',false);
+						$("#Miercoles").attr('checked',false);
+						$("#Jueves").attr('checked',false);
+						$("#Viernes").attr('checked',false);
+						$("#Sabado").attr('checked',false);
+
+
+						var diasdisponibles=[];
+							for (var i = 0; i < dias.length; i++) {
+								
+
+								if (dias[i].dia ==0 ) {
+									$(".lbldomingo").removeClass('btn_colorgray3');
+									$(".lbldomingo").addClass('btn_colorgray2');
+									$("#Domingo").attr('disabled',false);
+									//$("#Domingo").attr('checked',true);
+									diasdisponibles.push('Domingo');
+								}
+
+								
+								if (dias[i].dia==1) {
+								$(".lbllunes").removeClass('btn_colorgray3');
+								$(".lbllunes").addClass('btn_colorgray2');
+									
+								$("#Lunes").attr('disabled',false);
+/*								$("#Lunes").attr('checked',true);
+*/											diasdisponibles.push('Lunes');
+
+								}
+								if (dias[i].dia==2 ) {
+								$(".lblmartes").removeClass('btn_colorgray3');
+								$(".lblmartes").addClass('btn_colorgray2');
+									$("#Martes").attr('disabled',false);
+
+/*									$("#Martes").attr('checked',true);
+*/									diasdisponibles.push('Martes');
+
+								}
+						        if (dias[i].dia==3) {
+						        $(".lblmiercoles").removeClass('btn_colorgray3');
+									$(".lblmiercoles").addClass('btn_colorgray2');
+						               $("#Miercoles").attr('disabled',false);
+
+/*									$("#Miercoles").attr('checked',true);
+*/									diasdisponibles.push('Miercoles');
+
+								}
+								if (dias[i].dia==4) {
+									$(".lbljueves").removeClass('btn_colorgray3');
+									$(".lbljueves").addClass('btn_colorgray2');
+									$("#Jueves").attr('disabled',false);
+
+/*									$("#Jueves").attr('checked',true);
+*/									diasdisponibles.push('Jueves');
+
+								}
+								if (dias[i].dia==5 ) {
+								$(".lblviernes").removeClass('btn_colorgray3');
+								$(".lblviernes").addClass('btn_colorgray2');
+								$("#Viernes").attr('disabled',false);
+
+/*									$("#Viernes").attr('checked',true);
+*/								diasdisponibles.push('Viernes');
+
+								}
+
+								if (dias[i].dia==6 ) {
+									$(".lblsabado").removeClass('btn_colorgray3');
+									$(".lblsabado").addClass('btn_colorgray2');
+									$("#Sabado").attr('disabled',false);
+/*									$("#Sabado").attr('checked',true);
+*/									diasdisponibles.push('Sábado');
+
+								}
+							
+						}
+
+							if(domingox==1) {
+									$(".lbldomingo").removeClass('btn_colorgray3');
+									$(".lbldomingo").addClass('btn_colorgray2');
+									$("#Domingo").attr('disabled',false);
+									$("#Domingo").attr('checked',true);
+
+								}
+
+						if(lunesx==1) {
+								$(".lbllunes").removeClass('btn_colorgray3');
+								$(".lbllunes").addClass('btn_colorgray2');
+									
+								$("#Lunes").attr('disabled',false);
+								$("#Lunes").attr('checked',true);
+							}
+
+							if(martesx==1) {
+								$(".lblmartes").removeClass('btn_colorgray3');
+								$(".lblmartes").addClass('btn_colorgray2');
+								$("#Martes").attr('disabled',false);
+								$("#Martes").attr('checked',true);
+
+								}
+
+						if(miercolesx==1) {
+						        $(".lblmiercoles").removeClass('btn_colorgray3');
+								$(".lblmiercoles").addClass('btn_colorgray2');
+						        $("#Miercoles").attr('disabled',false);
+
+								$("#Miercoles").attr('checked',true);
+								}
+
+						if(juevesx==1) {
+								$(".lbljueves").removeClass('btn_colorgray3');
+								$(".lbljueves").addClass('btn_colorgray2');
+								$("#Jueves").attr('disabled',false);
+
+								$("#Jueves").attr('checked',true);
+								}
+
+
+							if(viernesx==1) {
+								$(".lblviernes").removeClass('btn_colorgray3');
+								$(".lblviernes").addClass('btn_colorgray2');
+								$("#Viernes").attr('disabled',false);
+								$("#Viernes").attr('checked',true);
+
+								}
+
+								if(sabadox==1) {
+									$(".lblsabado").removeClass('btn_colorgray3');
+									$(".lblsabado").addClass('btn_colorgray2');
+									$("#Sabado").attr('disabled',false);
+									$("#Sabado").attr('checked',true);
+								}
+						if (diasdisponibles.length>0) {
+
+							var uniqueArray = uArray(diasdisponibles);
+							
+							var dias='';
+							for (var i = 0; i <uniqueArray.length; i++) {
+
+								if (i>0) {
+									dias+=', ';
+								}
+								dias+=uniqueArray[i];
+							}
+
+							$("#leyenda").html('Los dias disponibles son: <span style="font-weight:bold;">'+dias+'<span>');
+						}
+
+
+
+					}	
+				});
+	}
+}
+
+
+function SeleccionarCategoriaNuevo2(categoriaid,idservicio,lunesx,martesx,miercolesx,juevesx,viernesx,sabadox,domingox) {
+	//var categoriaid=$("#v_categoria").val();
+	var datos="categoriaid="+categoriaid;
+
+	$("#profile-tab").css('display','none');
+	$("#contact-tab").css('display','none');
+	$("#costos-tab").css('display','none');
+	$("#coach-tab").css('display','none');
+	$("#multi-tab").css('display','none');
+	$("#politicas-tab").css('display','none');
+	$("#aceptacion-tab").css('display','none');
+	$("#otros-tab").css('display','none');
+
+if (categoriaid>0) {
+	$.ajax({
+					url: urlphp+'ObtenerCategoria.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					dataType:'json',
+					async:false,
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+						var dias=msj.horarios;
+						var horarios=msj.respuesta.horarios;
+						var zonas=msj.respuesta.zonas;
+						var participantes=msj.respuesta.participantes;
+						 cantidadparticipantes=msj.respuesta.cantidad;
+						var coachs=msj.respuesta.coachs;
+
+						var asignarcostos=msj.respuesta.configurarcostos;
+						var habilitarmodalidad=msj.respuesta.habilitarmodalidad;
+						var campototalclases=msj.respuesta.campototalclases;
+						var campopreciounitario=msj.respuesta.campopreciounitario;
+						var campomontoporparticipante=msj.respuesta.campomontoporparticipante;
+						var campomontogrupo=msj.respuesta.campomontoporgrupo;
+						var habilitarmodalidadpago=msj.respuesta.habilitarmodalidadpago;
+						var asignarcategoria=msj.respuesta.asignarcategoria;
+						var asignardias=msj.respuesta.asignardias;
+						var avanzado=msj.respuesta.avanzado;
+
+							$(".divcategoria").css('display','none');
+
+						if (avanzado==1) {
+								$("#profile-tab").css('display','block');
+								$("#contact-tab").css('display','block');
+							if(localStorage.getItem('idtipousuario')==0) {
+								$("#costos-tab").css('display','block');
+								$("#coach-tab").css('display','block');
+								$("#multi-tab").css('display','block');
+								$("#politicas-tab").css('display','block');
+								$("#aceptacion-tab").css('display','block');
+								$("#otros-tab").css('display','block');
+							}
+							$("#btnguardarservicio").attr('onclick',"Guardarservicio()");
+							$("#avanzado").val(1);
+
+							$(".divcategoria").css('display','block');
+
+							if (idservicio>0) {
+
+							$(".divcategoria").css('display','block');
+							
+
+							}
+						}else{
+
+							//$(".btncontinuar").css('display','none');
+							$("#btnguardarservicio").attr('onclick',"Guardarservicio2()");
+ 							//$(".btnguardarservicio").html('<i class="mdi mdi-content-save"></i>Guardar');
+
+						}
+						$(".diasckeckbox").attr('disabled',true);
+						$(".lbldomingo").addClass('btn_colorgray3');
+						$(".lbllunes").addClass('btn_colorgray3');
+						$(".lblmartes").addClass('btn_colorgray3');
+						$(".lblmiercoles").addClass('btn_colorgray3');
+						$(".lbljueves").addClass('btn_colorgray3');
+						$(".lblviernes").addClass('btn_colorgray3');
+						$(".lblsabado").addClass('btn_colorgray3');
+
+						$("#Domingo").attr('disabled',true);
+						$("#Lunes").attr('disabled',true);
+						$("#Martes").attr('disabled',true);
+						$("#Miercoles").attr('disabled',true);
+						$("#Jueves").attr('disabled',true);
+						$("#Viernes").attr('disabled',true);
+						$("#Sabado").attr('disabled',true);
+
+						$("#Domingo").attr('checked',false);
+						$("#Lunes").attr('checked',false);
+						$("#Martes").attr('checked',false);
+						$("#Miercoles").attr('checked',false);
+						$("#Jueves").attr('checked',false);
+						$("#Viernes").attr('checked',false);
+						$("#Sabado").attr('checked',false);
+
+
+						var diasdisponibles=[];
+							for (var i = 0; i < dias.length; i++) {
+								
+
+								if (dias[i].dia ==0 ) {
+									$(".lbldomingo").removeClass('btn_colorgray3');
+									$(".lbldomingo").addClass('btn_colorgray2');
+									$("#Domingo").attr('disabled',false);
+									//$("#Domingo").attr('checked',true);
+									diasdisponibles.push('Domingo');
+								}
+
+								
+								if (dias[i].dia==1) {
+								$(".lbllunes").removeClass('btn_colorgray3');
+								$(".lbllunes").addClass('btn_colorgray2');
+									
+								$("#Lunes").attr('disabled',false);
+/*								$("#Lunes").attr('checked',true);
+*/											diasdisponibles.push('Lunes');
+
+								}
+								if (dias[i].dia==2 ) {
+								$(".lblmartes").removeClass('btn_colorgray3');
+								$(".lblmartes").addClass('btn_colorgray2');
+									$("#Martes").attr('disabled',false);
+
+/*									$("#Martes").attr('checked',true);
+*/									diasdisponibles.push('Martes');
+
+								}
+						        if (dias[i].dia==3) {
+						        $(".lblmiercoles").removeClass('btn_colorgray3');
+									$(".lblmiercoles").addClass('btn_colorgray2');
+						               $("#Miercoles").attr('disabled',false);
+
+/*									$("#Miercoles").attr('checked',true);
+*/									diasdisponibles.push('Miercoles');
+
+								}
+								if (dias[i].dia==4) {
+									$(".lbljueves").removeClass('btn_colorgray3');
+									$(".lbljueves").addClass('btn_colorgray2');
+									$("#Jueves").attr('disabled',false);
+
+/*									$("#Jueves").attr('checked',true);
+*/									diasdisponibles.push('Jueves');
+
+								}
+								if (dias[i].dia==5 ) {
+								$(".lblviernes").removeClass('btn_colorgray3');
+								$(".lblviernes").addClass('btn_colorgray2');
+								$("#Viernes").attr('disabled',false);
+
+/*									$("#Viernes").attr('checked',true);
+*/								diasdisponibles.push('Viernes');
+
+								}
+
+								if (dias[i].dia==6 ) {
+									$(".lblsabado").removeClass('btn_colorgray3');
+									$(".lblsabado").addClass('btn_colorgray2');
+									$("#Sabado").attr('disabled',false);
+/*									$("#Sabado").attr('checked',true);
+*/									diasdisponibles.push('Sábado');
+
+								}
+							
+						}
+
+							if(domingox==1) {
+									$(".lbldomingo").removeClass('btn_colorgray3');
+									$(".lbldomingo").addClass('btn_colorgray2');
+									$("#Domingo").attr('disabled',false);
+									$("#Domingo").attr('checked',true);
+
+								}
+
+						if(lunesx==1) {
+								$(".lbllunes").removeClass('btn_colorgray3');
+								$(".lbllunes").addClass('btn_colorgray2');
+									
+								$("#Lunes").attr('disabled',false);
+								$("#Lunes").attr('checked',true);
+							}
+
+							if(martesx==1) {
+								$(".lblmartes").removeClass('btn_colorgray3');
+								$(".lblmartes").addClass('btn_colorgray2');
+								$("#Martes").attr('disabled',false);
+								$("#Martes").attr('checked',true);
+
+								}
+
+						if(miercolesx==1) {
+						        $(".lblmiercoles").removeClass('btn_colorgray3');
+								$(".lblmiercoles").addClass('btn_colorgray2');
+						        $("#Miercoles").attr('disabled',false);
+
+								$("#Miercoles").attr('checked',true);
+								}
+
+						if(juevesx==1) {
+								$(".lbljueves").removeClass('btn_colorgray3');
+								$(".lbljueves").addClass('btn_colorgray2');
+								$("#Jueves").attr('disabled',false);
+
+								$("#Jueves").attr('checked',true);
+								}
+
+
+							if(viernesx==1) {
+								$(".lblviernes").removeClass('btn_colorgray3');
+								$(".lblviernes").addClass('btn_colorgray2');
+								$("#Viernes").attr('disabled',false);
+								$("#Viernes").attr('checked',true);
+
+								}
+
+								if(sabadox==1) {
+									$(".lblsabado").removeClass('btn_colorgray3');
+									$(".lblsabado").addClass('btn_colorgray2');
+									$("#Sabado").attr('disabled',false);
+									$("#Sabado").attr('checked',true);
+								}
 						if (diasdisponibles.length>0) {
 
 							var uniqueArray = uArray(diasdisponibles);
@@ -937,7 +1447,7 @@ function uArray(array) {
     return out;
 }
 
-function ObtenerCategoriaServicios() {
+function ObtenerCategoriaServicios(valor) {
 	var pagina="ObtenerCategoriaServicios.php";
 	  $.ajax({
         type: 'POST',
@@ -945,9 +1455,14 @@ function ObtenerCategoriaServicios() {
         url: urlphp + pagina,
         async: false,
         success: function (resp) {
-           
+          
         	var res=resp.respuesta;
         	PintarCategoriaServicios(res);
+
+        	if (valor>0) {
+        		$("#v_categoriaservicio").val(valor);
+
+        	}
 
         }, error: function (XMLHttpRequest, textStatus, errorThrown) {
             var error;
@@ -1976,8 +2491,8 @@ function Guardarservicio2()
 
 
 function GuardarservicioNuevo2() {
-			var iduser=localStorage.getItem('id_user');
-			var idtipousuario=localStorage.getItem('idtipousuario');
+		var iduser=localStorage.getItem('id_user');
+		var idtipousuario=localStorage.getItem('idtipousuario');
 			
 
 		var domingo=0,lunes=0,martes=0,miercoles=0,jueves=0,Viernes=0,sabado=0;

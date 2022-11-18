@@ -326,7 +326,7 @@ var handleNotificationMessage = function(message){
 
                          if (localStorage.valor!='') {
                                 localStorage.setItem('idservicio',localStorage.valor);
-                            }
+                             }
                        // mainView.router.navigate("/"+localStorage.pushnav+"/", {reloadCurrent: true} );
                         //var view=app.views.current;
                         //view.router.navigate("/"+message.navigation+"/", {reloadCurrent: true} );
