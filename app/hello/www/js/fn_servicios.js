@@ -942,3 +942,93 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
        dynamicSheet1.open();
 }
+
+function ObtenerUsuariosServicio(idservicio) {
+	var datos="idservicio="+idservicio;
+			$.ajax({
+					url: urlphp+'ObtenerAlumnosServicio.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					dataType:'json',
+
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+						
+					var respuesta=msj.respuesta;
+					PintarAlumnosServicio(respuesta);	
+					}
+				});
+}
+
+function PintarAlumnosServicio(respuesta) {
+	var html="";
+	if (respuesta.length>0) {
+		for (var i = 0; i <respuesta.length; i++) {
+
+			if (respuesta[i].foto!='' && respuesta[i].foto!=null && respuesta[i].foto!='null') {
+
+				urlimagen=urlphp+`upload/perfil/`+respuesta[i].foto;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+			}else{
+
+				if (respuesta[i].sexo=='M') {
+
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarmujer');
+	
+				}else{
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarhombre');
+		
+				}
+
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+			}
+			html+=`
+				<li class="lista_" id="lista_`+respuesta[i].idusuarios+`" style="background:white;border-radius: 10px;margin-bottom: 1em;">
+            <label class="label-radio item-content">                                                                               
+              <div class="item-inner" style="width:80%;">
+             
+                <div class="row">
+                <div class="item-media">
+              		  <div class="col-30">
+                        <figure class="avatar  rounded-10">
+                       <img src="`+urlimagen+`" alt="" style="width:80px;height:80px;">
+                        </figure>
+                        </div>
+                        
+                        	<div class="col-100">
+                        	 <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;word-break: break-word;" id="participante_`+respuesta[i].idusuarios+`">
+             		   </div>
+
+
+                     <div class="row">
+             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+`
+             		     </div>
+             		   </div> <div class="row">
+             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].usuario+`
+             		     </div>
+             		   </div><div class="row">
+                        	  <div class="item-text">Alumno</div>
+                    </div>
+
+                        	</div>
+                        	
+                         	</div>
+                        </div>
+             		 
+              </div>
+             <input type="checkbox" name="my-opcion" class="idusuariosiniciar" id="idusuarios_`+respuesta[i].idusuarios+`" style="height:20px;width:20%;" onchange="SeleccionarAsignado(`+respuesta[i].idusuarios+`)">
+
+            </label>
+          </li>
+
+			`;
+		}
+	}
+	$(".usuarios").html(html);
+}

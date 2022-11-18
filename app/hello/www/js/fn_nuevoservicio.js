@@ -1916,6 +1916,7 @@ function BorrarElementoObjeto(id) {
 	}
 }
 function Resumenfechas() {
+	alert('aq');
 
 		$("#selected-dates").html('');
 		let days = ['Domingo','Lunes','Martes','Miércoles', 'Jueves', 'Viernes', 'Sábado','Domingo'];

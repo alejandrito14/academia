@@ -1874,12 +1874,15 @@ regresohome();
  ObtenerCategoriaServicios(0);
 
  ObtenerServiciosReplica();
- CargarCalendario();
+ //CargarCalendario();
+CargarFechasNuevoServicio();
 
-  $("#serviciosreplica").attr('onchange','ObtenerServicioNuevo(this.value)');
+  $("#serviciosreplica").attr('onchange','ObtenerServicioNuevo(this.value);ObtenerUsuariosServicio(this.value)');
 
   $("#btnguardarservicioreplica").attr('onclick','GuardarReplica()');
-  $("#btnaplicarcalendario").attr('onclick','DesplegarCalendario()');
+  $("#btnaplicarcalendario").attr('onclick','AplicarFechas()');
+
+  myStopFunction(identificadorDeTemporizador);
 });
 
 $$(document).on('page:init', '.page[data-name="reagendarservicio"]', function (e) {

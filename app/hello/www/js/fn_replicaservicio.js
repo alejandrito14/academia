@@ -538,73 +538,72 @@ function HorariosDiasCalendarioFecha(fechaseleccionada) {
 
 
 function GuardarReplica() {
-	var general='';
-	var costos='';
-	var v_politicasmensajes='';
-	var v_reglas='';
-	var v_coachs='';
-	$(".liservicio").removeClass('requerido');
-	$(".lititulo").removeClass('requerido');
-	$(".liselecciona").removeClass('requerido2');
-	var titulonuevo=$("#v_titulo").val();
-	var fechainicial='';
-	var fechafinal='';
-	//var iduser=localStorage.getItem('id_user');
-	var iduser=localStorage.getItem('id_user');
-	var idtipousuario=localStorage.getItem('idtipousuario');
-	var idservicio=$("#serviciosreplica").val();		
-	var idalumnos="";
-	var sabado="";
-	var Viernes="";
-	var jueves="";
-	var miercoles="";
-	var martes="";
-	var lunes="";
-	var domingo="";
-	var bandera=1;
-	if (idservicio==0) {
-			bandera=0;
-		}
-	if (titulonuevo=='') {
-			bandera=0;
-		}
-	if (arraydiaselegidos.length==0) {
-			bandera=0;
-		}
+	
+
+ var html=`
+         
+              <div class="">
+
+                <div class="row" style="padding-top:1em;">
+                <span>¿Seguro que desea realizar la operación?</span>
+                </div>
+              </div>
+           
+         
+        `;
+       app.dialog.create({
+          title: '',
+          //text: 'Dialog with vertical buttons',
+          content:html,
+          buttons: [
+            {
+              text: 'NO',
+            },
+            {
+              text: 'SI',
+            },
+            
+          ],
+
+           onClick: function (dialog, index) {
+            if(index === 0){
+             
+          }
+          else if(index === 1){
+          	if (Validacion()==1) {
+
+			if (idusuarios.length>0 && arraydiaselegidos.length>0) {
+          		  ValidacionHorario().then(r => {
+
+          		  	if (r.usuariosnoagregados.length>0) {
+          		  		
+          		  	}else{	
+
+          		  		GuardarservicioNuevoClonado();
+          		  	}
+
+          		  });
+          		}else{
 
 
-	if (bandera==1) {
-	var datos="titulonuevo="+titulonuevo+"&general="+general+"&costos="+costos+"&v_politicasmensajes="+v_politicasmensajes+"&v_reglas="+v_reglas+"&v_coachs="+v_coachs+"&idservicio="+idservicio+"&v_arraydiaselegidos="+arraydiaselegidos+"&idalumnos="+idalumnos;
-	datos+="&v_sabado="+sabado+"&v_viernes="+Viernes+"&v_jueves="+jueves+"&v_miercoles="+miercoles+"&v_martes="+martes+"&v_lunes="+lunes+"&v_domingo="+domingo;
-	datos+="&v_fechainicial="+fechainicial+"&v_fechafinal="+fechafinal;
-	datos+="&iduser="+iduser+"&idtipousuario="+idtipousuario;
-
-	GuardarServicioClonado(datos);
-
-	}
-	else{
-		if (idservicio==0) {
-	bandera=0;
-		$(".liservicio").addClass('requerido');	
-		}
-	if (titulonuevo=='') {
-		bandera=0;
-			$(".lititulo").addClass('requerido');
-		}
-	if (arraydiaselegidos.length==0) {
-			bandera=0;
-		$(".liselecciona").addClass('requerido2');
-
-		}
-		if (bandera==0) {
+          			GuardarservicioNuevoClonado();
+          		}
+          	
+          		
+          
+          	}else{
           		alerta('','Datos incompletos');
-		}
+          	}
+          }
 
-	}
-		
+
+
+        },
+          verticalButtons: false,
+        }).open();
 
 }
-
+/*
 function GuardarServicioClonado(datos) {
 	$.ajax({
 					url: urlphp+'GuardarServicioClonado.php', //Url a donde la enviaremos
@@ -638,7 +637,7 @@ function GuardarServicioClonado(datos) {
 					}
 				});
 }
-
+*/
 
 function GuardarservicioClon()
 {
@@ -675,8 +674,12 @@ function GuardarservicioClon()
           }
           else if(index === 1){
           	if (Validacion()==1) {
-          	GuardarservicioNuevoClonado();
-          	}else{
+          			if(ValidacionHorario()==1) {
+          				//GuardarservicioNuevoClonado();	
+          			}
+          		
+          		
+          		}else{
           		alerta('','Datos incompletos');
           	}
           }
@@ -714,35 +717,7 @@ function GuardarservicioNuevoClonado() {
 
 
 		var domingo=0,lunes=0,martes=0,miercoles=0,jueves=0,Viernes=0,sabado=0;
-	/*	if($(".lbldomingo").hasClass('active')){
-
-		 domingo=1;
-		}
-		 if($(".lbllunes").hasClass('active')){
-
-		 lunes=1;
-		}
-		 if($(".lblmartes").hasClass('active')){
-
-		 martes=1;
-		}
-		 if($(".lblmiercoles").hasClass('active')){
-
-		 miercoles=1;
-		}
-		 if($(".lbljueves").hasClass('active')){
-
-		 jueves=1;
-		}
-		 if($(".lblviernes").hasClass('active')){
-
-		 Viernes=1;
-		}
-		 if($(".lblsabado").hasClass('active')){
-
-		 sabado=1;
-		}	*/
-
+	
 		if($("#Domingo").is(':checked')){
 
 		 domingo=1;
@@ -771,6 +746,19 @@ function GuardarservicioNuevoClonado() {
 
 		 sabado=1;
 		}	
+
+		var idusuarios=[];
+			if($(".lista_").length) {
+			$(".lista_" ).each(function( index ) {
+				var id=$(this).attr('id');
+				var dividir=id.split('_')[1];
+				console.log(dividir);
+			  	if($("#idusuarios_"+dividir).is(':checked')) {
+			  		
+			  		idusuarios.push(dividir);
+			  	}
+			});
+		}
 
 		//recibimos todos los datos..
 		var nombre =$("#v_titulo").val();
@@ -860,16 +848,7 @@ function GuardarservicioNuevoClonado() {
 			}
 		});
 
-		/*$(".chkzona").each(function(){
-			var valor=$(this).attr('id');
-			var id=valor.split('_')[1];
-
-			if ($("#"+valor).is(':checked')) {
-				zonas.push(id);
-			}
-		});
-*/
-
+	
 		 porcentajescoachs=[];
 		$(".nombrecoach").each(function(){
 			var id=$(this).val();
@@ -888,7 +867,6 @@ function GuardarservicioNuevoClonado() {
 
 		});
 
-		console.log(porcentajescoachs);
 
 		$(".from").each(function(){
 			var valor=$(this).val();
@@ -1013,7 +991,7 @@ function GuardarservicioNuevoClonado() {
 		datos.append('imageneservicio',imagenessucursal);
 		datos.append('iduser',iduser);
 		datos.append('idtipousuario',idtipousuario);
-
+		datos.append('idusuarios',idusuarios);
 		var bandera1=1;
 		if (nombre=='') {
 			$("#lbltitulo").addClass('inputrequerido');
@@ -1204,49 +1182,13 @@ function GuardarservicioNuevoClonado() {
 			seccion6=1;
 		}
 
-		/*var bandera6=1;
 		
-		if (v_politicascancelacion=='') {
-
-			$("#lbldescripcionpolitica").addClass('inputrequerido');
-			bandera6=0;
-			
-		}*/
-
-
-
-/*		if (seccion2==1 && seccion3==1 && seccion4==1 && seccion5==1 &&seccion6==1) {
-			//document.getElementById("politicas-tab").click();
-
-
-		}
-	
-		if (seccion2==1 && seccion3==1 && seccion4==1 && seccion5==1 && seccion6==0) {
-			document.getElementById("aceptacion-tab").click();
-
-
-		}
-		if (seccion2==1 && seccion3==1 && seccion4==1 && seccion5==0 && seccion6==0) {
-			document.getElementById("costos-tab").click();
-
-
-		}
-
-		if (seccion2==1 &&seccion3==1 && seccion4==0 && seccion5==0 && seccion6==0) {
-			document.getElementById("contact-tab").click();
-
-		}
-
-		if (seccion2==1 && seccion3==0 && seccion4==0 && seccion5==0 && seccion6==0) {
-		document.getElementById("profile-tab").click();
-
-		}*/
 		
 		// $('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
 				if (bandera1==1) {
 		//setTimeout(function(){
 				  $.ajax({
-					url:urlphp+'GuardarServicio.php', //Url a donde la enviaremos
+					url:urlphp+'GuardarServicioClonado2.php', //Url a donde la enviaremos
 					type:'POST', //Metodo que usaremos
 					contentType: false, //Debe estar en false para que pase el objeto sin procesar
 					data: datos, //Le pasamos el objeto que creamos con los archivos
@@ -1303,5 +1245,61 @@ function GuardarservicioNuevoClonado() {
 
 		//}
 	 }
+}
+
+function ValidacionHorario() {
+	return new Promise((resolve, reject) => {
+	var datos = new FormData();
+		datos.append('v_arraydiaselegidos',arraydiaselegidos);
+
+		var idusuarios=[];
+		if($(".lista_").length) {
+			$(".lista_" ).each(function( index ) {
+				var id=$(this).attr('id');
+				var dividir=id.split('_')[1];
+				
+			  	if($("#idusuarios_"+dividir).is(':checked')) {
+			  		
+			  		idusuarios.push(dividir);
+			  	}
+			});
+		}
+		datos.append('idusuarios',idusuarios);
+
+		if (idusuarios.length>0) {
+
+		 $.ajax({
+					url:urlphp+'VerificarAsignacionHorariosUsuario.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos
+					contentType: false, //Debe estar en false para que pase el objeto sin procesar
+					data: datos, //Le pasamos el objeto que creamos con los archivos
+					processData: false, //Debe estar en false para que JQuery no procese los datos a enviar
+					cache: false, //Para que˘
+					dataType:'json',
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+					  },
+					success:function(msj){
+						var resp = msj.respuesta;
+							
+						   resolve(msj);
+						 	/*if( resp[0] == 1 ){
+								aparecermodulos(regresar+"?ac=1&idmenumodulo="+idmenumodulo+"&msj=Operacion realizada con exito",donde);
+						 	 }else{
+								aparecermodulos(regresar+"?ac=0&idmenumodulo="+idmenumodulo+"&msj=Error. "+msj,donde);
+						  	}*/			
+					  	}
+				  });		
+				}else{
+
+				  	resolve(1);
+				 }		
+		});
+
 }
 
