@@ -90,7 +90,33 @@ class Login
 
 	   public function BuscarUsuarioAsociado()
 	   {
-	   	$sql="SELECT *FROM usuariossecundarios WHERE idusuariotutorado='$this->idusuarios'";
+	   	$sql="SELECT *FROM usuariossecundarios WHERE idusuariotutorado='$this->idusuarios' ";
+
+
+	  
+	   	$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	   }
+
+	    public function BuscarUsuarioAsociadoTutor()
+	   {
+	   	$sql="SELECT *FROM usuariossecundarios WHERE idusuariostutor='$this->idusuarios'";
+
+	   
 	  
 	   	$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

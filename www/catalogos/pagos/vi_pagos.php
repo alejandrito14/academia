@@ -167,7 +167,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 													//SCRIPT PARA CONSTRUIR UN BOTON
 									$bt->titulo = "";
 									$bt->icon = "mdi-eye";
-									$bt->funcion = "AbrirModalDetalle('".$l_pagos_row['idnotapago']."','".$l_pagos_row['idusuario']."')";
+									$bt->funcion = "VerdatelleNota('".$l_pagos_row['idnotapago']."','".$l_pagos_row['idusuario']."','".$idmenumodulo."')";
 									$bt->estilos = "";
 									$bt->permiso = $permisos;
 									$bt->tipo = 2;
@@ -203,7 +203,48 @@ $estatuspago = array('NO PAGADO','PAGADO');
         </button>
       </div>
       <div class="modal-body">
+      	<div class="card" style="">
+	 	 <div class="card-body">
+	    	<h5 class="card-title" style="font-weight: bold;">FOLIO </h5>
+	    	<h4 id="folio" style="font-weight: normal;"></h4>
+
+	    	<div class="row">
+	    		
+	    		<div class="col-md-6">
+	    			
+
+	    	<h5 class="card-title" style="font-weight: bold;">TIPO DE PAGO </h5>
+	    	<h4 id="tipopago" style="font-weight: normal;"></h4>
+	    		</div>
+	    		<div class="col-md-6">
+	    			
+
+	    	<h5 class="card-title" style="font-weight: bold;">FECHA DE PAGO </h5>
+	    	<h4 id="fechapago" style="font-weight: normal;"></h4>
+
+	    		</div>
+
+	    	</div>
+
+
+
+
+	    	<h5 class="card-title" style="font-weight: bold;">ALUMNO </h5>
+	    	<h4 id="alumno" style="font-weight: normal;"></h4>
+
+
+	    	
+	 	 </div>
+		</div>
+
       	<table class="table table-striped table-bordered ">
+      		<thead>
+      			<tr >
+      				<th style="text-align: center;">CONCEPTO</th>
+      				<th style="text-align: center;">MONTO</th>
+
+      			</tr>
+      		</thead>
       		<tbody class="listadopagos"></tbody>
       	</table>
        
@@ -225,6 +266,8 @@ $estatuspago = array('NO PAGADO','PAGADO');
     </div>
   </div>
 </div>
+
+
 
 
 

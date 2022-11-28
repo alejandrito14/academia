@@ -58,6 +58,12 @@ try
 		$porpasar=0;
 		}
 
+		$obtenerservicios[$i]->fechaproxima="";
+		$obtenerservicios[$i]->horainicial="";
+		$obtenerservicios[$i]->horafinal="";
+		$obtenerservicios[$i]->idzona="";
+
+		if (count($obtenerhorarios)>0) {
 		$diasemana=$fechas->diaarreglocorto($obtenerhorarios[0]->dia);
 
 
@@ -93,7 +99,7 @@ try
 		$obtenerservicios[$i]->zonacolor=$rowzona['color'];
 		$obtenerservicios[$i]->fechahora=$fecha.' '.$obtenerhorarios[0]->horainicial;
 		$obtenerservicios[$i]->porpasar=$porpasar;
-
+	}
 
 		$calificacion->idservicio=$lo->idservicio;
 		$obtenercalificacion=$calificacion->ObtenerCalificacion();

@@ -31,11 +31,12 @@ try
 	$resultado_num = $db->num_rows($resultado);
 
 	   $propio=0;
+	   $estutor=0;
 	if ($resultado_num==1) {
 	   $propio=1;
 	}
 	
-	
+	$esasociado=0;
 	if ($resultado_num==0) {
 		# code...
 	
@@ -44,14 +45,23 @@ try
 	$resultado_num2 = $db->num_rows($resultado2);
 		
 
-
 	$lo->idusuarios = $resultado_row2['idusuarios'];
 
-	}
+	
+
+
 	$buscarusuario=$lo->BuscarUsuarioAsociado();
 	$esasociado=0;
+
 	if (count($buscarusuario)>0) {
 		$esasociado=1;
+	}
+
+
+	$buscarsiestutro=$lo->BuscarUsuarioAsociadoTutor();
+	$estutor=0;
+	if (count($buscarsiestutro)>0) {
+		$estutor=1;
 	}
 	//Validamos el resultado
 	if($resultado_num2  == 1){
@@ -78,15 +88,25 @@ try
 		$array->tipousuario=$tipo[0]->nombretipo;
 		$array->esasociado=$esasociado;
 		$array->propio=$propio;
+		$array->estutor=$estutor;
 
+		}else{
+			
+			$array->resultado = "0";
+			$array->id = '0';
+			$array->esasociado=$esasociado;
+			$array->propio=$propio;
+			$array->estutor=$estutor;
+		}
+	
 	}else{
 		//Contraseña o usuarios incorrectos
 		$array->resultado = "0";
 		$array->id = '0';
 		$array->esasociado=$esasociado;
 		$array->propio=$propio;
+		$array->estutor=$estutor;
 	}
-	
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($array);
 	echo $myJSON;

@@ -359,6 +359,7 @@ class ServiciosAsignados
 		(idservicio,idusuarios) VALUES ('$this->idservicio','$this->idusuario')";
 		
 		$resp=$this->db->consulta($query);
+		$this->idusuarios_servicios=$this->db->id_ultimo();
 	}
 
 	public function BuscarAsignacion()
@@ -847,6 +848,19 @@ class ServiciosAsignados
 		
 		return $array;
 
+	}
+
+
+	public function CambiarEstatusAsignacion($usuarioservicio)
+	{
+		$query="UPDATE  usuarios_servicios 
+			SET estatus=1 
+			WHERE idusuarios_servicios='$this->idusuarios_servicios'
+
+		";
+
+		$resp=$this->db->consulta($query);
+		
 	}
 
 

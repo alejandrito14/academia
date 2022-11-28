@@ -27,12 +27,13 @@ try
 	
 	$email = $f->guardar_cadena_utf8($_POST['v_email']);
 	$contra = $f->guardar_cadena_utf8($_POST['v_contra1']);
+	$usuario=$_POST['v_usuario'];
 
 	
-	$lo->usuario=$email;
+	$lo->email=$email;
 	$lo->clave=$contra;
 	$lo->idusuarios=$id;
-
+	$lo->usuario=$usuario;
 
 
 	$respuesta1=$lo->BuscarClienteporcorreo();

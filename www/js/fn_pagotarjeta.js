@@ -97,7 +97,7 @@ function PintarTarjetas(tarjetas,setlastcard=false) {
               </div>
             </div>
 
-                <div class="" style="float: right;line-height: 3;">
+                <div class="" style="float: right;line-height: 3;margin-left: 10px;">
                 ` +
                     `<a class="btn btn_rojo botoneliminar" style="" onclick="eliminarTarjeta('`+tarjetas[i].id +`','scard`+i+`');" style="float:left" >
                        <i style="color:white;" class="mdi mdi-delete-empty"></i>`+

@@ -31,6 +31,7 @@ try
 	$lo->foto=$_POST['foto'];
 	$lo->idservicio=$_POST['idservicio'];
 	
+	
 	if($lo->idimagenesgrupal == 0)
 	{
 		//guardando

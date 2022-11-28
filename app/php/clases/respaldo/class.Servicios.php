@@ -60,6 +60,7 @@ class Servicios
 	public $politicascancelacion;
 	public $reembolso;
 	public $cantidadreembolso;
+	public $tiporeembolso;
 	public $asignadocliente;
 	public $asignadocoach;
 	public $asignadoadmin;
@@ -537,9 +538,11 @@ class Servicios
 		politicasaceptacion,
 		controlasistencia,
 		agregousuario,
-		validaradmin
+		validaradmin,
+		tiporeembolso
 
-		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes','$this->politicasaceptacion','$this->controlasistencia','$this->idusuarios','$this->validaradmin')";
+
+		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes','$this->politicasaceptacion','$this->controlasistencia','$this->idusuarios','$this->validaradmin','$this->tiporeembolso')";
 			
 		$resp=$this->db->consulta($query);
 		$this->idservicio = $this->db->id_ultimo();
@@ -590,13 +593,34 @@ class Servicios
 		asignadoadmin='$this->asignadoadmin',
 		politicasaceptacion='$this->politicasaceptacion',
 		controlasistencia='$this->controlasistencia',
-		validaradmin='$this->validaradmin'
+		validaradmin='$this->validaradmin',
+		tiporeembolso='$this->tiporeembolso'
 		WHERE idservicio=$this->idservicio";
 
 		
 		$resp=$this->db->consulta($query);
 	}
 
+
+	//funcion para modificar los usuarios
+	public function ModificarServicioReagendado()
+	{
+		$query="UPDATE servicios 
+		SET
+		fechainicial='$this->fechainicial',
+		fechafinal='$this->fechafinal',
+		lunes='$this->lunes',
+		martes='$this->martes',
+		miercoles='$this->miercoles',
+		jueves='$this->jueves',
+		viernes='$this->viernes',
+		sabado='$this->sabado',
+		domingo='$this->domingo'
+		WHERE idservicio=$this->idservicio";
+
+		
+		$resp=$this->db->consulta($query);
+	}
 
 	public function Borrarservicio()
 	{
@@ -975,7 +999,7 @@ public function Eliminardeencuestas()
 			categorias.descripcion AS descripcioncategoria,
 			servicios.numeroparticipantesmax
 		FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio WHERE 
-			categorias.avanzado IN(0,1) AND servicios.estatus=1 AND servicios.validaradmin=0";
+			categorias.avanzado IN(0,1) AND servicios.estatus IN (0) ";
 
 			if($serviciosasignados!=''){
 
@@ -1028,7 +1052,8 @@ public function Eliminardeencuestas()
 		
 		return $array;
 	}
-	
+
+
 }
 
 ?>

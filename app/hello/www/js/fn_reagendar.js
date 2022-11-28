@@ -530,7 +530,7 @@ function GuardarservicioReagendar() {
 
 		 Viernes=1;
 		}
-		 if($("#Sabado").is('.checked')){
+		 if($("#Sabado").is(':checked')){
 
 		 sabado=1;
 		}	
@@ -659,12 +659,34 @@ function AplicarFechasReagendado() {
 	
 	if (v_fechainicial!='' && v_fechafinal!='' ) {
 
-		HorariosDisponiblesReagendado();
-		$("#demo-calendar").css('display','block');
+		
+		//$("#demo-calendar").css('display','block');
 		/*var id=$("#id").val();
 		if (id>0) {
 		ObtenerHorariosSemana(id);	
 		}*/
+
+
+		if (arraydiaselegidos.length>0) {
+
+ 		ObtenerVerificarFechasDias(v_fechainicial,v_fechafinal,arraydiaselegidos).then(r => {
+ 			
+ 			if (r.noseencuentra.length>0) {
+
+ 				MensajeMostrar(r.noseencuentra);
+ 				
+ 			}else{
+ 				HorariosDisponiblesReagendado();
+				$("#demo-calendar").css('display','block');
+
+ 			}
+
+ 		})
+
+		}else{
+		HorariosDisponiblesReagendado();
+		$("#demo-calendar").css('display','block');
+	}
 		
 	}else{
 

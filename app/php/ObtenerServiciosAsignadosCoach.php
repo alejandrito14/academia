@@ -51,12 +51,19 @@ try
 		$obtenerservicios[$i]->cantidadalumnos=count($participantes);
 		$porpasar=1;
 
+		$obtenerservicios[$i]->fechaproxima="";
+		$obtenerservicios[$i]->horainicial="";
+		$obtenerservicios[$i]->horafinal="";
 		if (count($obtenerhorarios)==0) {
 			
 		//horarios pasados
 		$obtenerhorarios=$lo->ObtenerHorariosOrdenados();
 		$porpasar=0;
 		}
+
+
+if (count($obtenerhorarios)>0) {
+	# code...
 
 		$diasemana=$fechas->diaarreglocorto($obtenerhorarios[0]->dia);
 
@@ -92,6 +99,7 @@ try
 		$obtenerservicios[$i]->zonanombre=$rowzona['nombre'];
 		$obtenerservicios[$i]->zonacolor=$rowzona['color'];
 		$obtenerservicios[$i]->fechahora=$fecha.' '.$obtenerhorarios[0]->horainicial;
+}
 		$obtenerservicios[$i]->porpasar=$porpasar;
 
 

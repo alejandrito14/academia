@@ -29,6 +29,7 @@ try
     $celular = $_POST['telefono'];
     $sistema = $_POST['sistema'];
     $uuid    = $_POST['uuid'];
+    $inputleido=$_POST['inputleido'];
 
     //$lo->usuario=$email;
     //$lo->idusuarios=$idusuarios;
@@ -62,7 +63,7 @@ try
     # code...
 
     $lo->codigosms = rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9);
-    $sql           = "UPDATE usuarios SET token='$lo->codigosms' WHERE idusuarios='$lo->idusuarios'";
+    $sql           = "UPDATE usuarios SET token='$lo->codigosms',aceptopolitica='$inputleido' WHERE idusuarios='$lo->idusuarios'";
 
     $resp = $db->consulta($sql);
 

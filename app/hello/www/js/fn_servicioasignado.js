@@ -2432,3 +2432,34 @@ function ObtenerVerificacionServicio() {
 
 	});
 }
+
+function ObtenerVerificarFechasDias(fechainicial,fechafinal,arraydiaselegidos) { 
+	 return new Promise(function(resolve, reject) {
+	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
+	var pagina = "ObtenerVerificarFechasDias.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user+"&fechainicial="+fechainicial+"&fechafinal="+fechafinal+"&v_arraydiaselegidos="+arraydiaselegidos;
+	
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(resp){
+			
+			resolve(resp);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+
+	});
+}

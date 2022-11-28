@@ -5,42 +5,24 @@ class Juego
 	public $idjuego;
 	public $nombre;
 	public $descripcion;
-	public $idtorneo;
-	public $idtipojuego;
+/*	public $idtorneo;
+*/	public $idtipojuego;
 	public $idtipopartido;
 	public $idespacio;
 	public $fechahora;
 	public $tipo_usuario;
 	public $lista_empresas;
-
+	public $idservicio;
+	public $idtipocompeticion;
 	public function ObtenertodosJuegos()
 	{
 		$query="SELECT
 		juego.idjuego,
 		juego.nombre,
 		juego.descripcion,
-		juego.idtorneo,
-		juego.idespacio,
-		juego.idhorario,
-		juego.estatus,
-		juego.idtipojuego,
-		juego.idtipopartido,
-		juego.marcador1,
-		juego.marcador2,
-		juego.jugado,
-		juegocliente.idcliente,
-		espacio.nombre as nombreespacio,
-		CONCAT(horario.hora,' ',horario.dia,'/',horario.mes,'/',horario.anio) as fecha,
-		tipojuego.nombre as nombretipojuego,
-		torneo.nombre as nombretorneo
+		juego.estatus
 		FROM
 		juego
-
-		INNER JOIN juegocliente ON juegocliente.idjuego =juego.idjuego
-		INNER JOIN espacio ON espacio.idespacio=juego.idespacio
-		INNER JOIN horario ON horario.idhorario=juego.idhorario
-		INNER JOIN tipojuego ON tipojuego.idtipojuego=juego.idtipojuego
-		INNER JOIN torneo ON torneo.idtorneo=juego.idtorneo
 		GROUP BY idjuego ";
 
 		$resp=$this->db->consulta($query);
@@ -63,7 +45,7 @@ class Juego
 	
 	public function Guardarjuego()
 	{
-		$query="INSERT INTO juego (nombre,descripcion,idtorneo,idespacio,idhorario,estatus,idtipojuego,idtipopartido) VALUES ('$this->nombre','$this->descripcion','$this->idtorneo','$this->idespacio','$this->fechahora','$this->estatus','$this->idtipojuego','$this->idtipopartido')";
+		$query="INSERT INTO juego (nombre,descripcion,idservicio,estatus,idtipojuego,idtipopartido,iddeporte,idtipocompeticion) VALUES ('$this->nombre','$this->descripcion','$this->idservicio','$this->estatus','$this->idtipojuego','$this->idtipopartido','$this->iddeporte','$this->idtipocompeticion')";
 		
 		
 		$resp=$this->db->consulta($query);
@@ -78,12 +60,12 @@ class Juego
 		descripcion='$this->descripcion',
 		idtorneo='$this->idtorneo',
 		idespacio='$this->idespacio',
-		idespacio='$this->idespacio',
 		idhorario='$this->fechahora',
 		estatus='$this->estatus',
 		idtipojuego='$this->idtipojuego',
 		idtipopartido='$this->idtipopartido'
 		WHERE idjuego=$this->idjuego";
+
 
 		$resp=$this->db->consulta($query);
 	}
@@ -139,6 +121,19 @@ class Juego
 		$resp=$this->db->consulta($query);
 	}
 
+	public function EliminarClienteJuego($value='')
+	{
+		$query="DELETE FROM juegocliente WHERE idjuego='$this->idjuego'";
+		$resp=$this->db->consulta($query);
+	}
+
+	public function EliminarSets()
+	{
+		
+		$query="DELETE FROM sets WHERE idjuego='$this->idjuego'";
+		$resp=$this->db->consulta($query);
+	}
+
 	public function obtenerjugadores()
 	{
 		$sql = "SELECT
@@ -182,6 +177,27 @@ class Juego
 		
 		
 		$resp=$this->db->consulta($query);
+	}
+
+
+	public function BuscarPareja($team,$parejas)
+	{
+		$pareja=array();
+
+		if (count($parejas)>0 && $team!=0) {
+			
+			for ($i=0; $i <count($parejas) ; $i++) { 
+				if ($parejas[$i]->{'numeropareja'}==$team) {
+					//var_dump($parejas[$i]->{'participante1'});die();
+					
+					$pareja=array('participante1'=>$parejas[$i]->{'participante1'},'participante2'=>$parejas[$i]->{'participante2'},'nombreparticipante1'=>$parejas[$i]->{'nombreparticipante1'},'nombreparticipante2'=>$parejas[$i]->{'nombreparticipante2'});
+
+					break;
+				}
+			}
+		}
+
+		return $pareja;
 	}
 	
 }

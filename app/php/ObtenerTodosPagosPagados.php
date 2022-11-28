@@ -25,6 +25,8 @@ try
 	$lo->idusuarios=$idusuarios;
 	$obtener=$lo->ListadoNotaspagospagados();
 
+	$textoestatus=array('Pendiente','Aceptado','Cancelado');
+
 	for ($i=0; $i < count($obtener); $i++) { 
 		
 		$fecha=$obtener[$i]->fecha;
@@ -33,7 +35,7 @@ try
 			$obtener[$i]->monto=$obtener[$i]->total;
 			
 			$obtener[$i]->concepto=$obtener[$i]->folio;
-
+			$obtener[$i]->textoestatus=$textoestatus[$obtener[$i]->estatus];
 
 		}
 

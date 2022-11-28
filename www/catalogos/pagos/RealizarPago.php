@@ -77,8 +77,8 @@ try {
     $fecha = explode('-', date('d-m-Y'));
     $anio = substr($fecha[2], 2, 4);
     $folio = $fecha[0].$fecha[1].$anio.$contador;
-
-
+    $db->commit();
+    $db->begin();
 
             $idtipodepago=$_POST['idtipodepago'];
             $tipopago=new Tipodepagos();

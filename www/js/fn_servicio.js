@@ -1607,11 +1607,12 @@ function CargarEventoSeleccionador() {
 									var color=zonaelegida.color;
 									
 						 			var dividirfecha=id.split('-');
+						 			console.log('aq');
 
 						 			console.log(dividirfecha);
 						 			var objeto={
 						 				id:id,
-						 				fecha:dividirfecha[0]+'-'+dividirfecha[2]+'-'+dividirfecha[3],
+						 				fecha:dividirfecha[0]+'-'+dividirfecha[1]+'-'+dividirfecha[2],
 						 				idzona:dividirfecha[5],
 						 				horainicial:dividirfecha[3],
 						 				horafinal:dividirfecha[4],

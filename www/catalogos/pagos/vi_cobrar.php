@@ -259,7 +259,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 		<button type="button" class="btn  btn-success btn-lg btn-block"  style="display: none;" id="btnmonederodisponible" disabled>MONEDERO $<span id="monederodisponible">0.00</span></button>
 	</div>
 </div>
-	<div class="row">
+	<div class="row" style="">
 	<div class="col-md-6" style="
     margin: 0;
     padding: 0;
@@ -271,14 +271,14 @@ $estatuspago = array('NO PAGADO','PAGADO');
 			<div class="row" style="
 			    /* margin-left: 1em; */
 			    ">
-			    	<div class="col-md-12" style="text-align: right;font-size: 16px;">SUBTOTAL: </div>
-			    	<div class="col-md-12" style="text-align: right;font-size: 16px;">MONEDERO: </div>
+			    	<div class="col-md-12" style="font-size: 16px;">SUBTOTAL: </div>
+			    	<div class="col-md-12" style="font-size: 16px;">MONEDERO: </div>
 			
-				<div class="col-md-12" style="text-align: right;font-size: 16px;">DESCUENTO: </div>
-				<div class="col-md-12" style="text-align: right;font-size: 16px;">DESCUENTO MEMBRESÍA: </div>
-					<div class="col-md-12 divcomision" style="text-align: right;font-size: 16px;display: none;">COMISIÓN: </div>
+				<div class="col-md-12" style="font-size: 16px;">DESCUENTO: </div>
+				<div class="col-md-12" style="font-size: 16px;">DESCUENTO MEMBRESÍA: </div>
+					<div class="col-md-12 divcomision" style="font-size: 16px;display: none;">COMISIÓN: </div>
 
-				<div class="col-md-12" style="text-align: right;font-size: 20px;">TOTAL:</div>
+				<div class="col-md-12" style="font-size: 20px;">TOTAL:</div>
 
 			</div>
 		</div>
@@ -286,7 +286,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 	</div>
 	</div>
 </div>
-	<div class="col-md-6">
+	<div class="col-md-6" style="font-size: 16px;">
 
 		<div class="row">
 			<div class="col-md-12">
@@ -773,6 +773,8 @@ $estatuspago = array('NO PAGADO','PAGADO');
     </div>
   </div>
 </div>
+
+
 
 
 <script type="text/javascript">

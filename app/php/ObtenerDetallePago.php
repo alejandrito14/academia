@@ -37,30 +37,7 @@ try
  	    $obtenerpagosstripe=$lo->ObtenerPagosStripe();
 
 
- 	    for ($i=0; $i < count($obtenerpagosstripe); $i++) { 
- 	    	$pagos->idpago=$obtenerpagosstripe[$i]->idpago;
- 	    	$pagosdescuentos=$pagos->ObtenerdescuentosPagos();
-
- 	    $pagos->descuentos=array();
- 	    	if (count($pagosdescuentos)>0) {
- 	    		$pagos->descuentos=$pagosdescuentos;
- 	    	 	    	array_push($descuentos,$pagosdescuentos);
-
- 	    	}
-
-
- 	    	$pagosdescuentomembresia=$pagos->Obtenerdescuentosmembresia();
-
-
- 	    	$pagos->descuentosmembresia=array();
-
- 	      if (count($pagosdescuentomembresia)>0) {
- 	      		$pagos->descuentosmembresia=$pagosdescuentomembresia;
- 	    	array_push($descuentosmembresia, $pagosdescuentomembresia);
-
- 	    	}
-
- 	    }
+ 	  
     }
    $obtenerimagenes=array();
     if ($resultado[0]->confoto==1) {
@@ -76,6 +53,34 @@ try
               $sumatotal=$sumatotal+$obtenerpagosstripe[$i]->monto;
           }
 */
+    }
+    if (count($obtenerpagosstripe)>0) {
+        # code...
+    
+      for ($i=0; $i < count($obtenerpagosstripe); $i++) { 
+            $pagos->idpago=$obtenerpagosstripe[$i]->idpago;
+            $pagosdescuentos=$pagos->ObtenerdescuentosPagos();
+
+        $pagos->descuentos=array();
+            if (count($pagosdescuentos)>0) {
+                $pagos->descuentos=$pagosdescuentos;
+                        array_push($descuentos,$pagosdescuentos);
+
+            }
+
+
+            $pagosdescuentomembresia=$pagos->Obtenerdescuentosmembresia();
+
+
+            $pagos->descuentosmembresia=array();
+
+          if (count($pagosdescuentomembresia)>0) {
+                $pagos->descuentosmembresia=$pagosdescuentomembresia;
+            array_push($descuentosmembresia, $pagosdescuentomembresia);
+
+            }
+
+        }
     }
     
 

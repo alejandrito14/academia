@@ -1,4 +1,4 @@
-let calendarInline2="";
+var calendarInline2="";
 var fechasglobal="";
 function ReplicaServicio() {
 	GoToPage('replicaservicio');

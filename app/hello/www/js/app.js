@@ -126,7 +126,7 @@ var produccion = 1;
 
 var lhost = "localhost:8888";
 var rhost = "issoftware1.com.mx";
-var version='1.0.6';
+var version='1.0.7';
 
 localStorage.setItem('versionapp',version);
 var abrir=0;
@@ -1209,7 +1209,7 @@ $$(document).on('page:init', '.page[data-name="detalleservicio"]', function (e) 
   ObtenerParticipantesAlumnos();
   $(".btnimagenesinformativas").attr('onclick','ImagenesInformativas()');
   $(".btncancelarservicio").attr('onclick','CancelarServicio()');
-
+  myStopFunction(identificadorDeTemporizador);
 });
 
 
@@ -1233,6 +1233,7 @@ $$(document).on('page:init', '.page[data-name="detalleserviciocoach"]', function
   //Verificarcantidadhorarios();
 
     $(".btncancelarservicio").attr('onclick','PantallaCancelarServicio()');
+  myStopFunction(identificadorDeTemporizador);
 
 });
 
@@ -1253,6 +1254,7 @@ $$(document).on('page:init', '.page[data-name="detalleserviciocoach2"]', functio
   //Verificarcantidadhorarios();
 
     $(".btncancelarservicio").attr('onclick','PantallaCancelarServicio()');
+  myStopFunction(identificadorDeTemporizador);
 
 });
 
@@ -1618,17 +1620,8 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
  
   
 
-  new Promise((resolve, reject) => {
-  resolve(ObtenerDescuentosRelacionados());
-  })
-  .then(() => {
-   ObtenerDescuentoMembresia();
-
-  }).then(()=>{
-
-    CalcularTotales();
-  });
-
+  ObtenerDescuentosRelacionados();//manda a llamar calcular totales al finalizar los descuentos
+  
 //PintarlistaImagen();
   $$("#tipopago").attr('onchange','CargarOpcionesTipopago()');
   $(".divtransferencia").css('display','none');
@@ -1763,7 +1756,7 @@ $$(document).on('page:init', '.page[data-name="nuevoservicio"]', function (e) {
 
        
     }).then(()=>{
-
+      asignacionperiodos=[];
        CargarFechasNuevoServicio();
   $("#v_costo").attr('onkeyup','');
   $("#v_categoria").attr('onchange','SeleccionarCategoria(0)');
@@ -1872,15 +1865,17 @@ $$(document).on('page:init', '.page[data-name="replicaservicio"]', function (e) 
 regresohome();
  ObtenerTipoServicios(0);
  ObtenerCategoriaServicios(0);
-
+  ObtenerPoliticasaceptacion();
  ObtenerServiciosReplica();
  //CargarCalendario();
-CargarFechasNuevoServicio();
+ CargarFechasNuevoServicio();
 
-  $("#serviciosreplica").attr('onchange','ObtenerServicioNuevo(this.value);ObtenerUsuariosServicio(this.value)');
+  $("#serviciosreplica").attr('onchange','ObtenerServicioAReplicar(this.value);ObtenerUsuariosServicio(this.value);ObtenerOrdenServicio();');
 
   $("#btnguardarservicioreplica").attr('onclick','GuardarReplica()');
   $("#btnaplicarcalendario").attr('onclick','AplicarFechas()');
+  $("#btnagregarperiodo").attr('onclick','NuevoPeriodo()');
+  $("#v_ligarclientes").attr('onchange','Permitirligar()');
 
   myStopFunction(identificadorDeTemporizador);
 });

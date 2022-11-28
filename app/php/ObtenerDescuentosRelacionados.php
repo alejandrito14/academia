@@ -152,7 +152,7 @@ if ($validado==1) {
 					
 
 					$validado=0;
-					if ($canthorarios>=$cantidadhorariosservicios) {
+					if ($canthorarios==$cantidadhorariosservicios) {
 							$validado=1;
 						
 								}

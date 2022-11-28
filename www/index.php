@@ -1198,7 +1198,10 @@ $navegador = $f->navegador();
  -->
  <script src="js/fn_categorias.js"></script>
 <script src="js/fn_notificacion.js"></script>
+<script src="js/fn_politicasaceptacion.js"></script>
+
 <script src="js/modal.js"></script>
+<script src="js/fn_matrices.js?<?php echo time(); ?>"></script>
 
 
 <!-- <script src="https://fullcalendar.io/js/fullcalendar-3.8.0/locale-all.js"></script> -->
@@ -1260,7 +1263,11 @@ $navegador = $f->navegador();
 <script src="js/fn_tipousuario.js?<?php echo time(); ?>"></script>
 <script src="js/fn_pagos.js?<?php echo time(); ?>"></script>
 <script src="js/fn_pagotarjeta.js?<?php echo time(); ?>"></script>
-
+<script src="js/fn_tipopartido.js?<?php echo time(); ?>"></script>
+<script src="js/fn_partidos.js?<?php echo time(); ?>"></script>
+<script src="js/fn_juego.js?<?php echo time(); ?>"></script>
+<script src="js/fn_notaspago.js?<?php echo time(); ?>"></script>
+<script src="js/fn_tipojuego.js?<?php echo time(); ?>"></script>
   <script src="https://js.stripe.com/v3/"></script>
 
  <!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -1271,10 +1278,7 @@ $navegador = $f->navegador();
 <!-- <script src="js/fn_espacios.js?<?php echo time(); ?>"></script>
 <script src="js/fn_cupones.js?<?php echo time(); ?>"></script>
 <script src="js/fn_horario.js?<?php echo time(); ?>"></script>
-<script src="js/fn_tipopartido.js?<?php echo time(); ?>"></script>
-<script src="js/fn_partidos.js?<?php echo time(); ?>"></script>
 
-<script src="js/fn_tipojuego.js?<?php echo time(); ?>"></script>
 <script src="js/fn_posicion.js?<?php echo time(); ?>"></script>
 
 <script src="js/fn_torneo.js?<?php echo time(); ?>"></script>

@@ -22,6 +22,7 @@ class Pagos
 	public $idnotapago;
 	public $tipo;
 	public $fechapago;
+	public $pagado;
 	//Funcion para obtener todos los niveles activos
 	public function ObtPagosActivos()
 	{
@@ -222,8 +223,9 @@ class Pagos
 
 	public function ActualizarPagado()
 	{
-		$sql="UPDATE pagos SET  pagado = '$this->pagado',
-		fechapago='$this->fechapago'
+		$sql="UPDATE pagos 
+		SET  pagado = '$this->pagado',
+		estatus='$this->estatus'
 		 WHERE idpago = '$this->idpago'";
 		
 		$resp=$this->db->consulta($sql);
@@ -381,6 +383,17 @@ class Pagos
 			}
 			return $array;
 		}
+
+
+		public function ActualizarPago()
+	{
+		$sql="UPDATE pagos SET  pagado = '$this->pagado',
+		fechapago='$this->fechapago'
+		 WHERE idpago = '$this->idpago'";
+		
+		$resp=$this->db->consulta($sql);
+
+	}
 }
 
 ?>

@@ -1,3 +1,4 @@
+var asignacionperiodos=[];
 function ObtenerServiciosAdicionales() {
 	var pagina = "ObtenerServiciosAdicionales.php";
 	$.ajax({
@@ -549,6 +550,7 @@ function ObtenerServicioNuevo(valor) {
 		var politicasaceptacion=respuesta.politicasaceptacion;
 		var estatus=respuesta.estatus;
 		var tiporeembolso=respuesta.tiporeembolso;
+
 		//$("#v_estatus").val(estatus);
 
 		if (estatus==1) {
@@ -711,6 +713,193 @@ function ObtenerServicioNuevo(valor) {
 		});
 }
 
+function ObtenerServicioAReplicar(valor) {
+	var pagina = "ObtenerServicioNuevo.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user+"&idservicio="+valor;
+	
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+ 		arraydiaselegidos=[];
+ 		arraydiaseleccionados=[];
+
+		var respuesta=datos.respuesta;
+		var idcategoriaservicio=respuesta.idcategoriaservicio;
+		var idservicio=respuesta.idservicio;
+		var idcategoria=respuesta.idcategoria;
+		var titulo=respuesta.titulo;
+		var descripcion=respuesta.descripcion;
+		var politicasaceptacion=respuesta.politicasaceptacion;
+		var estatus=respuesta.estatus;
+		var tiporeembolso=respuesta.tiporeembolso;
+		//$("#v_estatus").val(estatus);
+
+		if (estatus==1) {
+			$("#v_estatus").prop('checked',true);
+		}else{
+		$("#v_estatus").prop('checked',false);
+	
+		}
+		$("#v_titulo").val('Copia '+titulo);
+		$("#v_descripcion").val(descripcion);
+		 var lunes= respuesta.lunes;
+		var martes=respuesta.martes;
+		var miercoles=respuesta.miercoles;
+		var jueves=respuesta.jueves;
+		var viernes=respuesta.viernes;
+		var sabado=respuesta.sabado;
+		var domingo=respuesta.domingo;
+		ObtenerTipoServicios(idcategoriaservicio);
+
+		//ObtenerTipoServicios(idcategoriaservicio);
+		//ObtenerCategoriaServicios(idcategoria);
+		$("#v_categoria").val(idcategoriaservicio);
+		$("#v_categoriaservicio").val(idcategoria);
+	 var demo = new Promise((resolve, reject) => {
+	 resolve(ObtenerCategoriaServicios(idcategoria));
+      
+    });
+	 demo.then(()=>{
+   	SeleccionarCategoriaNuevo2(idcategoriaservicio,valor,lunes,martes,miercoles,jueves,viernes,sabado,domingo);
+		 ObtenerEncuestas(idservicio);
+
+		 var modalidad=respuesta.modalidad;
+
+		 if (modalidad==1) {
+		 	 $("#v_individual").attr('checked',true);
+		 }
+
+		 if (modalidad==2) {
+		 	 $("#v_grupal").attr('checked',true);
+		 }
+
+		 
+		 var numparticipantes=respuesta.numeroparticipantes;
+		 var numparticipantesmax=respuesta.numeroparticipantesmax;
+
+		//var totalclases='<?php echo $totalclases; ?>';
+		//var montopagarparticipante='<?php echo $montopagarparticipante; ?>';
+		//var montopagargrupo	='<?php echo $montopagargrupo ?>';
+		var precio	=respuesta.precio;
+		//$("#v_totalclase").val(totalclases);
+		$("#v_costo").val(precio);
+		//$("#v_montopagarparticipante").val(montopagarparticipante);
+		//$("#v_montopagargrupo").val(montopagargrupo);
+		$("#v_numparticipantesmin").val(numparticipantes);
+		$("#v_numparticipantesmax").val(numparticipantesmax);
+
+		var modalidadpago=respuesta.modalidadpago;
+		//var periodo='<?php echo $periodo; ?>';
+
+		 if (modalidadpago==1) {
+		 	 $("#v_habilitarevento").attr('checked',true);
+		 	 $("#v_periodo").val(0);
+		 }
+
+		 if (modalidadpago==2) {
+		 	 $("#v_habilitarperiodo").attr('checked',true);
+		 	 $("#v_periodo").val(periodo);
+		 }
+
+
+		
+		
+
+		var fechainicial=respuesta.fechainicial; 
+		var fechafinal=respuesta.fechafinal;
+		
+		$("#v_fechainicial").val(fechainicial);
+		$("#v_fechafinal").val(fechafinal);
+		$("#v_politicasaceptacion").val(politicasaceptacion);
+
+	//	ObtenerHorariosSemana(idservicio);
+		//ObtenerHorariosServicioComprobacion(idservicio);
+		//ObtenerPeriodos(idservicio);
+		ObtenerCoachesServicio(idservicio);
+	abiertocliente=respuesta.abiertocliente;
+	abiertocoach=respuesta.abiertocoach;
+	abiertoadmin=respuesta.abiertoadmin;
+	ligarcliente=respuesta.ligarcliente;
+	reembolso=respuesta.reembolso; 
+	asistencia=respuesta.asistencia;
+	//cantidadreembolso='<?php echo $cantidadreembolso; ?>';
+	asignadocliente=respuesta.asignadocliente;
+	asignadocoach=respuesta.asignadocoach;
+	asignadoadmin=respuesta.asignadoadmin;
+	/*tiempoaviso='<?php echo $tiempoaviso; ?>';
+	tituloaviso='<?php echo $tituloaviso; ?>';
+	descripcionaviso='<?php echo $descripcionaviso; ?>';
+	politicasca='<?php echo $politicasca; ?>';*/
+
+		if (abiertocliente==1) {
+			$("#v_abiertocliente").attr('checked',true);
+		}
+
+		if (abiertocoach==1) {
+			$("#v_abiertocoach").attr('checked',true);
+		}
+		if (abiertoadmin==1) {
+
+			$("#v_abiertoadmin").attr('checked',true);
+		}
+
+		if (ligarcliente==1) {
+			
+			$("#v_ligarclientes").attr('checked',true);
+		}
+
+		if (reembolso==1) {
+			
+			$("#v_reembolso").attr('checked',true);
+		}
+
+		if (asignadocliente==1) {
+			
+			$("#v_asignadocliente").attr('checked',true);
+		}
+
+		if (asignadoadmin==1) {
+			
+			$("#v_asignadoadmin").attr('checked',true);
+		}
+		if (asignadocoach==1) {
+			
+			$("#v_asignadocoach").attr('checked',true);
+		}
+
+		if (asistencia==1) {
+		$("#v_asistencia").attr('checked',true);
+	
+		}
+
+		if (localStorage.getItem('idtipousuario')==0) {
+			$("#contentestatus").css('display','block');
+		}
+
+		//$("#cantidadhorarios").text(arraydiaselegidos.length);
+
+		  }
+    );
+	//	Permitirligar();
+		//HabilitarcantidadReembolso();
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+}
+
  function ObtenerEncuestas(idservicio) {
  	var datos="idservicio="+idservicio;
 	$.ajax({
@@ -791,6 +980,7 @@ function ObtenerPeriodos(idservicio) {
 					},	
 					success: function (msj) {
 						asignacionperiodos=[];
+						$("#periodos").html('');
 					var respuesta=msj.respuesta;
 					//alert('a');
 					if (respuesta.length>0) {
@@ -969,6 +1159,7 @@ function ObtenerUsuariosServicio(idservicio) {
 function PintarAlumnosServicio(respuesta) {
 	var html="";
 	if (respuesta.length>0) {
+		$("#usuarios-tab").css('display','block');
 		for (var i = 0; i <respuesta.length; i++) {
 
 			if (respuesta[i].foto!='' && respuesta[i].foto!=null && respuesta[i].foto!='null') {

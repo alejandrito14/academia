@@ -384,7 +384,7 @@ class Servicios
 	public function ObtenerHorariosSemana()
 	{
 		$sql="SELECT idhorarioservicio,dia,horainicial,
-		horafinal,fecha,zonas.idzona,zonas.color  FROM horariosservicio INNER JOIN zonas ON zonas.idzona=horariosservicio.idzona WHERE idservicio=".$this->idservicio."";
+		horafinal,fecha,zonas.idzona,zonas.color,zonas.nombre  FROM horariosservicio INNER JOIN zonas ON zonas.idzona=horariosservicio.idzona WHERE idservicio=".$this->idservicio."";
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -844,6 +844,33 @@ class Servicios
 		
 		return $array;
 	}
+
+		public function ObtenerserviciosConsulta()
+	{
+		$sql="SELECT  
+			servicios.titulo,
+			servicios.idservicio,
+			servicios.descripcion,
+			servicios.estatus,
+			servicios.idcategoriaservicio,
+			servicios.imagen,
+			servicios.fechacreacion,
+			servicios.orden,
+			servicios.fechainicial,
+			servicios.fechafinal,
+			servicios.nodedias,
+			servicios.idcategoria,
+			servicios.precio,
+			servicios.totalclases,
+			servicios.montopagarparticipante,
+			categorias.titulo AS titulocategoria,
+			categorias.descripcion AS descripcioncategoria
+		FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio WHERE servicios.estatus=1 AND categorias.avanzado=1";
+		
+		$resp=$this->db->consulta($sql);
+		return $resp;
+	}
+	
 
 }
 

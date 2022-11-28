@@ -141,6 +141,9 @@ try
 			$obtenerservicio[0]->fechaproxima="";
 			}
 
+	$opiniones=$lo->ObtenerOpinionesServicio();
+	$evaluaciones=$lo->ObtenerEvaluacionesServicio();
+
 
 	$respuesta['respuesta']=$obtenerservicio[0];
 	$respuesta['horarios']=$obtenerhorarios1;
@@ -148,6 +151,8 @@ try
 	$respuesta['invitados']=$obtenerinvitaciones;
 	$respuesta['puedeinvitar']=$puedeinvitar;
 	$respuesta['habilitarcancelacion']=$habilitarcancelacion;
+	$respuesta['opiniones']=$opiniones;
+	$respuesta['evaluaciones']=$evaluaciones;
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);
 	echo $myJSON;

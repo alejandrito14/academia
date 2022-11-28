@@ -118,7 +118,7 @@ class Deportes
 
 	public function ObtenernivelesDeporte()
 	{
-		$sql="SELECT * FROM nivel_deporte WHERE iddeporte=".$this->iddeporte;
+		$sql="SELECT * FROM nivel_deporte INNER JOIN nivel ON nivel_deporte.idnivel=nivel.idnivel WHERE iddeporte=".$this->iddeporte;
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -141,6 +141,7 @@ class Deportes
 		$sql="DELETE  FROM nivel_deporte WHERE iddeporte=".$this->iddeporte;
 		$resp=$this->db->consulta($sql);
 	}
+
 
 }
 

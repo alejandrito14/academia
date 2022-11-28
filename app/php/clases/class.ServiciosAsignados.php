@@ -437,7 +437,7 @@ public function obtenerServiciosAsignadosPendientes()
 				WHERE
 				usuarios_servicios.idservicio='$this->idservicio' AND usuarios.idusuarios NOT IN('$this->idusuario') AND usuarios.tipo=3 and usuarios_servicios.cancelacion=0 ORDER BY usuarios.tipo DESC 
 		 ";
-
+		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -938,6 +938,8 @@ public function obtenerServiciosAsignadosPendientes()
 		return $array;
 	}
 
+
+
 	public function ObtenerUsuariosServiciosaCancelar($idusuariosacancelar)
 	{
 		$sql="SELECT
@@ -1049,6 +1051,119 @@ public function obtenerServiciosAsignadosPendientes()
 		}
 		
 		return $array;
+	}
+
+	public function VerificarSihaPagadoProceso()
+	{
+		$sql="SELECT * FROM pagos
+			WHERE  idservicio = '$this->idservicio' 
+			AND pagado=0 AND estatus=1 AND idusuarios='$this->idusuario'
+		 ";
+
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerOpinionesServicio()
+	{
+		$sql = "SELECT *FROM comentariosusuarios
+			INNER JOIN usuarios ON usuarios.idusuarios=comentariosusuarios.idusuarios
+		 WHERE comentariosusuarios.estatus=1 AND idservicio='$this->idservicio' ORDER BY idcomentariosusuarios";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerEvaluacionesServicio()
+	{
+		$sql = "SELECT *FROM usuarios_encuesta
+			INNER JOIN usuarios ON usuarios.idusuarios=usuarios_encuesta.idusuarios
+		 WHERE usuarios_encuesta.estatus=1 AND idservicio='$this->idservicio' ORDER BY idusuarioencuesta";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	
+	public function EvaluarHorarioFechaServicio($fechae,$horainicale,$horafinale)
+	{
+
+		$datetime1 = $this->fecha;
+		$datetime2 = $fechae;
+
+
+		if($datetime1==$datetime2){
+
+			
+			if ($this->horainicial>=$horainicale && $this->horafinal<=$horafinale ) {
+
+				return true;
+			}else{
+				return false;
+			}
+
+		}else{
+
+			return false;
+		}
+		
+		
+	}
+
+
+	public function CambiarEstatusAsignacion($usuarioservicio)
+	{
+		$query="UPDATE  usuarios_servicios 
+			SET estatus=1 
+			WHERE idusuarios_servicios='$this->idusuarios_servicios'
+
+		";
+
+		$resp=$this->db->consulta($query);
+		
 	}
 
 }

@@ -94,6 +94,8 @@ class ClienteStripe
 	public function GuardarIdCustomer(){
 
 		$query = "INSERT INTO customerstripe (skeystripe,idusuarios,customerid_stripe) VALUES ('$this->skey','$this->idusuarios','$this->customerid');";
+
+		
 		$resp=$this->db->consulta($query);
 		return $resp;
 

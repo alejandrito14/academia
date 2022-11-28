@@ -28,7 +28,7 @@ class Notapago
 	public $cantidad;
 	public $monto;
 	public $idpago;
-
+	public $descripcionaceptacion;
 
 	public function CrearNotapago()
 	{
@@ -70,7 +70,7 @@ class Notapago
 	public function Obtenernota()
 	{
 		$sql="
-			SELECT *FROM notapago WHERE idnotapago='$this->idnotapago' AND idusuario='$this->idusuario'";
+			SELECT *FROM notapago WHERE idnotapago='$this->idnotapago'";
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -232,5 +232,46 @@ class Notapago
 		$resp=$this->db->consulta($sql);
 		return $resp;
 	}
+
+	public function CambiarEstatus()
+	{
+			$sql="UPDATE notapago SET 
+			  estatus = '$this->estatus',
+			  descripcionaceptacion='$this->descripcionaceptacion'
+			  WHERE idnotapago='$this->idnotapago'";
+
+		    $resp=$this->db->consulta($sql);
+
+	}
+
+	public function ListadoNotasPagosPorvalidar()
+	{
+		
+			$sql = "SELECT *FROM
+					notapago INNER JOIN usuarios ON notapago.idusuario=usuarios.idusuarios		
+			    	WHERE  
+			    	 notapago.estatus IN(0) ORDER BY idnotapago DESC";
+
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
+		}
+
+	
+
+
+	
 }
  ?>

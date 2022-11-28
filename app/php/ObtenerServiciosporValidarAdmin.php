@@ -89,7 +89,7 @@ try
 		}
 
 
-//if (count($obtenerhorarios)==0) {
+if (count($obtenerhorarios)>0) {
 
 		$diasemana=$fechas->diaarreglocorto($obtenerhorarios[0]->dia);
 
@@ -127,7 +127,7 @@ try
 		$obtenerserviciosActivos[$i]->fechahora=$fecha.' '.$obtenerhorarios[0]->horainicial;
 		$obtenerserviciosActivos[$i]->porpasar=$porpasar;
 
-//	}
+	}
 
 		$calificacion->idservicio=$asignados->idservicio;
 		$obtenercalificacion=$calificacion->ObtenerCalificacion();

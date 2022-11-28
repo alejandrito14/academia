@@ -183,3 +183,11 @@ input[type=number] { -moz-appearance:textfield; }
 .seleccionado{
   background:#1167f6;
 }
+
+.seleccionadofecha{
+   background: red!important;
+   border-radius: 30px;color: white; 
+   cursor:pointer;margin: auto;width:20%;
+   padding-right: 1em;padding-left:1em;
+   justify-content:center;display:flex;
+}

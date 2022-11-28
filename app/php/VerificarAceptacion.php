@@ -33,15 +33,23 @@ try
 	$lo->idusuario=$idusuario;
 	$lo->idservicio=$idservicio;
 	$servicios->idservicio=$idservicio;
-	$pagadoservicio=$lo->VerificarSihaPagado();
 
 	$pagado=1;
+	$enproceso=0;
 	if ($obtenerservicio[0]->precio>0) {
-	
+		$pagadoservicio=$lo->VerificarSihaPagado();
+
 	if (count($pagadoservicio)>0) {
 				$pagado=1;
 			}else{
 				$pagado=0;
+			}
+
+
+		$enprocesoservicio=$lo->VerificarSihaPagadoProceso();
+
+			if (count($enprocesoservicio)>0) {
+				$enproceso=1;
 			}
 
 		}
@@ -56,6 +64,7 @@ try
 	$respuesta['respuesta']=$servicio;
 	$respuesta['pagado']=$pagado;
 	$respuesta['dentroperiodo']=$dentroperiodo;
+	$respuesta['enproceso']=$enproceso;
 
 	
 	//Retornamos en formato JSON 

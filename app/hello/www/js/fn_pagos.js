@@ -1392,7 +1392,7 @@ function ObtenerDescuentosRelacionados() {
       descuentosaplicados=[];
 
       PintarDescuentos(resultado);
-      
+       ObtenerDescuentoMembresia();
       
       },error: function(XMLHttpRequest, textStatus, errorThrown){ 
                         var error;
@@ -1645,7 +1645,7 @@ function ObtenerDescuentoMembresia() {
       if (descuentomembresia.length>0) {
         PintarDescuentosMembresia(descuentomembresia);
       }
-      
+       CalcularTotales();
 
       },error: function(XMLHttpRequest, textStatus, errorThrown){ 
         var error;

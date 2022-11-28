@@ -279,7 +279,7 @@ function CargarDatosCoach() {
     $$(".btnreagendarservicio").attr('onclick','ReagendarServicio()');
 
 	ObtenerTableroAnuncios(1);
-	ObtenerEntradas();
+	ObtenerEntradas(1);
    
      identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 3000);
      //botones

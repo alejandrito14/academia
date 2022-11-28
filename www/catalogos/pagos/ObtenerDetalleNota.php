@@ -19,6 +19,8 @@ require_once ("../../clases/conexcion.php");
 require_once ("../../clases/class.Notapago.php");
 require_once("../../clases/class.Funciones.php");
 require_once ("../../clases/class.Pagos.php");
+require_once ("../../clases/class.Usuarios.php");
+require_once ("../../clases/class.Sesion.php");
 
 
 try
@@ -28,13 +30,20 @@ try
     $db = new MySQL();
     $lo = new Notapago();
     $f  = new Funciones();
+    $usuarios=new Usuarios();
+    $usuarios->db=$db;
+    $sesion=new Sesion();
+
     $pagos = new Pagos();
     $pagos->db=$db;
     //Enviamos la conexion a la clase
     $lo->db    = $db;
    
     $idnotapago = $_POST['idnotapago'];
-    $id_user=$_POST['id_user'];
+    $rutaimagenes=$_SESSION['carpetaapp'];
+  /*  $id_user=$_POST['id_user'];
+    $usuarios->id_usuario=$id_user;
+    $datosusuario=$usuarios->ObtenerDatosUsuario();*/
     //Recibimos parametros
     $lo->idnotapago=$idnotapago;
     $lo->idusuario=$id_user;
@@ -126,6 +135,8 @@ try
     $respuesta['descuentos']=$descuentos;
     $respuesta['descuentosmembresia']=$descuentosmembresia;
     $respuesta['imagenescomprobante']=$obtenerimagenes;
+    $respuesta['usuario']=$datosusuario;
+    $respuesta['rutaimagenes']=$rutaimagenes;
 
     //Retornamos en formato JSON
     $myJSON = json_encode($respuesta);

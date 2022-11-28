@@ -304,7 +304,7 @@ class Pagos
 			$sql = "SELECT *FROM
 					notapago		
 			    	WHERE notapago.idusuario  
-			    	IN($this->idusuarios) AND estatus=1 ORDER BY idnotapago DESC";
+			    	IN($this->idusuarios) AND estatus IN(0,1) ORDER BY idnotapago DESC";
 			$resp = $this->db->consulta($sql);
 			$cont = $this->db->num_rows($resp);
 

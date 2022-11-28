@@ -24,7 +24,7 @@ try
     //Enviamos la conexion a la clase
     $lo->db    = $db;
     $idusuario = $_POST['id_user'];
-    $alias=$_POST['v_alias'];
+    $alias=$f->guardar_cadena_utf8($_POST['v_alias']);
     //Recibimos parametros
     $foto   = $_POST['foto'];
     $lo->alias   = $alias;

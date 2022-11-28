@@ -86,7 +86,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 	<div class="card-body">
 		<h5 class="card-title" style="float: left;">ASIGNAR USUARIOS A SERVICIOS</h5>
 		
-		<div style="float: right;position:fixed!important;z-index:10;right:0;margin-right:2em;width: 20%;">
+		<div style="float: right;position:fixed!important;z-index:10;right:0;margin-right:2em;width: 20%;display: none;" id="botones">
 		
 			<button class="btn btn-success btnguardar" ><i class="mdi mdi-content-save"></i>GUARDAR</button>
 

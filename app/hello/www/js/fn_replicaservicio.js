@@ -572,21 +572,73 @@ function GuardarReplica() {
           else if(index === 1){
           	if (Validacion()==1) {
 
+          			var idusuarios=[];
+					if($(".lista_").length) {
+						$(".lista_" ).each(function( index ) {
+							var id=$(this).attr('id');
+							var dividir=id.split('_')[1];
+							
+						  	if($("#idusuarios_"+dividir).is(':checked')) {
+						  		idusuarios.push(dividir);
+						  	}
+						});
+					}
+
 			if (idusuarios.length>0 && arraydiaselegidos.length>0) {
           		  ValidacionHorario().then(r => {
 
           		  	if (r.usuariosnoagregados.length>0) {
+          		  		var usuariosnoagregados=r.usuariosnoagregados;
+          		  		var html="";
+          		  		var idu=0;
           		  		
+						for (var i = 0; i <usuariosnoagregados.length; i++) {
+							var idservicioc=0;
+							if (idu!=usuariosnoagregados[i].idusuarios) {
+								idu=usuariosnoagregados[i].idusuarios;
+							html+=`<span>Usuario: `+usuariosnoagregados[i].usuario+`
+							no se pudo asignar, ya que se encuentra asignado a 
+							</span>`;
+
+							
+							}
+
+							var serviciosasignados=usuariosnoagregados[i].servicioscruzados;
+
+			 				for (var j =0; j < serviciosasignados.length; j++) {
+
+			 					//if (idservicioc!=serviciosasignados[j].idservicio && idu==usuariosnoagregados[i].idusuarios) {
+									//	idservicioc==serviciosasignados[j].idservicio;
+
+			 					html+=`<p>`+serviciosasignados[j].titulo+`</p>`
+			 					//}
+			 				}
+
+			 				
+			 				html+=`</br>`;
+						}
+
+						alerta(html,'No se pudieron asignar los siguientes usuarios');
           		  	}else{	
 
+          		  		if (arraydiaselegidos.length>0) {
           		  		GuardarservicioNuevoClonado();
+          		  		
+          		  		}else{
+          		  			alerta('Falta agregar horarios al servicio','');
+          		  		}
           		  	}
 
           		  });
           		}else{
 
-
+          			if (arraydiaselegidos.length>0) {
           			GuardarservicioNuevoClonado();
+          		
+          			}else{
+
+          		  		alerta('Falta agregar horarios al servicio','');
+          		  		}
           		}
           	
           		
@@ -742,7 +794,7 @@ function GuardarservicioNuevoClonado() {
 
 		 Viernes=1;
 		}
-		 if($("#Sabado").is('.checked')){
+		 if($("#Sabado").is(':checked')){
 
 		 sabado=1;
 		}	
@@ -947,8 +999,8 @@ function GuardarservicioNuevoClonado() {
 		datos.append('v_montopagargrupo',montopagargrupo);
 		datos.append('v_categoriaservicio',categoriaservicio);
 	
-			datos.append('periodos',JSON.stringify(asignacionperiodos));
-	datos.append('v_fechainicial',fechainicial);
+		datos.append('periodos',JSON.stringify(asignacionperiodos));
+		datos.append('v_fechainicial',fechainicial);
 		datos.append('v_fechafinal',fechafinal);
 		datos.append('v_modalidadpago',modalidadpago);
 		datos.append('v_perido',perido);
@@ -1159,10 +1211,8 @@ function GuardarservicioNuevoClonado() {
 		if (bandera4==1) {
 
 			seccion5=1;
-									 //onclick="ActivarTab(this,'profile')"
 			$("#aceptacion-tab").attr('onclick','ActivarTab(this,"aceptacion")');
-									//document.getElementById("contact-tab").click();
-
+		
 		}else{
 			seccion5=0;
 		}
@@ -1183,7 +1233,7 @@ function GuardarservicioNuevoClonado() {
 		}
 
 		
-		
+		console.log(bandera1);
 		// $('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
 				if (bandera1==1) {
 		//setTimeout(function(){
@@ -1211,7 +1261,7 @@ function GuardarservicioNuevoClonado() {
 							
 						   console.log("El resultado de msj es: "+msj);
 						   	if( resp == 1 ){
-								alerta('','Se realizó el registro correctamente');
+								//alerta('','Se realizó el registro correctamente');
 						 	
 								arraydiaselegidos=[];
 								arraydiaseleccionados=[];
@@ -1219,15 +1269,15 @@ function GuardarservicioNuevoClonado() {
 								asignacioncoach=[];
 								localStorage.setItem('fotoimagenservicio','');
 
-									if (localStorage.getItem('idtipousuario')==0) {
+									if(localStorage.getItem('idtipousuario')==0) {
 										GoToPage('homeadmin');
 										}
 										
-										if (localStorage.getItem('idtipousuario')==5) {
+									if(localStorage.getItem('idtipousuario')==5) {
 											GoToPage('homecoach');
-										}
+									}
 
-							alerta('','Se replicó servicio exitosamente');
+									alerta('','Se replicó servicio exitosamente');
 							
 						 	 }else{
 									alerta('','Error.Intente nuevamente');
@@ -1266,7 +1316,7 @@ function ValidacionHorario() {
 		}
 		datos.append('idusuarios',idusuarios);
 
-		if (idusuarios.length>0) {
+		
 
 		 $.ajax({
 					url:urlphp+'VerificarAsignacionHorariosUsuario.php', //Url a donde la enviaremos
@@ -1295,10 +1345,7 @@ function ValidacionHorario() {
 						  	}*/			
 					  	}
 				  });		
-				}else{
-
-				  	resolve(1);
-				 }		
+						
 		});
 
 }

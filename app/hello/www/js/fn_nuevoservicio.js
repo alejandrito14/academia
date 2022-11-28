@@ -1480,7 +1480,7 @@ function PintarCategoriaServicios(respuesta) {
 
 	if (respuesta.length>0) {
 		for (var i = 0; i < respuesta.length; i++) {
-			html+=`<option value="`+respuesta[i].idcategoriasservicio+`">`+respuesta[i].nombrecategoria+`</option>`;
+			html+=`<option value="`+respuesta[i].idcategoriasservicio+`">`+respuesta[i].nombrecategoria+' - '+respuesta[i].nombre+`</option>`;
 	
 		}
 	}
@@ -1509,9 +1509,26 @@ function AplicarFechas() {
 	}*/
 
 	if (v_fechainicial!='' && v_fechafinal!='' ) {
+		if (arraydiaselegidos.length>0) {
 
+ 		ObtenerVerificarFechasDias(v_fechainicial,v_fechafinal,arraydiaselegidos).then(r => {
+ 			console.log(r.noseencuentra);
+ 			if (r.noseencuentra.length>0) {
+
+ 				MensajeMostrar(r.noseencuentra);
+ 				
+ 			}else{
+ 				HorariosDisponibles();
+				$("#demo-calendar").css('display','block');
+
+ 			}
+
+ 		})
+
+		}else{
 		HorariosDisponibles();
 		$("#demo-calendar").css('display','block');
+	}
 		/*var id=$("#id").val();
 		if (id>0) {
 		ObtenerHorariosSemana(id);	
@@ -1522,6 +1539,75 @@ function AplicarFechas() {
 		alerta('','Seleccionar fechas');
 	}
 
+}
+
+function MensajeMostrar(noseencuentra) {
+			var msj="";
+ 				for (var i = 0; i < noseencuentra.length; i++) {
+ 				
+ 					var dividirfecha=noseencuentra[i].split('-');
+ 					var fecha=dividirfecha[0]+'-'+dividirfecha[1]+'-'+dividirfecha[2];
+ 					
+ 					msj+=`<span>`+fecha+`</span>`;
+ 				}
+
+ 				
+	 var html=`
+         
+              <div class="">
+
+                <div class="row" style="padding-top:1em;">
+
+                <span>Alguna de las fechas estan fuera del periodo seleccionado
+                ¿Desea eliminar las fechas?</span>
+                <p>`+msj+`</p>
+                </div>
+              </div>
+           
+         
+        `;
+       app.dialog.create({
+          title: '',
+          //text: 'Dialog with vertical buttons',
+          content:html,
+          buttons: [
+            {
+              text: 'NO',
+            },
+            {
+              text: 'SI',
+            },
+            
+          ],
+
+           onClick: function (dialog, index) {
+            if(index === 0){
+             
+          }
+          else if(index === 1){
+          	EliminarHorariosFueraPeriodo(noseencuentra);
+			
+            }
+
+        },
+          verticalButtons: false,
+        }).open();
+}
+
+function EliminarHorariosFueraPeriodo(noseencuentra) {
+
+		for (var i = 0; i < noseencuentra.length; i++) {
+ 				for (var j = 0; j < arraydiaseleccionados.length; j++) {
+ 					console.log(noseencuentra[i]+'=='+arraydiaseleccionados[j].id);
+ 					if (noseencuentra[i] == arraydiaseleccionados[j].id) {
+ 						EliminarHorario(noseencuentra[i]);
+ 						
+ 					}
+ 				}
+ 					
+ 		}
+
+ 		
 }
 
 function HorariosDisponibles() {
@@ -1916,7 +2002,7 @@ function BorrarElementoObjeto(id) {
 	}
 }
 function Resumenfechas() {
-	alert('aq');
+	
 
 		$("#selected-dates").html('');
 		let days = ['Domingo','Lunes','Martes','Miércoles', 'Jueves', 'Viernes', 'Sábado','Domingo'];
@@ -2476,7 +2562,14 @@ function Guardarservicio2()
           else if(index === 1){
 
           	if (Validacion()==1) {
-          		GuardarservicioNuevo2();
+
+          	//	if (arraydiaselegidos.length>0) {
+          			GuardarservicioNuevo2();
+
+          		/*}else{
+          		  	
+          		  	alerta('Falta agregar horarios al servicio','');
+          		  		}*/
           	}else{
           		alerta('','Datos incompletos');
           	}
@@ -2809,7 +2902,15 @@ function Guardarservicio()
           }
           else if(index === 1){
           	if (Validacion()==1) {
-          	GuardarservicioNuevo();
+          		if (arraydiaselegidos.length>0) {
+          		
+          			GuardarservicioNuevo();
+          		
+          		}else{
+          		  
+          		  alerta('Falta agregar horarios al servicio','');
+
+          		}
           	}else{
           		alerta('','Datos incompletos');
           	}
@@ -2903,7 +3004,7 @@ function GuardarservicioNuevo() {
 
 		 Viernes=1;
 		}
-		 if($("#Sabado").is('.checked')){
+		 if($("#Sabado").is(':checked')){
 
 		 sabado=1;
 		}	

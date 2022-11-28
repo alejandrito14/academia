@@ -19,6 +19,7 @@ function UsuariosServicio(idservicio) {
 	  success:function(msj){
 	  		arrayquitar=[];
 	  		arrayagregar=[];
+	  		$("#botones").css('display','block');
 	  		var servicio=msj.servicio[0];
 	  		$(".tituloseleccionado").html('<span style="font-weight: 400;">ASIGNAR A SERVICIO:</span> <span style="font-weight: bold;">'+servicio.titulo+'</span>');
 		 	$(".descripcionseleccionado").html('<span style="font-weight: 400;">DESCRIPCION:</span> <span style="font-weight: bold;">'+servicio.descripcion+'</span>');
@@ -42,6 +43,8 @@ function UsuariosServicio(idservicio) {
 								$("#inputcli_"+usuarios[i].idusuarios).prop('checked',true);
 							}
 						}
+
+
 
 		}
 	});
@@ -104,11 +107,11 @@ function GuardarAsignacion(idservicio) {
 
 
 			AbrirNotificacion(""+html,"mdi-checkbox-marked-circle ")
-
 		 }else{
 
 			AbrirNotificacion("SE REALIZARON LOS CAMBIOS CORRECTAMENTE","mdi-checkbox-marked-circle ")
- 	
+ 			aparecermodulos('catalogos/asignarusuarioservicios/vi_asignarusuarioservicios.php','main');
+
 		 }
 
 			 			

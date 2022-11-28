@@ -21,7 +21,8 @@ class Notapago
 	public $folio;
 	public $descuento;
 	public $descuentomembresia;
-
+	public $cambio;
+	public $montovisual;
 
 	public $descripcion;
 	public $cantidad;
@@ -183,6 +184,19 @@ class Notapago
 		}
 		
 		return $array;
+	}
+
+	public function ActualizarMonto()
+	{
+		$sql="UPDATE notapago SET 
+			  cambio = '$this->cambio',
+			  montovisual = '$this->montovisual', 
+			  estatus = '$this->estatus'
+			  WHERE idnotapago='$this->idnotapago'";
+			  
+		$resp=$this->db->consulta($sql);
+
+  
 	}
 }
  ?>
