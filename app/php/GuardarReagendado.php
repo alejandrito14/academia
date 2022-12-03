@@ -113,16 +113,17 @@ try
 
 			$notificaciones->idusuario=$idusuario;
 				$obtenertokenusuario=$notificaciones->Obtenertoken();
+			$titulonotificacion="Se reagendó el servicio ".$emp->titulo;
 
 			for ($i=0; $i < count($obtenertokenusuario); $i++) { 
 
-				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$i]->token);
+				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$i]->token,'titulonotificacion'=>$titulonotificacion,'ruta'=>$ruta);
 
 					array_push($arraytokens,$dato);
 				}
 			
 
-			$titulonotificacion="Se reagendó el servicio ".$emp->titulo;
+			
 		
 				}
 
@@ -135,7 +136,14 @@ try
 			$titulonotificacion="Se reagendó el servicio ".$emp->titulo;
 			for ($i=0; $i <count($obtenerusuariosarignados) ; $i++) { 
 			$idusuario=$obtenerusuariosarignados[$i]->idusuarios;
-			$ruta='detalleserviciocoach2';
+
+			if ($obtenerusuariosarignados[$i]->aceptarterminos==1) {
+				$ruta='detalleservicio2';
+
+				}else{
+				$ruta='aceptacionservicio2';
+
+			}
 			$valor=$emp->idservicio;
 			$texto='|Se reagendo el servicio|'.$emp->titulo.'|Periodo: '.date('d-m-Y',strtotime($emp->fechainicial)).' '.date('d-m-Y',strtotime($emp->fechafinal));
 			$estatus=0;
@@ -146,9 +154,9 @@ try
 
 			for ($j=0; $j < count($obtenertokenusuario); $j++) { 
 
-				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$j]->token);
+				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$j]->token,'titulonotificacion'=>$titulonotificacion,'ruta'=>$ruta);
 
-					array_push($arraytokens2,$dato);
+					array_push($arraytokens,$dato);
 				}
 				
 
@@ -194,9 +202,10 @@ try
 			
 			 $notificaciones->idcliente=$idusuario;
 			 $notificaciones->valor=$emp->idservicio;
-			 $notificaciones->navpage="detalleserviciocoach2";
+			 $notificaciones->navpage=$arraytokens[$i]['ruta'];
 			 $array=array();
 			 array_push($array,$arraytokens[$i]['token']);
+			 $titulonotificacion=$arraytokens[$i]['titulonotificacion'];
 			$notificaciones->EnviarNotificacion($array,$texto,$titulonotificacion);
 				//}
 
@@ -204,7 +213,7 @@ try
 		}
 
 
-		if (count($arraytokens2)>0) {
+		/*if (count($arraytokens2)>0) {
 			$texto='';
 			for ($i=0; $i <count($arraytokens2) ; $i++) { 
 
@@ -218,7 +227,7 @@ try
 			
 
 			}
-		}
+		}*/
 
 
 

@@ -307,6 +307,9 @@ function CalcularTotales() {
   var comisionporcentaje=0;
   var impuesto=0;
   var comision=0;
+  var comisionpornota=0;
+  var tipocomisionpornota=localStorage.getItem('tipocomisionpornota');
+
 
 	var obtenerpagos=JSON.parse(localStorage.getItem('pagos'));
 	var sumatotal=0;
@@ -363,9 +366,37 @@ function CalcularTotales() {
       }
         $(".divcomision").css('display','none');
 
+        if (localStorage.getItem('comisionpornota')!=0){
 
-      if (comision!=0 || comisionmonto!=0 ) {
+          comisionpornota=localStorage.getItem('comisionpornota');
+        }
 
+              localStorage.setItem('comisionnota',0);
+
+         if (comisionpornota>0 && comisionpornota!='') {
+
+              if (tipocomisionpornota==1) {//monto
+                comimonto1=comisionpornota;
+                comision=parseFloat(comision)+parseFloat(comisionpornota);
+              
+              }
+
+              if (tipocomisionpornota==2) {
+              
+                comimonto1=parseFloat(comisionpornota)/100;
+                comimonto1=parseFloat(comimonto1)*parseFloat(sumaconcomision);
+            
+                comision=parseFloat(comision)+parseFloat(comimonto1);
+              }
+
+              localStorage.setItem('comisionnota',comimonto1);
+
+                
+            }
+
+
+      if (comision!=0 || comisionmonto!=0 || comisionpornota!=0 ) {
+        console.log('comision'+comision+'-'+comisionmonto+'-'+comisionpornota);
         $(".divcomision").css('display','block');
         $(".lblcomision").text(formato_numero(comision,2,'.',','));
         localStorage.setItem('comisiontotal',comision);
@@ -621,6 +652,7 @@ function HabilitarOpcionespago(idtipodepago,foto,stripe,habilitarcampo,habilitar
 
     if (habilitarcampo==1) {
       // Recalcular4();
+      CalcularTotales();
       var sumatotalapagar1=localStorage.getItem('sumatotalapagar');
     
       $("#montocliente").val(parseFloat(round(sumatotalapagar1)));
@@ -665,6 +697,7 @@ function HabilitarOpcionespago(idtipodepago,foto,stripe,habilitarcampo,habilitar
 
   //Recalcular4();
 
+
 }
 function CargarOpcionesTipopago() {
 	var idtipopago=$("#tipopago").val();
@@ -681,7 +714,9 @@ function CargarOpcionesTipopago() {
       localStorage.setItem('comision',0);
       localStorage.setItem('comisiontotal',0);
       localStorage.setItem('impuestotal',0);
-
+      localStorage.setItem('comisionpornota',0);
+      localStorage.setItem('tipocomisionpornota',0);
+      localStorage.setItem('cambio',0);
   if (idtipopago>0) {
   
       $.ajax({
@@ -692,6 +727,9 @@ function CargarOpcionesTipopago() {
       async:false,
       success: function(respuesta){
       var resultado=respuesta.respuesta;
+
+      localStorage.setItem('comisionpornota',resultado.comisionpornota);
+      localStorage.setItem('tipocomisionpornota',resultado.tipocomisionpornota);
      
      	HabilitarOpcionespago(resultado.idtipodepago,resultado.habilitarfoto,resultado.constripe,resultado.habilitarcampomonto,resultado.habilitarcampomontofactura);
     if (resultado.habilitarfoto==1) {
@@ -1165,7 +1203,9 @@ function RealizarCargo() {
    var campomonto=localStorage.getItem('campomonto');
    var montovisual=localStorage.getItem('montocliente');
    var cambiomonto=localStorage.getItem('cambio');
-
+   var comisionpornota=localStorage.getItem('comisionpornota');
+   var comisionnota=localStorage.getItem('comisionnota');
+   var tipocomisionpornota=localStorage.getItem('tipocomisionpornota');
      $(".opccard").each(function(){
               if($(this).is(':checked')){
 
@@ -1187,13 +1227,17 @@ function RealizarCargo() {
           bandera=0;
         }
       }
-   var datos='pagos='+localStorage.getItem('pagos')+"&id_user="+iduser+"&constripe="+constripe+"&idtipodepago="+idtipodepago+"&descuentocupon="+descuentocupon+"&codigocupon="+codigocupon+"&descuentosaplicados="+JSON.stringify(descuentosaplicados)+"&sumatotalapagar="+sumatotalapagar+"&comision="+comision+"&comisionmonto="+comisionmonto+"&comisiontotal="+comisiontotal+"&impuestototal="+impuestototal+"&subtotalsincomision="+subtotalsincomision+"&impuesto="+impuesto+"&descuentosmembresia="+JSON.stringify(descuentosmembresia)+'&datostarjeta='+datostarjeta+'&datostarjeta2='+datostarjeta2+"&monedero="+monedero;
+   var datos='pagos='+localStorage.getItem('pagos')+"&id_user="+iduser+"&constripe="+constripe+"&idtipodepago="+idtipodepago+"&descuentocupon="+descuentocupon+"&codigocupon="+codigocupon+"&descuentosaplicados="+JSON.stringify(descuentosaplicados)+"&sumatotalapagar="+sumatotalapagar+"&comision="+comision+"&comisionmonto="+comisionmonto+"&comisiontotal="+comisiontotal+"&impuestototal="+impuestototal+"&subtotalsincomision="+subtotalsincomision+"&impuesto="+impuesto+"&descuentosmembresia="+JSON.stringify(descuentosmembresia);
       datos+='&confoto='+confoto+"&rutacomprobante="+rutacomprobante+"&comentarioimagenes="+comentarioimagenes;
       datos+='&campomonto='+campomonto+'&montovisual='+montovisual+'&cambiomonto='+cambiomonto;
+      datos+='&comisionpornota='+comisionpornota+"&comisionnota="+comisionnota+"&tipocomisionpornota="+tipocomisionpornota;
+      datos+='&datostarjeta2='+datostarjeta2+"&monedero="+monedero;
+      datos+='&datostarjeta='+datostarjeta;
+
     pagina = urlphp+pagina;
     if (bandera==1) {
           $(".dialog-buttons").css('display','none');
-          CrearModalEspera();
+         CrearModalEspera();
     var promise = $.ajax({
       url: pagina,
       type: 'post',
@@ -1480,9 +1524,9 @@ function CrearModalEspera() {
 
 
 
-                <span class="dialog-button dialog-button-bold butonok" onclick="VerPagos()" style="display:none;">OK</span>
+                <span class="dialog-button dialog-button-bold butonok" onclick="VerPagos()" style="display:none;position:static!important;">OK</span>
 
-                <span class="dialog-button dialog-button-bold butoerror" onclick="CerrarEspera()" style="display:none;">OK</span>
+                <span class="dialog-button dialog-button-bold butoerror" onclick="CerrarEspera()" style="display:none;position:static!important;">OK</span>
 
 
                   <div style="color:red;font-size:20px;"></div>
@@ -1528,6 +1572,9 @@ function CrearModalEspera() {
 function VerPagos() {
   app.dialog.close();
   GoToPage('pagos');
+}
+function CerrarEspera() {
+  app.dialog.close();
 }
 
 function HabilitarBotonPagar() {
@@ -2054,6 +2101,9 @@ function LimpiarVariables2(argument) {
                   localStorage.setItem('enviovariable','');
                   localStorage.setItem('costoenvio',0);
                   localStorage.setItem('sumatotalapagar','');
+                  localStorage.setItem('comisionpornota',0);
+                  localStorage.setItem('comisionnota',0);
+                  localStorage.setItem('tipocomisionpornota',0);
 
                   resultimagencomprobante=[];
                   arraycomentarios=[];
@@ -2109,7 +2159,7 @@ function PagoNorealizado(mensaje,idpayment,idnota) {
 
 function EditarMontoCliente() {
 
-  var sumatotalapagar1=localStorage.getItem('montocliente');
+  var sumatotalapagar1=localStorage.getItem('sumatotalapagar');
   app.dialog.create({
         title: '',
         text:'Captura el monto ',
@@ -2153,19 +2203,18 @@ function GuardarMonto2() {
   localStorage.setItem('montocliente',valor);
 
   $("#montocliente").val(round(valor));
-  $("#montovisual").val('$'+formato_numero(round(valor),2,'.',','));
 
   var sumatotalapagar=parseFloat(localStorage.getItem('sumatotalapagar'));
   var montovisual=parseFloat(valor);
   if (montovisual>=sumatotalapagar) {
-
+    $("#montovisual").val('$'+formato_numero(round(valor),2,'.',','));
     $("#btnpagarresumen").attr('disabled',false);
     var resta=montovisual-sumatotalapagar;
 
     localStorage.setItem('cambio',resta);
   }else{
 
-    alerta('Monto menor al total');
+    alerta('','Monto menor al total');
   }
 //editar
 }

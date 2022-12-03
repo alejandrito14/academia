@@ -49,6 +49,9 @@ try
 
 	$obtenerInvitacion=$invitacion->ObtenerInvitado();
 
+	if (count($obtenerInvitacion)>0) {
+		# code...
+	
 	$idusuarioinvita=$obtenerInvitacion[0]->idusuarioinvita;
 
 	$notificaciones->idusuario=$idusuarioinvita;
@@ -60,9 +63,9 @@ try
 
 					array_push($arraytokens,$dato);
 		}
+	
 
-
-	$titulonotificacion=$nombrequienrechaza." rechazo la asignacion al servicio ".$obtenerservicioasignado[0]->titulo;
+	$titulonotificacion=$nombrequienrechaza." rechazó la asignación al servicio ".$obtenerservicioasignado[0]->titulo;
 
 	$texto='|Rechazó la asignación|'.$obtenerservicioasignado[0]->titulo.'|'.$nombrequienrechaza;
 	$estatus=0;
@@ -70,10 +73,13 @@ try
 	$valor="";
 	$notificaciones->AgregarNotifcacionaUsuarios($idusuarioinvita,$texto,$ruta,$valor,$estatus);
 
-		
+	$invitacion->EliminarInvitacion();
+
+
+	}
 				
 
-	$invitacion->EliminarInvitacion();
+	
 	$db->commit();
 
 	if (count($arraytokens)>0) {

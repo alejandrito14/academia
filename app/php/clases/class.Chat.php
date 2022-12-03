@@ -49,7 +49,8 @@ class Chat
 		usuarios_alias1.nombre,
 		usuarios_alias1.paterno,
 		usuarios_alias1.usuario,
-		usuarios_alias1.foto
+		usuarios_alias1.foto,
+		usuarios_alias1.sexo
 		FROM
 		chatdirigido
 		JOIN chat

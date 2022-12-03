@@ -50,7 +50,7 @@ function Guardarservicio2(form,regresar,donde,idmenumodulo)
 		var estatus=$("#v_estatus").val();
 		var categoria=$("#v_categoria").val();
 		var costo=$("#v_costo").val();
-
+		var v_politicasaceptacionid=$("#v_politicasaceptacionid").val();
 
 
 		var id=$("#id").val();
@@ -172,7 +172,7 @@ function Guardarservicio2(form,regresar,donde,idmenumodulo)
 
 		
 		
-
+		datos.append('v_politicasaceptacionid',v_politicasaceptacionid);
 		datos.append('zonas',zonas);
 		datos.append('coachs',coachs);
 		datos.append('participantes',participantes);
@@ -1996,6 +1996,7 @@ function GuardarservicioForm(form,regresar,donde,idmenumodulo)
 			$("#lblmaximo").removeClass('inputrequerido');
 			$("#lbldescripcionpolitica").removeClass('inputrequerido');
 			$("#lbldescripcionaceptacionpolitica").removeClass('inputrequerido');
+			$("#lblseleccionarpoliticaaceptacion").removeClass('inputrequerido');
 
 
 		var domingo=0,lunes=0,martes=0,miercoles=0,jueves=0,Viernes=0,sabado=0;
@@ -2049,7 +2050,8 @@ function GuardarservicioForm(form,regresar,donde,idmenumodulo)
 
 		var categoriaservicio=$("#v_categoriaservicio").val();
 
-		
+		var v_politicasaceptacionid=$("#v_politicasaceptacionid").val();
+
 
 		var modalidad=0;
 
@@ -2269,6 +2271,7 @@ function GuardarservicioForm(form,regresar,donde,idmenumodulo)
 		datos.append('v_asignadocoach',v_asignadocoach);
 		datos.append('v_asignadoadmin',v_asignadoadmin);
 		datos.append('v_politicasaceptacion',v_politicasaceptacion);
+		datos.append('v_politicasaceptacionid',v_politicasaceptacionid);		
 		datos.append('v_descuentos',descuentos);
 		datos.append('v_membresias',membresias);
 		datos.append('v_encuestas',encuestas);

@@ -320,7 +320,7 @@ try
 
 
 	}else{
-		$titulonotificacion="Edicion servicio";
+		$titulonotificacion="Edición servicio";
 		$emp->ModificarServicio();
 
 		$obtenerser=$emp->ObtenerServicio();
@@ -612,7 +612,7 @@ try
 			$notificaciones->EnviarNotificacion($arraytokens,$texto,$titulonotificacion);
 		}
 */
-		
+	
 		if (count($arraytokens)>0) {
 			$texto='';
 			for ($i=0; $i <count($arraytokens) ; $i++) { 
@@ -634,6 +634,7 @@ try
 
 			}
 		}
+	
 
 	$respuesta['respuesta']=1;
 	$respuesta['idservicio']=$emp->idservicio;

@@ -1054,6 +1054,31 @@ public function Eliminardeencuestas()
 	}
 
 
+	public function ObtenerTodosHorarios()
+	{
+		$sql="SELECT idhorarioservicio,dia,horainicial,
+		horafinal,fecha,zonas.idzona,zonas.color,zonas.nombre
+		FROM horariosservicio
+		INNER JOIN zonas ON zonas.idzona=horariosservicio.idzona WHERE idservicio=".$this->idservicio." ORDER BY fecha asc ";
+
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
 }
 
 ?>

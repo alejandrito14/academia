@@ -125,7 +125,7 @@ if (count($obtenerInvitacion)>0) {
 		}
 
 		
-	$titulonotificacion=$nombrequienacepta." acepto la asignacion al servicio ".$obtenerservicio[0]->titulo;
+	$titulonotificacion=$nombrequienacepta." aceptó la asignación al servicio ".$obtenerservicio[0]->titulo;
 
 	$texto='|Aceptó la asignación|'.$obtenerservicio[0]->titulo.'|'.$nombrequienacepta;
 	$estatus=0;

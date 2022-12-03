@@ -55,7 +55,8 @@ class Calificacion
 			usuarios.usuario,
 			usuarios.alias,
 			usuarios.foto,
-			usuarios.materno
+			usuarios.materno,
+			usuarios.sexo
 		FROM calificacion
 			INNER JOIN usuarios ON calificacion.idusuarios = usuarios.idusuarios
 		 WHERE  calificacion.idservicio='$this->idservicio' ";

@@ -14,6 +14,7 @@ function listadochats() {
 		success: function(datos){
 
 			var respuesta=datos.respuesta;
+
 			PintarChatServicios(respuesta);
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -31,13 +32,12 @@ function PintarChatServicios(respuesta) {
 	if (respuesta.length>0) {
 		var html="";
 		for (var i = 0; i <respuesta.length; i++) {
-				if (respuesta[i].ultimomensaje.foto!='' && respuesta[i].ultimomensaje.foto!=null) {
+				if (respuesta[i].ultimomensaje.foto!='' && respuesta[i].ultimomensaje.foto!=null && respuesta[i].ultimomensaje.foto!='null') {
 
 				urlimagen=urlphp+`upload/perfil/`+respuesta[i].ultimomensaje.foto;
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
 			}else{
-
-        if (respuesta[i].sexo=='M') {
+        if (respuesta[i].ultimomensaje.sexo=='M') {
 
           urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarmujer');
   
@@ -74,16 +74,19 @@ function PintarChatServicios(respuesta) {
 			`;*/
 
 			html+=`
-			<div class="row" onclick="MostrarSala(`+respuesta[i].idsala+`)">
+			<div class="row" style="background: white;
+    padding-top: 1em;
+    padding-bottom: 1em;" onclick="MostrarSala1(`+respuesta[i].idsala+`,`+respuesta[i].servicio.idusuarios_servicios+`,`+respuesta[i].servicio.idservicio+`)">
                   <div class="col-30">
                     <div class="avatar  shadow rounded-10 ">
                     	`+imagen+`
                     </div>
                   </div>
                   <div class="col-60">
+
+                    <p class="text-muted" style="font-size: 14px;font-weight: bold;">`+respuesta[i].servicio.titulo+`</p>
                     <p class="text-color-theme no-margin-bottom">`+respuesta[i].ultimomensaje.nombre+` `+respuesta[i].ultimomensaje.paterno+`</p>
 
-                    
                     <p class="text-muted size-12">`+respuesta[i].ultimomensaje.mensaje+`</p>
                    <p class="text-muted small" style="opacity:0.6;">`+respuesta[i].ultimomensaje.fecha+`</p>
 
@@ -102,15 +105,23 @@ function PintarChatServicios(respuesta) {
 
 		}
 
-		$(".listamensajessala").html(html);
+		$(".listamensajessala").append(html);
 	}
 }
 
-function MostrarSala(idsalachat) {
+function MostrarSala1(idsalachat,idusuarios_servicios,idservicio) {
 
 	localStorage.setItem('idsala',idsalachat);
+  localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
+  localStorage.setItem('idservicio',idservicio);
 
 	GoToPage('messages');
+}
+function MostrarSala(idsalachat,idservicio) {
+
+  localStorage.setItem('idsala',idsalachat);
+  localStorage.setItem('idservicio',idservicio);
+  GoToPage('messages');
 }
 function ObtenerMensajesAnteriores() {
 	
@@ -129,13 +140,15 @@ function ObtenerMensajesAnteriores() {
 		success: function(datos){
 
 			var respuesta=datos.respuesta;
+      var datosusuarios=datos.datosusuarios;
 			var usuarios=[];
 
 			for (var i = 0; i <datos.usuarios.length; i++) {
 				usuarios.push(datos.usuarios[i]);
+
 			}
 
-
+      PintarUsuariosSala(datosusuarios);
 			localStorage.setItem('usuariossala',JSON.stringify(usuarios));
 			PintarMensajes(respuesta);
 
@@ -147,6 +160,23 @@ function ObtenerMensajesAnteriores() {
 					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
 			}
 		});
+}
+
+function PintarUsuariosSala(respuesta) {
+  var html="";
+ if (respuesta.length>0) {
+   
+
+    for (var i = 0; i <respuesta.length; i++) {
+      html+=`
+
+      <p>`+respuesta[i].nombre+` `+respuesta[i].paterno+` ha entrado al grupo</p>
+      `;
+    }
+  
+
+ }
+  $(".usuarios").append(html);
 }
 function PintarMensajes(mensajes) {
 	var id_user=localStorage.getItem('id_user');
@@ -257,4 +287,99 @@ function PintarMensajes(mensajes) {
          }
 
 	
+}
+
+function AbrirPantallaChats() {
+  GoToPage('chatservicio');
+}
+
+
+function listadochatservicio() {
+  var id_user=localStorage.getItem('id_user');
+  var idservicio=localStorage.getItem('idservicio');
+  var datos="idusuario="+id_user+"&idservicio="+idservicio;
+  var pagina = "ObtenerChats.php";
+  $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+    crossDomain: true,
+    cache: false,
+    async:false,
+    data:datos,
+    success: function(datos){
+
+      var respuesta=datos.respuesta;
+
+      PintarChatServicios2(respuesta);
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+            if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+            if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+          console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+      }
+    });
+  
+}
+
+
+function PintarChatServicios2(respuesta) {
+
+  if (respuesta.length>0) {
+    var html="";
+    for (var i = 0; i <respuesta.length; i++) {
+        if (respuesta[i].ultimomensaje.foto!='' && respuesta[i].ultimomensaje.foto!=null && respuesta[i].ultimomensaje.foto!='null') {
+
+        urlimagen=urlphp+`upload/perfil/`+respuesta[i].ultimomensaje.foto;
+        imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+      }else{
+        if (respuesta[i].ultimomensaje.sexo=='M') {
+
+          urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarmujer');
+  
+        }else{
+          urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarhombre');
+    
+        }
+
+       
+        imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+      }
+      
+
+      html+=`
+      <div class="row" style="background: white;
+    padding-top: 1em;
+    padding-bottom: 1em;" onclick="MostrarSala(`+respuesta[i].idsala+`,`+respuesta[i].servicio.idservicio+`)">
+                  <div class="col-30">
+                    <div class="avatar  shadow rounded-10 ">
+                      `+imagen+`
+                    </div>
+                  </div>
+                  <div class="col-60">
+
+                    <p class="text-color-theme no-margin-bottom">`+respuesta[i].ultimomensaje.nombre+` `+respuesta[i].ultimomensaje.paterno+`</p>
+
+                    <p class="text-muted size-12">`+respuesta[i].ultimomensaje.mensaje+`</p>
+                   <p class="text-muted small" style="opacity:0.6;">`+respuesta[i].ultimomensaje.fecha+`</p>
+
+                  </div>
+                  <div class="col-10">
+                    <p class=""><i style="text-align: right;
+    display: flex;
+    justify-content: right;" class="bi bi-chevron-right"></i></p>
+
+                  </div>
+                </div>
+
+
+      `;
+
+
+    }
+
+    $(".listamensajessala").append(html);
+  }
 }

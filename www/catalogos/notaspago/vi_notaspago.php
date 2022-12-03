@@ -94,7 +94,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 			<?php
 		
 				//SCRIPT PARA CONSTRUIR UN BOTON
-				$bt->titulo = "NUEVO PAGO";
+				$bt->titulo = "NUEVO COBRO";
 				$bt->icon = "mdi-plus-circle";
 				$bt->funcion = "aparecermodulos('catalogos/notaspago/fa_notaspago.php?idmenumodulo=$idmenumodulo','main');";
 				$bt->estilos = "float: right; margin-right:10px;";

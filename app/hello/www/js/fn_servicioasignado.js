@@ -37,11 +37,15 @@ function ObtenerServicioAsignado() {
 			var habilitarcancelacion=datos.habilitarcancelacion;
 			var opiniones=datos.opiniones;
 			var evaluaciones=datos.evaluaciones;
+			var calificacion=datos.calificacion;
+			var politicaaceptacion=datos.politicaaceptacion;
 			localStorage.setItem('idservicio',idservicio);
 			  ObtenerImagenesGrupalServicio();
 			  ObtenerImagenesIndividualServicioUsuario();
-			   VerificarcantidadhorariosAdmin();
-
+			  VerificarcantidadhorariosAdmin();
+		      VerificarSihayEvaluacionUsuario();
+			  ConsultarSihayComentarios();
+			  ObtenerParticipantesAlumnos();
 			var cantidadhorarios=horarios.length;
 			$(".cantidadhorarios").text(cantidadhorarios);
 			if (imagen!=null && imagen!='' && imagen!='null') {
@@ -69,8 +73,14 @@ function ObtenerServicioAsignado() {
              if (respuesta.fechaproxima!='') {
              	horarioshtml+=`<span>`+respuesta.fechaproxima+` `+respuesta.horainicial+` - `+respuesta.horafinal+` Hrs.</span></br>`;
              }
-
-             $(".descripcionpoliticas").text(respuesta.politicasaceptacion);
+             if (politicaaceptacion.length>0) {
+            
+             $(".descripcionpoliticas").text(politicaaceptacion[0].descripcion);
+             
+             }else{
+               $(".descripcionpoliticas").text(respuesta.politicasaceptacion);
+	
+             }
 			$(".colocarhorarios").html(horarioshtml);
 
 			$(".cantidadtotal").text(respuesta.numeroparticipantesmax);
@@ -85,6 +95,11 @@ function ObtenerServicioAsignado() {
 			if (evaluaciones.length>0) {
 				$(".divevaluacionesicono").addClass('iconos');
 				$(".evaluacionservicio").attr('onClick','GoToPage("evaluacionesservicio")');
+		
+			}
+
+			if (calificacion.length>0) {
+				$(".divcalificacion").addClass('iconos');
 		
 			}
 				$("#permisoasignaralumno").css('display','none');
@@ -157,6 +172,174 @@ function ObtenerServicioAsignado() {
 }
 
 
+function ObtenerServicioAsignado2() {
+	
+	var idservicio=localStorage.getItem('idservicio');
+	var pagina = "ObtenerServicioAsignado2.php";
+	var id_user=localStorage.getItem('id_user');
+	var idtipousuario=localStorage.getItem('idtipousuario');
+	var datos="id_user="+id_user+"&idservicio="+idservicio+"&idtipousuario="+idtipousuario;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		async:false,
+		success: function(datos){
+			var invitado=datos.invitado;
+			var respuesta=datos.respuesta;
+			var imagen=respuesta.imagen;
+			var horarios=datos.horarios;
+			var idservicio=respuesta.idservicio;
+			var puedeinvitar=datos.puedeinvitar;
+			var invitados=datos.invitados;
+			var habilitarcancelacion=datos.habilitarcancelacion;
+			var opiniones=datos.opiniones;
+			var evaluaciones=datos.evaluaciones;
+			var idusuarios_servicios=datos.idusuarios_servicios;
+			var calificacion=datos.calificacion;
+			var politicaaceptacion=datos.politicaaceptacion;
+
+
+
+			localStorage.setItem('idusuarios_servicios',idusuarios_servicios);
+			localStorage.setItem('idservicio',idservicio);
+			  ObtenerImagenesGrupalServicio();
+			  ObtenerImagenesIndividualServicioUsuario();
+			  VerificarcantidadhorariosAdmin();
+  			  VerificarSihayEvaluacionUsuario();
+  			  ConsultarSihayComentarios();
+  			  ObtenerParticipantesAlumnos();
+
+			var cantidadhorarios=horarios.length;
+			$(".cantidadhorarios").text(cantidadhorarios);
+			if (imagen!=null && imagen!='' && imagen!='null') {
+
+				imagen=urlimagenes+`servicios/imagenes/`+codigoserv+imagen;
+	
+			}else{
+
+
+				imagen=urlimagendefaultservicio;
+			}
+			$(".imgservicioasignado").attr('src',imagen);
+
+			$(".tituloservicio").text(respuesta.titulo);
+
+			var fechainicial=respuesta.fechainicial.split('-');
+			
+			var fechafinal=respuesta.fechafinal.split('-');
+			var fechai=fechainicial[2]+'/'+fechainicial[1]+'/'+fechainicial[0];
+			var fechaf=fechafinal[2]+'/'+fechafinal[1]+'/'+fechafinal[0];
+
+			$(".fechasservicio").text(fechai+' - '+fechaf);
+
+			var horarioshtml="";
+
+             if (respuesta.fechaproxima!='') {
+             	horarioshtml+=`<span>`+respuesta.fechaproxima+` `+respuesta.horainicial+` - `+respuesta.horafinal+` Hrs.</span></br>`;
+             }
+
+		if (politicaaceptacion.length>0) {
+            
+             $(".descripcionpoliticas").text(politicaaceptacion[0].descripcion);
+             
+             }else{
+               $(".descripcionpoliticas").text(respuesta.politicasaceptacion);
+	
+             }			
+
+             $(".colocarhorarios").html(horarioshtml);
+
+			$(".cantidadtotal").text(respuesta.numeroparticipantesmax);
+			$(".comentariosservicio").attr('onClick','MensajeNoacceso()');
+
+			if (opiniones.length>0) {
+				$(".comentariosservicio").attr('onClick','GoToPage("comentariosservicio")');
+				$(".divopiniones").addClass('iconos');
+			}
+			$(".evaluacionservicio").attr('onClick','MensajeNoaccesoEvaluacion()');
+
+			if (evaluaciones.length>0) {
+				$(".divevaluacionesicono").addClass('iconos');
+				$(".evaluacionservicio").attr('onClick','GoToPage("evaluacionesservicio")');
+		
+			}
+			if (calificacion.length>0) {
+				$(".divcalificacion").addClass('iconos');
+		
+			}
+				$("#permisoasignaralumno").css('display','none');
+			if (localStorage.getItem('idtipousuario')==3) {
+
+				if (respuesta.ligarcliente==1 && invitado==0 && puedeinvitar==0) {
+
+				$("#permisoasignaralumno").css('display','block');
+				}
+
+				if (puedeinvitar==1) {
+
+					if (invitados.length>0) {
+						var html="";
+						for (var i = 0; i <invitados.length; i++) {
+						html+=`
+								<div class="col">
+									`+invitados[i].nombre+`
+								</div>
+								`;
+
+
+						}
+
+						$("#permisoasignaralumno").html(html);
+					}
+
+				}
+
+
+			}
+		if (localStorage.getItem('idtipousuario')==5) {
+
+				if (respuesta.abiertocoach == 1) {
+					$("#permisoasignaralumno").css('display','block');
+				}
+			}
+
+	if (localStorage.getItem('idtipousuario')==0) {
+
+
+			if (respuesta.abiertoadmin == 1) {
+				$("#permisoasignaralumno").css('display','block');
+			}
+		}
+			
+			if (respuesta.controlasistencia==1) {
+				
+				$(".divasistencia").css('display','block');
+
+			}
+
+			if (habilitarcancelacion==1) {
+
+				$(".divcancelar").css('display','block');
+			}else{
+				$(".divcancelar").css('display','none');
+
+			}
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+}
+
 function ObtenerServicioAsignadoCoach() {
 	var pagina = "ObtenerServicioAsignadoCoach.php";
 	var idservicio=localStorage.getItem('idservicio');
@@ -188,6 +371,8 @@ function ObtenerServicioAsignadoCoach() {
 			  ObtenerParticipantesAlumnos();
 			  VerificarcantidadhorariosAdmin();
 			  VerificarSihayEvaluacion();
+
+
 			  var cantidadhorarios=horarios.length;
 			$(".cantidadhorarios").text(cantidadhorarios);
 			if (imagen!=null && imagen!='' && imagen!='null') {
@@ -308,7 +493,9 @@ function AceptarTerminos() {
 	var pagina = "AceptarTerminos.php";
 	var id_user=localStorage.getItem('id_user');
 	var datos="id_user="+id_user+"&idusuarios_servicios="+idusuarios_servicios;
-	 app.dialog.preloader('Guardando...');
+	CrearModalEsperaDialog();
+
+
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
@@ -317,8 +504,14 @@ function AceptarTerminos() {
 		cache: false,
 		data:datos,
 		success: function(datos){
-		  app.dialog.close();
 
+
+         $(".mensajeproceso").css('display','none');
+         $(".mensajeerror").css('display','none');
+         $(".mensajeexito").css('display','block');
+         $(".botonok").css('display','block');
+
+		 
 			if (datos.respuesta==1) {
 				
 				GoToPage('serviciosasignados');
@@ -330,6 +523,10 @@ function AceptarTerminos() {
 				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
 								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
 					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+					$(".mensajeproceso").css('display','none');
+                    $(".mensajeerror").css('display','block');
+                    $(".mensajeexito").css('display','none');
+                    $(".botonok").css('display','block');
 			}
 
 		});
@@ -386,8 +583,11 @@ function RechazarTerminos() {
 	var id_user=localStorage.getItem('id_user');
 	var motivo=$("#txtcomentariorechazo").val();
 	var datos="id_user="+id_user+"&idusuarios_servicios="+idusuarios_servicios+"&motivocancelacion="+motivo;
-	
-	if (motivo!='' && motivo.length>10) {
+
+	if (motivo!='' && motivo.length>=10) {
+			app.dialog.close();
+			CrearModalEsperaDialog();
+
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
@@ -398,8 +598,13 @@ function RechazarTerminos() {
 		success: function(datos){
 
 			if (datos.respuesta==1) {
+
+				 $(".mensajeproceso").css('display','none');
+        		 $(".mensajeerror").css('display','none');
+         		 $(".mensajeexito").css('display','block');
+         		 $(".botonok").css('display','block');
 			
-				alerta('','Operación realizada');
+				//alerta('','Operación realizada');
 				GoToPage('home');
 			}
 			
@@ -409,12 +614,16 @@ function RechazarTerminos() {
 				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
 								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
 					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+					$(".mensajeproceso").css('display','none');
+                    $(".mensajeerror").css('display','block');
+                    $(".mensajeexito").css('display','none');
+                    $(".botonok").css('display','block');
 			}
 
 		});
 	}else{
 
-		alerta('','Para continuar coloque un motivo de rechazo');
+		alerta('','Para continuar coloque un motivo de rechazo, cantidad mínima de 10 caracteres');
 	}
 }
 
@@ -1123,13 +1332,17 @@ html+=`
                         	  <div class=" col-100 item-text" style="font-size:14px;margin-left: 1em;`+background+`">`+respuesta[i].nombretipo+`</div>
                
                         </div>
-
-                        <div class="col-20">
+                        	 <div class="col-20">
                          <div class="col"> 
-	                        <button id="" class="button " style="font-size: 26px;" onclick="SubirFotoIndividual(`+respuesta[i].idusuarios+`)">
+                        `;
+
+                       	if (localStorage.getItem('idtipousuario')==5) {
+	                       html+=`<button id="" class="button " style="font-size: 26px;" onclick="SubirFotoIndividual(`+respuesta[i].idusuarios+`)">
 	                       		 <i class="bi bi-card-image"></i>
-	                        </button>
-                        </div>
+	                        </button>`;
+	                    }
+
+                      html+= ` </div>
                         </div>
 
                         `;
@@ -1752,13 +1965,22 @@ function PintarCalificacionesServicio(respuesta) {
 		var html="";
 		for (var i =0; i < respuesta.length; i++) {
 
-			if (respuesta[i].foto!='' && respuesta[i].foto!=null) {
+
+			if (respuesta[i].foto!='' && respuesta[i].foto!=null && respuesta[i].foto!='null') {
 
 				urlimagen=urlphp+`upload/perfil/`+respuesta[i].foto;
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
 			}else{
 
-				urlimagen="img/icon-usuario.png";
+				if (respuesta[i].sexo=='M') {
+
+                    urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarmujer');
+    
+                }else{
+                    urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarhombre');
+        
+                }
+
 				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
 			}
 			var calificacion=respuesta[i].calificacion;

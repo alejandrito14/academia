@@ -124,7 +124,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				<div class="card-body">
 
 					<div class="row">
-				<div class="col-md-3"></div>
+				
 				<div class="col-md-6">
 					
 			<!-- 	<input type="text"  class="form-control "> -->
@@ -135,13 +135,14 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 	
   		</div>
   	</div>
-    <input class="form-control mr-sm-2 nombreusuario" type="text" aria-label="Search" style="float: left;width: 70%;" disabled="disabled">
+    <input class="form-control mr-sm-2 nombreusuario" type="text" aria-label="Search" style="float: left;width: 90%;" disabled="disabled">
     <button class="btn" type="button" onclick="ObtenerClientesNotas()"><span class="mdi mdi-magnify"></span></button>
   
 
 
 
 				</div>
+				<div class="col-md-3"></div>
 				<div class="col-md-3"></div>
 			</div>
 
@@ -150,12 +151,15 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						
 						<div class="col-md-6">
 							<div class="divtodospagos" style="display: none;">
-							<div class="row">
+							<div class="row" style="padding-bottom: 1em;">
+								<div class="col-md-12">
+								<h3 class="nombreusuario2"></h3>
+								</div>
 								<div class="col-md-6">
 									<label for="">SELECCIONAR PAGOS</label>
 								</div>
 									<div class="col-md-6" style="float: right;">
-										<button style="float: right;display: none;" type="button" class="btn btnnuevopago btn_azul" onclick="AbrirModalNuevoPago()">NUEVO PAGO</button>
+										<button style="float: right;display: none;" type="button" class="btn btnnuevopago btn_azul" onclick="AbrirModalNuevoPago()">NUEVO CONCEPTO</button>
 									</div>
 							</div>
 							
@@ -164,17 +168,20 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 						</div>
 					</div>
-					<div class="col-md-6 " style="">
+					<div class="col-md-6 " >
+						<div class="row" style="padding-bottom: 3em;">
+							
+						</div>
 						<div class="divresumenpago" style="display: none;">
 							<div class="row">
 								<div class="col-md-6">
-							   <label for="">RESUMÉN DE PAGO</label>
+							   <label for="">RESUMEN DE PAGO</label>
 								</div>
 								<div class="col-md-6">
 								</div>
 
 					</div>
-						<div  style="background: gray;">
+						<div  style="background: gray;margin-top: 1.4em;">
 							
 							<div class="listadopagoselegidos"></div>
 

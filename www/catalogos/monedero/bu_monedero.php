@@ -47,16 +47,16 @@ try
 	//$p_pago = ($pago != "" ) ? "AND  est_pago in($pago) " : '';
 	//$p_ini = ($ini != "" ) ? " est_recibido != $ini" : '';
 	
-	if($tipousaurio != 0)
+	/*if($tipousaurio != 0)
 		{
 			$SQLidempresas = " AND   c.idempresas IN ($lista_empresas) ";
 
 		}else
-		{
+		{*/
 			$SQLidempresas = " ";
-		}
+		
 	
-	$sql_guias = "SELECT * FROM clientes c WHERE estatus IN(0,1,2) $p_nombre $p_materno $p_paterno $p_tarjeta $SQLidempresas ";
+	$sql_guias = "SELECT * FROM usuarios c WHERE estatus IN(0,1,2) and tipo=3 $p_nombre $p_materno $p_paterno $p_tarjeta $SQLidempresas ";
 
 			
 	
@@ -67,6 +67,7 @@ try
 	//$sql_mandar = $f->conver_especial($sql_guias);
 		
 //ejecuto la consulta y creo un fecth assoc	
+	
 	$result_gastos = $db->consulta($sql_guias);
 	$result_gastos_row = $db->fetch_assoc($result_gastos); 
 	$result_gastos_row_num = $db->num_rows($result_gastos);
@@ -124,12 +125,12 @@ try
                  $nombre=$f->imprimir_cadena_utf8($result_gastos_row['nombre']." ".$result_gastos_row['paterno']." ".$result_gastos_row['materno']);
 
                  echo $f->imprimir_cadena_utf8($result_gastos_row['nombre']." ".$result_gastos_row['paterno']." ".$result_gastos_row['materno']); ?></td> 
-			     <td align="center"><?php echo "$ ".$result_gastos_row['saldo_monedero']; ?></td>
+			     <td align="center"><?php echo "$ ".$result_gastos_row['monedero']; ?></td>
 
 			     <td align="center">
 			     	
-			     <button onclick="ObtenerMovimientos('<?php echo $result_gastos_row['idcliente']; ?>')" class="btn btn_accion"><i class="mdi mdi-eye"></i></button>
-			     <button  class="btn btn_accion" title="AGREGAR" onclick="agregarsaldoacliente('<?php echo $result_gastos_row['idcliente']; ?>','<?php echo $nombre; ?>')" ><i class="mdi mdi-plus"></i></button>
+			     <button onclick="ObtenerMovimientos('<?php echo $result_gastos_row['idusuarios']; ?>')" class="btn btn_accion"><i class="mdi mdi-eye"></i></button>
+			     <button  class="btn btn_accion" title="AGREGAR" onclick="agregarsaldoacliente('<?php echo $result_gastos_row['idusuarios']; ?>','<?php echo $nombre; ?>')" ><i class="mdi mdi-plus"></i></button>
 			     </td>
 			     <!--<td align="center"><?php echo $modalidad[$result_gastos_row['modalidad']]; ?></td> 
 			     <td align="center"><?php echo  $tipo[$result_gastos_row['tipo']]; ?></td>-->

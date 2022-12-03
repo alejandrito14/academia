@@ -117,6 +117,11 @@ var routes = [
     componentUrl: './pages/aceptacionservicio.html',
   },
 
+  {
+    path:'/aceptacionservicio2/',
+    componentUrl: './pages/aceptacionservicio2.html',
+  },
+
  {
     path:'/calendario/',
     componentUrl: './pages/calendario.html',
@@ -144,6 +149,13 @@ var routes = [
     path: '/chat/',
     url: './pages/chat.html',
     name: 'chat',
+  },
+
+   // chat
+  {
+    path: '/chatservicio/',
+    url: './pages/chatservicio.html',
+    name: 'chatservicio',
   },
 
   // messages
@@ -316,6 +328,12 @@ var routes = [
    {
     path: '/detalleservicio/',
     componentUrl: './pages/detalleservicio.html',
+  },
+
+  {
+    path: '/detalleservicio2/',
+    
+    componentUrl: './pages/detalleservicio2.html',
   },
 
   {

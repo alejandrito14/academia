@@ -31,6 +31,7 @@ require_once("../../clases/class.CategoriasServicios.php");
 require_once("../../clases/class.Descuentos.php");
 require_once("../../clases/class.Membresia.php");
 require_once("../../clases/class.Encuesta.php");
+require_once("../../clases/class.PoliticasAceptacion.php");
 
 $idmenumodulo = $_GET['idmenumodulo'];
 
@@ -49,6 +50,10 @@ $obtenercat=$cate->ObtenerCategoriasEstatus(1);
 $cateservicios=new CategoriasServicios();
 $cateservicios->db=$db;
 $obtenercateservicios=$cateservicios->ObtcategoriasservicioActivos();
+
+$politicasaceptacion=new PoliticasAceptacion();
+$politicasaceptacion->db=$db;
+$obtenerpoliticasaceptacion=$politicasaceptacion->ObtenerPoliticasActivas();
 
 $cli = new Usuarios();
 $cli->db = $db;
@@ -182,6 +187,8 @@ if(!isset($_GET['idservicio'])){
 	$politicasca=$result_SERVICIO_row['politicascancelacion'];
 	$politicasaceptacion=$result_SERVICIO_row['politicasaceptacion'];
 	$asistencia=$result_SERVICIO_row['controlasistencia'];
+
+$idpoliticaaceptacion=$f->imprimir_cadena_utf8($result_SERVICIO_row['idpoliticaaceptacion']);
 
 	$col = "col-md-12";
 	$ver = "";
@@ -1044,8 +1051,24 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							<div class="row">
 								<div class="col-md-6">
 								<div class="form-group m-t-20" style="">
-									<label for="" id="lbldescripcionaceptacionpolitica">* DESCRIPCIÓN:</label>
-									<textarea name="" id="v_politicasaceptacion" cols="20" rows="5" class="form-control"><?php echo $politicasaceptacion; ?></textarea>
+									<label for="" id="lblseleccionarpoliticaaceptacion">POLÍTICA DE ACEPTACIÓN</label>
+									<select name="" id="v_politicasaceptacionid" class="form-control">
+										
+										<option value="0" >SELECCIONAR POLÍTICA DE ACEPTACIÓN</option>
+
+									<?php if (count($obtenerpoliticasaceptacion)){
+
+										for ($i=0; $i <count($obtenerpoliticasaceptacion) ; $i++) {  ?>
+											<option value="<?php echo $obtenerpoliticasaceptacion[$i]->idpoliticasaceptacion;?>"><?php echo $obtenerpoliticasaceptacion[$i]->descripcion; ?></option>
+										
+										
+									<?php 
+									}
+								} ?>
+									</select>
+
+									<!-- <label for="" id="lbldescripcionaceptacionpolitica">* DESCRIPCIÓN:</label>
+									<textarea name="" id="v_politicasaceptacion" cols="20" rows="5" class="form-control"><?php echo $politicasaceptacion; ?></textarea> -->
 
 								</div>
 							</div>
@@ -1142,6 +1165,9 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		$("#v_categoria").val(idcategoriaservicio);
 
 		$("#v_categoriaservicio").val(idcategoria);
+		var idpoliticaaceptacion='<?php echo $idpoliticaaceptacion; ?>';
+
+		$("#v_politicasaceptacionid").val(idpoliticaaceptacion);
 
 		 SeleccionarCategoria(idservicio);
 		// Obtenerparticipantes(3,idservicio);

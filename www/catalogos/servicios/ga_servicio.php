@@ -19,6 +19,8 @@ require_once("../../clases/conexcion.php");
 require_once("../../clases/class.Servicios.php");
 require_once("../../clases/class.Funciones.php");
 require_once('../../clases/class.MovimientoBitacora.php');
+require_once("../../clases/class.NotificacionPush.php");
+
 try
 {
 	//declaramos los objetos de clase
@@ -26,7 +28,8 @@ try
 	$emp = new Servicios();
 	$f = new Funciones();
 	$md = new MovimientoBitacora();
-	
+	$notificaciones=new NotificacionPush();
+	$notificaciones->db=$db;
 	//enviamos la conexión a las clases que lo requieren
 	$emp->db=$db;
 	$md->db = $db;	
@@ -40,6 +43,11 @@ try
 	
 	$emp->orden = trim($f->guardar_cadena_utf8($_POST['v_orden']));
 	$emp->estatus = trim($f->guardar_cadena_utf8($_POST['v_estatus']));
+	$emp->validaradmin=0;
+	if ($emp->estatus==1) {
+		$emp->validaradmin=1;
+
+	}
 
 	$emp->idcategoriaservicio = $_POST['v_categoria'];
 	$emp->precio=$_POST['v_costo'];
@@ -115,6 +123,8 @@ try
 	$emp->descripcionaviso=$_POST['v_descripcionaviso'];
 	$emp->politicascancelacion=$_POST['v_politicascancelacion'];
 	$emp->politicasaceptacion=$_POST['v_politicasaceptacion'];
+	$emp->v_politicasaceptacionid=$_POST['v_politicasaceptacionid'];
+	//var_dump($emp->v_politicasaceptacionid);die();
 	$emp->reembolso=$_POST['v_reembolso'];
 	$emp->cantidadreembolso=$_POST['v_cantidadreembolso'];
 	$emp->tiporeembolso=$_POST['v_tiporeembolso'];
@@ -123,7 +133,7 @@ try
 	$emp->asignadoadmin=$_POST['v_asignadoadmin'];
 	$emp->numligarclientes=$_POST['v_numligarclientes'];
 	$emp->controlasistencia=$_POST['v_asistencia'];
-
+	$arraytokens=array();
 	//Validamos si hacermos un insert o un update
 	if($emp->idservicio == 0)
 	{
@@ -162,6 +172,7 @@ try
 				}
 
 			if (count($coachs)>0 && $coachs[0]!='') {
+
 				for ($i=0; $i < count($coachs); $i++) { 
 						$emp->idparticipantes=$coachs[$i];
 						$emp->Guardarparticipantes();
@@ -170,6 +181,20 @@ try
 						$monto=$porcentajescoachs[$i]->{'monto'};
 
 						$emp->GuardarMontotipo($tipo,$monto);	
+
+
+						$idusuario=$coachs[$i];
+						$ruta='detalleserviciocoach2';
+						$valor=$emp->idservicio;
+						$texto='|Se te asignó un nuevo servicio|'.$emp->titulo.'|';
+						$estatus=0;
+						$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
+
+						$notificaciones->idusuario=$idusuario;
+							$obtenertokenusuario=$notificaciones->Obtenertoken();
+						$titulonotificacion=$nombrequienagrega." te asignó un nuevo servicio ".$emp->titulo;
+							$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[0]->token,'ruta'=>$ruta,'titulonotificacion'=>$titulonotificacion);
+						array_push($arraytokens,$dato);
 					}
 				}
 
@@ -274,11 +299,23 @@ try
 						$emp->idparticipantes=$coachs[$i];
 						$emp->Guardarparticipantes();
 
-						
 						$tipo=$porcentajescoachs[$i]->{'tipopago'};
 						$monto=$porcentajescoachs[$i]->{'monto'};
 
-						$emp->GuardarMontotipo($tipo,$monto);	
+						$emp->GuardarMontotipo($tipo,$monto);
+
+						$idusuario=$coachs[$i];
+						$ruta='detalleserviciocoach2';
+						$valor=$emp->idservicio;
+						$texto='|Se te asignó un nuevo servicio|'.$emp->titulo.'|';
+						$estatus=0;
+						$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
+
+						$notificaciones->idusuario=$idusuario;
+							$obtenertokenusuario=$notificaciones->Obtenertoken();
+						$titulonotificacion=$nombrequienagrega." te asignó un nuevo servicio ".$emp->titulo;
+							$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[0]->token,'ruta'=>$ruta,'titulonotificacion'=>$titulonotificacion);
+						array_push($arraytokens,$dato);	
 					}
 				}	
 

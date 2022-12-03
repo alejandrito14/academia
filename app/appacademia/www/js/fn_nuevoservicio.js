@@ -1708,6 +1708,7 @@ function GuardarservicioNuevo2() {
 
 
 
+
 		var id=$("#id").val();
 		var v_numparticipantes=$("#v_numparticipantesmin").val();
 		var categoriaservicio=$("#v_categoriaservicio").val();
@@ -1743,6 +1744,7 @@ function GuardarservicioNuevo2() {
 		var abiertoadmin=$("#v_abiertoadmin").is(':checked')?1:0;
 		var ligarclientes=$("#v_ligarclientes").is(':checked')?1:0;
 		var v_numligarclientes=$("#v_numligarclientes").val();
+		var v_politicasaceptacionid=$("#v_politicasaceptacionid").val();
 
 	
 		datos.append('abiertocliente',abiertocliente);
@@ -1868,6 +1870,7 @@ function GuardarservicioNuevo2() {
 		datos.append('id',id);
 		datos.append('v_estatus',estatus);
 		datos.append('v_categoria',categoria);
+		datos.append('v_politicasaceptacionid',v_politicasaceptacionid);
 
 		datos.append('v_costo',costo);
 		datos.append('v_totalclase',totalclase);
@@ -2016,6 +2019,7 @@ function GuardarservicioNuevo() {
 			$("#lblmaximo").removeClass('inputrequerido');
 			$("#lbldescripcionpolitica").removeClass('inputrequerido');
 			$("#lbldescripcionaceptacionpolitica").removeClass('inputrequerido');
+			$("#lblseleccionarpoliticaaceptacion").removeClass('inputrequerido');
 
 
 		var domingo=0,lunes=0,martes=0,miercoles=0,jueves=0,Viernes=0,sabado=0;
@@ -2240,7 +2244,7 @@ function GuardarservicioNuevo() {
 		var v_tiempoaviso=$("#v_tiempoaviso").val();
 		var v_tituloaviso=$("#v_tituloaviso").val();
 		var v_descripcionaviso=$("#v_descripcionaviso").val();
-
+		var v_politicasaceptacionid=$("#v_politicasaceptacionid").val();
 		var v_politicascancelacion=$("#v_politicascancelacion").val();
 		var v_politicasaceptacion=$("#v_politicasaceptacion").val();
 		var v_reembolso=$("#v_reembolso").is(':checked')?1:0;
@@ -2271,8 +2275,8 @@ function GuardarservicioNuevo() {
 		datos.append('v_montopagargrupo',montopagargrupo);
 		datos.append('v_categoriaservicio',categoriaservicio);
 	
-			datos.append('periodos',JSON.stringify(asignacionperiodos));
-	datos.append('v_fechainicial',fechainicial);
+		datos.append('periodos',JSON.stringify(asignacionperiodos));
+	    datos.append('v_fechainicial',fechainicial);
 		datos.append('v_fechafinal',fechafinal);
 		datos.append('v_modalidadpago',modalidadpago);
 		datos.append('v_perido',perido);
@@ -2305,6 +2309,7 @@ function GuardarservicioNuevo() {
 		datos.append('v_asignadocoach',v_asignadocoach);
 		datos.append('v_asignadoadmin',v_asignadoadmin);
 		datos.append('v_politicasaceptacion',v_politicasaceptacion);
+		datos.append('v_politicasaceptacionid',v_politicasaceptacionid);
 		datos.append('v_descuentos',descuentos);
 		datos.append('v_membresias',membresias);
 		datos.append('v_encuestas',encuestas);

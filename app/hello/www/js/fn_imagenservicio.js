@@ -82,7 +82,7 @@
             //$('#miimagen').attr("src","img/lazy-placeholder.gif");
 
             //closepop('.popup-detalle-actividad-foto');
-            app.dialog.alert("Se subió imagen correctamente",localStorage.getItem("UserName"));
+            app.dialog.alert("","Se subió la imagen correctamente");
 
 
             //alerta('La foto se ha guardado correctamente','PROCESO TERMINADO');
@@ -187,7 +187,7 @@
 
         localStorage.setItem('fotoimagenservicio',data.ruta);
 
-        app.dialog.alert("Se subió imagen correctamente",localStorage.getItem("UserName"));
+        app.dialog.alert("Se subió la imagen correctamente",localStorage.getItem("UserName"));
          CargarFotoimagenservicio();
 
            // CargarFoto();

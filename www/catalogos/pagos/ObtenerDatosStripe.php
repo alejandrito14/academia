@@ -35,6 +35,7 @@ try
 	//Enviamos la conexion a la clase
 	$obj->db = $db;
 	$obj->idusuarios=$_SESSION['usuariopago'];
+
     $fname = $_POST['fname'];
 
     $idtipodepago=$_POST['idtipodepago'];
@@ -102,6 +103,15 @@ try
                 echo json_encode(array(), JSON_FORCE_OBJECT);
             }            
         break;
+
+         case 'llavepublica':       
+            
+            $output = [
+                'llavepublica' => $pub_key,
+              ];
+            echo json_encode($output);
+        break;
+
         case 'setupIntent':
             \Stripe\Stripe::setApiKey($skey);
             $idclientestripe = ObtenerIdClienteStripe($obj);

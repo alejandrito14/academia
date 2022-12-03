@@ -98,7 +98,7 @@ try
 	}
 
 	
-	$obtenerhorarios=$lo->ObtenerHorariosServicio();
+	$obtenerhorarios1=$lo->ObtenerHorariosServicio();
 	$arreglohorarios=array();
 
 	
@@ -141,13 +141,18 @@ try
 			$obtenerservicio[0]->fechaproxima="";
 			}
 
+	$opiniones=$lo->ObtenerOpinionesServicio();
+	$evaluaciones=$lo->ObtenerEvaluacionesServicio();
+
 
 	$respuesta['respuesta']=$obtenerservicio[0];
-	$respuesta['horarios']=$arreglohorarios;
+	$respuesta['horarios']=$obtenerhorarios1;
 	$respuesta['invitado']=$invitado;
 	$respuesta['invitados']=$obtenerinvitaciones;
 	$respuesta['puedeinvitar']=$puedeinvitar;
 	$respuesta['habilitarcancelacion']=$habilitarcancelacion;
+	$respuesta['opiniones']=$opiniones;
+	$respuesta['evaluaciones']=$evaluaciones;
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);
 	echo $myJSON;

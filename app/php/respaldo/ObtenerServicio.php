@@ -52,7 +52,7 @@ try
 		$asignar->idservicio=$obtenerservicio[0]->idservicio;
 	$arreglohorarios=array();
 	
-
+	$obtenerhorarios1=$asignar->ObtenerHorariosServicio();
 		$obtenerhorarios=$asignar->ObtenerHorariosProximo();
 
 
@@ -95,6 +95,7 @@ try
 
 	$respuesta['respuesta']=$obtenerservicio;
 	$respuesta['habilitarcancelacion']=$habilitarcancelacion;
+	$respuesta['horarios']=$obtenerhorarios1;
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);
 	echo $myJSON;

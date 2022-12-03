@@ -272,10 +272,86 @@ class MediaList {
 
 function myStopFunction(variable) {
   clearInterval(variable);
-  variable=null;
-  identificadorDeTemporizador=null;
+  variable=false;
+  identificadorDeTemporizador=false;
 }
 
 function LimpiarResultado(clista) {
 	$(clista).css('display','block');
+}
+
+
+function CrearModalEsperaDialog() {
+  
+
+  var html=`
+  
+           <div class="" style="text-align: center;">
+              <div class="toolbar" style="display:none;">
+                  <div class="toolbar-inner" >
+                      <div class="left">
+
+                      <span style="color:black;margin-left:1em;font-size: 14px;
+          font-weight: bold;"></span></div>
+
+                        <div class="right">
+                         
+                        </div>
+                    </div>
+              </div>
+
+                <div class="sheet-modal-inner" style="">
+                <div style="padding-top:1em;"></div>
+
+                  <div id="" class="mensajeproceso" style="font-size:20px;font-weight:bold;" >En proceso...
+                    <img src="img/loading.gif" style="width:20%;display: flex;justify-content: center;align-items: center;margin:0px auto;">
+
+                  </div>
+                  <div id="" class="mensajeerror" style="font-size:20px;font-weight:bold;display:none;" >Error en la conexción,vuelva a intentar.</div>
+                  <div id="" class="mensajeexito" style="font-size:20px;font-weight:bold;display:none;" >Se realizó correctamente</div>
+
+
+
+
+                <span class="dialog-button dialog-button-bold botonok" onclick="CerrarEspera()" style="display:none;position:static!important;">OK</span>
+
+
+                  <div style="color:red;font-size:20px;"></div>
+
+                     
+                      
+                </div>
+
+
+
+                  </div>
+               </div>
+
+        
+              `;
+      
+
+
+ modaldialogo=app.dialog.create({
+              title: '',
+              text:'',
+              content:html,
+
+              buttons: [
+            
+                
+              ],
+
+              onClick: function (dialog, index) {
+
+                  if(index === 0){
+                   
+                  }
+                 
+                
+              },
+              verticalButtons: true,
+            }).open();
+    
+
 }

@@ -395,7 +395,7 @@ function Guardando() {
 			  		var msg="";
 			  			if (r.cantidad==0) {
 			  				bandera=0;
-			  				msg+="La cantidad de horarios debe ser igual a la que se registro originalmente<br>";
+			  				msg+="La cantidad de horarios debe ser igual a la que se registró originalmente<br>";
 					  	}
 					  	if (r.fechaspasadas>0) {
 					  		bandera=0;
@@ -614,7 +614,7 @@ function GuardarservicioReagendar() {
 							
 						   console.log("El resultado de msj es: "+msj);
 						   	if( resp == 1 ){
-								alerta('','Se realizarón los cambios correctamente');
+								alerta('','Se realizaron los cambios correctamente');
 						 	
 								arraydiaselegidos=[];
 								arraydiaseleccionados=[];

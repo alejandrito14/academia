@@ -1214,6 +1214,8 @@ $navegador = $f->navegador();
 <script src="js/fn_subirarchivos.js?<?php echo time(); ?>"></script>
 <script src="js/fn_subirarchivoscategorias.js?<?php echo time(); ?>"></script>
 <script src="js/fn_subirarchivospaquetes.js?<?php echo time(); ?>"></script>
+<script src="js/fn_productos.js"></script>
+<script src="js/fn_categoriaproducto.js"></script>
 
 <!-- js nuevos de mike -->
 <!-- <script src="js/fn_banner.js"></script>
@@ -1227,7 +1229,8 @@ $navegador = $f->navegador();
 <script src="js/fn_funcionesextras.js?<?php echo time(); ?>"></script>
 
 
-<!-- <script src="js/fn_monedero.js?<?php echo time(); ?>"></script>
+ <script src="js/fn_monedero.js?<?php echo time(); ?>"></script>
+ <!--
 <script src="js/fn_paginas.js?<?php echo time(); ?>"></script>
 <script src="js/fn_contacto.js?<?php echo time(); ?>"></script> -->
 

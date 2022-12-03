@@ -1,19 +1,19 @@
 <?PHP
 require_once("../../clases/conexcion.php");
-require_once("../../clases/class.Clientes.php");
+require_once("../../clases/class.Usuarios.php");
 require_once("../../clases/class.Funciones.php");
 
 
 $db = new MySQL();
-$cli = new Clientes();
+$cli = new Usuarios();
 
 $f = new Funciones();
 
 
 $cli->db = $db;
 
-$cli->idCliente=$_POST['idcliente'];
-$result_clientes = $cli->ObtenerInformacionCliente();
+$cli->id_usuario=$_POST['idusuarios'];
+$result_clientes = $cli->ObtenerInformacionusuario();
 $row_clientes=$db->fetch_assoc($result_clientes);
 
 $result_cliente_monedero=$cli->ObtenerMonedero();

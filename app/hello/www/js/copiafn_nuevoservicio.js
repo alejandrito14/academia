@@ -1787,7 +1787,7 @@ function GuardarservicioNuevo2() {
 							$("#id").val(resp.idservicio);
 
 						   	if( resp == 1 ){
-								alerta('','Se realizó el registro correctamente');
+								alerta('','Se realizo el registro correctamente');
 								arraydiaselegidos=[];
 								arraydiaseleccionados=[];
 								asignacionperiodos=[];

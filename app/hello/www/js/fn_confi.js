@@ -30,7 +30,6 @@ function ObtenerConfiEmpresa() {
 
     		var textodescarga=datos.respuesta.textodescarga;
 
-    	$("#versionapp").text(version);
     	
     	$(".texto1").text(datos.respuesta.texto1);
 

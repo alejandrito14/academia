@@ -21,7 +21,8 @@ class Notapago
 	public $folio;
 	public $descuento;
 	public $descuentomembresia;
-
+	public $cambio;
+	public $montovisual;
 
 	public $descripcion;
 	public $cantidad;
@@ -140,6 +141,62 @@ class Notapago
 		}
 		
 		return $array;
+	}
+
+
+	public function ObtenerdescripcionNota()
+	{
+		$sql="SELECT idnotapago,descripcion as concepto,monto,idpago,fecha FROM notapago_descripcion WHERE idnotapago='$this->idnotapago'";
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerImagenesComprobante()
+	{
+		$sql="SELECT * FROM notapago_comprobante WHERE idnotapago='$this->idnotapago'";
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ActualizarMonto()
+	{
+		$sql="UPDATE notapago SET 
+			  cambio = '$this->cambio',
+			  montovisual = '$this->montovisual', 
+			  estatus = '$this->estatus'
+			  WHERE idnotapago='$this->idnotapago'";
+			 
+		$resp=$this->db->consulta($sql);
+
+  
 	}
 }
  ?>

@@ -796,7 +796,13 @@ class Usuarios
     }
 
 
+    	public function ObtenerMonedero()
+	{
+		$sql="SELECT *from monedero WHERE idusuarios=$this->id_usuario";
 
+		$lista = $this->db->consulta($sql);
+		return $lista;
+	}
 }
 
 ?>

@@ -128,7 +128,8 @@ class Sala
 			usuarios_alias1.nombre,
 			usuarios_alias1.paterno,
 			usuarios_alias1.usuario,
-			usuarios_alias1.foto
+			usuarios_alias1.foto,
+			usuarios_alias1.sexo
 			FROM
 			chat
 		
@@ -139,6 +140,29 @@ class Sala
 			ORDER BY idchat  
 
 		";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerOtrosUsuariosSala()
+	{
+		$sql="SELECT *FROM usuarios_sala INNER JOIN usuarios ON usuarios_sala.idusuarios=usuarios.idusuarios WHERE idsalachat='$this->idsalachat' AND usuarios_sala.idusuarios='$this->idusuario' ";
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

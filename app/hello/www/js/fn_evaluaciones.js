@@ -541,8 +541,9 @@ function ObtenerDatosEncuesta() {
 function VerificarSihayEvaluacionUsuario() {
 	var id_user=localStorage.getItem('id_user');
 	var idservicio=localStorage.getItem('idservicio');
+	var idtipousuario=localStorage.getItem('idtipousuario')
 
-	var datos="idservicio="+idservicio+"&id_user="+id_user;
+	var datos="idservicio="+idservicio+"&id_user="+id_user+"&idtipousuario="+idtipousuario;
 	var pagina="ObtenerEvaluacionesUsuario.php";
 	$.ajax({
 		type: 'POST',

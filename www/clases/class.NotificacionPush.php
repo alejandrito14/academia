@@ -10,6 +10,7 @@ class NotificacionPush
     public $idnotificacionadmin;
     public $estatus;
     public $apikey;
+    public $idusuario;
 
 	public function EnviarNotificacion($listatokens,$titulo,$mensaje)
 	{
@@ -57,7 +58,8 @@ class NotificacionPush
 
     public function AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus)
     {
-       $sql="INSERT INTO notificacionadmin(idusuario,texto,ruta,valor,estatus) VALUES('$idusuario','$texto','$ruta','$valor','$estatus')";
+        $sql="INSERT INTO notificacioncliente(idusuario,texto,ruta,valor,estatus) VALUES('$idusuario','$texto','$ruta','$valor','$estatus')";
+
 
      
         $resp=$this->db->consulta($sql);
@@ -68,6 +70,29 @@ class NotificacionPush
     {
           $query = "UPDATE notificacionadmin SET estatus = '$this->estatus' WHERE idnotificacionadmin = '$this->idnotificacionadmin'";
         $this->db->consulta($query);
+    }
+
+      public function Obtenertoken()
+    {
+        $fechaactual=date('Y-m-d');
+        $sql = "SELECT  DISTINCT token,uuid FROM usuariotoken WHERE idusuario='$this->idusuario' and  token!='null' 
+        ORDER BY idusuariotoken DESC LIMIT 3 ";
+     
+            $resp = $this->db->consulta($sql);
+            $cont = $this->db->num_rows($resp);
+
+
+            $array=array();
+            $contador=0;
+            if ($cont>0) {
+
+                while ($objeto=$this->db->fetch_object($resp)) {
+
+                    $array[$contador]=$objeto;
+                    $contador++;
+                } 
+            }
+            return $array;
     }
 
 

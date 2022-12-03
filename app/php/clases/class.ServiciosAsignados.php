@@ -42,7 +42,7 @@ class ServiciosAsignados
 public function obtenerServiciosAsignadosPendientes()
 	{
 		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
-		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0)
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0) AND servicios.estatus=1
 			AND cancelacion=0
 		 ";
 		$resp=$this->db->consulta($sql);
@@ -202,6 +202,7 @@ public function obtenerServiciosAsignadosPendientes()
 		motivocancelacion='$this->motivocancelacion',
 		estatus='$this->estatus'
 		WHERE idusuarios_servicios = '$this->idusuarios_servicios'";
+		
 		$resp=$this->db->consulta($sql);
 	}
 
@@ -1165,5 +1166,41 @@ public function obtenerServiciosAsignadosPendientes()
 		$resp=$this->db->consulta($query);
 		
 	}
+
+	public function BuscarAsignacionAlumno()
+	{
+		
+		$sql="SELECT
+				*
+				FROM
+				usuarios_servicios
+				JOIN usuarios
+				ON usuarios_servicios.idusuarios = usuarios.idusuarios
+				JOIN tipousuario
+				ON tipousuario.idtipousuario=usuarios.tipo
+				
+				WHERE 
+				usuarios_servicios.idservicio = '$this->idservicio' AND usuarios_servicios.idusuarios='$this->idusuario'  AND usuarios_servicios.aceptarterminos=1
+		 ";
+
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
 
 }

@@ -44,6 +44,10 @@ $datostarjeta2=$_POST['datostarjeta2'];
 $subtotalsincomision=$_POST['subtotalsincomision'];
 $confoto=$_POST['confoto'];
 $constripe=$_POST['constripe'];
+$campomonto=$_POST['campomonto'];
+$montovisual=$_POST['montovisual'];
+$cambiomonto=$_POST['cambiomonto'];
+
 try {
 	 $db = new MySQL();
 	 $obj = new ClienteStripe();
@@ -259,6 +263,9 @@ try {
           		  if ($confoto==1) {
                   $pagos->pagado=0;
                 }
+                if ($campomonto==1) {
+                  $pagos->pagado=0;
+                }
                
 
               
@@ -267,6 +274,11 @@ try {
               if ($pagosconsiderados[$i]->tipo==1) {
                   $pagos->estatus=2;
                   if ($confoto==1) {
+                      $pagos->estatus=1;
+
+                   }
+
+                    if ($campomonto==1) {
                       $pagos->estatus=1;
 
                    }
@@ -356,6 +368,14 @@ try {
                   $membresia->ActualizarEstatusMembresiaUsuarioPagado();
 
           	   }
+
+                if ($pagosconsiderados[$i]->tipo==3) {
+
+                    $pagos->estatus=2;
+                    $pagos->idpago=$pagosconsiderados[$i]->id;
+                    $pagos->ActualizarEstatus();
+                    $pagos->ActualizarPagado();
+                }
                //creacion de descripcion de pago
               $buscarpago=$pagos->ObtenerPago();
               $notapago->descripcion=$buscarpago[0]->concepto;
@@ -464,6 +484,15 @@ try {
 
       
         }
+
+         if ($campomonto==1) {
+              $notapago->estatus=0;
+              $notapago->ActualizarNotapago();
+              $notapago->cambio=abs($cambiomonto);
+              $notapago->montovisual=$montovisual;
+              $notapago->ActualizarMonto();
+            
+          }
 
           		$db->commit();
 

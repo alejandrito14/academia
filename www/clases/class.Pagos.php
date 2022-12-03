@@ -158,7 +158,7 @@ class Pagos
 					usuarios.celular
 			    FROM pagos
 				LEFT JOIN usuarios ON usuarios.idusuarios=pagos.idusuarios
-			    WHERE pagos.estatus=0 AND pagos.pagado=0 AND pagos.idusuarios  IN($this->idusuarios) GROUP BY idpago,idusuarios ORDER BY idpago ";
+			    WHERE pagos.estatus IN(0,1) AND pagos.pagado=0 AND pagos.idusuarios  IN($this->idusuarios) GROUP BY idpago,idusuarios ORDER BY idpago ";
 			$resp = $this->db->consulta($sql);
 			$cont = $this->db->num_rows($resp);
 

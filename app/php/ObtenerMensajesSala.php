@@ -32,11 +32,12 @@ try
 
 	$ObtenerMensajes=$sala->ObtenerMensajes();
 	$obtenerusuarios=$sala->ObtenerAgrupadousuariossala();
-
+	$obtenerdatosusuarios=$sala->ObtenerOtrosUsuariosSala();
 
 
 	$respuesta['respuesta']=$ObtenerMensajes;
 	$respuesta['usuarios']=explode(',',$obtenerusuarios[0]->usuariossala);
+	$respuesta['datosusuarios']=$obtenerdatosusuarios;
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);
 	echo $myJSON;

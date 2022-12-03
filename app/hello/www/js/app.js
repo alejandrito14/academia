@@ -88,12 +88,21 @@ var app = new Framework7({
 
  var pictureSource;   // picture source
  var destinationType; 
+var produccion = 1;
+var codigoservicio="0";
 
 $(document).ready(function() {
 
+    if (produccion == 0) {
+      codigoservicio='106';
+
+    }else{
+      codigoservicio='109';
+    }
 
 
- 
+   
+
     window.isphone = false;
     if(document.URL.indexOf("http://") === -1 
         && document.URL.indexOf("https://") === -1) {
@@ -104,15 +113,19 @@ $(document).ready(function() {
 
     if( window.isphone ) {
        
+    document.addEventListener("deviceready", Cargar, false);
+
      pictureSource=navigator.camera.PictureSourceType;
      destinationType=navigator.camera.DestinationType;
       mediaType = navigator.camera.MediaType;
-        document.addEventListener("deviceready", Cargar, false);
+      
     } else {
 
 
         Cargar();
     }
+  
+    
 
 
  });
@@ -122,11 +135,10 @@ $(document).ready(function() {
   
 
 
-var produccion = 1;
 
 var lhost = "localhost:8888";
 var rhost = "issoftware1.com.mx";
-var version='1.0.7';
+var version='1.0.8';
 
 localStorage.setItem('versionapp',version);
 var abrir=0;
@@ -139,34 +151,82 @@ var intervalo4=0;
 var intervalo5=0;
 var intervalo6=0;
 var identificadorDeTemporizador=0;
-if (produccion == 0) {
-    var codigoserv="106/";
-    var urlphp = "http://localhost:8888/is-academia/app/php/"; 
-    var urlimagenes = "http://localhost:8888/is-academia/www/catalogos/"; 
-    var urlimagendefault="http://localhost:8888/is-academia/www/images/sinfoto.png";
-    var urlimagenlogo="http://localhost:8888/is-academia/www/images/sinimagenlogo.png";
-    var globalsockect="http://localhost:3400/";
-    var imagenesbancos="http://localhost:8888/is-academia/www/assets/images/";
-    var urlimagendefaultservicio="https://issoftware1.com.mx/IS-ACADEMIA/images/sin-servicio.jpg"
+var rutaserver=localStorage.getItem('servidor');
+var puertosockect=localStorage.getItem('puertosocket');
+
+
+    var codigoserv="";
+    var urlphp = ""; 
+    var urlimagenes = ""; 
+    var urlimagendefault="";
+    var urlimagenlogo="";
+    var globalsockect="";
+    var imagenesbancos="";
+    var urlimagendefaultservicio=""
+
+
+function Cargar() {
+
+//  ObtenerServidor(codigoservicio);
+ 
+    var datos="clave=issoftware"+"&codservicio="+codigoservicio;
+  $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: 'https://is-software.net/isadmin/obtenerservidorapp.php',
+    crossDomain: true,
+    cache: false,
+    data:datos,
+    async:false,
+    success: function(resp){
+var rutaserver="";
+var puertosockect="";
+      if (resp.vigente==1) {
+        var servidor=resp.datosservidor.urlapp;
+        var puertosocket=resp.datosservidor.puertosocket;
+        localStorage.setItem('servidor',servidor);
+        localStorage.setItem('puertosocket',puertosocket);
+
+         rutaserver=resp.datosservidor.urlapp;
+         puertosockect=resp.datosservidor.puertosocket;
+
+      }else{
+        localStorage.setItem('servidor','http://localhost:8888/');
+        localStorage.setItem('puertosocket','3000');
+        rutaserver="http://localhost:8888";
+        puertosockect="3000";
+
+      }
+
+
+  if (produccion == 0) {
+    codigoserv="106/";
+    urlphp = rutaserver+"/is-academia/app/php/"; 
+    urlimagenes = rutaserver+"/is-academia/www/catalogos/"; 
+    urlimagendefault=rutaserver+"/is-academia/www/images/sinfoto.png";
+    urlimagenlogo=rutaserver+"/is-academia/www/images/sinimagenlogo.png";
+    globalsockect=rutaserver+":"+puertosockect+"/";
+    imagenesbancos=rutaserver+"/is-academia/www/assets/images/";
+    urlimagendefaultservicio=rutaserver+"/is-academia/images/sin-servicio.jpg"
 
 }else{
-    var codigoserv="109/";
-    var urlphp = "https://issoftware1.com.mx/IS-ACADEMIA/app/appwoolis/php/";
-    var urlimagenes = "https://issoftware1.com.mx/IS-ACADEMIA/catalogos/"; 
+    codigoserv="109/";
+    urlphp = rutaserver+"/IS-ACADEMIA/app/appwoolis/php/";
+    urlimagenes = rutaserver+"/IS-ACADEMIA/catalogos/"; 
   
-    var urlimagendefault="https://issoftware1.com.mx/IS-ACADEMIA/images/sinfoto.png"
-    var urlimagenlogo="https://issoftware1.com.mx/IS-ACADEMIA/images/sinimagenlogo.png";
-    var urlimagendefaultservicio="https://issoftware1.com.mx/IS-ACADEMIA/images/sin-servicio.jpg"
+    urlimagendefault=rutaserver+"/IS-ACADEMIA/images/sinfoto.png"
+    urlimagenlogo=rutaserver+"/IS-ACADEMIA/images/sinimagenlogo.png";
+    urlimagendefaultservicio=rutaserver+"/IS-ACADEMIA/images/sin-servicio.jpg"
 
-    var imagenesbancos="https://issoftware1.com.mx/IS-ACADEMIA/assets/images/";
-    var globalsockect="https://issoftware1.com.mx:3000/";
+    imagenesbancos=rutaserver+"/IS-ACADEMIA/assets/images/";
+    globalsockect=rutaserver+":"+puertosockect+"/";
    // var urlimagenvacia="https://issoftware1.com.mx/IS-ACADEMIA/images/sinimagenlogo.png";
 
 }
  
-function Cargar() {
-   
-  getConfiguracion();
+
+
+      getConfiguracion();
    localStorage.setItem("SO", "web");
 
   localStorage.setItem('rutaine',0);
@@ -240,8 +300,8 @@ localStorage.setItem('avatar','');
 
     p1.then(function(value) {
           var tokenfirebase=localStorage.getItem('tokenfirebase');
-            
-
+       
+     ObtenerConfiVersion();     
    GuardarTokenBase(0); 
 
 
@@ -251,6 +311,19 @@ localStorage.setItem('avatar','');
 });
   
 
+
+      
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+            if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+            if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+          console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+      }
+
+    });
+  
    /*  ObtenerConfiEmpresa();
 
     */
@@ -261,8 +334,9 @@ localStorage.setItem('avatar','');
 $$(document).on('page:init', function (e) {
   // Do something here when page loaded and initialized for all pages
   
+          $(".versionapp").text(version);
 
-ObtenerConfiVersion();
+//ObtenerConfiVersion();
 
 });
 
@@ -633,6 +707,7 @@ $$(document).on('page:init', '.page[data-name="profile"]', function (e) {
   });
 
  
+ $(".versionapp").text(version);
 
   var nombreusuario= localStorage.getItem('alias');
   $$(".nombreusuario").text(nombreusuario);
@@ -687,6 +762,7 @@ $$(document).on('page:init', '.page[data-name="register"]', function (e) {
 
 $$('#telefono').attr('onfocus',"Cambiar(this);");
 $$('#telefono').attr('onblur',"Cambiar2(this);");
+  $$('.regreso').attr('onclick',"GoToPage('login')");
 
 });
 
@@ -843,6 +919,7 @@ $$('#v_usuario').attr('onblur',"Cambiar2(this);QuitarEspacios(this)");
 
 $$('#v_clave').attr('onfocus',"Cambiar(this)");
 $$('#v_clave').attr('onblur',"Cambiar2(this);QuitarEspacios(this);");
+ $(".versionapp").text(version);
 
 /*$("#v_usuario" ).keypress(function() {
   if ($(this).val().length>0) {
@@ -975,6 +1052,30 @@ $$(document).on('page:init', '.page[data-name="chat"]', function (e) {
  // $$('#btnverificartoken').attr('onclick','ValidarCelular()')
 regresohome();
 listadochats();
+});
+
+
+$$(document).on('page:init', '.page[data-name="chatservicio"]', function (e) {
+ 
+   if (localStorage.getItem('idtipousuario')==0) {
+     $(".regreso").attr('href','/detalleservicioadmin/');
+   // ObtenerParticipantesAlumnosServicio();
+   }
+
+  if (localStorage.getItem('idtipousuario')==3) {
+     $(".regreso").attr('href','/detalleservicio/');
+    //ObtenerParticipantesAlumnosServicio();
+
+   }
+   if (localStorage.getItem('idtipousuario')==5){
+      $(".regreso").attr('href','/detalleserviciocoach/');
+   //ObtenerParticipantesAlumnosServicio();
+    }
+
+
+
+  listadochatservicio();
+  $$(".btnelegirparticipantes").attr('onclick','ElegirParticipantesChat()');
 });
 
 $$(document).on('page:init', '.page[data-name="notificaciones"]', function (e) {
@@ -1179,6 +1280,7 @@ $$(document).on('page:init', '.page[data-name="serviciosregistrados"]', function
  $(".v_buscador").attr('onkeyup','BuscarEnLista(".v_buscador",".list-item")');
   $(".limpiarspan").attr('onclick','LimpiarResultado(".list-item")');
 
+myStopFunction(identificadorDeTemporizador);
 
 });
 
@@ -1200,13 +1302,39 @@ $$(document).on('page:init', '.page[data-name="detalleservicio"]', function (e) 
 
   ObtenerServicioAsignado();
   $$("#abrirpantallacali").attr('onclick','AbirPantallaCalificarServicio()');
-  $$("#Abrirchat").attr('onclick','ElegirParticipantesChat()');
-  $$("#btncalendario").attr('onclick','FechasServicio()');
-  Verificarcantidadhorarios();
-  VerificarSihayEvaluacionUsuario();
-  ConsultarSihayComentarios();
+ // $$("#Abrirchat").attr('onclick','ElegirParticipantesChat()');
+  
+$$("#Abrirchat").attr('onclick','AbrirPantallaChats()');
+$$("#btncalendario").attr('onclick','FechasServicio()');
+ 
   $$("#btnpermisoasignaralumno").attr('onclick','VerificarTotalAlumnos()');
-  ObtenerParticipantesAlumnos();
+  
+  $(".btnimagenesinformativas").attr('onclick','ImagenesInformativas()');
+  $(".btncancelarservicio").attr('onclick','CancelarServicio()');
+  myStopFunction(identificadorDeTemporizador);
+});
+
+$$(document).on('page:init', '.page[data-name="detalleservicio2"]', function (e) {
+  
+  if (localStorage.getItem('idusuertutorado')!=undefined &&   localStorage.getItem('idusuertutorado')!=''){
+ 
+   $(".regreso").attr('href','/listadotutoservicios/');
+
+
+  }else{
+
+    $(".regreso").attr('href','/serviciosasignados/');
+  
+  }
+ 
+
+
+  ObtenerServicioAsignado2();
+  $$("#abrirpantallacali").attr('onclick','AbirPantallaCalificarServicio()');
+  $$("#Abrirchat").attr('onclick','AbrirPantallaChats()');
+  $$("#btncalendario").attr('onclick','FechasServicio()');
+ 
+  $$("#btnpermisoasignaralumno").attr('onclick','VerificarTotalAlumnos()');
   $(".btnimagenesinformativas").attr('onclick','ImagenesInformativas()');
   $(".btncancelarservicio").attr('onclick','CancelarServicio()');
   myStopFunction(identificadorDeTemporizador);
@@ -1222,7 +1350,7 @@ $$(document).on('page:init', '.page[data-name="detalleserviciocoach"]', function
   ObtenerServicioAsignado();
   
  // $$("#abrirpantallacali").attr('onclick','PantallaCalificacion()');
-  $$("#Abrirchat").attr('onclick','ElegirParticipantesChat()');
+  $$("#Abrirchat").attr('onclick','AbrirPantallaChats()');
   $$("#btncalendario").attr('onclick','FechasServicio()');
   ObtenerParticipantesAlumnos();
   
@@ -1245,7 +1373,7 @@ $$(document).on('page:init', '.page[data-name="detalleserviciocoach2"]', functio
   ObtenerServicioAsignadoCoach();
   
  // $$("#abrirpantallacali").attr('onclick','PantallaCalificacion()');
-  $$("#Abrirchat").attr('onclick','ElegirParticipantesChat()');
+  $$("#Abrirchat").attr('onclick','AbrirPantallaChats()');
   $$("#btncalendario").attr('onclick','FechasServicio()');
 
 
@@ -1270,7 +1398,7 @@ $$(document).on('page:init', '.page[data-name="detalleservicioadmin"]', function
 
   VerificarcantidadhorariosAdmin();
   $$("#abrirpantallacali").attr('onclick','PantallaCalificacion()');
-  $$("#Abrirchat").attr('onclick','ElegirParticipantesChat()');
+  $$("#Abrirchat").attr('onclick','AbrirPantallaChats()');
  /* $$("#btncalendario").attr('onclick','FechasServicio()');
   
   ObtenerImagenesGrupal();
@@ -1280,6 +1408,7 @@ $$(document).on('page:init', '.page[data-name="detalleservicioadmin"]', function
   $$(".btnasistencia").attr('onclick','Asistencia()');
  
   $(".btncancelarservicio").attr('onclick','PantallaCancelarServicio()');
+  myStopFunction(identificadorDeTemporizador);
 
 });
 
@@ -1397,6 +1526,7 @@ $$(document).on('page:init', '.page[data-name="serviciosasignados"]', function (
    $(".v_buscador").attr('onkeyup','BuscarEnLista(".v_buscador",".list-item")');
   $(".limpiarspan").attr('onclick','LimpiarResultado(".list-item")');
   regresohome();
+  myStopFunction(identificadorDeTemporizador);
 
 });
 
@@ -1408,6 +1538,7 @@ $$(document).on('page:init', '.page[data-name="serviciospendientesasignados"]', 
   $(".v_buscador").attr('onkeyup','BuscarEnLista(".v_buscador",".list-item")');
   $(".limpiarspan").attr('onclick','LimpiarResultado(".list-item")');
   regresohome();
+  myStopFunction(identificadorDeTemporizador);
 
 });
 
@@ -1418,9 +1549,25 @@ $$(document).on('page:init', '.page[data-name="aceptacionservicio"]', function (
  $$("#btnaceptartermino").attr('onclick','AceptarTerminos()');
  $$("#btnrechazartermino").attr('onclick','PantallaRechazarTerminos()');
  $(".regreso").attr('href','/serviciospendientesasignados/');
+  //Verificarcantidadhorarios();
 
- 
+ $(".btncalendario").attr('onclick','MostrarHorarios()');
   
+myStopFunction(identificadorDeTemporizador);
+
+});
+
+$$(document).on('page:init', '.page[data-name="aceptacionservicio2"]', function (e) {
+  
+ ObtenerServicioAsignado2();
+ $$("#btnaceptartermino").attr('onclick','AceptarTerminos()');
+ $$("#btnrechazartermino").attr('onclick','PantallaRechazarTerminos()');
+ $(".regreso").attr('href','/serviciospendientesasignados/');
+  //Verificarcantidadhorarios();
+
+ $(".btncalendario").attr('onclick','MostrarHorarios()');
+  
+myStopFunction(identificadorDeTemporizador);
 
 });
 
@@ -1611,7 +1758,11 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
  localStorage.setItem('comision',0);
  localStorage.setItem('impuestotal',0);
  localStorage.setItem('subtotalsincomision',0);
- Cargartipopago(0)
+ localStorage.setItem('comisionnota',0);
+ localStorage.setItem('comisionpornota',0);
+ localStorage.setItem('tipocomisionpornota',0);
+
+ Cargartipopago(0) 
  
  $$(".btnmonedero").attr('onclick','AbrirModalmonedero()');
  $$(".btncupon").attr('onclick','AbrirModalcupon()');
@@ -2074,6 +2225,7 @@ $$(document).on('page:init', '.page[data-name="politicas"]', function (e) {
  ObtenerPolitica();
 
   
+  $$('.regreso').attr('onclick',"GoToPage('register')");
 
 });
 /*$$(document).on('page:init', '.page[data-name="messages"]', function (e) {

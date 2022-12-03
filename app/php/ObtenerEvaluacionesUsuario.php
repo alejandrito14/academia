@@ -27,24 +27,36 @@ try
 	
 	$lo->idservicio=$_POST['idservicio'];
 	$lo->idusuarios=$_POST['id_user'];
-	$obtenerencuestas=$lo->ObtencuestaUsuarioServicio();
 
-	for ($i=0; $i <count($obtenerencuestas) ; $i++) { 
-		$idencuesta=$obtenerencuestas[$i]->idencuesta;
-		$lo->idencuesta=$idencuesta;
-		$obtenersiyasehacontesta=$lo->ObtenerSihayRespuestasEvaluacion();
+	$idtipousuario=$_POST['idtipousuario'];
 
-		$obtenerencuestas[$i]->evaluado=0;
+		if($idtipousuario==3) {
 
-		if (count($obtenersiyasehacontesta)>0) {
+			$obtenerencuestas=$lo->ObtencuestaUsuarioServicio();
+		}
 
-			if ($obtenersiyasehacontesta[0]->estatus=1) {
-				$obtenerencuestas[$i]->evaluado=1;
+		if ($idtipousuario==5) {
+			$obtenerencuestas=$lo->ObtencuestaActivosServicio();
+		}
+
+		if (count($obtenerencuestas)>0) {
+			for ($i=0; $i <count($obtenerencuestas) ; $i++) { 
+				$idencuesta=$obtenerencuestas[$i]->idencuesta;
+				$lo->idencuesta=$idencuesta;
+				$obtenersiyasehacontesta=$lo->ObtenerSihayRespuestasEvaluacion();
+
+				$obtenerencuestas[$i]->evaluado=0;
+
+				if (count($obtenersiyasehacontesta)>0) {
+
+					if ($obtenersiyasehacontesta[0]->estatus=1) {
+						$obtenerencuestas[$i]->evaluado=1;
+					}
+				}
+				
+
 			}
 		}
-		
-
-	}
 
 
 	$respuesta['respuesta']=$obtenerencuestas;

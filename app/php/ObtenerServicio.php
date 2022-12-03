@@ -9,6 +9,7 @@ require_once("clases/class.Servicios.php");
 require_once("clases/class.Funciones.php");
 require_once("clases/class.ServiciosAsignados.php");
 require_once("clases/class.Fechas.php");
+require_once("clases/class.Calificacion.php");
 
 //require_once("clases/class.MovimientoBitacora.php");
 /*require_once("clases/class.Sms.php");
@@ -24,15 +25,22 @@ try
 	$f=new Funciones();
 	$asignar = new ServiciosAsignados();
 	$fechas=new Fechas();
-
+	$calificacion = new Calificacion();
+	$calificacion->db=$db;
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
 	$asignar->db=$db;
 	$lo->idservicio=$_POST['idservicio'];
+	$asignar->idservicio=$lo->idservicio;
+	$calificacion->idservicio=$lo->idservicio;
+
 	$habilitarcancelacion=0;
 
 	
 	$obtenerservicio=$lo->ObtenerServicio();
+	$opiniones=$asignar->ObtenerOpinionesServicio();
+	$obtenercalificacion=$calificacion->ObtenerCalificacionesServicio();
+
 	if ($obtenerservicio[0]->asignadoadmin==1) {
 			$habilitarcancelacion=1;
 		}
@@ -92,7 +100,8 @@ try
 			}
 
 
-
+	$respuesta['opiniones']=$opiniones;
+	$respuesta['calificacion']=$obtenercalificacion;
 	$respuesta['respuesta']=$obtenerservicio;
 	$respuesta['habilitarcancelacion']=$habilitarcancelacion;
 	$respuesta['horarios']=$obtenerhorarios1;

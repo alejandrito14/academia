@@ -48,6 +48,10 @@ $campomonto=$_POST['campomonto'];
 $montovisual=$_POST['montovisual'];
 $cambiomonto=$_POST['cambiomonto'];
 
+$comisionpornota=$_POST['comisionpornota'];
+$comisionnota=$_POST['comisionnota'];
+$tipocomisionpornota=$_POST['tipocomisionpornota'];
+
 try {
 	 $db = new MySQL();
 	 $obj = new ClienteStripe();
@@ -254,6 +258,10 @@ try {
          $notapago->folio=$folio;
          $notapago->descuento=0;
          $notapago->descuentomembresia=0;
+
+         $notapago->comisionpornota=$comisionpornota;
+         $notapago->comisionnota=$comisionnota;
+         $notapago->tipocomisionpornota=$tipocomisionpornota;
          $notapago->CrearNotapago();
 
 

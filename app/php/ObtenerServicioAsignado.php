@@ -10,6 +10,10 @@ require_once("clases/class.Funciones.php");
 require_once("clases/class.Fechas.php");
 require_once("clases/class.Invitacion.php");
 require_once("clases/class.Servicios.php");
+require_once("clases/class.Encuesta.php");
+require_once("clases/class.Calificacion.php");
+require_once("clases/class.PoliticasAceptacion.php");
+
 
 try
 {
@@ -21,6 +25,13 @@ try
 	$fechas=new Fechas();
 	$invitacion=new Invitacion();
 	$servicios=new Servicios();
+	$encuesta=new Encuesta();
+	$encuesta->db=$db;
+	$calificacion = new Calificacion();
+	$calificacion->db=$db;
+	$politicas=new PoliticasAceptacion();
+	$politicas->db=$db;
+
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
 	$invitacion->db=$db;
@@ -31,6 +42,18 @@ try
 	$obtenerservicio=$lo->ObtenerServicioAsignado();
 	$lo->idservicio=$obtenerservicio[0]->idservicio;
 	$servicios->idservicio=$lo->idservicio;
+	$encuesta->idservicio=$lo->idservicio;
+	$calificacion->idservicio=$lo->idservicio;
+	$calificacion->idusuario=$id_user;
+	$obtenerpolitica=array();
+	if ($obtenerservicio[0]->idpoliticaaceptacion>0) {
+			$politicas->idpoliticaaceptacion=$obtenerservicio[0]->idpoliticaaceptacion;
+		$obtenerpolitica=$politicas->ObtenerPoliticaaceptacion();
+	}
+
+
+
+	$obtenercalificacion=$calificacion->ObtenerCalificacion();
 	$invitado=0;
 	$puedeinvitar=0;
 	$obtenerinvitaciones=array();
@@ -142,7 +165,17 @@ try
 			}
 
 	$opiniones=$lo->ObtenerOpinionesServicio();
-	$evaluaciones=$lo->ObtenerEvaluacionesServicio();
+
+	if ($idtipousuario==3) {
+		$evaluaciones=$lo->ObtenerEvaluacionesServicio();
+	}
+	
+	if ($idtipousuario==5) {
+		$lo->idusuario=0;
+		$evaluaciones=$lo->obtenerUsuariosServiciosAlumnosAsignados();
+
+	}
+
 
 
 	$respuesta['respuesta']=$obtenerservicio[0];
@@ -153,6 +186,8 @@ try
 	$respuesta['habilitarcancelacion']=$habilitarcancelacion;
 	$respuesta['opiniones']=$opiniones;
 	$respuesta['evaluaciones']=$evaluaciones;
+	$respuesta['calificacion']=$obtenercalificacion;
+	$respuesta['politicaaceptacion']=$obtenerpolitica;
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);
 	echo $myJSON;

@@ -42,7 +42,7 @@ class ServiciosAsignados
 public function obtenerServiciosAsignadosPendientes()
 	{
 		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
-		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0)
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0) AND servicios.estatus=1
 			AND cancelacion=0
 		 ";
 		$resp=$this->db->consulta($sql);
@@ -202,6 +202,7 @@ public function obtenerServiciosAsignadosPendientes()
 		motivocancelacion='$this->motivocancelacion',
 		estatus='$this->estatus'
 		WHERE idusuarios_servicios = '$this->idusuarios_servicios'";
+		
 		$resp=$this->db->consulta($sql);
 	}
 
@@ -437,7 +438,7 @@ public function obtenerServiciosAsignadosPendientes()
 				WHERE
 				usuarios_servicios.idservicio='$this->idservicio' AND usuarios.idusuarios NOT IN('$this->idusuario') AND usuarios.tipo=3 and usuarios_servicios.cancelacion=0 ORDER BY usuarios.tipo DESC 
 		 ";
-
+		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 

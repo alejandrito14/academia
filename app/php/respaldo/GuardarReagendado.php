@@ -89,7 +89,7 @@ try
 	//Validamos si hacermos un insert o un update
 	if($emp->idservicio > 0)
 	{
-		$titulonotificacion="Edicion servicio";
+		$titulonotificacion="Edición servicio";
 		$emp->ModificarServicioReagendado();
 
 		$obtenerser=$emp->ObtenerServicio();

@@ -1277,7 +1277,7 @@ function GuardarservicioNuevoClonado() {
 											GoToPage('homecoach');
 									}
 
-									alerta('','Se replicó servicio exitosamente');
+									alerta('','Se replicó el servicio exitosamente');
 							
 						 	 }else{
 									alerta('','Error.Intente nuevamente');

@@ -118,8 +118,9 @@ function ObtenerPagos() {
 
 	$("#myModalUsuariosnotas").modal('hide');
 	$(".nombreusuario").val(nombreseleccionado);
-	$(".divtodospagos").css('display','block');
+	$(".nombreusuario2").text(nombreseleccionado);
 
+	$(".divtodospagos").css('display','block');
 	ObtenerPagosCliente();
 	$("#botones").css('display','block');
 	 $(".btnnuevopago").css('display','block');
@@ -163,7 +164,7 @@ function PintarPagosPorpagar(pagos) {
 				   </div>
 				  <div class="col-md-4">
 
-					<p style="float: right;">Seleccionar todos <input type="checkbox" id="checktodos" onchange="SeleccionarTodos()" style="float:rigth;">
+					<p style="float: right;">Seleccionar todos  <input type="checkbox" id="checktodos" onchange="SeleccionarTodos()" style="float:rigth;">
 					</p>
 			 	  </div>
 		 	  </div>
@@ -261,6 +262,7 @@ function HabilitarBotonPago() {
  $(".divmetodopago").css('display','block');
  $(".divpagar").css('display','block');
  $(".divresumenpago").css('display','block');
+ $(".divcomision").css('display','none');
 
 CargarPagosElegidos();
 ObtenerDescuentosRelacionadosNotas();
@@ -533,7 +535,7 @@ function CalcularTotales() {
 	$(".lbltotal").html(formato_numero(resta,2,'.',','));
 
 
-     // if (localStorage.getItem('comisionporcentaje')!=0 ){
+      if (comisionporcentaje!=0 ){
        // comisionporcentaje=localStorage.getItem('comisionporcentaje');
         comimonto=parseFloat(comisionporcentaje)/100;
         
@@ -543,7 +545,7 @@ function CalcularTotales() {
       
        // localStorage.setItem('comision',comision);
 
-     // }
+     }
 
 
      // if (localStorage.getItem('impuesto')!=0 ){
@@ -694,6 +696,10 @@ function CargarOpcionesTipopago(){
   	      }
         
   	      comisionporcentaje=resultado.comisionporcentaje;
+  	      if (comisionporcentaje!=0) {
+  	      	 $(".divcomision").css('display','block');
+
+  	      }
   	      comisionmonto=resultado.comisionmonto;
   	      impuesto=resultado.impuesto;
   	      clavepublica=resultado.clavepublica;

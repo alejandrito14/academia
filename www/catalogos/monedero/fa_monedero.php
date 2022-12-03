@@ -1,7 +1,7 @@
  <?php
 require_once("../../clases/class.Sesion.php");
 require_once("../../clases/class.Funciones.php");
-require_once("../../clases/class.Clientes.php");
+require_once("../../clases/class.Usuarios.php");
 
 //creamos nuestra sesion.
 $se = new Sesion();
@@ -17,7 +17,7 @@ if(!isset($_SESSION['se_SAS']))
    
    $db = new MySQL();
    $f=new Funciones();
-   $cliente=new Clientes();
+   $cliente=new Usuarios();
    $cliente->db=$db;
 /*   $sql_cliente = "SELECT * FROM clientes WHERE estatus = '1' ORDER BY nombre, paterno, materno ASC";
 
@@ -28,12 +28,12 @@ if(!isset($_SESSION['se_SAS']))
    $clienteid='';
    $nombrecliente='';
 
-   if (isset($_POST['idcliente'])) {
+   if (isset($_POST['idusuarios'])) {
 
-	$cliente->idCliente=$_POST['idcliente'];
+	$cliente->id_usuario=$_POST['idusuarios'];
 
-	$clienteid=$_POST['idcliente'];
-	$obtener=$cliente->ObtenerInformacionCliente();
+	$clienteid=$_POST['idusuarios'];
+	$obtener=$cliente->ObtenerInformacionusuario();
 	$row=$db->fetch_assoc($obtener);
 
  $nombrecliente=$f->imprimir_cadena_utf8($row['nombre'].' '.$row['paterno'].' '.$row['materno']);

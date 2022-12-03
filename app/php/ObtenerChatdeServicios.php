@@ -41,7 +41,7 @@ try
 				$buscarChats=$chat->BuscarChats();
 				if (count($buscarChats)>0) {
 
-				$arraysalas=array('idsala'=>$chat->idsalachat,'ultimomensaje'=>$buscarChats[0]);
+				$arraysalas=array('idsala'=>$chat->idsalachat,'ultimomensaje'=>$buscarChats[0],'servicio'=>$obtenerservicios[$i]);
 
 				array_push($arraysalasusuario,$arraysalas);
 				}

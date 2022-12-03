@@ -102,7 +102,11 @@ function NuevoComentario() {
     var idservicio=localStorage.getItem('idservicio');
     var iduser=localStorage.getItem('id_user');
     var datos="idservicio="+idservicio+"&comentario="+comentario+"&iduser="+iduser;
-
+    var bandera=1;
+    if (comentario=='') {
+        bandera=0;
+    }
+    if (bandera==1) {
         $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -126,5 +130,13 @@ function NuevoComentario() {
         }
 
       });
+    }else{
+        var msg="";
+        if (comentario=='') {
+             msg+="Campo comentario vacío";
+         }
+
+         alerta('',msg);
+    }
 
   }

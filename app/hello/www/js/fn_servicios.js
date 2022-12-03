@@ -87,6 +87,15 @@ function ObtenerServicioAdmin() {
 			var habilitarcancelacion=datos.habilitarcancelacion;
 			var horarios=datos.horarios;
 			var cantidadhorarios=horarios.length;
+			var calificacion=datos.calificacion;
+			var opiniones=datos.opiniones;
+
+			if (calificacion.length>0) {
+				$(".divcalificaciones").addClass('iconos');
+			}
+			if (opiniones.length>0) {
+				$(".divopiniones").addClass('iconos');
+			}
 			$(".cantidadhorarios").text(cantidadhorarios);
 			localStorage.setItem('idservicio',idservicio);
 			ObtenerImagenesGrupalServicio();
@@ -550,7 +559,7 @@ function ObtenerServicioNuevo(valor) {
 		var politicasaceptacion=respuesta.politicasaceptacion;
 		var estatus=respuesta.estatus;
 		var tiporeembolso=respuesta.tiporeembolso;
-
+		var idpoliticaaceptacion=respuesta.idpoliticaaceptacion;
 		//$("#v_estatus").val(estatus);
 
 		if (estatus==1) {
@@ -630,7 +639,8 @@ function ObtenerServicioNuevo(valor) {
 		$("#v_fechainicial").val(fechainicial);
 		$("#v_fechafinal").val(fechafinal);
 		$("#v_politicasaceptacion").val(politicasaceptacion);
-
+		$("#v_politicaaceptacionseleccion").val(idpoliticaaceptacion);
+		SeleccionarPolitica();
 		ObtenerHorariosSemana(idservicio);
 		//ObtenerHorariosServicioComprobacion(idservicio);
 		ObtenerPeriodos(idservicio);
@@ -738,6 +748,7 @@ function ObtenerServicioAReplicar(valor) {
 		var politicasaceptacion=respuesta.politicasaceptacion;
 		var estatus=respuesta.estatus;
 		var tiporeembolso=respuesta.tiporeembolso;
+		var idpoliticaaceptacion=respuesta.idpoliticaaceptacion;
 		//$("#v_estatus").val(estatus);
 
 		if (estatus==1) {
@@ -817,7 +828,8 @@ function ObtenerServicioAReplicar(valor) {
 		$("#v_fechainicial").val(fechainicial);
 		$("#v_fechafinal").val(fechafinal);
 		$("#v_politicasaceptacion").val(politicasaceptacion);
-
+		$("#v_politicaaceptacionseleccion").val(idpoliticaaceptacion);
+		SeleccionarPolitica();
 	//	ObtenerHorariosSemana(idservicio);
 		//ObtenerHorariosServicioComprobacion(idservicio);
 		//ObtenerPeriodos(idservicio);

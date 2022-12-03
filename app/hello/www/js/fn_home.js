@@ -65,7 +65,7 @@ function CargarDatos() {
 	ObtenerEntradas(1);
 	Obtenerpublicidad(1);
 	ObtenerConfiguracion();
-      identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 3000);
+      identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 5000);
 
 	VerificarSiExisteTuTorados();
 	//botones
@@ -144,7 +144,7 @@ function CargarDatosAdmin(argument) {
 	VerificarServicios();
 	$$(".lipagos").attr('href','/listadopagosadmin/');
   //  ObtenerCantidadNuevas();
-      identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 3000);
+      identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 5000);
 
 		Obtenerpublicidad(0);
  		ObtenerTableroAnuncios(0);
@@ -281,7 +281,7 @@ function CargarDatosCoach() {
 	ObtenerTableroAnuncios(1);
 	ObtenerEntradas(1);
    
-     identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 3000);
+     identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 5000);
      //botones
 	ExistenServiciosporvalidar();
 	MostrarBotonServiciosActivosCoach();

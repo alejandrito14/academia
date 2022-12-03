@@ -136,9 +136,9 @@ function agregarsaldo(idcliente,nombre)
 }
 
 
-function agregarsaldoacliente(idcliente,nombre) {
+function agregarsaldoacliente(idusuarios,nombre) {
 
-	var datos="idcliente="+idcliente+"&nombrecliente="+nombre;
+	var datos="idusuarios="+idusuarios+"&nombrecliente="+nombre;
 
 		$.ajax({
 			  type: 'POST',
@@ -166,8 +166,8 @@ function agregarsaldoacliente(idcliente,nombre) {
 		  });
 }
 
-function ObtenerMovimientos(idcliente) {
-	var datos="idcliente="+idcliente;
+function ObtenerMovimientos(idusuarios) {
+	var datos="idusuarios="+idusuarios;
 		
 
 		$.ajax({

@@ -2665,7 +2665,9 @@ function GuardarservicioNuevo2() {
 		var abiertoadmin=$("#v_abiertoadmin").is(':checked')?1:0;
 		var ligarclientes=$("#v_ligarclientes").is(':checked')?1:0;
 		var v_numligarclientes=$("#v_numligarclientes").val();
+		var v_politicaaceptacionseleccion=$("#v_politicaaceptacionseleccion").val();
 
+		datos.append('v_politicaaceptacionseleccion',v_politicaaceptacionseleccion);
 		datos.append('abiertocliente',abiertocliente);
 		datos.append('abiertocoach',abiertocoach);
 		datos.append('abiertoadmin',abiertoadmin);
@@ -2676,11 +2678,12 @@ function GuardarservicioNuevo2() {
 		var v_reembolso=$("#v_reembolso").is(':checked')?1:0;
 		var v_tiporeembolso=$("#v_tiporeembolso").val();
 		var v_cantidadreembolso=$("#v_cantidadreembolso").val();
-
+		var v_politicaaceptacionseleccion=$("#v_politicaaceptacionseleccion").val();
 		var v_asistencia=$("#v_asistencia").is(':checked')?1:0;
 		var v_asignadocliente=$("#v_asignadocliente").is(':checked')?1:0;
 		var v_asignadocoach=$("#v_asignadocoach").is(':checked')?1:0;
 		var v_asignadoadmin=$("#v_asignadoadmin").is(':checked')?1:0;
+		datos.append('v_politicaaceptacionseleccion',v_politicaaceptacionseleccion);
 		datos.append('v_reembolso',v_reembolso);
 		datos.append('v_cantidadreembolso',v_cantidadreembolso);
 		datos.append('v_asignadocliente',v_asignadocliente);
@@ -2724,7 +2727,7 @@ function GuardarservicioNuevo2() {
 		var membresias=[];
 		var descuentos=[];
 
-
+ 
 		var zonas=[];
 		var coachs=[];
 		var periodoinicial=[];
@@ -2866,7 +2869,7 @@ function GuardarservicioNuevo2() {
 		
 	 
 }
-
+//si es avanzado utiliza esta funcion Guardarservicio avanzado
 function Guardarservicio()
 {
 
@@ -3177,6 +3180,9 @@ function GuardarservicioNuevo() {
 
 		var v_politicascancelacion=$("#v_politicascancelacion").val();
 		var v_politicasaceptacion=$("#v_politicasaceptacion").val();
+		var v_politicaaceptacionseleccion=$("#v_politicaaceptacionseleccion").val();
+
+
 		var v_reembolso=$("#v_reembolso").is(':checked')?1:0;
 		var v_asistencia=$("#v_asistencia").is(':checked')?1:0;
 		var v_tiporeembolso=$("#v_tiporeembolso").val();
@@ -3186,7 +3192,7 @@ function GuardarservicioNuevo() {
 		var v_asignadocoach=$("#v_asignadocoach").is(':checked')?1:0;
 		var v_asignadoadmin=$("#v_asignadoadmin").is(':checked')?1:0;
 		var imagenessucursal=localStorage.getItem('fotoimagenservicio');
-
+		datos.append('v_politicaaceptacionseleccion',v_politicaaceptacionseleccion);
 		const zonas = [...new Set(arraydiaseleccionados.map(bill => bill.idzona))];
 		datos.append('coachs',coachs);
 		datos.append('participantes',participantes);
@@ -3378,11 +3384,7 @@ function GuardarservicioNuevo() {
 		}
 
 	
-		if (periodoinicial.length==0) {
-			bandera4=0;
-	    	$("#lblperiodos").css('color','red');
-			
-		}
+
 
 		for (var i = 0; i < periodoinicial.length; i++) {
 			if (isValidDate(periodoinicial[i])==false) {
@@ -3885,6 +3887,7 @@ function Validacion() {
 	$(".lifechafinal").removeClass('requerido');
     $(".liseleccionardias").removeClass('requerido2');
     $(".liseleccionafechas").removeClass('requerido2');
+	$(".liperiodosdecobro").removeClass('requerido2')
 
 
 var bandera=1;
@@ -3974,6 +3977,8 @@ var bandera=1;
 			$(".liseleccionafechas").addClass('requerido2');
 
 			}
+
+			
 	if (localStorage.getItem('idtipousuario')== 0) {
 
 			var costo=$("#v_costo").val();
@@ -3985,6 +3990,10 @@ var bandera=1;
 
 			}
 
+			if (asignacionperiodos.length==0) {
+				bandera=0;
+			  $(".liperiodosdecobro").addClass('requerido2');
+			}
 
 			var modalidad=0;
 			  if(document.querySelector('input[name="v_grupo"]:checked')) { 
