@@ -1,7 +1,9 @@
 
 function ObtenerComentarios() {
-	 var idservicio=localStorage.getItem('idservicio');
-    var datos="idservicio="+idservicio;
+	var idservicio=localStorage.getItem('idservicio');
+    var idusuario=localStorage.getItem('id_user');
+    var idtipousuario=localStorage.getItem('idtipousuario');
+    var datos="idservicio="+idservicio+"&idusuario="+idusuario+"&idtipousuario="+idtipousuario;
     var pagina = "ObtenerComentariosServicio.php";
     $.ajax({
         type: 'POST',
@@ -118,7 +120,7 @@ function NuevoComentario() {
           $("#txtcomentario").val('');
           $(".input-clear-button").css('opacity',0);
           $(".input-clear-button").css('visibility','hidden');
-          
+          $("#txtcomentariocaja").val('');
           //alerta('','Se han guardado el comentario correctamente');
 
         },error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -140,3 +142,5 @@ function NuevoComentario() {
     }
 
   }
+
+

@@ -104,6 +104,7 @@ function ObtenerServicioAsignado() {
 			}
 				$("#permisoasignaralumno").css('display','none');
 			if (localStorage.getItem('idtipousuario')==3) {
+				ObtenerInvitados();
 
 				if (respuesta.ligarcliente==1 && invitado==0 && puedeinvitar==0) {
 
@@ -488,7 +489,7 @@ function PintarHorarios(horarios) {
 }
 
 function AceptarTerminos() {
-	 app.dialog.confirm('','¿Está seguro  de realizar la acción?' , function () {
+	 app.dialog.confirm('','¿Está seguro  de aceptar el servicio?' , function () {
 	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
 	var pagina = "AceptarTerminos.php";
 	var id_user=localStorage.getItem('id_user');
@@ -532,6 +533,7 @@ function AceptarTerminos() {
 		});
 	 });
 }
+
 
 
 function PantallaRechazarTerminos() {
@@ -881,6 +883,7 @@ function ObtenerParticipantes() {
 }
 
 function PintarParticipantes(respuesta) {
+
 	if (respuesta.length>0) {
 		var html="";
 		for (var i =0; i < respuesta.length; i++) {
@@ -905,30 +908,66 @@ function PintarParticipantes(respuesta) {
 			html+=`
 				  
 
-                <li>
+                <li class="lista_" id="lista_`+respuesta[i].idusuarios+`" style="background:white;border-radius: 10px;margin-bottom: 1em;">
             <label class="label-radio item-content">                                                                               
-              <div class="item-inner" style="width:80%;">
+              <div class="item-inner" style="width:100%;">
              
                 <div class="row">
                 <div class="item-media">
-              		  <div class="col-30">
-                        <figure class="avatar  rounded-10">
-                        <img src="`+urlimagen+`" alt="" style="width:80px;height:80px;" />
-                        </figure>
-                        </div>
+
+		              		  <div class="col-30">
+				                        <figure class="avatar  rounded-10">
+				                        <img src="`+urlimagen+`" alt="" style="width:80px;height:80px;" />
+				                        </figure>
+		                      </div>
+
+		                      <div class="col-50">
+		                      	<div class="row">`;
+
+		                      		html+=` <div class="row">
+			                        	   <div class="item-text" style="font-size:20px;">`;
+			                        	 if (respuesta[i].alias!='' && respuesta[i].alias!=null) {
+
+			                        	   html+=respuesta[i].alias;
+			                        	}
+
+			                        	 html+=  `</div>
+			                        	  </div>`;
+			                    
+
                         
-                        	<div class="col-100">
-                        	 <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
-             		   </div><div class="row">
-                        	  <div class="item-text">`+respuesta[i].nombretipo+`</div>
-                    </div>
+		                        	html+=` <div class="row">
+		                        	   <div class="col-100 item-text" style="font-size:18px;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
+		             		  		   </div>
+		             		  		 </div>
+		             		  		  <div class="row"> <div class="item-text">`;
+		             		  	
+		             		  		 if (respuesta[i].celular!='') {
+
+				             		 	 html+=respuesta[i].celular;
+
+				                    		}
+				                    html+=`
+				                  			  </div>
+				                    		  </div>
+				                    	</div>
+
+			                    	</div>
+
+		                    
+
+		                  		<div class="col-20">
+            				 <input type="checkbox" name="my-opcion" class="idusuariosiniciar" id="idusuarios_`+respuesta[i].idusuarios+`"  style="height: 20px;position: absolute; right: 2em;width: 20px;top: 3em;">
+
+		                  		</div>
+
+
                         	</div>
                         	
                         	</div>
                         </div>
              		 
               </div>
-             <input type="checkbox" name="my-opcion" class="idusuariosiniciar" id="idusuarios_`+respuesta[i].idusuarios+`"  style="height:20px;width:20px;">
 
             </label>
           </li>
@@ -1437,7 +1476,7 @@ function PintarAlumnosAdmin(respuesta) {
 			if (respuesta[i].foto!='' && respuesta[i].foto!=null && respuesta[i].foto!='null') {
 
 				urlimagen=urlphp+`upload/perfil/`+respuesta[i].foto;
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
 			}else{
 
 				if (respuesta[i].sexo=='M') {
@@ -1460,7 +1499,7 @@ function PintarAlumnosAdmin(respuesta) {
 
               <li class="lista_" id="lista_`+respuesta[i].idusuarios+`"  style="background:white;border-radius: 10px;margin-bottom: 1em;">
             <label class="label-radio item-content">                                                                               
-              <div class="item-inner" style="width:80%;">
+              <div class="item-inner" style="width:100%;">
              
                 <div class="row">
                 <div class="item-media">
@@ -1468,35 +1507,57 @@ function PintarAlumnosAdmin(respuesta) {
                         <figure class="avatar  rounded-10">
                        `+imagen+`
                         </figure>
+
                         </div>
-                        
-                        	<div class="col-100">
-                        	 <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;word-break: break-word;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
-             		   </div>
+                         <div class="col-50">
+	                         <div class="row">
+
+	                         <div class="row">
+		             		     <div class="col-100 item-text" style="font-size:20px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].alias+`
+		             		     </div>
+	             		     </div>
+             		  
+	                       <div class="row">
+
+	                        <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
+	             		    </div>
+	             		   </div>
 
 
-                     <div class="row">
-             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].alias+`
-             		     </div>
-             		   </div>`;
+                    `;
 
 
-             		   html+=` <div class="row">
-             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].celular+`
-             		     </div>
-             		   </div>`;
+	             		   html+=` <div class="row">
+	             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].celular+`
+	             		     </div>
+             		   `;
 
-             		   html+=`<div class="row">
-                        	  <div class="item-text">`+respuesta[i].nombretipo+`</div>
-                    </div>
+             		   html+=`<div class="row">`;
+             		   		if (respuesta[i].tutorado==1) {
+
+             		   		html+=`<div class="item-text">Tutorado</div>`;
+
+             		   		}
+
+
+
+                  			html+= `</div>
+
+                   		 </div>
 
                         	</div>
+
+
                         	
+                         	</div>
+
+                         	<div class="col-20">
+                         	    <input type="checkbox" name="my-opcion" class="idusuariosiniciar" id="idusuarios_`+respuesta[i].idusuarios+`"  style="height:20px;width:20px;" onchange="SeleccionarAsignado(`+respuesta[i].idusuarios+`)">
+
                          	</div>
                         </div>
              		 
               </div>
-             <input type="checkbox" name="my-opcion" class="idusuariosiniciar" id="idusuarios_`+respuesta[i].idusuarios+`"  style="height:20px;width:20%;" onchange="SeleccionarAsignado(`+respuesta[i].idusuarios+`)">
 
             </label>
           </li>
@@ -1548,7 +1609,7 @@ function PintarAlumnos(respuesta) {
 			if (respuesta[i].foto!='' && respuesta[i].foto!=null && respuesta[i].foto!='null') {
 
 				urlimagen=urlphp+`upload/perfil/`+respuesta[i].foto;
-				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
 			}else{
 
 				if (respuesta[i].sexo == 'M') {
@@ -1573,7 +1634,7 @@ function PintarAlumnos(respuesta) {
 
                 <li class="lista_" id="lista_`+respuesta[i].idusuarios+`"  style="background: white;border-radius: 10px;margin-bottom: 1em;">
             <label class="label-radio item-content">                                                                               
-              <div class="item-inner" style="width:80%;">
+              <div class="item-inner" style="width:100%;">
              
                 <div class="row">
                 <div class="item-media">
@@ -1581,32 +1642,53 @@ function PintarAlumnos(respuesta) {
                         <figure class="avatar  rounded-10">
                         <img src="`+urlimagen+`" alt="" style="width:80px;height:80px;" />
                         </figure>
-                        </div>
                         
-                        	<div class="col-100">
-                        	 <div class="col-100 item-text" style="margin-left: 1em;font-size:18px;word-break: break-word;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
-             		   </div>
+                        </div>
+                         <div class="col-50">
+	                         <div class="row">
 
-                     <div class="row">
-             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].alias+`
-             		     </div>
-             		   </div>
+	                         <div class="row">
+		             		     <div class="col-100 item-text" style="font-size:20px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].alias+`
+		             		     </div>
+	             		     </div>
+             		  
+	                       <div class="row">
 
-             		   <div class="row">
+	                        <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
+	             		    </div>
+	             		   </div>
+
+
+                    `;
+
+
+	             		   html+=` <div class="row">
+	             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].celular+`
+	             		     </div>
+             		   `;
+
+             		   html+=`<div class="row">
                         	  <div class="item-text">`+respuesta[i].nombretipo+`</div>
-                    </div>
+                  			  </div>
+
+                   		 </div>
 
                         	</div>
+
+
                         	
+                         	</div>
+
+                         	<div class="col-20">
+                         	    <input type="checkbox" name="my-opcion" class="idusuariosiniciar" id="idusuarios_`+respuesta[i].idusuarios+`"  style="height:20px;width:20px;" onchange="SeleccionarAsignado(`+respuesta[i].idusuarios+`)">
+
                          	</div>
                         </div>
              		 
               </div>
-             <input type="checkbox" name="my-opcion" class="idusuariosiniciar" id="idusuarios_`+respuesta[i].idusuarios+`"  style="height:20px;width:20%;" onchange="SeleccionarAsignado(`+respuesta[i].idusuarios+`)">
 
             </label>
           </li>
-
 
 			`;
 		}
@@ -1829,14 +1911,14 @@ function GuardarAsignaciones() {
 	$(".lista_" ).each(function( index ) {
 		var id=$(this).attr('id');
 		var dividir=id.split('_')[1];
-		console.log(dividir);
+	
 	  	if($("#idusuarios_"+dividir).is(':checked')) {
 	  		usuariosagregados.push(dividir);
 	  	}
 	});
 
 	var datos="id_user="+id_user+"&idusuarios="+idusuarios+"&idservicio="+idservicio+"&usuariosquitados="+usuariosquitados+"&usuariosagregados="+usuariosagregados;
-	
+	CrearModalEsperaDialog();
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
@@ -1845,7 +1927,7 @@ function GuardarAsignaciones() {
 		cache: false,
 		data:datos,
 		success: function(datos){
-
+			CerrarEspera();
 				
 			if (datos.respuesta==1) {
 
@@ -2685,3 +2767,153 @@ function ObtenerVerificarFechasDias(fechainicial,fechafinal,arraydiaselegidos) {
 
 	});
 }
+function ObtenerInvitados() {
+	var idservicio=localStorage.getItem('idservicio');
+	var pagina = "ObtenerInvitados.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user+"&idservicio="+idservicio;
+	
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(resp){
+				var usuarios=resp.respuesta;
+				if (usuarios.length>0) {
+
+					PintarInvitados(usuarios);
+
+				}
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+
+}
+
+function PintarInvitados(respuesta) {
+	
+	if (respuesta.length>0) {
+		$(".listadoinvitados").css('display','block');
+		var html="";
+		for (var i =0; i < respuesta.length; i++) {
+			var imagen="";
+			if (respuesta[i].foto!='' && respuesta[i].foto!=null  && respuesta[i].foto!='null') {
+
+				urlimagen=urlphp+`upload/perfil/`+respuesta[i].foto;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:60px;height:60px;"/>';
+			}else{
+
+				if (respuesta[i].sexo=='M') {
+                    urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarmujer');
+    
+                }else{
+                    urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarhombre');
+       
+                }
+
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:60px;height:60px;"/>';
+			}
+
+
+			var background="";
+			if (localStorage.getItem('idtipousuario')!=3) {
+			if (respuesta[i].pagado==0){
+				background="color:red;";
+				}
+			}
+			
+
+html+=`
+         <li style="
+    border-radius: 10px;margin-bottom: 1em;background: white;border-radius: 10px;">
+            <label class="label-radio item-content">                                                                               
+              <div class="item-inner" style="width:90%;">
+             
+                <div class="row">
+                <div class="row">
+              		  <div class="col-20">
+                        <figure class="avatar   rounded-10">
+                      `+imagen+`
+                        </figure>
+                        </div>
+                        
+                    <div class="col-60">
+                         <div class="col-100 item-text" style="margin-left: 1em;font-size:14px;`+background+`" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
+                         </div>
+             		 
+	             		 <div class="col-100 item-text" style="font-size:14px;margin-left: 1em;`+background+`" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].usuario+`
+	             		 	</div>
+             		
+               
+                        </div>
+                        	 <div class="col-20">
+                         <div class="col"> 
+                        `;
+
+                       	if (localStorage.getItem('idtipousuario')==5) {
+	                       html+=`<button id="" class="button " style="font-size: 26px;" onclick="SubirFotoIndividual(`+respuesta[i].idusuarios+`)">
+	                       		 <i class="bi bi-card-image"></i>
+	                        </button>`;
+	                    }
+
+                      html+= ` </div>
+                        </div>
+
+                        `;
+
+            
+                    if (localStorage.getItem('idtipousuario')!=3) {
+                    	html+=`
+                    		<div class="col-30">`;
+                    		var aceptoback="#c2c2c2";
+                    		if (respuesta[i].aceptarterminos==1){
+
+                    			aceptoback="#007aff";
+                    		}
+                    		var pagadoback="red";
+                    	if (respuesta[i].pagado==1){
+
+                    			pagadoback="#59c158";
+                    		}
+
+                        html+=`<span style="
+							    background:`+aceptoback+` ;
+							" class="divaceptado"></span>`;
+
+                       html+=` <span style="
+							    background:`+pagadoback+` ;" class="divaceptado"></span>`;
+
+                       html+=`</div>`;
+
+                    	
+                    }
+
+                    html+=` </div>
+               
+             		 
+              </div>
+
+            
+          </div></label></li>
+
+			`;
+		}
+		$("#divinvitados").html(html);
+
+	}else{
+				$(".listadoinvitados").css('display','none');
+
+	}
+}
+
+

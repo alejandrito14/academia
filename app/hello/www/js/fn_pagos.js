@@ -101,11 +101,11 @@ function Pintarpagos(pagos) {
 		html+=`
 		<li class="list-item">
                     <div class="row">
-                        <div class="col-40">
-               
+                        <div class="col-80">
+                        <p>Seleccionar todos</p>
                         </div>
-                        <div class="col-60">
-                        <p>Seleccionar todos<input type="checkbox" id="checktodos" onchange="SeleccionarTodos()" style="float:rigth;" /></p>
+                        <div class="col-20">
+                        <input type="checkbox" id="checktodos" onchange="SeleccionarTodos()" style="    width: 30px;height: 20px;" />
                         </div>
                     </div>
                  </li>
@@ -130,7 +130,7 @@ function Pintarpagos(pagos) {
                         </div>
                         <div class="col-20">
 
-                        <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Seleccionarcheck(`+pagos[i].idpago+`)" style="float:rigth;" />
+                        <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Seleccionarcheck(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />
                         <input type="hidden" id="tipo_`+pagos[i].idpago+`" value="`+pagos[i].tipo+`"  />
                         </div>
                     </div>

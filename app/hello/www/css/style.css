@@ -1509,10 +1509,7 @@ label.small {
 }
 
 .textolandig{
-        position: absolute;
-    top: 80%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+       
     text-align: center;
 }
 
@@ -2503,4 +2500,7 @@ background: white;
 .searchbar{
     margin-left: 0.5em;
     margin-right: 0.5em;
+}
+.cortartexto{
+        white-space: nowrap;
 }

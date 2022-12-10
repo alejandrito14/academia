@@ -324,9 +324,19 @@ var handleNotificationMessage = function(message){
                         localStorage.pushnav = message.navigation;
                         localStorage.valor=message.valor;
 
-                         if (localStorage.valor!='') {
+                       if (message.navigation == 'messages') {
+                        localStorage.setItem('bandera',1);
+                          if (localStorage.valor!='') {
+                            
+                                localStorage.setItem('idsala',localStorage.valor);
+                             }
+                         }else{
+
+                              if (localStorage.valor!='') {
                                 localStorage.setItem('idservicio',localStorage.valor);
                              }
+                         }
+                       
                        // mainView.router.navigate("/"+localStorage.pushnav+"/", {reloadCurrent: true} );
                         //var view=app.views.current;
                         //view.router.navigate("/"+message.navigation+"/", {reloadCurrent: true} );

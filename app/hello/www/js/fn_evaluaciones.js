@@ -870,8 +870,10 @@ function PintarResultadoEncuestaUsuario(encuesta) {
 }
 
 function ConsultarSihayComentarios() {
-	 var idservicio=localStorage.getItem('idservicio');
-    var datos="idservicio="+idservicio;
+	var idservicio=localStorage.getItem('idservicio');
+    var idusuario=localStorage.getItem('id_user');
+    var idtipousuario=localStorage.getItem('idtipousuario');
+    var datos="idservicio="+idservicio+"&idusuario="+idusuario+"&idtipousuario="+idtipousuario;
     var pagina = "ObtenerComentariosServicio.php";
     $.ajax({
         type: 'POST',

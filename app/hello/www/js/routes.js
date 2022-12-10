@@ -53,6 +53,14 @@ var routes = [
   },
 
    {
+    path:'/serviciosactivostutorado/',
+    componentUrl: './pages/serviciosactivostutorado.html',
+    name: 'serviciosactivostutorado',
+    routes: [
+    ]
+  },
+
+   {
     path:'/serviciosporvalidar/',
     componentUrl: './pages/serviciosporvalidar.html',
     name: 'serviciosporvalidar',
@@ -295,9 +303,22 @@ var routes = [
     
     url: './pages/serviciosasignados.html',
   },
+
+    {
+
+    path: '/serviciosasignadostutorado/',
+    
+    url: './pages/serviciosasignadostutorado.html',
+  },
    {
     path: '/serviciospendientesasignados/',
     componentUrl: './pages/serviciospendientesasignados.html',
+  
+  },
+
+   {
+    path: '/serviciospendientesasignadostutorado/',
+    componentUrl: './pages/serviciospendientesasignadostutorado.html',
   
   },
 

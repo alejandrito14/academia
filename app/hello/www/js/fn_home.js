@@ -206,6 +206,8 @@ function VerificarServiciosAsignados() {
 			$(".divbtnservicios").css('display','none');
 			if (respuesta.length>0) {
 				$("#numeroservicios").html(respuesta.length);
+				$(".numeroservicios").html(respuesta.length);
+
 				$(".divbtnservicios").css('display','block');
 			}
 
@@ -378,6 +380,8 @@ function VerificarServiciosAsignadosCoach() {
 
 				$(".divservicios").css('display','block');
 				$("#numerosservicios").html(respuesta.length);
+				$(".numerosservicios").html(respuesta.length);
+
 			}
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
@@ -806,6 +810,8 @@ function VerificarServiciosAsignadospendientes() {
 			if (respuesta.length>0) {
 				$(".serviciospendientes").css('display','block');
 				$("#numeropendientes").html(respuesta.length);
+				$(".numeropendientes").html(respuesta.length);
+
 			}else{
 				$(".serviciospendientes").css('display','none');
 	
@@ -1706,7 +1712,8 @@ function VerDetallesTablero(idtableroanuncio) {
 		success: function(datos){
 
 			var respuesta=datos.respuesta[0];
-			PintarAnuncioTablero(respuesta);
+			var imagenes=datos.imagenes;
+			PintarAnuncioTablero(respuesta,imagenes);
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
@@ -1718,10 +1725,95 @@ function VerDetallesTablero(idtableroanuncio) {
 		});
 }
 
- 
-function PintarAnuncioTablero(respuesta) {
+ var imagenestablero=[];
+function PintarAnuncioTablero(respuesta,imagenes) {
 
 	urlimagen=urlimagenes+`tableroanuncios/imagenes/`+codigoserv+respuesta.imagen;
+
+		
+			classe="swiper-slide-active";
+		
+imagenestablero=[];
+imagenestablero.push(urlimagen);
+
+	var html2="";
+	/*  if (respuesta.titulo!='') {
+              	html2+=`<h1 class="text-color-theme margin-bottom" style="font-size:30px;">
+             `+respuesta.titulo+`
+             </h1>`;
+
+              }*/
+
+	html2+=`<div class="swiper-slide `+classe+`" role="group"   style="    padding: 0;
+    margin: 0; "  id="slider_0">
+
+    <div class="textolandig">
+             	 <div class="">
+             		 <div class="">`;
+
+      
+             html2+=` </div>
+              		<div class="">
+              <div class="">`;
+            
+              
+
+             html2+=  `</div>
+   			 <div onclick="ExpandirImagen(0)">
+              <img class="row h-100" src="`+urlimagen+`" style="height:100%;width:100%;border-radius: 10px;"/>
+				</div>
+              
+                         </div>
+                        </div>
+                       </div>
+                     </div>
+
+`;
+
+	if (imagenes.length>0) {
+		for (var i = 0; i <imagenes.length; i++) {
+			var imagen="";
+		imagen=urlimagenes+`tableroanuncios/imagenestablero/`+codigoserv+imagenes[i].imagen;
+		imagenestablero.push(imagen);
+
+		html2+=`
+		  <div class="swiper-slide" role="group"   style="    padding: 0;
+    margin: 0; "  id="slider_`+(i+1)+`">
+
+    <div class="textolandig">
+             	 <div class="">
+             		 <div class="">`;
+
+      
+             html2+=` </div>
+              		<div class="">
+              <div class="">`;
+              if (imagenes[i].tituloimagen!='') {
+              	html2+=`<h4 class="text-color-theme margin-bottom" style="font-size:30px;">
+             `+imagenes[i].tituloimagen+`
+             </h4>`;
+
+              }
+              
+
+             html2+=  `</div>
+   			 <div onclick="ExpandirImagen(`+(i+1)+`)">
+              <img class="row h-100" src="`+imagen+`" style="height:100%;width:100%;    border-radius: 10px;"/>
+				</div>
+              
+                         </div>
+                        </div>
+                       </div>
+                     </div>
+
+          </div>
+
+		`;
+
+		}
+	}
+
+	
 
 var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: none;">
             <div class="toolbar">
@@ -1754,20 +1846,53 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
    							 	
 	   							  <div class="">
 		   							  <div class="block" style="margin-right:1em;margin-left:1em;">
-		   							 	
-		   							 			<figure class="overflow-hidden rounded-15 text-center">
-								                    <img src="`+urlimagen+`" alt="" class="width-100 margin-left-auto margin-right-auto">
-								                </figure>` ;
-								                if (respuesta.titulo!='' && respuesta.titulo!=null ) {
-								             	html+=`<h5 class="margin-bottom" style="font-size:24px;">`+respuesta.titulo+`</h5>`;
- 	
-								                }
-								                if (respuesta.descripcion!='' && respuesta.descripcion!=null) {
-								                html+=`<p class="text-muted" style="text-align:justify;">`+respuesta.descripcion+`</p>`;
-								            }
+		   							 	 
+		   							  	<div class="row">
+		   							  		<h1 class=" margin-bottom" style="font-size:24px;text-align:center;">
+								             `+respuesta.titulo+`
+								             </h1>
+		   							  	</div>
+		   							 	 <div class="row margin-bottom">
+									        <div class="col-100 no-padding-horizontal">
+										          <div class="list no-margin">
+											            <div style="margin-top: 1em;"  class="swiper-container introswiper swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events swiper-imagenes" id="swiper-imagenes1">
+													       <div class="swiper-pagination ">
+													        </div>
 
+											   
+													          <div class="swiper-wrapper" id="swiper-wrapper-imagenes"  aria-live="off" style="transform: translate3d(-750px, 0px, 0px); transition-duration: 0ms;">
+
+													         `+html2+`
+													         </div>
+													        
+
+											      		  </div>
+										          </div>
+									        </div>
+								      </div>
+		   							 			`;
 
 		   							 	html+=`</div>
+
+		   							 		<div class="row">
+			   							  		<p class=" margin-bottom" style="font-size:18px;text-align: justify;">
+									             `+respuesta.descripcion+`
+									             </p>
+		   							  		</div>
+
+		   							  		<div class="row margin-bottom " style="padding-top: 1em;">
+		   							  		<div class="col-100">`;
+		   							  		if (respuesta.url!='' && respuesta.url!=null) {
+		   							  		html+=`<button class="button button-fill button-large color-theme button-raised margin-bottom-half btnmisservicios" onclick="showArchivo('`+respuesta.url+`')">
+		   							  			<i class="bi bi-globe2 margin-horizontal-half">
+		   							  			</i>
+		   							  			Visitar
+		   							  			
+		   							  			</button>`;
+		   							  		}
+
+		   							  		html+=`</div>
+		   							  		</div>
 
 	   							 	</div>
 
@@ -1787,7 +1912,23 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
         // Events
         on: {
           open: function (sheet) {
-            console.log('Sheet open');
+           
+
+
+			 var swiper = new Swiper('.swiper-imagenes', {
+
+				      pagination: {
+				        el: '.swiper-pagination',
+				       dynamicBullets:true,
+				      },
+				     /* slideToClickedSlide: true,
+				      lazyLoading:true,*/
+				   		
+
+				    });
+
+			
+
           },
           opened: function (sheet) {
             console.log('Sheet opened');
@@ -1799,6 +1940,22 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 }
 
 
+
+function ExpandirImagen(posicion) {
+
+		var nombre=imagenestablero[posicion];
+	   var myPhotoBrowser = app.photoBrowser.create({
+       
+        photos: [
+         nombre
+            ]
+      });
+      //Open photo browser on click
+      myPhotoBrowser.open();
+      $(".popup-close").text('Cerrar');
+     $(".popup-close").css('margin-top','100px');
+     $(".popup").css('z-index','100000');
+}
 
 function VerDetalles(idservicio) {
 	var datos="idservicio="+idservicio;
@@ -1962,15 +2119,16 @@ html+=`	<div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;ba
    							 <div class="" style="position: absolute;top:2em;width: 100%;">
    							 	
 	   							  <div class="">
-		   							  <div class="block" style="margin-right:1em;margin-left:1em;">
-		   							 	
-		   							 			<figure class="overflow-hidden rounded-15 text-center">
-								                    <img src="`+urlimagen+`" alt="" class="width-100 margin-left-auto margin-right-auto">
-								                </figure>`;
-								                if(respuesta.titulo!='' && respuesta.titulo!=null) {
-								                html+=`<h5 class="margin-bottom" style="font-size:24px;">`+respuesta.titulo+`</h5>`;
+		   							  <div class="block" style="margin-right:1em;margin-left:1em;">`;
+		   							  if(respuesta.titulo!='' && respuesta.titulo!=null) {
+								                html+=`<h5 class="margin-bottom" style="font-size:24px;text-align:center;">`+respuesta.titulo+`</h5>`;
 
 								                }
+		   							 	
+		   							 			html+=`<figure class="overflow-hidden rounded-15 text-center">
+								                    <img src="`+urlimagen+`" alt="" class="width-100 margin-left-auto margin-right-auto">
+								                </figure>`;
+			
 
 								                if(respuesta.descripcion!='' && respuesta.descripcion!=null) {
 								              html+=` <p class="text-muted">`+respuesta.descripcion+`</p>`;
@@ -3061,6 +3219,8 @@ function MostrarBotonServiciosActivos() {
 
 				$(".divserviciosactivos").css('display','block');
 				$("#numeroabiertos").html(respuesta.length);
+				$(".numeroabiertos").html(respuesta.length);
+
 			}else{
 			
 				$(".divserviciosactivos").css('display','none');
@@ -3211,6 +3371,8 @@ function ExistenServiciosporvalidar() {
 			if (respuesta.length>0) {
 				$("#divpendientes").css('display','block');
 				$("#numerospendientes").html(respuesta.length);
+				$(".numerospendientes").html(respuesta.length);
+
 			}
 
 

@@ -258,16 +258,14 @@ function PintarImagenesinformativas(respuesta) {
 		html+=`
 		  <div class="swiper-slide `+classe+`" role="group"   style="    padding: 0;
     margin: 0; "  id="slider_`+i+`">
-   			 <div onclick="AbrirImagen(`+i+`)">
-              <img class="row h-100" src="`+imagen+`" style="height:100%;width:100%;"/>
-				</div>
-              <div class="textolandig">
-              <div class="">
-              <div class="">`
+
+    <div class="textolandig">
+             	 <div class="">
+             		 <div class="">`
 
       
              html+=` </div>
-              <div class="">
+              		<div class="">
               <div class="">`;
               if (respuesta[i].tituloimagen!='') {
               	html+=`<h1 class="text-color-theme margin-bottom" style="font-size:30px;">
@@ -276,10 +274,12 @@ function PintarImagenesinformativas(respuesta) {
 
               }
               
-           
-            
-             
-                     html+=  `</div>
+
+             html+=  `</div>
+   			 <div onclick="AbrirImagen(`+i+`)">
+              <img class="row h-100" src="`+imagen+`" style="height:100%;width:100%;"/>
+				</div>
+              
                          </div>
                         </div>
                        </div>
@@ -323,7 +323,7 @@ function AbrirImagen(posicion) {
       //Open photo browser on click
       myPhotoBrowser.open();
       $(".popup-close").text('Cerrar');
-     
+     $(".popup-close").css('margin-top','100px');
 }
 
 
@@ -650,7 +650,7 @@ function ObtenerServicioNuevo(valor) {
 	abiertoadmin=respuesta.abiertoadmin;
 	ligarcliente=respuesta.ligarcliente;
 	reembolso=respuesta.reembolso; 
-	asistencia=respuesta.asistencia;
+	asistencia=respuesta.controlasistencia;
 	//cantidadreembolso='<?php echo $cantidadreembolso; ?>';
 	asignadocliente=respuesta.asignadocliente;
 	asignadocoach=respuesta.asignadocoach;
@@ -728,6 +728,14 @@ function ObtenerServicioAReplicar(valor) {
 	var id_user=localStorage.getItem('id_user');
 	var datos="id_user="+id_user+"&idservicio="+valor;
 	
+	 var serviciosreplica=$("#serviciosreplica").val();
+		  if (serviciosreplica>0) {
+		  		$(".regreso").attr('onclick','ModalPregunta()');
+			
+			  }else{
+		     regresohome();
+		}
+
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
@@ -736,6 +744,9 @@ function ObtenerServicioAReplicar(valor) {
 		cache: false,
 		data:datos,
 		success: function(datos){
+
+
+
  		arraydiaselegidos=[];
  		arraydiaseleccionados=[];
 

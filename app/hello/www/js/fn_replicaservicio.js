@@ -655,6 +655,58 @@ function GuardarReplica() {
         }).open();
 
 }
+
+function ModalPregunta() {
+	
+
+ var html=`
+         
+              <div class="">
+
+                <div class="row" style="padding-top:1em;">
+                <span>¿Desea cancelar la replica?</span>
+                </div>
+              </div>
+           
+         
+        `;
+       app.dialog.create({
+          title: '',
+          //text: 'Dialog with vertical buttons',
+          content:html,
+          buttons: [
+            {
+              text: 'NO',
+            },
+            {
+              text: 'SI',
+            },
+            
+          ],
+
+           onClick: function (dialog, index) {
+            if(index === 0){
+             
+          }
+          else if(index === 1){
+          	if (localStorage.getItem('idtipousuario')==5) {
+             	GoToPage('homecoach');
+
+             }
+             if (localStorage.getItem('idtipousuario')==0) {
+             	GoToPage('homeadmin');
+
+             }
+          }
+
+
+
+        },
+          verticalButtons: false,
+        }).open();
+
+
+}
 /*
 function GuardarServicioClonado(datos) {
 	$.ajax({

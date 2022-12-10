@@ -614,7 +614,10 @@ function PintarSelecttutorados(respuesta) {
 }
 
 function InformacionTutorado(idusertutorado) {
+	var idusuarioresp=localStorage.getItem('id_user');
+	localStorage.setItem('iduserrespaldo',idusuarioresp);
 	localStorage.setItem('idusuertutorado',idusertutorado);
+	localStorage.setItem('id_user',idusertutorado);
 	GoToPage('listadotutoservicios');
 
 }
@@ -844,3 +847,331 @@ function DesasociarUsuario() {
 	});
 }
 
+function ObtenerMisServicioTutorado() {
+	var idusuertutorado=localStorage.getItem('idusuertutorado');
+	var datos="idusuertutorado="+idusuertutorado;
+	var pagina = "ObtenerMisServicioTutorado.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(resp){
+
+			if (resp.respuesta.length>0) {
+				$(".divbtnservicios").css('display','block');
+				$(".numeroservicios").html(resp.respuesta.length);
+
+				}else{
+
+				$(".divbtnservicios").css('display','none');
+
+			}
+			
+			
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+function ObtenerMispendientesTutorado() {
+	var idusuertutorado=localStorage.getItem('idusuertutorado');
+	var datos="idusuertutorado="+idusuertutorado;
+	var pagina = "ObtenerMispendientesTutorado.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(resp){
+
+			if (resp.respuesta.length>0) {
+				$(".serviciospendientes").css('display','block');
+				$(".numerospendientes").html(resp.respuesta.length);
+
+				}else{
+
+				$(".serviciospendientes").css('display','none');
+
+				}
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+
+function ObtenerServiciosAbiertoTutorado() {
+	var idusuertutorado=localStorage.getItem('idusuertutorado');
+	var datos="idusuertutorado="+idusuertutorado;
+	var pagina = "ObtenerServiciosActivoTutorado.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(resp){
+
+			if (resp.respuesta.length>0) {
+				$(".divserviciosactivos").css('display','block');
+				$("#numeroabiertos").html(resp.respuesta.length);
+				$(".numeroabiertos").html(resp.respuesta.length);
+
+			}else{
+				$(".divserviciosactivos").css('display','none');
+
+			}
+			
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+
+function ObtenerInformacionTutorado() {
+	var idusuertutorado=localStorage.getItem('idusuertutorado');
+	var datos="id_user="+idusuertutorado;
+	var pagina = "Obtenerdatospersonales.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(resp){
+			var datostutorado=resp.respuesta;
+			$(".titlenombre").text(datostutorado.nombre+' '+datostutorado.paterno);
+			
+			
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+
+function ObtenerServiciosAsignadospendientesTutorado() {
+	var idusuario=localStorage.getItem('idusuertutorado');
+	var datos="idusuario="+idusuario;
+	var pagina = "ObtenerServiciosAsignadosPendientes.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+
+			var respuesta=datos.respuesta;
+			var fechaactual=datos.fechaactual;
+			console.log(datos);
+			PintarServiciosAsignados3(respuesta,fechaactual);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+
+
+function PantallaRechazarTerminosTutorado() {
+	 var html=`
+         
+              <div class="">
+
+                <div class="row" style="padding-top:1em;">
+                	<label style="font-size:16px;padding:1px;">Motivo:</label>
+                	<textarea name="" id="txtcomentariorechazo" cols="30" rows="3"></textarea>
+               	<span class="mensajemotivo"></span>
+                </div>
+              </div>
+           
+         
+        `;
+       app.dialog.create({
+          title: 'Rechazar servicio',
+          //text: 'Dialog with vertical buttons',
+          content:html,
+          buttons: [
+            {
+              text: 'Cancelar',
+            },
+            {
+              text: 'Aceptar',
+            },
+            
+          ],
+
+           onClick: function (dialog, index) {
+            if(index === 0){
+             
+          }
+          else if(index === 1){
+               RechazarTerminosTutorado();
+
+            }
+
+        },
+          verticalButtons: false,
+        }).open();
+	
+}
+
+function RechazarTerminosTutorado() {
+	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
+	var pagina = "RechazarTerminos.php";
+	var id_user=localStorage.getItem('idusuertutorado');
+	var motivo=$("#txtcomentariorechazo").val();
+	var datos="id_user="+id_user+"&idusuarios_servicios="+idusuarios_servicios+"&motivocancelacion="+motivo;
+
+	if (motivo!='' && motivo.length>=10) {
+			app.dialog.close();
+			CrearModalEsperaDialog();
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+
+			if (datos.respuesta==1) {
+
+				 $(".mensajeproceso").css('display','none');
+        		 $(".mensajeerror").css('display','none');
+         		 $(".mensajeexito").css('display','block');
+         		 $(".botonok").css('display','block');
+			
+				//alerta('','Operación realizada');
+				GoToPage('listadotutoservicios');
+			}
+			
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+					$(".mensajeproceso").css('display','none');
+                    $(".mensajeerror").css('display','block');
+                    $(".mensajeexito").css('display','none');
+                    $(".botonok").css('display','block');
+			}
+
+		});
+	}else{
+
+		alerta('','Para continuar coloque un motivo de rechazo, cantidad mínima de 10 caracteres');
+	}
+}
+
+
+function AceptarTerminosTutorado() {
+	 app.dialog.confirm('','¿Está seguro  de aceptar el servicio?' , function () {
+	var idusuarios_servicios=localStorage.getItem('idusuarios_servicios');
+	var pagina = "AceptarTerminos.php";
+	var id_user=localStorage.getItem('idusuertutorado');
+	var datos="id_user="+id_user+"&idusuarios_servicios="+idusuarios_servicios;
+	CrearModalEsperaDialog();
+
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+
+
+         $(".mensajeproceso").css('display','none');
+         $(".mensajeerror").css('display','none');
+         $(".mensajeexito").css('display','block');
+         $(".botonok").css('display','block');
+
+		 
+			if (datos.respuesta==1) {
+				
+				GoToPage('serviciosasignadostutorado');
+			}
+			
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+					$(".mensajeproceso").css('display','none');
+                    $(".mensajeerror").css('display','block');
+                    $(".mensajeexito").css('display','none');
+                    $(".botonok").css('display','block');
+			}
+
+		});
+	 });
+}
+
+function ObtenerServiciosAsignadosTutorado() {
+	var idusuario=localStorage.getItem('idusuertutorado');
+	var datos="idusuario="+idusuario;
+	var pagina = "ObtenerServiciosAsignados.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(datos){
+
+			var respuesta=datos.respuesta;
+			var fechaactual=datos.fechaactual;
+			console.log(datos);
+			PintarServiciosAsignados2(respuesta,fechaactual);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+
+function RegresaraHome() {
+	var iduser=localStorage.getItem('iduserrespaldo');
+	localStorage.setItem('id_user',iduser);
+	GoToPage('home');
+
+}

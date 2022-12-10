@@ -1051,6 +1051,9 @@ $$(document).on('page:init', '.page[data-name="chat"]', function (e) {
   /* swiper carousel projects */
  // $$('#btnverificartoken').attr('onclick','ValidarCelular()')
 regresohome();
+ $(".v_buscador").attr('onkeyup','BuscarEnLista(".v_buscador",".lista")');
+  $(".limpiarspan").attr('onclick','LimpiarResultado(".lista")');
+
 listadochats();
 });
 
@@ -1073,6 +1076,8 @@ $$(document).on('page:init', '.page[data-name="chatservicio"]', function (e) {
     }
 
 
+  $(".v_buscador").attr('onkeyup','BuscarEnLista(".v_buscador",".lista")');
+  $(".limpiarspan").attr('onclick','LimpiarResultado(".lista")');
 
   listadochatservicio();
   $$(".btnelegirparticipantes").attr('onclick','ElegirParticipantesChat()');
@@ -1546,14 +1551,25 @@ $$(document).on('page:init', '.page[data-name="serviciospendientesasignados"]', 
 $$(document).on('page:init', '.page[data-name="aceptacionservicio"]', function (e) {
   
  ObtenerServicioAsignado();
- $$("#btnaceptartermino").attr('onclick','AceptarTerminos()');
- $$("#btnrechazartermino").attr('onclick','PantallaRechazarTerminos()');
- $(".regreso").attr('href','/serviciospendientesasignados/');
-  //Verificarcantidadhorarios();
+$(".regreso").attr('href','/serviciospendientesasignados/');
 
  $(".btncalendario").attr('onclick','MostrarHorarios()');
   
 myStopFunction(identificadorDeTemporizador);
+
+ var idusuertutorado=localStorage.getItem('idusuertutorado');
+ if (idusuertutorado=='') {
+  $$("#btnaceptartermino").attr('onclick','AceptarTerminos()');
+  $$("#btnrechazartermino").attr('onclick','PantallaRechazarTerminos()');
+
+ } else{
+  $$("#btnaceptartermino").attr('onclick','AceptarTerminosTutorado()');
+  $$("#btnrechazartermino").attr('onclick','PantallaRechazarTerminosTutorado()');
+
+  $(".regreso").attr('href','/serviciospendientesasignadostutorado/');
+
+ }
+
 
 });
 
@@ -1680,70 +1696,67 @@ $$(document).on('page:init', '.page[data-name="elegirparticipantes"]', function 
 
     if (localStorage.getItem('idtipousuario')==0) {
 
+         $(".regreso").attr('href','/chatservicio/');
 
-     if (localStorage.getItem('variable')==1) {
-        $(".regreso").attr('href','/serviciosregistrados/');
-        localStorage.setItem('variable',0)
-      }else{
-         $(".regreso").attr('href','/detalleservicioadmin/');
-
-       }
+       
     ObtenerParticipantesAdmin();
    }
 
   if (localStorage.getItem('idtipousuario')==3) {
 
+         $(".regreso").attr('href','/chatservicio/');
 
-     if (localStorage.getItem('variable')==1) {
-        $(".regreso").attr('href','/serviciosasignados/');
-        localStorage.setItem('variable',0)
-      }else{
-         $(".regreso").attr('href','/detalleservicio/');
-
-       }
-ObtenerParticipantes();
+       
+    ObtenerParticipantes();
    }
    if (localStorage.getItem('idtipousuario')==5){
-      if (localStorage.getItem('variable')==1) {
-        $(".regreso").attr('href','/serviciosasignados/');
-        localStorage.setItem('variable',0)
-      }else{
-    $(".regreso").attr('href','/detalleserviciocoach/');
+     
+    $(".regreso").attr('href','/chatservicio/');
 
 
-      }
-ObtenerParticipantes();
+      
+    ObtenerParticipantes();
 
    }
- 
+  $$("#buscadorusuario1").attr('onkeyup','BuscarEnLista("#buscadorusuario1",".lista_")');
+  $(".limpiarspan").attr('onclick','LimpiarResultado(".lista_")');
 
   $$("#btnIniciarChat").attr('onclick','IniciarChat()');
 
 });
 
 $$(document).on('page:init', '.page[data-name="messages"]', function (e) {
-  
+  var bandera=localStorage.getItem('bandera');
 
+  if (bandera==0) {
  if (localStorage.getItem('idtipousuario')==0) {
-     $(".regreso").attr('href','/detalleservicioadmin/');
+     $(".regreso").attr('href','/chatservicio/');
     
    }
 
    if (localStorage.getItem('idtipousuario')==3) {
-     $(".regreso").attr('href','/detalleservicio/');
+     $(".regreso").attr('href','/chatservicio/');
   
 
    }
    if (localStorage.getItem('idtipousuario')==5){
 
-    $(".regreso").attr('href','/detalleserviciocoach/');
+    $(".regreso").attr('href','/chatservicio/');
    
    }
+ }else{
+
+    $(".regreso").attr('href','/chat/');
+
+ }
  CargarFunciones();
  CargarFoto();
 
  if (localStorage.getItem('idsala')!=undefined && localStorage.getItem('idsala')!='') {
+   
+    ActualizarMensajesLeidos();
     ObtenerMensajesAnteriores();
+    VerificarSalaServicio();
  }
 
 });
@@ -2013,7 +2026,7 @@ $$(document).on('page:init', '.page[data-name="nuevoservicio"]', function (e) {
 myStopFunction(identificadorDeTemporizador);
 });
 $$(document).on('page:init', '.page[data-name="replicaservicio"]', function (e) {
-regresohome();
+
  ObtenerTipoServicios(0);
  ObtenerCategoriaServicios(0);
   ObtenerPoliticasaceptacion();
@@ -2027,6 +2040,19 @@ regresohome();
   $("#btnaplicarcalendario").attr('onclick','AplicarFechas()');
   $("#btnagregarperiodo").attr('onclick','NuevoPeriodo()');
   $("#v_ligarclientes").attr('onchange','Permitirligar()');
+  $("#v_titulo").attr("onblur","Colocardescripcion();CambiarColor2('lititulo');");
+  $$('#v_titulo').attr('onfocus',"CambiarColor('lititulo');");
+  $("#v_reembolso").attr('onchange','HabilitarcantidadReembolso()');
+  ObtenerTodasEncuestas();
+
+  $("#btnagregarcoach").attr('onclick','NuevoCoach()');
+
+  $$(".fotoimagen").attr('onclick','AbrirModalFotoimagenservicio()');
+
+  $("#v_politicaaceptacionseleccion").attr('onchange','SeleccionarPolitica()');
+
+
+  regresohome();
 
   myStopFunction(identificadorDeTemporizador);
 });
@@ -2085,10 +2111,43 @@ CargarInformacionMembresia();
 
 $$(document).on('page:init', '.page[data-name="listadotutoservicios"]', function (e) {
 
-regresohome();
-ObtenerServiciosTutorado();
+ $(".regreso").attr('onclick','RegresaraHome()');
+//ObtenerServiciosTutorado();
+ ObtenerInformacionTutorado();
+ ObtenerMisServicioTutorado();
+ ObtenerMispendientesTutorado();
+ ObtenerServiciosAbiertoTutorado();
+ $(".btnmisserviciospendientes").attr('onclick','GoToPage("serviciospendientesasignadostutorado")');
+ $(".btnserviciosactivos").attr('onclick','GoToPage("serviciosactivostutorado")');
+ $(".btnmisservicios").attr('onclick','GoToPage("serviciosasignadostutorado")');
 
 });
+
+
+$$(document).on('page:init', '.page[data-name="serviciospendientesasignadostutorado"]', function (e) {
+ ObtenerInformacionTutorado();
+ ObtenerServiciosAsignadospendientesTutorado();
+ $(".regreso").attr('onclick','GoToPage("listadotutoservicios")');
+
+});
+
+$$(document).on('page:init', '.page[data-name="serviciosactivostutorado"]', function (e) {
+ ObtenerInformacionTutorado();
+
+ $(".regreso").attr('onclick','GoToPage("listadotutoservicios")');
+ $(".v_buscador").attr('onkeyup','BuscarEnLista(".v_buscador",".list-item")');
+ $(".limpiarspan").attr('onclick','LimpiarResultado(".list-item")');
+
+  ObtenerServiciosActivos();
+    
+});
+$$(document).on('page:init', '.page[data-name="serviciosasignadostutorado"]', function (e) {
+ ObtenerInformacionTutorado();
+
+ $(".regreso").attr('onclick','GoToPage("listadotutoservicios")');
+ ObtenerServiciosAsignadosTutorado();
+});
+
 
 $$(document).on('page:init', '.page[data-name="datosdependencia"]', function (e) {
 
