@@ -1201,10 +1201,11 @@ const parejaencontrada = (idpareja) => {
 }
 
 function EliminarGrupo(posicion) {
-	alert(posicion);
-	arraygrupos.slice(posicion,1);
-	$("#grupo_"+posicion).remove();
+
 	
+	$("#grupo_"+posicion).remove();
+
+	arraygrupos.splice(posicion,1);
 }
 
 function GuardarJuego(form,regresar,donde,idmenumodulo) {

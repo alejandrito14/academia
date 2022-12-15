@@ -314,7 +314,7 @@ try
 				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[0]->token,'ruta'=>$ruta);
 			array_push($arraytokens,$dato);
 
-			$titulonotificacion="Se te asigno un nuevo servicio ".$emp->titulo;
+			$titulonotificacion="Se te asignó un nuevo servicio ".$emp->titulo;
 
 				}
 				$notificaciones->navpage="detalleserviciocoach2";
@@ -324,7 +324,7 @@ try
 
 
 	}else{
-		$titulonotificacion="Edicion servicio";
+		//$titulonotificacion="Edicion servicio";
 		$emp->ModificarServicio();
 
 		$obtenerser=$emp->ObtenerServicio();
@@ -590,7 +590,7 @@ try
 			$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[0]->token,'ruta'=>$ruta);
 			array_push($arraytokens,$dato);
 
-			$titulonotificacion="Se te asigno un nuevo servicio ".$emp->titulo;
+			$titulonotificacion="Se te asignó un nuevo servicio ".$emp->titulo;
 
 		}
 

@@ -159,9 +159,31 @@ try
 		$invitacion->GuardarInvitacion();
 
 		}
+		$usuarios->idusuarios=$idusuarios[$i];
+		$obtenerdependencia=$usuarios->ObtenerUsuarioDependencia();
+
+		if (count($obtenerdependencia)>0) {
+			$obtenerdatousuario=$usuarios->ObtenerUsuario();
+
+			if($obtenerdatousuario[0]->sincel==1) {
+				$notificaciones->idusuario=$obtenerdependencia[0]->idusuariostutor;
+				$ruta="listadotutoservicios";
+
+			}else{
+			   $notificaciones->idusuario=$idusuarios[$i];
+			   $ruta="serviciospendientesasignados";
+
+			}
+			
 
 
-		$notificaciones->idusuario=$idusuarios[$i];
+
+					}else{
+			$notificaciones->idusuario=$idusuarios[$i];
+			$ruta="serviciospendientesasignados";
+
+		}
+		//$notificaciones->idusuario=$idusuarios[$i];
 		$obtenertokenusuario=$notificaciones->Obtenertoken();
 
 		$idusuario=$idusuarios[$i];
@@ -169,13 +191,12 @@ try
 
 		for ($j=0; $j < count($obtenertokenusuario); $j++) { 
 
-				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$j]->token);
+				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$j]->token,'ruta'=>$ruta);
 
 					array_push($arraytokens,$dato);
 				}
 			$nombrequienasigna='Asignado por: '.$obtenerUsu[0]->nombre.' '.$obtenerUsu[0]->paterno;
 			
-			$ruta="serviciospendientesasignados";
 			$texto='|Asignacion de servicio|'.$obtenerdatosservicio[0]->titulo.'|'.$nombrequienasigna.'|Periodo: '.date('d-m-Y',strtotime($obtenerdatosservicio[0]->fechainicial)).' '.date('d-m-Y',strtotime($obtenerdatosservicio[0]->fechafinal));
 			$estatus=0;
 			$valor=$obtenerdatosservicio[0]->idservicio;
@@ -280,7 +301,7 @@ try
 
 				
 				$idusuario=$arraytokens[$i]['idusuario'];
-				$notificaciones->navpage="serviciospendientesasignados";
+				$notificaciones->navpage=$arraytokens[$i]['ruta'];
 			 	$notificaciones->idcliente=$idusuario;
 			 	$notificaciones->valor="";
 			 	$array=array();

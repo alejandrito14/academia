@@ -53,21 +53,22 @@ try
 
         if ($lo->idtutorado==-1 || $lo->idtutorado=='') {
 
-             if ($sincel==1) {
+             if ($sincelular==1) {
                     $lo->celular2=$info[0]->celular;
                  }
 
                    $v_idusuario=$_POST['v_idusuario'];
                  if ($v_idusuario==''){
-                     $lo->GuardarUsuarioTutorado();
+                     $lo->GuardarUsuarioTutorado($sincelular);
                    
                     }else{
                      $lo->idusuariotutorado=$v_idusuario;
                     }
 
-
+                    $ObtenerOrdenTutorado=$lo->ObtenerOrdenTutorado($idusuariotutor);
+                    $orden=$ObtenerOrdenTutorado;
               //   $lo->GuardarUsuarioTutorado();
-                 $lo->GuardarUsuarioyTutor($idusuariotutor,$parentesco,$inputtutor);
+                 $lo->GuardarUsuarioyTutor($idusuariotutor,$parentesco,$inputtutor,$orden);
         }else{
 
 

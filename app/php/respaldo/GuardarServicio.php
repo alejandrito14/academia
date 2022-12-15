@@ -40,7 +40,11 @@ try
 	
 	$emp->orden = trim($f->guardar_cadena_utf8($_POST['v_orden']));
 	$emp->estatus = trim($f->guardar_cadena_utf8($_POST['v_estatus']));
+	$emp->v_politicaaceptacionseleccion=$_POST['v_politicaaceptacionseleccion'];
 
+	if ($emp->v_politicaaceptacionseleccion=='') {
+		$emp->v_politicaaceptacionseleccion=0;
+	}
 	$emp->idcategoriaservicio = $_POST['v_categoria'];
 	$emp->precio=$_POST['v_costo'];
 
@@ -321,9 +325,11 @@ try
 
 	}else{
 		$titulonotificacion="Edición servicio";
-		$emp->ModificarServicio();
 
 		$obtenerser=$emp->ObtenerServicio();
+		$emp->ModificarServicio();
+
+		
 		if ($emp->estatus==1) {
 			# code...
 		
@@ -331,7 +337,9 @@ try
 			$usuarios->idusuarios=$emp->idusuarios;
 		$obtenerusuario=$usuarios->ObtenerUsuario();
 		$nombrequienagrega=$obtenerusuario[0]->nombre." ".$obtenerusuario[0]->paterno;
-
+		if ($obtenerser[0]->agregousuario!=$usuarios->idusuarios) {
+			# code...
+		
 			$idusuario=$obtenerser[0]->agregousuario;
 			$ruta='detalleserviciocoach2';
 			$valor=$emp->idservicio;
@@ -347,12 +355,12 @@ try
 				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$i]->token,'ruta'=>$ruta,'titulonotificacion'=>$titulonotificacion);
 
 					array_push($arraytokens,$dato);
-				}
+					}
 			
 
-			
-		
 				}
+		
+			}
 
 			$notificaciones->navpage="detalleserviciocoach2";
 		}
@@ -558,7 +566,9 @@ try
 		$db->consulta($sql);
 
 	}
-
+	//if ($emp->idservicio>0) {
+		# code...
+	
 	if($emp->estatus==1) {
 	$serviciosasignados->idservicio=$emp->idservicio;
 	$serviciosasignados->idusuario=0;

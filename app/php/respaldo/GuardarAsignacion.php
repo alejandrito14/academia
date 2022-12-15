@@ -163,11 +163,20 @@ try
 
 		$notificaciones->idusuario=$idusuarios[$i];
 		$obtenertokenusuario=$notificaciones->Obtenertoken();
-		array_push($arraytokens,$obtenertokenusuario[0]->token);
 
-			$idusuario=$idusuarios[$i];
+		$idusuario=$idusuarios[$i];
+	/*	array_push($arraytokens,$obtenertokenusuario[0]->token);*/
+
+		for ($j=0; $j < count($obtenertokenusuario); $j++) { 
+
+				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$j]->token);
+
+					array_push($arraytokens,$dato);
+				}
+			$nombrequienasigna='Asignado por: '.$obtenerUsu[0]->nombre.' '.$obtenerUsu[0]->paterno;
+			
 			$ruta="serviciospendientesasignados";
-			$texto='|Asignacion de servicio|'.$obtenerdatosservicio[0]->titulo.'|';
+			$texto='|Asignacion de servicio|'.$obtenerdatosservicio[0]->titulo.'|'.$nombrequienasigna.'|Periodo: '.date('d-m-Y',strtotime($obtenerdatosservicio[0]->fechainicial)).' '.date('d-m-Y',strtotime($obtenerdatosservicio[0]->fechafinal));
 			$estatus=0;
 			$valor=$obtenerdatosservicio[0]->idservicio;
 			$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
@@ -175,10 +184,10 @@ try
 	
 	}
 
-	$titulonotificacion=$obtenerUsu[0]->nombre." ".$obtenerUsu[0]->paterno." Te ha asignado a ".$obtenerdatosservicio[0]->titulo;
+	$titulonotificacion=$obtenerUsu[0]->nombre." ".$obtenerUsu[0]->paterno." te ha asignado a ".$obtenerdatosservicio[0]->titulo;
 
 	$obtenerusuarioscancelacion=$serviciosasignados->BuscarAsignacionCancelacion($idusuariosparaasignar);
-
+	
 	/*if (count($obtenerusuarioscancelacion)>0) {
 		for ($i=0; $i < count($obtenerusuarioscancelacion); $i++) { 
 
@@ -269,15 +278,13 @@ try
 			$texto='';
 			for ($i=0; $i <count($arraytokens) ; $i++) { 
 
-				//if ($arraytokens[$i]!='') {
-					# code...
 				
-				$idusuario=$idusuarios[$i];
+				$idusuario=$arraytokens[$i]['idusuario'];
 				$notificaciones->navpage="serviciospendientesasignados";
 			 	$notificaciones->idcliente=$idusuario;
 			 	$notificaciones->valor="";
 			 	$array=array();
-			 	array_push($array,$arraytokens[$i]);
+			 	array_push($array,$arraytokens[$i]['token']);
 			$notificaciones->EnviarNotificacion($array,$texto,$titulonotificacion);
 				//}
 

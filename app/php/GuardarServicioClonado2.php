@@ -130,18 +130,22 @@ try
 	$tipousuario=$_POST['idtipousuario'];
 		$validaradmin=1;
 	$nombrequienagrega="";
-	if ($tipousuario==5) {
-		$porcentajescoachs=array();
-		$validaradmin=0;
-		$usuarios->idusuarios=$emp->idusuarios;
-		$obtenerusuario=$usuarios->ObtenerUsuario();
-
-		$porcentajescoachs[0]->idusuarios=$obtenerusuario[0]->idusuarios;
+	$usuarios->idusuarios=$emp->idusuarios;
+	$obtenerusuario=$usuarios->ObtenerUsuario();
 
 		
 
-		$nombrequienagrega="Coach: ".$obtenerusuario[0]->nombre." ".$obtenerusuario[0]->paterno;
+	$nombrequienagrega=$obtenerusuario[0]->nombre." ".$obtenerusuario[0]->paterno;
+	
+	if ($tipousuario==5) {
+		$porcentajescoachs=array();
+		$validaradmin=0;
+
+		$porcentajescoachs[0]->idusuarios=$obtenerusuario[0]->idusuarios;
+
+
 	}
+		
 	$arraytokens=array();
 	$titulonotificacion="";
 	$emp->validaradmin=$validaradmin;
@@ -179,7 +183,7 @@ try
 
 			for ($i=0; $i <count($obtenertokenusuario) ; $i++) { 
 				
-				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$i]->token,'ruta'=>$ruta);
+				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$i]->token,'ruta'=>$ruta,'titulonotificacion'=>$titulonotificacion);
 			array_push($arraytokens,$dato);
 
 			}
@@ -310,11 +314,12 @@ try
 
 			$notificaciones->idusuario=$idusuario;
 				$obtenertokenusuario=$notificaciones->Obtenertoken();
+			$titulonotificacion=$nombrequienagrega." te ha asignado a un nuevo servicio ".$emp->titulo;
 
-				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[0]->token,'ruta'=>$ruta);
+				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[0]->token,'ruta'=>$ruta,'titulonotificacion'=>$titulonotificacion);
 			array_push($arraytokens,$dato);
 
-			$titulonotificacion="Se te asignó un nuevo servicio ".$emp->titulo;
+			
 
 				}
 				$notificaciones->navpage="detalleserviciocoach2";
@@ -345,16 +350,17 @@ try
 
 			$notificaciones->idusuario=$idusuario;
 				$obtenertokenusuario=$notificaciones->Obtenertoken();
+			$titulonotificacion=$nombrequienagrega." te ha validado el servicio ".$emp->titulo;
 
 			for ($i=0; $i < count($obtenertokenusuario); $i++) { 
 
-				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$i]->token,'ruta'=>$ruta);
+				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$i]->token,'ruta'=>$ruta,'titulonotificacion'=>$titulonotificacion);
 
 					array_push($arraytokens,$dato);
 				}
 			
 
-			$titulonotificacion=$nombrequienagrega." te ha validado el servicio ".$emp->titulo;
+		
 		
 				}
 
@@ -574,7 +580,7 @@ try
 		}
 
 		if ($emp->estatus==1) {
-			$serviciosasignados->CambiarEstatusAsignacion();
+			//$serviciosasignados->CambiarEstatusAsignacion();
 
 
 			$idusuario=$idusuarios[$i];
@@ -587,10 +593,12 @@ try
 			$notificaciones->idusuario=$idusuario;
 			$obtenertokenusuario=$notificaciones->Obtenertoken();
 
-			$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[0]->token,'ruta'=>$ruta);
+			$titulonotificacion=$nombrequienagrega." te ha asignado a un nuevo servicio ".$emp->titulo;
+
+			$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[0]->token,'ruta'=>$ruta,'titulonotificacion'=>$titulonotificacion);
 			array_push($arraytokens,$dato);
 
-			$titulonotificacion="Se te asignó un nuevo servicio ".$emp->titulo;
+			
 
 		}
 
@@ -633,6 +641,8 @@ try
 			 $notificaciones->valor=$emp->idservicio;
 			 $notificaciones->navpage=$arraytokens[$i]['ruta'];
 			 $array=array();
+			 
+			 $titulonotificacion=$arraytokens[$i]['titulonotificacion'];
 			 array_push($array,$arraytokens[$i]['token']);
 			$notificaciones->EnviarNotificacion($array,$texto,$titulonotificacion);
 				//}

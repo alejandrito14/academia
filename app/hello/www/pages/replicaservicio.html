@@ -55,8 +55,10 @@
                <div class="block" style="background: white">
                 <ul>
                 <li>
-                <div class="item-content item-input is-valid">
-                  <div class="item-inner liservicio"><div class="item-title item-floating-label" style="    margin-left: 1em;"></div>
+                <div class="item-content item-input item-input-with-value ">
+                  <div class="item-inner liservicio"><div class="item-title" style="    ">
+                    Servicio a replicar
+                  </div>
                   <div class="item-input-wrap">
                    <select id="serviciosreplica"></select>
                    </div>
@@ -122,8 +124,8 @@
             </div></a>
             <div class="accordion-item-content" style="font-size: 16px;" aria-hidden="true">
               <div class="block" style="background: white">
-                <div class="item-content item-input is-valid item-input-focused">
-                  <div class="item-inner lititulo"><div class="item-title item-floating-label ">Titulo</div><div class="item-input-wrap">
+                <div class="item-content item-input item-input-with-value">
+                  <div class="item-inner lititulo"><div class="item-title ">Titulo</div><div class="item-input-wrap">
                     <input name="v_titulo" id="v_titulo" type="text" placeholder="" class="" />
                     <span class="input-clear-button"></span></div>
                 </div>
@@ -335,7 +337,7 @@
                   <div class="item-inner licosto">
                     <div class="item-title item-label">Costo unitario $</div>
                     <div class="item-input-wrap">
-                      <input name="v_costo" id="v_costo" type="number" placeholder="" class="input-with-value"/>
+                      <input name="v_costo" id="v_costo" type="text" placeholder="" class="input-with-value"/>
                       <span class="input-clear-button"></span>
                     </div>
                   </div>
@@ -526,10 +528,10 @@
               </div>
 
                 <div class="row"> 
-
-                          <label class="btn ">
+ 
+                      <label class="btn ">
                          <input type="checkbox" id="v_asistencia" class=""   /> Asistencia
-                         </label>
+                      </label>
                   </div>
                   <div class="row" style="margin-top: 1em;">
                  <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Poíticas de cancelación</p>

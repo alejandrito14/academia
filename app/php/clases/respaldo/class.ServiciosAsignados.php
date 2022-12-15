@@ -245,7 +245,8 @@ public function obtenerServiciosAsignadosPendientes()
 				usuarios.foto,
 				usuarios.tipo,
 				tipousuario.nombretipo,
-				usuarios.sexo
+				usuarios.sexo,
+				usuarios.alias
 				FROM
 				usuarios_servicios
 				JOIN usuarios
@@ -253,7 +254,7 @@ public function obtenerServiciosAsignadosPendientes()
 				JOIN tipousuario
 				ON tipousuario.idtipousuario=usuarios.tipo
 				WHERE
-				usuarios_servicios.idservicio='$this->idservicio' AND usuarios.idusuarios NOT IN('$this->idusuario') AND cancelacion=0 ORDER BY usuarios.tipo DESC 
+				usuarios_servicios.idservicio='$this->idservicio' AND usuarios.idusuarios NOT IN('$this->idusuario') AND cancelacion=0 ORDER BY CONCAT(usuarios.nombre,' ',usuarios.paterno,' ',usuarios.materno),usuarios.tipo DESC 
 		 ";
 
 
@@ -1166,5 +1167,41 @@ public function obtenerServiciosAsignadosPendientes()
 		$resp=$this->db->consulta($query);
 		
 	}
+
+	public function BuscarAsignacionAlumno()
+	{
+		
+		$sql="SELECT
+				*
+				FROM
+				usuarios_servicios
+				JOIN usuarios
+				ON usuarios_servicios.idusuarios = usuarios.idusuarios
+				JOIN tipousuario
+				ON tipousuario.idtipousuario=usuarios.tipo
+				
+				WHERE 
+				usuarios_servicios.idservicio = '$this->idservicio' AND usuarios_servicios.idusuarios='$this->idusuario'  AND usuarios_servicios.aceptarterminos=1
+		 ";
+
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
 
 }

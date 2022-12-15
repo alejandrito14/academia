@@ -159,6 +159,14 @@ var routes = [
     name: 'chat',
   },
 
+ // chattutorado
+  {
+    path: '/chattutorado/',
+    url: './pages/chattutorado.html',
+    name: 'chattutorado',
+  },
+  
+
    // chat
   {
     path: '/chatservicio/',
@@ -476,6 +484,10 @@ var routes = [
   {
     path:'/listadopagos/',
     componentUrl: './pages/listadopagos.html',
+  },
+   {
+    path:'/detallepagoscoach/',
+    componentUrl: './pages/detallepagoscoach.html',
   },
 
    {

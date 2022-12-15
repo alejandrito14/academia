@@ -27,10 +27,11 @@ try
 
 	
 	$obteneranuncio=$lo->ObtenerAnuncioTablero();
-
+	$obtenerimagenes=$lo->ObtenerImagenesTablero();
 
 
 	$respuesta['respuesta']=$obteneranuncio;
+	$respuesta['imagenes']=$obtenerimagenes;
 	
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);

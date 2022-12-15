@@ -40,7 +40,7 @@ try
 	$usuariosservicio=$serviciosasignados->obtenerUsuariosServiciosAsignadosAgrupado();
 
 	$idusuariosservicio=$usuariosservicio[0]->idusuarios;
-
+ 
 	$lo->idusuario=0;
 	$obtener=$serviciosasignados->obtenerUsuariosServiciosAlumnosAsignados();
 

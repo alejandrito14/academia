@@ -17,7 +17,7 @@ class Comentarios
 
 		$sql = "SELECT *FROM comentariosusuarios
 			INNER JOIN usuarios ON usuarios.idusuarios=comentariosusuarios.idusuarios
-		 WHERE comentariosusuarios.estatus=1 AND idservicio='$this->idservicio' ORDER BY idcomentariosusuarios";
+		 WHERE comentariosusuarios.estatus=1 AND idservicio='$this->idservicio' ORDER BY usuarios.idusuarios,comentariosusuarios.idcomentariosusuarios";
 
 			$resp = $this->db->consulta($sql);
 			$cont = $this->db->num_rows($resp);
@@ -152,6 +152,32 @@ class Comentarios
 		
 		$resp=$this->db->consulta($query);
 		
+		}
+
+
+
+	public function ObtenerComentariosUsuarioServicio()
+	{	
+
+		$sql = "SELECT *FROM comentariosusuarios
+			INNER JOIN usuarios ON usuarios.idusuarios=comentariosusuarios.idusuarios
+		 WHERE comentariosusuarios.estatus=1 AND idservicio='$this->idservicio' AND usuarios.idusuarios='$this->idusuarios' ORDER BY idcomentariosusuarios";
+
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
 		}
 
 }

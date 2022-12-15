@@ -576,8 +576,9 @@ public function validarUsuarioClienteTokenCel()
     public function Actualizardatosacceso()
     {
         $sql = "UPDATE usuarios 
-        SET clave='$this->clave'
-    
+        SET clave='$this->clave',
+        usuario='$this->usuario',
+        email='$this->email'
         WHERE idusuarios='$this->idusuarios'";
 
         $r = $this->db->consulta($sql);
@@ -917,7 +918,7 @@ public function validarUsuarioClienteTokenCel()
        INNER JOIN categorias On categorias.idcategorias=servicios.idcategoriaservicio
         WHERE usuarios_servicios.idusuarios='$idtutor' GROUP BY  servicios.idcategoriaservicio";
 
-       
+     
         $resp=$this->db->consulta($sql);
         $cont = $this->db->num_rows($resp);
 
@@ -1113,6 +1114,42 @@ public function validarUsuarioClienteTokenCel()
         }
         return $array;
 
+    }
+
+
+    
+    public function ObtenerUsuarioDatos()
+    {
+        $sql="SELECT 
+        usuarios.idusuarios,
+        usuarios.nombre,
+        usuarios.paterno,
+        usuarios.materno,
+        usuarios.celular,
+        usuarios.fechanacimiento,
+        usuarios.sexo,
+        usuarios.email,
+        usuarios.usuario,
+        usuarios.tipo,
+        usuarios.alias
+        FROM usuarios
+         WHERE idusuarios='$this->idusuarios'";
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
     }
 
   

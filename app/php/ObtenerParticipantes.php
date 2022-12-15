@@ -7,6 +7,7 @@ header('Access-Control-Allow-Origin: *');
 require_once("clases/conexcion.php");
 require_once("clases/class.ServiciosAsignados.php");
 require_once("clases/class.Funciones.php");
+require_once("clases/class.Usuarios.php");
 
 try
 {
@@ -15,10 +16,11 @@ try
 	$db = new MySQL();
 	$lo = new ServiciosAsignados();
 	$f=new Funciones();
+	$usuarios=new Usuarios();
 
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
-
+	$usuarios->db=$db;
 	$lo->idusuario=$_POST['id_user'];
 	$idusuarios_servicios=$_POST['idusuarios_servicios'];
 	
@@ -28,6 +30,22 @@ try
 	$idservicio=$obtener[0]->idservicio;
 	$lo->idservicio=$idservicio;
 	$participantes=$lo->obtenerUsuariosServiciosAsignados();
+
+
+	for ($i=0; $i <count($participantes) ; $i++) { 
+		
+			
+			$usuarios->idusuarios=$participantes[$i]->idusuarios;
+			$estutorado=$usuarios->ObtenerparentescoUsuario();
+			$row=$db->fetch_assoc($estutorado);
+			$coun=$db->num_rows($estutorado);
+
+			$participantes[$i]->tutorado=0;
+			if ($coun>0) {
+			$participantes[$i]->tutorado=1;
+
+			}
+		}
 	
 	$respuesta['respuesta']=$participantes;
 	

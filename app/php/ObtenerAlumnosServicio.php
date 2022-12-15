@@ -21,7 +21,7 @@ try
 
 	$lo->idservicio=$_POST['idservicio'];
 	
-	$obtener=$lo->ObtenerParticipantes(3);
+	$obtener=$lo->ObtenerParticipantesPagado(3);
 	$respuesta['respuesta']=$obtener;
 	
 

@@ -172,6 +172,9 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 					}else{
 						do
 						{
+
+										$avanzado=$l_Servicios_row['avanzado'];
+
 							?>
 							<tr>
 							
@@ -228,6 +231,8 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 					?>
 
 								<?php
+
+								if ($avanzado==1) {
 						//SCRIPT PARA CONSTRUIR UN clonar
 						$bt->titulo = "";
 						$bt->icon = "mdi-book-multiple";
@@ -251,6 +256,22 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 						$bt->title="ALUMNOS INSCRITOS";
 
 						$bt->armar_boton();
+					?>
+
+
+						<?php
+						//SCRIPT PARA CONSTRUIR UN clonar
+						$bt->titulo = "";
+						$bt->icon = "mdi-cloud-upload";
+						$bt->funcion = "AbrirModalImagenes('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$l_Servicios_row['titulo']."')";
+
+						/*$bt->permiso = $permisos;*/
+						$bt->tipo = 4;
+						$bt->title="IMÁGENES INFORMATIVAS";
+
+						$bt->armar_boton();
+
+					}
 					?>
 
 								</td>
@@ -582,7 +603,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 </div>
 
 
-                    <div class="vfileNames" class="row"></div>
+       <div class="vfileNames" id="vfileNames"></div>
 
 
        <div class="tbl"></div>

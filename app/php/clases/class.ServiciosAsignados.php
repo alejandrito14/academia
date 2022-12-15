@@ -94,6 +94,7 @@ public function obtenerServiciosAsignadosPendientes()
 		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
 			AND cancelacion=0 AND servicios.validaradmin=1 GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios
 		 ";
+
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -245,7 +246,8 @@ public function obtenerServiciosAsignadosPendientes()
 				usuarios.foto,
 				usuarios.tipo,
 				tipousuario.nombretipo,
-				usuarios.sexo
+				usuarios.sexo,
+				usuarios.alias
 				FROM
 				usuarios_servicios
 				JOIN usuarios
@@ -253,7 +255,7 @@ public function obtenerServiciosAsignadosPendientes()
 				JOIN tipousuario
 				ON tipousuario.idtipousuario=usuarios.tipo
 				WHERE
-				usuarios_servicios.idservicio='$this->idservicio' AND usuarios.idusuarios NOT IN('$this->idusuario') AND cancelacion=0 ORDER BY usuarios.tipo DESC 
+				usuarios_servicios.idservicio='$this->idservicio' AND usuarios.idusuarios NOT IN('$this->idusuario') AND cancelacion=0 ORDER BY CONCAT(usuarios.nombre,' ',usuarios.paterno,' ',usuarios.materno),usuarios.tipo DESC 
 		 ";
 
 
@@ -266,9 +268,14 @@ public function obtenerServiciosAsignadosPendientes()
 		if ($cont>0) {
 
 			while ($objeto=$this->db->fetch_object($resp)) {
-
-				$array[$contador]=$objeto;
-				$contador++;
+				$this->idusuario=$objeto->idusuarios;
+				$existepago=$this->VerificarSihaPagado();
+				
+				if (count($existepago)>0) {
+					$array[$contador]=$objeto;
+					$contador++;
+				}
+				
 			} 
 		}
 		
@@ -1158,7 +1165,7 @@ public function obtenerServiciosAsignadosPendientes()
 	public function CambiarEstatusAsignacion($usuarioservicio)
 	{
 		$query="UPDATE  usuarios_servicios 
-			SET estatus=1 
+			SET estatus=0 
 			WHERE idusuarios_servicios='$this->idusuarios_servicios'
 
 		";
@@ -1200,6 +1207,54 @@ public function obtenerServiciosAsignadosPendientes()
 		}
 		
 		return $array;
+	}
+
+	public function ObtenertipoMontopago()
+	{
+		$sql="SELECT
+				*
+				FROM
+				usuarioscoachs
+				WHERE 
+				idusuarios_servicios = '$this->idusuarios_servicios';
+		 ";
+
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function CalcularMontoPago($tipo,$cantidad,$montopago)
+	{
+		
+		if ($tipo==0) {
+
+		 	$monto=($montopago*$cantidad)/100;
+			
+		}
+		if ($tipo==1) {
+			$monto=$cantidad;
+		}
+
+		
+
+		return $monto;
+
+
 	}
 
 

@@ -3849,6 +3849,7 @@ function Permitirligar() {
 		$("#cantidadligar").css('display','block');
 		}else{
 		$("#cantidadligar").css('display','none');
+		$("#v_numligarclientes").val('');
 	}
 }
 
@@ -3856,6 +3857,8 @@ function HabilitarcantidadReembolso() {
 	if ($("#v_reembolso").is(':checked')) {
 		$(".divcantidadreembolso").css('display','block');
 		}else{
+		$("#v_tiporeembolso").val('');
+		$("#v_cantidadreembolso").val('');
 		$(".divcantidadreembolso").css('display','none');
 	}
 }

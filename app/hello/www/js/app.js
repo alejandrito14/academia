@@ -88,7 +88,7 @@ var app = new Framework7({
 
  var pictureSource;   // picture source
  var destinationType; 
-var produccion = 1;
+var produccion = 0;
 var codigoservicio="0";
 
 $(document).ready(function() {
@@ -1056,6 +1056,17 @@ regresohome();
 
 listadochats();
 });
+$$(document).on('page:init', '.page[data-name="chattutorado"]', function (e) {
+  /* swiper carousel projects */
+ // $$('#btnverificartoken').attr('onclick','ValidarCelular()')
+ $(".regreso").attr('onclick','RegresaraHome()');
+
+
+ $(".v_buscador").attr('onkeyup','BuscarEnLista(".v_buscador",".lista")');
+  $(".limpiarspan").attr('onclick','LimpiarResultado(".lista")');
+
+  listadochatstutorado();
+});
 
 
 $$(document).on('page:init', '.page[data-name="chatservicio"]', function (e) {
@@ -1500,6 +1511,7 @@ $$(document).on('page:init', '.page[data-name="asignaralumnos"]', function (e) {
 
 
     $$("#buscadorusuarioasignado").attr('onkeyup','BuscarEnLista("#buscadorusuarioasignado",".listaa_")');
+    $(".limpiarfiltro").attr('onclick','LimpiarResultado(".lista_")');
 
     $$("#buscadorusuario").attr('onkeyup','BuscarEnLista("#buscadorusuario",".lista_")');
     $$("#limpiarfiltro").attr('onclick','LimpiarFiltroalumnos()');
@@ -1562,7 +1574,7 @@ myStopFunction(identificadorDeTemporizador);
   $$("#btnaceptartermino").attr('onclick','AceptarTerminos()');
   $$("#btnrechazartermino").attr('onclick','PantallaRechazarTerminos()');
 
- } else{
+  }else{
   $$("#btnaceptartermino").attr('onclick','AceptarTerminosTutorado()');
   $$("#btnrechazartermino").attr('onclick','PantallaRechazarTerminosTutorado()');
 
@@ -2275,9 +2287,38 @@ if (localStorage.getItem('idtipousuario')==5) {
 
 $$(document).on('page:init', '.page[data-name="listadopagosadmin"]', function (e) {
 regresohome();
+     $(".btnclick").css('display','none');
+
+if (localStorage.getItem('idtipousuario')==0){
+      
+      MostarCoaches();
+   
+    }
+
+if (localStorage.getItem('idtipousuario')==5) {
+    ListadoPagosCoach();
+     $(".btnclick").css('display','block');
+    $("#btnpendiente").attr('onclick','ActivoPagoCoach(1)')
+    $("#btnhistorial").attr('onclick','ActivoPagoCoach(2)')
+
+   }
 
 
 });
+
+$$(document).on('page:init', '.page[data-name="detallepagoscoach"]', function (e) {
+     $(".regreso").attr('onclick','GoToPage("listadopagosadmin")');
+
+     ListadoPagosCoachLista();
+     $(".btnclick").css('display','block');
+    $("#btnpendiente1").attr('onclick','ActivoPagoCoachLis(1)')
+    $("#btnhistorial1").attr('onclick','ActivoPagoCoachLis(2)')
+
+   
+
+
+});
+
 
 $$(document).on('page:init', '.page[data-name="politicas"]', function (e) {
   

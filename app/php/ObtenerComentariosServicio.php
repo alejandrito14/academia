@@ -26,7 +26,17 @@ try
 
 	
 	$lo->idservicio=$_POST['idservicio'];
-	$obteneranuncios=$lo->ObtenerComentariosServicio();
+	$lo->idusuarios=$_POST['idusuario'];
+	$idtipousuario=$_POST['idtipousuario'];
+
+	if ($idtipousuario==3) {
+		$obteneranuncios=$lo->ObtenerComentariosUsuarioServicio();
+		}else{
+
+
+		$obteneranuncios=$lo->ObtenerComentariosServicio();
+	}
+
 
 
 	$respuesta['respuesta']=$obteneranuncios;

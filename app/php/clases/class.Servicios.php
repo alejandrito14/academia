@@ -1081,6 +1081,35 @@ public function Eliminardeencuestas()
 		return $array;
 	}
 
+
+	public function ObtenerParticipantesPagado($idtipo)
+	{
+		$sql="SELECT *FROM usuarios INNER JOIN usuarios_servicios ON usuarios.idusuarios=usuarios_servicios.idusuarios
+			INNER JOIN pagos ON pagos.idservicio=usuarios_servicios.idservicio
+			 WHERE usuarios_servicios.idservicio='$this->idservicio' AND usuarios.tipo='$idtipo' AND cancelacion=0 AND pagos.pagado=1 and pagos.estatus=2 GROUP BY usuarios.idusuarios ";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
 }
+
+
+
 
 ?>

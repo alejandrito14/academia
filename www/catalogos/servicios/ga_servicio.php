@@ -20,6 +20,7 @@ require_once("../../clases/class.Servicios.php");
 require_once("../../clases/class.Funciones.php");
 require_once('../../clases/class.MovimientoBitacora.php');
 require_once("../../clases/class.NotificacionPush.php");
+require_once("../../clases/class.Tareas.php");
 
 try
 {
@@ -30,6 +31,8 @@ try
 	$md = new MovimientoBitacora();
 	$notificaciones=new NotificacionPush();
 	$notificaciones->db=$db;
+	$tareas=new Tareas();
+	$tareas->db=$db;
 	//enviamos la conexión a las clases que lo requieren
 	$emp->db=$db;
 	$md->db = $db;	
@@ -120,7 +123,7 @@ try
 	$emp->ligarclientes=$_POST['ligarclientes'];
 	$emp->tiempoaviso=$_POST['v_tiempoaviso'];
 	$emp->tituloaviso=$_POST['v_tituloaviso'];
-	$emp->descripcionaviso=$_POST['v_descripcionaviso'];
+	$emp->descripcionaviso='';
 	$emp->politicascancelacion=$_POST['v_politicascancelacion'];
 	$emp->politicasaceptacion=$_POST['v_politicasaceptacion'];
 	$emp->v_politicasaceptacionid=$_POST['v_politicasaceptacionid'];
@@ -390,6 +393,51 @@ try
 
 			$sql = "UPDATE servicios SET imagen = '$nombre' WHERE idservicio='".$emp->idservicio."'";   
 			$db->consulta($sql);	 
+		}
+	}
+
+
+	if ($emp->tituloaviso!='' && $emp->tiempoaviso>0) {
+		# code...
+	
+	if (count($arrayhorarios)>0 && $arrayhorarios[0]!='') {
+			$tareas->idservicio=$emp->idservicio;
+
+			$obtenertareas=$tareas->ObtenerTareasServicio();
+			if (count($obtenertareas)>0) {
+				$tareas->EliminarTareasNoCompletadas();
+
+			}
+			
+		
+		for ($i=0; $i < count($arrayhorarios); $i++) { 
+				 $dividircadena=explode('-', $arrayhorarios[$i]);
+			     $fecha=$dividircadena[0].'-'.$dividircadena[1].'-'.$dividircadena[2];
+				 $horainicial=substr($dividircadena[3],0,5);
+				 $horafinal=substr($dividircadena[4],0,5);
+				 $idzona=$dividircadena[5];
+				 $numdia=date('w',strtotime($fecha));
+
+				$emp->dia=$numdia;
+				$emp->horainiciosemana=$horainicial;
+				$emp->horafinsemana=$horafinal;
+				$emp->fecha=$fecha.' '.$horainicial.':00';
+				$emp->idzona=$idzona;
+
+				
+				$fechaUno = new DateTime($emp->fecha);
+				$NuevaFecha= $fechaUno->modify("-".$emp->tiempoaviso." minute")->format("Y-m-d h:i");
+
+				$tareas->nombretarea='Envio notificacion servicio';
+				$tareas->titulo=$emp->tituloaviso;
+				$tareas->descripcion=$emp->descripcionaviso;
+				$tareas->programada=$NuevaFecha;
+				$tareas->idservicio=$emp->idservicio;
+				$tareas->estatus=0;
+				$tareas->envio=0;
+				$tareas->CrearTarea();
+				
+			}
 		}
 	}
 				

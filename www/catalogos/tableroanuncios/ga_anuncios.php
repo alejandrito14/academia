@@ -41,6 +41,7 @@ try
 	
 	$emp->orden = trim($f->guardar_cadena_utf8($_POST['v_orden']));
 	$emp->estatus = trim($f->guardar_cadena_utf8($_POST['v_estatus']));
+	$emp->url=$_POST['v_url'];
 
 
 	$ruta="imagenes/".$_SESSION['codservicio'].'/';

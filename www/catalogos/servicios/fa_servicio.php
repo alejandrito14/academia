@@ -1059,7 +1059,9 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 									<?php if (count($obtenerpoliticasaceptacion)){
 
 										for ($i=0; $i <count($obtenerpoliticasaceptacion) ; $i++) {  ?>
-											<option value="<?php echo $obtenerpoliticasaceptacion[$i]->idpoliticasaceptacion;?>"><?php echo $obtenerpoliticasaceptacion[$i]->descripcion; ?></option>
+											<option value="<?php echo $obtenerpoliticasaceptacion[$i]->idpoliticasaceptacion;?>"><?php echo $obtenerpoliticasaceptacion[$i]->descripcion; ?>
+												
+											</option>
 										
 										
 									<?php 
@@ -1067,16 +1069,14 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								} ?>
 									</select>
 
-									<!-- <label for="" id="lbldescripcionaceptacionpolitica">* DESCRIPCIÓN:</label>
-									<textarea name="" id="v_politicasaceptacion" cols="20" rows="5" class="form-control"><?php echo $politicasaceptacion; ?></textarea> -->
-
 								</div>
 							</div>
 						</div>
 
 						</div>
+					</div>
 
-							<div class="card" style="" id="divcoachs">
+							<div class="card" style="">
 								<div class="card-header" style="margin-top: 1em;">
 									<h5>AVISOS</h5>
 
@@ -1085,19 +1085,19 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 										<div class="row">
 								<div class="col-md-6">
 									<div class="form-group m-t-20">
-											<label for="">TIEMPO DE AVISOS (minutos)</label>
-											<input type="text" id="v_tiempoaviso" class="form-control" value="<?php echo $tiempoaviso; ?>">
+											<label for="">TIEMPO DE AVISO(minutos antes)</label>
+											<input type="number" id="v_tiempoaviso" class="form-control" value="<?php echo $tiempoaviso; ?>">
 								</div>
 
 								<div class="form-group m-t-20">
-											<label for="">TÍTULO:</label>
+											<label for="">MENSAJE:</label>
 											<input type="text" id="v_tituloaviso" class="form-control" value="<?php echo $tituloaviso; ?>">
 								</div>
 
-									<div class="form-group m-t-20">
+								<!-- 	<div class="form-group m-t-20">
 												<label for="">DESCRIPCIÓN:</label>
 												<input type="text" id="v_descripcionaviso" class="form-control" value="<?php echo $descripcionaviso ?>">
-									</div>
+									</div> -->
 
 								</div>
 							</div>
@@ -1106,7 +1106,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 							</div>
 					</div>
-				</div>
+		
 
 					<div class="tab-pane fade" id="otros" role="tabpanel" aria-labelledby="otros-tab">
 

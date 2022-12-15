@@ -292,7 +292,10 @@ function Envio(nombre,correo,mensaje,soporte,imagen,idmensaje,arrayusuarios,idso
    html+= ' </div>';
     var divmensajes= $("#mensajes").html();
     var mensajes=divmensajes+html;
-    $("#mensajes").html(mensajes);
+   // $("#mensajes").html(mensajes);
+
+    ActualizarMensajesLeidos();
+    ObtenerMensajesAnteriores();
    $$('.messages-content').scrollTop( $('.messages-content').get(0).scrollHeight, 400 );
 
 /*    myMessagebar.scrollMessages();  
@@ -409,6 +412,7 @@ function PintarMensaje(data) {
     $("#mensajes").html(mensajes);
     if ($("#mensajes")) {
     ActualizarMensajes();
+
 
     }
 

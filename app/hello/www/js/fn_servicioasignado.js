@@ -928,7 +928,7 @@ function PintarParticipantes(respuesta) {
 			                        	   <div class="item-text" style="font-size:20px;">`;
 			                        	 if (respuesta[i].alias!='' && respuesta[i].alias!=null) {
 
-			                        	   html+=respuesta[i].alias;
+			                        	   html+="Alias: "+respuesta[i].alias;
 			                        	}
 
 			                        	 html+=  `</div>
@@ -940,7 +940,8 @@ function PintarParticipantes(respuesta) {
 		                        	   <div class="col-100 item-text" style="font-size:18px;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
 		             		  		   </div>
 		             		  		 </div>
-		             		  		  <div class="row"> <div class="item-text">`;
+		             		  		  <div class="row">
+		             		  		   <div class="item-text">`;
 		             		  	
 		             		  		 if (respuesta[i].celular!='') {
 
@@ -949,8 +950,21 @@ function PintarParticipantes(respuesta) {
 				                    		}
 				                    html+=`
 				                  			  </div>
-				                    		  </div>
-				                    	</div>
+
+				                    		  </div>`;
+
+										   html+=`<div class="row">`;
+				             		   		if (respuesta[i].tutorado==1) {
+
+				             		   		html+=`<div class="item-text">Tutorado</div>`;
+
+				             		   		}
+
+
+
+                  						html+= `</div>`;
+
+				                    	html+=`</div>
 
 			                    	</div>
 
@@ -1512,10 +1526,14 @@ function PintarAlumnosAdmin(respuesta) {
                          <div class="col-50">
 	                         <div class="row">
 
-	                         <div class="row">
-		             		     <div class="col-100 item-text" style="font-size:20px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].alias+`
-		             		     </div>
-	             		     </div>
+	                         <div class="row">`;
+		             		  if(respuesta[i].alias!='' && respuesta[i].alias!=null) {
+
+	                         html+=` <div class="col-100 item-text" style="font-size:20px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">Alias: `+respuesta[i].alias+`
+		             		    	 </div>`;	
+	                         }
+		             		   
+	             		    html+=` </div>
              		  
 	                       <div class="row">
 
@@ -1647,10 +1665,16 @@ function PintarAlumnos(respuesta) {
                          <div class="col-50">
 	                         <div class="row">
 
-	                         <div class="row">
-		             		     <div class="col-100 item-text" style="font-size:20px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].alias+`
-		             		     </div>
-	             		     </div>
+	                         <div class="row">`;
+
+	                         if (respuesta[i].alias!='' && respuesta[i].alias!=null) {
+	                         html+=` <div class="col-100 item-text" style="font-size:20px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">Alias: `+respuesta[i].alias+`
+		             		     </div>`;	
+	                         }
+		             		   
+
+
+	             		    html+=` </div>
              		  
 	                       <div class="row">
 
@@ -1667,10 +1691,16 @@ function PintarAlumnos(respuesta) {
 	             		     </div>
              		   `;
 
-             		   html+=`<div class="row">
-                        	  <div class="item-text">`+respuesta[i].nombretipo+`</div>
-                  			  </div>
+             	
+             		   html+=`<div class="row">`;
+             		   		if (respuesta[i].tutorado==1) {
+             		   		html+=`<div class="item-text">Tutorado</div>`;
 
+             		   		}
+
+
+
+                  	  html+= `</div>
                    		 </div>
 
                         	</div>

@@ -57,7 +57,13 @@ function PintarChatServicios(respuesta) {
          if (usuarios.length>0) {
         
             for (var j = 0; j <usuarios.length; j++) {
-              nombres+=usuarios[j].alias;
+
+              if (usuarios[j].alias!='' &&  usuarios[j].alias!=null) {
+                 nombres+=usuarios[j].alias;
+                 }else{
+                nombres+=usuarios[j].nombre;
+               }
+             
 
                 if (j<contador) {
 

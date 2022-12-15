@@ -69,6 +69,8 @@ try
 			$asignados->idservicio=$obtenerserviciosActivos[$i]->idservicio;
 	
 	 	$obtenerhorarios=$asignados->ObtenerHorariosProximo();
+
+
 	 	$participantes=$asignados->obtenerUsuariosServiciosAlumnosAsignados();
 		$obtenerserviciosActivos[$i]->cantidadalumnos=count($participantes);
 		$porpasar=1;
@@ -81,6 +83,13 @@ try
 
 		$porpasar=0;
 		}
+
+		$obtenerservicios[$i]->fechaproxima="";
+		$obtenerservicios[$i]->horainicial="";
+		$obtenerservicios[$i]->horafinal="";
+		$obtenerservicios[$i]->idzona="";
+
+		if (count($obtenerhorarios)>0) {
 
 		$diasemana=$fechas->diaarreglocorto($obtenerhorarios[0]->dia);
 
@@ -116,6 +125,7 @@ try
 		$obtenerserviciosActivos[$i]->zonanombre=$rowzona['nombre'];
 		$obtenerserviciosActivos[$i]->zonacolor=$rowzona['color'];
 		$obtenerserviciosActivos[$i]->fechahora=$fecha.' '.$obtenerhorarios[0]->horainicial;
+	}
 		$obtenerserviciosActivos[$i]->porpasar=$porpasar;
 
 

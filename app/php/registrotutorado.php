@@ -49,6 +49,9 @@ try
     $lo->idtutorado=$_POST['v_idtu'];
     $inputtutor=$_POST['inputtutor'];
     $sincelular=$_POST['inputsincelular'];
+    $lo->idusuarios= $idusuariotutor;
+
+    $info= $lo->ObtenerInformacionUsuario();
 
 
         if ($lo->idtutorado==-1 || $lo->idtutorado=='') {

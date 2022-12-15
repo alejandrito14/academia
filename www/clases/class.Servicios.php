@@ -71,7 +71,7 @@ class Servicios
 
 	public function ObtenerServicios()
 	{
-		$sql="SELECT servicios.*,categorias.titulo as nombrecategoria FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio ORDER BY orden asc";
+		$sql="SELECT servicios.*,categorias.titulo as nombrecategoria,categorias.avanzado FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio ORDER BY orden asc";
 
 	/*	$sql="SELECT * FROM servicios  ORDER BY orden asc";*/
 

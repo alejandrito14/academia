@@ -9,6 +9,7 @@ require_once "clases/class.Funciones.php";
 /*require_once "clases/class.MovimientoBitacora.php";
 */require_once "clases/class.Usuarios.php";
 
+require_once("clases/class.PagosCoach.php");
 
 require_once("clases/class.Pagos.php");
 require_once("clases/class.Descuentos.php");
@@ -242,6 +243,9 @@ try {
                $notapago=new Notapago();
                $notapago->db=$db;
 
+               $pagocoach=new PagosCoach();
+               $pagocoach->db=$db;
+
          $notapago->idusuario=$iduser;
          $notapago->subtotal=$subtotalsincomision;
          $notapago->iva=0;
@@ -295,6 +299,36 @@ try {
                
                   $pagos->ActualizarEstatus();
                   $pagos->ActualizarPagado();
+             /* $pagos->idpago=$pagosconsiderados[$i]->id;
+              $buscarpago=$pagos->ObtenerPago();
+              
+              $montopago=$buscarpago[0]->monto;
+              $lo->idservicio=$buscarpago[0]->idservicio;
+             $obtenercorachs=$lo->BuscarAsignacionCoach();
+              if (count($obtenercorachs)>0) {
+                for ($j=0; $j <count($obtenercorachs) ; $j++) { 
+
+                    $lo->idusuarios_servicios=$obtenercorachs[$j]->idusuarios_servicios;
+                    $tipomontopago= $lo->ObtenertipoMontopago();
+                    $pagocoach->idusuarios=$obtenercorachs[$j]->idusuarios;
+                    $pagocoach->idservicio=$lo->idservicio;
+                    $pagocoach->monto=$lo->CalcularMontoPago($tipomontopago[0]->tipopago,$tipomontopago[0]->monto,$montopago);
+                    $pagocoach->estatus=0;
+                    $pagocoach->pagado=0;
+                    $pagocoach->folio=$pagocoach->ObtenerFolioPagoCoach();
+                    $pagocoach->concepto=$buscarpago[0]->concepto;
+                    $pagocoach->idpago=$buscarpago[0]->idpago;
+                 
+                  
+                }
+              }*/
+
+           
+            
+
+
+
+
               }
 
               if ($pagosconsiderados[$i]->tipo==2) {
@@ -391,7 +425,8 @@ try {
               $notapago->monto=$buscarpago[0]->monto;
               $notapago->idpago=$buscarpago[0]->idpago;
                $notapago->Creardescripcionpago();
-          	
+
+               ///creacion pago a coach
 
                if ($constripe==1) {
              

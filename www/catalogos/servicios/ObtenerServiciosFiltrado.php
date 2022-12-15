@@ -56,7 +56,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 			$categorias->idcategoria=$idcategoria;
 			$detalle=$categorias->ObtenerCategoria();
 
-			print_r($detalle);
+			
 			$avanzado=$detalle[0]->avanzado;
 			
 		 ?>

@@ -597,9 +597,19 @@ function PintarSelecttutorados(respuesta) {
                                     <p class="no-margin-bottom text-color-theme">`+respuesta[i].nombre+' '+respuesta[i].paterno+` `+respuesta[i].materno+`</p>
                                     <p class="text-muted size-12"></p>
                                 </div>
-                                <div class="col-auto">
-                                    <a onclick="InformacionTutorado(`+respuesta[i].idusuarios+`)" class="button button-fill button-44 color-theme button-raised">
-                                        <i class="bi bi-arrow-up-right-circle"></i>
+                                 <div class="col">`;
+                                 if (respuesta[i].chat==1) {
+                                 html+=`<a onclick="Tutoradochat(`+respuesta[i].idusuarios+`)" class="button button-fill button-44 color-theme button-raised" style="width:100px;">
+                                        <i class="bi bi-chat-text" style="margin-right: 2px;"></i>Chat
+                                        <span class="numeros numerochattuto" id="numerochattuto" style="width: 25px;height: 25px;
+    right: 0;justify-content: center;display: flex;align-items: center;">`+respuesta[i].cantidadchat+`</span>
+                                   	   </a>`;
+                                }
+
+                              html+=`  </div>
+                                <div class="col">
+                                    <a onclick="InformacionTutorado(`+respuesta[i].idusuarios+`)" class="button button-fill button-44 color-theme button-raised" style="width:100px;">
+                                        <i class="bi bi-arrow-up-right-circle" style="margin-right: 2px;"></i>Servicios
                                     </a>
                                 </div>
                             </div>
@@ -620,6 +630,15 @@ function InformacionTutorado(idusertutorado) {
 	localStorage.setItem('id_user',idusertutorado);
 	GoToPage('listadotutoservicios');
 
+}
+
+function Tutoradochat(idusertutorado) {
+
+	var idusuarioresp=localStorage.getItem('id_user');
+	localStorage.setItem('iduserrespaldo',idusuarioresp);
+	localStorage.setItem('idusuertutorado',idusertutorado);
+	localStorage.setItem('id_user',idusertutorado);
+	GoToPage('chattutorado');
 }
 
 function ObtenerServiciosTutorado() {
@@ -895,7 +914,7 @@ function ObtenerMispendientesTutorado() {
 
 			if (resp.respuesta.length>0) {
 				$(".serviciospendientes").css('display','block');
-				$(".numerospendientes").html(resp.respuesta.length);
+				$(".numeropendientes").html(resp.respuesta.length);
 
 				}else{
 
@@ -1174,4 +1193,34 @@ function RegresaraHome() {
 	localStorage.setItem('id_user',iduser);
 	GoToPage('home');
 
+}
+
+function listadochatstutorado() {
+	var id_user=localStorage.getItem('idusuertutorado');
+
+	var datos="idusuario="+id_user;
+	var pagina = "ObtenerChatdeServicios.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		async:false,
+		data:datos,
+		success: function(datos){
+
+			var respuesta=datos.respuesta;
+
+			PintarChatServicios(respuesta);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+	
 }

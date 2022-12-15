@@ -2534,12 +2534,13 @@ function GuardarservicioForm(form,regresar,donde,idmenumodulo)
 						   console.log("El resultado de msj es: "+msj);
 						   if (bandera1==1 && bandera2==1 && bandera3==1 && bandera4==1 && bandera5==1) {
 						   	if( resp[0] == 1 ){
+						   		arraydiaselegidos=[];
+								arraydiaseleccionados=[];
 								aparecermodulos(regresar+"?ac=1&idmenumodulo="+idmenumodulo+"&msj=Operacion realizada con exito",donde);
 						 	
 								//aqui
 
-								arraydiaselegidos=[];
-								arraydiaseleccionados=[];
+								
 						 	 }else{
 								aparecermodulos(regresar+"?ac=0&idmenumodulo="+idmenumodulo+"&msj=Error. "+msj,donde);
 						  	}

@@ -827,7 +827,7 @@ class ServiciosAsignados
 	{
 		$sql="
 			SELECT *FROM pagos WHERE 
-			idservicio='$this->idservicio' AND idusuarios='$this->idusuario'
+			idservicio='$this->idservicio' AND idusuarios='$this->idusuario' AND estatus=2
 
 		";
 

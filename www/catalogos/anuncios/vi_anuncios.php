@@ -234,6 +234,9 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
             $bt->armar_boton();
           ?>
+
+
+          
           
 
                 </td>

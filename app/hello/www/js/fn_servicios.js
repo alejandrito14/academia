@@ -769,7 +769,7 @@ function ObtenerServicioAReplicar(valor) {
 	
 		}
 		$("#v_titulo").val('Copia '+titulo);
-		$("#v_descripcion").val(descripcion);
+		$("#v_descripcion").val('Copia '+titulo);
 		 var lunes= respuesta.lunes;
 		var martes=respuesta.martes;
 		var miercoles=respuesta.miercoles;
@@ -850,11 +850,14 @@ function ObtenerServicioAReplicar(valor) {
 	abiertoadmin=respuesta.abiertoadmin;
 	ligarcliente=respuesta.ligarcliente;
 	reembolso=respuesta.reembolso; 
-	asistencia=respuesta.asistencia;
+	cantidadreembolso=respuesta.cantidadreembolso;
+	asistencia=respuesta.controlasistencia;
+	tiporeembolso=respuesta.tiporeembolso;
 	//cantidadreembolso='<?php echo $cantidadreembolso; ?>';
 	asignadocliente=respuesta.asignadocliente;
 	asignadocoach=respuesta.asignadocoach;
 	asignadoadmin=respuesta.asignadoadmin;
+	numligarclientes=respuesta.numligarclientes;
 	/*tiempoaviso='<?php echo $tiempoaviso; ?>';
 	tituloaviso='<?php echo $tituloaviso; ?>';
 	descripcionaviso='<?php echo $descripcionaviso; ?>';
@@ -875,11 +878,17 @@ function ObtenerServicioAReplicar(valor) {
 		if (ligarcliente==1) {
 			
 			$("#v_ligarclientes").attr('checked',true);
+			Permitirligar();
+			$("#v_numligarclientes").val(numligarclientes);
+
 		}
 
 		if (reembolso==1) {
 			
 			$("#v_reembolso").attr('checked',true);
+			HabilitarcantidadReembolso();
+			$("#v_tiporeembolso").val(tiporeembolso);
+			$("#v_cantidadreembolso").val(cantidadreembolso);
 		}
 
 		if (asignadocliente==1) {

@@ -32,11 +32,27 @@ try
 
 	$ObtenerMensajes=$sala->ObtenerMensajes();
 	$obtenerusuarios=$sala->ObtenerAgrupadousuariossala();
+	$obtenerdatosusuarios=$sala->ObtenerOtrosUsuariosSala();
 
+
+	for ($i=0; $i < count($ObtenerMensajes); $i++) { 
+		
+		$fechahora=explode(' ',$ObtenerMensajes[$i]->fecha);
+		$fecha=$fechahora[0];
+		$ObtenerMensajes[$i]->fechaformato='';
+		if ($fecha!='') {
+	
+		$dianumero=explode('-',$fecha);
+		$ObtenerMensajes[$i]->fechaformato=$dianumero[2].'/'.$dianumero[1].'/'.$dianumero[0].' '.$fechahora[1];
+			
+			}
+
+	}
 
 
 	$respuesta['respuesta']=$ObtenerMensajes;
 	$respuesta['usuarios']=explode(',',$obtenerusuarios[0]->usuariossala);
+	$respuesta['datosusuarios']=$obtenerdatosusuarios;
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);
 	echo $myJSON;

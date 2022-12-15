@@ -62,7 +62,7 @@ if(!isset($_GET['idtableroanuncio'])){
 	}else{
 		$orden=0;
 	}
-
+	$url="";
 
 }else{
 	//El formulario funcionara para modificacion de un registro
@@ -85,7 +85,7 @@ if(!isset($_GET['idtableroanuncio'])){
 	$orden = $f->imprimir_cadena_utf8($result_anuncio_row['orden']);
 	$estatus = $f->imprimir_cadena_utf8($result_anuncio_row['estatus']);
 
-
+	$url=$result_anuncio_row['url'];
 	$ruta='';
 	if($foto==""){
 		$ruta="images/sinfoto.png";
@@ -225,7 +225,11 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<textarea name="v_descripcion" id="v_descripcion" cols="20" rows="4" class="form-control" title="DESCRIPCIÓN" placeholder='DESCRIPCIÓN'><?php echo $descripcion ?></textarea>
 							</div>
 
-							
+								<div class="form-group m-t-20">
+								<label>URL:</label>
+							<input type="text" class="form-control" id="v_url" name="v_url" value="<?php echo $url; ?>" title="url" placeholder='https://www.google.com/'>
+							</div>
+
 
 
 							<div class="form-group m-t-20">

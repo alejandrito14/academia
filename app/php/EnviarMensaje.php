@@ -41,12 +41,12 @@ try
 	$lo->imagen='';
 	$usuarios->idusuarios=$lo->idusuarioenvio;
  	$obtenerUsu=$usuarios->ObtenerUsuario();
-
- 	$obtenersala=$lo->ObtenerSala();
+ 	$sala->idsalachat=$lo->idsalachat;
+ 	$obtenersala=$sala->ObtenerSala();
  	$idservicio=$obtenersala[0]->idservicio;
  	$serviciosasignados->idservicio=$idservicio;
 	$obtenerdatosservicio=$serviciosasignados->ObtenerServicio();
-
+	
 	$lo->EnvioMensaje();
 	$sala->idsalachat=$lo->idsalachat;
 	$obtenerusuariossala=$sala->Obtenerusuariossala();
@@ -61,19 +61,47 @@ try
 	}
 
 	$obtenerusuariosnoti=$sala->ObtenerOtrosUsuariosSala();
-	$titulonotificacion=$obtenerUsu[0]->nombre." ".$obtenerUsu[0]->paterno." ha enviado un mensaje  ".$obtenerdatosservicio[0]->titulo;
+
+	
+	$titulonotificacion=$obtenerUsu[0]->nombre." ".$obtenerUsu[0]->paterno. ' te ha enviado un mensaje relacionado con el servicio '.$obtenerdatosservicio[0]->titulo;
+
+	//si es tutorado poner la palabra para
 	$arraytokens=array();
 	$ruta="messages";
 	if (count($obtenerusuariosnoti)>0) {
 		for ($i=0; $i <count($obtenerusuariosnoti) ; $i++) { 
 			
-
+ 
 		$notificaciones->idusuario=$obtenerusuariosnoti[$i]->idusuarios;
-		$obtenertokenusuario=$notificaciones->Obtenertoken();
+		
 
 		$idusuario=$obtenerusuariosnoti[$i]->idusuarios;
+
+		$usuarios->idusuarios=$idusuario;
+		$obtenerdependencia=$usuarios->ObtenerUsuarioDependencia();
+
+		if (count($obtenerdependencia)>0) {
+			$obtenerdatousuario=$usuarios->ObtenerUsuario();
+			if($obtenerdatousuario[0]->sincel==1) {
+			$notificaciones->idusuario=$obtenerdependencia[0]->idusuariostutor;
+				$ruta="messages";
+
+			}else{
+			   $notificaciones->idusuario=$idusuario;
+			   $ruta="messages";
+
+			}
+	
+
+					}else{
+		$notificaciones->idusuario=$obtenerusuariosnoti[$i]->idusuarios;
+			$ruta="messages";
+
+		}
 	/*	array_push($arraytokens,$obtenertokenusuario[0]->token);*/
 			
+		$obtenertokenusuario=$notificaciones->Obtenertoken();
+
 
 		for ($j=0; $j < count($obtenertokenusuario); $j++) { 
 
@@ -81,7 +109,7 @@ try
 
 					array_push($arraytokens,$dato);
 				}
-			
+			$idusuario=$notificaciones->idusuario;
 			$texto='|Nuevo mensaje|'.$obtenerdatosservicio[0]->titulo.'|'.$nombrequienasigna.'|'.$lo->mensaje;
 			$estatus=0;
 			$valor=$lo->idsalachat;

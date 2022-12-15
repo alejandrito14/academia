@@ -129,12 +129,13 @@ class Sala
 			usuarios_alias1.paterno,
 			usuarios_alias1.usuario,
 			usuarios_alias1.foto,
-			usuarios_alias1.sexo,
+			usuarios_alias1.sexo
 			FROM
 			chat
 		
 			JOIN usuarios AS usuarios_alias1
 			ON chat.idusuarioenvio = usuarios_alias1.idusuarios
+			
 			
 			WHERE
 			chat.idsalachat='$this->idsalachat' 
@@ -173,7 +174,8 @@ class Sala
 			usuarios.celular,
 			usuarios.email,
 			usuarios.usuario,
-			usuarios.sexo
+			usuarios.sexo,
+			usuarios.alias
 		FROM usuarios_sala INNER JOIN usuarios ON usuarios_sala.idusuarios=usuarios.idusuarios WHERE idsalachat='$this->idsalachat' AND usuarios_sala.idusuarios NOT IN($this->idusuario) ";
 
 		$resp=$this->db->consulta($sql);
@@ -215,6 +217,58 @@ class Sala
 		
 		return $array;
 	}
+
+
+	public function ObtenerSalasUsuario()
+	{
+		$sql="SELECT *FROM usuarios_sala WHERE  idusuarios='$this->idusuario' ";
+
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerSalasUsuarioServicio()
+	{
+		$sql="SELECT *FROM usuarios_sala 
+		INNER JOIN salachat 
+		ON salachat.idsalachat=usuarios_sala.idsalachat 
+		WHERE  usuarios_sala.idusuarios='$this->idusuario' AND  salachat.idservicio='$this->idservicio' ";
+
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
 
 
 }

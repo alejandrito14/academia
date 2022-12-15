@@ -31,19 +31,33 @@ try
 	
 	$arraysalasusuario=array();
 	$sala->idservicio=$_POST['idservicio'];
+	$sala->idusuario=$idusuario;
 	$lo->idservicio=$sala->idservicio;
 	$obtenerservicio=$lo->ObtenerServicio();
 	//for ($i=0; $i <count($obtenerservicios) ; $i++) { 
 			
-			$buscarSalas=$sala->ObtenerSalasServicio();
+				$buscarSalas=$sala->ObtenerSalasUsuarioServicio();
 
 			for ($j=0; $j <count($buscarSalas); $j++) { 
 				$chat->idsalachat=$buscarSalas[$j]->idsalachat;
 				$chat->idusuario=$idusuario;
 				$buscarChats=$chat->BuscarChats();
-				if (count($buscarChats)>0) {
 
-				$arraysalas=array('idsala'=>$chat->idsalachat,'ultimomensaje'=>$buscarChats[0],'servicio'=>$obtenerservicio[0]);
+
+				$sala->idsalachat=$chat->idsalachat;
+				$sala->idusuario=$idusuario;
+				$obtenerdatosusuarios=$sala->ObtenerOtrosUsuariosSala();
+
+		if (count($buscarChats)>0) {
+			$fechahora=explode(' ',$buscarChats[0]->fecha);
+			$fecha=$fechahora[0];
+			$buscarChats[0]->fechaformato='';
+			if ($fecha!='') {
+			$dianumero=explode('-',$fecha);
+			$buscarChats[0]->fechaformato=$dianumero[2].'/'.$dianumero[1].'/'.$dianumero[0].' '.$fechahora[1];
+				}
+
+				$arraysalas=array('idsala'=>$chat->idsalachat,'ultimomensaje'=>$buscarChats[0],'servicio'=>$obtenerservicio[0],'usuarios'=>$obtenerdatosusuarios);
 
 				array_push($arraysalasusuario,$arraysalas);
 				}
