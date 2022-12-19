@@ -556,7 +556,7 @@ function VerificarSiExisteTuTorados() {
 		});
 }
 
-
+/*
 function PintarSelecttutorados(respuesta) {
 	var html="";
 	if (respuesta.length>0) {
@@ -616,6 +616,83 @@ function PintarSelecttutorados(respuesta) {
 
 
 			`;
+
+		}
+	}
+
+	$(".listatutorados").html(html);
+}*/
+
+
+function PintarSelecttutorados(respuesta) {
+	var html="";
+	if (respuesta.length>0) {
+
+		for (var i =0; i < respuesta.length; i++) {
+
+			if (respuesta[i].foto!='' && respuesta[i].foto!=null && respuesta[i].foto!='null') {
+
+				urlimagen=urlphp+`upload/perfil/`+respuesta[i].foto;
+				imagen='<img src="'+urlimagen+'" alt="" />';
+				}else{
+
+
+				if (respuesta[i].sexo=='M') {
+
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarmujer');
+	
+				}else{
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarhombre');
+		
+				}
+
+					imagen='<img src="'+urlimagen+'" alt=""  />';
+				}
+
+			html+=`
+
+			<div class="col-100" style="margin-left: 1em;
+    margin-right: 1em;">
+                <div class="card margin-bottom">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-auto">
+                                <figure class="avatar avatar-60 rounded-10">
+                                    `+imagen+`
+                                </figure>
+                            </div>
+                            <div class="col no-padding-horizontal align-self-center">
+                                <h3 class="no-margin-bottom text-color-theme">`+respuesta[i].nombre+' '+respuesta[i].paterno+` `+respuesta[i].materno+`</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-content card-content-padding">
+                        <p class="text-muted margin-bottom">
+                           
+                        </p>
+                        <div class="row">
+                            <div class="col" style="justify-content: center;display: flex;align-items: center;">
+                                <a onclick="InformacionTutorado(`+respuesta[i].idusuarios+`)" class="button button-fill button-44 color-theme button-raised" style="width:100px;">
+                                        <i class="bi bi-calendar-check" style="margin-right: 2px;"></i>
+                                    </a>
+                            </div>
+                            <div class="col" style="justify-content: center;display: flex;align-items: center;">`;
+                                html+=`<a onclick="Tutoradochat(`+respuesta[i].idusuarios+`)" class="button button-fill button-44 color-theme button-raised" style="width:100px;">
+                                        <i class="bi bi-chat-text" style="margin-right: 2px;"></i>`;
+                                	if (respuesta[i].cantidadchat>0) {
+                                 html+=`<span class="numeros numerochattuto" id="numerochattuto" style="width: 25px;height: 25px;
+    right: 0;justify-content: center;display: flex;align-items: center;">`+respuesta[i].cantidadchat+`</span>
+
+                                   	   `; 
+
+                                   	}
+                           html+=`</a> </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+						`;
 
 		}
 	}

@@ -2,7 +2,7 @@ var descuentosaplicados=[];
 var descuentosmembresia=[];
 var arraycomentarios=[];
 function ObtenerTotalPagos() {
-	var pagina = "ObtenerTotalPagos.php";
+	var pagina = "ObtenerTodosPagos.php";
 	var id_user=localStorage.getItem('id_user');
 	var datos="id_user="+id_user;
 	$.ajax({
@@ -13,8 +13,8 @@ function ObtenerTotalPagos() {
 		cache: false,
 		data:datos,
 		success: function(respuesta){
-				var resultado=respuesta.respuesta;
-			$(".totalpagos").text('$'+resultado.total);
+				var resultado=respuesta.total;
+			$(".totalpagos").text('$'+formato_numero(resultado,2,'.',','));
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
@@ -132,6 +132,12 @@ function Pintarpagos(pagos) {
 
                         <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Seleccionarcheck(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />
                         <input type="hidden" id="tipo_`+pagos[i].idpago+`" value="`+pagos[i].tipo+`"  />
+
+                        <input type="hidden" id="servicio_`+pagos[i].idpago+`" value="`+pagos[i].idservicio+`"  />
+                        <input type="hidden" id="fechainicial_`+pagos[i].idpago+`" value="`+pagos[i].fechainicial+`"  />
+                        <input type="hidden" id="fechafinal_`+pagos[i].idpago+`" value="`+pagos[i].fechafinal+`"  />
+                        <input type="hidden" id="usuario_`+pagos[i].idpago+`" value="`+pagos[i].idusuarios+`"  />
+
                         </div>
                     </div>
                  </li>
@@ -181,13 +187,43 @@ function HabilitarBotonPago() {
 		 	suma=parseFloat(suma)+parseFloat(contador);
 		 	concepto=$("#concepto_"+dividir).text();
       tipo=$("#tipo_"+dividir).val();
+      if ($("#servicio_"+dividir)) {
+          servicio=$("#servicio_"+dividir).val();
+ 
+           }else{
+            servicio=0;
+           }
+      if ($("#fechainicial_"+dividir)) {
+          fechainicial=$("#fechainicial_"+dividir).val();
+ 
+           }else{
+            fechainicial="";
+           }
+       if ($("#fechafinal_"+dividir)) {
+          fechafinal=$("#fechafinal_"+dividir).val();
+ 
+           }else{
+            fechafinal="";
+           }
+
+          if ($("#usuario_"+dividir)) {
+          usuario=$("#usuario_"+dividir).val();
+ 
+           }else{
+            usuario="";
+           }
+
 		 	contar++;
 
 		 	var objeto={
 		 		id:dividir,
 		 		concepto:concepto.trim(),
 		 		monto:contador,
-        tipo:tipo
+        tipo:tipo,
+        servicio:servicio,
+        fechainicial:fechainicial,
+        fechafinal:fechafinal,
+        usuario:usuario
 		 	};
 		 	pagosarealizar.push(objeto);
 

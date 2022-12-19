@@ -205,19 +205,117 @@
     }
 
     function CargarFotoimagenindividual() {
-        var foto=localStorage.getItem("fotoimagenindividual");
 
 
-      if (foto!='null' && foto!='') {
+
+
+      var html="";  
+html+=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: none;">
+            <div class="toolbar">
+              <div class="toolbar-inner">
+                <div class="left"></div>
+                <div class="right">
+                  <a class="link sheet-close"></a>
+                </div>
+              </div> 
+            </div>
+            <div class="sheet-modal-inner" style="background: white;border-top-left-radius: 20px;border-top-right-radius:20px; ">
+              <div class="iconocerrar link sheet-close" style="z-index:100;">
+                                        <span class="bi bi-x-circle-fill"></span>
+                                     </div>
+
+              <div class="" style="height: 100%;">
+                   <div class="row">
+                                 <div class="col-20">
+                                    
+                                </div>
+
+                                 <div class="col-60">
+                                 <span class="titulomodal"></span>
+                                 </div>
+                                 <div class="col-20">
+                                 <span class="limpiarfiltros"></span>
+                                 </div>
+                             </div>
+                <div class="page-content" style="background: white; height: 100%;width: 100%;border-radius: 20px;">
+                        
+                             <div class="" style="position: absolute;top:2em;width: 100%;">
+                                
+                                  <div class="">
+                                      <div class="block" style="margin-right:1em;margin-left:1em;">
+
+                                       `;
+                
+                                    html+=`
+                                           
+                                           <div class="row" style="margin-bottom:1em;margin-top:3em;">
+                                                 <div class="col-100 fotoimagen">
+                                                    <div class="  margin-bottom" style="margin-right: 1em;
+                                              margin-left: 1em;">
+                                                        <div class="card-content ">
+                                                         <img src="" alt="" style="    width: 100%;height: 70%;border-radius: 10px;" class="imglogoimagenindividual" />
+                                                        </div>
+                                                    </div>
+                                                </div> 
+                                           
+                                            </div>
+                                            <div class="row">
+                                               <div class="col">
+                                                      <button class=" button button-fill button-large bg-color-white text-color-theme button-raised " id="btncancel" type="button" > Cancelar</button>
+                                                </div>
+                                                 <div class="col">
+                                                 <button class=" button button-fill button-large color-theme button-raised" id="btnguardarimagen" type="button"> Guardar</button>
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                             </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>`;
+      dynamicSheet2 = app.sheet.create({
+        content: html,
+        swipeToClose: true,
+        backdrop: true,
+        // Events
+        on: {
+          open: function (sheet) {
+             var foto=localStorage.getItem("fotoimagenindividual");
+
+              if (foto!='null' && foto!='') {
+               
+                $(".imglogoimagenindividual").attr('src',urlphp+"upload/imagenindividual/"+foto);
+
+              }else{
+                $(".imglogoimagenindividual").attr('src',urlimagenimagenindividual);
+
+              }
+
+             $$("#btnguardarimagen").attr('onclick','GuardarimagenIndividual()');
+             $$("#btncancel").attr('onclick','CancelarFotoIndividual()');
+          },
+          opened: function (sheet) {
+            console.log('Sheet opened');
+          },
+        }
+      });
+
+       dynamicSheet2.open();
        
-        $(".imglogoimagenindividual").attr('src',urlphp+"upload/imagenindividual/"+foto);
-
-      }else{
-        $(".imglogoimagenindividual").attr('src',urlimagenimagenindividual);
-
-      }
 
     }
+    function CancelarFotogrupal() {
+         localStorage.setItem('fotoimagenindividual','');
+
+          dynamicSheet2.close();
+
+    }
+
 
 
     function Cargardetalle(idclienteimagenindividual) {
@@ -323,36 +421,7 @@
    
 
 
-    function EliminarImagenes(idsucursalesimagenes) {
-        
-
-        var datos= 'idsucursalesimagenes='+idsucursalesimagenes;
-        var pagina = urlphp+"eliminarimagenindividual.php";
-            app.dialog.confirm('¿SEGURO DE ELIMINAR LA IMAGEN?','', function () {
-
-                $.ajax({
-                    url: pagina,
-                    type: 'post',
-                    dataType: 'json',
-                    data:datos,
-                    beforeSend: function() {
-                            // setting a timeout
-                            app.preloader.show()
-
-                        },
-
-                    success: function(data) {
-                        app.preloader.hide();
-                        ObtenerImagenesSucursal();
-
-
-                    }
-                });
-
-            });
-    
-    }
-
+   
 
 
 function ObtenerImagenesIndividualServicio(){
@@ -469,11 +538,11 @@ function GuardarimagenIndividual() {
             cache: false,
             async:false,
             success: function(datos){
-
+                dynamicSheet2.close();
                 localStorage.setItem('fotoimagenindividual','');
 
                 alerta('','Registro guardado correctamente');
-                GoToPage('detalleserviciocoach');
+                ObtenerImagenesIndividuales();
                 
                
                 },error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -588,9 +657,19 @@ function Pintarimagenindividuales(resultado) {
 
                         <div class="col-20">
                          <div class="col"> 
-                            <span id="" class="button " style="font-size: 26px;color:black;" onclick="EliminarImagenIndividual(`+resultado[i].idimagenesindividual+`)">
-                                <i class="bi bi-x-circle-fill"></i>
-                            </span>
+                           
+
+                            <a class="button button-fill button-large color-theme button-raised margin-bottom-half " style="
+                                position: absolute;
+                                height: 30px;
+                                background: red;
+                                width: 20px;
+                                margin-right: 1em;"
+     onclick="EliminarImagenIndividual(`+resultado[i].idimagenesindividual+`);">
+                                <i style="color: white;font-size:18px;margin-left: 0.2em;" class="bi bi-trash-fill"></i>
+                                 <span class="if-not-md">
+                                 </span>
+                        </a>
                         </div>
                         </div>
 

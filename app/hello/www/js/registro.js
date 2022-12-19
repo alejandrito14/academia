@@ -4708,3 +4708,17 @@ function ValidarIdusuario(idusuario) {
 
 			
 }
+
+function ObtenerIdUsuarioPrincipal() {
+    return new Promise(function(resolve, reject) {
+
+  		if (localStorage.getItem('iduserrespaldo')!=undefined && localStorage.getItem('iduserrespaldo')!=null && localStorage.getItem('iduserrespaldo')!=0 ) {
+
+  			var iduser=localStorage.getItem('iduserrespaldo');
+  			localStorage.setItem('id_user',iduser);
+  		}
+
+  		resolve();
+	
+    })
+}

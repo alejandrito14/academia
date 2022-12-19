@@ -76,10 +76,10 @@ function PintarpagosCoach(pagos) {
       }
 
       if (idservicio!=pagos[i].idservicio) {
-      	html+=`
-      		<div class="row margin-bottom ">
+      	html=`
+      		<div class="row margin-bottom margin-top ">
                 <div class="col">
-                <h5 class="title">
+                <h5 class="title" style="margin-left: -0.5em;">
               `+pagos[i].concepto+`
                 </h5>
                 </div>
@@ -95,12 +95,12 @@ function PintarpagosCoach(pagos) {
 
       	idservicio=pagos[i].idservicio;
 
-      	    $(".listadopagos").html(html);
+      	    $(".listadopagos").append(html);
 
       }
-
+      var usuario=pagos[i].corresponde[0].nombre+' '+pagos[i].corresponde[0].paterno;
       html=`
-        <li class="list-item" id="pago_`+pagos[i].idnotapago+`">
+        <li class="list-item pago_`+pagos[i].idnotapago+`">
                     <div class="row">
                         <div class="col-70">
                             <p class="text-muted "  id="concepto_`+pagos[i].idnotapago+`">
@@ -108,6 +108,9 @@ function PintarpagosCoach(pagos) {
                             </p>
 
                           <p class="text-muted small">$`+formato_numero(pagos[i].monto,2,'.',',')+`</p>
+                          <p class="text-muted small"  id="concepto_`+pagos[i].idnotapago+`">
+                              Corresponde a `+usuario+`
+                            </p>
                           <span class="text-muted small `+claseestatus+`">`+pagos[i].textoestatus+`</span>
 
 
@@ -141,9 +144,13 @@ function ActivoPagoCoach(boton) {
 	$(".btnclick").removeClass('button-active');
 	if (boton==1) {
 	$("#btnpendiente").addClass('button-active');
+	  	 $(".listadopagos").html("");
+
 		ListadoPagosCoach();
 	}
 	if (boton==2) {
+	$(".listadopagos").html("");
+
 	$("#btnhistorial").addClass('button-active');
 		ListadoPagosCoachHistorial();
 	}
@@ -181,7 +188,7 @@ function PintarpagosHistorialCoach(pagos) {
 	    var html="";
 
 	if (pagos.length>0) {
-   
+   	var idservicio=0;
     for (var i = 0; i <pagos.length; i++) {
 
       var claseestatus="";
@@ -197,7 +204,35 @@ function PintarpagosHistorialCoach(pagos) {
         claseestatus="notacancelado";
       }
 
-      html+=`
+
+          if (idservicio!=pagos[i].idservicio) {
+          
+            html=`
+      			<div class="row margin-bottom margin-top ">
+                <div class="col">
+                <h5 class="title" style="margin-left: -0.5em;">
+              `+pagos[i].concepto+`
+                </h5>
+                </div>
+                <div class="col-auto align-self-center">
+               
+                </div>
+              </div>
+
+               <ul class="list media-list no-margin pagos_`+pagos[i].idservicio+`" style="list-style: none;background:white;">
+        
+                </ul>`;
+
+      			idservicio=pagos[i].idservicio;
+
+      	   	 	$(".listadopagos").append(html);
+
+            }
+
+                  var usuario=pagos[i].corresponde[0].nombre+' '+pagos[i].corresponde[0].paterno;
+
+
+      html=`
         <li class="list-item" id="pago_`+pagos[i].idnotapago+`">
                     <div class="row">
                         <div class="col-70">
@@ -207,22 +242,27 @@ function PintarpagosHistorialCoach(pagos) {
 
                           <p class="text-muted small">Pagado `+pagos[i].fechaformatopago+`</p>
                           <p class="text-muted small">$`+formato_numero(pagos[i].monto,2,'.',',')+`</p>
+                          <p class="text-muted small "  id="concepto_`+pagos[i].idnotapago+`">
+                              Corresponde a `+usuario+`
+                            </p>
+
                           <span class="text-muted small `+claseestatus+`">`+pagos[i].textoestatus+`</span>
 
 
                         </div>`;
-                       /* <div class="col-30">
-                        <a id="btncalendario" style=" color: #007aff!important;text-align: center;justify-content: center;display: flex;" onclick="Detallepago(`+pagos[i].idnotapago+`)">Ver detalle</a>
-                        </div>*/
+                     
                    html+= ` </div>
                  </li>
 
       `;
+
+       $(".pagos_"+pagos[i].idservicio).append(html);
+
     }
 
   }
 
-      $(".listadopagos").html(html);
+     // $(".listadopagos").html(html);
 
 }
 
@@ -338,10 +378,14 @@ function DetallePagosCoach(idusuarios) {
 function ActivoPagoCoachLis(boton) {
 	$(".btnclick").removeClass('button-active');
 	if (boton==1) {
+			  	 $(".listadopagos").html("");
+
 	$("#btnpendiente1").addClass('button-active');
 		ListadoPagosCoachLista();
 	}
 	if (boton==2) {
+			  	 $(".listadopagos").html("");
+
 	$("#btnhistorial1").addClass('button-active');
 		ListadoPagosCoachHistorialLista();
 	}
@@ -430,7 +474,7 @@ html+=`	<div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;ba
 		   						 		</select>
 
 		   						 	 <a id="btnguardarpagocoach"  style="border-radius: 10px;
-									    height: 60px;" class="button button-fill button-large button-raised margin-bottom color-theme">
+									    height: 60px;" class="button button-fill button-large button-raised margin-bottom color-theme btnguardarpagocoach">
 									      <div class="fab-text">Guardar</div>
 									    </a>
 		   						 	</div>
@@ -451,6 +495,7 @@ html+=`	<div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;ba
         // Events
         on: {
           open: function (sheet) {
+          	Cargartipopago2();
             $$(".btnguardarpagocoach").attr('onclick','GuardarPagoCoach('+monto+','+idpago+','+idservicio+')')
           },
           opened: function (sheet) {
@@ -469,9 +514,13 @@ function GuardarPagoCoach(monto,idpago,idservicio) {
 	
 	var txtdescripcionpago=$("#txtdescripcionpago").val();
 	var txttipopago=$("#txttipopago").val();
+
 	var pagina = "GuardarPagoCoach.php";
-	var id_user=localStorage.getItem('idcoach');
-	var datos="idcoach="+id_user+"&txttipopago="+txttipopago+"&txtdescripcionpago="+txtdescripcionpago;
+	var idcoach=localStorage.getItem('idcoach');
+	var id_user=localStorage.getItem('id_user');
+	var datos="idcoach="+idcoach+"&txttipopago="+txttipopago+"&txtdescripcionpago="+txtdescripcionpago;
+		datos+="&idpago="+idpago+"&idservicio="+idservicio+"&monto="+monto;
+		datos+="&iduser="+id_user;
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
@@ -482,8 +531,12 @@ function GuardarPagoCoach(monto,idpago,idservicio) {
 		async:false,
 		success: function(respuesta){
 
-			var pagos=respuesta.respuesta;
-			PintarpagosHistorialCoach(pagos);
+			var res=respuesta.respuesta;
+			if (res==1) {
+				dynamicSheet2.close();
+				ListadoPagosCoachLista();
+
+			}
 
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -496,3 +549,50 @@ function GuardarPagoCoach(monto,idpago,idservicio) {
 
 		});
 }
+
+function Cargartipopago2(tipodepagoseleccionado) {
+
+
+    var pagina = "obtenertipodepagos.php";
+
+    $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+    async:false,
+    success: function(datos){
+
+      var opciones=datos.respuesta;
+        
+      Pintartipodepagos2(opciones,tipodepagoseleccionado);
+
+    },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+      var error;
+        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+    }
+
+  });
+}
+
+function Pintartipodepagos2(opciones,tipodepagoseleccionado) {
+   var html='';
+
+  if (opciones.length>0) {
+     html+=`  <option value="0">Seleccionar método de pago</option>`;
+    for (var i = 0; i <opciones.length; i++) {
+
+    html+=`  <option value="`+opciones[i].idtipodepago+`">`+
+             opciones[i].tipo  +`</option>`;
+
+          }
+
+    }
+
+
+  $("#txttipopago").html(html);
+
+
+  }

@@ -88,9 +88,8 @@ var app = new Framework7({
 
  var pictureSource;   // picture source
  var destinationType; 
-var produccion = 0;
+var produccion = 1;
 var codigoservicio="0";
-
 $(document).ready(function() {
 
     if (produccion == 0) {
@@ -138,7 +137,7 @@ $(document).ready(function() {
 
 var lhost = "localhost:8888";
 var rhost = "issoftware1.com.mx";
-var version='1.0.8';
+var version='1.0.9';
 
 localStorage.setItem('versionapp',version);
 var abrir=0;
@@ -262,7 +261,13 @@ var puertosockect="";
   localStorage.setItem('cont',-1);
 localStorage.setItem('valor','');
 localStorage.setItem('avatar','');
+        if(localStorage.getItem('iduserrespaldo')!=undefined && localStorage.getItem('iduserrespaldo')!=null)
+          {
+            var iduserrespaldo=localStorage.getItem('iduserrespaldo');
+            localStorage.setItem('id_user',iduserrespaldo);
+            localStorage.removeItem('iduserrespaldo');
 
+          }
   /* pictureSource=navigator.camera.PictureSourceType;
    destinationType=navigator.camera.DestinationType;
 */
@@ -708,7 +713,7 @@ $$(document).on('page:init', '.page[data-name="profile"]', function (e) {
 
  
  $(".versionapp").text(version);
-
+  regresohome();
   var nombreusuario= localStorage.getItem('alias');
   $$(".nombreusuario").text(nombreusuario);
 var tipoUsuario=localStorage.getItem('tipoUsuario');
@@ -727,6 +732,7 @@ var tipoUsuario=localStorage.getItem('tipoUsuario');
                     }
              
   $$(".tipousuario").addClass(classtipo);
+ ObtenerIdUsuarioPrincipal().then(function (result) {
 
   Cargarperfilfoto();
   CargarFoto();
@@ -739,8 +745,9 @@ var tipoUsuario=localStorage.getItem('tipoUsuario');
   $$("#btneliminarcuenta").attr('onclick','EliminarCuenta()');
 
   VerificarAsociacion();
+  });
 
-  regresohome();
+
 })
 
 $$(document).on('page:afterin', '.page[data-name="blogs"]', function (e) {
@@ -1053,8 +1060,11 @@ $$(document).on('page:init', '.page[data-name="chat"]', function (e) {
 regresohome();
  $(".v_buscador").attr('onkeyup','BuscarEnLista(".v_buscador",".lista")');
   $(".limpiarspan").attr('onclick','LimpiarResultado(".lista")');
+ ObtenerIdUsuarioPrincipal().then(function (result) {
 
-listadochats();
+  listadochats();
+
+  });
 });
 $$(document).on('page:init', '.page[data-name="chattutorado"]', function (e) {
   /* swiper carousel projects */
@@ -1098,19 +1108,32 @@ $$(document).on('page:init', '.page[data-name="notificaciones"]', function (e) {
   /* swiper carousel projects */
  // $$('#btnverificartoken').attr('onclick','ValidarCelular()')
 regresohome();
+ ObtenerIdUsuarioPrincipal().then(function (result) {
 
-ObtenerListadoNotificaciones();
+    ObtenerListadoNotificaciones();
+
+  });
 });
 
 $$(document).on('page:init', '.page[data-name="pagos"]', function (e) {
   /* swiper carousel projects */
  // $$('#btnverificartoken').attr('onclick','ValidarCelular()')
 regresohome();
-ObtenerTotalPagos();
-ProximopagoaVencer();
-$$('#btnlistadopagos').attr('onclick','VerListadoPago()')
-$$('#btnlistadopagados').attr('onclick','VerListadoPagados()')
-ObtenerMonedero();
+
+ ObtenerIdUsuarioPrincipal().then(function (result) {
+    
+  ObtenerTotalPagos();
+  ProximopagoaVencer();
+  $$('#btnlistadopagos').attr('onclick','VerListadoPago()')
+  $$('#btnlistadopagados').attr('onclick','VerListadoPagados()')
+  ObtenerMonedero();
+
+  });
+
+
+ 
+
+
 myStopFunction(identificadorDeTemporizador);
 
 });
@@ -1368,6 +1391,8 @@ $$(document).on('page:init', '.page[data-name="detalleserviciocoach"]', function
  // $$("#abrirpantallacali").attr('onclick','PantallaCalificacion()');
   $$("#Abrirchat").attr('onclick','AbrirPantallaChats()');
   $$("#btncalendario").attr('onclick','FechasServicio()');
+  $$(".btnimagengrupal").attr('onclick','AbrirModalFotoimagengrupal()');
+ 
   ObtenerParticipantesAlumnos();
   
   VerificarSihayEvaluacion();
@@ -1396,6 +1421,7 @@ $$(document).on('page:init', '.page[data-name="detalleserviciocoach2"]', functio
   $$(".btnasistencia").attr('onclick','Asistencia()');
   $$("#btnpermisoasignaralumno").attr('onclick','VerificarTotalAlumnos()');
   //Verificarcantidadhorarios();
+  $$(".btnimagengrupal").attr('onclick','AbrirModalFotoimagengrupal()');
 
     $(".btncancelarservicio").attr('onclick','PantallaCancelarServicio()');
   myStopFunction(identificadorDeTemporizador);
@@ -1885,7 +1911,7 @@ $$(document).on('page:init', '.page[data-name="imagenesindividuales"]', function
    }
 
    ObtenerImagenesIndividuales();
-   $(".btnnuevaimagen").attr('onclick','NuevaImagen()');
+   $(".btnnuevaimagen").attr('onclick','AbrirModalFotoimagenIndividual()');
 
 });
 
@@ -2133,6 +2159,10 @@ $$(document).on('page:init', '.page[data-name="listadotutoservicios"]', function
  $(".btnserviciosactivos").attr('onclick','GoToPage("serviciosactivostutorado")');
  $(".btnmisservicios").attr('onclick','GoToPage("serviciosasignadostutorado")');
 
+ /* if (localStorage.getItem('iduserrespaldo')!=undefined && localStorage.getItem('iduserrespaldo')!=0) {
+    var idusuariotuto=localStorage.getItem('idusuariotuto');
+    localStorage.setItem('id_user',idusuariotuto);
+   }*/
 });
 
 

@@ -749,7 +749,7 @@ function ObtenerServicioAReplicar(valor) {
 
  		arraydiaselegidos=[];
  		arraydiaseleccionados=[];
-
+ 		$("#selected-dates").html('');
 		var respuesta=datos.respuesta;
 		var idcategoriaservicio=respuesta.idcategoriaservicio;
 		var idservicio=respuesta.idservicio;
@@ -853,6 +853,8 @@ function ObtenerServicioAReplicar(valor) {
 	cantidadreembolso=respuesta.cantidadreembolso;
 	asistencia=respuesta.controlasistencia;
 	tiporeembolso=respuesta.tiporeembolso;
+	tituloaviso=respuesta.tituloaviso;
+	tiempoaviso=respuesta.tiempoaviso;
 	//cantidadreembolso='<?php echo $cantidadreembolso; ?>';
 	asignadocliente=respuesta.asignadocliente;
 	asignadocoach=respuesta.asignadocoach;
@@ -914,6 +916,9 @@ function ObtenerServicioAReplicar(valor) {
 			$("#contentestatus").css('display','block');
 		}
 
+
+		$("#v_tiempoaviso").val(tiempoaviso);
+		$("#v_tituloaviso").val(tituloaviso);
 		//$("#cantidadhorarios").text(arraydiaselegidos.length);
 
 		  }
