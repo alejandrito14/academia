@@ -43,12 +43,16 @@ try
 	$tipodepagos->habilitarstripe=$_POST['constripe'];	
 	$tipodepagos->claveprivada=$_POST['claveprivada'];
 	$tipodepagos->clavepublica=$_POST['clavepublica'];
-	$tipodepagos->porcentajecomision=$_POST['porcentajecomision'];
-	$tipodepagos->montotransaccion=$_POST['montotransaccion'];
-	$tipodepagos->porcentajeimpuesto=$_POST['porcentajeimpuesto'];
+	$tipodepagos->porcentajecomision=$_POST['porcentajecomision']!=''?$_POST['porcentajecomision']:0;
+	$tipodepagos->montotransaccion=$_POST['montotransaccion']!=''?$_POST['montotransaccion']:0;
+	$tipodepagos->porcentajeimpuesto=$_POST['porcentajeimpuesto']!=''?$_POST['porcentajeimpuesto']:0;
 	$tipodepagos->cuenta= $f->imprimir_cadena_utf8($_POST['cuenta']);
 	$tipodepagos->habilitarcampomonto=$_POST['habilitarcampomonto'];
 	$tipodepagos->habilitarcampomontofactura=$_POST['habilitarcampomontofactura'];
+	$tipodepagos->habilitarparafactura=$_POST['chkparafactura'];
+
+	$idtiposervicio=explode(',',$_POST['idtiposervicio']);
+	$v_tiposervicio=$_POST['v_tiposervicio'];
 
 	
 	//Validamos si hacermos un insert o un update
@@ -60,6 +64,23 @@ try
 	}else{
 		$tipodepagos->Modificartipodepagos();	
 		$md->guardarMovimiento($f->guardar_cadena_utf8('tipodepagos'),'tipodepagos',$f->guardar_cadena_utf8('Modificación de tipodepagos -'.$tipodepagos->idtipopartido));
+	}
+
+
+
+	if ($v_tiposervicio==1) {
+		if($tipodepagos->idtipodepago > 0)
+		{
+			$tipodepagos->EliminarRelacionCategoria();
+		}
+		
+		for ($i=0; $i < count($idtiposervicio); $i++) { 
+
+			$tipodepagos->tipodeservicio=$idtiposervicio[$i];
+			$tipodepagos->GuardarRelacionCategoria();
+
+		}
+
 	}
 				
 	$db->commit();

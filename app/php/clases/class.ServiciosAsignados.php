@@ -18,9 +18,10 @@ class ServiciosAsignados
 	public function obtenerServiciosAsignados()
 	{
 		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
-		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(1)
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios IN('$this->idusuario') AND usuarios_servicios.estatus IN(1)
 			AND cancelacion=0
 		 ";
+
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -271,9 +272,19 @@ public function obtenerServiciosAsignadosPendientes()
 				$this->idusuario=$objeto->idusuarios;
 				$existepago=$this->VerificarSihaPagado();
 				
-				if (count($existepago)>0) {
+				if ($objeto->tipo==3) {
+					# code...
+				
+					if (count($existepago)>0) {
+						$array[$contador]=$objeto;
+						
+					}
+					$contador++;
+				
+				}else{
 					$array[$contador]=$objeto;
 					$contador++;
+
 				}
 				
 			} 
@@ -909,7 +920,7 @@ public function obtenerServiciosAsignadosPendientes()
 		$fecha=date('Y-m-d H:i:s');
 		$sql="UPDATE usuarios_servicios SET 
 		estatus=2,
-		cancelacion=1,
+		canceladoservicio=1,
 		aceptarterminos=0,
 		fechacancelacion='$fecha'
 		WHERE idusuarios_servicios='$this->idusuarios_servicios'";
@@ -1240,7 +1251,7 @@ public function obtenerServiciosAsignadosPendientes()
 
 	public function CalcularMontoPago($tipo,$cantidad,$montopago)
 	{
-		
+
 		if ($tipo==0) {
 
 		 	$monto=($montopago*$cantidad)/100;
@@ -1250,12 +1261,137 @@ public function obtenerServiciosAsignadosPendientes()
 			$monto=$cantidad;
 		}
 
-		
+
 
 		return $monto;
 
 
 	}
 
+
+	public function obtenerServiciosAsignadosAceptados()
+	{
+		$sql="SELECT 
+			usuarios_servicios.idusuarios_servicios,
+				usuarios_servicios.idusuarios,
+				usuarios_servicios.idservicio,
+				usuarios_servicios.fechacreacion,
+				usuarios_servicios.aceptarterminos,
+				usuarios_servicios.fechaaceptacion,
+				usuarios_servicios.cancelacion,
+				usuarios_servicios.motivocancelacion,
+				usuarios_servicios.estatus,
+				usuarios_servicios.fechacancelacion,
+				servicios.idservicio AS idservicio_0,
+				servicios.titulo,
+				servicios.descripcion,
+				servicios.idcategoriaservicio,
+				servicios.imagen,
+				servicios.orden,
+				servicios.fechainicial,
+				servicios.fechafinal,
+				servicios.nodedias,
+				servicios.idcategoria,
+				servicios.precio,
+				servicios.totalclases,
+				servicios.montopagarparticipante,
+				servicios.montopagargrupo,
+				servicios.modalidad,
+				servicios.modalidaddepago,
+				servicios.periodo,
+				servicios.lunes,
+				servicios.martes,
+				servicios.miercoles,
+				servicios.jueves,
+				servicios.viernes,
+				servicios.sabado,
+				servicios.domingo,
+				servicios.numeroparticipantes,
+				servicios.numeroparticipantesmax,
+				servicios.abiertocliente,
+				servicios.abiertocoach,
+				servicios.abiertoadmin,
+				servicios.ligarcliente,
+				servicios.reembolso,
+				servicios.cancelaciondescricion,
+				servicios.idpoliticaaceptacion,
+				servicios.tiporeembolso,
+				servicios.validaradmin,
+				servicios.agregousuario,
+				servicios.habilitarclonadocoach,
+				servicios.habilitarclonadoadmin,
+				servicios.controlasistencia,
+				servicios.politicasaceptacion,
+				servicios.numligarclientes,
+				servicios.politicascancelacion,
+				servicios.descripcionaviso,
+				servicios.tiempoaviso,
+				servicios.tituloaviso,
+				servicios.asignadoadmin,
+				servicios.asignadocoach,
+				servicios.asignadocliente,
+				servicios.cantidadreembolso
+
+		FROM usuarios_servicios INNER JOIN 
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios IN($this->idusuario) AND usuarios_servicios.estatus IN(1)
+			AND usuarios_servicios.cancelacion=0 AND usuarios_servicios.aceptarterminos=1
+		 ";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerHorarioporfecha($fecha,$hora)
+	{
+		$sql = "SELECT *FROM horariosservicio
+			INNER JOIN zonas ON horariosservicio.idzona=zonas.idzona
+		 WHERE fecha='$fecha' AND horainicial>='$hora' AND idservicio='$this->idservicio' ORDER BY idhorarioservicio";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function CancelarServicioUsuario()
+	{
+		$fecha=date('Y-m-d H:i:s');
+		$sql="UPDATE usuarios_servicios SET 
+		estatus=2,
+		cancelacion=1,
+		aceptarterminos=0,
+		fechacancelacion='$fecha'
+		WHERE idusuarios='$this->idusuario' AND idservicio='$this->idservicio'";
+		$resp=$this->db->consulta($sql);
+		
+	}
 
 }

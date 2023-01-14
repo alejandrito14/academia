@@ -56,7 +56,7 @@ class Imagengrupal
 
 	}
 
-	public function EliminarImagen()
+	public function EliminarImagenGrupal()
 	{
 		$sql="DELETE FROM imagenesgrupal 
 				 WHERE idimagenesgrupal = '$this->idimagenesgrupal'

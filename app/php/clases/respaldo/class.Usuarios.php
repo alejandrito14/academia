@@ -758,6 +758,8 @@ public function validarUsuarioClienteTokenCel()
         if ($idusuariosservicio!='') {
              $sql.="AND idusuarios NOT IN($idusuariosservicio)";
            }
+           $sql.=" ORDER BY CONCAT(usuarios.nombre,'',usuarios.paterno,' ',usuarios.materno)";
+           
         $resp = $this->db->consulta($sql);
         $cont = $this->db->num_rows($resp);
 

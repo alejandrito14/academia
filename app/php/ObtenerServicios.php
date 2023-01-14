@@ -143,7 +143,12 @@ try
 		}
 
 
+		$lo->idservicio=$asignados->idservicio;
+		$obtenescoachesServicios=$lo->ObtenerParticipantesCoach(5);
+		$obtenerservicios[$i]->coaches=$obtenescoachesServicios;
 
+		$obtenerservicios[$i]->fechainicial=date('d/m/Y',strtotime($obtenerservicios[$i]->fechainicial));
+		$obtenerservicios[$i]->fechafinal=date('d/m/Y',strtotime($obtenerservicios[$i]->fechafinal));
 
 	}
 

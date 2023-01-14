@@ -20,6 +20,8 @@ require_once("clases/class.Tipodepagos.php");
 require_once("clases/class.PagConfig.php");
 require_once("clases/class.Membresia.php");
 require_once("clases/class.Notapago.php");
+require_once("clases/class.Servicios.php");
+require_once("clases/class.Datosfiscales.php");
 
 include 'stripe-php-7.93.0/init.php';
 $folio = "";
@@ -48,10 +50,21 @@ $constripe=$_POST['constripe'];
 $campomonto=$_POST['campomonto'];
 $montovisual=$_POST['montovisual'];
 $cambiomonto=$_POST['cambiomonto'];
+$requierefactura=$_POST['requierefactura'];
+$idusuariosdatosfiscales=$_POST['idusuariosdatosfiscales'];
 
 $comisionpornota=$_POST['comisionpornota'];
 $comisionnota=$_POST['comisionnota'];
 $tipocomisionpornota=$_POST['tipocomisionpornota'];
+$idtipodepago=$_POST['idtipodepago'];
+if ($montomonedero>0) {
+  
+  if ($montomonedero==$sumatotalapagar) {
+     $idtipodepago=0;
+    
+  }
+
+}
 
 try {
 	 $db = new MySQL();
@@ -72,9 +85,9 @@ try {
     $anio = substr($fecha[2], 2, 4);
     $folio = $fecha[0].$fecha[1].$anio.$contador;
 
+ 
 
-
-            $idtipodepago=$_POST['idtipodepago'];
+            //$idtipodepago=$_POST['idtipodepago'];
             $tipopago=new Tipodepagos();
             $tipopago->db=$db;
             $tipopago->idtipodepago=$idtipodepago;
@@ -245,6 +258,11 @@ try {
 
                $pagocoach=new PagosCoach();
                $pagocoach->db=$db;
+               $servicios=new Servicios();
+               $servicios->db=$db;
+               $datosfiscales=new Datosfiscales();
+               $datosfiscales->db=$db;
+
 
          $notapago->idusuario=$iduser;
          $notapago->subtotal=$subtotalsincomision;
@@ -262,10 +280,41 @@ try {
          $notapago->folio=$folio;
          $notapago->descuento=0;
          $notapago->descuentomembresia=0;
+         $notapago->requierefactura=$requierefactura;
 
          $notapago->comisionpornota=$comisionpornota;
          $notapago->comisionnota=$comisionnota;
          $notapago->tipocomisionpornota=$tipocomisionpornota;
+         $notapago->idusuariodatofiscal=0;
+         if ($requierefactura==1) {
+            $datosfiscales->idusuariosdatosfiscales=$idusuariosdatosfiscales;
+             $datosf=$datosfiscales->Obtenerdatofiscal();
+
+              $notapago->razonsocial=$datosf[0]->razonsocial;
+              $notapago->rfc=$datosf[0]->rfc;
+              $notapago->direccion=$datosf[0]->direccion;
+              $notapago->nointerior=$datosf[0]->nointerior;
+              $notapago->noexterior=$datosf[0]->noexterior;
+              $notapago->colonia=$datosf[0]->colonia;
+              $notapago->municipio=$datosf[0]->municipio;
+              $notapago->estado=$datosf[0]->estado;
+              $notapago->codigopostal=$datosf[0]->codigopostal;
+              $notapago->correo=$datosf[0]->correo;
+              $notapago->pais=$datosf[0]->pais;
+              $notapago->asentamiento=$datosf[0]->asentamiento;
+              $notapago->calle=$datosf[0]->calle;
+              $notapago->formapago=$datosf[0]->formapago;
+              $notapago->metodopago=$datosf[0]->metodopago;
+              $notapago->usocfdi=$datosf[0]->usocfdi;
+              $buscarimagenes=$datosfiscales->ObtenerImagenesfiscalAgrupado();
+              $imagenesfac="";
+              if (count($buscarimagenes)>0){
+                $imagenesfac=$buscarimagenes[0]->imagenesconstancia;
+              }
+
+              $notapago->imagenconstancia=$imagenesfac;
+              $notapago->idusuariodatofiscal=$idusuariosdatosfiscales;
+         }
          $notapago->CrearNotapago();
 
 
@@ -285,6 +334,9 @@ try {
                 $pagos->idpagostripe=$obj->idintento;
               if ($pagosconsiderados[$i]->tipo==1) {
                   $pagos->estatus=2;
+                 $servicios->idservicio= $pagosconsiderados[$i]->idservicio;
+                 $datosservicio=$servicios->ObtenerServicio();
+
                   if ($confoto==1) {
                       $pagos->estatus=1;
 
@@ -295,7 +347,52 @@ try {
 
                    }
                   $pagos->idpago=$pagosconsiderados[$i]->id;
-                 
+
+                  
+                  $buscarpago=$pagos->ObtenerPago();
+
+                  if ($pagosconsiderados[$i]->idservicio>0) {
+
+
+                      $idcadena=explode('-', $pagosconsiderados[$i]->id);
+                      
+
+                      $pagos->idusuarios=$pagosconsiderados[$i]->usuario;
+                   
+                      $pagos->idservicio=$pagosconsiderados[$i]->servicio;
+                      $pagos->tipo=$pagosconsiderados[$i]->tipo;
+                      $pagos->monto=$pagosconsiderados[$i]->monto;
+                      $pagos->dividido='';
+                      $pagos->fechainicial=$pagosconsiderados[$i]->fechainicial;
+                      $pagos->fechafinal=$pagosconsiderados[$i]->fechafinal;
+                      $pagos->concepto=$datosservicio[0]->titulo;
+                      $pagos->idmembresia=0;
+                      $pagos->folio=$folio;
+                     // $pagos->CrearRegistroPago();
+                    }
+
+                  /*   if (count($descuentosaplicados)>0) {
+              
+               for ($p=0; $p <count($descuentosaplicados) ; $p++) { 
+                    if ($descuentosaplicados[$p]->idpago==$pagosconsiderados[$i]->idpago) {
+                        $descuentosaplicados[$p]->idpago=$pagos->idpago;
+                        }
+
+                      }
+                   }*/
+
+
+             /* if (count($descuentosmembresia)>0) {
+                
+                for ($i=0; $i <count($descuentosmembresia) ; $i++) { 
+                   if($descuentosmembresia[$i]->idpago==$pagosconsiderados[$i]->idpago){
+                    $descuentosmembresia[$i]->idpago=$pagos->idpago;
+
+                   }
+                  
+                }
+              }*/
+
                
                   $pagos->ActualizarEstatus();
                   $pagos->ActualizarPagado();
@@ -359,7 +456,7 @@ try {
                       $pagos->CrearRegistroPago();
 
 
-
+               
 
                   }else{
                       $membresia->idmembresia=$buscarpago[0]->idmembresia;
@@ -521,13 +618,14 @@ try {
 
 
         }
+               
 
          $notapago->estatus=0;
          $notapago->ActualizarNotapago();
 
       
         }
-
+  
          if ($campomonto==1) {
               $notapago->estatus=0;
               $notapago->ActualizarNotapago();
@@ -536,6 +634,7 @@ try {
               $notapago->ActualizarMonto();
             
           }
+         
 
           		$db->commit();
 

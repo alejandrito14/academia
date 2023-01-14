@@ -7,7 +7,10 @@ require_once "clases/conexcion.php";
 require_once "clases/class.Notapago.php";
 require_once "clases/class.Funciones.php";
 require_once "clases/class.Pagos.php";
-
+require_once "clases/class.Pais.php";
+require_once "clases/class.Estado.php";
+require_once "clases/class.Municipio.php";
+require_once "clases/class.Usocfdi.php";
 
 try
 {
@@ -18,6 +21,17 @@ try
     $f  = new Funciones();
     $pagos = new Pagos();
     $pagos->db=$db;
+
+    $pais = new Paises();
+    $pais->db=$db;
+
+    $estado=new Estado();
+    $estado->db=$db;
+    $municipio=new Municipio();
+    $municipio->db=$db;
+
+    $usocfdi=new Usocfdi();
+    $usocfdi->db=$db;
     //Enviamos la conexion a la clase
     $lo->db    = $db;
    
@@ -82,6 +96,44 @@ try
 
         }
     }
+
+       
+
+    if ($resultado[0]->requierefactura==1) {
+
+        $pais->id_pais=$resultado[0]->pais;
+        $obtener=$pais->ObtenerDatosPais();
+
+        $paisfact=$obtener;
+       
+        $estado->id_estado=$resultado[0]->estado;
+        $obteneresta=$estado->ObtenerDatosEstado();
+
+        $estadofact=$obteneresta;
+
+        $municipio->idmunicipio=$resultado[0]->municipio;
+        $obtenermuni=$municipio->ObtenerDatosMunicipio();
+        $municipiofact=$obtenermuni;
+        
+        $resultado[0]->pais=$paisfact;
+        $resultado[0]->estado= $estadofact;
+        $resultado[0]->municipio=$municipiofact;
+
+        $usocfdi->cmetodopago=$resultado[0]->metodopago;
+        $usocfdi->cformapago=$resultado[0]->formapago;
+        $usocfdi->cusocfdi=$resultado[0]->usocfdi;
+
+        
+    }else{
+
+        $resultado[0]->municipio="";
+        $resultado[0]->estado="";
+        $resultado[0]->pais="";
+        $resultado[0]->formapavalor="";
+        $resultado[0]->metodopagovalor="";
+        $resultado[0]->usocfdivalor="";
+
+    }
     
 
     $respuesta['respuesta'] = $resultado;
@@ -89,6 +141,7 @@ try
     $respuesta['descuentos']=$descuentos;
     $respuesta['descuentosmembresia']=$descuentosmembresia;
     $respuesta['imagenescomprobante']=$obtenerimagenes;
+
 
     //Retornamos en formato JSON
     $myJSON = json_encode($respuesta);

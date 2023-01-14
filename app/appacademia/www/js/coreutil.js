@@ -234,7 +234,7 @@ class MediaList {
 
   
   function BuscarEnLista(idbuscador,clista) {
-
+  	
 
 		var buscador=$(idbuscador).val().toLowerCase();
 		console.log(buscador);

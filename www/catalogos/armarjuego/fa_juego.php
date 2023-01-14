@@ -423,7 +423,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						<div class="divgrupo" style="display: none;">
 					<div class="row " style="margin-bottom: 1em;">
 					<div class="col-md-12 ">
-							<button type="button" class="btn btn-primary" onclick="NuevoGrupo()" style="float: left;">NUEVO GRUPO</button>
+							<button type="button" class="btn btn-primary" onclick="NuevoGrupo()" style="float: left;">NUEVO GRUPO</button> 
 					</div>
 				
 				</div>
@@ -447,16 +447,19 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 					  <div class="tab-pane fade" id="rondas" role="tabpanel" aria-labelledby="rondas-tab">
 
-							<div class="col-md-6" style="margin-top: 1em;">
+							<div class="col-md-12" style="margin-top: 1em;">
 
 								<div class="form-group m-t-20">
-									<button type="button" class="btn btn-primary" onclick="GenerarRol()">GENERAR ROL DE JUEGOS</button>
+									<button type="button" class="btn btn-primary btngeneralrol" onclick="GenerarRol()">GENERAR ROL DE JUEGOS</button>
 								</div>
 
-								<div class="row">
+								<div class="">
 									
-									<div class="roles"></div>
+									<div class="roles" style="overflow: scroll;height: 100em;"></div>
 								</div>
+
+								  <div id="writeHere" class="tournament"></div>
+
 							
 							</div>
 	
@@ -515,9 +518,73 @@ if(isset($_SESSION['permisos_acciones_erp'])){
   </div>
 </div>
 
+
+ <style type="text/css">
+  .tournament {    
+    background-color: #F0F0F0;
+    border: dashed 1px solid;
+    overflow: auto;
+  }
+  .tournament .bracket {
+    background-color: #DFDFDF;
+    min-width: 100px;    
+    vertical-align: top;
+    float: left;
+  }
+  
+  .tournament .bracket .match {
+    background-color: #D0D0D0;
+    border-top: 1px solid;
+    border-right: 1px solid;
+    border-bottom: 1px solid;  
+  }
+  .tournament .bracket .match .p1 {    
+    height: 20px;
+  }
+  .tournament .bracket .match .p2 {
+    height: 20px;
+  }    
+  .tournament .bracket .match .spacer {
+    background-color: #DFDFDF;
+    height: 38px;
+  }
+  .tournament .bracket .spacer {
+    height: 80px;
+  }
+  .tournament .bracket .half-spacer {
+    height: 40px;
+  }
+  .tournament .bracket .small-spacer {
+    height: 10px;
+    background-color: #F1F1F1;
+  }
+  .tournament .bracket .winner {
+    border-bottom: 1px solid;
+  }
+  
+  .left-line {
+    border-left: 1px solid;
+  }
+  
+  .tournament .cell {
+    min-width: 100px;
+    height: 20px;
+    float: left;
+    background-color: #DFDFDF;    
+  }   
+  .tournament .l2 {
+    background-color: #D0D0D0;
+  }     
+  .tournament .lmax {
+    width: 0px;
+    clear: both;
+  }    
+  </style>
+
 	<script  type="text/javascript" src="./js/mayusculas.js"></script>
 
 	<script>
+		var urlimagen='<?php $_SESSION['carpetaapp'];?>';
 	ObtenerTipoCompetencia();
 
 		var edicion=<?php echo $edicion; ?>;

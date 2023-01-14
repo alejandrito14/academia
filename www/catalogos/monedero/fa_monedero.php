@@ -105,7 +105,7 @@ if(!isset($_SESSION['se_SAS']))
 		
 	<div class="card">
 		<div class="card-body" style="padding: 0;">			
-			<button type="button" onClick="var resp=MM_validateForm('cantidad','','R isNum','concepto','','R'); if(resp==1){ G_monedero('alta_categoria','catalogos/monedero/ga_monedero.php','catalogos/monedero/vi_monedero.php','main');}" class="btn btn-success" style="float: right;">GUARDAR</button>
+			
 		</div>
 	</div>
 </form>

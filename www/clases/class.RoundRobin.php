@@ -62,7 +62,7 @@ public function displayRoundPairs($teams)
               $opponente=$teams[$opponent];
         }
 
-        $rolequipos=array('jugar'=>$jugar,'team1'=>$contrincante,'team2'=>$opponente);
+        $rolequipos=array('jugar'=>$jugar,'team1'=>$contrincante,'team2'=>$opponente,'pareja1'=>array(),'pareja2'=>array());
         array_push($roles, $rolequipos);
 
     }

@@ -423,7 +423,7 @@ function RegistrarAcceso() {
 	var v_email=$("#v_correo").val();
 	var v_contra1=$("#v_contra1").val();
 	var v_contra2=$("#v_contra2").val();
-	var tipousuario=$("#v_tipousuario").val();
+	var tipousuario=3;
 	var v_usuario=$("#v_usuario").val();
 
 	var id_user=localStorage.getItem('id_user');
@@ -435,7 +435,7 @@ function RegistrarAcceso() {
 	}
 
 
-	var datos="v_usuario="+v_usuario+"&v_email="+v_email+"&v_contra1="+v_contra1+"&v_tipousuario="+tipousuario+"&id_user="+id_user+"&tutorados="+tutorados;
+	var datos="v_usuario="+v_usuario+"&v_email="+v_email+"&v_contra1="+v_contra1+"&id_user="+id_user+"&tutorados="+tutorados;
 	var pagina = "registroaccesousuario.php";
 
 	var msj="";

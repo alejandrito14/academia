@@ -51,11 +51,22 @@ class Estado
 	///funcion para objeter datos de un usuario
 	public function ObtenerDatosEstado()
 	{
-		$query="SELECT * FROM estado WHERE idestado=".$this->id_estado;
-		$resp=$this->db->consulta($query);
-		
-		
-		return $resp;
+		$query="SELECT * FROM estados WHERE id=".$this->id_estado;
+		$resp = $this->db->consulta($query);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
 	}
 	
 	

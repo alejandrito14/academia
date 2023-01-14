@@ -9,6 +9,7 @@ require_once "clases/class.Funciones.php";
 /*require_once "clases/class.MovimientoBitacora.php";
 */require_once "clases/class.Usuarios.php";
 
+require_once("clases/class.PagosCoach.php");
 
 require_once("clases/class.Pagos.php");
 require_once("clases/class.Descuentos.php");
@@ -19,6 +20,7 @@ require_once("clases/class.Tipodepagos.php");
 require_once("clases/class.PagConfig.php");
 require_once("clases/class.Membresia.php");
 require_once("clases/class.Notapago.php");
+require_once("clases/class.Servicios.php");
 
 include 'stripe-php-7.93.0/init.php';
 $folio = "";
@@ -47,6 +49,10 @@ $constripe=$_POST['constripe'];
 $campomonto=$_POST['campomonto'];
 $montovisual=$_POST['montovisual'];
 $cambiomonto=$_POST['cambiomonto'];
+
+$comisionpornota=$_POST['comisionpornota'];
+$comisionnota=$_POST['comisionnota'];
+$tipocomisionpornota=$_POST['tipocomisionpornota'];
 
 try {
 	 $db = new MySQL();
@@ -238,6 +244,11 @@ try {
                $notapago=new Notapago();
                $notapago->db=$db;
 
+               $pagocoach=new PagosCoach();
+               $pagocoach->db=$db;
+               $servicios=new Servicios();
+               $servicios->db=$db;
+
          $notapago->idusuario=$iduser;
          $notapago->subtotal=$subtotalsincomision;
          $notapago->iva=0;
@@ -254,6 +265,10 @@ try {
          $notapago->folio=$folio;
          $notapago->descuento=0;
          $notapago->descuentomembresia=0;
+
+         $notapago->comisionpornota=$comisionpornota;
+         $notapago->comisionnota=$comisionnota;
+         $notapago->tipocomisionpornota=$tipocomisionpornota;
          $notapago->CrearNotapago();
 
 
@@ -273,6 +288,9 @@ try {
                 $pagos->idpagostripe=$obj->idintento;
               if ($pagosconsiderados[$i]->tipo==1) {
                   $pagos->estatus=2;
+                 $servicios->idservicio= $pagosconsiderados[$i]->idservicio;
+                 $datosservicio=$servicios->ObtenerServicio();
+
                   if ($confoto==1) {
                       $pagos->estatus=1;
 
@@ -283,10 +301,86 @@ try {
 
                    }
                   $pagos->idpago=$pagosconsiderados[$i]->id;
+
+                  
+                  $buscarpago=$pagos->ObtenerPago();
+
+                  if ($pagosconsiderados[$i]->idservicio>0) {
+
+
+                      $idcadena=explode('-', $pagosconsiderados[$i]->id);
+                      
+
+                      $pagos->idusuarios=$pagosconsiderados[$i]->usuario;
+                   
+                      $pagos->idservicio=$pagosconsiderados[$i]->servicio;
+                      $pagos->tipo=$pagosconsiderados[$i]->tipo;
+                      $pagos->monto=$pagosconsiderados[$i]->monto;
+                      $pagos->dividido='';
+                      $pagos->fechainicial=$pagosconsiderados[$i]->fechainicial;
+                      $pagos->fechafinal=$pagosconsiderados[$i]->fechafinal;
+                      $pagos->concepto=$datosservicio[0]->titulo;
+                      $pagos->idmembresia=0;
+                      $pagos->folio=$folio;
+                     // $pagos->CrearRegistroPago();
+                    }
+
+                  /*   if (count($descuentosaplicados)>0) {
+              
+               for ($p=0; $p <count($descuentosaplicados) ; $p++) { 
+                    if ($descuentosaplicados[$p]->idpago==$pagosconsiderados[$i]->idpago) {
+                        $descuentosaplicados[$p]->idpago=$pagos->idpago;
+                        }
+
+                      }
+                   }*/
+
+
+             /* if (count($descuentosmembresia)>0) {
+                
+                for ($i=0; $i <count($descuentosmembresia) ; $i++) { 
+                   if($descuentosmembresia[$i]->idpago==$pagosconsiderados[$i]->idpago){
+                    $descuentosmembresia[$i]->idpago=$pagos->idpago;
+
+                   }
+                  
+                }
+              }*/
+
                  
                
                   $pagos->ActualizarEstatus();
                   $pagos->ActualizarPagado();
+             /* $pagos->idpago=$pagosconsiderados[$i]->id;
+              $buscarpago=$pagos->ObtenerPago();
+              
+              $montopago=$buscarpago[0]->monto;
+              $lo->idservicio=$buscarpago[0]->idservicio;
+             $obtenercorachs=$lo->BuscarAsignacionCoach();
+              if (count($obtenercorachs)>0) {
+                for ($j=0; $j <count($obtenercorachs) ; $j++) { 
+
+                    $lo->idusuarios_servicios=$obtenercorachs[$j]->idusuarios_servicios;
+                    $tipomontopago= $lo->ObtenertipoMontopago();
+                    $pagocoach->idusuarios=$obtenercorachs[$j]->idusuarios;
+                    $pagocoach->idservicio=$lo->idservicio;
+                    $pagocoach->monto=$lo->CalcularMontoPago($tipomontopago[0]->tipopago,$tipomontopago[0]->monto,$montopago);
+                    $pagocoach->estatus=0;
+                    $pagocoach->pagado=0;
+                    $pagocoach->folio=$pagocoach->ObtenerFolioPagoCoach();
+                    $pagocoach->concepto=$buscarpago[0]->concepto;
+                    $pagocoach->idpago=$buscarpago[0]->idpago;
+                 
+                  
+                }
+              }*/
+
+           
+            
+
+
+
+
               }
 
               if ($pagosconsiderados[$i]->tipo==2) {
@@ -317,7 +411,7 @@ try {
                       $pagos->CrearRegistroPago();
 
 
-
+               
 
                   }else{
                       $membresia->idmembresia=$buscarpago[0]->idmembresia;
@@ -383,7 +477,8 @@ try {
               $notapago->monto=$buscarpago[0]->monto;
               $notapago->idpago=$buscarpago[0]->idpago;
                $notapago->Creardescripcionpago();
-          	
+
+               ///creacion pago a coach
 
                if ($constripe==1) {
              

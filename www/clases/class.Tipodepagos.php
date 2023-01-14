@@ -21,6 +21,7 @@ class Tipodepagos
 	public $cuenta;
 	public $habilitarcampomonto;
 	public $habilitarcampomontofactura;
+	public $tipodeservicio;
 	
 	//Funcion para obtener todos los tipodepago activos
 	public function ObttipodepagoActivos()
@@ -69,7 +70,8 @@ class Tipodepagos
 	{
 		$query="INSERT INTO tipodepago (tipo,estatus,habilitarfoto,constripe,claveprivada,clavepublica,comisionporcentaje,comisionmonto,impuesto,cuenta,habilitarcampomonto,habilitarcampomontofactura) 
 		VALUES ('$this->tipo','$this->estatus','$this->habilitarfoto','$this->habilitarstripe','$this->claveprivada','$this->clavepublica','$this->porcentajecomision','$this->montotransaccion','$this->porcentajeimpuesto','$this->cuenta','$this->habilitarcampomonto','$this->habilitarcampomontofactura')";
-		
+				
+
 		$resp=$this->db->consulta($query);
 		$this->idtipodepago = $this->db->id_ultimo();
 		
@@ -170,6 +172,47 @@ public function ObtenerTipodepago2()
 		}
 		return $array;
 	}
+
+
+ public function EliminarRelacionCategoria()
+ 	{
+
+ 		$sql = "DELETE FROM categorias_tipodepago WHERE idtipodepago = '$this->idtipodepago'";
+ 		
+		$resp = $this->db->consulta($sql);
+		
+ 	}	
+
+ 	public function GuardarRelacionCategoria()
+ 	{
+ 	 $sql="INSERT INTO categorias_tipodepago(idcategorias, idtipodepago) VALUES 
+ 	 	('$this->tipodeservicio', '$this->idtipodepago')";
+
+
+ 		$resp = $this->db->consulta($sql);
+
+ 	}
+
+ 	public function ObtenerCategoriasTipopago()
+ 	{
+ 		$sql = "SELECT * FROM categorias_tipodepago WHERE  idtipodepago='$this->idtipodepago'";
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+ 	}
+
 
 }
 

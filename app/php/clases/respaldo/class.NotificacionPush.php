@@ -15,6 +15,7 @@ class NotificacionPush
     public $idcliente;
     public $idusuario;
     public $idnotificacioncliente;
+    public $banderatuto;
 	public function EnviarNotificacion($listatokens,$titulo,$mensaje)
 	{
 
@@ -29,7 +30,7 @@ class NotificacionPush
             'icon' =>'myIcon', 
             'sound' => 'mySound'
         ];
-        $extraNotificationData = ["notification_foreground" => "true", "navigation" => $this->navpage, "idcliente" => $this->idcliente,"valor"=>$this->valor];
+        $extraNotificationData = ["notification_foreground" => "true", "navigation" => $this->navpage, "idcliente" => $this->idcliente,"valor"=>$this->valor,'banderatuto'=>$this->banderatuto];
 
         $fcmNotification = [
             'registration_ids' => $tokenList, //multple token array
@@ -97,8 +98,10 @@ class NotificacionPush
 
     public function Obtenertoken()
     {
-       $sql = "SELECT *FROM usuariotoken WHERE idusuario='$this->idusuario' ORDER BY idusuariotoken DESC  ";
-       
+        $fechaactual=date('Y-m-d');
+        $sql = "SELECT  DISTINCT token,uuid FROM usuariotoken WHERE idusuario='$this->idusuario' and  token!='null' 
+        ORDER BY idusuariotoken DESC LIMIT 3 ";
+     
             $resp = $this->db->consulta($sql);
             $cont = $this->db->num_rows($resp);
 

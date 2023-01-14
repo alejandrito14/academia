@@ -31,6 +31,11 @@ class Membresia
 	public $inputcantidad;
 	public $idcategoria;
 	public $idnotapago;
+	public $fecha;
+	public $repetir;
+	
+	public $idusuarios;
+	public $idmembresias;
 
 
 	public function ObtenerTodosmembresia()
@@ -77,7 +82,7 @@ class Membresia
 
 	public function guardarmembresia($value='')
 	{
-		$query="INSERT INTO membresia (titulo,estatus,orden,descripcion,costo,cantidaddias,tiempodepago,porcategoria,porservicio,color,depende,idmembresiadepende,inppadre,inphijo,inpnieto,limite) VALUES ('$this->titulo','$this->estatus','$this->orden','$this->descripcion','$this->costo','$this->duracion','$this->limite','$this->porcategoria','$this->porservicio','$this->color','$this->depende','$this->membresiadepende','$this->inppadre','$this->inphijo','$this->inpnieto','$this->v_limitemembresia')";
+		$query="INSERT INTO membresia (titulo,estatus,orden,descripcion,costo,cantidaddias,tiempodepago,porcategoria,porservicio,color,depende,idmembresiadepende,inppadre,inphijo,inpnieto,limite,fecha,repetir) VALUES ('$this->titulo','$this->estatus','$this->orden','$this->descripcion','$this->costo','$this->duracion','$this->limite','$this->porcategoria','$this->porservicio','$this->color','$this->depende','$this->membresiadepende','$this->inppadre','$this->inphijo','$this->inpnieto','$this->v_limitemembresia','$this->fecha','$this->repetir')";
 		
 		$resp=$this->db->consulta($query);
 		$this->idmembresia = $this->db->id_ultimo();
@@ -102,7 +107,9 @@ class Membresia
 			 inppadre='$this->inppadre',
 			 inphijo='$this->inphijo',
 			 inpnieto='$this->inpnieto',
-			 limite='$this->v_limitemembresia'
+			 limite='$this->v_limitemembresia',
+			 repetir='$this->repetir',
+			 fecha='$this->fecha'
 		   	 WHERE idmembresia=$this->idmembresia";
 
 		$resp=$this->db->consulta($query);
@@ -481,7 +488,157 @@ class Membresia
 		return $array;
 	}
 
+	 public function VerificarSiesTutorado()
+    {
+        $sql="SELECT * FROM usuariossecundarios
+        WHERE usuariossecundarios.idusuariotutorado='$this->idusuarios' ";
 
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+    }
+
+
+
+	public function buscarSiTutorTieneMembresia($idtutor)
+	{
+		$fechaactual=date('Y-m-d H:i:s');
+	$sql="SELECT *FROM usuarios_membresia WHERE idusuarios='$idtutor' AND estatus=1 AND  date_format(date(fechaexpiracion),'%Y-%m-%d H:i:s') >= '$fechaactual' AND pagado=1";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerMembresiasDependen($idmembresiapadre,$inphijo,$inpnieto){
+		$sql="SELECT *
+		FROM membresia WHERE depende=1 AND estatus=1";
+		if ($inphijo!='') {
+			$sql.= " AND inphijo='$inphijo'";
+
+		}
+
+		if ($inpnieto!='') {
+			$sql.=" AND inpnieto='$inpnieto'";
+			}
+
+		if ($idmembresiapadre!='') {
+			$sql.=" AND idmembresiadepende='$idmembresiapadre'";
+		}
+
+		if ($this->idmembresias!='') {
+			$sql.=" AND idmembresia 
+			 NOT IN('$this->idmembresias')";
+		}
+
+		$sql.=" ORDER BY orden";
+		
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerSiTutoradosMembresia($idtutor)
+	{
+		$sql="SELECT *FROM usuariossecundarios
+		INNER JOIN usuarios_membresia ON usuarios_membresia.idusuarios=usuariossecundarios.idusuariotutorado
+		WHERE usuariossecundarios.idusuariostutor='$idtutor' AND usuarios_membresia.idmembresia='$this->idmembresia' 
+		";
+
+		if ($this->idmembresias!='') {
+			$sql.=" AND idmembresia 
+			 NOT IN('$this->idmembresias')";
+		}
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerMembresiasDisponibles($idmembresias)
+	{
+		$sql="SELECT *
+		FROM membresia WHERE (inppadre=1 OR depende=0 AND estatus=1)";
+
+		if ($idmembresias!='') {
+			$sql.=" AND idmembresia 
+			 NOT IN('$idmembresias')";
+		}
+
+		
+		$sql.=" ORDER BY orden";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 
 }
 

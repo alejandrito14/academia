@@ -12,11 +12,12 @@ class Imagenindividual
 	public $fechacreacion;
 	public $idservicio;
 	public $idusuarioseleccionado;
+	public $idusuarioenvia;
 
 	public function GuardarImagen()
 	{
 		
-		$sql="INSERT INTO imagenesindividual(foto, estatus,idservicio,idusuarios) VALUES ('$this->foto',1, '$this->idservicio','$this->idusuarioseleccionado')";
+		$sql="INSERT INTO imagenesindividual(foto, estatus,idservicio,idusuarios,idusuarioenvia) VALUES ('$this->foto',1, '$this->idservicio','$this->idusuarioseleccionado','$this->idusuarioenvia')";
 		$resp=$this->db->consulta($sql);
 		$this->idimagenesindividual = $this->db->id_ultimo();
 

@@ -31,6 +31,7 @@ try
 	$lo->foto=$_POST['foto'];
 	$lo->idservicio=$_POST['idservicio'];
 	$lo->idusuarioseleccionado=$_POST['iduserseleccionado'];
+	$lo->idusuarioenvia=$_POST['iduser'];
 	if($lo->idimagenesindividual == 0)
 	{
 		//guardando

@@ -71,6 +71,7 @@ class Categorias
 		
 		
 		$sql = "SELECT C.* FROM categorias C ORDER BY orden asc ";
+		
 		/*$sql .= ($this->nombre != '')? " AND C.categoria LIKE '%$this->nombre%'":"";
 		$sql .= ($this->idcategoria != '')? " AND C.idcategorias = '$this->idcategoria'":"";*/
 

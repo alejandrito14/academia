@@ -34,7 +34,7 @@ class MembresiasAsignadas
 		usuarios_membresia
 		JOIN membresia
 		ON usuarios_membresia.idmembresia = membresia.idmembresia 
-		  WHERE membresia.estatus=1 AND usuarios_membresia.idusuarios='$this->idusuarios'";
+		  WHERE usuarios_membresia.estatus=1  AND usuarios_membresia.idusuarios='$this->idusuarios'";
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

@@ -17,6 +17,7 @@ class Tipodepagos
 	public $claveprivada;
 	public $cuenta;
 	public $idsucursal;
+	public $habilitarparafactura;
 	
 	//Funcion para obtener todos los tipodepago activos
 	public function ObttipodepagoActivos()
@@ -105,9 +106,9 @@ class Tipodepagos
 	
 	public function Guardartipodepagos()
 	{
-		$query="INSERT INTO tipodepago (tipo,estatus,habilitarfoto,constripe,claveprivada,clavepublica,cuenta) 
-		VALUES ('$this->tipo','$this->estatus','$this->habilitarfoto','$this->habilitarstripe','$this->claveprivada','$this->clavepublica','$this->cuenta')";
-		
+		$query="INSERT INTO tipodepago (tipo,estatus,habilitarfoto,constripe,claveprivada,clavepublica,cuenta,factura) 
+		VALUES ('$this->tipo','$this->estatus','$this->habilitarfoto','$this->habilitarstripe','$this->claveprivada','$this->clavepublica','$this->cuenta','$this->habilitarparafactura')";
+		echo $query;die();
 		$resp=$this->db->consulta($query);
 		$this->idtipodepago = $this->db->id_ultimo();
 		
@@ -123,7 +124,8 @@ class Tipodepagos
 		constripe='$this->habilitarstripe',
 		clavepublica='$this->clavepublica',
 		claveprivada='$this->claveprivada',
-		cuenta='$this->cuenta'
+		cuenta='$this->cuenta',
+		factura='$this->habilitarparafactura'
 		WHERE idtipodepago=$this->idtipodepago";
 
 		$resp=$this->db->consulta($query);
@@ -162,6 +164,27 @@ class Tipodepagos
 	}
 
 	
+	//Funcion para obtener todos los tipodepago activos
+	public function ObttipodepagoActivosFiltrar($tipo)
+	{
+				$sql = "SELECT * FROM tipodepago WHERE estatus = 1 AND factura='$tipo'";
+
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
 
 
 	

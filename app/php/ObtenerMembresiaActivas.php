@@ -8,6 +8,7 @@ require_once("clases/conexcion.php");
 require_once("clases/class.Membresia.php");
 require_once("clases/class.Funciones.php");
 require_once("clases/class.Usuarios.php");
+require_once("clases/class.PagConfig.php");
 
 try
 {
@@ -17,6 +18,8 @@ try
 	$lo = new Membresia();
 	$f=new Funciones();
 	$usuarios=new Usuarios();
+	$configuracion=new PagConfig();
+	$configuracion->db=$db;
 
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
@@ -30,8 +33,14 @@ try
 	$idmembresias="";
 	$obtenerMembresias=array();
 
+	$obtenerconfimembresia=$configuracion->ObtenerInformacionConfiguracion();
+
+	$activarpopupmembresia=$obtenerconfimembresia['activarpopupmembresia'];
+
 
 	$idmembresiapadre="";
+
+if ($activarpopupmembresia==1) {
 	if (count($obtenertablero)==0) {
 		
 			if (count($verificarsiestutorado)>0) {
@@ -71,12 +80,18 @@ try
 			}
 			
 			}else{
+
+				
+					# code...
+				
 				$obtenerMembresias=$lo->ObtenerMembresiasDisponibles($idmembresias);
+
 			}
 
 		
 	}
 
+}
 	
 
 

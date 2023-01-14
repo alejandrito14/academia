@@ -201,7 +201,7 @@ class Membresia
 	{
 		$sql="SELECT *
 		FROM membresia WHERE inppadre=1 OR depende=0 AND estatus=1";
-
+		
 		if ($idmembresias!='') {
 			$sql.=" AND idmembresia 
 			 NOT IN('$this->idmembresias')";

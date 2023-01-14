@@ -7,6 +7,7 @@ header('Access-Control-Allow-Origin: *');
 require_once("clases/conexcion.php");
 require_once("clases/class.Membresia.php");
 require_once("clases/class.Funciones.php");
+require_once("clases/class.Usuarios.php");
 
 try
 {
@@ -15,19 +16,65 @@ try
 	$db = new MySQL();
 	$lo = new Membresia();
 	$f=new Funciones();
+	$usuarios=new Usuarios();
 
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
-
+	$usuarios->db=$db;
 	$lo->idusuarios=$_POST['idusuario'];
+	$usuarios->idusuarios=$lo->idusuarios;
+	$verificarsiestutorado=$usuarios->VerificarSiesTutorado();
+	$obterusuario=$usuarios->ObtenerUsuario();
 	
 	$obtenertablero=$lo->ObtenerUsuarioMembresias();
 	$idmembresias="";
 	$obtenerMembresias=array();
 
+
+	$idmembresiapadre="";
 	if (count($obtenertablero)==0) {
 		
-		$obtenerMembresias=$lo->ObtenerMembresiasDisponibles($idmembresias);
+			if (count($verificarsiestutorado)>0) {
+
+				$idtutor=$verificarsiestutorado[0]->idusuariostutor;
+
+				$buscarSiTutorTieneMembresia=$lo->buscarSiTutorTieneMembresia($idtutor);
+				
+				if (count($buscarSiTutorTieneMembresia)>0) {
+					$idmembresiapadre=$buscarSiTutorTieneMembresia[0]->idmembresia;
+				
+
+				if ($verificarsiestutorado[0]->sututor==1) {
+					$inpnieto=1;
+					$inphijo="";
+				}else{
+					$inpnieto="";
+					$inphijo=1;
+				}
+
+				if ($buscarSiTutorTieneMembresia[0]->pagado==1) {
+					 
+					$obtenerMembresias=$lo->ObtenerMembresiasDependen($idmembresiapadre,$inphijo,$inpnieto);
+
+					for ($i=0; $i <count($obtenerMembresias) ; $i++) { 
+						$lo->idmembresia=$obtenerMembresias[$i]->idmembresia;
+						$ObtenerSiTutoradosMembresia=$lo->ObtenerSiTutoradosMembresia($idtutor);
+
+						if ($obtenerMembresias[$i]->limite<=count($ObtenerSiTutoradosMembresia)) {
+							unset($obtenerMembresias[$i]);
+						}
+
+					}
+				}
+				
+
+			}
+			
+			}else{
+				$obtenerMembresias=$lo->ObtenerMembresiasDisponibles($idmembresias);
+			}
+
+		
 	}
 
 	
@@ -35,6 +82,7 @@ try
 
 	$respuesta['respuesta']=$obtenerMembresias;
 	$respuesta['membresias']=$obtenertablero;
+	$respuesta['usuario']=$obterusuario[0];
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);
 	echo $myJSON;

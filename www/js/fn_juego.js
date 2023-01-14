@@ -3,6 +3,9 @@ var adversarios=0;
 var contendientes=0;
 var arrayparejas=[];
 var arraygrupos=[];
+var roljuego=[];
+var roljuegollaves=[];
+
 function GenerarSelectPlayer1() {
 
 	var html="";
@@ -901,6 +904,7 @@ function PintarTipoCompentencia(resultado) {
 
 function NuevoGrupo() {
 	$("#modalgrupo").modal();
+	$(".parejas").html('');
 	ObtenerNiveles(0);
 	ObtenerParejas();
 }
@@ -1066,11 +1070,11 @@ function Ordenar() {
 	});
 }
 
-
+var arrayparejas=[];
 function ObtenerParejas() {
 	var conta=1;
 	$(".parejas").html("");
-	 arrayparejas=[];
+	arrayparejas=[];
 	$(".nuevapareja").each(function() {
 
 	  var id=$(this).attr('id');
@@ -1134,7 +1138,8 @@ function GuardarGrupo() {
 		v_nivel:v_nivel,
 		nombrenivel:nombrenivel,
 		parejas:parejas,
-		participantes:[]
+		participantes:[],
+		grupo:nombregrupo
 	};
 
 		$(".cheparejas").each(function() {
@@ -1264,7 +1269,9 @@ function GenerarRol() {
 						success:function(msj){
 
 							var respuesta=msj.respuesta;
+							roljuego=respuesta;
 							PintarRounRobind(respuesta);
+
 							
 						
 						}
@@ -1273,18 +1280,34 @@ function GenerarRol() {
 	
 }
 
+
 function SeleccionarTipoCompetencia() {
 	var v_tipocompe=$("#v_tipocompe").val();
 	$(".divgrupo").css('display','none');
 
 	if (v_tipocompe==1) {
 		$(".divgrupo").css('display','block');
+		$(".btngeneralrol").attr('onclick','GenerarRol()');
+
+	}
+
+	if (v_tipocompe==2) {
+		$(".divgrupo").css('display','none');
+		$(".grupos").html('');
+		$(".btngeneralrol").attr('onclick','GenerarRolLlaves()');
+		$(".roles").html('');
 	}
 }
 
-function PintarRounRobind(respuesta) {
+function PintarRounRobind(roldejuego) {
 	var html="";
-	if (respuesta.length>0) {
+	if (roldejuego.length>0) {
+
+		for (var a = 0; a < roldejuego.length; a++) {
+				console.log(roldejuego[a]);
+			respuesta=roldejuego[a].rolesdejuego;
+
+		html+=`<h4 style="font-size: 20px!important;">GRUPO `+roldejuego[a].nombregrupo+`</h4>`;
 
 		for (var i = 0; i < respuesta.length; i++) {
 			
@@ -1325,7 +1348,7 @@ function PintarRounRobind(respuesta) {
 			        </div>
 			    </div>
 
-			            <div class="list-with-dividers">
+		<div class="list-with-dividers">
 			                                            
 
 
@@ -1334,11 +1357,10 @@ function PintarRounRobind(respuesta) {
 			                    <div class="d-none d-md-table-cell col-2">
 			            <div id="date-game-2799882">
 			   			 <span class="">
-			             <a href="/manager/tournaments/2799858-torneo1/events/2799871/rounds/2799881/games/2799882/updateDate?format=short" class="ajaxLinkLoading game-2799882-date-text ">
-			                    Añadir horario               </a>
+			             
 			                        </span>
 			        </div>
-			<div id="venue-game-2799882" class="text-truncate-container text-center text-sm-left">
+					<div id="venue-game-2799882" class="text-truncate-container text-center text-sm-left">
 			                       
 			            </div>
 			                                </div>
@@ -1346,33 +1368,58 @@ function PintarRounRobind(respuesta) {
 				            <div class="media media-players  text-right"><div class="media-body  players-names text-truncate">
 						            <div class="player text-truncate-container h-osm-45p h-omd-45p h-oxs-35p d-block">
 							            <div class="text-truncate-ellipsis">
-								            <a class="ajaxLinkLoading" href="/tournaments/2799858-torneo1/participants/viewCard?p_id=2799880&amp;e_id=2799871">`+roles[j].pareja1.nombreparticipante1+`
+								            <a class="ajaxLinkLoading" >`+roles[j].pareja1.nombreparticipante1+`
 								            </a>
 							            </div>
 						            </div>
 						            <div class="player player2 text-truncate-container d-block mt-dmd-m15p">
 							            <div class="text-truncate-ellipsis">
-								            <a class="ajaxLinkLoading" href="/tournaments/2799858-torneo1/participants/viewCard?p_id=2799880&amp;e_id=2799871">`+roles[j].pareja1.nombreparticipante2+`
+								            <a class="ajaxLinkLoading" >`+roles[j].pareja1.nombreparticipante2+`
 								            </a>
 							            </div>
 						            </div>
-					            </div>
-			           			 <div class="d-lg-flex mr-0 mr0 d-none d-sm-block"><div class="media-right hw-30p hw-sm-40p ml-3 "><a class="image-popup" href="/media/defaults/profile_nophoto.png"><img height="50px" width="50px" class="img-fluid rounded-circle" src="/media/defaults/profile_nophoto.png" alt=""></a></div><div class="media-right media2 hw-30p hw-sm-40p mt-dmd-m15p ml-lg-m10p ml-3 "><a class="image-popup" href="/media/defaults/profile_nophoto.png"><img height="50px" width="50px" class="img-fluid rounded-circle" src="/media/defaults/profile_nophoto.png" alt=""></a></div></div></div>        </div>
+					            </div>`;
+			           			html+=`
+			           			 <div class="d-lg-flex mr-0 mr0 d-none d-sm-block"><div class="media-right hw-30p hw-sm-40p ml-3 ">
+				           			 <a class="image-popup" >
+					          	  		<img height="50px" width="50px" class="img-fluid " style="border-radius:10px;" src="`+roles[j].pareja1.foto1+`" alt="">
+				           			 </a>
+			           			 </div>
+			           			 <div class="media-right media2 hw-30p hw-sm-40p mt-dmd-m15p ml-lg-m10p  ">
+				           			 <a class="image-popup" >
+					          	  		<img height="50px" width="50px" class="img-fluid " style="border-radius:10px;" src="`+roles[j].pareja1.foto2+`" alt="">
+				           			 </a>
+			           			 </div>
+			           			 </div>
+			           			 </div>`;       
+			           	
+			           		html+=` </div>
 					        <div class="text-center col col-md-2">
 					            <span class="font-weight-bold">-</span><br>
 					        </div>
 
 			        <div class="col">
 			            <div class="media media-players "><div class="d-lg-flex mr-0 mr0 d-none d-sm-block">
-				            <div class="media-left hw-30p hw-sm-40p "><a class="image-popup" href="/media/defaults/profile_nophoto.png"><img height="50px" width="50px" class="img-fluid rounded-circle" src="/media/defaults/profile_nophoto.png" alt=""></a></div><div class="media-left media2 hw-30p hw-sm-40p mt-dmd-m15p ml-lg-m10p mr-3 "><a class="image-popup" href="/media/defaults/profile_nophoto.png"><img height="50px" width="50px" class="img-fluid rounded-circle" src="/media/defaults/profile_nophoto.png" alt=""></a></div></div><div class="media-body  players-names text-truncate">
+				            <div class="media-left hw-30p hw-sm-40p ">
+				            	<a class="image-popup" >
+					          	  <img height="50px" width="50px" class="img-fluid " style="border-radius:10px;" src="`+roles[j].pareja2.foto1+`" alt="">
+					            </a>
+				            </div>
+				            <div class="media-left media2 hw-30p hw-sm-40p mt-dmd-m15p ml-lg-m10p mr-3 ">
+					            <a class="image-popup" >
+					           	 <img height="50px" width="50px" class="img-fluid " style="border-radius:10px;" src="`+roles[j].pareja2.foto2+`" alt="">
+					            </a>
+				            </div>
+				            </div>
+				            <div class="media-body  players-names text-truncate">
 					            <div class="player text-truncate-container h-osm-45p h-omd-45p h-oxs-35p d-block"><div class="text-truncate-ellipsis">
-						            <a class="ajaxLinkLoading" href="/tournaments/2799858-torneo1/participants/viewCard?p_id=2799874&amp;e_id=2799871">`+roles[j].pareja2.nombreparticipante1+`
+						            <a class="ajaxLinkLoading" >`+roles[j].pareja2.nombreparticipante1+`
 						            </a>
 					            </div>
 				            </div>
 				            <div class="player player2 text-truncate-container d-block mt-dmd-m15p">
 					            <div class="text-truncate-ellipsis">
-						            <a class="ajaxLinkLoading" href="/tournaments/2799858-torneo1/participants/viewCard?p_id=2799874&amp;e_id=2799871">`+roles[j].pareja2.nombreparticipante2+`
+						            <a class="ajaxLinkLoading" >`+roles[j].pareja2.nombreparticipante2+`
 						            </a>
 					            </div>
 				            </div>
@@ -1412,9 +1459,15 @@ function PintarRounRobind(respuesta) {
 								</div>               
 
 							 </div>
+
+							  <div class="row">
+							  	<div class="col">Horario</div>
+							   </div>
 			    
 			           
 			    </div>
+
+
 
 
 						`;
@@ -1451,6 +1504,100 @@ function PintarRounRobind(respuesta) {
 			}
 		}
 	}
+}
 
 	$(".roles").html(html);
+}
+
+function GenerarRolLlaves() {
+		var idservicio=$("#v_servicio").val();
+
+		$("#writeHere").html('');
+		var arrayparejas=[];
+		$(".nuevapareja").each(function() {
+
+			  var id=$(this).attr('id');
+			  var dividir=id.split('_')[1];
+			  
+			  var idparti1=$("#participante_"+dividir+"_0").val();
+			  var idparti2=$("#participante_"+dividir+"_1").val();
+			  var nombreparticipante1=$("#participante_"+dividir+"_0 option:selected" ).text();
+			  var nombreparticipante2=$("#participante_"+dividir+"_1 option:selected" ).text();
+			  var numeropareja=$(".ordenar_"+dividir+"_0").text();
+			  var parejas={
+			  	numeropareja:numeropareja,
+			  	participante1:idparti1,
+			  	participante2:idparti2,
+			  	nombreparticipante1:nombreparticipante1,
+			  	nombreparticipante2:nombreparticipante2
+			  };
+
+			  arrayparejas.push(parejas);
+			});
+	    var datos="idservicio="+idservicio+"&arrayparejas="+JSON.stringify(arrayparejas);
+
+			$.ajax({
+					url:'catalogos/armarjuego/roldejuegollaves.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos
+					data: datos, //Le pasamos el objeto que creamos con los archivos
+					dataType:'json',
+					async:false,
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						var error;
+						console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+						},
+						success:function(msj){
+							var respuesta=msj.respuesta;
+							roldejuegollaves=respuesta;
+							console.log(respuesta);
+						//$(".roles").html(msj);
+							Creacionllave(respuesta);
+						
+						}
+					});
+}
+
+
+function GuardarJuego(form_usuario,regreso,donde,idmenumodulo) {
+	if(confirm("\u00BFEstas seguro de querer realizar esta operaci\u00f3n?"))
+	{
+		var datos = ObtenerDatosFormulario(form_usuario);//obteniedo los datos del formulario
+		datos+="&parejas="+JSON.stringify(arrayparejas);
+		datos+="&rolesdejuego="+JSON.stringify(roljuego);
+		datos+="&roljuegollaves="+JSON.stringify(roljuegollaves);
+
+		//$('#abc').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Cargando...</div>');
+	
+		//setTimeout(function(){
+				  $.ajax({
+					  type: 'POST',
+					  url:'catalogos/armarjuego/ga_juego.php', //Url a donde la enviaremos
+					  data: datos,
+					  error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						 aparecermodulos(regreso+"?ac=0&msj=Error. "+msj,donde);
+
+					  },
+					  success:function(msj){
+						   console.log("El resultado de msj es: "+msj);
+						  if ( msj == 1 ){
+							 
+							  //aparecermodulos(regreso+"?ac=1&msj=Operacion realizada con exito&idmenumodulo="+idmenumodulo,donde);
+						  }
+						  else{
+							
+							 //aparecermodulos(regreso+"?ac=0&msj=Error. "+msj,donde);
+						  }	
+					  }
+				  });				  					  
+		//},1000);
+	}
 }

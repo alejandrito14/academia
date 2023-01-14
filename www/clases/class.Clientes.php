@@ -378,7 +378,7 @@ class Clientes
 	
 	public function buscarMovimientoMonedero()
 	{
-		$sql = "SELECT * FROM cliente_monedero WHERE idcliente_monedero = '$this->idcliente_monedero'";
+		$sql = "SELECT * FROM monedero WHERE idmonedero = '$this->idcliente_monedero'";
 		$resp = $this->db->consulta($sql);
 		return $resp;
 	}

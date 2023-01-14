@@ -1,6 +1,8 @@
 var descuentosaplicados=[];
 var descuentosmembresia=[];
 var arraycomentarios=[];
+var resultimagendatosfactura=[];
+
 function ObtenerTotalPagos() {
 	var pagina = "ObtenerTodosPagos.php";
 	var id_user=localStorage.getItem('id_user');
@@ -291,18 +293,45 @@ function CargarPagosElegidos() {
 function Cargartipopago(tipodepagoseleccionado) {
 
 
-    var pagina = "obtenertipodepagos.php";
-
+    var pagina = "obtenertipodepagos2.php";
+    var datos="tipo=0";
     $.ajax({
     type: 'POST',
     dataType: 'json',
     url: urlphp+pagina,
+    data:datos,
     async:false,
     success: function(datos){
 
       var opciones=datos.respuesta;
         
       Pintartipodepagos(opciones,tipodepagoseleccionado);
+
+    },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+      var error;
+        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+    }
+
+  });
+}
+
+function CargartipopagoFactura(tipodepagoseleccionado) {
+   var pagina = "obtenertipodepagos2.php";
+    var datos="tipo=1";
+    $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+    data:datos,
+    async:false,
+    success: function(datos){
+
+      var opciones=datos.respuesta;
+        
+            Pintartipodepagos(opciones,tipodepagoseleccionado);
 
     },error: function(XMLHttpRequest, textStatus, errorThrown){ 
       var error;
@@ -444,10 +473,13 @@ function CalcularTotales() {
 	  $(".lblresumen").text(formato_numero(resta,2,'.',','));
     $(".lbltotal").text(formato_numero(sumaconcomision,2,'.',','));
     var suma=localStorage.getItem('sumatotalapagar');
-    if (suma==0) {
-
-      $("#btnpagarresumen").attr('disabled',false);
+    
+    if (suma==0 ) {
+    
+        $("#btnpagarresumen").attr('disabled',false);
     }
+
+
 }
 
 
@@ -728,6 +760,7 @@ function HabilitarOpcionespago(idtipodepago,foto,stripe,habilitarcampo,habilitar
        localStorage.setItem('impuesto',0);
        localStorage.setItem('datostarjeta2','');
        localStorage.setItem('datostarjeta','');
+      localStorage.setItem('campomonto',0);
 
   }
 
@@ -736,6 +769,15 @@ function HabilitarOpcionespago(idtipodepago,foto,stripe,habilitarcampo,habilitar
 
 }
 function CargarOpcionesTipopago() {
+
+  if($(".opccard")){
+      $(".opccard").each(function(){
+          $(this).attr('checked',false);
+
+      });
+  }
+  
+
 	var idtipopago=$("#tipopago").val();
 	var datos="idtipopago="+idtipopago;
 	var pagina="Cargartipopago.php";
@@ -744,6 +786,7 @@ function CargarOpcionesTipopago() {
     $("#divlistadotarjetas").css('display','none');
     $$("#btnpagarresumen").prop('disabled',true);
     $("#aparecerimagen").css('display','none');
+    $("#campomonto").css('display','none');
       localStorage.setItem('comisionmonto',0);
       localStorage.setItem('comisionporcentaje',0);
       localStorage.setItem('impuesto',0);
@@ -753,6 +796,7 @@ function CargarOpcionesTipopago() {
       localStorage.setItem('comisionpornota',0);
       localStorage.setItem('tipocomisionpornota',0);
       localStorage.setItem('cambio',0);
+      localStorage.setItem('idtipodepago',0);
   if (idtipopago>0) {
   
       $.ajax({
@@ -871,7 +915,7 @@ function CargarOpcionesTipopago() {
 
     });
   }else{
-
+    ObtenerDescuentosRelacionados();
     CalcularTotales();
   }
 }
@@ -1242,6 +1286,11 @@ function RealizarCargo() {
    var comisionpornota=localStorage.getItem('comisionpornota');
    var comisionnota=localStorage.getItem('comisionnota');
    var tipocomisionpornota=localStorage.getItem('tipocomisionpornota');
+   var requierefactura=$("#requierefactura").is(':checked')?1:0;
+   var idusuariosdatosfiscales=0; 
+
+
+
      $(".opccard").each(function(){
               if($(this).is(':checked')){
 
@@ -1263,13 +1312,25 @@ function RealizarCargo() {
           bandera=0;
         }
       }
-   var datos='pagos='+localStorage.getItem('pagos')+"&id_user="+iduser+"&constripe="+constripe+"&idtipodepago="+idtipodepago+"&descuentocupon="+descuentocupon+"&codigocupon="+codigocupon+"&descuentosaplicados="+JSON.stringify(descuentosaplicados)+"&sumatotalapagar="+sumatotalapagar+"&comision="+comision+"&comisionmonto="+comisionmonto+"&comisiontotal="+comisiontotal+"&impuestototal="+impuestototal+"&subtotalsincomision="+subtotalsincomision+"&impuesto="+impuesto+"&descuentosmembresia="+JSON.stringify(descuentosmembresia);
+
+       if (requierefactura==1) {
+        idusuariosdatosfiscales=localStorage.getItem('idusuariosdatosfiscales');
+        if (idusuariosdatosfiscales==0 || idusuariosdatosfiscales==undefined) {
+          bandera=0;
+        }
+      
+     }
+
+     console.log(descuentosaplicados);
+   var datos='pagos='+localStorage.getItem('pagos')+"&id_user="+iduser+"&constripe="+constripe+"&idtipodepago="+idtipodepago+"&descuentocupon="+descuentocupon+"&codigocupon="+codigocupon+"&sumatotalapagar="+sumatotalapagar+"&comision="+comision+"&comisionmonto="+comisionmonto+"&comisiontotal="+comisiontotal+"&impuestototal="+impuestototal+"&subtotalsincomision="+subtotalsincomision+"&impuesto="+impuesto+"&descuentosmembresia="+JSON.stringify(descuentosmembresia);
       datos+='&confoto='+confoto+"&rutacomprobante="+rutacomprobante+"&comentarioimagenes="+comentarioimagenes;
       datos+='&campomonto='+campomonto+'&montovisual='+montovisual+'&cambiomonto='+cambiomonto;
       datos+='&comisionpornota='+comisionpornota+"&comisionnota="+comisionnota+"&tipocomisionpornota="+tipocomisionpornota;
       datos+='&datostarjeta2='+datostarjeta2+"&monedero="+monedero;
       datos+='&datostarjeta='+datostarjeta;
-
+      datos+='&requierefactura='+requierefactura;
+      datos+='&idusuariosdatosfiscales='+idusuariosdatosfiscales;
+      datos+='&descuentosaplicados='+JSON.stringify(descuentosaplicados);
     pagina = urlphp+pagina;
     if (bandera==1) {
           $(".dialog-buttons").css('display','none');
@@ -1286,7 +1347,7 @@ function RealizarCargo() {
         mensaje=data.mensaje;
         pedido=data.idnotapago;
 
-      
+        localStorage.removeItem('idusuariosdatosfiscales');
       },error: function(XMLHttpRequest, textStatus, errorThrown){ 
                         var error;
                         if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
@@ -1404,6 +1465,7 @@ function RealizarCargo() {
 
 
                }else{
+                      var mensaje = "Opps,se produjo un error.Intenta más tarde";
 
 
                           $(".mensajeproceso").css('display','none');
@@ -1412,7 +1474,7 @@ function RealizarCargo() {
                           $(".butonok").css('display','none');
                           $(".butoerror").css('display','block');
 
-                alerta('',mensaje);
+                      alerta('',mensaje);
                }
 
                 
@@ -1429,6 +1491,16 @@ function RealizarCargo() {
                         alerta('','Falta por subir comprobante');
                       }
               }
+
+
+               if (requierefactura==1) {
+                idusuariosdatosfiscales=localStorage.getItem('idusuariosdatosfiscales');
+                if (idusuariosdatosfiscales==0 || idusuariosdatosfiscales==undefined) {
+                      alerta('','Falta por seleccionar dato fiscal');
+
+                }
+              
+             }
 
           }
         
@@ -1470,7 +1542,7 @@ function ObtenerDescuentosRelacionados() {
 
       var resultado=res.descuentos;
       descuentosaplicados=[];
-
+      localStorage.setItem('idtipodepago',-1);
       PintarDescuentos(resultado);
        ObtenerDescuentoMembresia();
       
@@ -1495,6 +1567,7 @@ function PintarDescuentos(respuesta) {
 
  if (respuesta.length>0) {
     descuentosaplicados=respuesta;
+    console.log(descuentosaplicados);
     $("#visualizardescuentos").css('display','block');
 
   for (var i = 0; i <respuesta.length; i++) {
@@ -2056,10 +2129,109 @@ function ColocarComentarioComprobante(i) {
           opened: function (sheet) {
             console.log('Sheet opened');
           },
+
+         
         }
       });
 
       dynamicSheet.open();
+}
+
+function PintarDatofiscalElegido() {
+  
+  if (localStorage.getItem('idusuariosdatosfiscales')!=null && localStorage.getItem('idusuariosdatosfiscales')>0 ) {
+      var pagina = "Obtenerdatofiscal.php";
+      var id_user=localStorage.getItem('id_user');
+      var idusuariosdatosfiscales=localStorage.getItem('idusuariosdatosfiscales');
+      var datos="idusuariosdatosfiscales="+idusuariosdatosfiscales+"&id_user="+id_user;
+      $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: urlphp+pagina,
+      data:datos,
+      async:false,
+      success: function(resp){
+        var respuesta=resp.respuesta;
+        var razonsocial=respuesta.razonsocial;
+        var rfc=respuesta.rfc;
+        var email=respuesta.correo;
+        var codigopostal=respuesta.codigopostal;
+        var pais=respuesta.pais;
+        var estado=respuesta.estado;
+        var municipio=respuesta.municipio;
+        var colonia=respuesta.colonia;
+        var calle=respuesta.direccion;
+        var noexterior=respuesta.noexterior;
+        var nointerior=respuesta.nointerior;
+        var formapago=respuesta.formapago;
+        var metodopago=respuesta.metodopago;
+        var usocfdi=respuesta.usocfdi;
+        var idusuariosdatosfiscales=respuesta.idusuariosdatosfiscales;
+        var imagen=resp.imagenes[0];
+
+
+        urlimagen=urlphp+`upload/datosfactura/`+imagen.ruta;
+   
+
+    var  html=`<li style="border-radius: 10px;margin-bottom: 1em;background: white;border-radius: 10px;" class="listadatosfactura"  id="listadatosfactura_" >
+            <label class="label-radio item-content">                                                                               
+              <div class="item-inner" style="width:90%;">
+             
+                <div class="row">
+                <div class="row">
+                        <div class="col-20" style="margin:0;padding:0;">
+                          <figure class="avatar   rounded-10">
+                          <img src="`+urlimagen+`" alt="" style="width:60px;height:60px;">
+                          </figure>
+                        </div>
+                        
+                          <div class="col-50" style="margin:0;padding:0;">
+                            <div class="col-100 item-text" style="margin-left: 1em;font-size:14px;" id="participante_">`+respuesta.razonsocial+`
+                            </div>
+                         
+                            <div class="col-100 item-text" style="font-size:14px;margin-left: 1em;" id="correo_">`+respuesta.rfc+`
+                            </div>
+                        
+                            <div class=" col-100 item-text" style="font-size:14px;margin-left: 1em;">`+respuesta.correo+`</div>
+                            
+                            <div class=" col-100 item-text" style="font-size:14px;margin-left: 1em;">`+respuesta.codigopostal+`</div>
+ 
+                            </div>
+                            <div class="col-10" style="margin:0;padding:0;">
+                             
+                            </div>
+                            <div class="col-10" style="margin:0;padding:0;">
+
+                             
+                            </div>
+
+                            <div class="col-10 factura_" style="padding:0;" >
+
+                            </div>
+
+                            </div>
+                 
+                         </div>
+                        </div>
+                    </label>
+                 </li>
+                `;
+
+                $(".lidatosfacturaelegido").html(html);
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                  //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                  console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+            }
+      });
+  
+  }else{
+
+    $(".listadatosfactura").remove();
+
+  }
 }
 
 function GuardarComentario(i) {
@@ -2258,3 +2430,1521 @@ function GuardarMonto2() {
 function CancelarMonto() {
    app.dialog.close();
 }
+
+
+function RequiereFactura() {
+
+  $("#listadotarjetas").html('');
+  CargarOpcionesTipopago();
+  if ($("#requierefactura").is(':checked')) {
+
+    AbrirModalDatos();
+    CargartipopagoFactura(0)
+
+  }else{
+
+    Cargartipopago(0);
+    $(".lidatosfacturaelegido").html('');
+    if(localStorage.getItem('idusuariosdatosfiscales')!=undefined) {
+      localStorage.removeItem('idusuariosdatosfiscales');
+    }
+  }
+
+    $(".lidatosfactura").html('');
+    CargarOpcionesTipopago();
+    HabilitarOpcionespago(0,0,0,0,0);
+    CalcularTotales();
+}
+
+function AbrirModalDatos() {
+  var html="";
+
+  html+=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: none;">
+            <div class="toolbar">
+              <div class="toolbar-inner">
+                <div class="left"></div>
+                <div class="right">
+                  <a class="link sheet-close"></a>
+                </div>
+              </div> 
+            </div>
+            <div class="sheet-modal-inner" style="background: white;border-top-left-radius: 20px;border-top-right-radius:20px; ">
+              <div class="iconocerrar link sheet-close" style="z-index:100;">
+                    <span class="bi bi-x-circle-fill"></span>
+                       </div>
+
+              <div class="" style="height: 100%;">
+                   <div class="row">
+                     <div class="col-20">
+                        
+                    </div>
+
+                     <div class="col-60">
+                     <span class="titulomodal"></span>
+                     </div>
+                     <div class="col-20">
+                     <span class="limpiarfiltros"></span>
+                     </div>
+                 </div>
+                <div class="page-content" style="background: white; height: 100%;width: 100%;border-radius: 20px;">
+              
+                 <div class="" style="position: absolute;top:2em;width: 100%;">
+                  
+                    <div class="">
+                      <div class="block" style="margin-right:1em;margin-left:1em;">
+
+                        `;
+        
+
+                    html+=`
+                    <div class="formulario" style="display:none">
+                    <h3 style="text-align:center;font-size:22px;margin-bottom:1em;">Datos de facturación</h3>
+                        <div class="row">
+                        <form class="was-validated needs-validation">
+                            <div class="list form-list no-margin margin-bottom">
+                              <ul>
+                                <input type="hidden" id="v_idfactura" value="0"/>
+                                <li class="item-content item-input lirazonsocial is-valid">
+                                <div class="item-inner">
+                                <div class="item-title item-floating-label" id="flotante">Razon social</div>
+                                <div class="item-input-wrap">
+                                     <input type="text"   id="v_razonsocial">
+                                     <span class="input-clear-button">
+                                     </span>
+                                  </div>
+                                </div>
+                                </li>
+
+                                 <li class="item-content item-input lirfc is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Rfc</div>
+                                  <div class="item-input-wrap">
+                                  <input type="text"  id="v_rfc">
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+
+
+                                 <li class="item-content item-input liemail is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Email</div>
+                                  <div class="item-input-wrap">
+                                  <input type="text"   id="v_email">
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+
+                                <li class="item-content item-input licodigopostal is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Código postal</div>
+                                  <div class="item-input-wrap">
+                                  <input type="text"   id="v_codigopostal" onkeyup="Buscarcodigo()">
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+
+                                <li class="item-content item-input lipais is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">País</div>
+                                  <div class="item-input-wrap">
+                                  <select id="v_pais" onchange="ObtenerEstado(0,$(this).val())"></select>
+                                       
+                                    </div>
+                                  </div>
+                                </li>
+
+                                 <li class="item-content item-input liestado is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Estado</div>
+                                  <div class="item-input-wrap">
+                                  <select name="v_estado" id="v_estado" onchange="ObtenerMunicipios(0,$(this).val())"></select>
+                                  
+                                    </div>
+                                  </div>
+                                </li>
+
+                                 <li class="item-content item-input limunicipio is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Municipio</div>
+                                  <div class="item-input-wrap">
+                                  <select name="v_municipio" id="v_municipio"></select>
+                                 
+                                    </div>
+                                  </div>
+                                </li>
+
+                                 <li class="item-content item-input licolonia is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Asentamiento</div>
+                                  <div class="item-input-wrap">
+                                  <input type="text"   id="v_colonia" onclick="FiltrarColonias()">
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+
+                                 <li class="item-content item-input licalle is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Calle</div>
+                                  <div class="item-input-wrap">
+                                  <input type="text"   id="v_calle">
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+
+                                 <li class="item-content item-input linoexterior is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">No. exterior</div>
+                                  <div class="item-input-wrap">
+                                  <input type="text"   id="v_noexterior">
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+                                 <li class="item-content item-input linointerior is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">No. interior</div>
+                                  <div class="item-input-wrap">
+                                  <input type="text"   id="v_nointerior">
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+
+                                <li class="item-content item-input liformapago is-valid item-input-with-value">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Forma de pago</div>
+                                  <div class="item-input-wrap">
+                                  <select name="" id="v_formapago"></select>
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+
+                                <li class="item-content item-input limetodopago is-valid item-input-with-value">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Método de pago</div>
+                                  <div class="item-input-wrap">
+                                        <select name="" id="v_metodopago"></select>
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+
+                                <li class="item-content item-input liusocfdi is-valid item-input-with-value">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Uso de cfdi</div>
+                                  <div class="item-input-wrap">
+                                        <select name="" id="v_usocfdi"></select>
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+
+                                
+                                
+                              </ul>
+                            </div>
+
+                        </form>
+                        </div>
+                        <div class="row">
+                          <div class="" id="vimagen" style="display:none;"></div>
+                        </div>
+                        <div class="row">
+                          <a id="btnsubirimagen" onclick="AbrirModalImagenDatosFactura()" style="border-radius: 10px;
+                          height: 60px;margin-left:1em;margin-right:1em;" class="button button-fill button-large button-raised margin-bottom color-theme">
+                            <div class="fab-text">Subir imagen de constancia (SAT)</div>
+                          </a>
+                        </div>
+
+                         <div class="row" style="margin-bottom:1em;margin-top:3em;">
+
+                           <a id="btnguardardatosfactura" onclick="GuardarDatosfactura()" style="border-radius: 10px;
+                            height: 60px;margin-left:1em;margin-right:1em" class="button button-fill button-large button-raised margin-bottom color-theme">
+                              <div class="fab-text">Guardar</div>
+                            </a>
+
+                            <a id="btnregresar" onclick="RegresarFormfactura()" style="border-radius: 10px;
+                            height: 60px;margin-left:1em;margin-right:1em" class="button button-fill button-large button-raised margin-bottom color-theme">
+                              <div class="fab-text">Cancelar</div>
+                            </a>
+                          </div>
+
+                    </div>
+                    <div class="divcolonias" style="display:none;">
+
+                       <form class="searchbar bordesredondeados" style="background: #ffffff!important;margin-left: 1em;margin-right: 1em;">
+                        <div class="searchbar-inner">
+                          <div class="searchbar-input-wrap">
+                            <input type="search" placeholder="Buscar asentamiento" id="buscador4" style="font-size: 16px;background: white;" />
+                            <i class="searchbar-icon"></i>
+                            <span class="input-clear-button" onclick="Vertodoscolonia()" ></span>
+                          </div>
+                          <span class="searchbar-disable-button if-not-aurora">Cancel</span>
+                        </div>
+                      </form>
+
+                      <div class="list media-list" style="margin-top: 1em;">
+
+                        <ul id="listadocolonias" style="font-size: 14px;"></ul>
+                         <a id="btnseleccionar" onclick="GuardarColonia()" style="border-radius: 10px;
+                            height: 60px;color: white;" class="button button-fill button-large button-raised margin-bottom color-theme">
+                              <div class="fab-text">Aceptar</div>
+                            </a>
+                      </div>
+                    </div>
+
+
+                    <div class="divlistadodatosfiscales" >
+                         <div class="list media-list" style="margin-top: 1em;">
+
+                           <ul id="listadodatosfiscales" style="font-size: 14px;"></ul>
+                            
+
+                            
+                        </div>
+                    </div>
+
+                   
+
+
+                    </div>
+                    </div>
+                 </div>
+              </div>
+                    
+                  </div>
+                </div>
+              </div>`;
+    dynamicSheet2 = app.sheet.create({
+        content: html,
+      swipeToClose: true,
+        backdrop: true,
+        // Events
+        on: {
+          open: function (sheet) {
+              ObtenerDatosfiscales();
+              ObtenerMetodoPago();
+              ObtenerFormaPago();
+              ObtenerPais(0);
+              ObtenerUsoCfdi();
+              $(".lipais").addClass('item-input-focused');
+
+
+          },
+          opened: function (sheet) {
+            console.log('Sheet opened');
+          },
+
+           close:function (sheet) {
+             PintarDatofiscalElegido();
+            
+           },
+
+           closed:function (sheet) {
+             if (localStorage.getItem('idusuariosdatosfiscales')==undefined) {
+                
+                 $("#requierefactura").prop('checked', false);
+             }
+
+              if ($("#requierefactura").is(':checked')) {
+
+                    CargartipopagoFactura(0)
+
+                  }else{
+
+                    Cargartipopago(0);
+                    $(".lidatosfacturaelegido").html('');
+                    if(localStorage.getItem('idusuariosdatosfiscales')!=undefined) {
+                      localStorage.removeItem('idusuariosdatosfiscales');
+                    }
+                  }
+
+          },
+        }
+      });
+
+       dynamicSheet2.open();
+
+}
+function ObtenerDatosfiscales() {
+  var pagina="ObtenerDatosfiscales.php";
+  var idusuario=localStorage.getItem('id_user');
+  var datos="idusuario="+idusuario;
+
+  $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+    data:datos,
+    async:false,
+    success: function(res){
+      var respuesta=res.respuesta;
+
+      PintarDatosfiscales(respuesta);
+
+    },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+      var error;
+        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+          }
+    });
+}
+
+
+
+function ObtenerColoniasFactura() {
+
+  var pagina="ObtenerColonias2.php";
+  var codigopostal=$("#v_codigopostal").val();
+  var idpais=$("#v_pais").val();
+  var idestado=$("#v_estado").val();
+  var idmunicipio=$("#v_municipio").val();
+  var tipoasen=0;
+  var codigopostal=$("#v_codigopostal").val();
+
+  var datos="idpais="+idpais+"&idestado="+idestado+"&idmunicipio="+idmunicipio+"&tipoasen="+tipoasen+"&v_codigopostal="+codigopostal;
+  $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+    data:datos,
+    async:false,
+    success: function(datos){
+    
+      console.log(datos);
+
+      var respuesta=datos.respuesta;
+
+      PintarColoniasFactura(respuesta);
+
+    },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+      var error;
+        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+          }
+    });
+
+  }
+
+
+  function PintarColoniasFactura(datos) {
+  
+    var html="";
+
+    if (datos.length>0) {
+    for (var i = 0; i <datos.length; i++) {
+      
+          localStorage.setItem('listadocolonias',JSON.stringify(datos));
+
+        html+=`  <li class="coloniasli clasescolonia`+datos[i].idcodigopostal+`">
+
+            <label class="" style="">
+                 <input type="checkbox" name="my-radio" class="colonias" onchange="Seleccionar1(\'`+datos[i].asenta+`\',\'`+datos[i].tipo_asenta+`\',`+i+`)"  id="colonia_`+i+`" style="display: block!important;float: left;top: 1em;position: absolute; margin-left: 1em;">
+                 <div class="item-content">
+              <div class="item-inner">
+               
+                <div class="item-text" style="margin-left: 1em;padding-top: 0.1em;" onclick="Seleccionar1(\'`+datos[i].asenta+`\',\'`+datos[i].tipo_asenta+`\',`+i+`)">
+                <label>`+datos[i].tipo_asenta+` `+datos[i].asenta+`</label>`
+                +`
+                </div>
+
+              </div>
+               <div class="item-after">
+                
+                </div>
+                </div>
+            </label>
+          </li>`;
+    }
+
+  html+=`
+    <li class="coloniasli clasescolonia0" style="display:none;">
+
+    <label class="label-radio item-content">
+              <div class="item-inner">
+               
+                <div class="item-text" style="margin-left: 1em;" id="colonia_">
+                <label>NO SE ENCONTRARON COINCIDENCIAS
+                </div>
+
+              </div>
+               <div class="item-after">
+                
+                </div>
+            </label>
+            </li>`;
+
+  }else{
+
+
+
+    html=`
+    <li>
+
+    <label class="label-radio item-content">
+              <div class="item-inner">
+               
+                <div class="item-text" style="margin-left: 1em;" id="colonia_">
+                <label>NO SE ENCONTRARON COLONIAS
+                </div>
+
+              </div>
+               <div class="item-after">
+                
+                </div>
+            </label>
+            </li>`;
+
+
+  }
+
+  
+  $("#listadocolonias").html(html);
+
+  }
+
+function GuardarColonia() {
+   $(".formulario").css('display','block');
+   $(".divcolonias").css('display','none');
+
+
+     if(localStorage.getItem('asenta')!==undefined && localStorage.getItem('asenta')!=''){
+
+          var asenta=localStorage.getItem('asenta');
+
+          $("#v_colonia").val(asenta);
+          $(".licolonia").addClass('item-input-focused');
+
+        }
+    
+
+
+}
+function FiltrarColonias() {
+  $(".formulario").css('display','none');
+  $(".divcolonias").css('display','block');
+
+   var codigopostal=$("#v_codigopostal").val();
+  var idpais=$("#v_pais").val();
+  var idestado=$("#v_estado").val();
+  var idmunicipio=$("#v_municipio").val();
+  var tipoasen=0;
+  var codigopostal=$("#v_codigopostal").val();
+  if (codigopostal!='' && idpais!='' && idpais>0 && idestado!='' && idestado>0 && idmunicipio!='' && idmunicipio>0) {
+
+   ObtenerColoniasFactura(); 
+   $$("#buscador4").attr('onkeyup','Buscarcolonia()');
+   $("#buscador4").val('');
+
+  }
+  
+  
+             
+
+}
+var arraydatosfactura=[];
+function GuardarDatosfactura(valor) {
+
+   $(".lirazonsocial").removeClass('is-invalid');
+      $(".lirfc").removeClass('is-invalid');
+      $(".liemail").removeClass('is-invalid');
+      $(".licodigopostal").removeClass('is-invalid');
+      $(".lipais").removeClass('is-invalid');
+      $(".liestado").removeClass('is-invalid');
+      $(".limunicipio").removeClass('is-invalid');
+      $(".licolonia").removeClass('is-invalid');
+      $(".licalle").removeClass('is-invalid');
+      $(".linoexterior").removeClass('is-invalid');
+      $(".liformapago").removeClass('is-invalid');
+      $(".limetodopago").removeClass('is-invalid');
+      $(".liusocfdi").removeClass('is-invalid');
+      $(".lipais").removeClass('is-invalid');
+      $(".limunicipio").removeClass('is-invalid');
+      $(".liestado").removeClass('is-invalid');
+      $(".licalle").removeClass('is-invalid');
+      $(".licolonia").removeClass('is-invalid');
+
+      $(".lirazonsocial").addClass('is-valid');
+      $(".lirfc").addClass('is-valid');
+      $(".liemail").addClass('is-valid');
+      $(".licodigopostal").addClass('is-valid');
+      $(".lipais").addClass('is-valid');
+      $(".liestado").addClass('is-valid');
+      $(".limunicipio").addClass('is-valid');
+      $(".licolonia").addClass('is-valid');
+      $(".licalle").addClass('is-valid');
+      $(".linoexterior").addClass('is-valid');
+      $(".liformapago").addClass('is-valid');
+      $(".limetodopago").addClass('is-valid');
+      $(".liusocfdi").addClass('is-valid');
+      $(".lipais").addClass('is-valid');
+      $(".limunicipio").addClass('is-valid');
+      $(".liestado").addClass('is-valid');
+      $(".licalle").addClass('is-valid');
+      $(".licolonia").addClass('is-valid');
+
+
+  var razonsocial=$("#v_razonsocial").val();
+  var rfc=$("#v_rfc").val();
+  var email=$("#v_email").val();
+  var codigopostal=$("#v_codigopostal").val();
+  var formapago=$("#v_formapago").val();
+  var metodopago=$("#v_metodopago").val();
+  var v_pais=$("#v_pais").val();
+  var v_estado=$("#v_estado").val();
+  var v_municipio=$("#v_municipio").val();
+  var v_colonia=$("#v_colonia").val();
+  var v_calle=$("#v_calle").val();
+  var v_noexterior=$("#v_noexterior").val();
+  var v_nointerior=$("#v_nointerior").val();
+  var textovpais= $('#v_pais option:selected').text();
+  var textovestado= $('#v_estado option:selected').text();
+  var textovmunicipio=$("#v_municipio option:selected").text();
+  var id=$("#v_idfactura").val();
+  var v_usocfdi=$("#v_usocfdi").val();
+
+  var bandera=1;
+  var pagina="Guardardatosfiscales.php";
+   
+   var datos="id="+id+
+    "&razonsocial="+razonsocial+
+    "&v_rfc="+rfc+
+    "&v_correo="+email+
+    "&v_codigopostal="+codigopostal+
+    "&formapago="+formapago+
+    "&metodopago="+metodopago+
+    "&v_pais="+v_pais+
+    "&v_estado="+v_estado+
+    "&v_municipio="+v_municipio+
+    "&v_colonia="+v_colonia+
+    "&v_calle="+v_calle+
+    "&v_noexterior="+v_noexterior+
+    "&v_nointerior="+v_nointerior+
+    "&v_usocfdi="+v_usocfdi+
+    "&textovpais="+textovpais+
+    "&textovestado="+textovestado+
+    "&textovmunicipio="+textovmunicipio+
+    "&idusuario="+localStorage.getItem('id_user')+
+    "&imagendatosfactura="+resultimagendatosfactura;
+
+    if (resultimagendatosfactura.length==0) {
+      bandera=0;
+    }
+
+    if (razonsocial=='') {
+
+      bandera=0;
+    }
+
+    if (rfc=='') {
+      bandera=0;
+    }
+
+    if (email=='') {
+      bandera=0;
+    }
+    if (codigopostal=='') {
+      bandera=0;
+    }
+
+     if (v_pais==null) {
+      bandera=0;
+    }
+
+    if(v_estado==null) {
+      bandera=0;
+    }
+    if (v_municipio==null) {
+      bandera=0;
+    }
+    if (v_colonia=='') {
+      bandera=0;
+    }
+    if (v_calle=='') {
+      bandera=0;
+    }
+    if (formapago==null) {
+       bandera=0;
+    }
+
+     if (metodopago==null) {
+       bandera=0;
+    }
+
+    if(v_usocfdi==null) {
+       bandera=0;
+    }
+
+    if (bandera==1) {
+  $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+    data:datos,
+    async:false,
+    success: function(datos){
+    resultimagendatosfactura=[];
+      ObtenerDatosfiscales();
+     RegresarFormfactura();
+    
+    },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+      var error;
+        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+          }
+    });
+
+}else{
+
+  var msj="";
+
+      
+
+    if (razonsocial=='') {
+
+       $(".lirazonsocial").removeClass('is-valid');
+      $(".lirazonsocial").addClass('is-invalid');
+
+
+    }
+
+    if (rfc=='') {
+    $(".lirfc").removeClass('is-valid');
+      $(".lirfc").addClass('is-invalid');
+
+    }
+
+    if (email=='') {
+     $(".liemail").removeClass('is-valid');
+      $(".liemail").addClass('is-invalid');
+
+    }
+    if (codigopostal=='') {
+
+       $(".licodigopostal").removeClass('is-valid');
+      $(".licodigopostal").addClass('is-invalid');
+
+    }
+
+     if (v_pais==null) {
+
+       $(".lipais").removeClass('is-valid');
+      $(".lipais").addClass('is-invalid');
+
+    }
+
+
+    if(v_estado==null) {
+     
+       $(".liestado").removeClass('is-valid');
+      $(".liestado").addClass('is-invalid');
+
+    }
+    if (v_municipio==null) {
+      
+       $(".limunicipio").removeClass('is-valid');
+      $(".limunicipio").addClass('is-invalid');
+
+    }
+    if (v_colonia=='') {
+     $(".licolonia").removeClass('is-valid');
+      $(".licolonia").addClass('is-invalid');
+    }
+    if (v_calle=='') {
+     $(".licalle").removeClass('is-valid');
+     $(".licalle").addClass('is-invalid');
+    }
+
+
+     if (formapago==null) {
+        $(".liformapago").removeClass('is-valid');
+      $(".liformapago").addClass('is-invalid');
+
+    }
+
+     if (metodopago==null) {
+
+         $(".limetodopago").removeClass('is-valid');
+      $(".limetodopago").addClass('is-invalid');
+
+
+    }
+
+    if(v_usocfdi==null) {
+      
+       $(".liusocfdi").removeClass('is-valid');
+      $(".liusocfdi").addClass('is-invalid');
+
+
+    }
+    if (bandera==0) {
+
+      msj+="Te falta por agregar una opción obligatoria<br>";
+    }
+
+    if (resultimagendatosfactura.length==0) {
+      msj+="Falta por agregar al menos una imagen<br>";
+    }
+    alerta('',msj);
+
+
+  }
+  
+}
+
+function PintarDatosfiscales(respuesta) {
+  var html="";
+
+ 
+
+ if (respuesta.length>0) {
+  for (var i = 0; i <respuesta.length; i++) {
+
+      var imagenes=respuesta[i].imagenes;
+
+      if (imagenes.length>0) {
+              var imagen=urlphp+'upload/datosfactura/'+imagenes[0].ruta;
+
+            }else{
+
+             var imagen=urlimagendefaultservicio;
+
+            }
+
+      html+=`<li style="border-radius: 10px;margin-bottom: 1em;background: white;border-radius: 10px;" class="listadatosfactura"  id="listadatosfactura_`+respuesta[i].idusuariosdatosfiscales+`" >
+            <label class="label-radio item-content">                                                                               
+              <div class="item-inner" style="width:90%;">
+             
+                <div class="row">
+                <div class="row">
+                        <div class="col-20" style="margin:0;padding:0;">
+                          <figure class="avatar   rounded-10">
+                          <img src="`+imagen+`" alt="" style="width:60px;height:60px;">
+                          </figure>
+                        </div>
+                        
+                          <div class="col-50" style="margin:0;padding:0;">
+                            <div class="col-100 item-text" style="margin-left: 1em;font-size:14px;" id="participante_">`+respuesta[i].razonsocial+`
+                            </div>
+                         
+                            <div class="col-100 item-text" style="font-size:14px;margin-left: 1em;" id="correo_">`+respuesta[i].rfc+`
+                            </div>
+                        
+                            <div class=" col-100 item-text" style="font-size:14px;margin-left: 1em;">`+respuesta[i].correo+`</div>
+                            
+                            <div class=" col-100 item-text" style="font-size:14px;margin-left: 1em;">`+respuesta[i].codigopostal+`</div>
+ 
+                            </div>
+                            <div class="col-10" style="margin:0;padding:0;">
+                              <span class="botoneditar" onclick="Editardatosfactura(`+respuesta[i].idusuariosdatosfiscales+`)">
+                               <i class="bi-pencil-fill"></i>
+                              </span>
+
+                            </div>
+                            <div class="col-10" style="margin:0;padding:0;">
+
+                              <a class="botoneliminar" style="line-height:0;margin-top: 0;" onclick="Eliminardatosfactura(`+respuesta[i].idusuariosdatosfiscales+`)">
+                                 <i style="color:red;font-size:22px;" class="bi bi-trash-fill">
+                                 </i>
+                              </a>
+                            </div>
+
+                            <div class="col-10 factura_`+respuesta[i].idusuariosdatosfiscales+`" style="padding:0;" >
+                            <input type="checkbox" id="datosfactura_`+respuesta[i].idusuariosdatosfiscales+`" style="width: 30px;height: 20px;position: absolute;" class="checkdatosfactura" onchange="SeleccionarDatofiscal(`+respuesta[i].idusuariosdatosfiscales+`)" >
+
+                            </div>
+
+                            </div>
+                 
+                         </div>
+                        </div>
+                    </label>
+                 </li>
+                `;
+
+                
+  }
+ }
+
+  html+=`
+                      <div class="row">
+                          <a id="btnnuevodatofiscal" onclick="NuevoDatofiscal()" style="border-radius: 10px;
+                            height: 60px;color: white;margin-right:1em;margin-left:1em;" class="button button-fill button-large button-raised margin-bottom color-theme">
+                              <div class="fab-text">Nuevo dato fiscal</div>
+                            </a>
+                         </div>
+
+
+                          <div class="row">
+                          <a id="btnaceptarfiscal" onclick="Aceptardatofiscal()" style="border-radius: 10px;
+                            height: 60px;color: white;display:none;margin-right:1em;margin-left:1em;" class="button button-fill button-large button-raised margin-bottom color-theme">
+                              <div class="fab-text">ACEPTAR</div>
+                            </a>
+                         </div>
+                       
+                `;
+
+     
+
+      $("#listadodatosfiscales").html(html);
+}
+
+
+
+function SeleccionarDatofiscal(idusuariosdatosfiscales) {
+  
+  $(".checkdatosfactura").attr('checked',false);
+
+  if ($("#datosfactura_"+idusuariosdatosfiscales).is(':checked')) {
+  
+       $("#datosfactura_"+idusuariosdatosfiscales).attr('checked',false);
+       $("#btnaceptarfiscal").css('display','block');
+
+      }else{
+
+      $("#btnaceptarfiscal").css('display','none');
+      $("#datosfactura_"+idusuariosdatosfiscales).attr('checked',true);
+
+  }
+
+ 
+}
+
+function Aceptardatofiscal() {
+  var valor=0;
+  var idusuariosdatosfiscales=0;
+   $(".checkdatosfactura").each(function( index ) {
+          if($(this).is(':checked')){
+            var idelemento=$(this).attr('id');
+             idusuariosdatosfiscales=idelemento.split('_')[1];
+
+          }
+      });
+
+   if(idusuariosdatosfiscales>0) {
+
+      localStorage.setItem('idusuariosdatosfiscales',idusuariosdatosfiscales);
+
+    }else{
+
+    localStorage.removeItem('idusuariosdatosfiscales');
+  }
+  dynamicSheet2.close();
+}
+
+function Editardatosfactura(idusuariosdatosfiscales) {
+      var pagina = "Obtenerdatofiscal.php";
+      var id_user=localStorage.getItem('id_user');
+      var datos="idusuariosdatosfiscales="+idusuariosdatosfiscales+"&id_user="+id_user;
+      $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: urlphp+pagina,
+      data:datos,
+      async:false,
+      success: function(resp){
+        var respuesta=resp.respuesta;
+        resultimagendatosfactura=[];
+        NuevoDatofiscal();
+
+        var razonsocial=respuesta.razonsocial;
+        var rfc=respuesta.rfc;
+        var email=respuesta.correo;
+        var codigopostal=respuesta.codigopostal;
+        var pais=respuesta.pais;
+        var estado=respuesta.estado;
+        var municipio=respuesta.municipio;
+        var colonia=respuesta.colonia;
+        var calle=respuesta.direccion;
+        var noexterior=respuesta.noexterior;
+        var nointerior=respuesta.nointerior;
+        var formapago=respuesta.formapago;
+        var metodopago=respuesta.metodopago;
+        var usocfdi=respuesta.usocfdi;
+        var idusuariosdatosfiscales=respuesta.idusuariosdatosfiscales;
+        var imagenes=resp.imagenes;
+        $("#v_razonsocial").val(razonsocial);
+        $("#v_rfc").val(rfc);
+        $("#v_email").val(email);
+        $("#v_codigopostal").val(codigopostal);
+        Buscarcodigo();
+        $("#v_pais").val(pais);
+        $("#v_estado").val(estado);
+        $("#v_municipio").val(municipio);
+        $("#v_colonia").val(colonia);
+        $("#v_calle").val(calle);
+        $("#v_noexterior").val(noexterior);
+        $("#v_nointerior").val(nointerior);
+        $("#v_formapago").val(formapago);
+        $("#v_metodopago").val(metodopago);
+        $("#v_usocfdi").val(usocfdi);
+        $("#v_idfactura").val(idusuariosdatosfiscales);
+
+        $(".lirazonsocial").addClass('item-input-focused');
+        $(".lirfc").addClass('item-input-focused');
+        $(".liemail").addClass('item-input-focused');
+        $(".licolonia").addClass('item-input-focused');
+        $(".licalle").addClass('item-input-focused');
+        $(".linoexterior").addClass('item-input-focused');
+        $(".linointerior").addClass('item-input-focused');
+        $(".linointerior").addClass('item-input-focused');
+
+
+        if (imagenes.length>0) {
+
+          for (var i = 0; i < imagenes.length; i++) {
+            
+              var ruta=imagenes[i].ruta;
+              resultimagendatosfactura.push(ruta);
+          }
+
+          PintarlistaImagenfactura();
+        }
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                  //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                  console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+            }
+      });
+  
+
+ } 
+
+
+
+
+
+function NuevoDatofiscal() {
+  $("#v_idfactura").val(0);
+   $("#v_razonsocial").val('');
+   $("#v_rfc").val('');
+   $("#v_email").val('');
+   $("#v_codigopostal").val('');
+   $("#v_pais").val('');
+   $("#v_estado").val('');
+   $("#v_municipio").val('');
+   $("#v_colonia").val('');
+   $("#v_calle").val('');
+   $("#v_noexterior").val('');
+   $("#v_nointerior").val('');
+   $("#v_formapago").val('');
+   $("#v_metodopago").val('');
+   $("#v_usocfdi").val('');
+
+
+  $(".formulario").css('display','block');
+  $(".divcolonias").css('display','none');
+  $(".divlistadodatosfiscales").css('display','none');
+}
+
+function RegresarFormfactura() {
+  $(".formulario").css('display','none');
+  $(".divcolonias").css('display','none');
+  $(".divlistadodatosfiscales").css('display','block');
+}
+
+function ObtenerMetodoPago() {
+
+    var pagina = "Obtenermetodopago.php";
+      $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: urlphp+pagina,
+      async:false,
+      success: function(datos){
+        var resultado=datos.respuesta;
+        PintarmetodoPago(resultado);
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                  //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                  console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+            }
+      });
+
+}
+
+/*function Editardatosfactura(valor) {
+  AbrirModalDatos();
+  var v_razonsocial="";
+  var v_rfc="";
+  var v_email="";
+  var v_codigopostal="";
+  var v_formapago="";
+  var v_metodopago="";
+  var v_pais="";
+  var v_estado="";
+  var v_municipio="";
+  var v_colonia="";
+  var v_calle="";
+  var v_noexterior="";
+  var v_nointerior="";
+
+  console.log(valor);
+  console.log(arraydatosfactura);
+  for (var i = 0; i < arraydatosfactura.length; i++) {
+      
+      if (valor==i) {
+             v_razonsocial=arraydatosfactura[i].razonsocial;
+             v_rfc=arraydatosfactura[i].rfc;
+             v_email=arraydatosfactura[i].email;
+             v_codigopostal=arraydatosfactura[i].codigopostal;
+             v_formapago=arraydatosfactura[i].formapago;
+             v_metodopago=arraydatosfactura[i].metodopago;
+             v_pais=arraydatosfactura[i].v_pais;
+             v_estado=arraydatosfactura[i].v_estado;
+             v_municipio=arraydatosfactura[i].v_municipio;
+             v_colonia=arraydatosfactura[i].v_colonia;
+             v_calle=arraydatosfactura[i].v_calle;
+             v_noexterior=arraydatosfactura[i].v_noexterior;
+             v_nointerior=arraydatosfactura[i].v_nointerior;
+
+             break;
+         }
+  }
+
+  $("#v_razonsocial").val(v_razonsocial);
+  $("#v_rfc").val(v_rfc);
+  $("#v_email").val(v_email);
+  $("#v_codigopostal").val(v_codigopostal);
+  $("#v_formapago").val(v_formapago);
+  $("#v_metodopago").val(v_metodopago);
+  Buscarcodigo();
+  $("#v_pais").val(v_pais);
+  $("#v_estado").val(v_estado);
+  $("#v_municipio").val(v_municipio);
+  $("#v_colonia").val(v_colonia);
+  $("#v_calle").val(v_calle);
+  $("#v_noexterior").val(v_noexterior);
+  $("#v_nointerior").val(v_nointerior);
+
+}*/
+
+function Eliminardatosfactura(idusuariosdatosfiscales) {
+
+    app.dialog.confirm('','¿Seguro de eliminar el dato de facturación?', function () {
+      var pagina = "Eliminardatosfactura.php";
+      var id_user=localStorage.getItem('id_user');
+      var datos="idusuariosdatosfiscales="+idusuariosdatosfiscales+"&id_user="+id_user;
+      $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: urlphp+pagina,
+      data:datos,
+      async:false,
+      success: function(datos){
+
+       ObtenerDatosfiscales();
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                  //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                  console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+            }
+      });
+  
+    
+
+
+    });
+
+}
+
+function PintarmetodoPago(resultado) {
+  var html="";
+  if (resultado.length>0) {
+    for (var i =0; i <resultado.length; i++) {
+        html+=`<option value="`+resultado[i].c_metodopago+`">`+resultado[i].c_metodopago+'-'+resultado[i].descripcion+`</option>`;
+    }
+  }
+
+  $$("#v_metodopago").html(html);
+}
+function ObtenerFormaPago() {
+     var pagina = "Obtenerformapago.php";
+      $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: urlphp+pagina,
+      async:false,
+      success: function(datos){
+        var resultado=datos.respuesta;
+        PintarformaPago(resultado);
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                  //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                  console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+            }
+      });
+  
+}
+
+function PintarformaPago(resultado) {
+  var html="";
+  if (resultado.length>0) {
+    for (var i = 0; i <resultado.length; i++) {
+        html+=`<option value="`+resultado[i].cformapago+`">`+resultado[i].descripcion+`</option>`;
+
+    }
+  }
+
+  $("#v_formapago").html(html);
+}
+
+function AbrirModalImagenDatosFactura() {
+  var id_user=localStorage.getItem('id_user');
+    app.dialog.create({
+        title: '',
+        text: '',
+        buttons: [
+        {
+          text: 'Tomar Foto',
+        },
+        {
+          text: 'Subir Foto',
+        },
+        {
+          text: 'Cancelar',
+          color:'#ff3b30',
+
+        },
+
+        ],
+
+        onClick: function (dialog, index) {
+          if(index === 0){
+                //Button 1 clicked
+
+                TomarFotoDatosfactura(id_user)
+
+              //  app.dialog.alert("Tomar foto");
+          }
+          else if(index === 1){
+                //Button 2 clicked
+                getFotoDatosfactura(pictureSource.PHOTOLIBRARY);
+                // app.dialog.alert("foto GALERIA");
+
+            }
+            else if(index === 2){
+                //Button 3 clicked
+
+            }
+        },
+        verticalButtons: true,
+    }).open();
+
+}
+
+function ObtenerUsoCfdi() {
+  
+   var pagina = "ObtenerUsocfdi.php";
+      $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: urlphp+pagina,
+      async:false,
+      success: function(datos){
+        var resultado=datos.respuesta;
+        PintarUsocfdi(resultado);
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                  //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                  console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+            }
+      });
+}
+function PintarUsocfdi(resultado) {
+  var html="";
+  if (resultado.length>0) {
+    for (var i = 0; i <resultado.length; i++) {
+        html+=`<option value="`+resultado[i].c_uso+`">`+resultado[i].descripcion+`</option>`;
+
+    }
+  }
+
+  $("#v_usocfdi").html(html);
+}
+
+//Funcion para abrir la camara del phone
+  function TomarFotoDatosfactura(iduser) {
+    var srcType = Camera.PictureSourceType.CAMERA;
+    var options = setOptions(srcType);
+    navigator.camera.getPicture(onSuccessDatosfactura,onError,options);
+  }
+
+  //El valor devuleto al tomar la foto lo envia a esta funcion 
+  function onSuccessDatosfactura(RutaImagen) {
+    //app.popup.close('.popup-opciones-subir-fotos');
+    //document.getElementById("miimagen").src = RutaImagen;
+    fichero=RutaImagen;
+    
+    var iduser = 0;
+  
+    
+    guardar_foto_datosfactura(iduser);
+  }
+
+
+
+  function guardar_foto_datosfactura(iduser) {
+
+    //app.preloader.show()
+          app.dialog.preloader('Cargando...');
+
+
+
+
+  var pagina = "subirconstanciafiscal.php";
+
+
+    var options = new FileUploadOptions();
+    options.fileKey = "file";
+    options.fileName = fichero.substr(fichero.lastIndexOf('/') + 1);
+    options.mimeType = "image/jpeg";
+    options.chunkedMode = false;
+    
+
+    //Agregamos parametros
+    var params = new Object();
+  
+    
+    options.params = params;
+
+    var ft = new FileTransfer();
+
+    //ft.upload(fichero, "http://192.168.1.69/svnonline/iasistencia/registroasistencia/php/asistencia_fotos_g_actividad.php", respuesta, fail, options);
+    
+    
+    //ft.upload(fichero, urlphp+"asistencia_fotos_g_actividad.php", respuesta, fail, options);
+    
+    ft.upload(fichero, urlphp+pagina, respuestafotodatosfactura, fail, options);
+
+    
+  }
+
+
+  function respuestafotodatosfactura(r)
+  {
+    //borrarfoto();
+
+
+    var resp = r.response;
+    var obj = JSON.parse(resp);
+    var result = obj[0]['respuesta'];
+    var ruta = obj[0]['ruta'];
+
+    //app.preloader.hide();
+    app.dialog.close();
+    if(result == 1){
+ 
+      if(localStorage.getItem('rutadatosfactura')!=undefined) {
+          localStorage.setItem('rutadatosfactura','');
+      }
+      //var jsonimagen=JSON.parse(localStorage.getItem('rutacomprobante'));
+
+      resultimagendatosfactura.push(ruta);
+
+     localStorage.setItem('rutadatosfactura',resultimagendatosfactura);
+      alerta('','Imagen importada exitosamente');
+
+      PintarlistaImagenfactura();
+
+    }else{
+      //Hubo un error
+      alerta(result,"ERROR");
+    $(".check-list").css('display','none');
+
+      $("#aparecerimagendatosfactura").css('display','none');
+      $("#aparecerimagendatosfactura").attr('onclick','');
+
+    } 
+  }
+
+
+function onPhotoDataSuccessdatosfactura(imageData) {
+ // borrarfoto();
+  var pagina = "subirconstanciafiscal2.php";
+
+    var datos= 'imagen='+imageData;
+
+    var pagina = urlphp+pagina;
+     // app.dialog.preloader('Cargando...');
+    $.ajax({
+      url: pagina,
+      type: 'post',
+      dataType: 'json',
+      data:datos,
+      async:false,
+      beforeSend: function() {
+        // setting a timeout
+       app.dialog.preloader('Cargando...');
+    },
+
+    success: function(data) {
+      app.dialog.close();
+
+      ruta=data.ruta;
+
+      if(localStorage.getItem('rutadatosfactura')!=undefined) {
+          localStorage.setItem('rutadatosfactura','');
+      }
+     
+      resultimagendatosfactura.push(ruta);
+
+     localStorage.setItem('rutadatosfactura',resultimagendatosfactura);
+
+      alerta('','Imágen importada exitosamente');
+
+      PintarlistaImagenfactura();
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+                        var error;
+                        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+                        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                                                 //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                         app.dialog.alert('Error leyendo fichero jsonP '+error,'Error');
+                     $(".check-list").css('display','none');
+                    }
+                                       
+
+     }); 
+
+  }
+
+ //
+ function getFotoDatosfactura(source) {
+      // Retrieve image file location from specified source
+      navigator.camera.getPicture(onPhotoDataSuccessdatosfactura, onError, { quality: 50,
+        destinationType: destinationType.DATA_URL,
+        sourceType: source });
+    }
+
+
+    function PintarlistaImagenfactura(){
+      var html="";
+      $("#vimagen").html('');
+
+      if (resultimagendatosfactura.length > 0) {
+
+        html+=`<div class="list media-list">
+          <ul>
+        `;
+
+        for(var i = 0; i < resultimagendatosfactura.length; i++) {
+          var imagen=urlphp+'upload/datosfactura/'+resultimagendatosfactura[i];
+          
+          html+=`
+            <li style="border-radius: 10px;margin-bottom: 1em;background: white;border-radius: 10px;" class="" id="imagendatos_`+i+`" >
+            <label class="label-radio item-content">                                                                               
+              <div class="item-inner" style="width:90%;">
+             
+                <div class="row">
+                <div class="row">
+                        <div class="col-20" style="margin:0;padding:0;">
+                          <figure class="avatar   rounded-10">
+                          <img src="`+imagen+`" alt="" style="width:60px;height:60px;">
+                          </figure>
+                        </div>
+                        
+                          <div class="col-50" style="margin:0;padding:0;">
+                            <div class="col-100 item-text" style="margin-left: 1em;font-size:14px;" id="participante_">
+                            </div>
+                         
+                            <div class="col-100 item-text" style="font-size:14px;margin-left: 1em;" id="correo_">
+                            </div>
+                        
+                            <div class=" col-100 item-text" style="font-size:14px;margin-left: 1em;"></div>
+                            
+                            <div class=" col-100 item-text" style="font-size:14px;margin-left: 1em;"></div>
+ 
+                            </div>
+                            <div class="col-10" style="margin:0;padding:0;">
+                              
+
+                            </div>
+                            <div class="col-10" style="margin:0;padding:0;">
+
+                              <a class="botoneliminar" style="line-height:0;margin-top: 0;" onclick="EliminarImagenFactura(`+i+`)">
+                                 <i style="color:red;font-size:22px;" class="bi bi-trash-fill">
+                                 </i>
+                              </a>
+                            </div>
+
+                            <div class="col-10 factura_6" style="padding:0;">
+
+                            </div>
+
+                            </div>
+                 
+                         </div>
+                        </div>
+                    </label>
+                 </li>
+
+          `;
+        }
+        html+=`
+          </ul>
+        </div>`;
+
+              $("#vimagen").css('display','block');
+
+
+      }
+
+       $("#vimagen").html(html);
+    }
+
+    function EliminarImagenFactura(posicion) {
+
+          app.dialog.confirm('','¿Seguro de eliminar la imagen?', function () {
+
+         $("#imagendatos_"+posicion).remove();
+
+         for (var i =0; i < resultimagendatosfactura.length; i++) {
+           if (i == posicion) {
+
+            resultimagendatosfactura.splice(i,1);
+            return 0;
+           }
+         }
+
+         PintarlistaImagenfactura();
+      });
+    }
+

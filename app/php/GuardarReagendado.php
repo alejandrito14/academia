@@ -75,7 +75,7 @@ try
 	$emp->fechafinal=$_POST['v_fechafinal'];
 
 
-
+	$usuarioinvita="";
 	
 	$emp->idusuarios=$_POST['iduser'];
 	$tipousuario=$_POST['idtipousuario'];
@@ -113,7 +113,10 @@ try
 
 			$notificaciones->idusuario=$idusuario;
 				$obtenertokenusuario=$notificaciones->Obtenertoken();
-			$titulonotificacion="Se reagendó el servicio ".$emp->titulo;
+			$usuarios->idusuarios=$idusuario;
+		$obtenerusuarioinvita=$usuarios->ObtenerUsuario();
+		$usuarioinvita=$obtenerusuarioinvita[0]->nombre.', ';
+			$titulonotificacion=$usuarioinvita."se reagendó el servicio ".$emp->titulo;
 
 			for ($i=0; $i < count($obtenertokenusuario); $i++) { 
 
@@ -133,10 +136,48 @@ try
 		$asignados->idusuario=0;
 		$obtenerusuariosarignados=$asignados->obtenerUsuariosServiciosAlumnosAsignados();
 		if(count($obtenerusuariosarignados)>0){
-			$titulonotificacion="Se reagendó el servicio ".$emp->titulo;
+			
 			for ($i=0; $i <count($obtenerusuariosarignados) ; $i++) { 
 			$idusuario=$obtenerusuariosarignados[$i]->idusuarios;
+			$usuarios->idusuarios=$idusuario;
+			$obtenerusuarioinvita=$usuarios->ObtenerUsuario();
+		$usuarioinvita=$obtenerusuarioinvita[0]->nombre.', ';
 
+			
+
+			$titulonotificacion=$usuarioinvita."se reagendó el servicio ".$emp->titulo;
+			$valor=$emp->idservicio;
+			$texto='|Se reagendo el servicio|'.$emp->titulo.'|Periodo: '.date('d-m-Y',strtotime($emp->fechainicial)).' '.date('d-m-Y',strtotime($emp->fechafinal));
+			$estatus=0;
+			$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
+
+		$usuarios->idusuarios=$idusuario;
+		$obtenerdependencia=$usuarios->ObtenerUsuarioDependencia();
+		$ruta="";
+		if (count($obtenerdependencia)>0) {
+			$obtenerdatousuario=$usuarios->ObtenerUsuario();
+			
+			if($obtenerdatousuario[0]->sincel==1) {
+				$notificaciones->idusuario=$obtenerdependencia[0]->idusuariostutor;
+				$ruta="";
+				$banderatuto=1;
+			}else{
+			   $notificaciones->idusuario=$idusuario;
+			  if ($obtenerusuariosarignados[$i]->aceptarterminos==1) {
+				$ruta='detalleservicio2';
+
+				}else{
+				$ruta='aceptacionservicio2';
+
+			}
+
+			}
+			
+
+
+
+					}else{
+			$notificaciones->idusuario=$idusuario;
 			if ($obtenerusuariosarignados[$i]->aceptarterminos==1) {
 				$ruta='detalleservicio2';
 
@@ -144,12 +185,10 @@ try
 				$ruta='aceptacionservicio2';
 
 			}
-			$valor=$emp->idservicio;
-			$texto='|Se reagendo el servicio|'.$emp->titulo.'|Periodo: '.date('d-m-Y',strtotime($emp->fechainicial)).' '.date('d-m-Y',strtotime($emp->fechafinal));
-			$estatus=0;
-			$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
 
-				$notificaciones->idusuario=$idusuario;
+		}
+
+				
 				$obtenertokenusuario=$notificaciones->Obtenertoken();
 
 			for ($j=0; $j < count($obtenertokenusuario); $j++) { 

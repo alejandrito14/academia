@@ -92,13 +92,13 @@ try
 			$pagos->fechainicial=$obtenerperiodos[$i]->fechainicial;
 			$pagos->fechafinal=$obtenerperiodos[$i]->fechafinal;
 			$pagos->concepto=$obtenerservicio[0]->titulo;
-			$contador=$lo->ActualizarConsecutivo();
+			//$contador=$lo->ActualizarConsecutivo();
    		    $fecha = explode('-', date('d-m-Y'));
 		    $anio = substr($fecha[2], 2, 4);
    			$folio = $fecha[0].$fecha[1].$anio.$contador;
    			
 			$pagos->folio=$folio;
-			$pagos->CrearRegistroPago();
+			//$pagos->CrearRegistroPago();
 
 		}
 	}
@@ -108,8 +108,13 @@ try
 	$obtenerusuario=$usuarios->ObtenerUsuario();
 	$nombrequienacepta=$obtenerusuario[0]->nombre." ".$obtenerusuario[0]->paterno;
 	$obtenerInvitacion=$invitacion->ObtenerInvitado();
+	$usuarioinvita="";
 if (count($obtenerInvitacion)>0) {
 	$idusuarioinvita=$obtenerInvitacion[0]->idusuarioinvita;
+
+	$usuarios->idusuarios=$idusuarioinvita;
+	$obtenerusuarioinvita=$usuarios->ObtenerUsuario();
+	$usuarioinvita=$obtenerusuarioinvita[0]->nombre.', ';
 
 	$notificaciones->idusuario=$idusuarioinvita;
 	$obtenertokenusuario=$notificaciones->Obtenertoken();
@@ -125,7 +130,7 @@ if (count($obtenerInvitacion)>0) {
 		}
 
 		
-	$titulonotificacion=$nombrequienacepta." aceptó la asignación al servicio ".$obtenerservicio[0]->titulo;
+	$titulonotificacion=$usuarioinvita.$nombrequienacepta." aceptó la asignación al servicio ".$obtenerservicio[0]->titulo;
 
 	$texto='|Aceptó la asignación|'.$obtenerservicio[0]->titulo.'|'.$nombrequienacepta;
 	$estatus=0;

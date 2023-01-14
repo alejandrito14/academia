@@ -107,11 +107,21 @@ function PintarpagosCoach(pagos) {
                                Pago `+pagos[i].concepto+`
                             </p>
 
-                          <p class="text-muted small">$`+formato_numero(pagos[i].monto,2,'.',',')+`</p>
                           <p class="text-muted small"  id="concepto_`+pagos[i].idnotapago+`">
                               Corresponde a `+usuario+`
                             </p>
-                          <span class="text-muted small `+claseestatus+`">`+pagos[i].textoestatus+`</span>
+                          <p class="text-muted small">$`+formato_numero(pagos[i].monto,2,'.',',')+`</p>`;
+                          	if (pagos[i].tipopago==0) {//porcentaje
+                          		html+=`<p class="text-muted small">Porcentaje:`+pagos[i].montopagocoach+`%</p>`;
+                          	}
+
+                          	if (pagos[i].tipopago==1) {//monto
+                          		html+=`<p class="text-muted small">Monto:`+pagos[i].montopagocoach+`</p>`;
+
+                          	}
+                          	html+=`<p class="text-muted small">Pago:$`+formato_numero(pagos[i].montopago,2,'.',',')+`</p>`;
+
+                         html+=` <span class="text-muted small `+claseestatus+`">`+pagos[i].textoestatus+`</span>
 
 
                         </div>`;
@@ -121,7 +131,7 @@ function PintarpagosCoach(pagos) {
                   if (localStorage.getItem('idtipousuario')==0) {
 
                  html+=`	<div class="col-30">
-                        	<a id="btncalendario" class="button button-fill " style="color:white!important;text-align: center;justify-content: center;display: flex;" onclick="PagarCoach(`+pagos[i].idpago+`,'`+pagos[i].concepto+`',`+pagos[i].monto+`,`+pagos[i].idservicio+`)">Pagar</a>
+                        	<a id="btncalendario" class="button button-fill " style="color:white!important;text-align: center;justify-content: center;display: flex;" onclick="PagarCoach(`+pagos[i].idpago+`,'`+pagos[i].concepto+`',`+pagos[i].monto+`,`+pagos[i].idservicio+`,`+pagos[i].tipopago+`,`+pagos[i].montopagocoach+`,`+pagos[i].montopago+`)">Pagar</a>
                         	</div>
                     	</div>`;
                     }
@@ -237,16 +247,27 @@ function PintarpagosHistorialCoach(pagos) {
                     <div class="row">
                         <div class="col-70">
                             <p class="text-muted "  id="concepto_`+pagos[i].idnotapago+`">
-                               Pago #`+pagos[i].concepto+`
+                               Pago `+pagos[i].concepto+`
                             </p>
 
                           <p class="text-muted small">Pagado `+pagos[i].fechaformatopago+`</p>
-                          <p class="text-muted small">$`+formato_numero(pagos[i].monto,2,'.',',')+`</p>
-                          <p class="text-muted small "  id="concepto_`+pagos[i].idnotapago+`">
+                            <p class="text-muted small "  id="concepto_`+pagos[i].idnotapago+`">
                               Corresponde a `+usuario+`
                             </p>
+                          <p class="text-muted small">$`+formato_numero(pagos[i].monto,2,'.',',')+`</p>
+                        `;
+                          	if (pagos[i].tipopagocoach==0) {//porcentaje
+                          		html+=`<p class="text-muted small">Porcentaje:`+pagos[i].montopagocoach+`%</p>`;
+                          	}
 
-                          <span class="text-muted small `+claseestatus+`">`+pagos[i].textoestatus+`</span>
+                          	if (pagos[i].tipopagocoach==1) {//monto
+                          		html+=`<p class="text-muted small">Monto:`+pagos[i].montopagocoach+`</p>`;
+
+                          	}
+                          	html+=`<p class="text-muted small">Pago:$`+formato_numero(pagos[i].montopago,2,'.',',')+`</p>`;
+
+
+                      html+=`  <span class="text-muted small `+claseestatus+`">`+pagos[i].textoestatus+`</span>
 
 
                         </div>`;
@@ -421,7 +442,8 @@ function ListadoPagosCoachHistorialLista() {
 		});
 }
 
-function PagarCoach(idpago,concepto,monto,idservicio) {
+function PagarCoach(idpago,concepto,monto,idservicio,tipopago,montopagocoach,montopago) {
+dynamicSheet2="";
 var html="";	
 html+=`	<div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: none;">
             <div class="toolbar">
@@ -496,10 +518,11 @@ html+=`	<div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;ba
         on: {
           open: function (sheet) {
           	Cargartipopago2();
-            $$(".btnguardarpagocoach").attr('onclick','GuardarPagoCoach('+monto+','+idpago+','+idservicio+')')
           },
           opened: function (sheet) {
             console.log('Sheet opened');
+            $$(".btnguardarpagocoach").attr('onclick','GuardarPagoCoach('+monto+','+idpago+','+idservicio+','+tipopago+','+montopagocoach+','+montopago+')')
+
           },
         }
       });
@@ -510,7 +533,7 @@ html+=`	<div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;ba
 
 }
 
-function GuardarPagoCoach(monto,idpago,idservicio) {
+function GuardarPagoCoach(monto,idpago,idservicio,tipopago,montopagocoach,montopago) {
 	
 	var txtdescripcionpago=$("#txtdescripcionpago").val();
 	var txttipopago=$("#txttipopago").val();
@@ -520,7 +543,7 @@ function GuardarPagoCoach(monto,idpago,idservicio) {
 	var id_user=localStorage.getItem('id_user');
 	var datos="idcoach="+idcoach+"&txttipopago="+txttipopago+"&txtdescripcionpago="+txtdescripcionpago;
 		datos+="&idpago="+idpago+"&idservicio="+idservicio+"&monto="+monto;
-		datos+="&iduser="+id_user;
+		datos+="&iduser="+id_user+"&tipopago="+tipopago+"&montopagocoach="+montopagocoach+"&montopago="+montopago;
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
@@ -534,6 +557,7 @@ function GuardarPagoCoach(monto,idpago,idservicio) {
 			var res=respuesta.respuesta;
 			if (res==1) {
 				dynamicSheet2.close();
+				$(".listadopagos").html('');
 				ListadoPagosCoachLista();
 
 			}

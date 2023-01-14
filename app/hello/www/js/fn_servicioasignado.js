@@ -1375,27 +1375,45 @@ html+=`
                         </figure>
                         </div>
                         
-                    <div class="col-60">
+                    <div class="col-50">
                          <div class="col-100 item-text" style="margin-left: 1em;font-size:14px;`+background+`" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
                          </div>
              		 
 	             		 <div class="col-100 item-text" style="font-size:14px;margin-left: 1em;`+background+`" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].usuario+`
 	             		 	</div>
              		
-                        	  <div class=" col-100 item-text" style="font-size:14px;margin-left: 1em;`+background+`">`+respuesta[i].nombretipo+`</div>
-               
-                        </div>
-                        	 <div class="col-20">
-                         <div class="col"> 
+                        	  <div class=" col-100 item-text" style="font-size:14px;margin-left: 1em;`+background+`">`+respuesta[i].nombretipo+`</div>`;
+
+             
+               	
+                	       html+=` </div>
+                        	 <div class="col-30">
+
+                        	 <div class="row">
+                         
                         `;
 
                        	if (localStorage.getItem('idtipousuario')==5) {
-	                       html+=`<button id="" class="button " style="font-size: 26px;" onclick="SubirFotoIndividual(`+respuesta[i].idusuarios+`)">
+	                       html+=`
+	                       <div class="col-50"> 
+	                       <button id="" class="button " style="font-size: 26px;" onclick="SubirFotoIndividual(`+respuesta[i].idusuarios+`)">
 	                       		 <i class="bi bi-card-image"></i>
-	                        </button>`;
+	                        </button>
+ 							</div>
+	                        `;
 	                    }
 
-                      html+= ` </div>
+
+                     if (respuesta[i].aceptarterminos==0){
+
+                   		html+=`<div class="col-50"> 
+                        	<button id="" class="button " style="font-size: 26px;color:red;" onclick="CancelarUsuarioServicio(`+respuesta[i].idusuarios+`)">
+								<i class="bi-trash-fill"></i>	                        </button> 
+	                        </div>`;
+                    		}
+                        html+=`
+
+                        	</div>
                         </div>
 
                         `;
@@ -2946,4 +2964,36 @@ html+=`
 	}
 }
 
+function CancelarUsuarioServicio(idusuarios) {
+	
+	 app.dialog.confirm('','¿Está seguro  de realizar la cancelación del usuario ?' , function () {
+	 	var pagina="CancelarUsuarioServicio.php";
+	 	var idservicio=localStorage.getItem('idservicio');
+	 	var idtipousuario=localStorage.getItem('idtipousuario');
+	 	var datos="idservicio="+idservicio+"&idusuarios="+idusuarios+"&idtipousuario="+idtipousuario;
+	 	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+	 	url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(resp){
+				 
+				 ObtenerParticipantesAlumnos();
+
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+
+
+	});
+}
 

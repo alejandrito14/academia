@@ -69,6 +69,9 @@ class Servicios
 	public $validaradmin;
 	public $v_politicasaceptacionid;
 
+	public $horainicial;
+	public $horafinal;
+
 	public function ObtenerServicios()
 	{
 		$sql="SELECT servicios.*,categorias.titulo as nombrecategoria,categorias.avanzado FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio ORDER BY orden asc";
@@ -877,6 +880,28 @@ class Servicios
 		return $resp;
 	}
 	
+
+	public function ExisteHorario()
+	{
+		$sql="SELECT idhorarioservicio,dia,horainicial,
+		horafinal,fecha,zonas.idzona,zonas.color,zonas.nombre  FROM horariosservicio INNER JOIN zonas ON zonas.idzona=horariosservicio.idzona WHERE idservicio=".$this->idservicio." AND horainicial='$this->horainicial' AND horafinal='$this->horafinal' AND fecha='$this->fecha'";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 
 }
 

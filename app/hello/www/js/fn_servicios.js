@@ -560,14 +560,29 @@ function ObtenerServicioNuevo(valor) {
 		var estatus=respuesta.estatus;
 		var tiporeembolso=respuesta.tiporeembolso;
 		var idpoliticaaceptacion=respuesta.idpoliticaaceptacion;
+		var tiempoaviso=respuesta.tiempoaviso;
+		var tituloaviso=respuesta.tituloaviso;
+		$("#v_tiempoaviso").val(tiempoaviso);
+		$("#v_tituloaviso").val(tituloaviso);
 		//$("#v_estatus").val(estatus);
-
+ 
 		if (estatus==1) {
 			$("#v_estatus").prop('checked',true);
 		}else{
 		$("#v_estatus").prop('checked',false);
 	
 		}
+		var imagenservicio=respuesta.imagen;
+
+		if (imagenservicio!=null && imagenservicio!='null' && imagenservicio!='') {
+			 $(".imglogoimagenservicio").attr('src',urlimagenes+"servicios/imagenes/"+codigoserv+'/'+imagenservicio);
+			localStorage.setItem("fotoimagenservicio",imagenservicio);
+
+
+			    }else{
+			 $(".imglogoimagenservicio").attr('src',urlimagendefaultservicio);
+
+			    }
 		$("#v_titulo").val(titulo);
 		$("#v_descripcion").val(descripcion);
 		 var lunes= respuesta.lunes;
@@ -610,7 +625,13 @@ function ObtenerServicioNuevo(valor) {
 		//var montopagargrupo	='<?php echo $montopagargrupo ?>';
 		var precio	=respuesta.precio;
 		//$("#v_totalclase").val(totalclases);
+
+		$("#v_costo").prop("type", "text");
 		$("#v_costo").val(precio);
+		$("#v_costo").prop("type", "number");
+
+	
+
 		//$("#v_montopagarparticipante").val(montopagarparticipante);
 		//$("#v_montopagargrupo").val(montopagargrupo);
 		$("#v_numparticipantesmin").val(numparticipantes);
@@ -655,6 +676,7 @@ function ObtenerServicioNuevo(valor) {
 	asignadocliente=respuesta.asignadocliente;
 	asignadocoach=respuesta.asignadocoach;
 	asignadoadmin=respuesta.asignadoadmin;
+	cancelado=respuesta.canceladoservicio;
 	/*tiempoaviso='<?php echo $tiempoaviso; ?>';
 	tituloaviso='<?php echo $tituloaviso; ?>';
 	descripcionaviso='<?php echo $descripcionaviso; ?>';
@@ -675,11 +697,13 @@ function ObtenerServicioNuevo(valor) {
 		if (ligarcliente==1) {
 			
 			$("#v_ligarclientes").attr('checked',true);
+			Permitirligar();
 		}
 
 		if (reembolso==1) {
 			
 			$("#v_reembolso").attr('checked',true);
+			HabilitarcantidadReembolso();
 		}
 
 		if (asignadocliente==1) {
@@ -705,6 +729,20 @@ function ObtenerServicioNuevo(valor) {
 			$("#contentestatus").css('display','block');
 		}
 
+		 if (localStorage.getItem('idtipousuario')==0) {
+		 	if (cancelado==0) {
+
+		 	  $("#btncancelar").css('display','block');
+	
+		 	}
+
+     	 }
+
+     	 if (cancelado==1) {
+     	 	$("#btncancelarservicio").css('display','none');
+     	 	$("#btnguardarservicio").css('display','none');
+     	 }
+
 		$("#cantidadhorarios").text(arraydiaselegidos.length);
 
 		  }
@@ -727,11 +765,11 @@ function ObtenerServicioAReplicar(valor) {
 	var pagina = "ObtenerServicioNuevo.php";
 	var id_user=localStorage.getItem('id_user');
 	var datos="id_user="+id_user+"&idservicio="+valor;
-	
 	 var serviciosreplica=$("#serviciosreplica").val();
 		  if (serviciosreplica>0) {
 		  		$(".regreso").attr('onclick','ModalPregunta()');
-			
+				$(".divimagen").css('display','block');
+				$(".divinformacion").css('display','block');
 			  }else{
 		     regresohome();
 		}
@@ -760,6 +798,17 @@ function ObtenerServicioAReplicar(valor) {
 		var estatus=respuesta.estatus;
 		var tiporeembolso=respuesta.tiporeembolso;
 		var idpoliticaaceptacion=respuesta.idpoliticaaceptacion;
+		var imagenservicio=respuesta.imagen;
+
+		if (imagenservicio!=null && imagenservicio!='null' && imagenservicio!='') {
+			 $(".imglogoimagenservicio").attr('src',urlimagenes+"servicios/imagenes/"+codigoserv+'/'+imagenservicio);
+			localStorage.setItem("fotoimagenservicio",imagenservicio);
+
+
+			    }else{
+			 $(".imglogoimagenservicio").attr('src',urlimagendefaultservicio);
+
+			    }
 		//$("#v_estatus").val(estatus);
 
 		if (estatus==1) {
@@ -984,7 +1033,7 @@ function ObtenerHorariosSemana(idservicio) {
 						$("#divcomplementos").html(error);
 					},	
 					success: function (msj) {
-
+						$("#selected-dates").html('');
 						var horarios=msj.respuesta;
 						var servicio=msj.servicio;
 						 zonasarray=msj.zonas;
@@ -993,6 +1042,7 @@ function ObtenerHorariosSemana(idservicio) {
 						if (horarios.length>0) {
 							PintarHorariosServicio(horarios,servicio);
 							Resumenfechas();
+							CantidadHorarios();
 						}
 
 
@@ -1259,4 +1309,86 @@ function PintarAlumnosServicio(respuesta) {
 		}
 	}
 	$(".usuarios").html(html);
+}
+
+function CancelarServicioAdmin(idservicio) {
+
+	
+	
+       var html=`
+         
+              <div class="block">
+               <div class="row" style="">
+
+                </div>
+
+                <div class="row" style="padding-top:1em;">
+                	<label style="font-size:16px;padding:1px;">Motivo de cancelación:</label>
+                	<input type="text" name="txtmotivo" id="txtmotivo"  />
+                </div>
+              </div>
+           
+         
+        `;
+       app.dialog.create({
+          title: 'Cancelación de servicio',
+          //text: 'Dialog with vertical buttons',
+          content:html,
+          buttons: [
+            {
+              text: 'Cancelar',
+            },
+            {
+              text: 'Aceptar',
+            },
+            
+          ],
+
+           onClick: function (dialog, index) {
+                    if(index === 0){
+              
+          }
+          else if(index === 1){
+                GuardarCancelacion(idservicio);
+              
+            }
+           },
+
+          verticalButtons: false,
+        }).open();
+		
+}
+
+function GuardarCancelacion(idservicio) {
+	// body...
+				var iduser=localStorage.getItem('id_user');
+				var motivocancelacion=$("#txtmotivo").val();
+				var datos="idservicio="+idservicio+"&motivocancelacion="+motivocancelacion+"&id_user="+iduser;
+			
+				if (motivocancelacion!='') {
+					$.ajax({
+					url: urlphp+'CancelarServicioAdmin.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					dataType:'json',
+
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+						ObtenerServicioNuevo(idservicio);
+
+						
+					}
+				});
+
+				}else{
+
+					alerta('','Ingresar motivo de cancelación');
+				}
+							
 }

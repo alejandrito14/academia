@@ -97,6 +97,8 @@ if(!isset($_GET['idmembresia'])){
 	$inphijo=$result_membresia_row['inphijo'];
 	$inpnieto=$result_membresia_row['inpnieto'];
 	$v_limitemembresia=$result_membresia_row['limite'];
+	$repetir=$result_membresia_row['repetir'];
+	$fecha=$result_membresia_row['fecha'];
 	
 	$ruta='';
 	if($foto==""){
@@ -244,10 +246,24 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 							</div>
 
+								<div class="form-group m-t-20">
+								<label for="">*FECHA</label>
+								<input type="date" id="v_fecha" class="form-control" value="<?php echo $fecha; ?>" placeholder="COSTO" title="COSTO">
+
+							</div>
+
+
+
 
 							<div class="form-group m-t-20">
 								<label for="">*TIEMPO EN QUE APLICA (días)</label>
 								<input type="number" id="v_duracion" class="form-control" value="<?php echo $duracion; ?>" placeholder="TIEMPO EN QUE APLICA (días)" title="TIEMPO EN QUE APLICA (días)">
+
+							</div>
+
+								<div class="form-group m-t-20">
+								<label for="">*CANTIDAD DE VECES A REPETIR </label>
+								<input type="text" id="v_repetir" class="form-control" value="<?php echo $repetir; ?>" placeholder="CANTIDAD DE VECES A REPETIR" title="CANTIDAD DE VECES A REPETIR">
 
 							</div>
 

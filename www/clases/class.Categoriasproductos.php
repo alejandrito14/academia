@@ -51,7 +51,8 @@ class Categoriasproductos
 	{
 		
 		
-		$sql = "SELECT C.* FROM categoriaproducto C ";
+		$sql = "SELECT C.* FROM categorias C ";
+		
 		/*$sql .= ($this->nombre != '')? " AND C.categoria LIKE '%$this->nombre%'":"";
 		$sql .= ($this->idcategoria != '')? " AND C.idcategoriaproducto = '$this->idcategoria'":"";*/
 

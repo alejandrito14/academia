@@ -137,7 +137,7 @@ $(document).ready(function() {
 
 var lhost = "localhost:8888";
 var rhost = "issoftware1.com.mx";
-var version='1.0.9';
+var version='1.0.14';
 
 localStorage.setItem('versionapp',version);
 var abrir=0;
@@ -180,15 +180,17 @@ function Cargar() {
     success: function(resp){
 var rutaserver="";
 var puertosockect="";
+var carpetaapp="";
       if (resp.vigente==1) {
         var servidor=resp.datosservidor.urlapp;
         var puertosocket=resp.datosservidor.puertosocket;
+
         localStorage.setItem('servidor',servidor);
         localStorage.setItem('puertosocket',puertosocket);
 
          rutaserver=resp.datosservidor.urlapp;
          puertosockect=resp.datosservidor.puertosocket;
-
+         carpetaapp=resp.datosservidor.carpetaapp;
       }else{
         localStorage.setItem('servidor','http://localhost:8888/');
         localStorage.setItem('puertosocket','3000');
@@ -209,8 +211,8 @@ var puertosockect="";
     urlimagendefaultservicio=rutaserver+"/is-academia/images/sin-servicio.jpg"
 
 }else{
-    codigoserv="109/";
-    urlphp = rutaserver+"/IS-ACADEMIA/app/appwoolis/php/";
+    codigoserv=codigoservicio+"/";
+    urlphp = rutaserver+"/IS-ACADEMIA/app/"+carpetaapp+"/php/";
     urlimagenes = rutaserver+"/IS-ACADEMIA/catalogos/"; 
   
     urlimagendefault=rutaserver+"/IS-ACADEMIA/images/sinfoto.png"
@@ -524,8 +526,7 @@ $$(document).on('page:init', '.page[data-name="home"]', function (e) {
       Cargarperfilfoto();
       
       CargarDatos();
-    // $$(".iniciotab").attr('onclick','CargarInicio()');
-     // ObtenerMembresiaActivas();
+      ObtenerMembresiaActivas();//obtiene la membresia del usuario
   
     
   var pregunta=localStorage.getItem('pregunta');
@@ -609,6 +610,7 @@ $$(document).on('page:init', '.page[data-name="homeadmin"]', function (e) {
   Cargarperfilfoto();
   CargarFoto();
   CargarDatosAdmin();
+  localStorage.setItem('valorlistado',0);
 
   var pregunta=localStorage.getItem('pregunta');
 
@@ -766,7 +768,7 @@ $$(document).on('page:init', '.page[data-name="register"]', function (e) {
   /* swiper carousel projects */
   $$('#btnvalidarcelular').attr('onclick','ValidarCelular()')
  phoneFormatter('telefono');
-
+$$(".leidoacepto").attr('onclick','SeleccionarCheckLeido()');
 $$('#telefono').attr('onfocus',"Cambiar(this);");
 $$('#telefono').attr('onblur',"Cambiar2(this);");
   $$('.regreso').attr('onclick',"GoToPage('login')");
@@ -852,7 +854,9 @@ $$(document).on('page:init', '.page[data-name="registrodatosacceso"]', function 
   $$('#btnmembresia').attr('onclick','SolicitarMembresia()');
   $$('#btnregistraralumnos').attr('onclick','AlumnosSecundarios()');
 
-  ObtenerTiposUsuarios();
+  /*ObtenerTiposUsuarios();
+
+  $$('#v_tipousuario').val(3);*/
   $$('#v_tipousuario').attr('onchange','TipoUsuario()');
   $$("#v_tipousuario").val(localStorage.getItem('idtipousuario'));
 
@@ -1002,6 +1006,12 @@ phoneFormatter('v_celulartu');
 $("#inputsincelular").attr('onchange','SinCelular()');
 
 $("#v_celulartu").attr('onkeyup','ValidarCampo(this);BuscarUsuario();');
+$("#v_nombretu").attr('onblur','QuitarEspacios(this)');
+
+$("#v_paternotu").attr('onblur','QuitarEspacios(this)');
+$("#v_maternotu").attr('onblur','QuitarEspacios(this)');
+
+
 
 });
 
@@ -1315,11 +1325,23 @@ $$(document).on('page:init', '.page[data-name="servicios"]', function (e) {
 });
 $$(document).on('page:init', '.page[data-name="serviciosregistrados"]', function (e) {
   regresohome();
-  ObtenerServiciosRegistrados();
+  myStopFunction(identificadorDeTemporizador);
+
+  
  $(".v_buscador").attr('onkeyup','BuscarEnLista(".v_buscador",".list-item")');
   $(".limpiarspan").attr('onclick','LimpiarResultado(".list-item")');
 
-myStopFunction(identificadorDeTemporizador);
+
+ ObtenerServiciosRegistrados().then(r => {
+        
+      $("#filtrocoach").css('display','block');
+      $(".v_coach").attr('onchange','FiltrarServicios()');
+       localStorage.setItem('pantalla','serviciosregistrados');
+
+        ObtenerCoachesFiltro();
+       });
+    
+
 
 });
 
@@ -1410,6 +1432,7 @@ $$(document).on('page:init', '.page[data-name="detalleserviciocoach2"]', functio
   
   //regresohome();
   $(".regreso").attr('href','/serviciosasignados/');
+  myStopFunction(identificadorDeTemporizador);
 
   ObtenerServicioAsignadoCoach();
   
@@ -1424,7 +1447,6 @@ $$(document).on('page:init', '.page[data-name="detalleserviciocoach2"]', functio
   $$(".btnimagengrupal").attr('onclick','AbrirModalFotoimagengrupal()');
 
     $(".btncancelarservicio").attr('onclick','PantallaCancelarServicio()');
-  myStopFunction(identificadorDeTemporizador);
 
 });
 
@@ -1432,6 +1454,7 @@ $$(document).on('page:init', '.page[data-name="detalleservicioadmin"]', function
   
   //regresohome();
   $(".regreso").attr('href','/serviciosregistrados/');
+  myStopFunction(identificadorDeTemporizador);
 
   ObtenerServicioAdmin();
   ObtenerParticipantesAlumnosAdmin();
@@ -1450,7 +1473,6 @@ $$(document).on('page:init', '.page[data-name="detalleservicioadmin"]', function
   $$(".btnasistencia").attr('onclick','Asistencia()');
  
   $(".btncancelarservicio").attr('onclick','PantallaCancelarServicio()');
-  myStopFunction(identificadorDeTemporizador);
 
 });
 
@@ -1553,6 +1575,7 @@ $$(document).on('page:init', '.page[data-name="asignaralumnos"]', function (e) {
 });
 
 $$(document).on('page:init', '.page[data-name="serviciosasignados"]', function (e) {
+  myStopFunction(identificadorDeTemporizador);
 
 
   if (localStorage.getItem('idtipousuario')==3) {
@@ -1569,19 +1592,17 @@ $$(document).on('page:init', '.page[data-name="serviciosasignados"]', function (
    $(".v_buscador").attr('onkeyup','BuscarEnLista(".v_buscador",".list-item")');
   $(".limpiarspan").attr('onclick','LimpiarResultado(".list-item")');
   regresohome();
-  myStopFunction(identificadorDeTemporizador);
 
 });
 
 $$(document).on('page:init', '.page[data-name="serviciospendientesasignados"]', function (e) {
   regresohome();
+  myStopFunction(identificadorDeTemporizador);
 
   ObtenerServiciosAsignadospendientes();
  
   $(".v_buscador").attr('onkeyup','BuscarEnLista(".v_buscador",".list-item")');
   $(".limpiarspan").attr('onclick','LimpiarResultado(".list-item")');
-  regresohome();
-  myStopFunction(identificadorDeTemporizador);
 
 });
 
@@ -1612,7 +1633,8 @@ myStopFunction(identificadorDeTemporizador);
 });
 
 $$(document).on('page:init', '.page[data-name="aceptacionservicio2"]', function (e) {
-  
+  myStopFunction(identificadorDeTemporizador);
+
  ObtenerServicioAsignado2();
  $$("#btnaceptartermino").attr('onclick','AceptarTerminos()');
  $$("#btnrechazartermino").attr('onclick','PantallaRechazarTerminos()');
@@ -1621,7 +1643,6 @@ $$(document).on('page:init', '.page[data-name="aceptacionservicio2"]', function 
 
  $(".btncalendario").attr('onclick','MostrarHorarios()');
   
-myStopFunction(identificadorDeTemporizador);
 
 });
 
@@ -1812,6 +1833,11 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
  localStorage.setItem('comisionnota',0);
  localStorage.setItem('comisionpornota',0);
  localStorage.setItem('tipocomisionpornota',0);
+localStorage.setItem('campomonto',0);
+
+  $("#btnpagarresumen").attr('disabled',true);
+  $$("#btnatras").attr('onclick','Atras()');
+  $$("#btnatras").css('display','none');
 
  Cargartipopago(0) 
  
@@ -1819,7 +1845,7 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
  $$(".btncupon").attr('onclick','AbrirModalcupon()');
  
 
- 
+ $$("#requierefactura").attr('onchange','RequiereFactura()');
   
 
   ObtenerDescuentosRelacionados();//manda a llamar calcular totales al finalizar los descuentos
@@ -1829,10 +1855,6 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
   $(".divtransferencia").css('display','none');
   $("#divagregartarjeta").css('display','none');
   $("#divlistadotarjetas").css('display','none');
-
-  $$("#btnpagarresumen").attr('disabled',true);
-  $$("#btnatras").attr('onclick','Atras()');
-  $$("#btnatras").css('display','none');
 
   $$("#btnpagarresumen").attr('onclick','RealizarCargo()')
 });
@@ -1959,6 +1981,12 @@ $$(document).on('page:init', '.page[data-name="nuevoservicio"]', function (e) {
        
     }).then(()=>{
       asignacionperiodos=[];
+      arraydiaselegidos=[];
+      arraydiaseleccionados=[];
+      asignacioncoach=[];
+
+    localStorage.setItem("fotoimagenservicio",'');
+
        CargarFechasNuevoServicio();
   $("#v_costo").attr('onkeyup','');
   $("#v_categoria").attr('onchange','SeleccionarCategoria(0)');
@@ -1968,14 +1996,15 @@ $$(document).on('page:init', '.page[data-name="nuevoservicio"]', function (e) {
   $("#v_reembolso").attr('onchange','HabilitarcantidadReembolso()');
   ObtenerTodasEncuestas();
   //$$(".imglogoimagenservicio").attr('src',urlimagendefault);
-  $("#btnagregarcoach").attr('onclick','NuevoCoach()');
-  $$(".fotoimagen").attr('onclick','AbrirModalFotoimagenservicio()');
+  $("#btnagregarcoach").attr('onclick','NuevoCoach(-1)');
+  //$$(".fotoimagen").attr('onclick','AbrirModalFotoimagenservicio()');
   $("#btnguardarservicio").attr('onclick','Guardarservicio()');
   $("#btnagregarperiodo").attr('onclick','NuevoPeriodo()');
   
   $("#v_politicaaceptacionseleccion").attr('onchange','SeleccionarPolitica()');
   $(".imglogoimagenservicio").attr('src',urlimagendefaultservicio);
-  
+  $$(".fotoimagen").attr('onclick','AbrirModalFotoimagenservicio()');
+
   $("#v_ligarclientes").attr('onchange','Permitirligar()');
   $("#v_titulo").attr("onblur","Colocardescripcion();CambiarColor2('lititulo');");
   $$('#v_titulo').attr('onfocus',"CambiarColor('lititulo');");
@@ -2021,7 +2050,7 @@ $$(document).on('page:init', '.page[data-name="nuevoservicio"]', function (e) {
   $$('#v_numparticipantesmin').attr('onfocus',"CambiarColor('linumparticipantesmin');");
    $("#v_numparticipantesmax").attr("onblur","CambiarColor2('linumparticipantesmax');");
   $$('#v_numparticipantesmax').attr('onfocus',"CambiarColor('linumparticipantesmax');");
-     
+  $("#btncancelar").css('display','none');
 
 
     }).then(()=>{
@@ -2033,12 +2062,17 @@ $$(document).on('page:init', '.page[data-name="nuevoservicio"]', function (e) {
        porcentajescoachs=[];
        
          ObtenerServicioNuevo(localStorage.getItem('valor'));
-    
+         $$("#btncancelarservicio").attr('onclick','CancelarServicioAdmin('+localStorage.getItem('valor')+')');
+
       $("#id").val(localStorage.getItem('valor'));
       $("#txtpagina").html('Editar <span style="color: #0abe68;">servicio</span>');
      $(".lititulo").addClass('item-input-with-value');
      $(".lidescripcion").addClass('item-input-with-value');
-
+        $("#btncancelar").css('display','none');
+        if (localStorage.getItem('idtipousuario')==0){
+          var paginaregreso=localStorage.getItem('pantalla');
+          $(".regreso").attr('onclick','GoToPage("'+paginaregreso+'")');
+      }
     }else{
 
       ObtenerTipoServicios(0)
@@ -2071,7 +2105,7 @@ $$(document).on('page:init', '.page[data-name="replicaservicio"]', function (e) 
  ObtenerServiciosReplica();
  //CargarCalendario();
  CargarFechasNuevoServicio();
-
+localStorage.setItem("fotoimagenservicio",'');
   $("#serviciosreplica").attr('onchange','ObtenerServicioAReplicar(this.value);ObtenerUsuariosServicio(this.value);ObtenerOrdenServicio();');
 
   $("#btnguardarservicioreplica").attr('onclick','GuardarReplica()');
@@ -2086,6 +2120,7 @@ $$(document).on('page:init', '.page[data-name="replicaservicio"]', function (e) 
   $("#btnagregarcoach").attr('onclick','NuevoCoach()');
 
   $$(".fotoimagen").attr('onclick','AbrirModalFotoimagenservicio()');
+  $(".imglogoimagenservicio").attr('src',urlimagendefaultservicio);
 
   $("#v_politicaaceptacionseleccion").attr('onchange','SeleccionarPolitica()');
 
@@ -2293,7 +2328,21 @@ regresohome();
 
    if (localStorage.getItem('idtipousuario')==0){
       
-   ObtenerServiciosporValidarAdmin();
+
+    
+      ObtenerServiciosporValidarAdmin().then(r => {
+
+
+          $("#filtrocoach").css('display','block');
+
+          localStorage.setItem('pantalla','serviciosporvalidar');
+          ObtenerCoachesFiltro();
+          $(".v_coach").attr('onchange','FiltrarServicios()');
+
+
+        });
+
+
     }
 
 

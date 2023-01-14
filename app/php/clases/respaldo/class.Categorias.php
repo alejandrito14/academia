@@ -143,7 +143,7 @@ class Categorias
 		return $array;
 	}
 
-
+	
 /*
 	public function ObtenerHorariosCategoriasDia()
 	{

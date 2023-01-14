@@ -32,13 +32,13 @@ $lista_empresas = $_SESSION['se_liempresas']; //variables de sesion
 
 //Importamos nuestras clases
 require_once("../../clases/conexcion.php");
-require_once("../../clases/class.Categoriasproductos.php");
+require_once("../../clases/class.Categorias.php");
 require_once("../../clases/class.Funciones.php");
 require_once("../../clases/class.Botones.php");
 
 //Se crean los objetos de clase
 $db = new MySQL();
-$emp = new Categoriasproductos();
+$emp = new Categorias();
 $f = new Funciones();
 $bt = new Botones_permisos();
 

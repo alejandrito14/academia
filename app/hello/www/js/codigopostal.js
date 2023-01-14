@@ -88,7 +88,16 @@ function Buscarcodigo() {
 								$("#v_estado").val(0);
 								$("#v_municipio").val(0);
 							}
+
+							$(".licodigopostal").addClass('item-input-focused');
+							$(".lipais").addClass('item-input-focused');
+							$(".liestado").addClass('item-input-focused');
+							$(".limunicipio").addClass('item-input-focused');
 						}
+
+
+						
+						
 
 						
 	 					

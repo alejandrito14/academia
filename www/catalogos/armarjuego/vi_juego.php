@@ -15,7 +15,7 @@ if(!isset($_SESSION['se_SAS']))
 $idmenumodulo = $_GET['idmenumodulo'];
 
 //validaciones para todo el sistema
-
+ 
 $tipousaurio = $_SESSION['se_sas_Tipo'];  //variables de sesion
 $lista_empresas = $_SESSION['se_liempresas']; //variables de sesion
 

@@ -8,8 +8,9 @@ require_once("clases/conexcion.php");
 require_once("clases/class.PagosCoach.php");
 require_once("clases/class.Funciones.php");
 require_once("clases/class.Fechas.php");
-require_once("clases/class.ServiciosAsignados.php");
+require_once("clases/class.ServiciosAsignados.php"); 
 require_once("clases/class.Pagos.php");
+require_once("clases/class.Usuarios.php");
 
 try
 {
@@ -23,11 +24,15 @@ try
 	$asignacion->db=$db;
 	$pagos=new Pagos();
 	$pagos->db=$db;
+	$usuarios=new Usuarios();
+	$usuarios->db=$db;
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
 
 	$idusuarios=$_POST['id_user'];
 	$lo->idusuarios=$idusuarios;
+	$usuarios->idusuarios=$idusuarios;
+    $datoscoach=$usuarios->ObtenerUsuarioDatos();
 	$asignacion->idusuario=$idusuarios;
 	$obtenerservicios=$asignacion->obtenerServiciosAsignadosCoach();
 	$pagosdelcoach=array();
@@ -44,39 +49,61 @@ try
 
 		if (count($tipomontopago)>0) {
 				# code...
+			if($tipomontopago[0]->monto>0) {
+					# code...
 				
 			if (count($obtenerpagos)>0) {
 				# code...
-			for ($j=0; $j <count($obtenerpagos) ; $j++) { 
+
+			for ($j=0;$j<count($obtenerpagos);$j++) { 
 				# code...
 					$idpago=$obtenerpagos[$j]->idpago;
-					$lo->idpago=$idpago;
-					$lo->idservicio=$idservicio;
-					$existe=$lo->ObtenerPagoCoach();
+					//echo $idpago;die();
+					//$lo->idpago=$idpago;
+					//$lo->idservicio=$idservicio;
+					$existe=$lo->ObtenerPagoCoach($idpago,$idservicio);
 
 					if (count($existe)==0) {
 						# code...
 					$pagos->idpago=$idpago;
 				    $buscarpago=$pagos->ObtenerPago();
+				   	//echo $pagos->idpago.'<br>';
 
 				    $montopago=$buscarpago[0]->monto;
-                    $lo->idusuarios=$idusuarios;
-                    $lo->idservicio=$idservicio;
-                    $lo->monto=$asignacion->CalcularMontoPago($tipomontopago[0]->tipopago,$tipomontopago[0]->monto,$montopago);
+                    $idservicios=$buscarpago[0]->idservicio;
+                    $monto=$asignacion->CalcularMontoPago($tipomontopago[0]->tipopago,$tipomontopago[0]->monto,$montopago);
+                    $idpago=$buscarpago[0]->idpago;
+	                $estatus=0;
+	                $pagado=0;
+	                $folio="";
+	                $concepto=$buscarpago[0]->concepto;
+	               // $lo->idpago=$pagos->idpago;
+	                $text=$textoestatus[$estatus];
+	                $usuarios->idusuarios=$buscarpago[0]->idusuarios;
+	                $corresponde=$usuarios->ObtenerUsuarioDatos();
+	                $objeto=array(
+	                	'idpago'=>$buscarpago[0]->idpago,
+	                	'idusuarios'=>$idusuarios,
+	                	'idservicio'=>$idservicio,
+	                	'concepto'=>$concepto,
+	                	'textoestatus'=>$text,
+	                	'estatus'=>0,
+	                	'pagado'=>0,
+	                	'folio'=>'',
+	                	'corresponde'=>$corresponde,
+	                	'monto'=>$monto	,
+	                	'tipopago'=>$tipomontopago[0]->tipopago,
+	                	'montopagocoach'=>$tipomontopago[0]->monto,
+	                	'montopago'=>$montopago
+	                );
 
-	                $lo->estatus=0;
-	                $lo->pagado=0;
-	                $lo->folio="";
-	                $lo->concepto=$buscarpago[0]->concepto;
-	                $lo->idpago=$buscarpago[0]->idpago;
-	                $lo->textoestatus=$textoestatus[$lo->estatus];
-
-	                 array_push($pagosdelcoach,$lo);
+	                 array_push($pagosdelcoach,$objeto);
 					
+							}
+
 						}
 
 					}
-
 				}
 			}
 
@@ -84,10 +111,11 @@ try
 		}
 
 
-
+		
 
 
 	$respuesta['respuesta']=$pagosdelcoach;
+	$respuesta['datoscoach']=$datoscoach;
 	
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);

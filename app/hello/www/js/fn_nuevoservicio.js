@@ -17,45 +17,7 @@ let calendarInline="";
 function CargarFechasNuevoServicio() {
 
 	var eventos=[];
-	/*var idservicio=localStorage.getItem('idservicio');
-	var datos="idservicio="+idservicio;
-	var pagina="ObtenerFechasHorarios.php";
-	$.ajax({
-		type: 'POST',
-		dataType: 'json',
-	 	url: urlphp+pagina,
-		crossDomain: true,
-		cache: false,
-		data:datos,
-		success: function(datos){
-		var respuesta=datos.respuesta;
-				var eventos=[];
-				for (var i = 0; i <respuesta.length; i++) {
-						
-						var fecha=respuesta[i].fecha;
-						var dividir=fecha.split('-');
-						
-						var anio=dividir[0];
-						var mes=(dividir[1].replace(/^(0+)/g, '')-1);
-						var dia=dividir[2];
-						var color=respuesta[i].color;
 
-						var objeto={
-							date:new Date(anio,mes,dia),
-							color:'rgb(255 255 255 / 10%)',
-						};
-						eventos.push(objeto);
-
-					}
-
-*/
-					
- 
-   
-
-      // Default
-  
-    
       // Inline with custom toolbar
       var monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
       calendarInline = app.calendar.create({
@@ -118,43 +80,7 @@ function CargarFechasNuevoServicio() {
 
    
 
-          /*	var fechaac=new Date();
-          	var mes=fechaac.getMonth()+1;
-         	var dia=fechaac.getDate();
-         	fechaactualdata=fechaac.getFullYear()+'-'+ mes+'-'+dia;
-
-          	var fecha=calendarInline.getValue();
-
-
-          	var convertirfecha=new Date(fecha);
-          	var mes=(convertirfecha.getMonth() + 1)<10?'0'+(convertirfecha.getMonth() + 1):(convertirfecha.getMonth() + 1);
-         	var mesdata=convertirfecha.getMonth();
-
-         	var dia=convertirfecha.getDate()<10?'0'+convertirfecha.getDate():convertirfecha.getDate();
-         	var diadata=convertirfecha.getDate();
-
-         	fecha1=convertirfecha.getFullYear()+'-'+ mes+'-'+dia;
-          	ConsultarFechaHorariosDisponibles(fecha1);
-          	
-*/
-         /*	var fechaac=new Date();
-          	var mes=fechaac.getMonth()+1;
-         	var dia=fechaac.getDate();
-         	fechaactualdata=fechaac.getFullYear()+'-'+ mes+'-'+dia;
-
-          	var fecha=calendarInline.getValue();
-*/
-
-        /*  	var convertirfecha=new Date(fecha);
-          	var mes=(convertirfecha.getMonth() + 1)<10?'0'+(convertirfecha.getMonth() + 1):(convertirfecha.getMonth() + 1);
-         	var mesdata=convertirfecha.getMonth();
-
-         	var dia=convertirfecha.getDate()<10?'0'+convertirfecha.getDate():convertirfecha.getDate();
-         	var diadata=convertirfecha.getDate();
-
-         	fecha1=convertirfecha.getFullYear()+'-'+ mes+'-'+dia;
-          	ConsultarFechaHorariosDisponibles(fecha1);
-          	*/
+         
 
           },
          calendarChange:function (c) {
@@ -166,7 +92,6 @@ function CargarFechasNuevoServicio() {
 
           	var fecha=calendarInline.getValue();
 
-
           	var convertirfecha=new Date(fecha);
           	var mes=(convertirfecha.getMonth() + 1)<10?'0'+(convertirfecha.getMonth() + 1):(convertirfecha.getMonth() + 1);
          	var mesdata=convertirfecha.getMonth();
@@ -175,24 +100,7 @@ function CargarFechasNuevoServicio() {
          	var diadata=convertirfecha.getDate();
          	fecha1=convertirfecha.getFullYear()+'-'+ mes+'-'+dia;
           	ConsultarFechaHorariosDisponibles(fecha1);
-          	//var fechadata=convertirfecha.getFullYear()+'-'+mesdata+'-'+diadata;
-
-          		/*$(".calendar-day").each(function( index ) {
-						 var datafecha=$(this).data('date');
-
-						 if (datafecha==fechadata && datafecha!= fechaactualdata) {
-
-						 	$(this).children().eq(0).addClass('seleccionado');
-							//return 0;
-						 }
-
-						 else{
-
-						 $(this).children().eq(0).removeClass('seleccionado');
-
-						 }
-
-				});*/
+         
           
       
           },
@@ -219,16 +127,7 @@ function CargarFechasNuevoServicio() {
    
 
   
-		/*	},error: function(XMLHttpRequest, textStatus, errorThrown){ 
-				var error;
-		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
-				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
-								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
-					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
-			}
-
-		});*/
-
+		
 }
 
 
@@ -1548,7 +1447,7 @@ function MensajeMostrar(noseencuentra) {
  					var dividirfecha=noseencuentra[i].split('-');
  					var fecha=dividirfecha[0]+'-'+dividirfecha[1]+'-'+dividirfecha[2];
  					
- 					msj+=`<span>`+fecha+`</span>`;
+ 					msj+=`<span>`+fecha+`</span><br>`;
  				}
 
  				
@@ -1558,9 +1457,10 @@ function MensajeMostrar(noseencuentra) {
 
                 <div class="row" style="padding-top:1em;">
 
-                <span>Alguna de las fechas estan fuera del periodo seleccionado
-                ¿Desea eliminar las fechas?</span>
-                <p>`+msj+`</p>
+                <span>Tienes horarios seleccionados que estan fuera del periodo actual
+               	`+msj+`
+                ¿Deseas eliminarlos?</span>
+                
                 </div>
               </div>
            
@@ -1600,10 +1500,15 @@ function EliminarHorariosFueraPeriodo(noseencuentra) {
  				for (var j = 0; j < arraydiaseleccionados.length; j++) {
  					console.log(noseencuentra[i]+'=='+arraydiaseleccionados[j].id);
  					if (noseencuentra[i] == arraydiaseleccionados[j].id) {
- 						EliminarHorario(noseencuentra[i]);
+ 						//EliminarHorario(noseencuentra[i]);
+ 						BorrarElemento(noseencuentra[i]);
+						BorrarElementoObjeto(noseencuentra[i]);
+						
  						
  					}
  				}
+ 				Resumenfechas();
+				CantidadHorarios();
  					
  		}
 
@@ -2176,8 +2081,8 @@ function EliminarHorario(idhorario) {
 	
 }
 
-function NuevoCoach() {
-		
+function NuevoCoach(val) {
+		 ObtenerCoaches().then(r => {
 
 var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: none;">
             <div class="toolbar">
@@ -2313,9 +2218,10 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
         on: {
           open: function (sheet) {
 
-            ObtenerCoaches().then(r => {
+           
             	var html="";
             	if (r.length>0) {
+            			html+=`<option value="0">Seleccionar coach </option>`;
 
             		for (var i = 0; i < r.length; i++) {
             		
@@ -2325,14 +2231,30 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
             	$("#coaches").html(html);
 
-            });
+          
 
-            $("#btnguardarcoach").attr('onclick','GuardarCoachServicio()');
 
           },
           opened: function (sheet) {
           
- 
+             $("#btnguardarcoach").attr('onclick','GuardarCoachServicio()');
+
+             console.log(val);
+             if (val>=0) {
+
+             	if (asignacioncoach.length>0) {
+            
+             	var coaches=asignacioncoach[val].idcoach;
+												
+														var tipo=asignacioncoach[val].tipopago;
+														var txcantidaddescuento=asignacioncoach[val].monto;
+														var textonombre=asignacioncoach[val].textonombre;
+														$("#coaches").val(coaches);
+														$("#tipo").val(tipo);
+														$("#txcantidaddescuento").val(txcantidaddescuento);
+														$("#txtposcion").val(val);
+														}
+             }
             
           },
           closed:function(sheet){
@@ -2344,7 +2266,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
        dynamicSheet1.open();
 
-
+         });
 }
 
 function ObtenerCoaches() {
@@ -2374,6 +2296,8 @@ return new Promise((resolve, reject) => {
 
 function GuardarCoachServicio() {
 	var coaches=$("#coaches").val();
+
+	if (coaches>0) {
 	var tipo=$("#tipo").val();
 	var txcantidaddescuento=$("#txcantidaddescuento").val();
 	var textonombre=$("#coaches option:selected").html();
@@ -2405,6 +2329,11 @@ function GuardarCoachServicio() {
 	
 	PintarCoaches();
 dynamicSheet1.close();
+
+	}else{
+
+		alerta('','Seleccionar coach')
+	}
 }
 
 function PintarCoaches() {
@@ -2414,7 +2343,7 @@ function PintarCoaches() {
 		for (var i = 0; i <asignacioncoach.length; i++) {
 				html+=`
 
-			<div class="col-100 medium-33 large-50 elemento"  style="    margin-top: 1em;
+			<div class="col-100  elemento"  style="    margin-top: 1em;
     margin-bottom: 1em;" id="elemento_`+i+`"><div class="card">
     <div class="card-content card-content-padding ">
     <div class="row">
@@ -2512,16 +2441,11 @@ function Eliminar(posicion) {
 								PintarCoaches();
 }
 function EditarCoach(posicion) {
-	NuevoCoach();
 
-	var coaches=asignacioncoach[posicion].idcoach;
-	var tipo=asignacioncoach[posicion].tipopago;
-	var txcantidaddescuento=asignacioncoach[posicion].monto;
-	var textonombre=asignacioncoach[posicion].textonombre;
-	$("#coaches").val(coaches);
-	$("#tipo").val(tipo);
-	$("#txcantidaddescuento").val(txcantidaddescuento);
-	$("#txtposcion").val(posicion);
+	dynamicSheet2="";
+	NuevoCoach(posicion);
+
+	
 }
 
 
@@ -3888,10 +3812,11 @@ function Validacion() {
 	$(".lidescripcionpoliticas").removeClass('requerido');
 	$(".lifechainicial").removeClass('requerido');
 	$(".lifechafinal").removeClass('requerido');
-    $(".liseleccionardias").removeClass('requerido2');
-    $(".liseleccionafechas").removeClass('requerido2');
+ $(".liseleccionardias").removeClass('requerido2');
+ $(".liseleccionafechas").removeClass('requerido2');
 	$(".liperiodosdecobro").removeClass('requerido2')
-
+	$(".lipoliticasaceptacion").removeClass('requerido');
+	$(".parrafopoliticasaceptacion").removeClass('requerido2');
 
 var bandera=1;
 	if (titulo=='') {
@@ -3952,7 +3877,7 @@ var bandera=1;
 
 		 contardias++;
 		}
-		 if($("#Sabado").is('.checked')){
+		 if($("#Sabado").is(':checked')){
 
 		 contardias++;
 		}	
@@ -4026,6 +3951,7 @@ var bandera=1;
 			if (politicasaceptacion == '') {
 				bandera=0;
 				$(".lidescripcionpoliticas").addClass('requerido');
+				$(".parrafopoliticasaceptacion").addClass('requerido2');
 
 			}
 

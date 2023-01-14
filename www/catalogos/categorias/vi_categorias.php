@@ -146,7 +146,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 <script type="text/javascript">
-	Buscar_categoriasproducto(<?php echo $idmenumodulo; ?>);
+	Buscar_categorias(<?php echo $idmenumodulo; ?>);
 </script>
 
 

@@ -221,7 +221,7 @@
         $(".imglogoimagenservicio").attr('src',urlimagenes+"servicios/imagenes/"+codigoserv+'/'+foto);
 
       }else{
-        $(".imglogoimagenservicio").attr('src',urlimagenimagenservicio);
+        $(".imglogoimagenservicio").attr('src',urlimagendefaultservicio);
 
       }
 

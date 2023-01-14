@@ -10,15 +10,19 @@ class NotificacionPush
     public $idnotificacionadmin;
     public $estatus;
     public $apikey;
+    public $valor;
+    public $navpage;
+    public $idcliente;
     public $idusuario;
+    public $idnotificacioncliente;
+    public $banderatuto;
 
 	public function EnviarNotificacion($listatokens,$titulo,$mensaje)
 	{
+    $fcmUrl = 'https://fcm.googleapis.com/fcm/send';
+    
 
-		$fcmUrl = 'https://fcm.googleapis.com/fcm/send';
- 	
-
- 		$tokenList=$listatokens;
+        $tokenList=$listatokens;
 
      $notification = [
             'title' =>$titulo,
@@ -26,7 +30,7 @@ class NotificacionPush
             'icon' =>'myIcon', 
             'sound' => 'mySound'
         ];
-        $extraNotificationData = ["message" => $notification,"moredata" =>'dd'];
+        $extraNotificationData = ["notification_foreground" => "true", "navigation" => $this->navpage, "idcliente" => $this->idcliente,"valor"=>$this->valor,'banderatuto'=>$this->banderatuto];
 
         $fcmNotification = [
             'registration_ids' => $tokenList, //multple token array
@@ -50,7 +54,6 @@ class NotificacionPush
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fcmNotification));
         $result = curl_exec($ch);
         curl_close($ch);
-
 
        // echo $result;
 	
@@ -96,6 +99,17 @@ class NotificacionPush
     }
 
 
+    public function ObtenerApiKey()
+    {
+       $query="SELECT  *, count(idpagina_configuracion) as cuantos FROM pagina_configuracion";
+                
+        $resp=$this->db->consulta($query);
+        $rows=$this->db->fetch_assoc($resp);
+        return $rows;
+     
+
+
+    }
 	
 }
 

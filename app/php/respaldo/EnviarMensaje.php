@@ -71,13 +71,37 @@ try
 	if (count($obtenerusuariosnoti)>0) {
 		for ($i=0; $i <count($obtenerusuariosnoti) ; $i++) { 
 			
-
+ 
 		$notificaciones->idusuario=$obtenerusuariosnoti[$i]->idusuarios;
-		$obtenertokenusuario=$notificaciones->Obtenertoken();
+		
 
 		$idusuario=$obtenerusuariosnoti[$i]->idusuarios;
+
+		$usuarios->idusuarios=$idusuario;
+		$obtenerdependencia=$usuarios->ObtenerUsuarioDependencia();
+
+		if (count($obtenerdependencia)>0) {
+			$obtenerdatousuario=$usuarios->ObtenerUsuario();
+			if($obtenerdatousuario[0]->sincel==1) {
+			$notificaciones->idusuario=$obtenerdependencia[0]->idusuariostutor;
+				$ruta="messages";
+
+			}else{
+			   $notificaciones->idusuario=$idusuario;
+			   $ruta="messages";
+
+			}
+	
+
+					}else{
+		$notificaciones->idusuario=$obtenerusuariosnoti[$i]->idusuarios;
+			$ruta="messages";
+
+		}
 	/*	array_push($arraytokens,$obtenertokenusuario[0]->token);*/
 			
+		$obtenertokenusuario=$notificaciones->Obtenertoken();
+
 
 		for ($j=0; $j < count($obtenertokenusuario); $j++) { 
 
@@ -85,7 +109,7 @@ try
 
 					array_push($arraytokens,$dato);
 				}
-			
+			$idusuario=$notificaciones->idusuario;
 			$texto='|Nuevo mensaje|'.$obtenerdatosservicio[0]->titulo.'|'.$nombrequienasigna.'|'.$lo->mensaje;
 			$estatus=0;
 			$valor=$lo->idsalachat;

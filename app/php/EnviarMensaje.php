@@ -63,11 +63,13 @@ try
 	$obtenerusuariosnoti=$sala->ObtenerOtrosUsuariosSala();
 
 	
-	$titulonotificacion=$obtenerUsu[0]->nombre." ".$obtenerUsu[0]->paterno. ' te ha enviado un mensaje relacionado con el servicio '.$obtenerdatosservicio[0]->titulo;
+	
 
 	//si es tutorado poner la palabra para
 	$arraytokens=array();
 	$ruta="messages";
+		$usuarioinvita="";
+
 	if (count($obtenerusuariosnoti)>0) {
 		for ($i=0; $i <count($obtenerusuariosnoti) ; $i++) { 
 			
@@ -76,6 +78,10 @@ try
 		
 
 		$idusuario=$obtenerusuariosnoti[$i]->idusuarios;
+
+		$usuarios->idusuarios=$idusuario;
+		$obtenerusuarioinvita=$usuarios->ObtenerUsuario();
+		$usuarioinvita=$obtenerusuarioinvita[0]->nombre.', ';
 
 		$usuarios->idusuarios=$idusuario;
 		$obtenerdependencia=$usuarios->ObtenerUsuarioDependencia();
@@ -101,11 +107,11 @@ try
 	/*	array_push($arraytokens,$obtenertokenusuario[0]->token);*/
 			
 		$obtenertokenusuario=$notificaciones->Obtenertoken();
-
+		$titulonotificacion=$usuarioinvita.$obtenerUsu[0]->nombre." ".$obtenerUsu[0]->paterno. ' te ha enviado un mensaje relacionado con el servicio '.$obtenerdatosservicio[0]->titulo;
 
 		for ($j=0; $j < count($obtenertokenusuario); $j++) { 
 
-				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$j]->token,'ruta'=>$ruta,'titulo'=>$titulonotificacion);
+				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$j]->token,'ruta'=>$ruta,'titulonotificacion'=>$titulonotificacion);
 
 					array_push($arraytokens,$dato);
 				}
@@ -127,6 +133,7 @@ try
 				$notificaciones->navpage=$arraytokens[$i]['ruta'];
 			 	$notificaciones->idcliente=$idusuario;
 			 	$notificaciones->valor=$lo->idsalachat;
+			 	$titulonotificacion=$arraytokens[$i]['titulonotificacion'];
 			 	$array=array();
 			 	array_push($array,$arraytokens[$i]['token']);
 			$notificaciones->EnviarNotificacion($array,$texto,$titulonotificacion);

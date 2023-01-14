@@ -142,7 +142,7 @@ $arraydescuentos=array();
 if ($validado==1) {
 		if ($porhorarioservicio==1) {
 					
-				$fechaactual=date('Y-m-d',strtotime($fechacreacionservicio));
+				$fechaactual=date('Y-m-d',strtotime($datosservicio[0]->fechainicial));
 
 				$fechades = date('Y-m-d',strtotime($fechaactual."+ ".$cantidaddias." days"));
 

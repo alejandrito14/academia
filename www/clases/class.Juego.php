@@ -189,8 +189,9 @@ class Juego
 			for ($i=0; $i <count($parejas) ; $i++) { 
 				if ($parejas[$i]->{'numeropareja'}==$team) {
 					//var_dump($parejas[$i]->{'participante1'});die();
-					
-					$pareja=array('participante1'=>$parejas[$i]->{'participante1'},'participante2'=>$parejas[$i]->{'participante2'},'nombreparticipante1'=>$parejas[$i]->{'nombreparticipante1'},'nombreparticipante2'=>$parejas[$i]->{'nombreparticipante2'});
+					$foto1=$this->ConsultarFoto($parejas[$i]->{'participante1'});
+					$foto2=$this->ConsultarFoto($parejas[$i]->{'participante2'});
+					$pareja=array('participante1'=>$parejas[$i]->{'participante1'},'participante2'=>$parejas[$i]->{'participante2'},'nombreparticipante1'=>$parejas[$i]->{'nombreparticipante1'},'nombreparticipante2'=>$parejas[$i]->{'nombreparticipante2'},'foto1'=>$foto1,'foto2'=>$foto2);
 
 					break;
 				}
@@ -199,6 +200,62 @@ class Juego
 
 		return $pareja;
 	}
+
+
+	public function ConsultarFoto($idusuario)
+	{
+		$sql="SELECT 
+		usuarios.idusuarios,
+		usuarios.nombre,
+		usuarios.foto,
+		usuarios.paterno,
+		usuarios.materno,
+		usuarios.celular,
+		usuarios.fechanacimiento,
+		usuarios.sexo,
+		usuarios.email,
+		usuarios.usuario,
+		usuarios.tipo,
+		usuarios.alias
+		FROM usuarios
+		 WHERE idusuarios='$idusuario'";
+
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+       
+
+
+        if($array[0]->foto==""){
+														$rutaperfil="images/sinfoto.png";
+													}
+													else{
+		
+														if ($_SESSION['carpetaapp']=='') {
+															$carpeta="";
+														}else{
+															$carpeta=$_SESSION['carpetaapp'].'/';
+
+														}
+
+														$rutaperfil="../app/".$carpeta."php/upload/perfil/".$array[0]->foto;
+													}
+
+
+											return $rutaperfil;
+			}
 	
 }
 ?>

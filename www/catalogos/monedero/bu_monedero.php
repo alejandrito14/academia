@@ -91,7 +91,7 @@ try
 			   <tr >
 			     
 			     <!--<th align="center" style="text-align:center"> FECHA</th>--> 
-                 	<th align="center" style="text-align:center"> ClIENTE</th>
+                 	<th align="center" style="text-align:center"> ALUMNO</th>
 				   <th align="center" style="text-align:center">SALDO</th>
 				   <th align="center" style="text-align: center;">ACCIÓN</th>
 				   <!--<th align="center" style="text-align:center">MODALIDAD</th> 

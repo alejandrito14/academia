@@ -54,7 +54,7 @@ function G_monedero(formulario,archivo_envio,archivo_vizualizar,donde_mostrar)
 		var datos = ObtenerDatosFormulario(formulario);//obteniedo los datos del formulario
 		console.log(datos);
 		$('#abc').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Cargando...</div>');
-		overlayopen('abc');
+		//overlayopen('abc');
 		setTimeout(function(){
 				  $.ajax({
 					  type: 'POST',
@@ -74,8 +74,8 @@ function G_monedero(formulario,archivo_envio,archivo_vizualizar,donde_mostrar)
 						  
 						   console.log("El resultado de msj es: "+msj);
 						  if ( array[0] == 1 ){
-							  overlayclose('ventana');
-							  overlayclose('abc');
+							 // overlayclose('ventana');
+							  //overlayclose('abc');
 							  //$('#ModalPrincipal').css('display','none'); $('#contenido_modal').html('');
 							  $('#modalinformacion').modal('hide');
 							  //aparecermodulos(archivo_vizualizar+"?ac=1&msj=Operacion realizada con exito",donde_mostrar);
@@ -93,8 +93,8 @@ function G_monedero(formulario,archivo_envio,archivo_vizualizar,donde_mostrar)
 							  imprimirPDF(pag);
 						  }
 						  else{
-							  overlayclose('ventana');
-							 overlayclose('abc');
+							 // overlayclose('ventana');
+							 //overlayclose('abc');
 							 aparecermodulos(archivo_vizualizar+"?ac=0&msj=Error. "+msj,donde_mostrar);
 						  }	
 					  }
@@ -150,6 +150,8 @@ function agregarsaldoacliente(idusuarios,nombre) {
 
 			  	$("#titulomodal").html('AGREGAR SALDO');
 				 $("#bodymodal").html(msj);
+				 var html=`<button type="button" onClick="var resp=MM_validateForm('cantidad','','R','concepto','','R'); if(resp==1){ G_monedero('alta_categoria','catalogos/monedero/ga_monedero.php','catalogos/monedero/vi_monedero.php','main');}" class="btn btn-success" style="float: right;">GUARDAR</button>`;
+				 $("#btnfooter").html(html);
 				 $("#modalinformacion").modal();
 				 
 			  },

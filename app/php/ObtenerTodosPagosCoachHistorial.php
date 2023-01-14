@@ -8,6 +8,8 @@ require_once("clases/conexcion.php");
 require_once("clases/class.PagosCoach.php");
 require_once("clases/class.Funciones.php");
 require_once("clases/class.Fechas.php");
+require_once("clases/class.Usuarios.php");
+require_once("clases/class.Pagos.php");
 
 try
 {
@@ -17,6 +19,10 @@ try
 	$lo = new PagosCoach();
 	$f=new Funciones();
 	$fechas=new Fechas();
+	$usuarios=new Usuarios();
+	$usuarios->db=$db;
+	$pagos=new Pagos();
+	$pagos->db=$db;
 
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
@@ -34,6 +40,15 @@ try
 		$obtener[$i]->fechaformatopago=explode(' ',$dianumero[2])[0].'/'.$fechas->mesesAnho3[$fechas->mesdelano($fecha)-1].' '.$dianumero[0];
 			
 			$obtener[$i]->textoestatus=$textoestatus[$obtener[$i]->estatus];
+
+			$pagos->idpago=$obtener[$i]->idpago;
+			$buscarpago=$pagos->ObtenerPago();
+
+			
+			$usuarios->idusuarios= $buscarpago[0]->idusuarios;
+
+			$obtener[$i]->corresponde=$usuarios->ObtenerUsuarioDatos();
+
 
 		}
 

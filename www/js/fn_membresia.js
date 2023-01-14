@@ -13,6 +13,8 @@ function Guardarmembresia(form,regresar,donde,idmenumodulo)
 		var inppadre=$("#inppadre").is(':checked')?1:0;
 		var inphijo=$("#inphijo").is(':checked')?1:0;
 		var inpnieto=$("#inpnieto").is(':checked')?1:0;
+		var fecha=$("#v_fecha").val();
+		var repetir=$("#v_repetir").val();
 
 		var v_descripcion=$("#v_descripcion").val();
 		var v_costo=$("#v_costo").val();
@@ -130,10 +132,11 @@ function Guardarmembresia(form,regresar,donde,idmenumodulo)
 		datos.append('inphijo',inphijo);
 		datos.append('inpnieto',inpnieto);
 		datos.append('v_limitemembresia',v_limitemembresia);
-
-
-			if (bandera==1) {
-	$('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
+		datos.append('v_fecha',fecha);
+		datos.append('v_repetir',repetir);
+		
+		if (bandera==1) {
+		$('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
 
 		setTimeout(function(){
 				  $.ajax({

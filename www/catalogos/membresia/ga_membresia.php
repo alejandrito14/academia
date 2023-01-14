@@ -62,6 +62,8 @@ try
 	$emp->inphijo=$_POST['inphijo'];
 	$emp->inpnieto=$_POST['inpnieto'];
 	$emp->v_limitemembresia=$_POST['v_limitemembresia'];
+	$emp->fecha=$_POST['v_fecha'];
+	$emp->repetir=$_POST['v_repetir']!=''?$_POST['v_repetir']:0;
 	
 	$ruta="imagenes/".$_SESSION['codservicio'].'/';
 

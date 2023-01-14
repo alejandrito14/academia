@@ -21,6 +21,9 @@ require_once("../../clases/class.Funciones.php");
 require_once('../../clases/class.MovimientoBitacora.php');
 require_once('../../clases/class.ServiciosAsignados.php');
 require_once('../../clases/class.Encuesta.php');
+require_once("../../clases/class.NotificacionPush.php");
+require_once("../../clases/class.Tareas.php");
+require_once("../../clases/class.Usuarios.php");
 
 try
 {
@@ -33,6 +36,16 @@ try
 	$serviciciosasignados->db=$db;
 	$encuestas=new Encuesta();
 	$encuestas->db=$db;
+
+	$notificaciones=new NotificacionPush();
+	$notificaciones->db=$db;
+	$api=$notificaciones->ObtenerApiKey();
+	$notificaciones->apikey=$api['clavetokennotificacion'];
+
+	$tareas=new Tareas();
+	$tareas->db=$db;
+	$usuarios=new Usuarios();
+	$usuarios->db=$db;
 	//enviamos la conexión a las clases que lo requieren
 	$emp->db=$db;
 	$md->db = $db;	
@@ -54,6 +67,13 @@ try
 	$datosservicio=$obtenerservicio[0];
 	$obtenerperiodos="";
 
+
+	$usuarios->id_usuario=$_SESSION['se_sas_Usuario'];
+	$obtenerusuario=$usuarios->ObtenerUsuario();
+	$nombrequienagrega=$obtenerusuario[0]->nombre;
+
+	//Validamos 
+	$emp->validaradmin=0;
 	if ($general==1) {
 
 	$emp->descripcion = $datosservicio->descripcion;
@@ -62,6 +82,10 @@ try
 	$emp->imagen=$datosservicio->imagen;
 	$emp->orden = $datosservicio->orden;
 	$emp->estatus = $datosservicio->estatus;
+
+		if ($emp->estatus==1) {
+			$emp->validaradmin=1;
+		}
 	}
 
 	if ($costos==1) {
@@ -95,6 +119,7 @@ try
     	$emp->tiempoaviso=$datosservicio->tiempoaviso;
 		$emp->tituloaviso=$datosservicio->tituloaviso;
 		$emp->descripcionaviso=$datosservicio->descripcionaviso;
+		$emp->v_politicasaceptacionid=$datosservicio->idpoliticaaceptacion;
 	
 
 	}
@@ -108,6 +133,7 @@ try
 		$emp->ligarclientes=$datosservicio->ligarcliente;
 		$emp->reembolso=$datosservicio->reembolso;
 		$emp->cantidadreembolso=$datosservicio->cantidadreembolso;
+		$emp->tiporeembolso=$datosservicio->tiporeembolso;
 		$emp->asignadocliente=$datosservicio->asignadocliente;
 		$emp->asignadocoach=$datosservicio->asignadocoach;
 		$emp->asignadoadmin=$datosservicio->asignadoadmin;
@@ -159,7 +185,7 @@ try
 	$emp->sabado=$sabado;
 	$emp->domingo=$domingo;
 	$nombreimagen=$datosservicio->imagen;
-	
+	$arraytokens=array();
 			 
 
 
@@ -203,7 +229,27 @@ try
 						$tipo=$coachs[$i]->tipopago;
 						$monto=$coachs[$i]->monto;
 
-						$emp->GuardarMontotipo($tipo,$monto);	
+						$emp->GuardarMontotipo($tipo,$monto);
+
+
+						$idusuario=$coachs[$i]->idusuarios;
+
+						$usuarios->id_usuario=$idusuario;
+						$obtenerusuarioinvita=$usuarios->ObtenerUsuario();
+						$usuarioinvita=$obtenerusuarioinvita[0]->nombre.', ';
+
+						$ruta='detalleserviciocoach2';
+						$valor=$emp->idservicio;
+						$texto='|Se te asignó un nuevo servicio|'.$emp->titulo.'|';
+						$estatus=0;
+						$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
+
+						$notificaciones->idusuario=$idusuario;
+							$obtenertokenusuario=$notificaciones->Obtenertoken();
+						$titulonotificacion=$usuarioinvita.$nombrequienagrega." te asignó un nuevo servicio ".$emp->titulo;
+
+							$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[0]->token,'ruta'=>$ruta,'titulonotificacion'=>$titulonotificacion,'banderatuto'=>0);
+						array_push($arraytokens,$dato);	
 					}
 				}
 	}
@@ -243,13 +289,84 @@ try
 				for ($i=0; $i < count($idalumnos); $i++) { 
 						$emp->idparticipantes=$idalumnos[$i];
 						$emp->Guardarparticipantes();
+
+
+					$usuarios->idusuarios=$idalumnos[$i];
+					$obtenerdependencia=$usuarios->ObtenerUsuarioDependencia();
+
+					$ruta="";
+				
+					if (count($obtenerdependencia)>0) {
+						$obtenerdatousuario=$usuarios->ObtenerUsuario();
+						
+						if($obtenerdatousuario[0]->sincel==1) {
+							$notificaciones->idusuario=$obtenerdependencia[0]->idusuariostutor;
+							$ruta="listadotutoservicios";
+							$banderatuto=1;
+						}else{
+						   $notificaciones->idusuario=$idusuarios[$i];
+						   $ruta="serviciospendientesasignados";
+
+						}
+						
+
+
+
+								}else{
+						$notificaciones->idusuario=$idusuarios[$i];
+						$ruta="serviciospendientesasignados";
+
+					}
+					//$notificaciones->idusuario=$idusuarios[$i];
+					$obtenertokenusuario=$notificaciones->Obtenertoken();
+
+					$idusuario=$idalumnos[$i];
+				/*	array_push($arraytokens,$obtenertokenusuario[0]->token);*/
+				$titulonotificacion=$usuarioinvita.$obtenerUsu[0]->nombre." ".$obtenerUsu[0]->paterno." te ha asignado a ".$emp->titulo;
+
+					for ($j=0; $j < count($obtenertokenusuario); $j++) { 
+
+							$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$j]->token,'ruta'=>$ruta,'titulonotificacion'=>$titulonotificacion,'banderatuto'=>$banderatuto);
+
+								array_push($arraytokens,$dato);
+							}
+						$nombrequienasigna='Asignado por: '.$obtenerUsu[0]->nombre.' '.$obtenerUsu[0]->paterno;
+						
+						$texto='|Asignacion de servicio|'.$emp->titulo.'|'.$nombrequienasigna.'|Periodo: '.date('d-m-Y',strtotime($emp->fechainicial)).' '.date('d-m-Y',strtotime($emp->fechafinal));
+						$estatus=0;
+						$valor=$emp->idservicio;
+						$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
+
 					}
 				}
+
+
+
 
 
 	
 				
 	$db->commit();
+
+
+	if (count($arraytokens)>0) {
+			$texto='';
+			for ($i=0; $i <count($arraytokens) ; $i++) { 
+
+				
+				$idusuario=$arraytokens[$i]['idusuario'];
+				$notificaciones->navpage=$arraytokens[$i]['ruta'];
+			 	$notificaciones->idcliente=$idusuario;
+			 	$notificaciones->valor="";
+			 	$notificaciones->banderatuto=$arraytokens[$i]['banderatuto'];
+			 	$array=array();
+			 	array_push($array,$arraytokens[$i]['token']);
+			 	$titulonotificacion=$arraytokens[$i]['titulonotificacion'];
+			$notificaciones->EnviarNotificacion($array,$texto,$titulonotificacion);
+				//}
+
+			}
+		}
 	echo "1|".$emp->idservicio;
 	
 }catch(Exception $e)

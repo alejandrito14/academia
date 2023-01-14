@@ -67,14 +67,14 @@ try
 	}else{
 		//ES UN CARGO
 		//Obtenemos el saldo que tiene el cliente
-		$cli->idCliente = $cliente;
-		$result_cliente = $cli->ObtenerInformacionCliente();
+		$cli->id_usuario = $cliente;
+		$result_cliente = $cli->ObtenerInformacionusuario();
 		$row_cliente=$db->fetch_assoc($result_cliente);
 
-		$saldo_actual = $row_cliente['monedero'];
+		$saldo_anterior = $row_cliente['monedero'];
 		
 		//Calculamos nuevo saldo
-		$nuevo_saldo = $saldo_actual - $cantidad;
+		$nuevo_saldo = $saldo_anterior - $cantidad;
 		
 		//Guardamos el saldo en la tabla de clientes para posterior guardar el movimiento en tabla cliente_monedero
 		$sql = "UPDATE usuarios SET monedero = '$nuevo_saldo' WHERE idusuarios = '$cliente'";
@@ -82,16 +82,17 @@ try
 		
 		
 		//Guardamos el movimiento en tabla cliente_monedero
-		$sql_movimiento = "INSERT INTO monedero (idusuarios,monto,modalidad,tipo,saldo_ant,saldo_act,concepto) VALUES ('$cliente','$cantidad','4','$tipo','$saldo_actual','$nuevo_saldo','$concepto');";
+		
+		$sql_movimiento = "INSERT INTO monedero (idusuarios,monto,modalidad,tipo,saldo_ant,saldo_act,concepto) VALUES ('$cliente','$cantidad','4','$tipo','$saldo_anterior','$nuevo_saldo','$concepto');";
+
 		$db->consulta($sql_movimiento);
 		$ultimo = $db->id_ultimo();
 		
-		$md->guardarMovimiento(utf8_decode('monedero'),'monedero',utf8_decode('Nuevo movimiento de saldo creado con el ID :'.$ultimo.'saldo anterior: '.$saldo_anterior.' nuevo saldo: '.$nuevo_saldo));
+		//$md->guardarMovimiento(utf8_decode('monedero'),'monedero',utf8_decode('Nuevo movimiento de saldo creado con el ID :'.$ultimo.'saldo anterior: '.$saldo_anterior.' nuevo saldo: '.$nuevo_saldo));
 	}
 
 	$db->commit();
-
-	$suc = $_SESSION['se_sas_Sucursal'];
+	$impresion=0;
 	/*$sql_imp = "SELECT * FROM sucursales WHERE idsucursales = '$suc'";
 	$result_imp = $db->consulta($sql_imp);
 	$result_imp_row = $db->fetch_assoc($result_imp);

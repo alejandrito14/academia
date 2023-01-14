@@ -40,6 +40,7 @@ try
 	$arrayelegidos=json_decode($_POST['arraydiaseleccionados']);
 	$obtener=$servicio->ObtenerHorariosSemana($servicio->idservicioes);
 
+
 	$cantidad=0;
 	$fechaspasadas=0;
 	if (count($arrayelegidos) ==count($obtener)) {

@@ -142,10 +142,14 @@ try
 
 	if (count($idusuarios)>0) {
 		# code...
-	
+	$usuarioinvita="";
 	for ($i=0; $i <count($idusuarios) ; $i++) { 
 		$serviciosasignados->idusuario=$idusuarios[$i];
 		$serviciosasignados->idservicio=$idservicioasignar;
+
+		$usuarios->idusuarios=$idusuarios[$i];
+		$obtenerusuarioinvita=$usuarios->ObtenerUsuario();
+		$usuarioinvita=$obtenerusuarioinvita[0]->nombre.', ';
 		
 		$consulta=$serviciosasignados->BuscarAsignacion();
 
@@ -159,16 +163,17 @@ try
 		$invitacion->GuardarInvitacion();
 
 		}
+		$banderatuto=0;
 		$usuarios->idusuarios=$idusuarios[$i];
 		$obtenerdependencia=$usuarios->ObtenerUsuarioDependencia();
-
+		$ruta="";
 		if (count($obtenerdependencia)>0) {
 			$obtenerdatousuario=$usuarios->ObtenerUsuario();
-
+			
 			if($obtenerdatousuario[0]->sincel==1) {
 				$notificaciones->idusuario=$obtenerdependencia[0]->idusuariostutor;
 				$ruta="listadotutoservicios";
-
+				$banderatuto=1;
 			}else{
 			   $notificaciones->idusuario=$idusuarios[$i];
 			   $ruta="serviciospendientesasignados";
@@ -188,10 +193,11 @@ try
 
 		$idusuario=$idusuarios[$i];
 	/*	array_push($arraytokens,$obtenertokenusuario[0]->token);*/
+	$titulonotificacion=$usuarioinvita.$obtenerUsu[0]->nombre." ".$obtenerUsu[0]->paterno." te ha asignado a ".$obtenerdatosservicio[0]->titulo;
 
 		for ($j=0; $j < count($obtenertokenusuario); $j++) { 
 
-				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$j]->token,'ruta'=>$ruta);
+				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$j]->token,'ruta'=>$ruta,'titulonotificacion'=>$titulonotificacion,'banderatuto'=>$banderatuto);
 
 					array_push($arraytokens,$dato);
 				}
@@ -205,7 +211,7 @@ try
 	
 	}
 
-	$titulonotificacion=$obtenerUsu[0]->nombre." ".$obtenerUsu[0]->paterno." te ha asignado a ".$obtenerdatosservicio[0]->titulo;
+	
 
 	$obtenerusuarioscancelacion=$serviciosasignados->BuscarAsignacionCancelacion($idusuariosparaasignar);
 	
@@ -304,8 +310,10 @@ try
 				$notificaciones->navpage=$arraytokens[$i]['ruta'];
 			 	$notificaciones->idcliente=$idusuario;
 			 	$notificaciones->valor="";
+			 	$notificaciones->banderatuto=$arraytokens[$i]['banderatuto'];
 			 	$array=array();
 			 	array_push($array,$arraytokens[$i]['token']);
+			 	$titulonotificacion=$arraytokens[$i]['titulonotificacion'];
 			$notificaciones->EnviarNotificacion($array,$texto,$titulonotificacion);
 				//}
 

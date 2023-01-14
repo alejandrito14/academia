@@ -36,7 +36,7 @@ function Buscar_categoriasproducto(idmenumodulo)
 }
 
 
-function GuardarCategorias(form,regresar,donde,idmenumodulo)
+function GuardarCategoriasa(form,regresar,donde,idmenumodulo)
 {
 	if(confirm("\u00BFDesea realizar esta operaci\u00f3n?"))
 	{			

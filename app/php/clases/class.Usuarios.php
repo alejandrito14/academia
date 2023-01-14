@@ -862,7 +862,8 @@ public function validarUsuarioClienteTokenCel()
         usuarios.nombre,
         usuarios.paterno,
         usuarios.materno,
-        usuarios.idusuarios
+        usuarios.idusuarios,
+        usuarios.sexo
         FROM
         usuarios
         JOIN usuariossecundarios

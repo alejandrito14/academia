@@ -32,10 +32,53 @@ class Notapago
 	public $comisionnota;
 	public $tipocomisionpornota;
 
+	public $requierefactura;
+	public $razonsocial;
+	public $rfc;
+	public $direccion;
+	public $nointerior;
+	public $noexterior;
+	public $colonia;
+	public $municipio;
+	public $estado;
+	public $codigopostal;
+	public $correo;
+	public $pais;
+	public $asentamiento;
+	public $calle;
+	public $calle1;
+	public $referencia;
+	public $formapago;
+	public $metodopago;
+	public $usocfdi;
+	public $imagenconstancia;
+	public $idusuariodatofiscal;
 	public function CrearNotapago()
 	{
-		$sql="INSERT INTO notapago( idusuario, subtotal, iva, total, comisiontotal, montomonedero, estatus, idtipopago, tipopago, confoto, datostarjeta,datostarjeta2,idpagostripe,folio,comisionpornota,comisionnota,tipocomisionpornota) VALUES ('$this->idusuario', '$this->subtotal','$this->iva', '$this->total', '$this->comisiontotal','$this->montomonedero','$this->estatus','$this->idtipopago','$this->tipopago','$this->confoto','$this->datostarjeta','$this->datostarjeta2','$this->idpagostripe','$this->folio','$this->comisionpornota','$this->comisionnota','$this->tipocomisionpornota')";
-		
+		$sql="INSERT INTO notapago( idusuario, subtotal, iva, total, comisiontotal, montomonedero, estatus, idtipopago, tipopago, confoto, datostarjeta,datostarjeta2,idpagostripe,folio,comisionpornota,comisionnota,tipocomisionpornota,requierefactura,razonsocial,rfc,direccion,nointerior,noexterior,colonia,municipio,estado,codigopostal,correo,pais,asentamiento,calle,formapago,metodopago,usocfdi,imagenconstancia,idusuariodatofiscal) VALUES ('$this->idusuario', '$this->subtotal','$this->iva', '$this->total', '$this->comisiontotal','$this->montomonedero','$this->estatus','$this->idtipopago','$this->tipopago','$this->confoto','$this->datostarjeta','$this->datostarjeta2','$this->idpagostripe','$this->folio','$this->comisionpornota','$this->comisionnota','$this->tipocomisionpornota',
+			'$this->requierefactura',
+			'$this->razonsocial',
+			'$this->rfc',
+			'$this->direccion',
+			'$this->nointerior',
+			'$this->noexterior',
+			'$this->colonia',
+			'$this->municipio',
+			'$this->estado',
+			'$this->codigopostal',
+			'$this->correo',
+			'$this->pais',
+			'$this->asentamiento',
+			'$this->calle',
+			'$this->formapago',
+			'$this->metodopago',
+			'$this->usocfdi',
+			'$this->imagenconstancia',
+			'$this->idusuariodatofiscal'
+
+			)";
+
+			
 		 $resp=$this->db->consulta($sql);
 		 $this->idnotapago=$this->db->id_ultimo();
 
@@ -72,7 +115,8 @@ class Notapago
 	public function Obtenernota()
 	{
 		$sql="
-			SELECT *FROM notapago WHERE idnotapago='$this->idnotapago' AND idusuario='$this->idusuario'";
+			SELECT *FROM notapago
+			 WHERE idnotapago='$this->idnotapago' AND idusuario='$this->idusuario'";
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 

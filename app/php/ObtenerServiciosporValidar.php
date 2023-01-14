@@ -13,6 +13,7 @@ require_once("clases/class.Calificacion.php");
 require_once("clases/class.Comentarios.php");
 require_once("clases/class.Chat.php");
 require_once("clases/class.Fechas.php");
+require_once("clases/class.Pagos.php");
 
 //require_once("clases/class.MovimientoBitacora.php");
 /*require_once("clases/class.Sms.php");
@@ -33,12 +34,13 @@ try
 	$calificacion=new Calificacion();
 	$comentarios=new Comentarios();
 	$salachat=new Chat();
+	$pagos=new Pagos();
 
 	$espacios->db = $db;
 	$calificacion->db=$db;
 	$comentarios->db=$db;
 	$salachat->db=$db;
-
+	$pagos->db=$db;
 
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
@@ -109,7 +111,7 @@ if (count($obtenerhorarios)>0) {
 		$fecha=$obtenerhorarios[0]->fecha;
 		$dianumero=explode('-', $fecha);
 
-
+ 
 		$obtenerserviciosActivos[$i]->fechaproxima=$diasemana.' '.$dianumero[2].'/'.$fechas->mesesAnho3[$fechas->mesdelano($fecha)-1];
 		$obtenerserviciosActivos[$i]->horainicial=$horainicio;
 		$obtenerserviciosActivos[$i]->horafinal=$horafinal;
@@ -161,6 +163,12 @@ if (count($obtenerhorarios)>0) {
 
 
 		$obtenerserviciosActivos[$i]->coaches=$obtenescoachesServicios;
+		$pagos->idservicio=$lo->idservicio;
+		$existepago=$pagos->ExistePagoServicio();
+		$obtenerserviciosActivos[$i]->existepago=0;
+		if (count($existepago)>0) {
+			$obtenerserviciosActivos[$i]->existepago=1;
+		}
 
 	}
 

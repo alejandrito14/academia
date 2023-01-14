@@ -66,59 +66,7 @@ try
 		$juego->Guardarjuego();
 
 
-		if (count($arrayintegrantes)>0) {
-			for ($i=0; $i <count($arrayintegrantes) ; $i++) { 
-
-				$integrante->numero=$arrayintegrantes[$i]->{'numeropareja'};
-				$integrante->idjuego=$juego->idjuego;
-				
-				$integrante->idusuarios=$arrayintegrantes[$i]->{'participante1'};
-				$integrante->GuardarIntegrante();
-
-				$integrante->idusuarios=$arrayintegrantes[$i]->participante2;
-
-				$integrante->GuardarIntegrante();
-
-				
-
-			}
-		}
-
-
-		if (count($arraygrupos)>0) {
-			for ($i=0; $i <count($arraygrupos) ; $i++) { 
-
-				$grupos->nombregrupo=$arraygrupos[$i]->{'nombregrupo'};
-				$grupos->idnivel=$arraygrupos[$i]->{'v_nivel'};
-				$grupos->idjuego=$juego->idjuego;
-
-
-				$grupos->Guardargrupo();
-				$arrayparticipantes=$arraygrupos[$i]->{'participantes'};
-				for ($j=0; $j <count($arrayparticipantes) ; $j++) { 
-					
-				$integrante->idgrupo=$grupos->idgrupos;
-
-				$integrante->idusuarios=$arrayparticipantes[$j]->{'participante1'};
-				
-				$integrante->ActualizarGrupoIntegrante();
-
-
-				$integrante->idusuarios=$arrayparticipantes[$j]->{'participante2'};
-				$integrante->ActualizarGrupoIntegrante();
-
-
-
-				}
-
-				
-			}
-		}
-
-
-
-
-
+	
 
 		$md->guardarMovimiento($f->guardar_cadena_utf8('juegos'),'juego',$f->guardar_cadena_utf8('Nuevo juego creado con el ID-'.$juego->idjuego));
 	}else{

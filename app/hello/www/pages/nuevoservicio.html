@@ -47,39 +47,20 @@
 
         <div class="row">
 
-          <div class="col-85 margin-left-auto margin-right-auto align-self-center  padding-vertical"><h1 style="" id="txtpagina"> Nuevo <span style="color: #0abe68;">servicio</span></h1></div>
-
-        <!--  
-          <div class="col-100 fotoimagen" ><div class="card  margin-bottom" style="margin-right: 1em;
-          margin-left: 1em;"><div class="card-content ">
-            <img src="" alt="" style="width: 100%;height: 200px;" class="imglogoimagengrupal" />
-          </div></div>
-        </div> -->
-
-      <!-- <div class="col-100 fotoimagen" >
-        <div class="card margin-bottom overflow-hidden  text-color-white" 
-        style="margin: 1em;height: 200px;">
-        <div class="coverimg h-100 width-100 position-absolute">
+          <div class="col-85 margin-left-auto margin-right-auto align-self-center  padding-vertical"><h1 style="" id="txtpagina"> Nuevo <span style="color: #0abe68;">servicio</span>
+          </h1>
         </div>
-        <div class="card-content ">
-          <img  alt="" style="width: 100%;height: 200px;" class="imglogoimagenservicio"/>
-          <div class="small">
-          </div>
-        </div>
-        </div>
-      </div> -->
-
-
-
-      <div class="">
-        <div class="col-100">
-          <img src="" alt="" class="imglogoimagenservicio" style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;border-radius: 10px;" />
-        </div>
-        </div>
-
-
-
       </div>
+
+
+      <div class="row">
+        <div class="col-100">
+          <img src="" alt="" class="imglogoimagenservicio fotoimagen" style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;border-radius: 10px;" />
+         
+        </div>
+      </div>
+
+
 
       
             
@@ -416,13 +397,13 @@
           <div class="accordion-item-content" style="font-size: 16px;" aria-hidden="true">
             <div class="block" style="background: white">
               <div class="row" style="margin-top: 1em;">
-                <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Políticas de aceptación</p>
+                <p class="parrafopoliticasaceptacion" style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Políticas de aceptación</p>
 
               </div>
 
 
               <div class="row">
-                <div class="item-content item-input item-input-with-value">
+                <div class="item-content item-input item-input-with-value lipoliticasaceptacion">
                   <div class="item-inner">
                     <select name="" id="v_politicaaceptacionseleccion"></select>
                   </div>
@@ -465,7 +446,7 @@
 
                 <div class="row" style="">
                 <div class="item-content item-input item-input-with-value">
-                  <div class="item-inner litituloavisos">
+                  <div class="item-inner litituloavisos" style="display: none;">
                         <div class="item-title item-label">Mensaje</div>
                       <div class="item-input-wrap">
                         <input name="v_tituloaviso" id="v_tituloaviso" type="text" placeholder="" class="input-with-value"/>
@@ -669,6 +650,13 @@
 
 
       </ul>
+
+
+      <div class="row" style="margin-top: 1em;">
+        <div class="col" id="btncancelar">
+          <button class="button button-fill color-red" id="btncancelarservicio">Cancelar servicio</button>
+        </div>
+      </div>
    
 
     </div>

@@ -70,12 +70,12 @@ $asignar->EliminarAsignacionesMembresiasNoPagadas();
                       $pagos->fechainicial='';
                       $pagos->fechafinal='';
                       $pagos->concepto=$obtenermembresia[0]->titulo;
-                      $contador=$emp->ActualizarConsecutivo();
+                      /*$contador=$emp->ActualizarConsecutivo();
                           $fecha = explode('-', date('d-m-Y'));
                         $anio = substr($fecha[2], 2, 4);
                         $folio = $fecha[0].$fecha[1].$anio.$contador;
-                        
-                      $pagos->folio=$folio;
+                        */
+                      $pagos->folio='';
                       $pagos->CrearRegistroPago();
 
 

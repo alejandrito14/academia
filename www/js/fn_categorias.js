@@ -1,6 +1,6 @@
 // JavaScript Document
 	
-function Buscar_categoriasproducto(idmenumodulo)
+function Buscar_categorias(idmenumodulo)
 {
 	var id = $('#b_id').val();
 	var nombre = $('#b_nombre').val();

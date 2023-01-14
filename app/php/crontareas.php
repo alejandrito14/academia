@@ -11,6 +11,7 @@ require_once("clases/class.Tareas.php");
 require_once("clases/class.ServiciosAsignados.php");
 require_once("clases/class.Servicios.php");
 require_once("clases/class.NotificacionPush.php");
+require_once("clases/class.Usuarios.php");
 
 try
 {
@@ -27,6 +28,8 @@ try
 	$emp->db=$db;
 	$notificaciones=new NotificacionPush();
 	$notificaciones->db=$db;
+	$usuarios=new Usuarios();
+	$usuarios->db=$db;
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
 
@@ -50,11 +53,24 @@ try
 			$asignados->idservicio=$emp->idservicio;
 			$asignados->idusuario=0;
 			$obtenerusuarios=$asignados->obtenerUsuariosServiciosAsignados();
+			$fechanoti="";
+			$horanoti="";
+			$canchanoti="";
+
+			$fechaprogramada=$obtenertareas[$m]->hora;
+
+			$dividir=explode(' ',$fechaprogramada);
+			
+			$obtenerdato=$asignados->ObtenerHorarioporfecha($dividir[0],$dividir[1]);
+
+			$fechanoti=$obtenerdato[0]->fecha;
+			$horanoti=$obtenerdato[0]->horainicial;
+			$canchanoti=$obtenerdato[0]->nombre;
 
 			
 		for ($i=0; $i <count($obtenerusuarios) ; $i++) { 
 			$nombre=$obtenerusuarios[0]->nombre;
-			$titulonotificacion=$nombre.', '.$obtenertareas[$m]->titulo.' '.$emp->titulo;
+			$titulonotificacion=$nombre.', tienes agendado el '.date('d-m-Y',strtotime($fechanoti)).' a las '.$horanoti.'hrs. en '.$canchanoti.' servicio'.$emp->titulo;
 			$descripcion="";
 			$idusuario=$obtenerusuarios[$i]->idusuarios;
 			$ruta='detalleservicio2';
@@ -62,7 +78,27 @@ try
 			$texto='|'.$obtenertareas[$m]->titulo.'|'.$obtenertareas[$m]->descripcion.'|'.$emp->titulo;
 			$estatus=0;
 			$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
+
+
+		$usuarios->idusuarios=$idusuario;
+		$obtenerdependencia=$usuarios->ObtenerUsuarioDependencia();
+		if (count($obtenerdependencia)>0) {
+			$obtenerdatousuario=$usuarios->ObtenerUsuario();
+			
+			if($obtenerdatousuario[0]->sincel==1) {
+				$notificaciones->idusuario=$obtenerdependencia[0]->idusuariostutor;
+			}else{
+			   $notificaciones->idusuario=$idusuario;
+			 
+			}
+		
+			}else{
 			$notificaciones->idusuario=$idusuario;
+			
+
+		}
+
+			//$notificaciones->idusuario=$idusuario;
 			$obtenertokenusuario=$notificaciones->Obtenertoken();
 
 			for ($j=0; $j <count($obtenertokenusuario) ; $j++) { 
@@ -79,11 +115,14 @@ try
 			$obtenercoachs=$asignados->BuscarAsignacionCoach();
 
 			for ($i=0; $i <count($obtenercoachs) ; $i++) { 
+			//$titulonotificacion=$nombre.', '.$obtenertareas[$m]->titulo.' '.$emp->titulo;
+
 			$nombre=$obtenercoachs[0]->nombre;
-			$titulonotificacion=$nombre.', '.$obtenertareas[$m]->titulo.' '.$emp->titulo;
+			$titulonotificacion=$nombre.', tienes agendado el '.date('d-m-Y',strtotime($fechanoti)).' a las '.$horanoti.'hrs. en '.$canchanoti.' servicio'.$emp->titulo;
+
 			$descripcion="";
 			$idusuario=$obtenercoachs[$i]->idusuarios;
-			$ruta='detalleservicio2';
+			$ruta='detalleserviciocoach2';
 			$valor=$emp->idservicio;
 			$texto='|'.$obtenertareas[$m]->titulo.'|'.$obtenertareas[$m]->descripcion.'|'.$emp->titulo;
 			$estatus=0;

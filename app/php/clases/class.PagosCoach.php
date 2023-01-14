@@ -13,14 +13,20 @@ class PagosCoach
 	public $estatus;
 	public $dividido;
 	public $fechainicial;
-	public $fechafinal;
+	public $fechapago;
 	public $concepto;
 	public $folio;
 	public $idstripe;
 	public $pagado;
-	public $fechapago;
 	public $idpagocoach;
 	public $idpago;
+	public $idusuariocreado;
+	public $descripcionpago;
+	public $idtipopago;
+	public $tipopago;
+	public $tipopagocoach;
+	public $montopagocoach;
+	public $montopago;
 
 	public function CrearRegistroPagoCoach()
 	{
@@ -93,7 +99,11 @@ class PagosCoach
 					pagos.tipopago,
 					pagos.folio,
 					pagos.monto,
-					servicios.titulo
+					servicios.titulo,
+					pagos.idpago,
+					pagos.montopagocoach,
+					pagos.montopago,
+					pagos.tipopagocoach
 			      FROM pagoscoach as pagos
 				LEFT JOIN usuarios ON usuarios.idusuarios=pagos.idusuarios
 				INNER JOIN servicios ON servicios.idservicio=pagos.idservicio
@@ -122,9 +132,9 @@ class PagosCoach
 
 
 	
-	public function ObtenerPagoCoach()
+	public function ObtenerPagoCoach($idpago,$idservicio)
 	{
-		$sql="SELECT *FROM pagoscoach WHERE idpago='$this->idpago' AND idservicio='$this->idservicio'";
+		$sql="SELECT *FROM pagoscoach WHERE idpago='$idpago' AND idservicio='$idservicio'";
 	
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -340,6 +350,14 @@ class PagosCoach
 			 $resp = $this->db->consulta($sql);
 			return $val;
 		
+		}
+
+		public function GuardarPagoCoach()
+		{
+			$sql="INSERT INTO pagoscoach(idusuarios, idservicio, monto, fechapago, estatus, folio,concepto,idtipopago,tipopago,pagado,idpago,descripcionpago,idusuarioquienpaga,tipopagocoach,montopagocoach,montopago) VALUES ('$this->idusuarios','$this->idservicio','$this->monto','$this->fechapago','$this->estatus','$this->folio','$this->concepto','$this->idtipopago','$this->tipopago','$this->pagado','$this->idpago','$this->descripcionpago','$this->idusuariocreado','$this->tipopagocoach','$this->montopagocoach','$this->montopago')";
+
+			$resp = $this->db->consulta($sql);
+
 		}
 
 

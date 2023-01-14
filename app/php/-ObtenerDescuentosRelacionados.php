@@ -37,6 +37,7 @@ $arraydescuentos=array();
 	for ($i=0; $i <count($pagoselegidos) ; $i++) { 
 		$idpago=$pagoselegidos[$i]->{'id'};
 		$montopago=$pagoselegidos[$i]->{'monto'};
+		$idpago=$pagoselegidos[$i]->{'id'};
 		$pagos->idpago=$idpago;
 		$buscar=$pagos->ObtenerPago();
 

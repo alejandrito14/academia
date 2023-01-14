@@ -317,7 +317,7 @@ class Usuarios
 	{
 		
 		$sql="SELECT *FROM usuarios WHERE idusuarios='$this->id_usuario'";
-	
+		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -803,6 +803,28 @@ class Usuarios
 		$lista = $this->db->consulta($sql);
 		return $lista;
 	}
+
+	
+    public function ObtenerUsuarioDependencia()
+    {
+    	 $sql = "SELECT * FROM usuariossecundarios
+        WHERE idusuariotutorado='$this->idusuarios'";
+
+        $resp = $this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+        $array    = array();
+        $contador = 0;
+        if ($cont > 0) {
+
+            while ($objeto = $this->db->fetch_object($resp)) {
+
+                $array[$contador] = $objeto;
+                $contador++;
+            }
+        }
+        return $array;
+    }
 }
 
 ?>

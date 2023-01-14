@@ -1,3 +1,4 @@
+var detalleimagen=[];
 function Pintardetallepago() {
 
 	var idnotapago=localStorage.getItem('idnotapago');
@@ -7,7 +8,7 @@ function Pintardetallepago() {
 		$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		url: urlphp+pagina,
+		url: urlphp+pagina, 
 		data:datos,
 		async:false,
 		success: function(resp){
@@ -21,6 +22,48 @@ function Pintardetallepago() {
 			if (resultado.datostarjeta!='') {
 			$(".datostarjeta").html(resultado.datostarjeta);
 			$(".infodatostarjeta").append(resultado.datostarjeta2);
+
+			}
+
+			if (resultado.requierefactura==1) {
+
+
+				var html="";
+				html+=`<p>
+					Razon social: `+resultado.razonsocial+`
+					
+				</p>`;
+				html+=`<p>
+					RFC.: `+resultado.rfc+`</p>`;
+			html+=`<p>
+					Correo.: `+resultado.correo+`</p>`;
+			html+=`<p>
+					Cod. Postal: `+resultado.codigopostal+`</p>`;
+					var imagenes=resultado.imagenconstancia;
+					if (imagenes!='') {
+
+					var imagen=imagenes.split(',');
+					detalleimagen=imagen;
+					var htmlimagenes="";
+					for (var i = 0; i < imagen.length; i++) {
+						        urlimagen=urlphp+`upload/datosfactura/`+imagen[i];
+
+						html+=`
+							<div class="row">
+		                        <div class="col-20" style="margin:0;padding:0;">
+		                          <figure class="avatar   rounded-10">
+		                          <img src="`+urlimagen+`" alt="" style="width:60px;height:60px;" onclick="DetalleImagen(`+i+`)">
+		                          </figure>
+		                        </div>
+
+                       		 </div>
+
+						`;
+					}
+				}
+
+					$(".datosfiscales").html(html);
+				
 
 			}
 			var pagos=resp.pagos;
@@ -52,6 +95,21 @@ function Pintardetallepago() {
 		}
 
 	});
+}
+
+function DetalleImagen(posicion) {
+	 urlimagen=urlphp+`upload/datosfactura/`+detalleimagen[posicion];
+	   var myPhotoBrowser = app.photoBrowser.create({
+       
+        photos: [
+         urlimagen
+            ]
+      });
+      //Open photo browser on click
+      myPhotoBrowser.open();
+      $(".popup-close").text('Cerrar');
+     $(".popup-close").css('margin-top','100px');
+	
 }
 
 function Pintarpagosdetalle(listado) {

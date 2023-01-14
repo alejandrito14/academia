@@ -265,7 +265,18 @@ class Pagos
 
 		public function ObtenerdescuentosPagos()
 		{
-			$sql = "SELECT * FROM pagodescuento
+			$sql = "SELECT 
+			pagodescuento.iddescuento,
+			pagodescuento.montopago,
+			pagodescuento.montoadescontar,
+			pagodescuento.tipo,
+			pagodescuento.monto,
+			pagodescuento.idpago,
+			pagodescuento.fechacreacion,
+			pagodescuento.infodescuento,
+			pagodescuento.idnotapago,
+			descuento.titulo
+			 FROM pagodescuento
 			INNER JOIN descuento ON descuento.iddescuento=pagodescuento.iddescuento
 			 WHERE idpago='$this->idpago' AND idnotapago='$this->idnotapago' ORDER BY idpago ";
 

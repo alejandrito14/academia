@@ -11,6 +11,7 @@ require_once("clases/class.Fechas.php");
 require_once("clases/class.Usuarios.php");
 require_once("clases/class.NotificacionPush.php");
 require_once("clases/class.ServiciosAsignados.php");
+require_once("clases/class.Tareas.php");
 
 
 try
@@ -26,7 +27,8 @@ try
 	$serviciosasignados=new ServiciosAsignados();
 	$serviciosasignados->db=$db;
 	//$md = new MovimientoBitacora();
-	
+	$tareas=new Tareas();
+	$tareas->db=$db;
 	//enviamos la conexión a las clases que lo requieren
 	$emp->db=$db;
 	//$md->db = $db;	
@@ -180,13 +182,16 @@ try
 			$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
 			$notificaciones->idusuario=$idusuario;
 			$obtenertokenusuario=$notificaciones->Obtenertoken();
-
-			for ($i=0; $i <count($obtenertokenusuario) ; $i++) { 
+			if (count($obtenertokenusuario)>0) {
+				# code...
+			
+			for ($j=0; $j <count($obtenertokenusuario) ; $j++) { 
 				
-				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$i]->token,'ruta'=>$ruta,'titulonotificacion'=>$titulonotificacion);
+				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$j]->token,'ruta'=>$ruta,'titulonotificacion'=>$titulonotificacion);
 			array_push($arraytokens,$dato);
 
 			}
+		}
 			$notificaciones->navpage="nuevoservicio";
 				
 
@@ -202,7 +207,8 @@ try
 
 		if (count($arrayhorarios)>0 && $arrayhorarios[0]!='') {
 			# code...
-		
+						
+
 		for ($i=0; $i < count($arrayhorarios); $i++) { 
 				 $dividircadena=explode('-', $arrayhorarios[$i]);
 			$fecha=$dividircadena[0].'-'.$dividircadena[1].'-'.$dividircadena[2];
@@ -231,7 +237,7 @@ try
 				}
 
 			if (count($porcentajescoachs)>0) {
-
+				
 				//var_dump($porcentajescoachs);die();
 				if ($tipousuario==5) {
 				for ($i=0; $i < count($porcentajescoachs); $i++) { 
@@ -260,7 +266,7 @@ try
 				}
 
 			
-
+			
 		
 				if (count($periodos)>0) {
 					for ($i=0; $i < count($periodos); $i++) { 
@@ -306,6 +312,9 @@ try
 					
 
 			$idusuario=$obtenercoachesservicio[$i]->idusuarios;
+			$usuarios->idusuarios=$idusuario;
+			$obtenerusuarioinvita=$usuarios->ObtenerUsuario();
+			$usuarioinvita=$obtenerusuarioinvita[0]->nombre.', ';
 			$ruta='detalleserviciocoach2';
 			$valor=$emp->idservicio;
 			$texto='|Se te asignó un nuevo servicio|'.$emp->titulo.'|';
@@ -314,7 +323,7 @@ try
 
 			$notificaciones->idusuario=$idusuario;
 				$obtenertokenusuario=$notificaciones->Obtenertoken();
-			$titulonotificacion=$nombrequienagrega." te ha asignado a un nuevo servicio ".$emp->titulo;
+			$titulonotificacion=$usuarioinvita.$nombrequienagrega." te ha asignado a un nuevo servicio ".$emp->titulo;
 
 				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[0]->token,'ruta'=>$ruta,'titulonotificacion'=>$titulonotificacion);
 			array_push($arraytokens,$dato);
@@ -563,7 +572,7 @@ try
 
 	if (count($idusuarios)>0 && $idusuarios[0]!='') {
 		# code...
-	
+	$usuarioinvita="";
 	for ($i=0; $i <count($idusuarios) ; $i++) { 
 		$serviciosasignados->idusuario=$idusuarios[$i];
 		$serviciosasignados->idservicio=$emp->idservicio;
@@ -590,10 +599,36 @@ try
 			$estatus=0;
 			$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
 
+			
+
+			$usuarios->idusuarios=$idusuario;
+			$obtenerusuarioinvita=$usuarios->ObtenerUsuario();
+
+			$usuarioinvita=$obtenerusuarioinvita[0]->nombre.', ';
+
+
+		$usuarios->idusuarios=$idusuario;
+		$obtenerdependencia=$usuarios->ObtenerUsuarioDependencia();
+		if (count($obtenerdependencia)>0) {
+			$obtenerdatousuario=$usuarios->ObtenerUsuario();
+			
+			if($obtenerdatousuario[0]->sincel==1) {
+				$notificaciones->idusuario=$obtenerdependencia[0]->idusuariostutor;
+			}else{
+			   $notificaciones->idusuario=$idusuario;
+			 
+			}
+		
+			}else{
 			$notificaciones->idusuario=$idusuario;
+			
+
+		}
+
+
 			$obtenertokenusuario=$notificaciones->Obtenertoken();
 
-			$titulonotificacion=$nombrequienagrega." te ha asignado a un nuevo servicio ".$emp->titulo;
+			$titulonotificacion=$usuarioinvita.$nombrequienagrega." te ha asignado a un nuevo servicio ".$emp->titulo;
 
 			$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[0]->token,'ruta'=>$ruta,'titulonotificacion'=>$titulonotificacion);
 			array_push($arraytokens,$dato);
@@ -614,6 +649,51 @@ try
 		$sql = "UPDATE servicios SET imagen = '$nombreimagen' WHERE idservicio='".$emp->idservicio."'";   
 		$db->consulta($sql);
 
+	}
+
+
+	if ($emp->tiempoaviso>0) {
+		# code...
+	
+	if (count($arrayhorarios)>0 && $arrayhorarios[0]!='') {
+			$tareas->idservicio=$emp->idservicio;
+
+			$obtenertareas=$tareas->ObtenerTareasServicio();
+			if (count($obtenertareas)>0) {
+				$tareas->EliminarTareasNoCompletadas();
+
+			}
+			
+		
+		for ($i=0; $i < count($arrayhorarios); $i++) { 
+				 $dividircadena=explode('-', $arrayhorarios[$i]);
+			     $fecha=$dividircadena[0].'-'.$dividircadena[1].'-'.$dividircadena[2];
+				 $horainicial=substr($dividircadena[3],0,5);
+				 $horafinal=substr($dividircadena[4],0,5);
+				 $idzona=$dividircadena[5];
+				 $numdia=date('w',strtotime($fecha));
+
+				$emp->dia=$numdia;
+				$emp->horainiciosemana=$horainicial;
+				$emp->horafinsemana=$horafinal;
+				$emp->fecha=$fecha.' '.$horainicial.':00';
+				$emp->idzona=$idzona;
+
+				
+				$fechaUno = new DateTime($emp->fecha);
+				$NuevaFecha= $fechaUno->modify("-".$emp->tiempoaviso." minute")->format("Y-m-d H:i");
+
+				$tareas->nombretarea='Envio notificacion servicio';
+				$tareas->titulo=$emp->tituloaviso;
+				$tareas->descripcion=$emp->descripcionaviso;
+				$tareas->programada=$NuevaFecha;
+				$tareas->idservicio=$emp->idservicio;
+				$tareas->estatus=0;
+				$tareas->envio=0;
+				$tareas->CrearTarea();
+				
+			}
+		}
 	}
 
 	$db->commit();

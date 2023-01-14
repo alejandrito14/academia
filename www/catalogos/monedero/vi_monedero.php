@@ -94,7 +94,7 @@ try{
 <div class="card">
 	<div class="card-body">
 		<h5 class="card-title" style="float: left;">LISTADO DE MONEDERO</h5>
-		<button type="button" onClick="/*aparecermodulos('catalogos/fa_guias.php','main');*/ AbrirModalGeneral2('ModalPrincipal','900','400','catalogos/monedero/fa_monedero.php');" class="btn btn_azul" style="float: right;"><i class="mdi mdi-plus-circle"></i>NUEVO MONEDERO</button>
+		<button type="button" onClick="/*aparecermodulos('catalogos/fa_guias.php','main');*/ AbrirModalGeneral2('ModalPrincipal','900','400','catalogos/monedero/fa_monedero.php');" class="btn btn_azul" style="float: right;display: none;"><i class="mdi mdi-plus-circle"></i>NUEVO MONEDERO</button>
 		
 		<div style="float:right;">
 			<button type="button" onClick="abrir_filtro('modal-filtros');" class="btn btn-primary" style="float: right;display: none;"><i class="mdi mdi-account-search"></i>  BUSCAR</button>			

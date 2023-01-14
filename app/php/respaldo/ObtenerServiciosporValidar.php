@@ -66,7 +66,9 @@ try
 
 
 		$asignados->idservicio=$obtenerserviciosActivos[$i]->idservicio;
-		
+		$obtenerserviciosActivos[$i]->fechaproxima="";
+		$obtenerserviciosActivos[$i]->horainicial="";
+		$obtenerserviciosActivos[$i]->horafinal="";
 	 	$obtenerhorarios=$asignados->ObtenerHorariosProximo();
 	 	$participantes=$asignados->obtenerUsuariosServiciosAlumnosAsignados();
 		$obtenerserviciosActivos[$i]->cantidadalumnos=count($participantes);
@@ -89,7 +91,7 @@ try
 		}
 
 
-//if (count($obtenerhorarios)==0) {
+if (count($obtenerhorarios)>0) {
 
 		$diasemana=$fechas->diaarreglocorto($obtenerhorarios[0]->dia);
 
@@ -125,9 +127,10 @@ try
 		$obtenerserviciosActivos[$i]->zonanombre=$rowzona['nombre'];
 		$obtenerserviciosActivos[$i]->zonacolor=$rowzona['color'];
 		$obtenerserviciosActivos[$i]->fechahora=$fecha.' '.$obtenerhorarios[0]->horainicial;
+	}
 		$obtenerserviciosActivos[$i]->porpasar=$porpasar;
 
-//	}
+	
 
 		$calificacion->idservicio=$asignados->idservicio;
 		$obtenercalificacion=$calificacion->ObtenerCalificacion();
@@ -152,9 +155,12 @@ try
 			$obtenerserviciosActivos[$i]->conchat=1;
 		}
 
+		
+		$lo->idservicio=$asignados->idservicio;
+		$obtenescoachesServicios=$lo->ObtenerParticipantesCoach(5);
 
 
-
+		$obtenerserviciosActivos[$i]->coaches=$obtenescoachesServicios;
 
 	}
 
