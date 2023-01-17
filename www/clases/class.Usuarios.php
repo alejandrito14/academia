@@ -825,6 +825,17 @@ class Usuarios
         }
         return $array;
     }
+
+    public function lista_UsuariosMembresia($tipo)
+	{
+		$sql = "SELECT * FROM usuarios INNER JOIN tipousuario ON usuarios.tipo=tipousuario.idtipousuario 
+		INNER JOIN usuarios_membresia ON usuarios.idusuarios=usuarios_membresia.idusuarios
+		WHERE tipo IN($tipo)";
+		
+		$resp = $this->db->consulta($sql);
+		return $resp;
+	}
+
 }
 
 ?>

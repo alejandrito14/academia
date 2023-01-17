@@ -56,6 +56,9 @@ $idusuariosdatosfiscales=$_POST['idusuariosdatosfiscales'];
 $comisionpornota=$_POST['comisionpornota'];
 $comisionnota=$_POST['comisionnota'];
 $tipocomisionpornota=$_POST['tipocomisionpornota'];
+$idtipodepago=$_POST['idtipodepago'];
+$variable="";
+
 
 try {
 	 $db = new MySQL();
@@ -75,11 +78,22 @@ try {
     $fecha = explode('-', date('d-m-Y'));
     $anio = substr($fecha[2], 2, 4);
     $folio = $fecha[0].$fecha[1].$anio.$contador;
+     $tipopago=new Tipodepagos();
+
+      if ($montomonedero>0) {
+  
+            if ($montomonedero==$sumatotalapagar) {
+               $idtipodepago=0;
+              
+            }
+
+             $tipopago->idtipodepago=0;
+             $obtenertipopago=$tipopago->ObtenerTipodepago2();
+             $variable=','.$obtenertipopago[0]->tipo;
+          }
 
 
-
-            $idtipodepago=$_POST['idtipodepago'];
-            $tipopago=new Tipodepagos();
+            //$idtipodepago=$_POST['idtipodepago'];
             $tipopago->db=$db;
             $tipopago->idtipodepago=$idtipodepago;
            
@@ -262,7 +276,7 @@ try {
          $notapago->comisiontotal=$comisiontotal;
          $notapago->montomonedero=$montomonedero;
          $notapago->estatus=0;
-         $notapago->tipopago=$obtenertipopago[0]->tipo;
+         $notapago->tipopago=$obtenertipopago[0]->tipo.$variable;
          $notapago->idtipopago=$idtipodepago;
          $notapago->confoto=$confoto;
          $notapago->datostarjeta=$datostarjeta;
@@ -384,7 +398,6 @@ try {
                 }
               }*/
 
-                 
                
                   $pagos->ActualizarEstatus();
                   $pagos->ActualizarPagado();
@@ -588,7 +601,7 @@ try {
     //Guardamos el movimiento en tabla cliente_monedero
     $tipo=1;
     $concepto="Cargo";
-    $sql_movimiento = "INSERT INTO monedero (idusuarios,monto,modalidad,tipo,saldo_ant,saldo_act,concepto) VALUES ('$iduser','$montomonedero','2','$tipo','$saldo_anterior','$nuevo_saldo','$concepto');";
+    $sql_movimiento = "INSERT INTO monedero (idusuarios,monto,modalidad,tipo,saldo_ant,saldo_act,concepto,idnota) VALUES ('$iduser','$montomonedero','2','$tipo','$saldo_anterior','$nuevo_saldo','$concepto','$notapago->idnotapago');";
      $db->consulta($sql_movimiento);
 
 
@@ -610,14 +623,15 @@ try {
 
 
         }
+               
 
          $notapago->estatus=0;
          $notapago->ActualizarNotapago();
 
       
         }
-
-         if ($campomonto==1 && $montovisual!=0 && $montovisual!='') {
+  
+         if ($campomonto==1) {
               $notapago->estatus=0;
               $notapago->ActualizarNotapago();
               $notapago->cambio=abs($cambiomonto);
@@ -625,6 +639,7 @@ try {
               $notapago->ActualizarMonto();
             
           }
+         
 
           		$db->commit();
 

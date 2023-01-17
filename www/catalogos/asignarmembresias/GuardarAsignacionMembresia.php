@@ -21,6 +21,7 @@ require_once("../../clases/class.Funciones.php");
 require_once('../../clases/class.MovimientoBitacora.php');
 require_once('../../clases/class.MembresiasAsignadas.php');
 require_once('../../clases/class.Pagos.php');
+require_once('../../clases/class.MembresiaUsuarioConfiguracion.php');
 
 try
 {
@@ -33,6 +34,8 @@ try
 	$asignar->db=$db;
 	$pagos=new Pagos();
 	$pagos->db=$db;
+	$usuariomembresia=new MembresiaUsuarioConfiguracion();
+	$usuariomembresia->db=$db;
 	
 	//enviamos la conexión a las clases que lo requieren
 	$emp->db=$db;
@@ -44,6 +47,8 @@ try
 	$asignar->idusuarios = trim($_POST['idusuario']);
 
 	$idmembresias=explode(',',  $_POST['idmembresias']);
+
+	$membresiaseleccionada=json_decode($_POST['membresiaseleccionada']);
 	
 	
 $asignar->EliminarAsignacionesMembresiasNoPagadas();
@@ -80,6 +85,20 @@ $asignar->EliminarAsignacionesMembresiasNoPagadas();
 
 
 						}
+
+
+						
+						if($membresiaseleccionada[$i]->idmembresia==$idmembresias[$i]){
+
+							$usuariomembresia->idusuarios=$asignar->idusuarios;
+							$usuariomembresia->idmembresia=$membresiaseleccionada[$i]->idmembresia;
+
+							$usuariomembresia->fecha=$membresiaseleccionada[$i]->fecha;
+							$usuariomembresia->numerodias=$membresiaseleccionada[$i]->numerodias;
+							$usuariomembresia->repetir=$membresiaseleccionada[$i]->repetir;
+							$usuariomembresia->GuardarMembresiaUsuarioConfiguracion();
+						}
+
 				}
 			}
 

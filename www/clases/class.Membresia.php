@@ -640,6 +640,49 @@ class Membresia
 		return $array;
 	}
 
+
+
+	public function buscarMembresiaAsociadaUsuario()
+	{
+		$sql="SELECT 
+			usuarios_membresia.idusuarios,
+			usuarios_membresia.idmembresia,
+			membresia.titulo,
+			membresia.imagen,
+			usuarios_membresia.fecha,
+			usuarios_membresia.estatus,
+			usuarios_membresia.renovacion,
+			usuarios_membresia.fechaexpiracion,
+			usuarios_membresia.pagado,
+			usuarios_membresia.idusuarios_membresia,
+			membresia.color
+		FROM usuarios_membresia
+		INNER JOIN membresia ON membresia.idmembresia=usuarios_membresia.idmembresia
+		 WHERE idusuarios='$this->idusuarios' AND usuarios_membresia.estatus IN (0,1)  ORDER BY idusuarios_membresia desc limit 1 
+		 ";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+
+
+
+	}
+
+
 }
 
  ?>

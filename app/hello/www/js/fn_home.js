@@ -1891,11 +1891,15 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 								      </div>
 		   							 			`;
 
+		   							 			var descripcion= respuesta.descripcion;
+
+		   							 			var dividircadena=descripcion.replace('|','<br>');
+
 		   							 	html+=`</div>
 
 		   							 		<div class="row">
 			   							  		<p class=" margin-bottom" style="font-size:18px;text-align: justify;">
-									             `+respuesta.descripcion+`
+									             `+dividircadena+`
 									             </p>
 		   							  		</div>
 

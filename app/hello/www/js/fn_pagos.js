@@ -44,7 +44,7 @@ function ProximopagoaVencer() {
 				var resultado=respuesta.respuesta;
 
 				if (resultado.length>0) {
-
+          $(".divvencimiento").css('display','block');
 					$(".vencimiento").text(resultado[0].fechaformato);
 				}
 			
@@ -374,6 +374,7 @@ function CalcularTotales() {
   var comision=0;
   var comisionpornota=0;
   var tipocomisionpornota=localStorage.getItem('tipocomisionpornota');
+   $(".divtipopago").css('display','block');
 
 
 	var obtenerpagos=JSON.parse(localStorage.getItem('pagos'));
@@ -477,6 +478,9 @@ function CalcularTotales() {
     if (suma==0 ) {
     
         $("#btnpagarresumen").attr('disabled',false);
+   
+        $(".divtipopago").css('display','none');
+
     }
 
 
@@ -496,7 +500,7 @@ function AbrirModalmonedero() {
 
                 <div class="row" style="padding-top:1em;">
                 	<label style="font-size:16px;padding:1px;">Cantidad a utilizar:</label>
-                	<input type="number" name="txtcantidad" id="txtcantidad"  />
+                	<input type="number" name="txtcantidad" id="txtcantidad" onkeyup="ValidarNumero()";  />
                 </div>
               </div>
            
@@ -531,6 +535,13 @@ function AbrirModalmonedero() {
 		
 		ObtenerMonedero();
 
+}
+
+function ValidarNumero() {
+  var numero= $("#txtcantidad").replace(/\D/g, "")
+        .replace(/([0-9])([0-9]{2})$/, '$1$2');
+
+    $("#txtcantidad").val(numero);
 }
 
 function AplicarMonedero() {

@@ -312,9 +312,9 @@ function setOptions(srcType) {
 function CargarFoto() {
 
   var foto=localStorage.getItem("foto");
-
+  var url="";
   if (foto!='null' && foto!='') {
-
+  	url=urlphp+"upload/perfil/"+foto;
     $("#imagenusuario").attr('src',urlphp+"upload/perfil/"+foto);
     $("#imagenusuario2").attr('src',urlphp+"upload/perfil/"+foto);
     $("#imagencliente").attr('src',urlphp+"upload/perfil/"+foto);
@@ -325,7 +325,8 @@ function CargarFoto() {
 
   
   	foto=localStorage.getItem('avatar');
-  	
+  	  	url=urlphp+"upload/perfil/"+foto;
+
     $("#imagenusuario").attr('src',urlphp+"imagenesapp/"+foto);
     $("#imagenusuario2").attr('src',urlphp+"imagenesapp/"+foto);
 
@@ -336,6 +337,21 @@ function CargarFoto() {
 
   }
 
+  $(".divimagencliente2").attr('onclick','VerFoto("'+url+'")');
+
+}
+
+function VerFoto(url) {
+	   var myPhotoBrowser = app.photoBrowser.create({
+       
+        photos: [
+         url
+            ]
+      });
+      //Open photo browser on click
+      myPhotoBrowser.open();
+      $(".popup-close").text('Cerrar');
+     $(".popup-close").css('margin-top','100px');
 }
 
 function CargarFotodefault() {

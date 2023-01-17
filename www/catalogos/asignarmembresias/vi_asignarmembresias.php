@@ -11,7 +11,7 @@ if(!isset($_SESSION['se_SAS']))
 
 	exit;
 }
-
+ 
 $idmenumodulo = $_GET['idmenumodulo'];
 
 //validaciones para todo el sistema
@@ -127,10 +127,10 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
 				<div class="subject-info-arrows text-center">
 					<br /><br />
-					<input type='button' id='btnAllRight' value='>>' class="btn btn-default" /><br />
+					<!-- <input type='button' id='btnAllRight' value='>>' class="btn btn-default" /><br /> -->
 					<input type='button' id='btnRight' value='>' class="btn btn-default" /><br />
 					<input type='button' id='btnLeft' value='<' class="btn btn-default" /><br />
-					<input type='button' id='btnAllLeft' value='<<' class="btn btn-default" />
+				<!-- 	<input type='button' id='btnAllLeft' value='<<' class="btn btn-default" /> -->
 				</div>
 
 				<div class="subject-info-box-2">
@@ -141,6 +141,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 				</div>
 
 				<div class="clearfix"></div>
+
 			</div>
 		</div>
 
@@ -152,7 +153,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
 	</div>
 
-  <div class="card">
+  <div class="card descripcionmembresia" style="display: none;">
     <div class="card-title"></div>
     <div class="card-body">
       <div class="row">
@@ -229,6 +230,63 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
   </div>
 </div>
+</div>
+
+<div id="mymodal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        
+      </div>
+      <div class="modal-body">
+
+        <div class="card" style="" id="divcoachs">
+        
+
+        </div>
+        <div class="card-body">
+          <div class="row">
+                <div class="col-md-12">
+                <div class="card-body" id="lclientesdiv" style="display: block; padding: 0;">
+                  <input type="hidden" id="inputmembresiaselec" value="0">
+                  
+                <div class="form-group m-t-20">
+                <label>*Fecha:</label>
+                <input type="date" class="form-control" id="v_fecha" name="v_fecha" value="" title="Fecha" placeholder='Fecha'>
+              </div>
+
+              <div class="form-group m-t-20">
+                <label>*Número de días:</label>
+                <input type="text" class="form-control" id="v_numerodias" name="v_numerodias" value="" title="Número de días" placeholder='Número de días'>
+              </div>
+
+               <div class="form-group m-t-20">
+                <label>*Repetir:</label>
+                <input type="text" class="form-control" id="v_repetir" name="v_repetir" value="" title="Repetir" placeholder='Repetir'>
+              </div>
+              <div class="mensaje"></div>
+
+      </div>
+   </div>
+
+
+       
+      </div>
+      <div class="modal-footer">
+
+         <button type="button" class="btn btn-success" onclick="AgregarMembresia()">Aceptar</button>
+
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
 	
     <script src="js/jquery.selectlistactions.js"></script>  
 
@@ -295,7 +353,8 @@ $estatus=array('DESACTIVADO','ACTIVADO');
         });
 		
         $('#btnRight').click(function (e) {
-            $('select').moveToListAndDelete('#lstBox1', '#lstBox2');
+          AbrirModalFormulario();
+           
             e.preventDefault();
         });
 
@@ -313,9 +372,13 @@ $estatus=array('DESACTIVADO','ACTIVADO');
                 console.log(r);
               if (r.respuesta==0) {
                  $('select').moveToListAndDelete('#lstBox2', '#lstBox1');
+
+                 BorrarAsignacionmembresia();
+              $("#botones").css('display','none');
+
                }else{
                 
-                    AbrirNotificacion("El servicio no se puede mover , ha sido aceptado por el usuario","mdi-close-circle");
+                    AbrirNotificacion("La membresia no se puede mover , ha sido aceptado por el usuario","mdi-close-circle");
                 
                }
 

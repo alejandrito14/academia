@@ -221,7 +221,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							</div>
 
 								<div class="form-group m-t-20">
-								<label>*DESCRIPCIÓN:</label>
+								<label>*DESCRIPCIÓN(|=salto de línea):</label>
 								<textarea name="v_descripcion" id="v_descripcion" cols="20" rows="4" class="form-control" title="DESCRIPCIÓN" placeholder='DESCRIPCIÓN'><?php echo $descripcion ?></textarea>
 							</div>
 

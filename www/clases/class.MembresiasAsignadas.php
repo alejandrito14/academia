@@ -34,7 +34,7 @@ class MembresiasAsignadas
 		usuarios_membresia
 		JOIN membresia
 		ON usuarios_membresia.idmembresia = membresia.idmembresia 
-		  WHERE usuarios_membresia.estatus=1  AND usuarios_membresia.idusuarios='$this->idusuarios'";
+		  WHERE usuarios_membresia.estatus IN(0,1)  AND usuarios_membresia.idusuarios='$this->idusuarios' ORDER BY usuarios_membresia.idusuarios_membresia LIMIT 1";
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -98,9 +98,9 @@ class MembresiasAsignadas
 	public function VerificarAsignacionmembresia()
 	{
 		$sql="SELECT *FROM  usuarios_membresia WHERE pagado=1 AND idusuarios='$this->idusuarios' AND idmembresia='$this->idmembresia' ";
-		
-			$this->db->consulta($sql);
-			
+	
+			$resp=$this->db->consulta($sql);
+			return $resp;
 	}
 
 }
