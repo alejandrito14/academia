@@ -34,6 +34,7 @@ try
 	$contador=1;
 	$idusuarios=$_POST['id_user'];
 	$asignacion->idusuarios=$idusuarios;
+	
 	$pagosencontrados=array();
 	$total=0;
 	$usuarios->db=$db;
@@ -43,7 +44,7 @@ try
 	for ($i=0; $i <count($tutorados) ; $i++) { 
 		$idusuarios.=','.$tutorados[$i]->idusuarios;
 	}
-
+	$lo->idusuarios=$idusuarios;
  
 	$asignacion->idusuario=$idusuarios;
 
@@ -165,8 +166,8 @@ try
 
 		}
 	}
-
-
+}
+	
 	$obtenerpagostipotres=$lo->ObtenerPagosTipoDosTres();
 	if (count($obtenerpagostipotres)>0) {
 
@@ -181,14 +182,14 @@ try
 				$idmembresia=$obtenerpagostipotres[$i]->idmembresia;
 				$idservicio=$obtenerpagostipotres[$i]->idservicio;
 				$tipo=$obtenerpagostipotres[$i]->tipo;
-				$monto=$obtenerpagostipotres[$i]->monto;
+				$montoapagar=$obtenerpagostipotres[$i]->monto;
 				$estatus=$obtenerpagostipotres[$i]->estatus;
 				$dividido=0;
 				$fechainicial="";
 				$fechafinal="";
 				$folio="";
 				$concepto=$obtenerpagostipotres[$i]->concepto;
-			$objeto=array('idusuarios'=>$idusuarios,'idmembresia'=>$idmembresia,'idservicio'=>$idservicio,'tipo'=>$tipo,'monto'=>$montoapagar,'estatus'=>$estatus,'dividido'=>$dividido,'fechainicial'=>$fechainicial,'fechafinal'=>$fechafinal,'concepto'=>$concepto,'folio'=>$folio,'fechaformato'=>$fechaformato,'nombre'=>$datosusuario[0]->nombre,'paterno'=>$datosusuario[0]->paterno,'materno'=>$datosusuario[0]->materno,'idpago'=>$idpago);
+			$objeto=array('idusuarios'=>$idusuarios,'idmembresia'=>$idmembresia,'idservicio'=>$idservicio,'tipo'=>$tipo,'monto'=>$montoapagar,'estatus'=>$estatus,'dividido'=>$dividido,'fechainicial'=>$fechainicial,'fechafinal'=>$fechafinal,'concepto'=>$concepto,'folio'=>$folio,'fechaformato'=>'','nombre'=>$datosusuario[0]->nombre,'paterno'=>$datosusuario[0]->paterno,'materno'=>$datosusuario[0]->materno,'idpago'=>$idpago);
 
 				$total=$total+$montoapagar;
 				array_push($pagosencontrados,$objeto);
@@ -252,7 +253,7 @@ try
 			}
 		}*/
 
-		}
+		
 
 	/*$obtener=$lo->ListadopagosNopagados();
 

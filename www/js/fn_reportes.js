@@ -83,7 +83,7 @@ function Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafi
 
 		$("#servicios").css('display','block');
 		CargarServiciosReporte();
-		$("#v_servicios").attr('onchange','CargarAlumnos()');
+		//$("#v_servicios").attr('onchange','CargarAlumnos()');
 	}
 
 	if (habilitaralumnos==1) {
@@ -260,4 +260,25 @@ function CargarAlumnos() {
 			$('#v_alumnos').html(msj);   
 			}
 		}); 
+}
+
+function GenerarReportePagosCoach(){
+
+	var idservicio=$("#v_servicios").val();
+	var fechainicio=$("#fechainicio1").val();
+	var fechafin=$("#fechafin").val();
+
+	var horainicio=$("#v_horainicio").val();
+	var horafin=$("#v_horafin").val();
+
+	var fechainicio1=fechainicio.split(' ')[0];
+	var fechafin1=fechafin.split(' ')[0];
+
+	var datos="idservicio="+idservicio+"&alumno="+v_alumnos+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin;
+
+	var url='modelosreportes/pagos/excel/rpt_PagosCoach.php?'+datos; 
+
+	//alert(url);
+	window.open(url, '_blank');	
+
 }

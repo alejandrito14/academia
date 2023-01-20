@@ -73,6 +73,10 @@ class Servicios
 	public $validaradmin;
 	public $v_politicaaceptacionseleccion;
 
+
+	public $motivocancelacion;
+	public $fechacancelacion;
+	public $usuariocancela;
 	
 
 	public function ObtenerServicios()
@@ -226,7 +230,7 @@ class Servicios
 
 	public function ObtenerParticipantes($idtipo)
 	{
-		$sql="SELECT *FROM usuarios INNER JOIN usuarios_servicios ON usuarios.idusuarios=usuarios_servicios.idusuarios WHERE idservicio='$this->idservicio' AND tipo='$idtipo' AND cancelacion=0 ";
+		$sql="SELECT *FROM usuarios INNER JOIN usuarios_servicios ON usuarios.idusuarios=usuarios_servicios.idusuarios WHERE idservicio='$this->idservicio' AND usuarios.tipo='$idtipo' AND usuarios_servicios.cancelacion=0 ";
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -1101,7 +1105,7 @@ public function Eliminardeencuestas()
 			pagos.fechainicial,
 			pagos.fechafinal
 		FROM usuarios INNER JOIN usuarios_servicios ON usuarios.idusuarios=usuarios_servicios.idusuarios
-			INNER JOIN pagos ON pagos.idservicio=usuarios_servicios.idservicio
+		INNER JOIN pagos ON pagos.idservicio=usuarios_servicios.idservicio AND pagos.idusuarios=usuarios_servicios.idusuarios
 			 WHERE usuarios_servicios.idservicio='$this->idservicio' AND usuarios.tipo='$idtipo' AND cancelacion=0 AND pagos.pagado=1 and pagos.estatus=2  ";
 		
 		$resp=$this->db->consulta($sql);
@@ -1120,6 +1124,29 @@ public function Eliminardeencuestas()
 		}
 		
 		return $array;
+	}
+
+	public function EliminarHorarioServicio($idhorarioservicio)
+	{
+		$sql="DELETE FROM horariosservicio 
+		WHERE idhorarioservicio='$idhorarioservicio'";
+
+		$resp=$this->db->consulta($sql);
+
+	}
+
+	public function GuardarCancelacion()
+	{
+		$sql="UPDATE servicios SET
+		cancelacion=1,
+		motivocancelacion='$this->motivocancelacion',
+		fechacancelacion='$this->fechacancelacion',
+		usuariocancela='$this->usuariocancela',
+		estatus=2
+		WHERE idservicio='$this->idservicio'";
+		
+		$resp=$this->db->consulta($sql);
+
 	}
 
 

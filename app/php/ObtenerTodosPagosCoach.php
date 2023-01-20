@@ -34,7 +34,7 @@ try
 	$usuarios->idusuarios=$idusuarios;
     $datoscoach=$usuarios->ObtenerUsuarioDatos();
 	$asignacion->idusuario=$idusuarios;
-	$obtenerservicios=$asignacion->obtenerServiciosAsignadosCoach();
+	$obtenerservicios=$asignacion->obtenerServiciosAsignadosCoach2();
 	$pagosdelcoach=array();
 
 	$textoestatus=array('Pendiente','Aceptado','Cancelado');

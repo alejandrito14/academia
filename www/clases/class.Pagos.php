@@ -405,6 +405,104 @@ class Pagos
 		$resp=$this->db->consulta($sql);
 
 	}
+
+
+	
+		public function ObtenerPagosServicio($sqlfecha)
+		{
+			$sql = "SELECT * FROM pagos WHERE pagado=1 AND
+			  idservicio='$this->idservicio' $sqlfecha ORDER BY idpago ";
+
+			
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;		
+		}
+
+
+	public function ObtenerPagoDescuento()
+	{
+		$sql="SELECT *FROM pagos WHERE idpago='$this->idpago'";
+		//echo $sql.'<br>';
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+				$resta=0;
+
+				$sql2="SELECT SUM(montoadescontar) as montodescontar FROM pagodescuento WHERE idpago='$objeto->idpago'";
+
+				$resp2=$this->db->consulta($sql2);
+
+				$rowdescuento=$this->db->fetch_assoc($resp2);
+				$montodescontar1=$rowdescuento['montodescontar'];
+
+				$sql3="SELECT SUM(montoadescontar) as montodescontar FROM pagodescuentomembresia WHERE idpago='$objeto->idpago'";
+
+				$resp3=$this->db->consulta($sql3);
+				$rowdescuentomembresia=$this->db->fetch_assoc($resp3);
+
+				$montodescontar2=$rowdescuentomembresia['montoadescontar'];
+
+				//echo $objeto->monto.'-'.$montodescontar1.'-'.$montodescontar2;die();
+				$resta=$objeto->monto-$montodescontar1-$montodescontar2;
+			
+
+			
+				$objeto->montocondescuento=$resta;
+				$objeto->descuento=$montodescontar1;
+				$objeto->descuentomembresia=$montodescontar2;
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerFolio()
+	{
+		$sql = "SELECT folio,tipopago FROM
+				notapago_descripcion
+				INNER JOIN notapago ON
+				notapago_descripcion.idnotapago=notapago.idnotapago	
+			    	WHERE notapago_descripcion.idpago='$this->idpago'";
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
+	}
+
 }
 
 ?>

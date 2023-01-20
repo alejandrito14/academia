@@ -8,6 +8,7 @@ require_once("clases/conexcion.php");
 require_once("clases/class.Pagos.php");
 require_once("clases/class.Funciones.php");
 require_once("clases/class.Fechas.php");
+require_once("clases/class.Notapago.php");
 
 try
 {
@@ -17,10 +18,11 @@ try
 	$lo = new Pagos();
 	$f=new Funciones();
 	$fechas=new Fechas();
+	$notapago = new Notapago();
 
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
-
+	$notapago->db=$db;
 	$idusuarios=$_POST['id_user'];
 	$lo->idusuarios=$idusuarios;
 	$obtener=$lo->ListadoNotaspagospagados();
@@ -36,6 +38,18 @@ try
 			
 			$obtener[$i]->concepto=$obtener[$i]->folio;
 			$obtener[$i]->textoestatus=$textoestatus[$obtener[$i]->estatus];
+
+
+			$$notapago->idnotapago=$obtener[$i]->idnotapago;
+			$obtenerdescripcion=$notapago->ObtenerdescripcionNota();
+			$total=0;
+			for ($j=0; $j <count($obtenerdescripcion) ; $j++) { 
+
+				$total=$total+$obtenerdescripcion[$j]->monto;
+			
+			}
+			$obtener[$i]->total=$total;
+
 
 		}
 

@@ -150,7 +150,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				  </div>
 
 
-				  <div class="col-md-6" id="estatuspago">
+				 <!--  <div class="col-md-6" id="estatuspago">
 
 				  	<div class="form-group m-t-20">
 				  	<label>ESTATUS DE PAGO:</label>
@@ -158,7 +158,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				  		
 				  	</select>
 				   	</div>
-				  </div>
+				  </div> -->
 
 <!-- 				   <div class="col">
  -->
@@ -240,14 +240,14 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					    float: right;
 					">
 						
-						<button style="display: none;margin-left:3em;" id="btnpantalla" class="btn btn-success" onclick="">VER EN PANTALLA</button>
+						<!-- <button style="display: none;" id="btnpantalla" class="btn btn-success" onclick="">VER EN PANTALLA</button> -->
 
 					</div>
 					<div class="col-md-2" style="
 					    float: right;
 					">
 						
-						<button style="display: none;margin-left:2.5em;" id="btngenerar" class="btn btn-primary" onclick="">GENERAR REPORTE</button>
+						<button style="display: none;" id="btngenerar" class="btn btn-primary" onclick="">GENERAR REPORTE</button>
 
 					</div>
 

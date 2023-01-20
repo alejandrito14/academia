@@ -164,7 +164,7 @@ class Pagos
 	public function ActualizarPagado()
 	{
 		$sql="UPDATE pagos SET  pagado = '$this->pagado',
-		fechapago='$this->fechapago'
+		    fechapago='$this->fechapago'
 		 WHERE idpago = '$this->idpago'";
 		$resp=$this->db->consulta($sql);
 
@@ -375,7 +375,7 @@ class Pagos
 			$sql = "DELETE FROM pagos WHERE pagado=0 AND
 			  idservicio='$this->idservicio' AND fechainicial='$this->fechainicial' AND fechafinal='$this->fechafinal' AND idusuarios='$this->idusuarios' ";
 
-			
+		
 			$this->db->consulta($sql);
 		}
 
@@ -414,7 +414,99 @@ class Pagos
 			    FROM pagos
 				LEFT JOIN usuarios ON usuarios.idusuarios=pagos.idusuarios
 			    WHERE pagos.estatus=0 AND pagos.pagado=0 AND pagos.idusuarios  IN($this->idusuarios) AND pagos.tipo IN(2,3) GROUP BY idpago,idusuarios ORDER BY idpago ";
+			    
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
 
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
+		}
+
+
+		public function ExistePagoServicio()
+		{
+			$sql = "SELECT * FROM pagos WHERE pagado IN(1) AND
+			  idservicio='$this->idservicio'  ORDER BY idpago ";
+
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
+		}
+
+
+		public function PagosNoPagados()
+		{
+			
+			$sql = "SELECT * FROM pagos WHERE pagado=0 AND
+			  idservicio='$this->idservicio' AND fechainicial='$this->fechainicial' AND fechafinal='$this->fechafinal' AND idusuarios='$this->idusuarios' AND fechapago='' ";
+
+		
+			$this->db->consulta($sql);
+		}
+
+
+
+
+		public function ListadopagosNopagadosMembresia()
+		{
+			$sql = "SELECT 
+					pagos.idpago,
+					pagos.idusuarios,
+					pagos.idservicio,
+					pagos.idmembresia,
+					pagos.tipo,
+					pagos.monto,
+					pagos.estatus,
+					pagos.fechapago,
+					pagos.tarjeta,
+					pagos.fechacreacion,
+					pagos.pagado,
+					pagos.validadoporusuario,
+					pagos.digitostarjeta,
+					pagos.tipopago,
+					pagos.fechaevento,
+					pagos.dividido,
+					pagos.fechainicial,
+					pagos.fechafinal,
+					pagos.concepto,
+					pagos.idtipopago,
+					pagos.tipodepago,
+					pagos.descuento,
+					pagos.folio,
+					usuarios.nombre,
+					usuarios.paterno,
+					usuarios.materno,
+					usuarios.email,
+					usuarios.celular
+			    FROM pagos
+				LEFT JOIN usuarios ON usuarios.idusuarios=pagos.idusuarios
+			    WHERE pagos.pagado=0 and pagos.idusuarios  IN($this->idusuarios) and pagos.estatus IN(0,1)  and pagos.idmembresia='$this->idmembresia'
+
+			     GROUP BY idpago,idusuarios ORDER BY idpago ";
+
+			   
 			$resp = $this->db->consulta($sql);
 			$cont = $this->db->num_rows($resp);
 

@@ -62,13 +62,14 @@ try
          for ($i=0; $i <count($obtenerdescripcionnota) ; $i++) { 
             
             $pago->idpago=$obtenerdescripcionnota[$i]->idpago;
+            $pago->estatus=2;
         
             $pago->ActualizarPagado();
         }
 
 
 
-    $md->guardarMovimiento($f->guardar_cadena_utf8('nota de pago'),'nota de pago',$f->guardar_cadena_utf8('Cambio de estatus a '.$notapago->estatus.' nota de pago ID-'.$pago->idpago.' por usuario '.$_SESSION['se_sas_Usuario']));
+    $md->guardarMovimiento($f->guardar_cadena_utf8('nota de pago'),'nota de pago',$f->guardar_cadena_utf8('Cambio de estatus a '.$notapago->estatus.' nota de pago ID-'.$notapago->idnotapago.' por usuario '.$_SESSION['se_sas_Usuario']));
 
     $db->commit();
 

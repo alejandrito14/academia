@@ -146,8 +146,20 @@ class Servicios
 
 			while ($objeto=$this->db->fetch_object($resp)) {
 
-				$array[$contador]=$objeto;
-				$contador++;
+				$fechaactual=date('Y-m-d');
+
+
+				$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
+				$resphorarios=$this->db->consulta($sql1);
+
+				$conta = $this->db->num_rows($resphorarios);
+
+				if ($conta>0) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				
+				}
 			} 
 		}
 		
@@ -439,8 +451,20 @@ class Servicios
 
 			while ($objeto=$this->db->fetch_object($resp)) {
 
-				$array[$contador]=$objeto;
-				$contador++;
+				$fechaactual=date('Y-m-d');
+
+
+				$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
+				$resphorarios=$this->db->consulta($sql1);
+
+				$conta = $this->db->num_rows($resphorarios);
+
+				if ($conta>0) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				
+				}
 			} 
 		}
 		
@@ -492,8 +516,20 @@ class Servicios
 
 			while ($objeto=$this->db->fetch_object($resp)) {
 
-				$array[$contador]=$objeto;
-				$contador++;
+				$fechaactual=date('Y-m-d');
+
+
+				$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
+				$resphorarios=$this->db->consulta($sql1);
+
+				$conta = $this->db->num_rows($resphorarios);
+
+				if ($conta>0) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				
+				}
 			} 
 		}
 		
@@ -972,8 +1008,20 @@ public function Eliminardeencuestas()
 
 			while ($objeto=$this->db->fetch_object($resp)) {
 
-				$array[$contador]=$objeto;
-				$contador++;
+				$fechaactual=date('Y-m-d');
+
+
+				$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
+				$resphorarios=$this->db->consulta($sql1);
+
+				$conta = $this->db->num_rows($resphorarios);
+
+				if ($conta>0) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				
+				}
 			} 
 		}
 		
@@ -1026,8 +1074,20 @@ public function Eliminardeencuestas()
 
 			while ($objeto=$this->db->fetch_object($resp)) {
 
-				$array[$contador]=$objeto;
-				$contador++;
+				$fechaactual=date('Y-m-d');
+
+
+				$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
+				$resphorarios=$this->db->consulta($sql1);
+
+				$conta = $this->db->num_rows($resphorarios);
+
+				if ($conta>0) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				
+				}
 			} 
 		}
 		

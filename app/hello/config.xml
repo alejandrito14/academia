@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.woolis.app" version="1.0.14" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.woolis.app" version="1.0.16" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Woolis</name>
     <description>
         Aplicacion de academias
@@ -90,11 +90,11 @@
         </config-file>
         <config-file parent="NSLocationWhenInUseUsageDescription" platform="ios" target="*-Info.plist">
             <string>
-          The application needs access to your approximate location, to choose the zip code
+          Woolis needs access to your approximate location, to choose the zip code
         </string>
         </config-file>
         <config-file parent="NSLocationAlwaysUsageDescription" platform="ios" target="*-Info.plist">
-            <string> The application needs access to your approximate location, to choose the zip code</string>
+            <string> Woolis needs access to your approximate location, to choose the zip code</string>
         </config-file>
         <config-file parent="CFBundleAllowMixedLocalizations" platform="ios" target="*-Info.plist">
             <true />

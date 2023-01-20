@@ -55,6 +55,27 @@ class Municipio
 	
 		$resp=$this->db->consulta($query);
 	}
+
+			///funcion para objeter datos de un usuario
+	public function ObtenerDatosMunicipio()
+	{
+		$query="SELECT * FROM municipios WHERE id=".$this->idmunicipio;
+		$resp = $this->db->consulta($query);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
+	}
 	
 	
 }

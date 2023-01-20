@@ -1229,7 +1229,7 @@ function VisualizarImagen(foto) {
 function ValidacionCargosTutorados() {
 
   var iduser=localStorage.getItem('id_user');
-  var pagina = "ValidacionCargosTutor.php";
+  var pagina = "ValidacionCargosTutor2.php";
   var datos= 'pagos='+localStorage.getItem('pagos')+"&id_user="+iduser;
   pagina = urlphp+pagina;
 
@@ -1273,7 +1273,7 @@ function RealizarCargo() {
      var mensaje='';
      var pedido='';
      var informacion='';
-   var pagina = "RealizarPago.php";
+   var pagina = "RealizarPago2.php";
    var iduser=localStorage.getItem('id_user');
    var constripe=localStorage.getItem('constripe');
    var idtipodepago=localStorage.getItem('idtipodepago');

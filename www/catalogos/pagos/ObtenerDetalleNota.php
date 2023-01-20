@@ -17,10 +17,14 @@ if(!isset($_SESSION['se_SAS']))
 //Inlcuimos las clases a utilizar
 require_once ("../../clases/conexcion.php");
 require_once ("../../clases/class.Notapago.php");
-require_once("../../clases/class.Funciones.php");
+require_once ("../../clases/class.Funciones.php");
 require_once ("../../clases/class.Pagos.php");
 require_once ("../../clases/class.Usuarios.php");
 require_once ("../../clases/class.Sesion.php");
+require_once ("../../clases/class.Pais.php");
+require_once ("../../clases/class.Estado.php");
+require_once ("../../clases/class.Municipio.php");
+require_once ("../../clases/class.Usocfdi.php");
 
 
 try
@@ -36,6 +40,19 @@ try
 
     $pagos = new Pagos();
     $pagos->db=$db;
+
+
+    $pais = new Paises();
+    $pais->db=$db;
+
+    $estado=new Estado();
+    $estado->db=$db;
+    $municipio=new Municipio();
+    $municipio->db=$db;
+
+    $usocfdi=new Usocfdi();
+    $usocfdi->db=$db;
+
     //Enviamos la conexion a la clase
     $lo->db    = $db;
    
@@ -53,9 +70,7 @@ try
     $descuentosmembresia=array();
     if ($resultado[0]->idpagostripe!=0) {
 
-    	$idpagostripe=$resultado[0]->idpagostripe;
-    	$lo->idpagostripe=$idpagostripe;
- 	    $obtenerpagosstripe=$lo->ObtenerPagosStripe();
+    	
 
 /*
  	    for ($i=0; $i < count($obtenerpagosstripe); $i++) { 
@@ -128,6 +143,44 @@ try
  	    	}
  	    	
         }
+       
+
+       if ($resultado[0]->requierefactura==1) {
+        $pais->id_pais=$resultado[0]->pais;
+        $obtener=$pais->ObtenerDatosPais();
+
+        $paisfact=$obtener[0];
+        $resultado[0]->nombrepais=$paisfact;
+
+
+        $estado->id_estado=$resultado[0]->estado;
+        $obteneresta=$estado->ObtenerDatosEstado();
+
+        $estadofact=$obteneresta[0];
+
+         $municipio->idmunicipio=$resultado[0]->municipio;
+         $obtenermuni=$municipio->ObtenerDatosMunicipio();
+       $municipiofact=$obtenermuni[0];
+        
+       
+       $resultado[0]->nombrestado= $estadofact;
+       $resultado[0]->nombremunicipio=$municipiofact;
+
+       $usocfdi->cmetodopago=$resultado[0]->metodopago;
+        $usocfdi->cformapago=$resultado[0]->formapago;
+       $usocfdi->cusocfdi=$resultado[0]->usocfdi;
+
+       $obteneruso=$usocfdi->ObtenerUso();
+
+       $obtenermetodo=$usocfdi->ObtenerMetodoPago();
+
+       $obtenerforma=$usocfdi->ObtenerFormadepago();
+
+        $resultado[0]->cusocfdi=$obteneruso[0];
+        $resultado[0]->cmetodopago=$obtenermetodo[0];
+
+        $resultado[0]->cformapago=$obtenerforma[0];
+       }
     
 
     $respuesta['respuesta'] = $resultado;

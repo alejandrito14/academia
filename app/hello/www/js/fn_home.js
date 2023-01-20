@@ -1032,7 +1032,8 @@ function PintarServiciosAsignados2(respuesta,fechaactual) {
                      <span class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].zonanombre+`</span>
 
  					<span class="text-muted no-margin-bottom tituloserviciolista"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</span>
-                  
+                           <a class="btncalendario" style="text-align:center;color:#007aff;font-size: 14px;" onclick="VisualizarHorarios(`+respuesta[i].idservicio+`)">Ver horarios</a>
+
 
                   </div>
                   <div class="row" style="margin-top:1em;">
@@ -1208,6 +1209,10 @@ function PintarServiciosAsignados3(respuesta,fechaactual) {
 	}
 }
 
+function VisualizarHorarios(idservicio) {
+	localStorage.setItem('idservicio',idservicio);
+	MostrarHorarios();
+}
 
 function VerificarServiciosAsignadosCoach() {
 	var idusuario=localStorage.getItem('id_user');
@@ -1381,11 +1386,13 @@ function PintarServiciosAsignadosCoach2(respuesta,fechaactual) {
                     	//}
 
                     html+=`
+
+
                      <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</span>
                      <span class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].zonanombre+`</span>
 
  					<span class="text-muted no-margin-bottom tituloserviciolista"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</span>
-                  
+                  	<a class="btncalendario" style="text-align:center;color:#007aff;font-size: 14px;" onclick="VisualizarHorarios(`+respuesta[i].idservicio+`)">Ver horarios</a>
 
                   </div>
                   <div class="row" style="margin-top:1em;">

@@ -79,25 +79,36 @@ try {
     $anio = substr($fecha[2], 2, 4);
     $folio = $fecha[0].$fecha[1].$anio.$contador;
      $tipopago=new Tipodepagos();
+     $tipopago->db=$db;
 
       if ($montomonedero>0) {
   
             if ($montomonedero==$sumatotalapagar) {
                $idtipodepago=0;
               
+            }else{
+                $tipopago->idtipodepago=0;
+                $obtenertipopago=$tipopago->ObtenerTipodepago2();
+             $variable=','.$obtenertipopago[0]->tipo;
+
+
             }
 
-             $tipopago->idtipodepago=0;
-             $obtenertipopago=$tipopago->ObtenerTipodepago2();
-             $variable=','.$obtenertipopago[0]->tipo;
+           
           }
 
 
             //$idtipodepago=$_POST['idtipodepago'];
-            $tipopago->db=$db;
-            $tipopago->idtipodepago=$idtipodepago;
+            if ($tipopago->idtipodepago!=$idtipodepago) {
+                $tipopago->idtipodepago=$idtipodepago;
            
-            $obtenertipopago=$tipopago->ObtenerTipodepago2();
+              $obtenertipopago=$tipopago->ObtenerTipodepago2();
+
+             // var_dump($obtenertipopago);die();
+            }else{
+              $variable=str_replace(',','',$variable);
+            }
+          
 
 
             if ($obtenertipopago[0]->constripe==1) {

@@ -325,7 +325,7 @@ function CargarFoto() {
 
   
   	foto=localStorage.getItem('avatar');
-  	  	url=urlphp+"upload/perfil/"+foto;
+  	 url=urlphp+"imagenesapp/"+foto;
 
     $("#imagenusuario").attr('src',urlphp+"imagenesapp/"+foto);
     $("#imagenusuario2").attr('src',urlphp+"imagenesapp/"+foto);

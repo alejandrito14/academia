@@ -330,6 +330,7 @@ function salir_app()
 	localStorage.removeItem("correo");
 	localStorage.removeItem("passwordisuoder");
 	localStorage.removeItem("id_user");
+	myStopFunction(identificadorDeTemporizador);
 
 	GoToPage("/");
 /*

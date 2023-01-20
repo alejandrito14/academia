@@ -41,7 +41,9 @@ try
 	$calificacion->idusuario=$idusuario;
 	$lo->idusuario=$idusuario;
 	$obtenerservicios=$lo->obtenerServiciosAsignadosTuto();
-
+	if (count($obtenerservicios)>0) {
+		# code...
+	
 	for ($i=0; $i <count($obtenerservicios) ; $i++) { 
 		
 		$lo->idservicio=$obtenerservicios[$i]->idservicio;
@@ -125,7 +127,7 @@ try
 	usort($obtenerservicios, function ($a, $b) {
     return strcmp($b->fechahora,$a->fechahora);
 	});
-
+}
 
 	$fechaactual=date('Y-m-d');
 

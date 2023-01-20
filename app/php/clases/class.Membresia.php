@@ -518,5 +518,30 @@ class Membresia
 		WHERE idusuarios_membresia='$this->idusuarios_membresia'";
 		$resp=$this->db->consulta($query);
 	}
+
+
+
+	public function ObtenerMembresiaUsuarioAsociada()
+	{
+		$sql="SELECT *
+		FROM usuarios_membresia WHERE idusuarios='$this->idusuarios' and estatus=1 ORDER BY idusuarios_membresia DESC";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 }
 ?>

@@ -35,7 +35,7 @@ class Membresia
 	public $descuento;
 	public $monto;
 	public $montoadescontar;
-	
+	public $idnotapago;
 
 	public function ObtenerTodosmembresia()
 	{
@@ -316,7 +316,7 @@ class Membresia
 	{
 		$query="UPDATE membresia SET estatus='$this->estatus'
 		WHERE idusuarios_membresia='$this->idusuarios_membresia'";
-		
+		echo $query;die();
 		$resp=$this->db->consulta($query);
 	}
 
@@ -377,7 +377,7 @@ class Membresia
 	public function GuardarPagoDescuentoMembresia()
 	{
 		$sql="INSERT INTO pagodescuentomembresia
-		(idpago, idmembresia, idservicio, descuento, monto,montoadescontar) VALUES ( '$this->idpago', '$this->idmembresia','$this->idservicio', '$this->descuento', '$this->monto','$this->montoadescontar')";
+		(idpago, idmembresia, idservicio, descuento, monto,montoadescontar,idnotapago) VALUES ( '$this->idpago', '$this->idmembresia','$this->idservicio', '$this->descuento', '$this->monto','$this->montoadescontar','$this->idnotapago')";
 		$resp=$this->db->consulta($sql);
 
 	}
@@ -485,6 +485,38 @@ class Membresia
 		}
 		
 		return $array;
+	}
+
+	public function ObtenerUsuariosMembresia($fechaactual)
+	{
+		$sql="SELECT *
+		FROM usuarios_membresia WHERE  estatus=1 and fechaexpiracion<='$fechaactual'";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ActualizarEstatusMembresia()
+	{
+		$query="UPDATE usuarios_membresia 
+		SET
+		estatus='$this->estatus'
+		WHERE idusuarios_membresia='$this->idusuarios_membresia'";
+		$resp=$this->db->consulta($query);
 	}
 }
 ?>

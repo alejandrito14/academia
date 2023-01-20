@@ -1742,6 +1742,7 @@ estatus=['PENDIENTE','ACEPTADO','CANCELADO'];
 	//var nombreusuario=usuario.nombre+" "+usuario.paterno+" "+usuario.materno;
 	//$("#alumno").text(nombreusuario);
 	$("#tipopago").text(respuesta.tipopago);
+	
 
 	$("#estatus").text(estatus[respuesta.estatus]);
 	var classe="";
@@ -1953,4 +1954,228 @@ function SeleccionarTodos() {
 		$(".seleccionar").prop('checked',false);
 	}
 	HabilitarBotonPago();
+}
+
+
+
+function ObtenerNotasPorFacturar() {
+	
+	 var pagina = "ObtenerNotasPorfacturar.php";
+      $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url:'catalogos/notasporfacturar/'+pagina, //Url a donde la enviaremos
+      async:false,
+      success: function(msj){
+
+      	var respuesta=msj.pagos;
+      	PintarNotasporfacturar(respuesta);
+     
+           
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                  //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                  console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+            }
+      });
+
+}
+function PintarNotasporfacturar(respuesta) {
+	var html="";
+	if (respuesta.length>0) {
+		for (var i = 0; i <respuesta.length; i++) {
+			 html+=`
+		    <li class="list-group-item  align-items-center linotasporvalidar" id="nota_`+respuesta[i].idnotapago+`" style="" >
+					   <div class="row">
+					   <div class="col-md-9">
+					   		<p id="">Pago #`+respuesta[i].folio+` </p>
+					   		<p>`+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`</p>
+		              		<p class="" style="">`+respuesta[i].fechaformato+`</p>
+
+		                    <p class="" style="">$<span class="">`+formato_numero(respuesta[i].total,2,'.',',')+`</span></p>
+
+		                   </div>
+		                   <div class="col-md-3">
+
+							    <span class="badge " style="display:none;">
+							    </span>
+
+							    <button type="button" class="btn btn-info" onclick="DetalleNotaFactu(`+respuesta[i].idnotapago+`)">Ver detalle</button>
+					   		 </div>
+					    
+					    </div>
+
+					  </li>
+
+		    `;
+		}
+	}
+	$(".notasporfacturar").html(html);
+}
+
+
+
+function DetalleNotaFactu(idnotapago) {
+	var datos="idnotapago="+idnotapago;
+	 var pagina = "ObtenerDetalleNota.php";
+      $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: urlphp+pagina,
+      data:datos,
+      async:false,
+      success: function(resp){
+
+      	var pagos=resp.pagos;
+      	var descuentos=resp.descuentos;
+      	var descuentosmembresia=resp.descuentosmembresia;
+      	var respuesta=resp.respuesta;
+      	var usuario=resp.usuario;
+      	var rutaimagenes=resp.rutaimagenes;
+      	var imagenescomprobante=resp.imagenescomprobante;
+      	PintardetalleNotapagoFactu(respuesta[0]);
+      	PintarPagos(pagos);
+		$("#uldescuentos").html('');
+      	if (descuentos.length>0) {
+
+      	PintarDescuentosDetalleNota(descuentos);
+
+      }
+
+      	if (descuentosmembresia.length>0) {
+      	PintarDescuentosDetalleMembresiaNota(descuentosmembresia[0]);
+
+      }
+      	
+      	if (imagenescomprobante.length>0) {
+      		PintarImagenesNota(imagenescomprobante,rutaimagenes);
+      	}
+           
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                  //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                  console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+            }
+      });
+}
+
+function PintardetalleNotapagoFactu(respuesta) {
+	$(".divdetalle").css('display','block');
+estatus=['PENDIENTE','ACEPTADO','CANCELADO'];
+
+	$("#folionota").text('PAGO #'+respuesta.folio);
+	$("#fechapago").text(respuesta.fecha);
+	//var nombreusuario=usuario.nombre+" "+usuario.paterno+" "+usuario.materno;
+	//$("#alumno").text(nombreusuario);
+	$("#tipopago").text(respuesta.tipopago);
+	
+	$("#estatus").text(estatus[respuesta.estatus]);
+	var classe="";
+	if (respuesta.estatus==0) {
+		classe="notapendiente";
+	}
+
+	if (respuesta.estatus==1) {
+		classe="notaaceptado";
+	}
+
+	if (respuesta.estatus==2) {
+		classe="notacancelado";
+	}
+
+	$("#estatus").addClass(classe);
+
+	$(".divmonedero").css('display','block');
+	$(".divresumen").css('display','block');
+	$(".divcomision").css('display','block');
+	$(".divtotal").css('display','block');
+	//$("#btnState_1").attr('onchange','CambiarEstatusNota('+respuesta.idnotapago+')');
+	var html="";
+	$("#monedero").html(respuesta.montomonedero);
+	$(".lblresumen").html(respuesta.subtotal);
+	$(".lblcomision").html(respuesta.comisiontotal);
+	$(".lbltotal").html(respuesta.total);
+	$(".btncambiarestatus").attr('onclick','Abrirmodalfactura('+respuesta.idnotapago+')');
+
+	html+=`
+	<p>RAZÓN SOCIAL:`+respuesta.razonsocial+`</p>
+	<p>RFC:`+respuesta.rfc+`</p>
+	<p>EMAIL:`+respuesta.email+`</p>
+	<p>CÓDIGO POSTAL:`+respuesta.codigopostal+`</p>
+	<p>PAÍS:`+respuesta.nombrepais.pais+`</p>
+	<p>ESTADO:`+respuesta.nombrestado.nombre+`</p>
+	<p>MUNICIPIO:`+respuesta.nombremunicipio.nombre+`</p>
+	<p>ASENTAMIENTO:`+respuesta.asentamiento+`</p>
+	<p>CALLE:`+respuesta.calle+`</p>
+	<p>NO.INTERIOR:`+respuesta.nointerior+`</p>
+	<p>NO.EXTERIOR:`+respuesta.noexterior+`</p>
+
+	`;
+
+	$(".datosfacturacion").html(html);
+
+}
+
+
+
+function Abrirmodalfactura(idnotapago) {
+
+	$("#txtvalidacion").css('border','1px solid #e9ecef');
+	$("#txtdescripcion").text('');
+	$(".btnvalidacion").attr('onclick','GuardarFoliofactura('+idnotapago+')');
+	$("#modalfoliofactura").modal();
+
+}
+
+function GuardarFoliofactura(idnotapago) {
+
+    $("#txtfoliofactura").text('');
+    $("#txtfolio").removeClass('inputrequerido');
+    $("#txtfolio").css('border','0px');
+
+	var txtfolio=$("#txtfolio").val();
+	var datos="folio="+txtfolio+"&idnotapago="+idnotapago;
+	var pagina = "AgregarFoliofactura.php";
+     var bandera=1;
+	if (txtfolio=='') {
+		bandera=0;
+		$("#txtfolio").css('border','1px solid red');
+		$("#txtfoliofactura").text('Campo requerido');
+		$("#txtfolio").addClass('inputrequerido');
+	}
+
+	if (bandera==1) {
+      $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      data:datos,
+      url:'catalogos/notasporfacturar/'+pagina, //Url a donde la enviaremos
+      async:false,
+      success: function(msj){
+
+      	   $("#txtfolio").val('');
+           $("#modalfoliofactura").modal('hide');
+           AbrirNotificacion("SE REALIZARON LOS CAMBIOS CORRECTAMENTE","mdi-checkbox-marked-circle ");
+           ObtenerNotasPorFacturar();
+           $(".divdetalle").css('display','none');
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                  //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                  console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+            }
+      });
+  }else{
+  	if (txtfolio=='') {
+		$("#txtfolio").css('border','1px solid red');
+		$("#txtfoliofactura").text('Campo requerido');
+	}
+
+  }
 }
