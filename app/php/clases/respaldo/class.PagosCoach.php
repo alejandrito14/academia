@@ -100,7 +100,10 @@ class PagosCoach
 					pagos.folio,
 					pagos.monto,
 					servicios.titulo,
-					pagos.idpago
+					pagos.idpago,
+					pagos.montopagocoach,
+					pagos.montopago,
+					pagos.tipopagocoach
 			      FROM pagoscoach as pagos
 				LEFT JOIN usuarios ON usuarios.idusuarios=pagos.idusuarios
 				INNER JOIN servicios ON servicios.idservicio=pagos.idservicio

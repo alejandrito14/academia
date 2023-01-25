@@ -50,11 +50,12 @@ $reporte->idreporte=$idreporte;
 $resultado_reporte = $reporte->buscar_reportes();
 $resultado_reporte_num = $db->num_rows($resultado_reporte);
 $resultado_reporte_row = $db->fetch_assoc($resultado_reporte);
+$fechaactual=date('Y-m-d');
 
 
 
 $respuesta['respuesta']=$resultado_reporte_row;
-
+$respuesta['fechactual']=$fechaactual;
 echo json_encode($respuesta);
 
 ?>

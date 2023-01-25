@@ -54,6 +54,9 @@ try
      $lo->tipopagocoach=$_POST['tipopago'];
 	 $lo->montopagocoach=$_POST['montopagocoach'];
 	 $lo->montopago=$_POST['montopago'];
+	 $lo->fechainicial=$buscarpago[0]->fechainicial;
+	 $lo->fechafinal=$buscarpago[0]->fechafinal;
+
      $lo->GuardarPagoCoach();
 
 	 $db->commit();

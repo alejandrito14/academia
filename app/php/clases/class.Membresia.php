@@ -490,7 +490,9 @@ class Membresia
 	public function ObtenerUsuariosMembresia($fechaactual)
 	{
 		$sql="SELECT *
-		FROM usuarios_membresia WHERE  estatus=1 and fechaexpiracion<='$fechaactual'";
+		FROM usuarios_membresia
+		INNER JOIN membresia ON usuarios_membresia.idmembresia=usuarios_membresia.idmembresia
+		 WHERE  usuarios_membresia.estatus=1 and usuarios_membresia.fechaexpiracion<='$fechaactual'";
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -526,6 +528,31 @@ class Membresia
 		$sql="SELECT *
 		FROM usuarios_membresia WHERE idusuarios='$this->idusuarios' and estatus=1 ORDER BY idusuarios_membresia DESC";
 		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerMembresiasCaducadas()
+	{
+		$sql="SELECT * FROM usuarios_membresia
+			INNER JOIN membresia ON usuarios_membresia.idmembresia=membresia.idmembresia
+		 WHERE idusuarios='$this->idusuarios'AND idmembresia='$this->idmembresia' AND estatus=2 ";
+	
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 

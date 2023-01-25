@@ -774,7 +774,7 @@ class Servicios
 
 	public function ObtenerServiciosFiltrado($tiposervicio,$coach)
 	{
-		$sql="SELECT servicios.idservicio,servicios.titulo,servicios.imagen,categorias.titulo as nombrecategoria,servicios.orden,servicios.estatus FROM servicios ";
+		$sql="SELECT servicios.idservicio,servicios.titulo,servicios.imagen,categorias.titulo as nombrecategoria,categorias.idcategorias,servicios.orden,servicios.estatus FROM servicios ";
 		$filtro="";
 		if ($tiposervicio>=0) {
 		$sql.=" INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio ";
@@ -844,6 +844,33 @@ class Servicios
 		
 		return $array;
 	}
+
+		public function ObtenerserviciosConsulta()
+	{
+		$sql="SELECT  
+			servicios.titulo,
+			servicios.idservicio,
+			servicios.descripcion,
+			servicios.estatus,
+			servicios.idcategoriaservicio,
+			servicios.imagen,
+			servicios.fechacreacion,
+			servicios.orden,
+			servicios.fechainicial,
+			servicios.fechafinal,
+			servicios.nodedias,
+			servicios.idcategoria,
+			servicios.precio,
+			servicios.totalclases,
+			servicios.montopagarparticipante,
+			categorias.titulo AS titulocategoria,
+			categorias.descripcion AS descripcioncategoria
+		FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio WHERE servicios.estatus=1 AND categorias.avanzado=1";
+		
+		$resp=$this->db->consulta($sql);
+		return $resp;
+	}
+	
 
 }
 

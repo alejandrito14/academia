@@ -51,6 +51,9 @@ try
      $lo->idusuariocreado=$iduser;
      $lo->fechapago=date('Y-m-d H:i:s');
      $lo->descripcionpago=$_POST['txtdescripcionpago'];
+     $lo->tipopagocoach=$_POST['tipopago'];
+	 $lo->montopagocoach=$_POST['montopagocoach'];
+	 $lo->montopago=$_POST['montopago'];
      $lo->GuardarPagoCoach();
 
 	 $db->commit();

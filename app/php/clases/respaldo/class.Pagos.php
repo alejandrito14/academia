@@ -348,7 +348,7 @@ class Pagos
 
 		public function ExistePago()
 		{
-			$sql = "SELECT * FROM pagos WHERE pagado IN(1) AND
+			$sql = "SELECT * FROM pagos WHERE pagado IN(0,1) AND estatus IN(1,2) AND
 			  idservicio='$this->idservicio' AND fechainicial='$this->fechainicial' AND fechafinal='$this->fechafinal' AND idusuarios='$this->idusuarios'  ORDER BY idpago ";
 
 			
@@ -372,11 +372,11 @@ class Pagos
 		public function EliminarPagoNoPagado()
 		{
 			
-			$sql = "DELETE FROM pagos WHERE pagado=0 AND
+			$sql = "DELETE FROM pagos 
+				WHERE pagado=0 AND estatus=0 AND
 			  idservicio='$this->idservicio' AND fechainicial='$this->fechainicial' AND fechafinal='$this->fechafinal' AND idusuarios='$this->idusuarios' ";
 
-		
-			$this->db->consulta($sql);
+			  $this->db->consulta($sql);
 		}
 
 		public function ObtenerPagosTipoDosTres()
@@ -460,10 +460,25 @@ class Pagos
 		{
 			
 			$sql = "SELECT * FROM pagos WHERE pagado=0 AND
-			  idservicio='$this->idservicio' AND fechainicial='$this->fechainicial' AND fechafinal='$this->fechafinal' AND idusuarios='$this->idusuarios' AND fechapago='' ";
+			  idservicio='$this->idservicio' AND fechainicial='$this->fechainicial' AND fechafinal='$this->fechafinal' AND idusuarios='$this->idusuarios' AND fechapago IS NULL";
 
-		
-			$this->db->consulta($sql);
+			
+			   
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
 		}
 
 

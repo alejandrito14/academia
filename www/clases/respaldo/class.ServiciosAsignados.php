@@ -359,6 +359,7 @@ class ServiciosAsignados
 		(idservicio,idusuarios) VALUES ('$this->idservicio','$this->idusuario')";
 		
 		$resp=$this->db->consulta($query);
+		$this->idusuarios_servicios=$this->db->id_ultimo();
 	}
 
 	public function BuscarAsignacion()
@@ -849,5 +850,104 @@ class ServiciosAsignados
 
 	}
 
+
+	public function CambiarEstatusAsignacion($usuarioservicio)
+	{
+		$query="UPDATE  usuarios_servicios 
+			SET estatus=1 
+			WHERE idusuarios_servicios='$this->idusuarios_servicios'
+
+		";
+
+		$resp=$this->db->consulta($query);
+		
+	}
+
+	
+	public function obtenerServiciosAsignadosCoach2()
+	{
+		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
+			AND cancelacion=0 AND servicios.validaradmin=1 GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios
+		 ";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				/*$fechaactual=date('Y-m-d');
+
+
+				$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
+				$resphorarios=$this->db->consulta($sql1);
+
+				$conta = $this->db->num_rows($resphorarios);
+*/
+				//if ($conta>0) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				
+				//}
+			} 
+		}
+		
+		return $array;
+	}
+
+	
+	public function CalcularMontoPago($tipo,$cantidad,$montopago)
+	{
+
+		if ($tipo==0) {
+
+		 	$monto=($montopago*$cantidad)/100;
+			
+		}
+		if ($tipo==1) {
+			$monto=$cantidad;
+		}
+
+
+
+		return $monto;
+
+
+	}
+
+	public function ObtenertipoMontopago()
+	{
+		$sql="SELECT
+				*
+				FROM
+				usuarioscoachs
+				WHERE 
+				idusuarios_servicios = '$this->idusuarios_servicios';
+		 ";
+
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 
 }

@@ -85,11 +85,11 @@ try {
   
             if ($montomonedero==$sumatotalapagar) {
                $idtipodepago=0;
-              
+               $tipopago->idtipodepago=0;
             }else{
                 $tipopago->idtipodepago=0;
                 $obtenertipopago=$tipopago->ObtenerTipodepago2();
-             $variable=','.$obtenertipopago[0]->tipo;
+             $variable=$obtenertipopago[0]->tipo;
 
 
             }
@@ -104,12 +104,14 @@ try {
            
               $obtenertipopago=$tipopago->ObtenerTipodepago2();
 
+              $variable=','.$variable;
+
              // var_dump($obtenertipopago);die();
             }else{
               $variable=str_replace(',','',$variable);
             }
           
-
+            $constripe=$obtenertipopago[0]->constripe;
 
             if ($obtenertipopago[0]->constripe==1) {
               # code...
@@ -255,8 +257,7 @@ try {
         }
 
 
-      
-
+     
           if ($estatusdeproceso==1) {
           	   $db = new MySQL();
           	   $db->begin();
@@ -412,6 +413,8 @@ try {
                
                   $pagos->ActualizarEstatus();
                   $pagos->ActualizarPagado();
+
+
              /* $pagos->idpago=$pagosconsiderados[$i]->id;
               $buscarpago=$pagos->ObtenerPago();
               
@@ -538,7 +541,7 @@ try {
               $notapago->monto=$buscarpago[0]->monto;
               $notapago->idpago=$buscarpago[0]->idpago;
                $notapago->Creardescripcionpago();
-
+ 
                ///creacion pago a coach
 
                if ($constripe==1) {
@@ -549,6 +552,7 @@ try {
 
 
           		}
+
               $notapago->idpagostripe=0;
               if ($constripe==1) {
                $notapago->idpagostripe=$obj->idintento;
@@ -613,6 +617,7 @@ try {
     $tipo=1;
     $concepto="Cargo";
     $sql_movimiento = "INSERT INTO monedero (idusuarios,monto,modalidad,tipo,saldo_ant,saldo_act,concepto,idnota) VALUES ('$iduser','$montomonedero','2','$tipo','$saldo_anterior','$nuevo_saldo','$concepto','$notapago->idnotapago');";
+
      $db->consulta($sql_movimiento);
 
 
@@ -641,7 +646,7 @@ try {
 
       
         }
-  
+   
          if ($campomonto==1) {
               $notapago->estatus=0;
               $notapago->ActualizarNotapago();
@@ -654,7 +659,14 @@ try {
 
           		$db->commit();
 
+              if ($constripe==0) {
+                 $output = [
+                        'succeeded' => 1,
+                       
+                    ]; 
+              }
 
+             
           }
 
             

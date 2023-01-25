@@ -137,7 +137,7 @@ $(document).ready(function() {
 
 var lhost = "localhost:8888";
 var rhost = "issoftware1.com.mx";
-var version='1.0.16';
+var version='1.0.17';
 
 localStorage.setItem('versionapp',version);
 var abrir=0;
@@ -1833,8 +1833,9 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
  localStorage.setItem('comisionnota',0);
  localStorage.setItem('comisionpornota',0);
  localStorage.setItem('tipocomisionpornota',0);
-localStorage.setItem('campomonto',0);
-
+ localStorage.setItem('campomonto',0);
+ localStorage.setItem('constripe',0);
+ localStorage.setItem('comisiontotal',0);
   $("#btnpagarresumen").attr('disabled',true);
   $$("#btnatras").attr('onclick','Atras()');
   $$("#btnatras").css('display','none');

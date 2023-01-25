@@ -37,6 +37,7 @@ class Descuentos
 	//public $modalidaddescuento;
 	/*public $txtdiascaducidad;
 	public $porclientenoasociado;*/
+	public $idnotapago;
 
 	public function ObtenerTodosdescuentos()
 	{
@@ -275,7 +276,7 @@ class Descuentos
 	public function GuardarDescuentoPago()
 	{
 
-		$sql="INSERT INTO pagodescuento( iddescuento, montopago, montoadescontar, tipo, monto, idpago) VALUES ('$this->iddescuento', '$this->montopago', '$this->montoadescontar', '$this->tipo', '$this->monto', '$this->idpago')";
+		$sql="INSERT INTO pagodescuento( iddescuento, montopago, montoadescontar, tipo, monto, idpago,idnotapago) VALUES ('$this->iddescuento', '$this->montopago', '$this->montoadescontar', '$this->tipo', '$this->monto', '$this->idpago','$this->idnotapago')";
 		
 		$resp=$this->db->consulta($sql);
 
@@ -426,12 +427,17 @@ class Descuentos
 		return $array;
 	}
 
-	public function ObtenerTodosParentescoUsuario($idusuariotutor,$idparentesco)
+	public function ObtenerTodosParentescoUsuario($idusuariotutor,$idparentesco,$categoria)
 	{
 		$sql="SELECT * FROM usuariossecundarios
-		 WHERE idusuariostutor='$idusuariotutor'
+		 INNER JOIN usuarios_servicios ON 
+		 idusuarios=usuariossecundarios.idusuariotutorado
+		 INNER JOIN servicios ON usuarios_servicios.idservicio=servicios.idservicio
+		 WHERE idusuariostutor='$idusuariotutor'  AND servicios.idcategoriaservicio='$categoria'  ORDER BY usuariossecundarios.idusuariossecundario
+
 
 		 ";
+		
 
 		 if ($idparentesco!=0) {
 		 	$sql.=" AND idparentesco='$idparentesco'";
@@ -529,7 +535,7 @@ class Descuentos
 	{
 		
 		$sql="SELECT COUNT(*)as cantidad FROM usuarios_servicios INNER JOIN usuarios ON usuarios_servicios.idusuarios=usuarios.idusuarios
-		 WHERE idservicio='$this->idservicio' AND usuarios.tipo=3";
+		 WHERE idservicio='$this->idservicio' AND usuarios.tipo=3 AND aceptarterminos=1 AND cancelacion=0 AND usuarios_servicios.estatus=1";
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -549,7 +555,50 @@ class Descuentos
 		return $array;
 	}
 
-	
+
+
+	public function ObtenerTipoDescuentoAsociador()
+		{
+		 $sql="SELECT *FROM categoriasasociador WHERE iddescuento='$this->iddescuento' ";
+		   $resp=$this->db->consulta($sql);
+		   $cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerServicioAsociador()
+	{
+		$sql="SELECT *FROM serviciosasociador WHERE iddescuento='$this->iddescuento' ";
+		   $resp=$this->db->consulta($sql);
+		   $cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
 	
 }
 

@@ -411,9 +411,10 @@ class Pagos
 		public function ObtenerPagosServicio($sqlfecha)
 		{
 			$sql = "SELECT * FROM pagos WHERE pagado=1 AND
-			  idservicio='$this->idservicio' $sqlfecha ORDER BY idpago ";
+			  idservicio='$this->idservicio' AND idusuarios='$this->idusuarios'
+			  AND fechainicial='$this->fechainicial' AND fechafinal='$this->fechafinal'
+			  ORDER BY idpago ";
 
-			
 			$resp = $this->db->consulta($sql);
 			$cont = $this->db->num_rows($resp);
 
@@ -435,7 +436,7 @@ class Pagos
 	public function ObtenerPagoDescuento()
 	{
 		$sql="SELECT *FROM pagos WHERE idpago='$this->idpago'";
-		//echo $sql.'<br>';
+		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 

@@ -535,7 +535,7 @@ class Descuentos
 	{
 		
 		$sql="SELECT COUNT(*)as cantidad FROM usuarios_servicios INNER JOIN usuarios ON usuarios_servicios.idusuarios=usuarios.idusuarios
-		 WHERE idservicio='$this->idservicio' AND usuarios.tipo=3";
+		 WHERE idservicio='$this->idservicio' AND usuarios.tipo=3 AND aceptarterminos=1 AND cancelacion=0 AND usuarios_servicios.estatus=1";
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

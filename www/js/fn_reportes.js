@@ -51,8 +51,13 @@ function CargarFiltrosreportes(idreporte) {
 			var habilitarhorafin=respuesta.habilitarhorafin;
 			var habilitaralumnos=respuesta.habilitaralumnos;
 			var funcionpantalla=respuesta.funcionpantalla;
+			var fechactual=msj.fechactual;
 			Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafin,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla);
 			
+
+			$("#fechainicio1").val(fechactual);
+			$("#fechafin").val(fechactual);
+
 			}
 		}); 
 	}else{
@@ -73,11 +78,11 @@ function Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafi
 	$("#fechainicio").css('display','none');
 	$("#fechafinal").css('display','none');
 	$("#btngenerar").css('display','block');
-	$("#btngenerar").attr('onclick',funcion);
+	$("#btngenerar").attr('onclick',funcionpantalla);
 	$("#horainicio").attr('display','none');
 	$("#horafin").attr('display','none');
-	$("#btnpantalla").css('display','block');
-	$("#btnpantalla").attr('onclick',funcionpantalla);
+	//$("#btnpantalla").css('display','block');
+	$("#btnpantalla").attr('onclick',funcion);
 
 	if (habilitarservicio==1) {
 
@@ -172,7 +177,6 @@ function GenerarPantallaReporteVentas(){
 	var datos="idservicio="+idservicio+"&alumno="+v_alumnos+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin;
 
 	aparecermodulos('catalogos/reportes/GenerarPantallaReporteVentas.php?'+datos,'contenedor_reportes'); 
-
 }
 
 function GenerarReporteDetalladoVentas(){
@@ -274,11 +278,199 @@ function GenerarReportePagosCoach(){
 	var fechainicio1=fechainicio.split(' ')[0];
 	var fechafin1=fechafin.split(' ')[0];
 
-	var datos="idservicio="+idservicio+"&alumno="+v_alumnos+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin;
+	var datos="idservicio="+idservicio+"&alumno="+v_alumnos+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&pantalla=0";
 
 	var url='modelosreportes/pagos/excel/rpt_PagosCoach.php?'+datos; 
 
 	//alert(url);
 	window.open(url, '_blank');	
 
+}
+
+function GenerarReportePagosCoachPantalla() {
+	var idservicio=$("#v_servicios").val();
+	var fechainicio=$("#fechainicio1").val();
+	var fechafin=$("#fechafin").val();
+
+	var horainicio=$("#v_horainicio").val();
+	var horafin=$("#v_horafin").val();
+
+	var fechainicio1=fechainicio.split(' ')[0];
+	var fechafin1=fechafin.split(' ')[0];
+
+	var datos="idservicio="+idservicio+"&alumno="+v_alumnos+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&pantalla=1";
+
+	var url='modelosreportes/pagos/excel/rpt_PagosCoach.php'; 
+
+
+	$.ajax({
+		type:'GET',
+		url: url,
+		cache:false,
+		data:datos,
+		async:false,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+		alert(error);						  
+		 },
+		success : function (msj){
+		
+			$("#contenedor_reportes").html(msj);
+
+			CargarEstilostable('.vertabla');
+			$("#btnpantalla").css('display','block');
+
+			}
+		}); 
+}
+
+function GenerarReportePantallaEstatusAlumno() {
+	var idservicio=$("#v_servicios").val();
+	var fechainicio=$("#fechainicio1").val();
+	var fechafin=$("#fechafin").val();
+
+	var horainicio=$("#v_horainicio").val();
+	var horafin=$("#v_horafin").val();
+
+	var fechainicio1=fechainicio.split(' ')[0];
+	var fechafin1=fechafin.split(' ')[0];
+
+	var datos="idservicio="+idservicio+"&alumno="+v_alumnos+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&pantalla=1";
+
+	var url='modelosreportes/estatusalumnos/excel/rpt_EstatusAlumnos.php'; 
+
+
+	$.ajax({
+		type:'GET',
+		url: url,
+		cache:false,
+		data:datos,
+		async:false,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+		alert(error);						  
+		 },
+		success : function (msj){
+		
+			$("#contenedor_reportes").html(msj);
+
+			CargarEstilostable('.vertabla');
+			$("#btnpantalla").css('display','block');
+
+			}
+		}); 
+}
+
+function GenerarReporteEstatusAlumno() {
+	
+	var idservicio=$("#v_servicios").val();
+	var fechainicio=$("#fechainicio1").val();
+	var fechafin=$("#fechafin").val();
+
+	var horainicio=$("#v_horainicio").val();
+	var horafin=$("#v_horafin").val();
+
+	var fechainicio1=fechainicio.split(' ')[0];
+	var fechafin1=fechafin.split(' ')[0];
+
+	var datos="idservicio="+idservicio+"&alumno="+v_alumnos+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&pantalla=0";
+
+	var url='modelosreportes/estatusalumnos/excel/rpt_EstatusAlumnos.php?'+datos; 
+
+	//alert(url);
+	window.open(url, '_blank');	
+}
+function CargarEstilostable(elemento) {
+	$(''+elemento).DataTable( {		
+		 	"pageLength": 100,
+			"oLanguage": {
+						"sLengthMenu": "Mostrar _MENU_ ",
+						"sZeroRecords": "NO EXISTEN REGISTROS CON EL FILTRO SELECCIONADO.",
+						"sInfo": "Mostrar _START_ a _END_ de _TOTAL_ Registros",
+						"sInfoEmpty": "desde 0 a 0 de 0 records",
+						"sInfoFiltered": "(filtered desde _MAX_ total Registros)",
+						"sSearch": "Buscar",
+						"oPaginate": {
+									 "sFirst":    "Inicio",
+									 "sPrevious": "Anterior",
+									 "sNext":     "Siguiente",
+									 "sLast":     "Ultimo"
+									 }
+						},
+		   "sPaginationType": "full_numbers", 
+		 	"paging":   true,
+		 	"ordering": true,
+        	"info":     false,
+        	"bAutoWidth": false,
+
+
+		} );
+}
+
+
+function GenerarReportePantallaNotasPago() {
+
+	var idservicio=$("#v_servicios").val();
+	var fechainicio=$("#fechainicio1").val();
+	var fechafin=$("#fechafin").val();
+
+	var horainicio=$("#v_horainicio").val();
+	var horafin=$("#v_horafin").val();
+
+	var fechainicio1=fechainicio.split(' ')[0];
+	var fechafin1=fechafin.split(' ')[0];
+
+	var datos="idservicio="+idservicio+"&alumno="+v_alumnos+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&pantalla=1";
+
+	var url='modelosreportes/notaspago/excel/rpt_NotasPagos.php'; 
+
+
+	$.ajax({
+		type:'GET',
+		url: url,
+		cache:false,
+		data:datos,
+		async:false,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+		alert(error);						  
+		 },
+		success : function (msj){
+		
+			$("#contenedor_reportes").html(msj);
+
+			CargarEstilostable('.vertabla');
+
+			$("#btnpantalla").css('display','block');
+
+			}
+		}); 
+}
+
+function GenerarReporteNotasPago() {
+	var idservicio=$("#v_servicios").val();
+	var fechainicio=$("#fechainicio1").val();
+	var fechafin=$("#fechafin").val();
+
+	var horainicio=$("#v_horainicio").val();
+	var horafin=$("#v_horafin").val();
+
+	var fechainicio1=fechainicio.split(' ')[0];
+	var fechafin1=fechafin.split(' ')[0];
+
+	var datos="idservicio="+idservicio+"&alumno="+v_alumnos+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&pantalla=0";
+
+	var url='modelosreportes/notaspago/excel/rpt_NotasPagos.php?'+datos; 
+
+	//alert(url);
+	window.open(url, '_blank');	
 }

@@ -1291,7 +1291,7 @@ function RealizarCargo() {
    var idopcion=0;
    var confoto=localStorage.getItem('llevafoto');
    var bandera=1;
-   var campomonto=localStorage.getItem('campomonto');
+   var campomonto=localStorage.getItem('campomonto'); 
    var montovisual=localStorage.getItem('montocliente');
    var cambiomonto=localStorage.getItem('cambio');
    var comisionpornota=localStorage.getItem('comisionpornota');

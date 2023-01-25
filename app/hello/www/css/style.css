@@ -2504,3 +2504,21 @@ background: white;
 .cortartexto{
         white-space: nowrap;
 }
+
+
+.notaaceptado1{
+  
+    background:#59c158;
+    border-radius: 10px;
+    padding: 3px;
+    font-size: 12px;
+    color: white!important;
+}
+.notapendiente1{
+
+    background:#ff0000;
+    border-radius: 10px;
+    padding: 3px;
+    font-size: 12px;
+    color: white!important;
+}

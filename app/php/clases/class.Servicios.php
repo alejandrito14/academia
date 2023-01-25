@@ -1210,6 +1210,55 @@ public function Eliminardeencuestas()
 	}
 
 
+	public function ObtenerParticipantesAceptados($idtipo)
+	{
+		$sql="SELECT *FROM usuarios INNER JOIN usuarios_servicios ON usuarios.idusuarios=usuarios_servicios.idusuarios WHERE idservicio='$this->idservicio' AND usuarios.tipo='$idtipo' AND usuarios_servicios.cancelacion=0 AND usuarios_servicios.aceptarterminos=1 AND usuarios_servicios.estatus=1 ";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerPeriodosFechaHoras()
+	{
+		$sql="SELECT fecha FROM horariosservicio 
+	  where fecha = (SELECT MAX(fecha) FROM horariosservicio  WHERE idservicio='$this->idservicio')
+	    OR fecha = (SELECT MIN(fecha) FROM horariosservicio WHERE idservicio='$this->idservicio')
+	  GROUP BY  fecha";
+
+	    $resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
 }
 
 

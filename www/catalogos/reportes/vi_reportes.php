@@ -189,7 +189,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				  		<label>HORA INICIO:</label>
 
 			            <div class='input-group date' id='datetimepicker1'>
-			               <input type='time' class="form-control" id="v_horainicio" />
+			               <input type='time' class="form-control" id="v_horainicio" value="00:00" />
 			               <span class="input-group-addon">
 			               <span class="glyphicon glyphicon-calendar"></span>
 			               </span>
@@ -218,7 +218,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				  		<label>HORA FIN:</label>
 
 			            <div class='input-group date' id='datetimepicker1'>
-			               <input type='time' class="form-control" id="v_horafin" />
+			               <input type='time' class="form-control" id="v_horafin" value="23:59" />
 			               <span class="input-group-addon">
 			               <span class="glyphicon glyphicon-calendar"></span>
 			               </span>
@@ -240,8 +240,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					    float: right;
 					">
 						
-						<!-- <button style="display: none;" id="btnpantalla" class="btn btn-success" onclick="">VER EN PANTALLA</button> -->
-
+					
 					</div>
 					<div class="col-md-2" style="
 					    float: right;
@@ -261,6 +260,14 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		 <div class="col-md-12" id="contenedor_reportes">
 			 
 		 </div>
+
+		  <div class="col-md-12" id="">
+			 <button style="display: none; position: absolute;
+    left: 1.5em;" id="btnpantalla" class="btn btn-success" onclick="">EXPORTAR A EXCEL</button>
+		 </div>
+
+		 	
+
 
 
 		 <style type="text/css">

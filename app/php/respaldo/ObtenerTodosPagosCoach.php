@@ -91,7 +91,10 @@ try
 	                	'pagado'=>0,
 	                	'folio'=>'',
 	                	'corresponde'=>$corresponde,
-	                	'monto'=>$monto	
+	                	'monto'=>$monto	,
+	                	'tipopago'=>$tipomontopago[0]->tipopago,
+	                	'montopagocoach'=>$tipomontopago[0]->monto,
+	                	'montopago'=>$montopago
 	                );
 
 	                 array_push($pagosdelcoach,$objeto);

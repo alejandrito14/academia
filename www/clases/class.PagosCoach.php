@@ -134,7 +134,10 @@ class PagosCoach
 	
 	public function ObtenerPagoCoach($idpago,$idservicio)
 	{
-		$sql="SELECT *FROM pagoscoach WHERE idpago='$idpago' AND idservicio='$idservicio'";
+		$sql="SELECT *FROM pagoscoach WHERE idpago='$idpago' AND idservicio='$idservicio'
+			AND fechainicial='$this->fechainicial' AND fechafinal='$this->fechafinal'
+
+		";
 	
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

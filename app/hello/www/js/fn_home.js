@@ -1900,15 +1900,21 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
 		   							 			var descripcion= respuesta.descripcion;
 
-		   							 			var dividircadena=descripcion.replace('|','<br>');
-
+		   							 			var dividircadena=descripcion.split('|');
+		   							 		
 		   							 	html+=`</div>
 
-		   							 		<div class="row">
-			   							  		<p class=" margin-bottom" style="font-size:18px;text-align: justify;">
-									             `+dividircadena+`
-									             </p>
-		   							  		</div>
+		   							 		<div class="row">`;
+
+		   							 			for (var i = 0; i < dividircadena.length; i++) {
+		   							 				html+=`<p class="" style="font-size:18px;text-align: justify;margin:0!important;">
+									            	 `+dividircadena[i]+`
+									            	 </p>`;
+		   							 			}
+			   							  		
+
+
+		   							  		html+=`</div>
 
 		   							  		<div class="row margin-bottom " style="padding-top: 1em;">
 		   							  		<div class="col-100">`;
