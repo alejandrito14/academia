@@ -147,7 +147,7 @@ try
                  $lo->pagado=0;
                  $lo->idservicio=$idservicio;
                  $lo->tipo=$tipo;
-                 $lo->monto=$montoapagar;
+                 $lo->monto=$f->redondear_dos_decimal($montoapagar);
                  $lo->dividido='';
                  $lo->fechainicial=$fechainicial;
                  $lo->fechafinal=$fechafinal;
@@ -156,7 +156,7 @@ try
                  $lo->folio="";
                  $lo->CrearRegistroPago();
 
-				$objeto=array('idusuarios'=>$idusuarios,'idmembresia'=>$idmembresia,'idservicio'=>$idservicio,'tipo'=>$tipo,'monto'=>$montoapagar,'estatus'=>$estatus,'dividido'=>$dividido,'fechainicial'=>$fechainicial,'fechafinal'=>$fechafinal,'concepto'=>$concepto,'folio'=>$folio,'fechaformato'=>$fechaformato,'nombre'=>$datosusuario[0]->nombre,'paterno'=>$datosusuario[0]->paterno,'materno'=>$datosusuario[0]->materno,'idpago'=>$lo->idpago);
+				$objeto=array('idusuarios'=>$idusuarios,'idmembresia'=>$idmembresia,'idservicio'=>$idservicio,'tipo'=>$tipo,'monto'=>$f->redondear_dos_decimal($montoapagar),'estatus'=>$estatus,'dividido'=>$dividido,'fechainicial'=>$fechainicial,'fechafinal'=>$fechafinal,'concepto'=>$concepto,'folio'=>$folio,'fechaformato'=>$fechaformato,'nombre'=>$datosusuario[0]->nombre,'paterno'=>$datosusuario[0]->paterno,'materno'=>$datosusuario[0]->materno,'idpago'=>$lo->idpago);
 				$total=$total+$montoapagar;
 				array_push($pagosencontrados,$objeto);
 				//$contador++;

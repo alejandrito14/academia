@@ -9,6 +9,9 @@ function Guardartableroanuncios(form,regresar,donde,idmenumodulo)
 		var orden=$("#v_orden").val();
 		var estatus=$("#v_estatus").val();
     var url=$("#v_url").val();
+    var v_enlace=$("#v_enlace").val();
+    var v_valor=$("#v_valor").val();
+    var v_activarenlace=$("#v_activarenlace").is(':checked')?1:0;
 
 		var id=$("#id").val();
 		var datos = new FormData();
@@ -27,8 +30,11 @@ function Guardartableroanuncios(form,regresar,donde,idmenumodulo)
 		datos.append('v_orden',orden); 
 		datos.append('id',id);
 		datos.append('v_estatus',estatus);
-	   datos.append('v_url',url);
-
+	  datos.append('v_url',url);
+    datos.append('v_enlace',v_enlace);
+    datos.append('v_valor',v_valor);
+    datos.append('v_activarenlace',v_activarenlace);
+      
 		 $('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
 				
 		setTimeout(function(){
@@ -371,3 +377,140 @@ function deleteArchivoAnuncio(idimagentablero,idtableroanuncio) {
  }
 
 
+function ActivarEnlaceinterno() {
+
+  if ($("#v_activarenlace").is(':checked')) {
+    $(".divenlace").css('display','block');
+    //$(".divservicios").css('display','block');
+    $(".divurl").css('display','none');
+    ObtenerEnlacesInternos();
+
+    }else{
+
+    $(".divenlace").css('display','none');
+    $(".dicargardatos").css('display','none');
+    $(".divurl").css('display','block');
+  }
+}
+
+
+function ObtenerEnlacesInternos(enlaceinterno) {
+  
+
+      $.ajax({
+          url:'catalogos/tableroanuncios/ObtenerEnlacesInternos.php', //Url a donde la enviaremos
+          type:'POST', //Metodo que usaremos
+          dataType:'json', //Debe estar en false para que pase el objeto sin procesar
+          async:false,
+          error:function(XMLHttpRequest, textStatus, errorThrown){
+              var error;
+              console.log(XMLHttpRequest);
+              if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+              if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+              $('#abc').html('<div class="alert_error">'+error+'</div>'); 
+              //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+            },
+          success:function(msj){
+              
+              var respuesta=msj.respuesta;
+              PintarEnlacesInternos(respuesta);
+            
+                  if (enlaceinterno>0) {
+                     $("#v_enlace").val(enlaceinterno);
+                  }
+              }
+          });
+}
+
+function PintarEnlacesInternos(respuesta) {
+  var html="";
+
+  html+=`<option value="0">SELECCIONAR ENLACE INTERNO</option>`;
+  if (respuesta.length>0) {
+    for (var i = 0; i <respuesta.length; i++) {
+      html+=`<option value="`+respuesta[i].idrutainternaapp+`">`+respuesta[i].descripcion+`</option>`;
+
+    }
+  }
+  $("#v_enlace").html(html);
+}
+
+function ObtenerCaracteristicasEnlace(valorid) {
+    var v_enlace=$("#v_enlace").val();
+    var datos="v_enlace="+v_enlace;
+
+      $.ajax({
+          url:'catalogos/tableroanuncios/ObtenerEnlaceInterno.php', //Url a donde la enviaremos
+          type:'POST', //Metodo que usaremos
+          dataType:'json', //Debe estar en false para que pase el objeto sin procesar
+          data:datos,
+          error:function(XMLHttpRequest, textStatus, errorThrown){
+              var error;
+              console.log(XMLHttpRequest);
+              if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+              if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+              $('#abc').html('<div class="alert_error">'+error+'</div>'); 
+              //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+            },
+          success:function(msj){
+              
+              var respuesta=msj.respuesta;
+            
+              
+
+                CargarDatos(respuesta.idrutainternaapp,respuesta.tipo,respuesta.tabla,respuesta.estatuselementos,valorid);  
+              
+              }
+          });
+}
+
+function CargarDatos(idrutainternaapp,tipo,tabla,estatuselementos,valorid) {
+  
+
+    var datos="idrutainternaapp="+idrutainternaapp+"&tipo="+tipo+"&tabla="+tabla+"&estatuselementos="+estatuselementos;
+
+      $.ajax({
+          url:'catalogos/tableroanuncios/ObtenerDatos.php', //Url a donde la enviaremos
+          type:'POST', //Metodo que usaremos
+          dataType:'json', //Debe estar en false para que pase el objeto sin procesar
+          data:datos,
+          error:function(XMLHttpRequest, textStatus, errorThrown){
+              var error;
+              console.log(XMLHttpRequest);
+              if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+              if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+              $('#abc').html('<div class="alert_error">'+error+'</div>'); 
+              //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+            },
+          success:function(msj){
+              
+              var respuesta=msj.respuesta;
+              if (respuesta.length>0) {
+                $(".dicargardatos").css('display','block');
+                PintarValores(respuesta);
+              }
+              
+                if (valorid>0) {
+                  $("#v_valor").val(valorid);
+                }
+                            
+              }
+          });
+}
+
+function PintarValores(respuesta) {
+  var html="";
+
+    html+=`<option value="0">SELECCIONAR VALOR</option>`;
+
+  if (respuesta.length>0) {
+
+    for (var i = 0; i <respuesta.length; i++) {
+      
+      html+=`<option value="`+respuesta[i].idvalor+`">`+respuesta[i].titulo+`</option>`;
+
+    }
+  }
+
+  $("#v_valor").html(html);
+}

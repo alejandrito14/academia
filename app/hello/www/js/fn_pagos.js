@@ -2,7 +2,7 @@ var descuentosaplicados=[];
 var descuentosmembresia=[];
 var arraycomentarios=[];
 var resultimagendatosfactura=[];
-
+var dynamicSheet4="";
 function ObtenerTotalPagos() {
 	var pagina = "ObtenerTodosPagos.php";
 	var id_user=localStorage.getItem('id_user');
@@ -926,7 +926,7 @@ function CargarOpcionesTipopago() {
 
     });
   }else{
-    ObtenerDescuentosRelacionados();
+   ObtenerDescuentosRelacionados();
     CalcularTotales();
   }
 }
@@ -1539,24 +1539,27 @@ function RealizarCargo() {
 
 function ObtenerDescuentosRelacionados() {
    var iduser=localStorage.getItem('id_user');
-
+ descuentosaplicados=[];
+ $$("#uldescuentos").html('');
+ $$(".desc").remove();
   var datos= 'pagos='+localStorage.getItem('pagos')+"&id_user="+iduser;
   var pagina = "ObtenerDescuentosRelacionados.php";
 
-    $.ajax({
+var promesa= new Promise(function(resolve, reject) {
+
+   $.ajax({
       url: urlphp+pagina,
       type: 'post',
       dataType: 'json',
       data:datos,
-      async:false,
     success: function(res) {
-
+    
       var resultado=res.descuentos;
       descuentosaplicados=[];
       localStorage.setItem('idtipodepago',-1);
       PintarDescuentos(resultado);
-       ObtenerDescuentoMembresia();
-      
+       
+      resolve(resultado);
       },error: function(XMLHttpRequest, textStatus, errorThrown){ 
                         var error;
                         if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
@@ -1569,6 +1572,14 @@ function ObtenerDescuentosRelacionados() {
                                        
 
           }); 
+ }).then(function(value) { 
+ console.log('1'); 
+   ObtenerDescuentoMembresia();
+
+ });
+
+
+
 
 }
 
@@ -1578,12 +1589,11 @@ function PintarDescuentos(respuesta) {
 
  if (respuesta.length>0) {
     descuentosaplicados=respuesta;
-    console.log(descuentosaplicados);
     $("#visualizardescuentos").css('display','block');
 
   for (var i = 0; i <respuesta.length; i++) {
     html+=`
-     <li class="list-item">
+     <li class="list-item desc">
                     <div class="row">
                         <div class="col-80" style="padding: 0;">
                             <p class="text-muted small" style="font-size:18px;" id="">
@@ -1607,8 +1617,8 @@ function PintarDescuentos(respuesta) {
   }
  }
 
-
  $("#uldescuentos").append(html);
+
 }
 
 
@@ -1800,10 +1810,7 @@ function ObtenerDescuentoMembresia() {
     type: 'POST',
     dataType: 'json',
     url: urlphp+pagina,
-    crossDomain: true,
-    cache: false,
     data:datos,
-    async:false,
     success: function(respuesta){
 
       var descuentomembresia=respuesta.descuentomembresia;
@@ -1835,7 +1842,7 @@ function PintarDescuentosMembresia(respuesta) {
 
   for (var i = 0; i <respuesta.length; i++) {
     html+=`
-     <li class="list-item">
+     <li class="list-item desc">
                     <div class="row">
                         <div class="col-80" style="padding: 0;">
                             <p class="text-muted small" style="font-size:18px;" id="">
@@ -2446,11 +2453,11 @@ function CancelarMonto() {
 function RequiereFactura() {
 
   $("#listadotarjetas").html('');
-  CargarOpcionesTipopago();
+ 
   if ($("#requierefactura").is(':checked')) {
 
     AbrirModalDatos();
-    CargartipopagoFactura(0)
+    CargartipopagoFactura(0);
 
   }else{
 
@@ -2742,7 +2749,7 @@ function AbrirModalDatos() {
                   </div>
                 </div>
               </div>`;
-    dynamicSheet2 = app.sheet.create({
+    dynamicSheet4 = app.sheet.create({
         content: html,
       swipeToClose: true,
         backdrop: true,
@@ -2764,6 +2771,8 @@ function AbrirModalDatos() {
 
            close:function (sheet) {
              PintarDatofiscalElegido();
+
+         
             
            },
 
@@ -2775,10 +2784,10 @@ function AbrirModalDatos() {
 
               if ($("#requierefactura").is(':checked')) {
 
-                    CargartipopagoFactura(0)
+                    CargartipopagoFactura(0);
 
                   }else{
-
+                  
                     Cargartipopago(0);
                     $(".lidatosfacturaelegido").html('');
                     if(localStorage.getItem('idusuariosdatosfiscales')!=undefined) {
@@ -2790,7 +2799,7 @@ function AbrirModalDatos() {
         }
       });
 
-       dynamicSheet2.open();
+       dynamicSheet4.open();
 
 }
 function ObtenerDatosfiscales() {

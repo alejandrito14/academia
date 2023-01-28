@@ -128,8 +128,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					</div>
 
 				</div>
-				<div class="row" id="servicios">
-				  <div class="col-md-6">
+				<div class="row" >
+				  <div class="col-md-6" id="servicios" style="display: none;">
 
 				  	<div class="form-group m-t-20">
 				  	<label>SERVICIOS</label>
@@ -138,16 +138,17 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				  	</select>
 				   	</div>
 				  </div>
+				</div>
 
-
-				   <div class="col-md-6" id="alumnos">
-				  	<div class="form-group m-t-20">
+				<div class="row" >
+				  	<div class=" col-md-6 form-group m-t-20" id="alumnos">
 				  	<label>ALUMNOS:</label>
 				  	<select id="v_alumnos" class="form-control">
 				  		
 				  	</select>
 				   	</div>
 				  </div>
+			
 
 
 				 <!--  <div class="col-md-6" id="estatuspago">
@@ -168,7 +169,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				    -->
 <!-- 				  </div>
  -->
-				  <div class="col-md-6" id="fechainicio">
+ 	 <div class="row" id="fechainicio">
+				  <div class="col-md-6" id="">
 				  	<div class="form-group">
 				  		<label>FECHA INICIO:</label>
 
@@ -180,11 +182,13 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 			            </div>
 				  </div>
 				</div>
+			</div>
 
 
 
+ 	 <div class="row" id="horainicio">
 
-				  <div class="col-md-6" id="horainicio">
+				  <div class="col-md-6" >
 				  	<div class="form-group">
 				  		<label>HORA INICIO:</label>
 
@@ -197,9 +201,11 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				  </div>
 				</div>
 
+			</div>
 
+ 	 <div class="row" id="fechafinal">
 
-				   <div class="col-md-6" id="fechafinal">
+				   <div class="col-md-6" >
 				   	<div class="form-group">
 				  		 <label>FECHA FIN:</label>
 
@@ -212,8 +218,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				  </div>
 
 				</div>
+			</div>
+ 	 <div class="row" id="horafin">
 
-				<div class="col-md-6" id="horafin">
+				<div class="col-md-6" id="">
 				  	<div class="form-group">
 				  		<label>HORA FIN:</label>
 
@@ -228,25 +236,25 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 			</div>
 
 				<div class="row">
-
-					<div class="col-md-2" style="
+					<div class="col-md-6" id="">
+					<!-- <div class="col-md-2" style="
 					    float: left;
 					">
 						
 					
 
-					</div>
-					<div class="col-md-2" style="
+					</div> -->
+					<!-- <div class="col-md-2" style="
 					    float: right;
 					">
 						
 					
-					</div>
-					<div class="col-md-2" style="
+					</div> -->
+					<!-- <div class="col-md-2" style="
 					    float: right;
-					">
+					"> -->
 						
-						<button style="display: none;" id="btngenerar" class="btn btn-primary" onclick="">GENERAR REPORTE</button>
+						<button style="display: none;    float: right;" id="btngenerar" class="btn btn-primary" onclick="">GENERAR REPORTE</button>
 
 					</div>
 
@@ -284,6 +292,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 	$("#fechainicio").css('display','none');
 	$("#fechafinal").css('display','none');
 	$("#alumnos").css('display','none');
+	$("#horainicio").css('display','none');
+	$("#horafin").css('display','none');
 	//CargarSucursales();
 //	CargarCategorias();
 	

@@ -237,7 +237,6 @@ body {
   background: linear-gradient(45deg, var(--fimobile-page-bg-2) 0%, var(--fimobile-page-bg-1) 100%);
   background-attachment: fixed;
 }
-
 .dark-bg {
   background-color:black !important;
   background-image: url("../img/Splash.png") !important;

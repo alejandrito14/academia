@@ -28,6 +28,15 @@ try
 	
 	$obteneranuncio=$lo->ObtenerAnuncioTablero();
 	$obtenerimagenes=$lo->ObtenerImagenesTablero();
+	$obteneranuncio[0]->ruta="";
+
+
+	if ($obteneranuncio[0]->enlaceinterno==1) {
+		$lo->idrutainterna=$obteneranuncio[0]->idrutainterna;
+		$obtenerrutainterna=$lo->ObtenerRutaInterna();
+		$obteneranuncio[0]->ruta=$obtenerrutainterna[0]->ruta;
+		$obteneranuncio[0]->campoid=$obtenerrutainterna[0]->campoid;
+	}
 
 
 	$respuesta['respuesta']=$obteneranuncio;

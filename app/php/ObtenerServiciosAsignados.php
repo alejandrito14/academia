@@ -41,6 +41,7 @@ try
 	$calificacion->idusuario=$idusuario;
 	$lo->idusuario=$idusuario;
 	$obtenerservicios=$lo->obtenerServiciosAsignadosTuto();
+	
 	if (count($obtenerservicios)>0) {
 		# code...
 	

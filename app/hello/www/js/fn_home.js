@@ -1,3 +1,4 @@
+var dynamicSheet1="";
 function CargarInicio() {
 	var idtipousuario=localStorage.getItem('idtipousuario');
 	
@@ -473,7 +474,7 @@ function PintarTableroAnuncios(respuesta) {
                     </div>
                     <div class="row">
                       <div class="col-100">
-                        <h5 class="fw-normal margin-bottom-half">
+                        <h5 class="fw-normal margin-bottom-half" onclick="VerDetallesTablero(`+respuesta[i].idtableroanuncio+`)" >
                          `+respuesta[i].titulo+`
                           <span class="small text-muted"></span>
                         </h5>
@@ -1918,13 +1919,27 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
 		   							  		<div class="row margin-bottom " style="padding-top: 1em;">
 		   							  		<div class="col-100">`;
-		   							  		if (respuesta.url!='' && respuesta.url!=null) {
-		   							  		html+=`<button class="button button-fill button-large color-theme button-raised margin-bottom-half btnmisservicios" onclick="showArchivo('`+respuesta.url+`')">
-		   							  			<i class="bi bi-globe2 margin-horizontal-half">
-		   							  			</i>
-		   							  			Visitar
-		   							  			
-		   							  			</button>`;
+		   							  		
+
+		   							  		if (respuesta.enlaceinterno==1) {
+
+		   							  			html+=`<button class="button button-fill button-large color-theme button-raised margin-bottom-half btnmisservicios" onclick="IrAceptacionServicio('`+respuesta.ruta+`','`+respuesta.valor+`','`+respuesta.campoid+`')">
+			   							  			<i class="bi bi-globe2 margin-horizontal-half">
+			   							  			</i>
+			   							  			Acceder
+			   							  			
+			   							  			</button>`;
+
+		   							  		}else{
+
+		   							  			if (respuesta.url!='' && respuesta.url!=null) {
+			   							  		html+=`<button class="button button-fill button-large color-theme button-raised margin-bottom-half btnmisservicios" onclick="showArchivo('`+respuesta.url+`')">
+			   							  			<i class="bi bi-globe2 margin-horizontal-half">
+			   							  			</i>
+			   							  			Visitar
+			   							  			
+			   							  			</button>`;
+			   							  		}
 		   							  		}
 
 		   							  		html+=`</div>
@@ -1940,7 +1955,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
             </div>
           </div>`;
           
-	 var dynamicSheet1 = app.sheet.create({
+	  dynamicSheet1 = app.sheet.create({
         content: html,
 
     	swipeToClose: true,
@@ -1975,6 +1990,11 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
        dynamicSheet1.open();
 }
 
+function IrAceptacionServicio(ruta,idvalor,campoid) {
+	dynamicSheet1.close();
+	localStorage.setItem(''+campoid+'',idvalor);
+	GoToPage(ruta);	
+}
 
 
 function ExpandirImagen(posicion) {

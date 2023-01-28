@@ -66,10 +66,15 @@ class Servicios
 	public $idmembresia;
 	public $idencuesta;
 	public $idusuarios_servicios;
+	public $validaradmin;
+	public $v_politicasaceptacionid;
+
+	public $horainicial;
+	public $horafinal;
 
 	public function ObtenerServicios()
 	{
-		$sql="SELECT servicios.*,categorias.titulo as nombrecategoria FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio ORDER BY orden asc";
+		$sql="SELECT servicios.*,categorias.titulo as nombrecategoria,categorias.avanzado FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio ORDER BY orden asc";
 
 	/*	$sql="SELECT * FROM servicios  ORDER BY orden asc";*/
 
@@ -149,9 +154,11 @@ class Servicios
 		numligarclientes,
 		politicasaceptacion,
 		controlasistencia,
-		tiporeembolso
+		tiporeembolso,
+		validaradmin,
+		idpoliticaaceptacion
 
-		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes','$this->politicasaceptacion','$this->controlasistencia','$this->tiporeembolso')";
+		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes','$this->politicasaceptacion','$this->controlasistencia','$this->tiporeembolso','$this->validaradmin','$this->v_politicasaceptacionid')";
 		
 		$resp=$this->db->consulta($query);
 		$this->idservicio = $this->db->id_ultimo();
@@ -202,7 +209,9 @@ class Servicios
 		asignadoadmin='$this->asignadoadmin',
 		politicasaceptacion='$this->politicasaceptacion',
 		controlasistencia='$this->controlasistencia',
-		tiporeembolso='$this->tiporeembolso'
+		tiporeembolso='$this->tiporeembolso',
+		validaradmin='$this->validaradmin',
+		idpoliticaaceptacion='$this->v_politicasaceptacionid'
 		WHERE idservicio=$this->idservicio";
 
 		
@@ -384,7 +393,7 @@ class Servicios
 	public function ObtenerHorariosSemana()
 	{
 		$sql="SELECT idhorarioservicio,dia,horainicial,
-		horafinal,fecha,zonas.idzona,zonas.color  FROM horariosservicio INNER JOIN zonas ON zonas.idzona=horariosservicio.idzona WHERE idservicio=".$this->idservicio."";
+		horafinal,fecha,zonas.idzona,zonas.color,zonas.nombre  FROM horariosservicio INNER JOIN zonas ON zonas.idzona=horariosservicio.idzona WHERE idservicio=".$this->idservicio."";
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -871,6 +880,28 @@ class Servicios
 		return $resp;
 	}
 	
+
+	public function ExisteHorario()
+	{
+		$sql="SELECT idhorarioservicio,dia,horainicial,
+		horafinal,fecha,zonas.idzona,zonas.color,zonas.nombre  FROM horariosservicio INNER JOIN zonas ON zonas.idzona=horariosservicio.idzona WHERE idservicio=".$this->idservicio." AND horainicial='$this->horainicial' AND horafinal='$this->horafinal' AND fecha='$this->fecha'";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 
 }
 

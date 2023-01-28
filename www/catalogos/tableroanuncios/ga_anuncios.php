@@ -43,7 +43,14 @@ try
 	$emp->estatus = trim($f->guardar_cadena_utf8($_POST['v_estatus']));
 	$emp->url=$_POST['v_url'];
 
+	$v_enlace=$_POST['v_enlace'];
+	$v_valor=$_POST['v_valor'];
+	$v_activarenlace=$_POST['v_activarenlace'];
 
+	$emp->enlaceinterno=$v_activarenlace;
+	$emp->idrutainterna=$v_enlace;
+	$emp->valor=$v_valor;
+	
 	$ruta="imagenes/".$_SESSION['codservicio'].'/';
 
 	
@@ -51,7 +58,7 @@ try
 	if($emp->idtableroanuncio == 0)
 	{
 		//guardando
-		$emp->guardarAnuncio();
+		$emp->guardarAnuncio(); 
 		$md->guardarMovimiento($f->guardar_cadena_utf8('Tablero Anuncio'),'tablero anuncio',$f->guardar_cadena_utf8('Nuevo anuncio creado con el ID-'.$emp->idtableroanuncio));
 	}else{
 		$emp->modificarAnuncio();	

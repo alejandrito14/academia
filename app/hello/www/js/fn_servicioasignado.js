@@ -1403,6 +1403,7 @@ html+=`
 	                        `;
 	                    }
 
+	          if (localStorage.getItem('idtipousuario')==0 &&  localStorage.getItem('idtipousuario')==5) {
 
                      if (respuesta[i].aceptarterminos==0){
 
@@ -1410,7 +1411,11 @@ html+=`
                         	<button id="" class="button " style="font-size: 26px;color:red;" onclick="CancelarUsuarioServicio(`+respuesta[i].idusuarios+`)">
 								<i class="bi-trash-fill"></i>	                        </button> 
 	                        </div>`;
+                    		
+
                     		}
+
+                    	}
                         html+=`
 
                         	</div>

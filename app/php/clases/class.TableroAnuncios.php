@@ -13,6 +13,10 @@ class TableroAnuncios
 	public $orden;
 	public $estatus;
 	public $imagen;
+
+
+	public $enlaceinterno;
+	public $idrutainterna;
 	public function ObtenerTodosAnuncios()
 	{
 		$sql="SELECT *FROM tableroanuncios";
@@ -156,6 +160,30 @@ class TableroAnuncios
 		
 		return $array;
 	}
+
+	public function ObtenerRutaInterna()
+	{
+
+		$sql="SELECT * FROM rutainternaapp WHERE
+		idrutainternaapp='$this->idrutainterna'";
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
 
 }
 

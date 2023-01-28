@@ -14,6 +14,10 @@ class TableroAnuncios
 	public $estatus;
 	public $imagen;
 	public $url;
+
+	public $enlaceinterno;
+	public $idrutainterna;
+
 	public function ObtenerTodosAnuncios()
 	{
 		$query = "SELECT *
@@ -54,7 +58,7 @@ class TableroAnuncios
 
 	public function guardarAnuncio($value='')
 	{
-		$query="INSERT INTO tableroanuncios (titulo,descripcion,estatus,orden,url) VALUES ('$this->titulo','$this->descripcion','$this->estatus','$this->orden','$this->url')";
+		$query="INSERT INTO tableroanuncios (titulo,descripcion,estatus,orden,url,enlaceinterno,idrutainterna,valor) VALUES ('$this->titulo','$this->descripcion','$this->estatus','$this->orden','$this->url','$this->enlaceinterno','$this->idrutainterna','$this->valor')";
 		
 		$resp=$this->db->consulta($query);
 		$this->idtableroanuncio = $this->db->id_ultimo();
@@ -68,9 +72,12 @@ class TableroAnuncios
 			 descripcion= '".$this->db->real_escape_string($this->descripcion)."',
 		     estatus='$this->estatus',
 		     orden='$this->orden',
-		      url='$this->url'
+		     url='$this->url',
+		     enlaceinterno='$this->enlaceinterno',
+		     idrutainterna='$this->idrutainterna',
+		     valor='$this->valor'
 		   	WHERE idtableroanuncio=$this->idtableroanuncio";
-		   
+		  
 		$resp=$this->db->consulta($query);
 	}
 
@@ -92,6 +99,9 @@ class TableroAnuncios
 
 		$result = $this->db->consulta($query);
 	}
+
+
+
 
 }
 

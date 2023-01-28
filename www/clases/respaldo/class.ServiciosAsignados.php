@@ -287,7 +287,9 @@ class ServiciosAsignados
 				usuarios.foto,
 				usuarios.tipo,
 				tipousuario.nombretipo,
-				usuarios.alias
+				usuarios.alias,
+				usuarios_servicios.estatus,
+				usuarios_servicios.aceptarterminos
 				FROM
 				usuarios_servicios
 				JOIN usuarios
@@ -871,6 +873,7 @@ class ServiciosAsignados
 			AND cancelacion=0 AND servicios.validaradmin=1 GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios
 		 ";
 
+
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -949,5 +952,77 @@ class ServiciosAsignados
 		
 		return $array;
 	}
+
+
+
+	public function obtenerUsuariosServiciosAsignadosAlumnos()
+	{
+		$sql="SELECT
+				usuarios.nombre,
+				usuarios.paterno,
+				usuarios.telefono,
+				usuarios.materno,
+				usuarios.email,
+				usuarios.celular,
+				usuarios.usuario,
+				usuarios.idusuarios,
+				usuarios.foto,
+				usuarios.tipo,
+				tipousuario.nombretipo
+				FROM
+				usuarios_servicios
+				JOIN usuarios
+				ON usuarios_servicios.idusuarios = usuarios.idusuarios
+				JOIN tipousuario
+				ON tipousuario.idtipousuario=usuarios.tipo
+				WHERE
+				usuarios_servicios.idservicio='$this->idservicio' AND usuarios_servicios.estatus=1 AND usuarios.tipo=3 ORDER BY usuarios.tipo DESC 
+		 ";
+
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function VerificarSihaPagado()
+	{
+		$sql="SELECT * FROM pagos
+			WHERE  idservicio = '$this->idservicio' 
+			AND pagado=1 AND idusuarios='$this->idusuario'
+		 ";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
 
 }

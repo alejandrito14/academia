@@ -81,7 +81,7 @@ if ($obtenerconfi['iva']!='' && $obtenerconfi['iva']>0) {
 	$sqlfecha="";
 	$total_gral=0;
 	if ($idservicio>0){
-		$sqlconcan=" AND notapago.idservicio=".$idservicio."";
+		$sqlconcan=" AND servicios.idservicio=".$idservicio."";
 	}
 	/*if ($alumno>0) {
 		$sqalumnoconcan=" AND usuarios.idusuarios=".$alumno."";
@@ -109,20 +109,18 @@ if ($obtenerconfi['iva']!='' && $obtenerconfi['iva']>0) {
 	}
 
 	if ($fechainicio!='' && $fechafin!='') {
-		$sqlfecha=" AND  usuarios_servicios.fechacreacion>= '$fechainicio' AND usuarios_servicios.fechacreacion <='$fechafin'";
+		$sqlfecha=" AND  servicios.fechacreacion>= '$fechainicio' AND servicios.fechacreacion <='$fechafin'";
 	}
 
 
 	$sql="
-			SELECT *FROM usuarios_servicios
-			INNER JOIN servicios ON usuarios_servicios.idservicio=servicios.idservicio
-			INNER JOIN usuarios ON usuarios_servicios.idusuarios=usuarios.idusuarios
-			WHERE 1=1 $sqlfecha
-
+			SELECT *FROM servicios
+			WHERE 1=1 $sqlconcan 
+			
 
 		";
 
-		
+		//echo $sql;die();
 		$resp=$db->consulta($sql);
 		$cont = $db->num_rows($resp);
 
@@ -139,23 +137,23 @@ if ($obtenerconfi['iva']!='' && $obtenerconfi['iva']>0) {
 				$fechainicio=$obtenerfechas[0]->fecha;
 				$fechafin=$obtenerfechas[1]->fecha;
 				$fechaactual=date('Y-m-d');
-				if ($fechainicio>=$fechaactual && $fechafin<=$fechaactual) {
+				//if ( $fechaactual<=$fechafin) {
 					
 
 					$array[$contador]=$objeto;
 					$contador++;
-				}
+				//}
 
 			} 
 		}
 		
-	
+		
  
 if($pantalla==0) {
 	# code...
 
 
-$filename = "rpt_NotasPagos-".".xls";
+$filename = "rpt_Cobranza-".".xls";
 header("Content-Type: application/vnd.ms-excel charset=iso-8859-1");
 header('Content-Disposition: attachment; filename="'.$filename.'"');
 
@@ -177,31 +175,147 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
  		<table class="table  table table-striped table-bordered table-responsive vertabla" border="1" style="">
  			<thead >
 		  <tr bgcolor="#3B3B3B" style="color: #FFFFFF; text-align: left;">
-		    <th style="width: 30%;">FOLIO DEL TICKET</th>
-		    <th style="width: 20%;">FECHA Y HORA DE PAGO</th>
+		    <th style="width: 30%;">ESTATUS SERVICIO</th>
+		    <th style="width: 20%;">ESTATUS DE PAGO</th>
 		    <th style="width: 20%;">ID CLIENTE</th>
 		    <th style="width: 20%;">NOMBRE DEL CLIENTE</th>
-		    <th style="width: 20%;">CANTIDAD</th>
-		    <th style="width: 20%;">ID PRODUCTO</th>
-		    <th style="width: 20%;">NOMBRE DEL PRODUCTO</th>
-		   	<th style="width: 20%;">PRECIO UNITARIO</th>
+		    <th style="width: 20%;">CELULAR</th>
+		    <th style="width: 20%;">ID SERVICIO</th>
+		    <th style="width: 20%;">SERVICIO</th>
+		   	<th style="width: 20%;">COACH</th>
 
-		   	<th style="width: 20%;">SUBTOTAL</th>
-		   	<th style="width: 20%;">IVA</th>
-
-		   	<th style="width: 20%;">DESCUENTO</th>
-		   	<th style="width: 20%;">TOTAL</th>
-			<th style="width: 20%;">TIPO DE PAGO</th>
-		   	<th style="width: 20%;">CUENTA DE PAGO</th>
+		   
 
 		  </tr>
 		  </thead>
 		  <tbody>
 
-		  	<?php for ($i=0; $i <count($array) ; $i++) { 
-		  		
-		  			$idservicio=$array[$i]->idservicio;
-		  			$idusuarios=$array[$i]->idusuarios;
+		  	<?php for ($j=0; $j <count($array) ; $j++) { 
+		  		$arrayestatus=array();
+		  			$idservicio=$array[$j]->idservicio;
+		  			$asignacion->idservicio=$idservicio;
+		  			$obtenercoachs=$asignacion->BuscarAsignacionCoach();
+		  			$asignacion->idusuario=0;
+		  			$participantes=$asignacion->obtenerUsuariosServiciosAlumnosAsignados();
+
+
+
+				for ($i=0; $i < count($participantes); $i++) { 
+						$idusuarios=$participantes[$i]->idusuarios;
+						$asignacion->idusuario=$idusuarios;
+						$asignacion->idservicio=$idservicio;
+						$pagadoservicio=$asignacion->VerificarSihaPagado();
+
+						if (count($pagadoservicio)>0) {
+							$pagado=1;
+						}else{
+							$pagado=0;
+						}
+						$participantes[$i]->pagado=$pagado;
+
+
+
+
+
+						$objeto=array(
+
+							'estatusservicio'=>$participantes[$i]->estatus,
+							'estatusaceptado'=>$participantes[$i]->aceptarterminos,
+							'estatuspago'=>$participantes[$i]->pagado,
+							'idusuario'=>$participantes[$i]->idusuarios,
+							'nombreusuario'=>$participantes[$i]->nombre.' '.$participantes[$i]->paterno.' '.$participantes[$i]->materno,
+							'celular'=>$participantes[$i]->celular,
+							'idservicio'=>$idservicio,
+							'servicio'=>$array[$j]->titulo,
+							'coachs'=>$obtenercoachs
+
+
+						);
+						array_push($arrayestatus, $objeto);
+
+				//var_dump($arrayestatus);die();
+
+
+				}
+
+
+				for ($e=0; $e <count($arrayestatus) ; $e++) { ?>
+					
+
+
+
+					<tr>
+
+		 				  <td><?php 
+		 				  $imprimir='ACEPTADO';
+		 				  $color="#007aff";
+		 				  if ($arrayestatus[$e]['estatusaceptado']== '0') {
+		 				  	$imprimir='PENDIENTE POR ACEPTAR';
+		 				  	$color="#a09f9a";
+		 				  } ?>
+
+		 				<span class="divaceptado" style="background: <?php echo $color; ?>"><?php echo $imprimir; ?></span>
+
+
+		 			</td> 
+
+
+		 				  <td><?php 
+		 				  $pagado="PAGADO";
+		 				  $color2="#59c158";
+		 				  if ($arrayestatus[$e]['estatuspago']==0) {
+		 				  	 $pagado="PENDIENTE POR PAGAR";
+		 				  	 $color2="red";
+		 				  } ?>
+
+		 				  <span class="divaceptado" style="background: <?php echo $color2; ?>">
+		 				 <?php echo $pagado; ?>
+		 				</span>
+		 				</td>
+
+
+		 				 <td><?php echo $arrayestatus[$e]['idusuario']; ?></td>
+
+		 				 <td><?php echo $arrayestatus[$e]['nombreusuario']; ?></td>
+
+		 				 <td><?php echo $arrayestatus[$e]['celular']; ?></td>
+
+		 				 <td><?php echo $arrayestatus[$e]['idservicio']; ?></td>
+
+		 				 <td><?php echo $arrayestatus[$e]['servicio']; ?></td>
+
+		 				 <td>
+		 				 	
+		 				 <?php 
+		 				 $coaches=$arrayestatus[$e]['coachs'];
+
+		 				 $nombrescoach="";
+		 				 $contador=0;
+		 				 if (count($coaches)>0) {
+		 				 	for ($m=0; $m < count($coaches); $m++) { 
+
+		 				$nombrescoach=$nombrescoach.$coaches[$m]->idusuarios.'-'.$coaches[$m]->nombre.' '.$coaches[$m]->paterno.' '.$coaches[$m]->materno;
+
+		 					$con=$contador+1;
+
+		 					if ($con<count($coaches)) {
+		 					$nombrescoach=',';	
+		 					
+		 					}
+
+		 					$contador++;
+		 				 		
+		 				 	}
+		 				 }
+
+		 				 echo $nombrescoach;
+		 				  ?>
+
+		 				 </td>
+		 			</tr>
+			<?php
+
+				}
 
 
 

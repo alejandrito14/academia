@@ -63,7 +63,7 @@ if(!isset($_GET['idtableroanuncio'])){
 		$orden=0;
 	}
 	$url="";
-
+$enlaceinterno=0;
 }else{
 	//El formulario funcionara para modificacion de un registro
 
@@ -84,6 +84,10 @@ if(!isset($_GET['idtableroanuncio'])){
 	$foto = $f->imprimir_cadena_utf8($result_anuncio_row['imagen']);
 	$orden = $f->imprimir_cadena_utf8($result_anuncio_row['orden']);
 	$estatus = $f->imprimir_cadena_utf8($result_anuncio_row['estatus']);
+
+	$enlaceinterno=$result_anuncio_row['enlaceinterno'];
+	$idrutainterna=$result_anuncio_row['idrutainterna'];
+	$valor=$result_anuncio_row['valor'];
 
 	$url=$result_anuncio_row['url'];
 	$ruta='';
@@ -225,17 +229,41 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<textarea name="v_descripcion" id="v_descripcion" cols="20" rows="4" class="form-control" title="DESCRIPCIÓN" placeholder='DESCRIPCIÓN'><?php echo $descripcion ?></textarea>
 							</div>
 
-								<div class="form-group m-t-20">
+							<!-- 	<div class="form-group m-t-20">
+								<label>*ENLACE INTERNO EN LA APP:</label>
+									<input type="checkbox" class="form-control" id="v_enlaceinterno" name="v_enlaceinterno" value="<?php echo $orden; ?>" title="orden" placeholder='ORDEN'>
+							</div> -->
+
+
+								<div class="form-check" style="margin-bottom: 1em;">
+					   <input type="checkbox" class="form-check-input " name="v_activarenlace" onchange="ActivarEnlaceinterno()"  value="<?php echo $enlaceinterno ?>" id="v_activarenlace" style="top: -0.3em;">
+					     <label class="form-check-label">
+										HABILITAR LINK EN LA APP
+					     </label>
+				   </div>
+
+								<div class="form-group m-t-20 divurl">
 								<label>URL:</label>
-							<input type="text" class="form-control" id="v_url" name="v_url" value="<?php echo $url; ?>" title="url" placeholder='https://www.google.com/'>
+							 <input type="text" class="form-control" id="v_url" name="v_url" value="<?php echo $url; ?>" title="url" placeholder='https://www.google.com/'>
 							</div>
 
+								<div class="form-group m-t-20 divenlace" style="display: none;">
+							 	<label>SELECCIONAR ENLACE:</label>
+						 		<select id="v_enlace" name="v_enlace" class="form-control" onchange="ObtenerCaracteristicasEnlace(0)"></select>
+							</div>
+
+								<div class="form-group m-t-20 dicargardatos"  style="display: none;">
+								<label>SELECCIONAR VALOR:</label>
+								<select name="v_valor" id="v_valor" class="form-control"></select>
+							</div>
 
 
 							<div class="form-group m-t-20">
 								<label>*ORDEN:</label>
 							<input type="number" class="form-control" id="v_orden" name="v_orden" value="<?php echo $orden; ?>" title="orden" placeholder='ORDEN'>
 							</div>
+
+							
 
 
 
@@ -269,8 +297,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
  -->
 <script>
 	var ruta='<?php echo $ruta;?>';
-			 
-
+	var idrutainterna='<?php echo $idrutainterna; ?>'	;
+	var enlaceinterno='<?php echo $enlaceinterno; ?>';
+	var valor='<?php echo $valor; ?>';	 
+var idtableroanuncio='<?php echo $idtableroanuncio ?>';
 	   $("#v_empresa").chosen({width:"100%"});
 
 	    function SubirImagenanuncio() {
@@ -305,6 +335,21 @@ if(isset($_SESSION['permisos_acciones_erp'])){
         });
         return false;
     }
+    	$("#v_activarenlace").attr('checked',false);
+
+if (idtableroanuncio>0) {
+
+		 if (enlaceinterno==1) {
+    	$("#v_activarenlace").attr('checked',true);
+    			ActivarEnlaceinterno();
+
+    		ObtenerEnlacesInternos(idrutainterna);
+
+    	 ObtenerCaracteristicasEnlace(valor);
+
+    }
+}
+   
 
 </script>
 
