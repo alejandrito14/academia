@@ -11,6 +11,8 @@ class HorariosServicios
 	public $idservicio;
 	public $fecha;
 	public $idzona;
+	public $fechainicial;
+	public $fechafinal;
 	
 
 	public function obtenerTodas()
@@ -115,7 +117,7 @@ class HorariosServicios
 		where
 		  TABLA1.horainicial >= '$this->horainicial' AND TABLA1.horafinal<='$this->horafinal'";
 
-
+		 
 		  $resp = $this->db->consulta($sql);
 		  $cont = $this->db->num_rows($resp);
 
@@ -133,6 +135,31 @@ class HorariosServicios
 		return $array;
 	}
 	
+
+	public function HorariosOcupadosFecha()
+	{
+		$sql="SELECT *
+			FROM horariosservicio
+		WHERE fecha>='$this->fechainicial' AND fecha<='$this->fechainicial' 
+		";
+	
+
+		  $resp = $this->db->consulta($sql);
+		  $cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
 	
 
 }

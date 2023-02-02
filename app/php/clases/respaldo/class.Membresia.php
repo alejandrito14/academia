@@ -201,7 +201,7 @@ class Membresia
 	{
 		$sql="SELECT *
 		FROM membresia WHERE inppadre=1 OR depende=0 AND estatus=1";
-
+		
 		if ($idmembresias!='') {
 			$sql.=" AND idmembresia 
 			 NOT IN('$this->idmembresias')";
@@ -517,6 +517,31 @@ class Membresia
 		estatus='$this->estatus'
 		WHERE idusuarios_membresia='$this->idusuarios_membresia'";
 		$resp=$this->db->consulta($query);
+	}
+
+
+
+	public function ObtenerMembresiaUsuarioAsociada()
+	{
+		$sql="SELECT *
+		FROM usuarios_membresia WHERE idusuarios='$this->idusuarios' and estatus=1 ORDER BY idusuarios_membresia DESC";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
 	}
 }
 ?>

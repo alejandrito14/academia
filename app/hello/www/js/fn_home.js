@@ -59,6 +59,7 @@ function CargarDatos() {
  	 $$(".tipousuario").removeClass('tipocoach');
   	 $$(".tipousuario").addClass(classtipo);
   	 $$(".btnservicios").attr('onclick','GoToPage("serviciosasignados")');
+  	 $$(".btnayuda").attr('onclick','AbrirModalAyuda()');
   	 $$(".btnserviciostutorados").attr('onclick','GoToPage("listadotutoservicios")');
   	 $$(".lipagos").attr('href','/pagos/');
   	 $$(".serviciosnoavanzados").attr('onclick','PintarServiciosnoAvanzados()');
@@ -2770,6 +2771,7 @@ function DetalleServicioAsignado(idusuarios_servicios) {
 			var dentroperiodo=datos.dentroperiodo;
 			var enproceso=datos.enproceso;
 			if (respuesta==0) {
+				
 
 				GoToPage('aceptacionservicio');
  
@@ -4904,4 +4906,123 @@ function PintarServiciosRegistrados3(respuesta,fechaactual) {
 		$$(".serviciosregistrados").html(html);
 
 	}
+}
+
+function AbrirModalAyuda() {
+
+	
+
+var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: none;">
+            <div class="toolbar">
+              <div class="toolbar-inner">
+                <div class="left"></div>
+                <div class="right">
+                  <a class="link sheet-close"></a>
+                </div>
+              </div>
+            </div>
+            <div class="sheet-modal-inner" style="background: white;border-top-left-radius: 20px;border-top-right-radius:20px; ">
+            	 <div class="iconocerrar link sheet-close" style="z-index:10;">
+	 									<span class="bi bi-x-circle-fill"></span>
+	   						    	 </div>
+              <div class="page-content" style="height: 100%;">
+                <div style="background: white; height: 100%;width: 100%;border-radius: 20px;">
+   						     <div class="row">
+	   						     <div class="col-20">
+	   						      	
+	   						    </div>
+
+   						    	 <div class="col-60">
+   						    	 <span class="titulomodal"></span>
+   						    	 </div>
+   						    	 <div class="col-20">
+   						    	 <span class="limpiarfiltros"></span>
+   						    	 </div>
+   							 </div>
+   							 <div class="" style="position: absolute;top:2em;width: 100%;">
+   							 	
+	   							  <div class="">
+		   							  		<div class="block" style="margin-right:1em;margin-left:1em;">
+		   							 	 
+		   							  			<div class="row">
+		   							  		    	<p id="textomensaje" style="    font-size: 18px;
+    font-weight: bold;
+    text-align: center;"></p>
+		   										</div>
+		   							  		</div>
+
+		   							  		<div class="block" style="margin-right:1em;margin-left:1em;">
+		   							 	 
+		   							  			<div class="row">
+		   							  		    	<div class="divbtn"></div>
+		   										</div>
+		   							  		</div>
+
+	   							 	</div>
+
+   							 </div>
+
+   				</div>
+                
+              </div>
+            </div>
+          </div>`;
+          
+	  dynamicSheet5 = app.sheet.create({
+        content: html,
+
+    	swipeToClose: true,
+        backdrop: true,
+        // Events
+        on: {
+          open: function (sheet) {
+           
+
+
+          },
+          opened: function (sheet) {
+            console.log('Sheet opened');
+             ObtenerMensajeAyuda();
+
+          },
+        }
+      });
+
+       dynamicSheet5.open();
+}
+
+function ObtenerMensajeAyuda() {
+	var pagina = "ObtenerConfiguracion.php";
+	
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		async:false,
+		
+		success: function(datos){
+
+			var respuesta=datos.respuesta;
+			var telefono=datos.respuesta.telefonosoporte;
+			$("#textomensaje").text(respuesta.mensajesoporte);
+			//$(".btnwhatsap").attr("onclick","BotonWhatsap('"+respuesta.telefonosoporte+"')");
+			var html="";
+			html+=`<a class="button button-fill button-larg" onclick="BotonWhatsap('`+telefono+`')" style="background:#5ac35b!important; "><i class="bi bi-whatsapp"></i> <span>Whatsapp</span></a>`;
+
+			
+			$(".divbtn").html(html);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+//text=Hola, soy "+nombre+"&
+function BotonWhatsap(telefono) {
+	var nombre="Hola, soy "+localStorage.getItem('nombre')+' '+localStorage.getItem('paterno');
+	 window.open('https://api.whatsapp.com/send?phone=' + telefono+"&text="+nombre);
 }

@@ -91,7 +91,7 @@ try {
                 $obtenertipopago=$tipopago->ObtenerTipodepago2();
              $variable=$obtenertipopago[0]->tipo;
 
-
+          
             }
 
            
@@ -103,7 +103,7 @@ try {
                 $tipopago->idtipodepago=$idtipodepago;
            
               $obtenertipopago=$tipopago->ObtenerTipodepago2();
-
+ 
               $variable=','.$variable;
 
              // var_dump($obtenertipopago);die();
@@ -111,6 +111,7 @@ try {
               $variable=str_replace(',','',$variable);
             }
           
+
             $constripe=$obtenertipopago[0]->constripe;
 
             if ($obtenertipopago[0]->constripe==1) {

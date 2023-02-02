@@ -70,7 +70,12 @@ try
 				$lo->idservicio=$idservicio;
 				$lo->fechainicial=$fechainicial;
 				$lo->fechafinal=$fechafinal;
-				$lo->EliminarPagoNoPagado();
+
+				$PagosNoPagados=$lo->PagosNoPagados();
+				if (count($PagosNoPagados)>0) {
+					$lo->EliminarPagoNoPagado();
+				}
+				
 				$existepago=$lo->ExistePago();
 
 				if (count($existepago)==0) {
@@ -85,8 +90,8 @@ try
 
 			if ($modalidad==2) {
 				//grupo
-				$obtenerparticipantes=$servicios->ObtenerParticipantes(3);
-			
+				$obtenerparticipantes=$servicios->ObtenerParticipantesAceptados(3);
+				
 				$cantidadparticipantes=count($obtenerparticipantes);
 				$costo=$obtenerservicio[0]->precio;
 

@@ -88,7 +88,7 @@ var app = new Framework7({
 
  var pictureSource;   // picture source
  var destinationType; 
-var produccion = 0;
+var produccion = 1;
 var codigoservicio="0";
 $(document).ready(function() {
 
@@ -137,7 +137,7 @@ $(document).ready(function() {
 
 var lhost = "localhost:8888";
 var rhost = "issoftware1.com.mx";
-var version='1.0.18';
+var version='1.0.19';
 
 localStorage.setItem('versionapp',version);
 var abrir=0;
@@ -1153,9 +1153,22 @@ $$(document).on('page:init', '.page[data-name="listadopagos"]', function (e) {
 
   ObtenerTodosPagos();
   ObtenerPagosMembresia();
-  $(".seleccionar" ).each(function( index ) {
-       $(this).attr('checked',true);     
-  });
+  //$(".seleccionar" ).each(function( index ) {
+       /*$(this).attr('checked',true);   */ 
+  SeleccionarTodos();
+
+  /*  $(".seleccionar").each(function( index ) {
+
+       var id=$(this).attr('id');
+       var explode=id.split('_');
+        
+        if ($("#val_"+explode[1]).val()>0) {
+
+          $("#check_"+explode[1]).attr('checked',true);
+        }
+
+      });*/ 
+ // });
 
   $("#checktodos").attr('checked',true);
   $("#btnpagar").prop('disabled',false);
@@ -1483,6 +1496,7 @@ $$(document).on('page:init', '.page[data-name="detalleservicioactivo"]', functio
 
   ObtenerServicioAdmin();
   ObtenerParticipantesAlumnosAdmin();
+ $(".btncalendario").attr('onclick','MostrarHorarios()');
 
   $$("#btnasignaralumno").attr('onclick','GuardarAsignacionServicio()');
   $$("#btncalendario").attr('onclick','FechasServicio()');

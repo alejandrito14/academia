@@ -125,14 +125,54 @@ function Pintarpagos(pagos) {
 
                              html+=`<p class="text-muted small">Vencimiento `+pagos[i].fechaformato+`</p>`;
                           }
-                        html+=`<p class="text-muted small"> `+pagos[i].nombre+` `+pagos[i].paterno+` `+pagos[i].materno+`</p>
-   
-                          <p class="text-muted small">$`+pagos[i].monto+`</p>
+                        html+=`<p class="text-muted small"> `+pagos[i].nombre+` `+pagos[i].paterno+` `+pagos[i].materno+`</p>`;
+                            
+                        if (pagos[i].alumnos!='') {
+
+                         html+=`<p class="text-muted small"> Asignados:`+pagos[i].alumnos+` Aceptados: `+pagos[i].aceptados+`</p>`;
+ 
+                        }
+
+
+                     if (pagos[i].fechamin!='') {
+
+                         html+=`<p class="text-muted small"> Fecha inicio: `+pagos[i].fechamin+`</p>
+                         <p  class="text-muted small"> Fecha fin: `+pagos[i].fechamax+`</p>`;
+ 
+                        }
+
+                         html+=` <p class="text-muted small">$`+pagos[i].monto+`</p>
+
                           <input type="hidden" value="`+pagos[i].monto+`" class="montopago" id="val_`+pagos[i].idpago+`">
                         </div>
-                        <div class="col-20">
+                        <div class="col-20">`;
 
-                        <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Seleccionarcheck(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />
+                        if (pagos[i].dividido==2) {
+
+
+                          if (pagos[i].alumnos==pagos[i].aceptados) {
+
+                             html+=` <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Seleccionarcheck(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />`;
+                               html+=` <input type="hidden" id="sepuede_`+pagos[i].idpago+`" class="" value="1" style="" />`;
+
+                          }else{
+
+                            html+=` <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Advertencia(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />`;
+                               html+=` <input type="hidden" id="sepuede_`+pagos[i].idpago+`" class="" value="0" style="" />`;
+
+                          }
+     
+                        }else{
+
+                         html+=` <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Seleccionarcheck(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />`;
+                         html+=` <input type="hidden" id="sepuede_`+pagos[i].idpago+`" class="" value="1" style="" />`;
+
+                        }
+
+                      
+
+                      html+=`
+
                         <input type="hidden" id="tipo_`+pagos[i].idpago+`" value="`+pagos[i].tipo+`"  />
 
                         <input type="hidden" id="servicio_`+pagos[i].idpago+`" value="`+pagos[i].idservicio+`"  />
@@ -154,11 +194,41 @@ function Pintarpagos(pagos) {
   }
 }
 
+function Advertencia(idpago) {
+  $("#check_"+idpago).prop('checked',false);
+
+  alerta('','Este pago requiere que todos los participantes hallan aceptado');
+
+}
+
 function SeleccionarTodos() {
 	if ($("#checktodos").is(':checked')) {
-		$(".seleccionar").prop('checked',true);
+		//$(".seleccionar").prop('checked',true);
+
+    $(".seleccionar").each(function( index ) {
+
+       var id=$(this).attr('id');
+       var explode=id.split('_');
+
+       var sepuede=$("#sepuede_"+explode[1]).val();
+          console.log(explode);
+        if ($("#val_"+explode[1]).val()>0  && sepuede==1) {
+
+          $("#check_"+explode[1]).prop('checked',true);
+        }
+
+      });
 	 }else{
-		$(".seleccionar").prop('checked',false);
+		//$(".seleccionar").prop('checked',false);
+    $(".seleccionar").each(function( index ) {
+
+        var id=$(this).attr('id');
+        var explode=id.split('_');
+       
+         $("#check_"+explode[1]).prop('checked',false);
+       
+
+        });
 	}
 	HabilitarBotonPago();
 }
@@ -178,15 +248,26 @@ var pagosarealizar=[];
 function HabilitarBotonPago() {
 	var contar=0;
 	var suma=0;
+  var contarseleccionadoscero=0;
+  var pagocero=0;
     pagosarealizar=[];
-	$( ".seleccionar" ).each(function( index ) {
+	$( ".seleccionar" ).each(function(index) {
 	
-		 if($(this ).is(':checked')){
+		 if($(this).is(':checked')){
 		 	var id=$(this).attr('id');
-     
+     console.log('idelemento'+id);
 		 	var dividir=id.split('_')[1];
 		 	var contador=$("#val_"+dividir).val();
 		 	suma=parseFloat(suma)+parseFloat(contador);
+    
+
+
+      if (contador==0) {
+       // $(this).prop('checked',false);
+        pagocero=1;  
+        contarseleccionadoscero++;    
+      }
+
 		 	concepto=$("#concepto_"+dividir).text();
       tipo=$("#tipo_"+dividir).val();
       if ($("#servicio_"+dividir)) {
@@ -215,8 +296,10 @@ function HabilitarBotonPago() {
             usuario="";
            }
 
-		 	contar++;
 
+         
+		 	contar++;
+      console.log(contar)
 		 	var objeto={
 		 		id:dividir,
 		 		concepto:concepto.trim(),
@@ -229,22 +312,81 @@ function HabilitarBotonPago() {
 		 	};
 		 	pagosarealizar.push(objeto);
 
+
+      
+
 		 }
 	
 	});
+  console.log(contar+''+contarseleccionadoscero);
+  console.log('pago cero'+pagocero);
+   if (contar!=contarseleccionadoscero) {
+    if (pagocero==1) {
+      
+      alerta('','El pago con monto cero se debe pagar en un ticket independiente');
+      $( ".seleccionar" ).each(function( index ) {
+  
+     if($(this ).is(':checked')){
+        var id=$(this).attr('id');
+     
+        var dividir=id.split('_')[1];
+        var valor=$("#val_"+dividir).val();
+
+        if (valor==0) {
+        for (var i=0;i< pagosarealizar.length; i++) {
+          
+           if (pagosarealizar[i].id==dividir) {
+           
+            $("#check_"+dividir).prop('checked',false);
+
+            pagosarealizar.splice(i,1);
+
+           }
+        
+        }
+      }
+
+        }
+      });
+    }
+
+  }
+  
 
 
 	if (contar==0) {
 		$(".btnpagar").prop('disabled',true);
-		$(".checktodos").prop('checked',false);
+		$("#checktodos").prop('checked',false);
 		$(".cantidad").text(formato_numero(suma,2,'.',','));
 		localStorage.setItem('montopago',suma);
 	}
 	if (contar>0) {
 
-		$(".btnpagar").prop('disabled',false);
-		$(".cantidad").text(formato_numero(suma,2,'.',','));
-		localStorage.setItem('montopago',suma);
+     if (contar!=contarseleccionadoscero) {
+    if (pagocero==1) {
+          $(".btnpagar").prop('disabled',true);
+          $(".checktodos").prop('checked',false);
+          $(".cantidad").text(formato_numero(suma,2,'.',','));
+          localStorage.setItem('montopago',suma);
+
+      }else{
+
+         $(".btnpagar").prop('disabled',false);
+       $(".cantidad").text(formato_numero(suma,2,'.',','));
+       localStorage.setItem('montopago',suma);
+
+         
+
+      }
+    }else{
+       $(".btnpagar").prop('disabled',false);
+       $(".cantidad").text(formato_numero(suma,2,'.',','));
+       localStorage.setItem('montopago',suma);
+
+       
+    }
+
+	
 	}
 
   localStorage.setItem('pagos',JSON.stringify(pagosarealizar));
@@ -480,6 +622,7 @@ function CalcularTotales() {
         $("#btnpagarresumen").attr('disabled',false);
    
         $(".divtipopago").css('display','none');
+        $(".preguntafactura").css('display','none');
 
     }
 
@@ -1476,7 +1619,7 @@ function RealizarCargo() {
 
 
                }else{
-                      var mensaje = "Opps,se produjo un error.Intenta más tarde";
+                      var mensaje = "Oops, algo no está bien, intenta de nuevo";
 
 
                           $(".mensajeproceso").css('display','none');
@@ -1556,7 +1699,7 @@ var promesa= new Promise(function(resolve, reject) {
     
       var resultado=res.descuentos;
       descuentosaplicados=[];
-      localStorage.setItem('idtipodepago',-1);
+      localStorage.setItem('idtipodepago',100);
       PintarDescuentos(resultado);
        
       resolve(resultado);
@@ -1649,7 +1792,7 @@ function CrearModalEspera() {
                     <img src="img/loading.gif" style="width:20%;display: flex;justify-content: center;align-items: center;margin:0px auto;">
 
                   </div>
-                  <div id="" class="mensajeerror" style="font-size:20px;font-weight:bold;display:none;" >Error en la conexción,vuelva a intentar.</div>
+                  <div id="" class="mensajeerror" style="font-size:20px;font-weight:bold;display:none;" >Oops, algo no está bien, intenta de nuevo.</div>
                   <div id="" class="mensajeexito" style="font-size:20px;font-weight:bold;display:none;" >Se realizó correctamente</div>
 
 

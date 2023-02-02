@@ -58,6 +58,7 @@ function ObtenerTarjetasStripe(setlastcard=false) {
 
 function NuevaTarjetaStripe(){ 
   HideDiv("btnnextpage");
+  SetLastCard(null);
 
   LoadSetupIntent();
 }
@@ -344,13 +345,13 @@ function CheckCardSelection(obj,objclass,cardid)
 
 function SetLastCard(cardid) {
   var idtipodepago=localStorage.getItem('idtipodepago');
-       
 
   var fname = "setLastCard";
   var pagina = "ObtenerDatosStripe.php";
   var idcliente = localStorage.getItem('id_user');
   var datos = "idcliente=" + idcliente + "&fname="+fname + "&lastcard="+cardid+"&idtipodepago="+idtipodepago;
   
+  if (cardid!=null) {
   $.ajax({
       type: 'POST',
       dataType: 'json',
@@ -368,6 +369,11 @@ function SetLastCard(cardid) {
           console.log("Error leyendo fichero jsonP " + d_json + pagina + " " + error, "ERROR");
       }
   });
+  }else{
+
+            $("#btnpagarresumen").attr('disabled',true);
+
+  }
 }
 
 function GetLastCard() {

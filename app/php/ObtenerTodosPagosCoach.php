@@ -113,7 +113,7 @@ try
         $monto=$asignacion->CalcularMontoPago($tipomontopago[0]->tipopago,$tipomontopago[0]->monto,$montopago);
 
 
-                    if ($montopago>0) {
+                    if ($montopago>=0) {
                     	# code...
                     
                     $idpago=$buscarpago[0]->idpago;

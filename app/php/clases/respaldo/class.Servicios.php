@@ -128,10 +128,13 @@ class Servicios
 		servicios.abiertocoach,
 		servicios.abiertoadmin,
 		servicios.abiertocliente,
-		categorias.idcategorias
+		categorias.idcategorias,
+		(SELECT COUNT(*) FROM usuarios_servicios  INNER JOIN pagos on usuarios_servicios
+		.idusuarios=pagos.idusuarios   WHERE pagos.pagado=1 AND usuarios_servicios.idservicio=servicios.idservicio )  AS pagados,
+		(SELECT COUNT(*) FROM usuarios_servicios    WHERE usuarios_servicios.aceptarterminos=1  AND usuarios_servicios.idservicio=servicios.idservicio) as aceptados
 		FROM
-		categorias
-		JOIN servicios
+		servicios
+		JOIN categorias
 		ON categorias.idcategorias = servicios.idcategoriaservicio WHERE categorias.avanzado=1 and servicios.validaradmin=1 and servicios.estatus=1
 		ORDER BY
 		servicios.orden ASC";
@@ -148,17 +151,30 @@ class Servicios
 
 				$fechaactual=date('Y-m-d');
 
-
+				if ($objeto->aceptados==$objeto->pagados && $objeto->pagados>=$objeto->aceptados) {
+					# code...
+				
 				$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
 				$resphorarios=$this->db->consulta($sql1);
 
 				$conta = $this->db->num_rows($resphorarios);
-
+ 
 				if ($conta>0) {
 
 					$array[$contador]=$objeto;
 					$contador++;
 				
+					}
+
+				}else{
+
+
+					$array[$contador]=$objeto;
+					$contador++;
+				
+
+
+
 				}
 			} 
 		}

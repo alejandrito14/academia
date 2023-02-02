@@ -40,7 +40,7 @@ try
 			$obtener[$i]->textoestatus=$textoestatus[$obtener[$i]->estatus];
 
 
-			$$notapago->idnotapago=$obtener[$i]->idnotapago;
+			$notapago->idnotapago=$obtener[$i]->idnotapago;
 			$obtenerdescripcion=$notapago->ObtenerdescripcionNota();
 			$total=0;
 			for ($j=0; $j <count($obtenerdescripcion) ; $j++) { 

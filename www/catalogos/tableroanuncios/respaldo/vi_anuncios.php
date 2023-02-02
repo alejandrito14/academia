@@ -234,6 +234,19 @@ $estatus=array('DESACTIVADO','ACTIVADO');
             $bt->armar_boton();
           ?>
           
+            <?php
+            //SCRIPT PARA CONSTRUIR UN clonar
+            $bt->titulo = "";
+            $bt->icon = "mdi-cloud-upload";
+            $bt->funcion = "AbrirModalAnuncio('".$l_Anuncios_row['idtableroanuncio']."','tableroanuncios','tableroanuncios','n','catalogos/tableroanuncios/vi_anuncios.php','main','$idmenumodulo','".$l_Anuncios_row['titulo']."')";
+
+            /*$bt->permiso = $permisos;*/
+            $bt->tipo = 4;
+            $bt->title="IMÁGENES EXTRAS";
+
+            $bt->armar_boton();
+
+            ?>
 
                 </td>
 
@@ -250,6 +263,71 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 </div>
 
 
+
+<div class="modal" id="modalimagenanuncio" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Subir imágenes</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="col-md-6"></div>
+          <div class="col-md-6">
+            
+            <button type="button" id="btnnuevaimagen" onclick="NuevaImagen()" class="btn btn_azul" style="float: right; margin-right:10px;" title="NUEVO">
+        <i class="mdi mdi-plus-circle"></i>NUEVO</button>
+          </div>
+
+        </div>
+       
+       <input type="hidden" id="idanuncio" value="">
+             <img class="card-img-top" src="">
+         <div id="d_foto" style="text-align:center; ">
+        <img src="<?php echo $ruta; ?>" class="card-img-top" alt="" style="border: 1px #777 solid"/> 
+        </div>
+
+          <div class="formimagen" style="display: none;">
+                    <form method="post" action="" enctype="multipart/form-data" id="uploadForm" >
+                   
+                   
+                        <input type="file" class=" inputfile inputfile-1 form-control"   name="file" id="imageninformativa" />
+
+
+                  <div class="form-group">
+                      <label class="form-check-label" for="exampleCheck1">Título</label>
+            <input type="text" class="form-control" id="txttituloimagen">
+          
+          </div>
+                     
+
+
+                    <p></p>
+
+                 <div id="contador"></div>
+                    <div id="cargado"></div>
+                      <div id='salidaImagen'></div>
+
+                  </form>
+</div>
+
+
+       <div class="vfileNames" id="vfileNames"></div>
+
+
+       <div class="tbl"></div>
+      </div>
+      <div class="modal-footer">
+          <button type="button" style="display: none;" class="btn btn-success btnguadarimagen">GUARDAR</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script type="text/javascript">
 

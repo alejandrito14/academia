@@ -161,6 +161,28 @@ class Tipodepagos
 		return $array;
 	}
 
+
+	public function ObttipodepagoActivosFiltrar($tipo)
+	{
+				$sql = "SELECT * FROM tipodepago WHERE estatus = 1 AND factura='$tipo'";
+
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+
 	
 
 

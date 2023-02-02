@@ -15,6 +15,7 @@ require_once("clases/class.Usuarios.php");
 
 try
 {
+
 	
 	//Declaramos objetos de clases
 	$db = new MySQL();
@@ -103,7 +104,7 @@ try
 
 			}
 
-		if ($costo>0) {
+		if ($costo>=0) {
 
 			$obtenerperiodos=$servicios->ObtenerPeriodosPagos();
 
@@ -141,7 +142,7 @@ try
 
 
 		}
-
+				 
 				 $lo->idusuarios=$idusuarios;
                  $lo->estatus=0;
                  $lo->pagado=0;
@@ -156,7 +157,22 @@ try
                  $lo->folio="";
                  $lo->CrearRegistroPago();
 
-				$objeto=array('idusuarios'=>$idusuarios,'idmembresia'=>$idmembresia,'idservicio'=>$idservicio,'tipo'=>$tipo,'monto'=>$f->redondear_dos_decimal($montoapagar),'estatus'=>$estatus,'dividido'=>$dividido,'fechainicial'=>$fechainicial,'fechafinal'=>$fechafinal,'concepto'=>$concepto,'folio'=>$folio,'fechaformato'=>$fechaformato,'nombre'=>$datosusuario[0]->nombre,'paterno'=>$datosusuario[0]->paterno,'materno'=>$datosusuario[0]->materno,'idpago'=>$lo->idpago);
+                 $servicios->idservicio=$idservicio;
+                 $obtenerfechas=$servicios->ObtenerFechaHoras();
+                
+                 $ObtenerTodosParticipantes=$servicios->ObtenerTodosParticipantes(3);
+
+                 $obtenerparticipantesaceptados=$servicios->ObtenerParticipantesAceptados(3);
+
+               $completo=0;
+                if (count($ObtenerTodosParticipantes)==count($obtenerparticipantesaceptados)) {
+                	$completo=1;
+                }
+
+				$objeto=array('idusuarios'=>$idusuarios,'idmembresia'=>$idmembresia,'idservicio'=>$idservicio,'tipo'=>$tipo,'monto'=>$f->redondear_dos_decimal($montoapagar),'estatus'=>$estatus,'dividido'=>$dividido,'fechainicial'=>$fechainicial,'fechafinal'=>$fechafinal,'concepto'=>$concepto,'folio'=>$folio,'fechaformato'=>$fechaformato,'nombre'=>$datosusuario[0]->nombre,'paterno'=>$datosusuario[0]->paterno,'materno'=>$datosusuario[0]->materno,'idpago'=>$lo->idpago,'aceptados'=>count($obtenerparticipantesaceptados),'alumnos'=>count($ObtenerTodosParticipantes),'completo'=>$completo,
+					'fechamin'=>date('d-m-Y',strtotime($obtenerfechas[0]->fechamin)),
+					'fechamax'=>date('d-m-Y',strtotime($obtenerfechas[0]->fechamax))
+			);
 				$total=$total+$montoapagar;
 				array_push($pagosencontrados,$objeto);
 				//$contador++;
@@ -194,10 +210,12 @@ try
 				$fechafinal="";
 				$folio="";
 				$concepto=$obtenerpagostipotres[$i]->concepto;
-			$objeto=array('idusuarios'=>$idusuarios,'idmembresia'=>$idmembresia,'idservicio'=>$idservicio,'tipo'=>$tipo,'monto'=>$montoapagar,'estatus'=>$estatus,'dividido'=>$dividido,'fechainicial'=>$fechainicial,'fechafinal'=>$fechafinal,'concepto'=>$concepto,'folio'=>$folio,'fechaformato'=>'','nombre'=>$datosusuario[0]->nombre,'paterno'=>$datosusuario[0]->paterno,'materno'=>$datosusuario[0]->materno,'idpago'=>$idpago);
+			$objeto=array('idusuarios'=>$idusuarios,'idmembresia'=>$idmembresia,'idservicio'=>$idservicio,'tipo'=>$tipo,'monto'=>$montoapagar,'estatus'=>$estatus,'dividido'=>$dividido,'fechainicial'=>$fechainicial,'fechafinal'=>$fechafinal,'concepto'=>$concepto,'folio'=>$folio,'fechaformato'=>'','nombre'=>$datosusuario[0]->nombre,'paterno'=>$datosusuario[0]->paterno,'materno'=>$datosusuario[0]->materno,'idpago'=>$idpago,'aceptados'=>'','alumnos'=>'','completo'=>'',
+				'fechamin'=>'','fechamax'=>''
+			);
 
 				$total=$total+$montoapagar;
-				array_push($pagosencontrados,$objeto);
+				array_push($pagosencontrados,$objeto); 
 
 			}
 	}

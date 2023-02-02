@@ -305,6 +305,7 @@ class Pagos
 					notapago		
 			    	WHERE notapago.idusuario  
 			    	IN($this->idusuarios) AND estatus IN(0,1) ORDER BY idnotapago DESC";
+			    	
 			$resp = $this->db->consulta($sql);
 			$cont = $this->db->num_rows($resp);
 
@@ -571,7 +572,7 @@ class Pagos
 				$resp3=$this->db->consulta($sql3);
 				$rowdescuentomembresia=$this->db->fetch_assoc($resp3);
 
-				$montodescontar2=$rowdescuentomembresia['montoadescontar'];
+				$montodescontar2=$rowdescuentomembresia['montodescontar'];
 
 				//echo $objeto->monto.'-'.$montodescontar1.'-'.$montodescontar2;die();
 				$resta=$objeto->monto-$montodescontar1-$montodescontar2;

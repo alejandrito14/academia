@@ -8,6 +8,7 @@ function Guardartableroanuncios(form,regresar,donde,idmenumodulo)
 		var descripcion=$("#v_descripcion").val();
 		var orden=$("#v_orden").val();
 		var estatus=$("#v_estatus").val();
+    var url=$("#v_url").val();
 
 		var id=$("#id").val();
 		var datos = new FormData();
@@ -26,7 +27,8 @@ function Guardartableroanuncios(form,regresar,donde,idmenumodulo)
 		datos.append('v_orden',orden); 
 		datos.append('id',id);
 		datos.append('v_estatus',estatus);
-	
+	   datos.append('v_url',url);
+
 		 $('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
 				
 		setTimeout(function(){

@@ -30,7 +30,8 @@ try
 	$usuarios->db=$db;
 	$md->db = $db;	
 	
-	$obtenerUsuarios=$usuarios->ObtTodosUsuarios();
+	$valor=$_POST['valor'];
+	$obtenerUsuarios=$usuarios->ObtTodosUsuariosFiltro($valor);
 		
 
 	$respuesta['usuarios']=$obtenerUsuarios;

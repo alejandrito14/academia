@@ -36,7 +36,7 @@ try
 
 	$pagado=1;
 	$enproceso=0;
-	if ($obtenerservicio[0]->precio>0) {
+	if ($obtenerservicio[0]->precio>=0) {
 		$pagadoservicio=$lo->VerificarSihaPagado();
 
 	if (count($pagadoservicio)>0) {

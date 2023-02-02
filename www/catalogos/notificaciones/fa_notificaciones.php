@@ -26,6 +26,7 @@ require_once("../../clases/class.Funciones.php");
 require_once("../../clases/class.Botones.php");
 require_once("../../clases/class.Clientes.php");
 require_once("../../clases/class.Usuarios.php");
+require_once("../../clases/class.Tipodeusuarios.php");
 
 $idmenumodulo = $_GET['idmenumodulo'];
 
@@ -51,6 +52,11 @@ $emp->db = $db;
 
 $emp->tipo_usuario = $tipousaurio;
 $emp->lista_empresas = $lista_empresas;
+
+$tipousaurio=new Tipodeusuarios();
+$tipousaurio->db=$db;
+
+$obtenertipos=$tipousaurio->ObttipodeusuariosActivos();
 
 //Validamos si cargar el formulario para nuevo registro o para modificacion
 if(!isset($_GET['idnotificacion'])){
@@ -261,11 +267,17 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							<div class="form-group m-t-20">
 								<label>*DIRIGIDO A:</label>
 								<select class="form-control" name="dirigido" id="dirigido" onchange="dirigira()">
-									<option value="0">SELECCIONAR OPCIÓN</option>
-									<option value="1">CLIENTES</option>
-									<option value="2">USUARIOS</option>
-									<option value="3">CLIENTES Y USUARIOS</option>
-									<option value="4">TELÉFONOS REGISTRADOS</option>
+										<option value="-1">TODOS</option>
+									<?php 
+										if (count($obtenertipos)>0) {
+											for ($i=0; $i <count($obtenertipos) ; $i++) {  ?>
+											
+											<option value="<?php echo $obtenertipos[$i]->idtipousuario ?>"><?php echo $obtenertipos[$i]->nombretipo; ?></option>
+									<?php		}
+											# code...
+										}
+									 ?>
+									
 								</select>
 							</div>
 
@@ -292,7 +304,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				</div>
 			</div>
 
-			 <div class="card clienteslistado" style="display: none;">
+			 <!-- <div class="card clienteslistado" style="display: none;">
 		<div class="card-header">
 				<label style="font-size: 16px;">*CLIENTE(S):</label>
 			</div>
@@ -324,10 +336,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
      					    	 ?>
 						    	<?php } ?>    
 				    </div>
-                </div> <!-- lclientesdiv -->
+                </div> 
 			</div>
 		</div>
-    </div><!--card-CLI-->
+    </div> --><!--card-CLI-->
 
 
      <div class="card usuarioslista" style="display: none;">
@@ -346,24 +358,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				    </div>
 
 			
-                    <div class="usuarios"  style="overflow:scroll;height:100px;overflow-x: hidden" id="usuarios_<?php echo $a_cliente['idusuarios'];?>">
-					    <?php     	
-							if ($r_usuarios_num>0) {	
-						    	do {
-						?>
-						    	<div class="form-check usu_"  id="usu_<?php echo $a_usuarios['idusuarios'];?>_<?php echo $a_usuarios['idusuarios'];?>">
-						    	    <?php 	
-						    			$valor="";
-                                        $nombre=mb_strtoupper($f->imprimir_cadena_utf8($a_usuarios['nombre']." ".$a_usuarios['paterno']." ".$a_usuarios['materno']));
-						    		?>
-									  <input  type="checkbox"  onchange="UsuarioSeleccionado()" value="<?php echo $a_usuarios['idusuarios']?>" class="form-check-input chkusuario" id="inputcli_<?php echo $a_usuarios['idusuarios']?>" <?php echo $valor; ?>>
-									  <label class="form-check-label" for="flexCheckDefault"><?php echo $nombre; ?></label>
-								</div>						    		
-						    	<?php
-						    		} while ($a_usuarios = $db->fetch_assoc($r_usuarios));
-     					    	 ?>
-						    	<?php } ?>    
-				    </div>
+                    <div class="usuarios"  style="overflow:scroll;height:100px;overflow-x: hidden" id="">
+					    
                 </div> <!-- lclientesdiv -->
 			</div>
 		</div>
@@ -419,6 +415,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 	}
+
+
 	//programado(programado);
 
 

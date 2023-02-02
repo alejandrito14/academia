@@ -1494,7 +1494,7 @@ label.small {
     font-size: 16px;
 
     background: black;
-    width: 48px;
+    width: 68px;
     border-radius: 10px;
     color: white;
     justify-content: center;
@@ -2432,6 +2432,13 @@ background: white;
 }
 .btnservicios{
   background: #4b4b4b!important;
+}
+
+.btnservicios2{
+  background: #ee5d36!important;
+}
+.btnayuda{
+  background: #ed6a41 !important;
 }
 .btnservicios i{
   color: white;

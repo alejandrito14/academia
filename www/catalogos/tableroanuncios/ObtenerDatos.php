@@ -46,7 +46,9 @@ try
 		$sqlestatus="AND estatus=".$estatus;
 	}
 
-	$sql="SELECT $idcampo as idvalor,$campovalor as titulo FROM $tabla WHERE  1=1 $sqlestatus ";
+
+
+	$sql="SELECT $idcampo as idvalor,$campovalor as titulo FROM $tabla WHERE  1=1 AND abiertocliente=1 $sqlestatus ";
 
 		$resp=$db->consulta($sql);
 		$cont = $db->num_rows($resp);

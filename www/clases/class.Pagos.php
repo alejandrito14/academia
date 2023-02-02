@@ -460,7 +460,7 @@ class Pagos
 				$resp3=$this->db->consulta($sql3);
 				$rowdescuentomembresia=$this->db->fetch_assoc($resp3);
 
-				$montodescontar2=$rowdescuentomembresia['montoadescontar'];
+				$montodescontar2=$rowdescuentomembresia['montodescontar'];
 
 				//echo $objeto->monto.'-'.$montodescontar1.'-'.$montodescontar2;die();
 				$resta=$objeto->monto-$montodescontar1-$montodescontar2;
