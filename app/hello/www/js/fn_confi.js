@@ -487,7 +487,7 @@ function getConfiguracion() {
 
     	localStorage.setItem('avatarhombre',datos.respuesta.avatarhombre);
     	localStorage.setItem('avatarmujer',datos.respuesta.avatarmujer);
-
+    	localStorage.setItem('btnayuda',datos.respuesta.botonayuda);
 
 		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 			var error;

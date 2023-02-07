@@ -685,6 +685,16 @@ var routes = [
     path: '/politicas/',
     componentUrl: './pages/politicas.html',
   },
+
+   {
+    path: '/politicas2/',
+    componentUrl: './pages/politicas2.html',
+  },
+
+   {
+    path: '/politicas3/',
+    componentUrl: './pages/politicas3.html',
+  },
   
   {
     path: '/accordion/',

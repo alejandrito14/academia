@@ -44,8 +44,11 @@ function ProximopagoaVencer() {
 				var resultado=respuesta.respuesta;
 
 				if (resultado.length>0) {
-          $(".divvencimiento").css('display','block');
-					$(".vencimiento").text(resultado[0].fechaformato);
+          if (resultado[0].fechaformato!='') {
+             $(".divvencimiento").css('display','block');
+             $(".vencimiento").text(resultado[0].fechaformato);
+          }
+         
 				}
 			
 
@@ -197,7 +200,7 @@ function Pintarpagos(pagos) {
 function Advertencia(idpago) {
   $("#check_"+idpago).prop('checked',false);
 
-  alerta('','Este pago requiere que todos los participantes hallan aceptado');
+  alerta('','Para pagar, todos los participantes deben aceptar');
 
 }
 

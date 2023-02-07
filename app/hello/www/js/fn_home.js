@@ -72,6 +72,7 @@ function CargarDatos() {
 	ObtenerConfiguracion();
       identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 5000);
 
+
 	VerificarSiExisteTuTorados();
 	//botones
 	VerificarServiciosAsignadospendientes();

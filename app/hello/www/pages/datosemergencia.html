@@ -30,7 +30,7 @@
 
           <div
             class="col-85 medium-50 large-40 margin-left-auto margin-right-auto align-self-center text-align-center padding-vertical">
-            <form  >
+           <form>
               <div class="list form-list no-margin margin-bottom">
                 <ul>
                <input type="text" name="v_id" id="v_id" value="0" class="input-with-value" style="display: none;" />
@@ -123,27 +123,43 @@
               </li>
 
             </ul>
+          </div>
+      
 
-            <div>
-              <div class="item-content lipoliticas" style="text-align: left;">
+
+
+            <div class="item-content lipoliticas">
                 <div class="item-inner">
-                  <input type="checkbox" id="inputleido" />He leído y acepto las políticas relacionadas
+                  <div class="row">
+                    <div class="col-20">
+                      <input type="checkbox" id="inputleido"  style=" width: 30px;height: 20px;    margin-left: 1.5em;" />
+                    </div>
+                    <div class="col" style="text-align: left; ">
+                       <span class="leidoacepto">He leído y acepto los</span><a  class="" style="color: #007aff!important;" href="/politicas2/"> Términos y Condiciones</a>, así como el <a  class="" style="color: #007aff!important;" href="/politicas2/">Aviso de Privacidad</a>
+                    </div>
+                  </div>
+                 
                 </div>
               </div>
 
-            </div>
-
-            <div>
+            
               <div class="item-content lidatos" style="text-align: left;">
                 <div class="item-inner">
-                  <input type="checkbox" id="inputleido2"/>Todos los datos son verdaderos,bajo mi responsabilidad
+                   <div class="item-inner">
+                  <div class="row">
+                      <div class="col-20">
+
+                    <input type="checkbox" id="inputleido2" style="width: 30px;height: 20px;    margin-left: 1.5em;" />
+                     </div>
+                       <div class="col">
+                        Todos los datos son verdaderos,bajo mi responsabilidad
+                      </div>
+                    </div>
                 </div>
               </div>
-
             </div>
 
-
-            </div>
+           
           
               <p class="margin-bottom"> </p>
 

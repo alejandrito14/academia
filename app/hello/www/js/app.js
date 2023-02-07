@@ -89,6 +89,7 @@ var app = new Framework7({
  var pictureSource;   // picture source
  var destinationType; 
 var produccion = 1;
+
 var codigoservicio="0";
 $(document).ready(function() {
 
@@ -137,7 +138,7 @@ $(document).ready(function() {
 
 var lhost = "localhost:8888";
 var rhost = "issoftware1.com.mx";
-var version='1.0.19';
+var version='1.0.21';
 
 localStorage.setItem('versionapp',version);
 var abrir=0;
@@ -519,7 +520,7 @@ $$(document).on('page:init', '.page[data-name="home"]', function (e) {
  getValidacionUsuario().then(r => {
 
         var existe=r.existe;
-      
+
 
   if (existe==0) {
 
@@ -530,7 +531,7 @@ $$(document).on('page:init', '.page[data-name="home"]', function (e) {
   
     
   var pregunta=localStorage.getItem('pregunta');
-
+ 
 
  
     if (pregunta==0) {
@@ -579,6 +580,17 @@ $$(document).on('page:init', '.page[data-name="home"]', function (e) {
 
        });
     
+     var promesa2=getConfiguracion();
+    promesa2.then(r => {
+    
+        var btnayuda=r.respuesta.botonayuda;
+       
+        if (btnayuda==1) {
+
+            $(".btnayuda").css('display','block');
+
+          }
+    });
       
 /*
     var promesa=getConfiguracion();
@@ -2420,6 +2432,25 @@ $$(document).on('page:init', '.page[data-name="politicas"]', function (e) {
 
   
   $$('.regreso').attr('onclick',"GoToPage('register')");
+
+});
+
+$$(document).on('page:init', '.page[data-name="politicas2"]', function (e) {
+  
+ ObtenerPolitica();
+
+  
+  $$('.regreso').attr('onclick',"GoToPage('datosemergencia')");
+
+});
+
+
+$$(document).on('page:init', '.page[data-name="politicas3"]', function (e) {
+  
+ ObtenerPolitica();
+
+  
+  $$('.regreso').attr('onclick',"GoToPage('datosdesalud')");
 
 });
 /*$$(document).on('page:init', '.page[data-name="messages"]', function (e) {
