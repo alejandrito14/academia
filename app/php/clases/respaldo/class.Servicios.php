@@ -1214,7 +1214,7 @@ public function Eliminardeencuestas()
 	public function GuardarCancelacion()
 	{
 		$sql="UPDATE servicios SET
-		cancelacion=1,
+		canceladoservicio=1,
 		motivocancelacion='$this->motivocancelacion',
 		fechacancelacion='$this->fechacancelacion',
 		usuariocancela='$this->usuariocancela',
@@ -1256,6 +1256,8 @@ public function Eliminardeencuestas()
 	    OR fecha = (SELECT MIN(fecha) FROM horariosservicio WHERE idservicio='$this->idservicio')
 	  GROUP BY  fecha";
 
+	  echo $sql;die();
+
 	    $resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -1273,6 +1275,53 @@ public function Eliminardeencuestas()
 		
 		return $array;
 	}
+
+
+	public function ObtenerTodosParticipantes($idtipo)
+	{
+		$sql="SELECT *FROM usuarios INNER JOIN usuarios_servicios ON usuarios.idusuarios=usuarios_servicios.idusuarios WHERE idservicio='$this->idservicio' AND usuarios.tipo='$idtipo' AND usuarios_servicios.cancelacion=0  ";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+		public function ObtenerFechaHoras()
+	{
+		$sql="SELECT MAX(fecha) as fechamax, MIN(fecha) as fechamin FROM horariosservicio WHERE idservicio='$this->idservicio'";
+		
+	    $resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
 
 
 }

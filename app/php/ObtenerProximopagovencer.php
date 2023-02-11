@@ -39,8 +39,14 @@ try
 	if (count($obtener)>0) {
 
 		$fecha=$obtener[0]->fechafinal;
+		$obtener[0]->fechaformato="";
+		if ($fecha!='') {
+			# code...
+		
 		$dianumero=explode('-',$fecha);
 		$obtener[0]->fechaformato=$dianumero[2].'/'.$fechas->mesesAnho3[$fechas->mesdelano($fecha)-1];
+
+			}
 		
 		}
 

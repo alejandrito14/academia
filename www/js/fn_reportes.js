@@ -52,7 +52,8 @@ function CargarFiltrosreportes(idreporte) {
 			var habilitaralumnos=respuesta.habilitaralumnos;
 			var funcionpantalla=respuesta.funcionpantalla;
 			var fechactual=msj.fechactual;
-			Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafin,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla);
+			var habilitartiposervicios=msj.habilitartiposervicios;
+			Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafin,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios);
 			
 
 			$("#fechainicio1").val(fechactual);
@@ -72,7 +73,7 @@ function CargarFiltrosreportes(idreporte) {
 	}
 }
 
-function Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafinal,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla) {
+function Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafinal,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios) {
 
 	$("#servicios").css('display','none');
 	$("#fechainicio").css('display','none');
@@ -118,6 +119,11 @@ function Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafi
 	}
 	if (habilitarhorafin==1) {
 		$("#horafin").css('display','block');
+	}
+
+	if (habilitartiposervicios==1) {
+		$("#tiposervicios").css('display','block');
+		CargarTipoServicios();
 	}
 	
 }
@@ -218,7 +224,7 @@ function CargarServiciosReporte() {
 		success : function (msj){
 		
 			$('#v_servicios').html(msj);   
-			}
+			} 
 		}); 
 }
 
@@ -611,6 +617,27 @@ function GenerarReportePagosCoachPantallaNoVigentes(){
 			CargarEstilostable('.vertabla');
 			$("#btnpantalla").css('display','block');
 
+			}
+		}); 
+}
+
+function CargarTipoServicios() {
+
+	$.ajax({
+		type:'GET',
+		url: 'catalogos/reportes/li_tiposervicios.php',
+		cache:false,
+		async:false,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+		alert(error);						  
+		 },
+		success : function (msj){
+		
+			$('#v_tiposervicios').html(msj);   
 			}
 		}); 
 }

@@ -29,7 +29,7 @@ try
 			$idusuarios=$participantes[$i]->idusuarios;
 			$lo->idusuario=$idusuarios;
 			$pagadoservicio=$lo->VerificarSihaPagado();
-
+ 
 			if (count($pagadoservicio)>0) {
 				$pagado=1;
 			}else{

@@ -514,9 +514,19 @@ var routes = [
       path:'/registrotutorados/',
       componentUrl: './pages/registrotutorados.html',
     },
+
+     {
+      path:'/registroasociados/',
+      componentUrl: './pages/registroasociados.html',
+    },
     {
       path:'/nuevotutorado/',
       componentUrl: './pages/nuevotutorado.html',
+    },
+
+     {
+      path:'/nuevoasociado/',
+      componentUrl: './pages/nuevoasociado.html',
     },
 
       // membresia

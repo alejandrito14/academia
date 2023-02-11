@@ -2606,16 +2606,26 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
             </div>¡--->
 
             <div class="" style="    margin-top: 1em; margin-bottom: 1em;">
-            	<div class="row">
+            							 	<div class="row">
+                                <div class="col-auto">
+                                    <label class="toggle toggle-init color-theme inputpreguntatoo">
+                                        <input type="checkbox" id="inputpregunta">
+                                        <span class="toggle-icon"></span>
+                                    </label>
+                                </div>
+                                <div class="col" style="margin: 0; padding: 0;justify-content: left;display: flex;">
+                                    <h5 class="no-margin-bottom">El asociado a registrar, ¿Se ha registrado anteriormente en la plataforma?</h5>
+                                </div>
+                            </div>
+
+            							  <div class="row">
                                 <div class="col-auto">
                                     <label class="toggle toggle-init color-theme">
                                         <input type="checkbox" id="inputtutor" onchange="SoyTutor()">
                                         <span class="toggle-icon"></span>
                                     </label>
                                 </div>
-                                <div class="col" style="margin: 0; padding: 0;
-    justify-content: left;
-    display: flex;">
+                                <div class="col" style="margin: 0; padding: 0;justify-content: left;display: flex;    margin-left: 1em;">
                                     <h5 class="no-margin-bottom">Soy tutor</h5>
                                 </div>
                             </div>
@@ -2629,7 +2639,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
                                         <span class="toggle-icon"></span>
                                     </label>
                                 </div>
-                                <div class="col" style="    margin: 0;padding: 0;justify-content: left;display: flex;">
+                                <div class="col" style="    margin: 0;padding: 0;justify-content: left;display: flex;    margin-left: 1em;">
                                     <h5 class="no-margin-bottom">Sin celular</h5>
                                 </div>
                             </div>
@@ -2813,7 +2823,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
         // Events
         on: {
           open: function (sheet) {
-              $$('#btnnuevotutorado').attr('onclick','MostrarFormTutorado()');
+        $$('#btnnuevotutorado').attr('onclick','MostrarFormTutorado()');
 			  $$('.btnregresar').attr('onclick','RegresarApantalla()');
 			  $$("#btnsiguiente").attr('onclick','Siguientesdatos()');
 			   phoneFormatter('v_celulartu');
@@ -2822,7 +2832,15 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
     		leerLocalStorage();
     		
     		ObtenerParentesco(0);
-
+  		 // $$("#inputpregunta").attr('onchange','ActivarBusqueda()');
+  		 var toggle = app.toggle.create({
+				  el: '.inputpreguntatoo',
+				  on: {
+				    change: function () {
+				     ActivarBusqueda();
+				    }
+				  }
+				})
 
     		$("#v_celulartu").attr('onblur','Cambiar2(this);QuitarEspacios(this);');
 			$("#v_nombretu").attr('onblur','Cambiar2(this);QuitarEspacios(this);');
@@ -2898,10 +2916,10 @@ function SinCelular() {
 
 	if($("#inputsincelular").is(':checked')){
 		$("#v_celulartu").attr('disabled',true);
-		$(".licelulartu").css('display','none');
+		//$(".licelulartu").css('display','none');
 	}else{
 		$("#v_celulartu").attr('disabled',false);
-		$(".licelulartu").css('display','block');
+		//$(".licelulartu").css('display','block');
 
 	}
 	
@@ -4548,7 +4566,320 @@ function AbrirInfo() {
 	
 }
 
-function BuscarUsuario() {
+
+function BuscarUsuario(valor) {
+	
+
+var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: none;">
+            <div class="toolbar">
+              <div class="toolbar-inner">
+                <div class="left"></div>
+                <div class="right">
+                  <a class="link sheet-close"></a>
+                </div>
+              </div>
+            </div>
+            <div class="sheet-modal-inner" style="background: white;border-top-left-radius: 20px;border-top-right-radius:20px; ">
+            	 <div class="iconocerrar link sheet-close" style="z-index:10;">
+	 									<span class="bi bi-x-circle-fill"></span>
+	   						    	 </div>
+              <div class="page-content" style="height: 100%;">
+                <div style="background: white; height: 100%;width: 100%;border-radius: 20px;">
+   						     <div class="row">
+	   						     <div class="col-20">
+	   						      	
+	   						    </div>
+
+   						    	 <div class="col-60">
+   						    	 <span class="titulomodal"></span>
+   						    	 </div>
+   						    	 <div class="col-20">
+   						    	 <span class="limpiarfiltros"></span>
+   						    	 </div>
+   							 </div>
+   							 <div class="" style="position: absolute;top:2em;width: 100%;">
+   							 					
+   <div class="row" style="padding-top: 3em;">
+
+   			<h4 style="text-align:center;">Buscar alumno</h4>
+
+        <div class="col">
+
+         
+          <div class="block">
+   							 						<form style="    margin-right: 1em;
+    margin-left: 1em;">
+	   							 						<div class="list form-list no-margin margin-bottom">
+	   							 						<ul>`;
+
+	   							 						if (valor==1) {
+	   							 								html+=`	<li class="item-content item-input is-valid licelulartu"><div class="item-inner">
+	   							 									<div class="item-title item-floating-label">
+	   							 									Celular</div>
+		   							 								<div class="item-input-wrap">
+		   							 									<input type="text" name="v_celulartu2" id="v_celulartu2" class="" placeholder="(___) ___-____" >
+		   							 									<span class="input-clear-button"></span>
+		   							 								</div>
+	   							 									</div>
+	   							 								</li>`;
+	   							 						}
+	   							 						
+	   							 						if (valor==2) {
+
+	   							 								html+=`<li class="item-content item-input is-valid linombretu">
+	   							 									<div class="item-inner">
+		   							 									<div class="item-title item-floating-label">
+		   							 									Nombre</div>
+			   							 								<div class="item-input-wrap">
+			   							 								<input type="text" name="v_nombretu2" id="v_nombretu2" class="" onclick="QuitarEspacios(this);">
+				   							 								<span class="input-clear-button">
+				   							 								</span>
+			   							 								</div>
+	   							 									</div>
+	   							 								</li>`;
+	   							 							}
+	   							 						html+=`</ul>	
+
+	   							 						</div>
+
+
+	   							 						<div class="">
+	   							 							<div class="col">
+	   							 								<button type="button" class="button button-fill button-large button-raised margin-bottom color-theme" id="btnaceptartuto" style="" onclick="AceptarTuto(`+valor+`)">
+	   							 								Buscar
+	   							 								</button>
+	   							 							</div>
+	   							 						</div>
+   							 						</form>
+
+   							 						<div class="row">
+
+   							 							<div class="listaalumnos" ></div>
+   							 						</div>
+
+   							 						</div>
+   							 	
+		   							  		</div>
+
+		   							  			</div>
+   							 	
+		   							  		</div>
+
+	   							 	</div>
+
+   							 </div>
+
+   				</div>
+                
+              </div>
+            </div>
+          </div>`;
+          
+	  dynamicSheet1 = app.sheet.create({
+        content: html,
+
+    	swipeToClose: true,
+        backdrop: true,
+        // Events
+        on: {
+          open: function (sheet) {
+           phoneFormatter('v_celulartu2');
+
+
+
+          },
+          opened: function (sheet) {
+            console.log('Sheet opened');
+          },
+        }
+      });
+
+       dynamicSheet1.open();
+}
+
+
+function AceptarTuto(valor) {
+
+
+		var nombrecompleto="";
+		var inputsincelular=$("#inputsincelular").is(':checked')?1:0;
+		var v_celulartu2="";
+		if (valor==2) {
+				nombrecompleto=$("#v_nombretu2").val();
+
+		}else{
+
+			v_celulartu2=$("#v_celulartu2").val();
+		}
+		var datos="nombrecompleto="+nombrecompleto+"&v_celulartu2="+v_celulartu2+"&valor="+valor;
+		var pagina="ObtenerCoincidencias.php";
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: urlphp+pagina,
+			data: datos,
+			async:false,
+			success: function(respuesta){
+				console.log(respuesta);
+				var resp=respuesta.respuesta;
+				PintarListaAlumnos(resp);
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+					var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+					//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+				}
+		});
+}
+
+function PintarListaAlumnos(respuesta) {
+	var html="";
+	html+=`
+	<div class="row">
+							<div class="col">
+						
+							Se encontraron las siguientes coincidencias
+							</div>
+
+						</div>`;
+
+							html+=`<div class="row">
+							<div class="col-10">
+							<input type="checkbox" class="elementoalumno" onchange="ElegirValor(0)" id="valor_0" style="width:20px;height:30px;"/>
+							</div>
+							<div class="col-90" style="line-height: 2.3;">
+							No corresponde a ninguno
+							
+							</div>
+
+						</div>`;
+
+	if (respuesta.length>0) {
+		for (var i = 0; i < respuesta.length; i++) {
+			html+=`<div class="row">
+							<div class="col-10">
+							<input type="checkbox" class="elementoalumno" onchange="ElegirValor(`+respuesta[i].idusuarios+`)" id="valor_`+respuesta[i].idusuarios+`" style="width:20px;height:30px;"/>
+							</div>
+							<div class="col-90" style="line-height: 2.3;"  id="`+respuesta[i].idusuarios+`">`
+							+respuesta[i].nombrecompleto+`
+							</div>
+
+						</div>`;
+		}
+
+
+	}
+
+	html+=`<div class="row">
+							<div class="col-100 btnelegir" style="display:none;">
+							<button type="button" id="" class="button button-fill button-large button-raised margin-bottom color-theme" onclick="AceptarOpcion()">Aceptar</button>
+							</div>
+
+						</div>`;
+
+	$(".listaalumnos").html(html);
+}
+
+function ElegirValor(idusuario) {
+
+	$(".elementoalumno").prop('checked',false);
+
+	if ($("#valor_"+idusuario).is(':checked')) {
+
+		$("#valor_"+idusuario).prop('checked',false);
+		$(".btnelegir").css('display','none');
+
+	}else{
+
+		$("#valor_"+idusuario).prop('checked',true);
+		$(".btnelegir").css('display','block');
+	}
+}
+
+function AceptarOpcion() {
+	var idaceptado=0;
+		$(".elementoalumno").each(function( index ) {
+	 	var id=$(this).attr('id');
+	 	var dividir=id.split('_')[1];
+
+	 		if ($("#valor_"+dividir).is(':checked')) {
+	 			idaceptado=dividir;
+
+	 			return 0;
+	 		}
+	
+	});
+		if (idaceptado>0) {
+		var datos="id_user="+idaceptado;
+		var pagina="Obtenerdatospersonales.php";
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: urlphp+pagina,
+			data: datos,
+			async:false,
+			success: function(resp){
+					
+
+						dynamicSheet1.close();
+
+						var respuesta=resp.respuesta;
+
+						$("#v_celulartu").val(respuesta.celular);
+						$("#v_nombretu").val(respuesta.nombre);
+						$("#v_paternotu").val(respuesta.paterno);
+						$("#v_maternotu").val(respuesta.materno);
+						$("#v_fechatu").val(respuesta.fechanacimiento);
+						$("#v_sexotu").val(respuesta.sexo);
+						$(".licelulartu").addClass('item-input-with-value');
+						$(".linombretu").addClass('item-input-with-value');
+						$(".limaternotu").addClass('item-input-with-value');
+						$(".lipaternotu").addClass('item-input-with-value');
+						$(".lifechanacimientotu").addClass('item-input-with-value');
+						$("#v_idusuario").val(idaceptado);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+					var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+					//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+				}
+		});
+
+
+	}else{
+
+			dynamicSheet1.close();
+	
+		$("#inputpregunta").prop('checked',false);
+		ActivarBusqueda();
+	}
+
+}
+
+function ActivarBusqueda() {
+	/*if ($("#inputpregunta").is(':checked')) {
+
+		
+
+	}else{
+		
+
+	}*/
+
+	var toggle = app.toggle.get('.inputpreguntatoo');
+
+if (toggle.checked) {
+ $("#v_celulartu").attr('onclick','BuscarUsuario(1);');
+		$("#v_nombretu").attr('onclick','BuscarUsuario(2);');
+		}else{
+	$("#v_celulartu").attr('onclick','');
+		$("#v_nombretu").attr('onclick','');
+	}
+}
+/*function BuscarUsuario() {
 	var celularbuscar=$("#v_celulartu").val();
 	var iduser=localStorage.getItem('id_user');
 	var datos="id_user="+iduser+"&celularbuscar="+celularbuscar;
@@ -4684,7 +5015,7 @@ function BuscarUsuario() {
 				}
 		});
 	}
-}
+}*/
 
 function ValidarIdusuario(idusuario) {
 		let objetoLS;

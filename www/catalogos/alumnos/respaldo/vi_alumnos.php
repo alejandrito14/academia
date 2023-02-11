@@ -33,11 +33,12 @@ $cli->tipo_usuario= $tipousaurio;
 $cli->lista_empresas = $lista_empresas;
 	 
 
-	 $sql_cliente = $cli->lista_Usuarios('3,6');
+	 $sql_cliente = $cli->lista_Usuarios('3,5');
 
 
 	 $result_row = $db->fetch_assoc($sql_cliente);
 	 $result_row_num = $db->num_rows($sql_cliente);
+$estatus=array('DESACTIVADO','ACTIVADO');
 
 //die("Entro ".$result_row_num);
 
@@ -103,7 +104,7 @@ var oTable = $('#zero_config').dataTable( {
 
 <div class="card mb-3">
 		<div class="card-body">
-		<h5 class="card-title" style="float: left; margin-top: 5px;">LISTADO DE ALUMNOS</h5>
+		<h5 class="card-title" style="float: left; margin-top: 5px;">LISTADO DE USUARIOS</h5>
 		<!--<button type="button" onClick="AbrirModalGeneral2('ModalPrincipal','900','560','catalogos/Usuarios/fa_cliente.php');" class="btn btn-info" style="float: right;">AGREGAR CLIENTE</button>-->
 		<?php
 		
@@ -129,18 +130,24 @@ var oTable = $('#zero_config').dataTable( {
 	</div>
   	<div class="card-body">
 		<div class="table-responsive">
-			<table id="zero_config" class="table table-bordered table-hover" cellpadding="0" cellspacing="0">
+				<table id="zero_config" class="table table-bordered table-hover" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
- 						<th>ID</th>
- 	
+ 						<th>TIPO</th>
+ 					 <th>FOTO</th>
+ 	 				<th>ALIAS</th>
+
 						<th width="72">NOMBRE</th>
+						<th width="72">USUARIO</th>
+
 					<!--	<th>NIVEL</th> -->
 						<!--<th>NO TARJETA</th>-->
 						<th width="88">CELULAR</th>
 						<th>CORREO</th>
+						<th>ASOCIADOS</th>
 <!-- 						<th width="97">LOCALIDAD</th>
  --> 
+						<th>ESTATUS</th>
 
 						<!--<th>SUCURSAL</th>-->
 						<th width="64">ACCI&Oacute;N</th>
@@ -161,23 +168,74 @@ var oTable = $('#zero_config').dataTable( {
 
 						<tr> 
 						  
-							<td width="30"><?php echo utf8_encode($result_row['idusuarios']); ?></td>
-						
+							<td width="30"><?php echo utf8_encode($result_row['nombretipo']); ?></td>
+							<td width="30"><?php
+
+						$fotoperfil=	$result_row['foto'];
+								if($fotoperfil=="" || $fotoperfil=='null'){
+														$rutaperfil="images/sinfoto.png";
+													}
+													else{
+														//$rutaine="catalogos/paquetes/imagenespaquete/".$_SESSION['codservicio']."/$foto";
+
+														$rutaperfil="app/".$_SESSION['carpetaapp']."/php/upload/perfil/$fotoperfil";
+													}
+
+							 ?>
+							 	
+							 <img src="<?php echo $rutaperfil; ?>" style="height: 30px;width: 30px;">
+
+							 </td>
+							<td width="30"><?php echo utf8_encode($result_row['alias']); ?></td>
+						  
 						  	<td><?php
 
 						  	$nombre=mb_strtoupper($f->imprimir_cadena_utf8($result_row['nombre']." ".$result_row['paterno']." ".$result_row['materno']));
 
-						  	 echo mb_strtoupper($f->imprimir_cadena_utf8($result_row['nombre']." ".$result_row['paterno']." ".$result_row['materno'])); ?></td>
+						  	 echo $result_row['nombre']." ".$result_row['paterno']." ".$result_row['materno']; ?></td>
 						  	<!--<td><?php echo $nivel; ?></td>-->
-						  	
-						  	<td><a href="tel://<?php echo utf8_encode($result_row['celular']); ?>"><?php echo utf8_encode($result_row['celular']); ?></a></td>
-						  	<td width="30"><?php echo utf8_encode($result_row['usuario']); ?></td>
-						  	<!--<td style="text-align:center;"><?php echo utf8_encode($result_row['usuario']); ?></td>-->
-							<!-- <td width="97"><?php echo mb_strtoupper($f->imprimir_cadena_utf8($result_row['idlocalidad'])); ?></td> -->
+						  		<td width="30"><?php echo utf8_encode($result_row['usuario']); ?></td>
 
+						  	<td>
+						  		<a href="tel://<?php echo utf8_encode($result_row['celular']); ?>"><?php echo utf8_encode($result_row['celular']); ?>
+						  			
+						  		</a>
+						  	</td>
+						  		<td width="30"><?php echo utf8_encode($result_row['email']); ?></td>
+
+						  		<td>
+						  		<?php 
+						  		$cli->id_usuario=$result_row['idusuarios'];
+						  		$obtenerasociados=$cli->ObtenerAsociados();
+
+
+						  			if (count($obtenerasociados)>0) {
+						  				for ($i=0; $i <count($obtenerasociados) ; $i++) { 
+						  					$nombre=$obtenerasociados[$i]->nombre.' '.$obtenerasociados[$i]->paterno.' '.$obtenerasociados[$i]->materno;
+						  					$icono="";
+						  						$color="";
+						  					if ($obtenerasociados[$i]->sututor==1) {
+						  						$color="#46b2e2";
+						  					}
+
+						  					if ($obtenerasociados[$i]->celular!='') {
+						  						$icono='<span class="mdi-cellphone" style="font-size:20px;"></span>';
+						  					}
+
+						  				 ?>
+						  						<p style="background: <?php echo $color; ?>"><?php echo $nombre; ?><?php echo $icono ?></p>
+						  			
+						  			<?php	
+						  					}
+						  			}
+						  		 ?>	
+
+						  		</td>
+						  
+						 	<td width="30"><?php echo utf8_encode($estatus[$result_row['estatus']]); ?></td>
+							
 						
-						
-					  	  <!--	<td style="text-align:center;"><?php echo utf8_encode($result_sucursal_row['sucursal']); ?></td>-->
+					  	
 						  	<td align="center">
 								
 
@@ -215,7 +273,7 @@ var oTable = $('#zero_config').dataTable( {
 													$bt->tipo = 4;
 													$bt->title="DIRECCIONES DE ENVIO";
 
-													$bt->armar_boton();
+													//$bt->armar_boton();
 							
 							
 													$bt->titulo = "";
@@ -242,8 +300,8 @@ var oTable = $('#zero_config').dataTable( {
 
 					}else{?>
 						<tr> 
-				<td colspan="6" style="text-align: center">
-					<h5 class="alert_warning">NO EXISTEN Usuarios EN LA BASE DE DATOS.</h5>
+				<td colspan="8" style="text-align: center">
+					<h5 class="alert_warning">NO EXISTEN ALUMNOS EN LA BASE DE DATOS.</h5>
 				</td>
 			</tr>
 						

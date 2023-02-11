@@ -748,5 +748,15 @@ z-index:0;
     margin-left: 1em;
     width: 30px;
 }
+
+ input[type=date]:required:invalid::-webkit-datetime-edit {
+    color: transparent;
+}
+input[type=date]:focus::-webkit-datetime-edit {
+    color: black !important;
+}
+  
+#mensajevalidacion{
+  font-size: 18px;
 }
 

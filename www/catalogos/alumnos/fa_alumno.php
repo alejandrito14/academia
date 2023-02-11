@@ -607,8 +607,8 @@ $su->lista_empresas = $lista_empresas;
 					<div class="form-group m-t-20">
 						<label>ESTATUS:</label>
 						<select name="estatus" tabindex="110" id="v_estatus" title="Estatus" class="form-control"  >
-							<option value="0" <?php if($v_estatus == 0) { echo "selected"; } ?> >NO ACTIVO</option>
-							<option value="1" <?php if($v_estatus == 1) { echo "selected"; } ?> >ACTIVO</option>
+							<option value="0" <?php if($v_estatus == 0) { echo "selected"; } ?> >DESACTIVO</option>
+							<option value="1" <?php if($v_estatus == 1) { echo "selected"; } ?> >ACTIVADO</option>
 						</select>
 						</div>
 					 </div>
@@ -901,7 +901,7 @@ $su->lista_empresas = $lista_empresas;
 
 
 <script>
-$("#v_estatus").chosen({width:"100%"});
+//$("#v_estatus").chosen({width:"100%"});
 
 	$("#v_pais").chosen({width:"100%"});
 	$("#v_pais1").chosen({width:"100%"});

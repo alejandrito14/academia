@@ -38,7 +38,7 @@ try
     else{
     	$usu->idusuarios=$idusuariotutorado;
     	$usu->EliminarUsuarioSecundario();
-    	$usu->EliminarUsuario();
+    	//$usu->EliminarUsuario();
     	$resultado=1;
     }
 

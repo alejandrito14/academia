@@ -931,7 +931,8 @@ function VerificarAsociacion() {
 
 			}else{
 				$(".coltutorados").css('display','block');
-				$("#btnasociados").attr("onclick","GoToPage('registrotutorados')")
+				$("#btnasociados").attr("onclick","GoToPage('registroasociados')")
+				$("#btntutorado").attr("onclick","GoToPage('registrotutorados')")
 
 			}
 

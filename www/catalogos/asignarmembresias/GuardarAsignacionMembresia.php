@@ -49,9 +49,10 @@ try
 	$idmembresias=explode(',',  $_POST['idmembresias']);
 
 	$membresiaseleccionada=json_decode($_POST['membresiaseleccionada']);
+	$idMembresiasCancelar=json_decode($_POST['idMembresiasCancelar']);
 	
 	
-$asignar->EliminarAsignacionesMembresiasNoPagadas();
+//$asignar->EliminarAsignacionesMembresiasNoPagadas();
 		if (count($idmembresias)>0 && $idmembresias[0]!='') {
 			
 			
@@ -61,6 +62,7 @@ $asignar->EliminarAsignacionesMembresiasNoPagadas();
 						$asignacion=$asignar->ObtenerAsignacionMembresia();
 						 
 					if (count($asignacion)==0) {
+
 					$asignar->GuardarAsignacionmembresia();
                     $emp->idmembresia=$idmembresias[$i];
                     $obtenermembresia=$emp->ObtenerMembresia();
@@ -86,25 +88,62 @@ $asignar->EliminarAsignacionesMembresiasNoPagadas();
 
 						}
 
+						$buscarfechasarray=$asignar->BuscarFechasArray($membresiaseleccionada,$idmembresias[$i]);
 
+						//var_dump($buscarfechasarray);
+
+						if (count($buscarfechasarray)>0) {
+
+							$primerfecha=$buscarfechasarray[0];
+							$asignar->ActualizarFechaAsignacion($primerfecha);
 						
-						if($membresiaseleccionada[$i]->idmembresia==$idmembresias[$i]){
+						for ($k=0; $k < count($buscarfechasarray); $k++) { 
+							# code...
+							
+						/*if($membresiaseleccionada[$k]->idmembresia==$idmembresias[$i]){*/
+
+
 
 							$usuariomembresia->idusuarios=$asignar->idusuarios;
-							$usuariomembresia->idmembresia=$membresiaseleccionada[$i]->idmembresia;
+							$usuariomembresia->idmembresia=$idmembresias[$i];
 
-							$usuariomembresia->fecha=$membresiaseleccionada[$i]->fecha;
-							$usuariomembresia->numerodias=$membresiaseleccionada[$i]->numerodias;
-							$usuariomembresia->repetir=$membresiaseleccionada[$i]->repetir;
+							$usuariomembresia->fecha=$buscarfechasarray[$k];
+
+
+							
 							$usuariomembresia->GuardarMembresiaUsuarioConfiguracion();
-						}
+						//}
+					}
+
+				}
 
 				}
 			}
 
 	$md->guardarMovimiento($f->guardar_cadena_utf8('Membresia'),'Asignación a usuario membresia',$f->guardar_cadena_utf8('Asignación a usuario -'.$asignar->idusuarios.' membresia: '.$idmembresias));
 
-				
+		
+
+		if (count($idMembresiasCancelar)>0 && $idMembresiasCancelar[0]!='') {
+				for ($i=0; $i <count($idMembresiasCancelar) ; $i++) { 
+					$idmembresia=$idMembresiasCancelar[$i];
+					$asignar->idmembresia=$idmembresia;
+			$membresiaacaducar=$asignar->ConsultarSiTienelamembresia();
+
+					/*var_dump($membresiaacaducar);die();*/
+					if (count($membresiaacaducar)>0) {
+							$asignar->idusuarios_membresia=$membresiaacaducar[0]->idusuarios_membresia;
+							$asignar->estatus=2;
+							$asignar->ActualizarEstatusAsignacion();
+							
+							
+						}
+
+						
+					}	
+
+				}	
+
 	$db->commit();
 	$respuesta['respuesta']=1;
 	echo json_encode($respuesta);

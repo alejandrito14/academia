@@ -59,7 +59,6 @@ function CargarDatos() {
  	 $$(".tipousuario").removeClass('tipocoach');
   	 $$(".tipousuario").addClass(classtipo);
   	 $$(".btnservicios").attr('onclick','GoToPage("serviciosasignados")');
-  	 $$(".btnayuda").attr('onclick','AbrirModalAyuda()');
   	 $$(".btnserviciostutorados").attr('onclick','GoToPage("listadotutoservicios")');
   	 $$(".lipagos").attr('href','/pagos/');
   	 $$(".serviciosnoavanzados").attr('onclick','PintarServiciosnoAvanzados()');
@@ -70,7 +69,8 @@ function CargarDatos() {
 	ObtenerEntradas(1);
 	Obtenerpublicidad(1);
 	ObtenerConfiguracion();
-      identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 5000);
+	ObtenerCantidadNuevas();
+      //identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 5000);
 
 
 	VerificarSiExisteTuTorados();
@@ -150,8 +150,8 @@ function CargarDatosAdmin(argument) {
 	VerificarServicios();
 	$$(".lipagos").attr('href','/listadopagosadmin/');
  
-      identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 5000);
-
+      //identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 5000);
+ObtenerCantidadNuevas();
       if (localStorage.getItem('id_user')==1) {
       	var swiper = app.swiper.destroy('.cardswiper');
 		var swiper2 = app.swiper.destroy('.cardpublicidad');
@@ -296,8 +296,9 @@ function CargarDatosCoach() {
 	ObtenerTableroAnuncios(1);
 	ObtenerEntradas(1);
    
-     identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 5000);
+     //identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 5000);
      //botones
+     ObtenerCantidadNuevas();
 	ExistenServiciosporvalidar();
 	MostrarBotonServiciosActivosCoach();
 	VerificarServiciosAsignadosCoach();
@@ -2913,6 +2914,68 @@ function ObtenerServiciosRegistrados() {
 
 }
 
+function FiltroServiciosCat() {
+	$("#v_coach").val(0);
+	$(".buscador").val('');
+	localStorage.setItem('valorlistado',0);
+	localStorage.setItem('buscadorvalor','');
+	var pagina = "ObtenerServicios.php";
+	var v_categorias=$("#v_categorias").val();
+	var v_coach=$("#v_coach").val();
+	var estatus=0;
+	var datos="estatus="+estatus+"&v_categorias="+v_categorias+"&v_coach="+v_coach;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		data:datos,
+		
+		success: function(datos){
+
+			localStorage.setItem('v_categoriasvalor',v_categorias);
+
+			var respuesta=datos.respuesta;
+			var fechaactual=datos.fechaactual;
+			PintarServiciosRegistrados3(respuesta,fechaactual);
+			 ObtenerCoachesFiltro();
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+
+function FiltroBuscador() {
+	var valor=$(".buscador").val();
+
+	if (valor.length>0) {
+
+		let mypromise = function functionOne(testInput){
+	    return new Promise((resolve ,reject)=>{
+				  setTimeout(
+           			()=>{
+					FiltrarServicios();
+					resolve(1);
+
+					} , 3000);
+
+				});
+			};
+		localStorage.setItem('buscadorvalor',valor);
+		mypromise().then((res)=>{
+
+		BuscarEnLista(".buscador",".list-item");
+
+		})
+	}else{
+		FiltrarServicios();	
+	}
+
+}
+
 function PintarServiciosRegistrados(respuesta) {
 	
 	var html="";
@@ -4650,26 +4713,17 @@ function ObtenerCoachesFiltro() {
 		type: 'POST',
 		dataType: 'json',
 		url: urlphp+pagina,
-		crossDomain: true,
-		cache: false,
-		
+		async:false,
 		success: function(datos){
 
 			var respuesta=datos.respuesta;
-			PintarCoachesFiltro(respuesta);
+	        var valorlistado=localStorage.getItem('valorlistado');
 
-			if (localStorage.getItem('valorlistado')!=undefined) {
-            
-            	var valorlistado=localStorage.getItem('valorlistado');
-            	$(".v_coach").val(valorlistado);
-           		
+			PintarCoachesFiltro(respuesta,valorlistado);
 
-       
-  				FiltrarServicios();
-					
-   	
-         
-         		 }
+
+
+
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
@@ -4681,10 +4735,10 @@ function ObtenerCoachesFiltro() {
 		});
 }
 
-function PintarCoachesFiltro(respuesta) {
+function PintarCoachesFiltro(respuesta,valorlistado) {
 	var html="";
 	if (respuesta.length>0) {
-		html+=`<option value="0">Todos</option>`;
+		html+=`<option value="0">Todos los coaches</option>`;
 		html+=`<option value="-1">Sin coach</option>`;
 
 		for (var i = 0; i < respuesta.length;i++) {
@@ -4694,19 +4748,33 @@ function PintarCoachesFiltro(respuesta) {
 
 	$(".v_coach").html(html);
 
+	if (valorlistado!=undefined && valorlistado>0) {
+		$(".v_coach").val(valorlistado);
+           		
+  		FiltrarServicios();
+	}
+	
+
+	if(localStorage.getItem('buscadorvalor')!=undefined && localStorage.getItem('buscadorvalor')!='') {
+                 var busca= localStorage.getItem('buscadorvalor');
+                 $(".buscador").val(busca);
+               
+                 FiltroBuscador();
+                }
+					
 
 }
 
 function FiltrarServicios() {
 
 	var value=$(".v_coach").val();
-	
 	if (value > 0) {
+	
 		var obtenervalor=$(".v_coach option:selected").text();
 		$(".buscandoservicios").val(obtenervalor);
 
 		BuscarEnLista(".buscandoservicios",".list-item");	
-
+		localStorage.setItem('valorlistado',value);
 
 	}else if(value==-1){
 
@@ -4721,10 +4789,54 @@ function FiltrarServicios() {
 
 	}
 
-	localStorage.setItem('valorlistado',value);
+	//localStorage.setItem('valorlistado',value);
 	
 }
 
+function ObtenerCategoriasFiltro() {
+	var pagina = "ObtenerCategoriasFiltro.php";
+	
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		async:false,
+		success: function(datos){
+
+			var respuesta=datos.respuesta;
+			PintarCategoriasFiltro(respuesta);
+
+			if (localStorage.getItem('v_categoriasvalor')!=undefined) {
+            
+            	var valorlistado=localStorage.getItem('v_categoriasvalor');
+            	$(".v_categorias").val(valorlistado);
+           		FiltroServiciosCat();
+					
+   				
+         
+         		 }
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+function PintarCategoriasFiltro(respuesta) {
+	var html="";
+			html+=`<option value="0">Todas las categorías</option>`;
+
+	if (respuesta.length>0) {
+		for (var i =0; i < respuesta.length; i++) {
+			html+=`<option value="`+respuesta[i].idcategorias+`">`+respuesta[i].titulo+`</option>`;
+		}
+	}
+	$(".v_categorias").html(html);
+}
+//listado servicios admin
 function PintarServiciosRegistrados3(respuesta,fechaactual) {
 	
 	var html="";
@@ -4802,13 +4914,19 @@ function PintarServiciosRegistrados3(respuesta,fechaactual) {
 				clasecomentario="convalor";
 			}
 
-			var colocarnumero="";
+				var colocarnumero="";
               if(respuesta[i].numeroparticipantesmax=='' ) {
 				respuesta[i].numeroparticipantesmax=0;
               }
                if(respuesta[i].numeroparticipantesmin=='' ) {
 				respuesta[i].numeroparticipantesmin=0;
               }
+                colocarnumero+=`<div style="text-align:center;`+opacidad+`" class="textoarribaizquierda `+clasecantidad+`">`;
+						                 
+                 colocarnumero+=`<span>`+respuesta[i].cantidadalumnos+ ` </span>de<span> `+respuesta[i].numeroparticipantesmax+`</span></div>`;
+                  		
+               
+
             	clasesincoach="sincoach";
               if (coaches.length>0) {
               	clasesincoach="concoach";
@@ -4816,9 +4934,13 @@ function PintarServiciosRegistrados3(respuesta,fechaactual) {
 
 			html+=`
 				 <div class="list-item `+clasesincoach+`"  style="background: white; margin: 1em;border-radius: 10px;" id="servicio_`+respuesta[i].idservicio+`">
-                <div class="row">
-                 
-                
+                <div class="row" style="margin-bottom: 2em;">
+	                 <div class="col-10" style="padding-left: 10px;">
+	                  `+colocarnumero+`
+	                 </div>
+                 </div>
+                  <div class="row">
+               
                   <div class="col-100" >
                    <div class="row" style="margin-top:.5em;">
                     `;
@@ -4897,7 +5019,7 @@ function PintarServiciosRegistrados3(respuesta,fechaactual) {
 		html+=`
 			 <div class="list-item">
                 <div class="row text-color-theme">
-                  <h4 style="text-align:center;">En breve el administrador te asignará tus servicios</h4>
+                  <h4 style="text-align:center;"> No se encontraron servicios</h4>
                 </div>
               </div>
 
@@ -5026,4 +5148,237 @@ function ObtenerMensajeAyuda() {
 function BotonWhatsap(telefono) {
 	var nombre="Hola, soy "+localStorage.getItem('nombre')+' '+localStorage.getItem('paterno');
 	 window.open('https://api.whatsapp.com/send?phone=' + telefono+"&text="+nombre);
+}
+
+function ValidarNombreAlumno() {
+	var nombre=$("#v_nombretu").val();
+	var paterno=$("#v_paternotu").val();
+	var materno=$("#v_maternotu").val();
+	var iduser=localStorage.getItem('id_user');
+
+	var datos="nombre="+nombre+"&paterno="+paterno+"&materno="+materno+"&iduser="+iduser;
+	var pagina = "ValidarNombreAlumno.php";
+	
+	if (nombre!='') {
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		data:datos,
+		async:false,
+		
+		success: function(respuesta){
+
+			var resp=respuesta.respuesta;
+
+			if (resp.length>0) {
+				var estutorado=0;
+				var estutor=0;
+				for (var i = 0; i <resp.length; i++) {
+					
+					if (resp[i].tutorado==1) {
+						estutorado++;
+					}
+
+
+					if (resp[i].tutor==1) {
+						estutor++;
+					}
+				}
+				if (estutorado>0) {
+
+					alerta('','El usuario ya se encuentra asociado');
+				}else{
+
+					
+					Habilitar();
+
+					$("#v_fechatu").val(resp[0].fechanacimiento);
+					$("#v_sexotu").val(resp[0].sexo);
+					$("#v_idusuario").val(resp[0].idusuarios);
+
+				}
+			}else{
+
+				
+				Habilitar();
+			}
+
+
+			
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+  }else{
+
+  	alerta('','Ingrese nombre para continuar');
+  }
+}
+function Habilitar() {
+					$("#mensajevalidacion").html('<span style="color:#59c158;">Validado<i class="bi bi-check2"></i></span>')
+					$("#btnvalidartuto").css('display','none');
+					$(".lifechanacimientotu").css('display','block');
+			   		$(".liparentescotu").css('display','block');
+			   		$(".lisexotu").css('display','block');
+			   		$(".mostrar").css('display','block');
+			   		$("#v_nombretu").attr('disabled',true);
+			   		$("#v_paternotu").attr('disabled',true);
+			   		$("#v_maternotu").attr('disabled',true);
+			   		$(".input-clear-button").css('display','none');
+
+}	
+
+function DeshacerAccion(argument) {
+					$("#mensajevalidacion").html('')
+					$("#btnvalidartuto").css('display','block');
+					$(".lifechanacimientotu").css('display','none');
+			   		$(".liparentescotu").css('display','none');
+			   		$(".lisexotu").css('display','none');
+			   		$(".mostrar").css('display','none');
+			   		$("#v_nombretu").attr('disabled',false);
+			   		$("#v_paternotu").attr('disabled',false);
+			   		$("#v_maternotu").attr('disabled',false);
+			   		$(".input-clear-button").css('display','block');
+					$("#v_nombretu").val('');
+					$("#v_paternotu").val('');
+					$("#v_maternotu").val('');
+					}
+
+function ElegirTipoBusqueda1() {
+	if ($("#inputcelular").is(':checked')) {
+
+		$("#inputcodigo").prop('checked',false);
+
+		$(".licelulartu").css('display','block');
+		$(".licodigo").css('display','none');
+	}else{
+		$(".licelulartu").css('display','none');
+		$(".licodigo").css('display','none');
+
+	}
+
+
+}
+
+function ElegirTipoBusqueda2(argument) {
+		if ($("#inputcodigo").is(':checked')) {
+		
+		$("#inputcelular").prop('checked',false);
+		$(".licelulartu").css('display','none');
+		$(".licodigo").css('display','block');
+	}else{
+		$(".licelulartu").css('display','none');
+		$(".licodigo").css('display','none');
+	}
+}
+
+function OcultarCampos() {
+	$(".lielegir").css('display','none');
+	$(".linombretu").css('display','none');
+	$(".lipaternotu").css('display','none');
+	$(".limaternotu").css('display','none');
+	$(".lifechanacimientotu").css('display','none');
+	$(".lisexotu").css('display','none');
+	$(".liparentescotu").css('display','none');
+	$(".mostrar").css('display','none');
+	$(".licodigo").css('display','none');
+	$("#mensajevalidacion").html('')
+
+	/*if ($("#inputsincelular").is(':checked')) {
+
+		$(".licelulartu").css('display','block');
+
+	}*/
+
+	}
+
+	function MostrarCampos(argument) {
+
+		$("#mensajevalidacion").html('<span style="color:#59c158;">Validado<i class="bi bi-check2"></i></span>')
+
+		$(".linombretu").css('display','block');
+		$(".lipaternotu").css('display','block');
+		$(".limaternotu").css('display','block');
+		$(".lifechanacimientotu").css('display','block');
+		$(".lisexotu").css('display','block');
+		$(".liparentescotu").css('display','block');
+		$(".mostrar").css('display','block');
+	}
+function ValidarCelCodigo() {
+	var celular=$("#v_celulartu").val();
+	var codigo=$("#v_codigo").val();
+	var iduser=localStorage.getItem('id_user');
+	var datos="celular="+celular+"&codigo="+codigo+"&iduser="+iduser;
+	var pagina = "ValidarCelAlumno.php";
+	if (celular.length>6) {
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		data:datos,
+		async:false,
+		
+		success: function(respuesta){
+
+			var resp=respuesta.respuesta;
+
+			if (resp.length>0) {
+				var estutorado=0;
+				var estutor=0;
+				for (var i = 0; i <resp.length; i++) {
+					
+					if (resp[i].tutorado==1) {
+						estutorado++;
+					}
+
+
+					if (resp[i].tutor==1) {
+						estutor++;
+					}
+				}
+				if (estutorado>0) {
+
+					alerta('','El usuario ya se encuentra asociado');
+				}else{
+
+					
+					MostrarCampos();
+					$(".linombretu").addClass('item-input-with-value');
+					$(".lipaternotu").addClass('item-input-with-value');
+					$(".limaternotu").addClass('item-input-with-value');
+					
+					$("#v_nombretu").val(resp[0].nombre);
+					$("#v_paternotu").val(resp[0].paterno);
+					$("#v_maternotu").val(resp[0].materno);
+					$("#v_fechatu").val(resp[0].fechanacimiento);
+					$("#v_sexotu").val(resp[0].sexo);
+					$("#v_idusuario").val(resp[0].idusuarios);
+				   
+				}
+			}else{
+
+				
+				MostrarCampos();
+			}
+
+			
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+	}else{
+		alerta('','Ingrese un número celular para continuar');
+	}
+
 }

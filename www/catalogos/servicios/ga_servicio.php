@@ -272,6 +272,8 @@ try
 
 
 	}else{
+		$obtenerservicio=$emp->ObtenerServicio();
+		$emp->validaradmin=$obtenerservicio[0]->validaradmin;
 		$emp->ModificarServicio();	
 		$md->guardarMovimiento($f->guardar_cadena_utf8('Servicio'),'Servicio',$f->guardar_cadena_utf8('Modificación del Servicio -'.$emp->idservicio));
 

@@ -87,7 +87,15 @@ VerificarexisteCorreoTutorado(v_correotu,v_idtu).then(r => {
 		
 			alerta('','Registro guardado correctamente');
 
-			GoToPage('registrotutorados');
+		var registro=localStorage.getItem('registro');
+			if (registro==1) {
+				GoToPage('registrotutorados');
+			}else{
+
+				GoToPage('registroasociados');
+			}
+
+			
 
 		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 			var error;
@@ -300,6 +308,29 @@ VerificarexisteCorreoTutorado(v_correotu,v_idtu).then(r => {
 
 }
 
+function ObtenerAsociados() {
+		var id_user=localStorage.getItem('id_user')
+		var pagina = "ObtenerAsociados.php";
+		var datos="id_user="+id_user;
+		$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		data:datos,
+		async:false,
+		success: function(datos){
+			PintarAsociados(datos.respuesta);
+
+		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+			var error;
+				if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+				//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+				console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+		}
+
+	});
+}
 
 
 
@@ -346,8 +377,13 @@ function PintarTutorados(respuesta) {
     <div class="row margin-bottom-half"><div class="col">
 	    <p class="small text-muted no-margin-bottom">
 	    </p>
-	    <p>`+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`</p>
-	    </div>
+	    <p>`+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`</p>`;
+
+	    if (respuesta[i].celular!='' && respuesta[i].celular!=undefined) {
+	    	html+=`<p>`+respuesta[i].celular+`</p>`;
+	    }
+	   
+	   html+=`</div>
 
 	     <div class="col-auto" style="text-align: right;">
 	   	    <span class="" style="float: left;padding: .5em;" onclick="EditarTutorado(`+respuesta[i].idusuarios+`)"><i class="bi-pencil-fill"></i> </span>
@@ -394,10 +430,89 @@ function PintarTutorados(respuesta) {
 	$(".listado").html(html);
 }
 
+
+function PintarAsociados(respuesta) {
+	var html="";
+	if (respuesta.length>0) {
+		for (var i = 0; i <respuesta.length; i++) {
+			html+=`
+			<div class="col-100 medium-33 large-50 elemento" style="    margin-top: 1em;
+    margin-bottom: 1em;" id="elemento_`+respuesta[i].idusuario+`"><div class="card">
+    <div class="card-content card-content-padding ">
+    <div class="row">
+	    <div class="col-auto align-self-center">
+		    <div class="avatar avatar-40 alert-danger text-color-red rounded-circle">
+		    <i class="bi bi-person-circle"></i>
+
+		    </div>
+	    </div>
+    <div class="col align-self-center no-padding-left">
+    <div class="row margin-bottom-half"><div class="col">
+	    <p class="small text-muted no-margin-bottom">
+	    </p>
+	    <p>`+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`</p>`;
+
+	    if (respuesta[i].celular!='' && respuesta[i].celular!=undefined) {
+	    	html+=`<p>`+respuesta[i].celular+`</p>`;
+	    }
+	   
+	   html+=`</div>
+
+	     <div class="col-auto" style="text-align: right;">
+	   	    <span class="" style="float: left;padding: .5em;" onclick="EditarAsociado(`+respuesta[i].idusuarios+`)"><i class="bi-pencil-fill"></i> </span>
+	    	<span class="" style="float: left;padding: 0.5em;" onclick="EliminarTutorado(`+respuesta[i].idusuarios+`);"><i class="bi-x-circle-fill"></i></span>
+	    			</div>
+	    			</div>
+    			</div>
+    		</div>
+    	</div>
+   	 </div>
+    </div>
+		`;
+		}
+	}else{
+
+		html+=`
+			<div class="col-100 medium-33 large-50" style="    margin-top: 1em;
+    margin-bottom: 1em;"><div class="card">
+    <div class="card-content card-content-padding ">
+    <div class="row">
+	    <div class="col-auto align-self-center">
+		    <div class="avatar avatar-40 alert-danger text-color-red rounded-circle">
+		    </div>
+	    </div>
+    <div class="col align-self-center no-padding-left">
+    <div class="row margin-bottom-half"><div class="col">
+	    <p class="small text-muted no-margin-bottom">
+	    </p>
+	    <p>No tienes asociados registrados</p>
+	    </div><div class="col-auto text-align-right">
+	    <p class="small text-muted no-margin-bottom"></p>
+	    	<p class="small"></p></div>
+	    			</div>
+    			</div>
+    		</div>
+    	</div>
+   	 </div>
+    </div>
+		`;
+
+	}
+
+
+	$(".listado").html(html);
+}
 function EditarTutorado(idusuario) {
 
 localStorage.setItem('idtutorado',idusuario)
 GoToPage('nuevotutorado');
+
+}
+
+function EditarAsociado(idusuario) {
+
+localStorage.setItem('idtutorado',idusuario)
+GoToPage('nuevoasociado');
 
 }
 
@@ -430,6 +545,8 @@ function Obtenerdatostutorado(idusuario) {
 }
 
 function PintarDatosRegistroTutorado(respuesta) {
+	$$(".lifechanacimientotu").css('display','block');
+
 	$("#v_idtu").val(respuesta.idusuarios);
 	$("#v_nombretu").val(respuesta.nombre);
 	$("#v_paternotu").val(respuesta.paterno);
@@ -446,9 +563,14 @@ if (respuesta.sututor==1) {
 	if (respuesta.sincel==1) {
 		$("#inputsincelular").prop('checked',true);
 	}
-	SoyTutor();
-	SinCelular();
+	//SoyTutor();
+	//SinCelular();
+	
 	localStorage.removeItem('idtutorado');
+
+
+	//$("#mensajevalidacion").html('<span style="color:#59c158;">Validado<i class="bi bi-check2"></i></span>')
+
 }
 function EliminarTutorado(idusuario) {
 	app.dialog.confirm('','¿Seguro de eliminar tutorado?', function () {
@@ -471,7 +593,15 @@ function EliminarTutorado(idusuario) {
 		success: function(datos){
 
 			if (datos.respuesta==1) {
+
+				 var registro=localStorage.getItem('registro');
+     		 if (registro==1) {
 				ObtenerTutorados();
+
+				}else{
+					ObtenerAsociados();
+
+				}
 				
 			}
 			if (datos.respuesta==2) {

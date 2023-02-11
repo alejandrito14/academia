@@ -252,21 +252,32 @@ $estatus=array('DESACTIVADO','ACTIVADO');
                 <div class="col-md-12">
                 <div class="card-body" id="lclientesdiv" style="display: block; padding: 0;">
                   <input type="hidden" id="inputmembresiaselec" value="0">
-                  
-                <div class="form-group m-t-20">
-                <label>*Fecha:</label>
-                <input type="date" class="form-control" id="v_fecha" name="v_fecha" value="" title="Fecha" placeholder='Fecha'>
-              </div>
+                 <label>*Fecha:</label>
+                 <div >
+                    <div class="form-group m-t-20" id="divfechas" >
 
-              <div class="form-group m-t-20">
+                      <div style="width: 90%;float: left;">
+                      
+                      <input type="date" class="form-control v_fecha" id="v_fecha" name="v_fecha" value="" title="Fecha" placeholder='Fecha'></div>
+                      <button class="btn btn-primary" style="    width: 10%;" onclick="AgregarFechas()">+</button>
+                   </div>
+
+                   <div class="divfecha"></div>
+
+                    
+
+                 </div> 
+               
+
+              <!-- <div class="form-group m-t-20">
                 <label>*Número de días:</label>
                 <input type="text" class="form-control" id="v_numerodias" name="v_numerodias" value="" title="Número de días" placeholder='Número de días'>
-              </div>
+              </div> -->
 
-               <div class="form-group m-t-20">
+              <!--  <div class="form-group m-t-20">
                 <label>*Repetir:</label>
                 <input type="text" class="form-control" id="v_repetir" name="v_repetir" value="" title="Repetir" placeholder='Repetir'>
-              </div>
+              </div> -->
               <div class="mensaje"></div>
 
       </div>
@@ -374,7 +385,9 @@ $estatus=array('DESACTIVADO','ACTIVADO');
                  $('select').moveToListAndDelete('#lstBox2', '#lstBox1');
 
                  BorrarAsignacionmembresia();
-              $("#botones").css('display','none');
+                    $("#botones").css('display','block');    
+
+              //$("#botones").css('display','none');
 
                }else{
                 

@@ -241,7 +241,9 @@ class Notapago
 	{
 			$sql="UPDATE notapago SET 
 			  estatus = '$this->estatus',
-			  descripcionaceptacion='$this->descripcionaceptacion'
+			  descripcionaceptacion='$this->descripcionaceptacion',
+			  fechaaceptacion=date('Y-m-d H:i:s'),
+			  idusuarioaceptacion=$_SESSION['se_sas_Usuario']
 			  WHERE idnotapago='$this->idnotapago'";
 
 		    $resp=$this->db->consulta($sql);

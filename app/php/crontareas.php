@@ -38,7 +38,7 @@ try
 	$arraytokens=array();
 
 	$obtenertareas=$tareas->ObtenerTareas();
-
+	
 	if (count($obtenertareas)>0) {
 		# code...
 	
@@ -48,11 +48,12 @@ try
 
 	$emp->idservicio=$obtenertareas[$m]->idservicio;
 	$obtenerservicio=$emp->ObtenerServicio();
-			
+				
 			$emp->titulo=$obtenerservicio[0]->titulo;
 			$asignados->idservicio=$emp->idservicio;
 			$asignados->idusuario=0;
 			$obtenerusuarios=$asignados->obtenerUsuariosServiciosAsignados();
+			var_dump($obtenerusuarios);
 			$fechanoti="";
 			$horanoti="";
 			$canchanoti="";
@@ -187,7 +188,7 @@ try
 			 
 			 $titulonotificacion=$arraytokens[$i]['titulonotificacion'];
 			 array_push($array,$arraytokens[$i]['token']);
-			$notificaciones->EnviarNotificacion($array,$texto,$titulonotificacion);
+			//$notificaciones->EnviarNotificacion($array,$texto,$titulonotificacion);
 				//}
 
 			}

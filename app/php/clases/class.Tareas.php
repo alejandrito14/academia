@@ -21,7 +21,6 @@ class Tareas
 	{
 		$sql="SELECT *from (SELECT DATE_FORMAT(programada, '%Y-%m-%d %H:%i') AS hora,titulo,descripcion,idservicio,estatus,idtarea,envia
 		FROM tarea) as tabla WHERE tabla.hora='$this->fechahora'";
- 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 

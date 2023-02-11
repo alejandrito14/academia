@@ -106,10 +106,11 @@ if(!isset($_GET['idusuarios']))
 	$v_referencia='';
 	$v_fis_correo="";
 	$v_celular="";
-	$titulo='NUEVO ALUMNO';
+	$titulo='NUEVO USUARIO';
 	$v_idtipo=3;
 	$bloquearediciondedatos=0;
 			$rutaperfil="images/sinfoto.png";
+	//$validacion="onkeyup='ValidarCelular()'";
 
 }else
 {
@@ -225,7 +226,7 @@ if(!isset($_GET['idusuarios']))
 		$checkedhabilitar="checked";
 
 	}
-	$titulo='EDITAR ALUMNO';
+	$titulo='EDITAR USUARIO';
 
 
 	
@@ -240,7 +241,7 @@ if(!isset($_GET['idusuarios']))
 	}
 
 
-	if($fotoperfil==""){
+	if($fotoperfil=="" || $fotoperfil=='null'){
 		$rutaperfil="images/sinfoto.png";
 	}
 	else{
@@ -296,7 +297,7 @@ $su->lista_empresas = $lista_empresas;
 					$bt->icon = "mdi mdi-content-save";
 					
 					 $bt->funcion="
-					 var resp=MM_validateFormUsuario('nombre','','R','v_paterno','','R','v_materno','','R','email','','RisEmail','v_usuario','','R','clave','','R'); if(resp==1){  Guardarusuario('form_usuario','catalogos/alumnos/vi_alumnos.php','main','catalogos/alumnos/ga_clientes.php',$idmenumodulo);}
+					 var resp=MM_validateFormUsuario('v_celular','','R','v_alias','','R','nombre','','R','v_paterno','','R','v_materno','','R','email','','RisEmail','v_usuario','','R','clave','','R','v_sexo','','R','v_fechanacimiento','','R'); if(resp==1){  Guardarusuario('form_usuario','catalogos/alumnos/vi_alumnos.php','main','catalogos/alumnos/ga_clientes.php',$idmenumodulo);}
 					 ";
 
 					$bt->estilos = "float: right;";
@@ -348,8 +349,8 @@ $su->lista_empresas = $lista_empresas;
 				<div class="row">
 				<div class="col-md-6">
 					<div class="form-group">
-						<label for="">TIPO DE USUARIO:</label>
-						<select name="tipo" id="v_tipo" class="v_tipo form-control">
+						<label for="">*TIPO DE USUARIO:</label>
+						<select name="tipo" id="v_tipo" class="v_tipo form-control" onchange="CambioTipoUsuario()">
 							
 						</select>
 					</div>
@@ -368,30 +369,36 @@ $su->lista_empresas = $lista_empresas;
 				<div class="row">
 				<div class="col-md-6">
 
+					<div class="form-group ">
+						<label>*CELULAR:</label>
+						<input name="celular" id="v_celular" title="CELULAR" type="text" class="form-control" placeholder="CELULAR" value="<?php echo $v_celular; ?>" tabindex="99" <?php echo $validacion ?>>
+					</div>
+
+
 					<div class="form-group m-t-20">
-					<label>ALIAS:</label>
+					<label>*ALIAS:</label>
 					<input type="text" name="alias" id="v_alias" class="form-control" title="Alias" value="<?php echo $fu->imprimir_cadena_utf8($alias); ?>" placeholder="ALIAS" tabindex="100" />
 				</div>
 
 					<div class="form-group ">
-						<label>NOMBRE:</label>
+						<label>*NOMBRE:</label>
 						<input name="nombre" id="nombre" title="NOMBRE" type="text" class="form-control" placeholder="NOMBRE"  required value="<?php echo $v_nombre; ?>" tabindex="101">
 					</div>
 
 					
 					<div class="form-group ">
-						<label>APELLIDO PATERNO:</label>
+						<label>*APELLIDO PATERNO:</label>
 						<input name="paterno" id="v_paterno" title="APELLIDO PATERNO" type="text" class="form-control" placeholder="APELLIDO PATERNO"  required value="<?php echo $v_paterno; ?>" tabindex="102">
 					</div>
 					
 					<div class="form-group ">
-						<label>APELLIDO MATERNO:</label>
+						<label>*APELLIDO MATERNO:</label>
 						<input name="materno" id="v_materno" title="APELLIDO MATERNO" type="text" class="form-control" placeholder="APELLIDO MATERNO"  required value="<?php echo $v_materno; ?>" tabindex="103">
 					</div>	
 
 						<div class=" form-group  ">
 							
-								<label>GÉNERO:</label>
+								<label>*GÉNERO:</label>
 								<select tabindex="104" name="v_sexo" id="v_sexo" title="sexo" class="form-control">
 									<option value="H" <?php if("H" == $v_sexo ){ echo "selected"; } ?>>HOMBRE</option>
 									<option value="M" <?php if("M" == $v_sexo ){ echo "selected"; } ?>>MUJER</option>
@@ -399,32 +406,15 @@ $su->lista_empresas = $lista_empresas;
 							</div>	
 
 					<div class="">
-						<label>FECHA DE NACIMIENTO:</label>
+						<label>*FECHA DE NACIMIENTO:</label>
 					  <input name="v_fechanacimiento" id="v_fechanacimiento" title="FECHA DE NACIMIENTO" type="date" class="form-control" placeholder="FECHA DE NACIMIENTO" required="" value="<?php echo $v_edad;?>" tabindex="105">
 					</div>
 					
 
-					
-						
-						<!-- <div class="form-group " style="display: none;">
-							
-								<label>FECHA DE NACIMIENTO:</label>
-								<div class="input-group">
-									<input type="text" class="form-control" name="v_f_nacimiento" id="v_f_nacimiento" placeholder="yyyy-mm-dd" value="<?PHP echo $v_f_nacimiento; ?>" >
-									<div class="input-group-append">
-										<span class="input-group-text"><i class="fa fa-calendar"></i></span>
-									</div>
-								</div>
-							</div> -->
-
 
 			
-					<div class="">
 				
-					<div class="form-group ">
-						<label>CELULAR:</label>
-						<input name="celular" id="v_celular" title="CELULAR" type="text" class="form-control" placeholder="CELULAR" value="<?php echo $v_celular; ?>" tabindex="106">
-					</div>
+					
 					<div class="form-group " style="display: none;">
 						<label>TEL&Eacute;FONO:</label>
 						<input name="v_telefono" id="v_telefono" title="TELÉFONO" type="text" class="form-control" placeholder="TELÉFONO"  required value="<?php echo $v_telefono; ?>">
@@ -432,8 +422,9 @@ $su->lista_empresas = $lista_empresas;
 
 					<div class="form-group m-t-20">
 					<label>*EMAIL:</label>
-					<input type="text" name="email" id="email" class="form-control" title="Email" value="<?php echo $v_email; ?>" placeholder="EMAIL"  />
+					<input type="text" name="email" id="email" class="form-control" title="Email" value="<?php echo $v_email; ?>" placeholder="EMAIL" tabindex="106" />
 					</div>
+				</div>
 
 
 					<div class="col-md-6">
@@ -442,7 +433,7 @@ $su->lista_empresas = $lista_empresas;
 					 	<div>
 					 	</div>
 
-					 		<form method="post" action="#" enctype="multipart/form-data">
+					 	<!-- 	<form method="post" action="#" enctype="multipart/form-data"> -->
 								    <div class="card" style="width: 18rem;margin: auto;margin-top: 3em;">
 								        <img class="card-img-top" src="">
 								        <div id="d_foto" style="text-align:center; ">
@@ -458,7 +449,7 @@ $su->lista_empresas = $lista_empresas;
 								         
 								        </div>
 								    </div>
-								</form>
+						<!-- 		</form> -->
 					 		
 					 	</div>
 					</div>
@@ -492,7 +483,7 @@ $su->lista_empresas = $lista_empresas;
 						<label>INE:</label>
 					 	<div>
 
-					 		<form method="post" action="#" enctype="multipart/form-data">
+					 	<!-- 	<form method="post" action="#" enctype="multipart/form-data">
 								    <div class="card" style="width: 18rem;margin: auto;margin-top: 3em;">
 								        <img class="card-img-top" src="">
 								        <div id="d_foto" style="text-align:center; ">
@@ -503,15 +494,16 @@ $su->lista_empresas = $lista_empresas;
 								           
 								            <div class="form-group">
 
-								               <!--  <input type="file" class="form-control-file" name="image" id="image" onchange="SubirImagen()"> -->
+								                 <input type="file" class="form-control-file" name="image" id="image" onchange="SubirImagen()"> 
 								            </div>
-								          <!--   <input type="button" class="btn btn-primary upload" value="Subir"> -->
+								           <input type="button" class="btn btn-primary upload" value="Subir"> 
 								        </div>
 								    </div>
-								</form>
+							
 					 		
 					 	</div>
 					</div>
+				</form> -->
 
 			
 
@@ -551,87 +543,7 @@ $su->lista_empresas = $lista_empresas;
 				</div>
 
 					<div class="row">
-					<!-- 	
-						<div class="form-group col-md-4">
-						<label>PAIS:</label>
-
-
-						<select name="v_pais1" id="v_pais1" class="form-control" onchange="ObtenerEstadosCatalogo2(0,$(this).val(),'v_estado,v_fis_estado')">
-							  <option value="0">SELECCIONAR PAIS</option>
-							   <?php
-							  do
-							  {
-							?>
-								<option  value="<?php echo $result_paises_row['idpais'] ?>"  <?php if($result_paises_row1['idpais'] == $idpais){ echo "selected"; }?>><?php echo strtoupper($fu->imprimir_cadena_utf8($result_paises_row1['pais']));?></option>
-							<?php
-							   }while($result_paises_row1 = $db->fetch_assoc($resul_paises1));
-						   ?>
-						</select>
-						
-					</div> -->
-
 					
-				
-
-
-				<!-- 	<div class="form-group col-md-4">
-						<label>ESTADO:</label>
-						
-						<select name="v_fis_estado" id="v_fis_estado" class="form-control" style="width: 100%;" onchange="ObtenerMunicipiosCatalogo(0,$(this).val(),'v_fis_municipio');"></select>
-							
-
-					</div>	 -->
-					
-					
-
-					<!-- <div class="form-group col-md-4">
-						<label>MUNICIPIO:</label>	
-						<select name="v_fis_municipio" id="v_fis_municipio" class="form-control" ></select>
-					</div>
-					
-					
-					<div class="form-group col-md-4 ">
-						<label>LOCALIDAD:</label>
-					
-						<input type="text" name="v_fis_ciudad" id="v_fis_ciudad" class="form-control" placeholder="LOCALIDAD" value="<?php echo $v_fis_ciudad;?>">
-					</div>
-
-					<div class="form-group col-md-4">
-						<label>CP:</label>
-						<input name="v_fis_cp" id="v_fis_cp" title="CP" type="text" class="form-control" placeholder="CP"  required value="<?php echo $v_fis_cp; ?>">
-					</div>
-
-
-					<div class="col-md-4">
-						<div class="form-group ">
-						<label>CALLE/AV/BLVD:</label>
-						<textarea name="v_fis_direccion" required id="v_fis_direccion" class="form-control" placeholder="DIRECCION" title="DIRECCION"><?php echo $v_fis_direccion; ?></textarea>
-					</div>
-					</div>
-
-						<div class="col-md-4">
-							<div class="form-group ">
-								<label>NO.INT:</label>
-								<input name="v_fis_no_int" id="v_fis_no_int" title="NO.INT" type="text" class="form-control" placeholder="NO.INT"  required value="<?php echo $v_fis_no_int; ?>">
-							</div>	
-						</div>
-
-						<div class="col-md-4">
-							<div class="form-group ">
-								<label>NO. EXT:</label>
-								<input name="v_fis_no_ext" id="v_fis_no_ext" title="NO.EXT. Fiscal" type="text" class="form-control" placeholder="NO.EXT"  required value="<?php echo $v_fis_no_ext; ?>" >
-							</div>
-						</div> -->
-
-
-<!-- 
-						<div class=" col-md-4">
-						<div class="form-group ">
-						<label>COLONIA:</label>
-						<input name="v_fis_col" id="v_fis_col" title="COLONIA" type="text" class="form-control" placeholder="COLONIA"  required value="<?php echo $v_fis_col; ?>" >
-					</div>
-					</div> -->
-
 					
 					</div>
 
@@ -656,8 +568,8 @@ $su->lista_empresas = $lista_empresas;
 
 					<div class="col-md-6">
 					<div class="form-group m-t-20" >
-						<label>USUARIO:</label>
-						<input name="usuario" onBlur="validarUsuariousuario();" id="v_usuario" title="Usuario" type="text" class="form-control" placeholder="Usuario"  required value="<?php echo $v_usuario; ?>" tabindex="107">
+						<label>*USUARIO:</label>
+						<input name="usuario" onBlur="validarUsuariousuario();" id="v_usuario" title="Usuario" type="text" class="form-control" placeholder="USUARIO"  required value="<?php echo $v_usuario; ?>" tabindex="107">
 					</div>
 					
 					
@@ -703,7 +615,46 @@ $su->lista_empresas = $lista_empresas;
 					</div>
 				</div>
 			</div>
-				
+	</form>
+			<div class="card" id="divasociados">
+			<div class="card-header" style="margin-top: 1em;">
+						<h5>DATOS DE ASOCIADOS</h5>
+					</div>
+				<div class="card-body">
+					<div class="row">
+					<div class="col-md-12" style="text-align: right;">
+						<button type="button" class="btn btn-primary" onclick="AbrirModalAsociado()">NUEVO ASOCIADO</button>
+					</div>
+					</div>
+
+					<div class="row" style="margin-top: 1em;">
+						<div class="col-md-12">
+							
+							<table class="table">
+								<thead>
+									<tr>
+										<td>CELULAR</td>
+										
+										<td>NOMBRE</td>
+										<td>APELLIDO PATERNO</td>
+										<td>APELLIDO MATERNO</td>
+										<td>GÉNERO</td>
+										<td>FECHA DE NACIMIENTO</td>
+										<td>EMAIL</td>
+										<td>PARENTESCO</td>
+										<td>SOY SU TUTOR</td>
+										<td>OPCIONES</td>
+									</tr>
+								</thead>
+								<tbody id="tblasociados">
+									
+								</tbody>
+							</table>
+						</div>
+					</div>
+					
+				</div>
+			</div>
 				<div class="tab-pane p-20" id="envio" role="tabpanel" style="display: none;">
 					
 					
@@ -739,6 +690,140 @@ $su->lista_empresas = $lista_empresas;
 	</div>
 </form>
 
+<div id="myModalAsociados" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        
+      </div>
+      <div class="modal-body">
+
+				<div class="card" style="" id="divcoachs">
+				
+
+				</div>
+				<div class="card-body">
+					<div class="row">
+				<div class="col-md-12">
+			<div class="card-body"  >
+				<div class="form-group ">
+				<select id="buscadoralumnos" class="form-control" style=""> 
+				</select>
+				<button class="btn btn-success" id="btnfuncion" style="float: right;" onclick="SeleccionarUsuario()">SELECCIONAR</button>
+				</div>
+				<input type="hidden" id="posicion" value="-1">
+	 		   <input type="hidden" id="idalumnoasociado" value="0">
+  
+					<div class="form-group ">
+						<label>*CELULAR:</label>
+						<input name="celular" id="v_celularaso" title="CELULAR" type="text" class="form-control" placeholder="CELULAR" value="" tabindex="112">
+						<span id="spancelular" style="color:red;"></span>
+					</div>
+
+
+					<div class="form-group ">
+						<label>*NOMBRE:</label>
+						<input name="nombre" id="nombreaso" title="NOMBRE" type="text" class="form-control" placeholder="NOMBRE"  required value="" tabindex="114">
+						<span id="spannombre" style="color:red;"></span>
+
+					</div>
+
+					
+					<div class="form-group ">
+						<label>*APELLIDO PATERNO:</label>
+						<input name="paterno" id="v_paternoaso" title="APELLIDO PATERNO" type="text" class="form-control" placeholder="APELLIDO PATERNO"  required value="" tabindex="115">
+						<span id="spanpaterno" style="color:red;"></span>
+
+					</div>
+					
+					<div class="form-group ">
+						<label>*APELLIDO MATERNO:</label>
+						<input name="materno" id="v_maternoaso" title="APELLIDO MATERNO" type="text" class="form-control" placeholder="APELLIDO MATERNO"  required value="" tabindex="116">
+					<span id="spanmaterno" style="color:red;"></span>
+
+					</div>	
+
+						<div class=" form-group  ">
+							
+								<label>*GÉNERO:</label>
+								<select tabindex="117" name="v_sexo" id="v_sexoaso" title="sexo" class="form-control">
+									<option value="H">HOMBRE</option>
+									<option value="M">MUJER</option>
+								</select>
+						<span id="spansexo" style="color:red;"></span>
+
+							</div>	
+
+					<div class="">
+						<label>*FECHA DE NACIMIENTO:</label>
+					  <input name="v_fechanacimiento" id="v_fechanacimientoaso" title="FECHA DE NACIMIENTO" type="date" class="form-control" placeholder="FECHA DE NACIMIENTO" required="" value="" tabindex="118">
+
+					<span id="spanfechanacimiento" style="color:red;"></span>
+
+					</div>
+					
+
+
+			
+				
+					
+					<div class="form-group " style="display: none;">
+						<label>TEL&Eacute;FONO:</label>
+						<input name="v_telefono" id="v_telefonoaso" title="TELÉFONO" type="text" class="form-control" placeholder="TELÉFONO"  required value="">
+						<span id="spantelefono"></span>
+
+					</div>
+
+					<div class="form-group m-t-20">
+					<label>*EMAIL:</label>
+					<input type="text" name="email" id="emailaso" class="form-control" title="Email" value="" placeholder="EMAIL" tabindex="119" />
+
+					<span id="spanemail" style="color:red;"></span>
+
+					</div>
+
+					<div class="form-group m-t-20">
+					<label>*PARENTESCO:</label>
+					<select name="v_parentesco" id="v_parentesco" class="form-control"></select>
+
+					<span id="spanparentesco" style="color:red;"></span>
+
+					</div>
+
+
+					<div class="form-group m-t-20">
+						<label for="">Soy su tutor</label>
+
+						<span style="width: 20px;margin-left: 0.5em;"></span>
+						<input tabindex="120" type="checkbox" id="v_soytutor" >
+
+					</div>
+				</div>
+	     
+	     
+	     </div>
+
+	    </div>
+   </div>
+
+
+       
+      </div>
+      <div class="modal-footer">
+
+      	 <button type="button" class="btn btn-success" onclick="GuardarAlumnoAsociado()">GUARDAR</button>
+
+        <button type="button" class="btn btn-default" data-dismiss="modal">CERRAR</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
 
 <link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
 <script src="assets/libs/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
@@ -763,6 +848,8 @@ $su->lista_empresas = $lista_empresas;
 
 	<script type="text/javascript">
 	var idusuario='<?php echo $idusuario; ?>';
+	var asociados=[];
+	var asociadoseliminados=[];
 
 	if (idusuario>0){
 		var opcionestipopago='<?php echo $opcionespago; ?>';
@@ -791,6 +878,8 @@ $su->lista_empresas = $lista_empresas;
 
  	//validartelefonocheck(validartelefono);
 	ObtenerTipos(idtipo);
+	ObtenerAsociados(idusuario);
+	ObtenerDependencia(idusuario);
 
 	}else{
 

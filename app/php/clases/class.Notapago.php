@@ -193,7 +193,9 @@ class Notapago
 
 	public function ObtenerdescripcionNota()
 	{
-		$sql="SELECT idnotapago,descripcion as concepto,monto,idpago,fecha FROM notapago_descripcion WHERE idnotapago='$this->idnotapago'";
+		$sql="SELECT idnotapago,descripcion as concepto,monto,idpago,fecha FROM notapago_descripcion
+			
+		 WHERE idnotapago='$this->idnotapago'";
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

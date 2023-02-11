@@ -36,7 +36,7 @@ try
 	$asignar->idusuarios=$idusuario;
 	$membresia->idusuarios=$idusuario;
 	$obtenermembresiasAsignados=$asignar->ObtenermembresiaActivosAsignados();
-
+	
 	$arraymembresia="";
 	$contador=0;
 	$idmembresias="";
@@ -59,13 +59,13 @@ try
 	$obtenermembresias=array();
 
 	$verificarsiestutorado=$membresia->VerificarSiesTutorado();
-
+	
 	if (count($verificarsiestutorado)>0) {
 
 				$idtutor=$verificarsiestutorado[0]->idusuariostutor;
 
 				$buscarSiTutorTieneMembresia=$membresia->buscarSiTutorTieneMembresia($idtutor);
-
+				//var_dump($buscarSiTutorTieneMembresia);die();
 				
 				if (count($buscarSiTutorTieneMembresia)>0) {
 					$idmembresiapadre=$buscarSiTutorTieneMembresia[0]->idmembresia;
@@ -79,21 +79,23 @@ try
 					$inphijo=1;
 				}
 
-				if ($buscarSiTutorTieneMembresia[0]->pagado==1) {
+				//if ($buscarSiTutorTieneMembresia[0]->pagado == 1) { verificacion si la membresia del tutor ha sido pagada
 					 
-					$obtenerMembresias=$membresia->ObtenerMembresiasDependen($idmembresiapadre,$inphijo,$inpnieto);
-
-					for ($i=0; $i <count($obtenerMembresias) ; $i++) { 
-						$membresia->idmembresia=$obtenerMembresias[$i]->idmembresia;
+					$obtenermembresias=$membresia->ObtenerMembresiasDependen($idmembresiapadre,$inphijo,$inpnieto);
+					
+					for ($i=0; $i <count($obtenermembresias) ; $i++) { 
+						$membresia->idmembresia=$obtenermembresias[$i]->idmembresia;
 						$ObtenerSiTutoradosMembresia=$membresia->ObtenerSiTutoradosMembresia($idtutor);
+						//var_dump($ObtenerSiTutoradosMembresia);die();
+						//var_dump($obtenerMembresias[$i]->limite);die();
 
 
-						if ($obtenerMembresias[$i]->limite<=count($ObtenerSiTutoradosMembresia)) {
-							unset($obtenerMembresias[$i]);
+						if($obtenermembresias[$i]->limite <= count($ObtenerSiTutoradosMembresia)) {
+							unset($obtenermembresias[$i]);
 						}
 
 					}
-				}
+				//}
 				
 
 			}

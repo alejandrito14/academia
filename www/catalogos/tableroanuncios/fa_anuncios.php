@@ -295,6 +295,11 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 </form>
 <!-- <script  type="text/javascript" src="./js/mayusculas.js"></script>
  -->
+
+ <style>
+ 	
+ 	
+ </style>
 <script>
 	var ruta='<?php echo $ruta;?>';
 	var idrutainterna='<?php echo $idrutainterna; ?>'	;

@@ -43,7 +43,7 @@ try
     $lo->celular=$telefono;
     $lo->email=$email;
     $lo->curp     = "";
-    $lo->estatus  = 0;
+    $lo->estatus  = 1;
     $lo->tipo=3;
     $lo->usuario=$email;
     $lo->idtutorado=$_POST['v_idtu'];
@@ -77,7 +77,7 @@ try
 
 
             $lo->ActualizarUsuarioTutorado();
-            $lo->ActualizarParentesco($parentesco);
+            $lo->ActualizarParentesco($parentesco,$inputtutor,$orden);
 
         }
 

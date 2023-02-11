@@ -20,7 +20,7 @@ require_once("../../clases/class.Notapago.php");
 
 require_once("../../clases/class.Notapago.php");
 require_once('../../clases/class.MovimientoBitacora.php');
-
+require_once('../../clases/class.Membresia.php');
 try
 {
 
@@ -33,6 +33,9 @@ try
     $md->db = $db;  
     $pago->db=$db;
     $notapago->db=$db;
+
+    $membresia=new Membresia();
+    $membresia->db=$db;
     $idnotapago = $_POST['idnotapago'];
     $estado=$_POST['estado'];
     $descripcion=$_POST['descripcion'];
@@ -65,6 +68,26 @@ try
             $pago->estatus=2;
         
             $pago->ActualizarPagado();
+
+
+            $obtenerpago=$pago->BuscarPago2();
+            if(count($obtenerpago)>0) {
+                # code...
+            if($obtenerpago[0]->tipo == 2) {
+
+
+               $idusuario=$obtenerpago[0]->idusuarios;
+               $idmembresia=$obtenerpago[0]->idmembresia;
+
+               $membresia->idusuarios=$idusuario;
+               $membresia->idmembresia=$idmembresia;
+               $obtenermembresia=$membresia->ObtenerMembresiaUsuarioPorPagar();
+               $idusuarios_membresia=$obtenermembresia[0]->idusuarios_membresia;
+               $membresia->ActualizarEstatusMembresia($idusuarios_membresia);
+               ///falta por realizar el cambio a pagado
+               }
+
+            }
         }
 
 

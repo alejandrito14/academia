@@ -847,6 +847,11 @@ class Clientes
 		$r = $this->db->consulta($sql);
 		return $r; 
 	}
+
+	public function ObtenerAsociados()
+	{
+		# code...
+	}
 	
 }
 ?>

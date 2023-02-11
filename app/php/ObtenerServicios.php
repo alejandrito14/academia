@@ -45,8 +45,19 @@ try
 	$lo->db = $db;
 
 	$lo->estatus=$_POST['estatus'];
+	$idcategorias=0;
+	$v_coach=0;
+	if (isset($_POST['v_categorias'])) {
+		$idcategorias=$_POST['v_categorias'];
+	}
+
+	if (isset($_POST['v_coach'])) {
+		$v_coach=$_POST['v_coach'];
+
+	}
+
 	 
-	$obtenerservicios=$lo->ObtenerServiciosAdmin();
+	$obtenerservicios=$lo->ObtenerServiciosAdmin($idcategorias,$v_coach);
  
 
 	for ($i=0; $i <count($obtenerservicios) ; $i++) { 

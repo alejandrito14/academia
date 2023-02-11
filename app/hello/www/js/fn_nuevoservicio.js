@@ -1521,7 +1521,7 @@ function HorariosDisponibles() {
 
 
 	var v_zonas=[];
-	arraydiaselegidos=[];
+	//arraydiaselegidos=[];
 	arraydiaseleccionados=[];
 	var domingo=0,lunes=0,martes=0,miercoles=0,jueves=0,Viernes=0,sabado=0;
 	

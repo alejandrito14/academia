@@ -133,6 +133,8 @@ var oTable = $('#zero_config').dataTable( {
 				<table id="zero_config" class="table table-bordered table-hover" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
+						<th>ID</th>
+
  						<th>TIPO</th>
  					 <th>FOTO</th>
  	 				<th>ALIAS</th>
@@ -144,6 +146,8 @@ var oTable = $('#zero_config').dataTable( {
 						<!--<th>NO TARJETA</th>-->
 						<th width="88">CELULAR</th>
 						<th>CORREO</th>
+						<th>ASOCIADOS</th>
+						<th>ASOCIADO DE</th>
 <!-- 						<th width="97">LOCALIDAD</th>
  --> 
 						<th>ESTATUS</th>
@@ -166,6 +170,8 @@ var oTable = $('#zero_config').dataTable( {
 					?>
 
 						<tr> 
+
+							<td width="30"><?php echo utf8_encode($result_row['idusuarios']); ?></td>
 						  
 							<td width="30"><?php echo utf8_encode($result_row['nombretipo']); ?></td>
 							<td width="30"><?php
@@ -191,7 +197,7 @@ var oTable = $('#zero_config').dataTable( {
 
 						  	$nombre=mb_strtoupper($f->imprimir_cadena_utf8($result_row['nombre']." ".$result_row['paterno']." ".$result_row['materno']));
 
-						  	 echo mb_strtoupper($f->imprimir_cadena_utf8($result_row['nombre']." ".$result_row['paterno']." ".$result_row['materno'])); ?></td>
+						  	 echo $result_row['nombre']." ".$result_row['paterno']." ".$result_row['materno']; ?></td>
 						  	<!--<td><?php echo $nivel; ?></td>-->
 						  		<td width="30"><?php echo utf8_encode($result_row['usuario']); ?></td>
 
@@ -201,9 +207,62 @@ var oTable = $('#zero_config').dataTable( {
 						  		</a>
 						  	</td>
 						  		<td width="30"><?php echo utf8_encode($result_row['email']); ?></td>
+
+						  		<td>
+						  		<?php 
+						  		$cli->id_usuario=$result_row['idusuarios'];
+						  		$obtenerasociados=$cli->ObtenerAsociados();
+
+
+						  			if (count($obtenerasociados)>0) {
+						  				for ($i=0; $i <count($obtenerasociados) ; $i++) { 
+						  					$nombre=$obtenerasociados[$i]->nombre.' '.$obtenerasociados[$i]->paterno.' '.$obtenerasociados[$i]->materno;
+						  					$icono="";
+						  						$color="";
+						  					if ($obtenerasociados[$i]->sututor==1) {
+						  						$color="#85cceb";
+						  					}
+
+						  					if ($obtenerasociados[$i]->celular!='') {
+						  						$icono='<a href="tel://'.$obtenerasociados[$i]->celular.'"> '.$obtenerasociados[$i]->celular.'</a>';
+						  					}
+
+						  				 ?>
+
+						  						<p style="background: <?php echo $color; ?>"><?php echo $nombre; ?><?php echo $icono ?></p>
+						  			
+						  			<?php	
+						  					}
+						  			}
+						  		 ?>	
+
+						  		</td>
+						  		<td>
+
+						  			<?php 
+						  			$nombre="";
+						  				if (count($obtenerasociados)==0) {
+
+						  						$cli->id_usuario=$result_row['idusuarios'];
+						  					$buscartutor=$cli->ObtenerTutor();
+
+						  					if (count($buscartutor)>0) {
+						  								$nombre=$buscartutor[0]->nombre.' '.$buscartutor[0]->paterno.' '.$buscartutor[0]->materno;
+
+						  					
+						  					}
+
+						  				}
+
+						  				echo $nombre;
+
+						  			 ?>
+						  			
+
+						  		</td>
 						  
 						 	<td width="30"><?php echo utf8_encode($estatus[$result_row['estatus']]); ?></td>
-						
+							
 						
 					  	
 						  	<td align="center">

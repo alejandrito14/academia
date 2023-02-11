@@ -46,6 +46,7 @@ class Usuarios
     public $iddeporte;
     public $celular2;
     public $idusuariotutorado;
+    public $tipo;
 	public function validarTelefono()
 	{
 		 $sql_cliente = "SELECT * FROM usuarios WHERE celular='$this->celular'";
@@ -128,17 +129,16 @@ class Usuarios
        	 email = '$this->email',
        	 usuario='$this->usuario',
        	 clave='$this->clave',
-         tipo='$this->tipousuario'
+         tipo='$this->tipo'
         WHERE idusuarios = '$this->idusuarios' ";
      
-        
         $result = $this->db->consulta($query);
 	}
 
 	public function GuardarUsuarioTutorado($sincel)
 	{
-		$sql = "INSERT INTO usuarios (nombre,paterno,materno,fechanacimiento,sexo,celular,email,usuario,tipo,celular2,sincel)
-        VALUES ('$this->nombre','$this->paterno','$this->materno','$this->fecha','$this->sexo','$this->celular','$this->email','$this->usuario','$this->tipo','$this->celular2','$sincel')";
+		$sql = "INSERT INTO usuarios (nombre,paterno,materno,fechanacimiento,sexo,celular,email,usuario,tipo,celular2,sincel,estatus)
+        VALUES ('$this->nombre','$this->paterno','$this->materno','$this->fecha','$this->sexo','$this->celular','$this->email','$this->usuario','$this->tipo','$this->celular2','$sincel','$this->estatus')";
        
 
         $result  = $this->db->consulta($sql);
@@ -171,10 +171,11 @@ class Usuarios
         $result  = $this->db->consulta($sql);
 	}
 
-    public function ActualizarParentesco($parentesco)
+    public function ActualizarParentesco($parentesco,$soysututor,$orden)
     {
           $query = "UPDATE usuariossecundarios SET
-         idparentesco = '$parentesco'
+         idparentesco = '$parentesco',
+         sututor='$soysututor'
         WHERE idusuariotutorado = '$this->idtutorado' ";
 
      
@@ -262,11 +263,15 @@ class Usuarios
 		usuarios.nombre,
 		usuarios.paterno,
 		usuarios.materno,
-		usuarios.idusuarios
+		usuarios.idusuarios,
+        usuarios.celular
+
 		FROM
 		usuarios
 		JOIN usuariossecundarios
-		ON usuarios.idusuarios = usuariossecundarios.idusuariotutorado WHERE usuariossecundarios.idusuariostutor='$this->idusuarios'";
+		ON usuarios.idusuarios = usuariossecundarios.idusuariotutorado WHERE usuariossecundarios.idusuariostutor='$this->idusuarios'
+        AND sincel=1
+        ";
 
 
 		$resp=$this->db->consulta($sql);
@@ -287,6 +292,41 @@ class Usuarios
 		return $array;
 	}
 
+
+public function ObtAsociados()
+    {
+        $sql="SELECT
+        usuarios.nombre,
+        usuarios.paterno,
+        usuarios.materno,
+        usuarios.idusuarios,
+        usuarios.sincel,
+        usuarios.celular
+        FROM
+        usuarios
+        JOIN usuariossecundarios
+        ON usuarios.idusuarios = usuariossecundarios.idusuariotutorado WHERE usuariossecundarios.idusuariostutor='$this->idusuarios'
+        AND sincel=0
+        ";
+
+
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+    }
 
 	public function ObtenerTipo()
 	{
@@ -863,11 +903,12 @@ public function validarUsuarioClienteTokenCel()
         usuarios.paterno,
         usuarios.materno,
         usuarios.idusuarios,
-        usuarios.sexo
+        usuarios.sexo,
+        usuarios.estatus
         FROM
         usuarios
         JOIN usuariossecundarios
-        ON usuarios.idusuarios = usuariossecundarios.idusuariotutorado WHERE usuariossecundarios.idusuariostutor='$this->idusuarios' AND sincel=1";
+        ON usuarios.idusuarios = usuariossecundarios.idusuariotutorado WHERE usuariossecundarios.idusuariostutor='$this->idusuarios' AND sincel=1 AND usuarios.estatus=1 ";
 
        
         $resp=$this->db->consulta($sql);
@@ -890,8 +931,10 @@ public function validarUsuarioClienteTokenCel()
 
     public function VerificarSiesTutorado()
     {
-        $sql="SELECT * FROM usuariossecundarios
-        WHERE usuariossecundarios.idusuariotutorado='$this->idusuarios' ";
+        $sql="SELECT * FROM usuariossecundarios INNER JOIN usuarios ON usuarios.idusuarios=usuariossecundarios.idusuariostutor
+        WHERE usuariossecundarios.idusuariotutorado='$this->idusuarios' 
+            AND sututor=1
+        ";
 
        
         $resp=$this->db->consulta($sql);
@@ -1155,6 +1198,112 @@ public function validarUsuarioClienteTokenCel()
         return $array;
     }
 
+  
+  public function ObtenerCoincidencias($nombre,$paterno,$materno,$celular)
+  {
+     $sql="SELECT* FROM (SELECT 
+        usuarios.idusuarios,
+        CONCAT(usuarios.nombre,' ',usuarios.paterno,' ', usuarios.materno) as nombrecompleto,
+        usuarios.nombre,
+        usuarios.paterno,
+        usuarios.materno,
+        usuarios.celular,
+        usuarios.fechanacimiento,
+        usuarios.sexo,
+        usuarios.email,
+        usuarios.usuario,
+        usuarios.tipo,
+        usuarios.alias
+        FROM usuarios
+         ) as tabla WHERE 1=1 AND tipo=3 ";
+
+         if ($nombre!='') {
+
+            $sql.=" AND 
+            UPPER(tabla.nombre) = UPPER('$nombre') AND  UPPER(tabla.paterno) = UPPER('$paterno') AND  UPPER(tabla.materno) =UPPER('$materno')
+            ";
+         }
+
+         if ($celular!='') {
+            $sql.=" AND tabla.celular LIKE '%%".$celular."%%'"; 
+         }
+
+
+
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+
+                $this->idusuarios=$objeto->idusuarios;
+
+                $verificarsiestutor=$this->VerificarSiesTutor();
+              
+                 $objeto->tutor=0;
+                 $objeto->tutorado=0;
+                if (count($verificarsiestutor)>0) {
+                    $objeto->tutor=1;
+                }
+                if (count($verificarsiestutor)==0) {
+
+                    $verificarsiestutorado=$this->VerificarSiesTutorado();
+                   
+                    if (count($verificarsiestutorado)>0) {
+                        
+                        
+                        $objeto->tutorado=1;
+                        $objeto->tutor=$verificarsiestutorado[0];
+                            
+                        
+
+                        }
+
+                     $array[$contador]=$objeto;
+                         $contador++;
+                   
+                }else{
+
+                      $array[$contador]=$objeto;
+                         $contador++;
+
+                }
+
+
+            } 
+        }
+        
+        return $array;
+  }
+
+   public function VerificarSiesTutor()
+    {
+        $sql="SELECT * FROM usuariossecundarios
+        WHERE  usuariossecundarios.idusuariostutor='$this->idusuarios'  ";
+
+       
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+    }
   
 
 

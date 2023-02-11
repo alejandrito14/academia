@@ -171,10 +171,11 @@ class Usuarios
         $result  = $this->db->consulta($sql);
 	}
 
-    public function ActualizarParentesco($parentesco)
+    public function ActualizarParentesco($parentesco,$soysututor,$orden)
     {
           $query = "UPDATE usuariossecundarios SET
-         idparentesco = '$parentesco'
+         idparentesco = '$parentesco',
+         sututor='$soysututor'
         WHERE idusuariotutorado = '$this->idtutorado' ";
 
      
@@ -862,7 +863,8 @@ public function validarUsuarioClienteTokenCel()
         usuarios.nombre,
         usuarios.paterno,
         usuarios.materno,
-        usuarios.idusuarios
+        usuarios.idusuarios,
+        usuarios.sexo
         FROM
         usuarios
         JOIN usuariossecundarios

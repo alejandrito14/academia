@@ -16,7 +16,7 @@ class MembresiasAsignadas
 	public $fechafinal;
 	public $fechapago;
 	public $pagado;
-
+	public $idusuarios_membresia;
 
 
 	public function ObtenermembresiaActivosAsignados()
@@ -67,7 +67,7 @@ class MembresiasAsignadas
 
 	public function ObtenerAsignacionMembresia()
 	{
-		$sql="SELECT *FROM usuarios_membresia WHERE idmembresia='$this->idmembresia' AND idusuarios='$this->idusuarios'";
+		$sql="SELECT *FROM usuarios_membresia WHERE idmembresia='$this->idmembresia' AND idusuarios='$this->idusuarios' AND usuarios_membresia.estatus=1 AND usuarios_membresia.pagado=1";
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -92,6 +92,7 @@ class MembresiasAsignadas
 		$query = "INSERT INTO usuarios_membresia (idusuarios,idmembresia) VALUES ('$this->idusuarios','$this->idmembresia')";
 
 			$this->db->consulta($query);
+			$this->idusuarios_membresia=$this->db->id_ultimo();
 
 	}
 
@@ -101,6 +102,59 @@ class MembresiasAsignadas
 	
 			$resp=$this->db->consulta($sql);
 			return $resp;
+	}
+
+	public function ConsultarSiTienelamembresia()
+	{
+		$sql="SELECT *FROM usuarios_membresia WHERE idmembresia='$this->idmembresia' AND idusuarios='$this->idusuarios' AND estatus=1";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ActualizarEstatusAsignacion()
+	{
+		$sql="UPDATE usuarios_membresia SET estatus='$this->estatus' WHERE idusuarios_membresia='$this->idusuarios_membresia'";
+		$resp=$this->db->consulta($sql);
+
+
+	}
+
+	public function BuscarFechasArray($arrayfechas,$idmembresia)
+	{
+		$fechas=array();
+		if (count($arrayfechas)>0) {
+			for ($i=0; $i < count($arrayfechas); $i++) { 
+				if ($arrayfechas[$i]->idmembresia==$idmembresia) {
+					
+					array_push($fechas, $arrayfechas[$i]->fecha);
+				}
+			}
+		}
+
+		return $fechas;
+	}
+
+	public function ActualizarFechaAsignacion($fecha)
+	{
+		$fecha=$fecha.' 23:59:59';
+		$sql="UPDATE usuarios_membresia SET fechaexpiracion='$fecha' WHERE idusuarios_membresia='$this->idusuarios_membresia'";
+		$resp=$this->db->consulta($sql);
+
 	}
 
 }

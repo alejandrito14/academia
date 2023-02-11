@@ -30,6 +30,7 @@ try
 	$obterusuario=$usuarios->ObtenerUsuario();
 	
 	$obtenertablero=$lo->ObtenerUsuarioMembresias();
+	//var_dump($obtenertablero);die();
 	$idmembresias="";
 	$obtenerMembresias=array();
 

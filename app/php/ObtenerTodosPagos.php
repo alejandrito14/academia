@@ -12,7 +12,7 @@ require_once("clases/class.Usuarios.php");
 require_once("clases/class.ServiciosAsignados.php"); 
 require_once("clases/class.Servicios.php");
 require_once("clases/class.Usuarios.php");
-
+require_once("clases/class.Membresia.php");
 try
 {
 
@@ -29,6 +29,8 @@ try
 	$servicios->db=$db;
 	$usuarios=new Usuarios();
 	$usuarios->db=$db;
+	$membresia=new Membresia();
+	$membresia->db=$db;
 
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
@@ -46,10 +48,10 @@ try
 		$idusuarios.=','.$tutorados[$i]->idusuarios;
 	}
 	$lo->idusuarios=$idusuarios;
- 
+ 	$usuariosconsulta=$idusuarios;
 	$asignacion->idusuario=$idusuarios;
 
-
+	//var_dump($lo->idusuarios);die();
 	$obtenerservicios=$asignacion->obtenerServiciosAsignadosAceptados();
 	
 	for ($i=0; $i < count($obtenerservicios); $i++) { 
@@ -188,7 +190,11 @@ try
 		}
 	}
 }
-	
+
+	//$lo->idusuarios=$usuarios->idusuarios;
+
+	//var_dump($usuariosconsulta);die();
+	$lo->idusuarios=$usuariosconsulta;
 	$obtenerpagostipotres=$lo->ObtenerPagosTipoDosTres();
 	if (count($obtenerpagostipotres)>0) {
 
@@ -210,6 +216,15 @@ try
 				$fechafinal="";
 				$folio="";
 				$concepto=$obtenerpagostipotres[$i]->concepto;
+
+				if ($tipo==2) {
+					$membresia->idmembresia=$idmembresia;
+					$membresia->idusuarios=$idusuarios;
+					$buscarmembresiaasociada=$membresia->BuscarMembresiaAsociadaalapago();
+
+					$concepto=$concepto.'   Vigencia:'.date('d-m-Y',strtotime($buscarmembresiaasociada[0]->fechaexpiracion));
+
+				}
 			$objeto=array('idusuarios'=>$idusuarios,'idmembresia'=>$idmembresia,'idservicio'=>$idservicio,'tipo'=>$tipo,'monto'=>$montoapagar,'estatus'=>$estatus,'dividido'=>$dividido,'fechainicial'=>$fechainicial,'fechafinal'=>$fechafinal,'concepto'=>$concepto,'folio'=>$folio,'fechaformato'=>'','nombre'=>$datosusuario[0]->nombre,'paterno'=>$datosusuario[0]->paterno,'materno'=>$datosusuario[0]->materno,'idpago'=>$idpago,'aceptados'=>'','alumnos'=>'','completo'=>'',
 				'fechamin'=>'','fechamax'=>''
 			);

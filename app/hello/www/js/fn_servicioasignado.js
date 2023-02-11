@@ -1402,10 +1402,9 @@ html+=`
  							</div>
 	                        `;
 	                    }
+	          if (localStorage.getItem('idtipousuario')==0 ||  localStorage.getItem('idtipousuario')==5) {
 
-	          if (localStorage.getItem('idtipousuario')==0 &&  localStorage.getItem('idtipousuario')==5) {
-
-                     if (respuesta[i].aceptarterminos==0){
+                     if (respuesta[i].aceptarterminos==0 || respuesta[i].pagado==0 ){
 
                    		html+=`<div class="col-50"> 
                         	<button id="" class="button " style="font-size: 26px;color:red;" onclick="CancelarUsuarioServicio(`+respuesta[i].idusuarios+`)">
@@ -2984,9 +2983,9 @@ function CancelarUsuarioServicio(idusuarios) {
 		cache: false,
 		data:datos,
 		success: function(resp){
-				 
-				 ObtenerParticipantesAlumnos();
 
+
+  			ObtenerParticipantesAlumnosAdmin();
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;

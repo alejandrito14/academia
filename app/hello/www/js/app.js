@@ -88,7 +88,7 @@ var app = new Framework7({
 
  var pictureSource;   // picture source
  var destinationType; 
-var produccion = 1;
+var produccion = 0;
 
 var codigoservicio="0";
 $(document).ready(function() {
@@ -443,7 +443,7 @@ if (session==1) {
 
   }
 
-  }, 5000);
+  }, 1000);
 });
 
 $$(document).on('page:init', '.page[data-name="thankyouorder"]', function (e) {
@@ -580,18 +580,7 @@ $$(document).on('page:init', '.page[data-name="home"]', function (e) {
 
        });
     
-     var promesa2=getConfiguracion();
-    promesa2.then(r => {
     
-        var btnayuda=r.respuesta.botonayuda;
-       
-        if (btnayuda==1) {
-
-            $(".btnayuda").css('display','block');
-
-          }
-    });
-      
 /*
     var promesa=getConfiguracion();
     promesa.then(r => {
@@ -623,6 +612,8 @@ $$(document).on('page:init', '.page[data-name="homeadmin"]', function (e) {
   CargarFoto();
   CargarDatosAdmin();
   localStorage.setItem('valorlistado',0);
+  localStorage.setItem('buscadorvalor','');
+  localStorage.setItem('v_categoriasvalor',0);
 
   var pregunta=localStorage.getItem('pregunta');
 
@@ -760,6 +751,21 @@ var tipoUsuario=localStorage.getItem('tipoUsuario');
 
   VerificarAsociacion();
   });
+
+
+  var promesa2=getConfiguracion();
+    promesa2.then(r => {
+    
+        var btnayuda=r.respuesta.botonayuda;
+       
+        if (btnayuda==1) {
+
+            $(".btnayuda").css('display','block');
+            $$(".btnayuda").attr('onclick','AbrirModalAyuda()');
+
+          }
+    });
+      
 
 
 })
@@ -981,28 +987,131 @@ $(".spanvisible").attr('onclick',"LimpiarElemento('v_clave')");
 
 
 $$(document).on('page:init', '.page[data-name="registrotutorados"]', function (e) {
-
+localStorage.setItem('registro',1);
   ObtenerTutorados();
+});
+
+$$(document).on('page:init', '.page[data-name="registroasociados"]', function (e) {
+localStorage.setItem('registro',2);
+
+  ObtenerAsociados();
 });
 
 $$(document).on('page:init', '.page[data-name="nuevotutorado"]', function (e) {
    var id=-1;
+
+
    $("#v_idtu").val(id);
 ObtenerParentesco();
 /*      $("#tituloventana").html('Nuevo <span style="color: #0abe68;">tutorado</span>');
 */
+
+    $("#inputtutor").attr('checked',true);
+    $("#inputsincelular").attr('checked',true);
+    $("#lisincelular").css('display','none');
+     $(".licelulartu").css('display','none');
+
+      var fecha=new Date();
+    var dia=fecha.getDate()<10?'0'+fecha.getDate():fecha.getDate();
+    var mes=(fecha.getMonth() + 1)<10?'0'+(fecha.getMonth() + 1):(fecha.getMonth() + 1);
+    var anio=fecha.getFullYear();
+    var fechaactualdata=anio+'-'+ mes+'-'+dia;
+
+    $("#v_fechatu").val(fechaactualdata);
+  
+
+    if (localStorage.getItem('idtutorado')!='' && localStorage.getItem('idtutorado')!=undefined) {
+    
+      var id=localStorage.getItem('idtutorado');
+      $("#v_idtu").val(id);
+      Habilitar();
+      Obtenerdatostutorado(id);
+      $("#tituloventana").html('Editar <span style="color: #0abe68;">tutorado</span>');
+      $("#btncancelartuto").css('display','none');
+      $("#mensajevalidacion").html('');
+    }else{
+
+    
+     $(".lifechanacimientotu").css('display','none');
+     $(".lisexotu").css('display','none');
+     $(".liparentescotu").css('display','none');
+     $(".mostrar").css('display','none');
+    }
+         
+  $("#inputtutor").attr('onchange','SoyTutor()');
+  $("#inputsincelular").attr('onchange','SinCelular()');
+  
+          var v=$("#v_idtu").val();
+
+          if (v=='' || v==-1) {
+            
+           $$('#btnguadartuto').attr('onclick','GuardarTutoradoForm(-1)');
+
+          }else{
+          $$('#btnguadartuto').attr('onclick','GuardarTutoradoForm('+v+')');
+
+          }
+phoneFormatter('v_celulartu');
+
+/*$("#inputsincelular").attr('onchange','SinCelular()');
+*/
+
+$("#v_paternotu").attr('onblur','QuitarEspacios(this)');
+$("#v_maternotu").attr('onblur','QuitarEspacios(this)');
+
+  $("#inputpregunta").attr('onchange','ActivarBusqueda()');
+
+
+  $("#btnvalidartuto").attr('onclick','ValidarNombreAlumno()');
+  $("#btncancelartuto").attr('onclick','DeshacerAccion()');
+
+  var registro=localStorage.getItem('registro');
+      if (registro==1) {
+
+        $(".btnregreso").attr('href','/registrotutorados/');
+       // GoToPage('registrotutorados');
+      }else{
+        $(".btnregreso").attr('href','/registroasociados/');
+
+        //GoToPage('registroasociados');
+      }
+
+
+});
+
+$$(document).on('page:init', '.page[data-name="nuevoasociado"]', function (e) {
+   var id=-1;
+   $("#v_idtu").val(id);
+  ObtenerParentesco();
+  OcultarCampos();
+
+    var fecha=new Date();
+    var dia=fecha.getDate()<10?'0'+fecha.getDate():fecha.getDate();
+    var mes=(fecha.getMonth() + 1)<10?'0'+(fecha.getMonth() + 1):(fecha.getMonth() + 1);
+    var anio=fecha.getFullYear();
+    var fechaactualdata=anio+'-'+ mes+'-'+dia;
+
+    $("#v_fechatu").val(fechaactualdata);
+
     if (localStorage.getItem('idtutorado')!='' && localStorage.getItem('idtutorado')!=undefined) {
     
       var id=localStorage.getItem('idtutorado');
       $("#v_idtu").val(id);
 
       Obtenerdatostutorado(id);
-      $("#tituloventana").html('Editar <span style="color: #0abe68;">tutorado</span>');
+       MostrarCampos();
+       $("#mensajevalidacion").html('');
+       $("#btnvalidartuto").css('display','none');
+       $("#btncancelaraso").css('display','none');
+       $("#tituloventana").html('Editar <span style="color: #0abe68;">asociado</span>');
     }
          
   $("#inputtutor").attr('onchange','SoyTutor()');
   $("#inputsincelular").attr('onchange','SinCelular()');
 
+  $("#inputcelular").attr('onchange','ElegirTipoBusqueda1()');
+  $("#inputcodigo").attr('onchange','ElegirTipoBusqueda2()');
+  $("#btnvalidartuto").attr('onclick','ValidarCelCodigo()');
           var v=$("#v_idtu").val();
 
           if (v=='' || v==-1) {
@@ -1017,15 +1126,17 @@ phoneFormatter('v_celulartu');
 
 $("#inputsincelular").attr('onchange','SinCelular()');
 
-$("#v_celulartu").attr('onkeyup','ValidarCampo(this);BuscarUsuario();');
-$("#v_nombretu").attr('onblur','QuitarEspacios(this)');
 
 $("#v_paternotu").attr('onblur','QuitarEspacios(this)');
 $("#v_maternotu").attr('onblur','QuitarEspacios(this)');
 
+  $("#inputpregunta").attr('onchange','ActivarBusqueda()');
 
+
+  $("#btncancelaraso").attr('onclick','OcultarCampos()');
 
 });
+
 
 
 $$(document).on('page:init', '.page[data-name="forgotpassword"]', function (e) {
@@ -1350,11 +1461,11 @@ $$(document).on('page:init', '.page[data-name="servicios"]', function (e) {
 });
 $$(document).on('page:init', '.page[data-name="serviciosregistrados"]', function (e) {
   regresohome();
-  myStopFunction(identificadorDeTemporizador);
+  //myStopFunction(identificadorDeTemporizador);
 
   
  $(".v_buscador").attr('onkeyup','BuscarEnLista(".v_buscador",".list-item")');
-  $(".limpiarspan").attr('onclick','LimpiarResultado(".list-item")');
+  $(".limpiarspan").attr('onclick','LimpiarResultado2()');
 
 
  ObtenerServiciosRegistrados().then(r => {
@@ -1362,9 +1473,24 @@ $$(document).on('page:init', '.page[data-name="serviciosregistrados"]', function
       $("#filtrocoach").css('display','block');
       $(".v_coach").attr('onchange','FiltrarServicios()');
        localStorage.setItem('pantalla','serviciosregistrados');
+      $("#filtrocategorias").css('display','block');
+      $("#filtro").css('display','block');
+ 
+       
+      $(".buscador").attr('onkeyup','FiltroBuscador()');
 
-        ObtenerCoachesFiltro();
+
+        $("#v_categorias").attr('onchange','FiltroServiciosCat()');
+
+        
+       }).then(r => {
+
+         ObtenerCategoriasFiltro();
+
        });
+       
+
+       
     
 
 

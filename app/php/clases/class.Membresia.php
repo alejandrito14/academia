@@ -243,7 +243,7 @@ class Membresia
 			$sql.=" AND idmembresiadepende='$idmembresiapadre'";
 		}
 		$sql.=" ORDER BY orden";
-		
+
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -289,7 +289,7 @@ class Membresia
 	public function buscarMembresiaUsuario()
 	{
 		$sql="SELECT *
-		FROM usuarios_membresia WHERE idmembresia='$this->idmembresia' AND idusuarios='$this->idusuarios' AND estatus IN (0,1) AND fechaexpiracion IS NULL";
+		FROM usuarios_membresia WHERE idmembresia='$this->idmembresia' AND idusuarios='$this->idusuarios' AND estatus IN (0,1)";
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -458,8 +458,7 @@ class Membresia
 		$query="UPDATE usuarios_membresia 
 		SET pagado='$this->pagado',
 		renovacion='$this->renovacion',
-		estatus='$this->estatus',
-		fechaexpiracion='$this->fechaexpiracion'
+		estatus='$this->estatus'
 		WHERE idusuarios_membresia='$this->idusuarios_membresia'";
 		$resp=$this->db->consulta($query);
 	}
@@ -487,12 +486,40 @@ class Membresia
 		return $array;
 	}
 
-	public function ObtenerUsuariosMembresia($fechaactual)
+	public function ObtenerUsuariosMembresia($fechaactual,$idusuario)
 	{
-		$sql="SELECT *
+		/*$sql="SELECT *
 		FROM usuarios_membresia
 		INNER JOIN membresia ON usuarios_membresia.idmembresia=usuarios_membresia.idmembresia
-		 WHERE  usuarios_membresia.estatus=1 and usuarios_membresia.fechaexpiracion<='$fechaactual'";
+		 WHERE  usuarios_membresia.estatus=1 and usuarios_membresia.fechaexpiracion<='$fechaactual'";*/
+		 $sql="SELECT
+			usuarios_membresia.idusuarios_membresia,
+			usuarios_membresia.idusuarios,
+			usuarios_membresia.idmembresia,
+			usuarios_membresia.fecha,
+			usuarios_membresia.estatus,
+			usuarios_membresia.pagado,
+			membresia.titulo,
+			usuarios.paterno,
+			usuarios.nombre,
+			usuarios.materno,
+			membresia.costo,
+			membresia.orden,
+			membresia.porcategoria,
+			membresia.porservicio,
+			membresia.color,
+			membresia.limite
+			FROM
+			usuarios_membresia
+			LEFT JOIN membresia
+			ON usuarios_membresia.idmembresia = membresia.idmembresia 
+			JOIN usuarios
+			ON usuarios_membresia.idusuarios = usuarios.idusuarios
+			WHERE usuarios_membresia.estatus=1 AND usuarios_membresia.pagado=1
+
+			AND usuarios_membresia.fechaexpiracion<='2023-03-01 00:00:01'
+			";
+
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -553,6 +580,30 @@ class Membresia
 			INNER JOIN membresia ON usuarios_membresia.idmembresia=membresia.idmembresia
 		 WHERE idusuarios='$this->idusuarios'AND idmembresia='$this->idmembresia' AND estatus=2 ";
 	
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function BuscarMembresiaAsociadaalapago()
+	{
+		$sql="SELECT *
+		FROM usuarios_membresia WHERE idmembresia='$this->idmembresia' AND idusuarios='$this->idusuarios' AND estatus IN (0)";
+		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 

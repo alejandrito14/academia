@@ -86,9 +86,9 @@ function ObtenerMembresiasporasignar() {
 		},
 	  success:function(msj){
 		 
-	  		var Membresias=msj.membresias;
+	  		var membresias=msj.membresias;
 	  		var Membresiasasignados=msj.membresiasasignados;
-	  		PintarMembresias(Membresias);
+	  		PintarMembresias(membresias);
 	  		PintarAsignadosMembresias(Membresiasasignados);
 			 			
 			}
@@ -98,7 +98,7 @@ function ObtenerMembresiasporasignar() {
 
 function PintarMembresias(respuesta) {
 	var html="";
-	if (respuesta.length>0) {
+	if(respuesta.length > 0) {
 
 		for (var i = 0; i < respuesta.length; i++) {
 			html+=`
@@ -153,13 +153,21 @@ $("#membresiasdescripcion").html(html2);
 function GuardarAsignacionMembresia() {
 
 	var idMembresias=[];
+	var idMembresiasCancelar=[];
 	 $("#lstBox2 option").each(function(){
     
        idMembresias.push($(this).val());
 
      });
+
+
+      $("#lstBox1 option").each(function(){
+       idMembresiasCancelar.push($(this).val());
+
+     });
+
 	 if (alumnoseleccionado>0) {
-     var datos="idusuario="+alumnoseleccionado+"&idmembresias="+idMembresias+"&membresiaseleccionada="+JSON.stringify(membresiaseleccionada);
+     var datos="idusuario="+alumnoseleccionado+"&idmembresias="+idMembresias+"&membresiaseleccionada="+JSON.stringify(membresiaseleccionada)+"&idMembresiasCancelar="+JSON.stringify(idMembresiasCancelar);
 
 	$.ajax({
 		url:'catalogos/asignarmembresias/GuardarAsignacionMembresia.php', //Url a donde la enviaremos
@@ -176,7 +184,8 @@ function GuardarAsignacionMembresia() {
 			//aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
 		},
 	  success:function(msj){
-		 ObtenerMembresiasporasignar();
+	  	membresiaseleccionada=[];
+		ObtenerMembresiasporasignar();
 		AbrirNotificacion("SE REALIZARON LOS CAMBIOS CORRECTAMENTE","mdi-checkbox-marked-circle ")
 		$("#botones").css('display','none');		
 			}
@@ -214,6 +223,7 @@ function VerificarMembresia(idmembresia) {
 }
 
 function AbrirModalFormulario() {
+	$(".divfecha").html('');
 	var selectObject =document.getElementById("lstBox1");
  	
     for (var i = 0; i < selectObject.options.length; i++) {
@@ -244,31 +254,44 @@ function AgregarMembresia() {
 
 
 	 var fecha=$("#v_fecha").val();
-	 var numerodias=$("#v_numerodias").val();
+	/* var numerodias=$("#v_numerodias").val();
 	 var repetir=$("#v_repetir").val();
-	 var idmembresia=$("#inputmembresiaselec").val();
+	 */var idmembresia=$("#inputmembresiaselec").val();
 	 var bandera=1;
-	 if (fecha=='') {
-	 	bandera=0;
-	 }
 
-	 if (numerodias=='') {
+	var cantidadfecha=$(".v_fecha").length;
+
+	if (cantidadfecha>0) {
+		bandera=1;
+	}
+
+	 if (bandera==1) {
+
+	 $(".v_fecha").each(function( index ) {
+
+			var objeto={
+	 			fecha:$(this).val(),
+	 			idmembresia:idmembresia
+	 		};
+	 	membresiaseleccionada.push(objeto);
+
+
+		});
+	 /*if (fecha=='') {
+	 	bandera=0;
+	 }*/
+
+	 /*if (numerodias=='') {
 	 	bandera=0;
 	 }
 	 if (repetir=='') {
 	 	bandera=0;
-	 }
-	 if (bandera==1) {
+	 }*/
+	 
 	 	$('select').moveToListAndDelete('#lstBox1', '#lstBox2');
 
-	 		var objeto={
-	 			fecha:fecha,
-	 			numerodias:numerodias,
-	 			repetir:repetir,
-	 			idmembresia:idmembresia
-	 		};
+	 		
 
-	      membresiaseleccionada.push(objeto);
 	      	 $("#mymodal").modal('hide');
 	      	 $("#botones").css('display','block');
 	      console.log(membresiaseleccionada);
@@ -326,4 +349,25 @@ function BorrarAsignacionmembresia() {
 			membresiaseleccionada.splice(i,1);
 		}
 	}
+}
+
+function AgregarFechas() {
+
+	var contador=$(".v_fecha").length+1;
+	var html="";
+	html+=`
+	<div class="fechas" id="fe_`+contador+`" style="margin-bottom: 1em;">
+	 <div style="width: 90%;float: left;">
+	<input type="date" class="form-control v_fecha" id="v_fecha" name="v_fecha" value="" title="Fecha" placeholder='Fecha'>
+		</div>
+
+		 <button class="btn btn_rojo" style="    width: 10%;" onclick="EliminarFechas(`+contador+`)">-</button>
+		</div>
+	`;
+
+	$(".divfecha").append(html);
+}
+
+function EliminarFechas(idcontador) {
+	$("#fe_"+idcontador).remove();
 }

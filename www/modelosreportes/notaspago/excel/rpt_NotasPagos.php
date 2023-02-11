@@ -214,6 +214,8 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 		   	<th style="width: 20%;">TOTAL</th>
 			<th style="width: 20%;">TIPO DE PAGO</th>
 		   	<th style="width: 20%;">CUENTA DE PAGO</th>
+		   	<th style="">FECHA DE ACEPTACIÓN</th>
+
 
 		  </tr>
 		  </thead>
@@ -252,11 +254,13 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 
 						$ivacalculado=$preciototal-$precioiva;
 
+						
 
 		 				$total=$obtenerdescripcionnota[$j]->monto-$descuento;
 		 				$objeto=array(
 		 					'folioticket'=>$array[$k]->folio,
 		 					'fechahora'=>$array[$k]->fecha,
+		 					'fechaaceptacion'=>$obtenerpago[0]->fechapago,
 		 					'idcliente'=>$array[$k]->idusuarios,
 		 					'nombrecliente'=>$array[$k]->nombre.' '.$array[$k]->paterno.' '.$array[$k]->materno,
 		 					'cantidad'=>$obtenerdescripcionnota[$j]->cantidad,
@@ -299,7 +303,13 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 							<td><?php echo $arraynotas[$n]['tipopago']; ?></td>
 							<td><?php echo $arraynotas[$n]['cuenta']; ?></td>
 							
-							
+							<td><?php
+
+							if ($arraynotas[$n]['fechaaceptacion']!=null) {
+									echo date('d-m-Y H:i:s',strtotime($arraynotas[$n]['fechaaceptacion']));
+								}
+
+							  ?></td>
 							</tr>
 							
 		 		

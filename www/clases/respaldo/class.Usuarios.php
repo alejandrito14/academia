@@ -317,7 +317,7 @@ class Usuarios
 	{
 		
 		$sql="SELECT *FROM usuarios WHERE idusuarios='$this->id_usuario'";
-	
+		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -796,6 +796,116 @@ class Usuarios
     }
 
 
+    	public function ObtenerMonedero()
+	{
+		$sql="SELECT *from monedero WHERE idusuarios=$this->id_usuario";
+
+		$lista = $this->db->consulta($sql);
+		return $lista;
+	}
+
+	
+    public function ObtenerUsuarioDependencia()
+    {
+    	 $sql = "SELECT * FROM usuariossecundarios
+        WHERE idusuariotutorado='$this->idusuarios'";
+
+        $resp = $this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+        $array    = array();
+        $contador = 0;
+        if ($cont > 0) {
+
+            while ($objeto = $this->db->fetch_object($resp)) {
+
+                $array[$contador] = $objeto;
+                $contador++;
+            }
+        }
+        return $array;
+    }
+
+    public function lista_UsuariosMembresia($tipo)
+	{
+		$sql = "SELECT * FROM usuarios INNER JOIN tipousuario ON usuarios.tipo=tipousuario.idtipousuario 
+		INNER JOIN usuarios_membresia ON usuarios.idusuarios=usuarios_membresia.idusuarios
+		WHERE tipo IN($tipo)";
+		
+		$resp = $this->db->consulta($sql);
+		return $resp;
+	}
+
+
+
+	public function ObtTodosUsuariosFiltro($valor)
+	{
+		$sql = "SELECT * FROM usuarios WHERE tipo = '$valor'";
+		
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+
+
+	public function ObtenerAsociados()
+	{
+		$sql = "SELECT * FROM usuariossecundarios 
+			INNER JOIN usuarios ON usuariossecundarios.idusuariotutorado=usuarios.idusuarios WHERE idusuariostutor='$this->id_usuario'
+			";
+		
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+
+
+	public function ObtenerTutor()
+	{
+		$sql = "SELECT * FROM usuariossecundarios 
+			INNER JOIN usuarios ON usuariossecundarios.idusuariostutor=usuarios.idusuarios WHERE idusuariotutorado='$this->id_usuario'
+			";
+		
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
 
 }
 

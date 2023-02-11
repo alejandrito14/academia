@@ -109,7 +109,7 @@ class Servicios
 	}
 
 
-	public function ObtenerServiciosAdmin()
+	public function ObtenerServiciosAdmin($idcategorias,$v_coach)
 	{
 		$sql="SELECT
 		servicios.idservicio,
@@ -135,9 +135,19 @@ class Servicios
 		FROM
 		servicios
 		JOIN categorias
-		ON categorias.idcategorias = servicios.idcategoriaservicio WHERE categorias.avanzado=1 and servicios.validaradmin=1 and servicios.estatus=1
-		ORDER BY
+		ON categorias.idcategorias = servicios.idcategoriaservicio WHERE categorias.avanzado=1 and servicios.validaradmin=1 and servicios.estatus=1 
+
+		";
+
+		if ($idcategorias>0) {
+			$sql.=" AND categorias.idcategorias IN($idcategorias)";
+		}
+
+
+
+		$sql.=" ORDER BY
 		servicios.orden ASC";
+
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -1214,7 +1224,7 @@ public function Eliminardeencuestas()
 	public function GuardarCancelacion()
 	{
 		$sql="UPDATE servicios SET
-		cancelacion=1,
+		canceladoservicio=1,
 		motivocancelacion='$this->motivocancelacion',
 		fechacancelacion='$this->fechacancelacion',
 		usuariocancela='$this->usuariocancela',

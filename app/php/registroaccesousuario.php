@@ -121,7 +121,8 @@ try
     $nombretipousuario="";
     $nombre="";
     $paterno="";
-
+    $lo->tipo=3;
+    $lo->tipousuario=3;
     if ($validar == 0) {
 
         $lo->ActualizarUsuarioAcceso();

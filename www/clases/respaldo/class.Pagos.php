@@ -413,9 +413,8 @@ class Pagos
 			$sql = "SELECT * FROM pagos WHERE pagado=1 AND
 			  idservicio='$this->idservicio' AND idusuarios='$this->idusuarios'
 			  AND fechainicial='$this->fechainicial' AND fechafinal='$this->fechafinal'
-			   $sqlfecha  ORDER BY idpago ";
+			  ORDER BY idpago ";
 
-			
 			$resp = $this->db->consulta($sql);
 			$cont = $this->db->num_rows($resp);
 
@@ -461,7 +460,7 @@ class Pagos
 				$resp3=$this->db->consulta($sql3);
 				$rowdescuentomembresia=$this->db->fetch_assoc($resp3);
 
-				$montodescontar2=$rowdescuentomembresia['montoadescontar'];
+				$montodescontar2=$rowdescuentomembresia['montodescontar'];
 
 				//echo $objeto->monto.'-'.$montodescontar1.'-'.$montodescontar2;die();
 				$resta=$objeto->monto-$montodescontar1-$montodescontar2;

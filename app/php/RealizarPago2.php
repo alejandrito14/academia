@@ -499,7 +499,7 @@ try {
                    $dias=$obtenermembresia[0]->cantidaddias;
                    $date = date("d-m-Y");
                    $mod_date = strtotime($date."+ ".$dias." days");
-                   $membresia->fechaexpiracion= date("Y-m-d",$mod_date).' 23:59:59';
+                   $membresia->fechaexpiracion='';
 
                  
                    $membresia->renovacion=0;
@@ -524,6 +524,10 @@ try {
                       $membresia->CrearRegistroMembresiaUsuario();
                    }
 
+                   if ($campomonto==1) {
+                     $membresia->pagado=0;
+                    }
+ 
                   $membresia->ActualizarEstatusMembresiaUsuarioPagado();
 
           	   }
