@@ -618,6 +618,52 @@ class Pagos
 	}
 
 
+
+
+	public function ObtenerPagoSoloDescuento()
+	{
+		$sql="SELECT *FROM pagos WHERE idpago='$this->idpago'";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+				$resta=0;
+
+				$sql2="SELECT SUM(montoadescontar) as montodescontar FROM pagodescuento WHERE idpago='$objeto->idpago'";
+
+				$resp2=$this->db->consulta($sql2);
+
+				$rowdescuento=$this->db->fetch_assoc($resp2);
+				$montodescontar1=$rowdescuento['montodescontar'];
+
+				
+
+				//echo $objeto->monto.'-'.$montodescontar1.'-'.$montodescontar2;die();
+				$resta=$objeto->monto-$montodescontar1;
+			
+
+			
+				$objeto->montocondescuento=$resta;
+				$objeto->descuento=$montodescontar1;
+				$objeto->descuentomembresia=0;
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+
+
 }
 
  ?>

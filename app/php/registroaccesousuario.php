@@ -82,7 +82,7 @@ try
     /*$lo->nivel    = $nivel;
     $lo->posicion = $posicion;*/
     $lo->curp     = "";
-    $lo->estatus  = 0;
+    $lo->estatus  = 1;
 
   /*  $lo->v_codigopostal = $v_codigopostal;
     $lo->v_pais         = $v_pais;

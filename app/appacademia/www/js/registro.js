@@ -2485,7 +2485,7 @@ function AlumnosSecundarios(argument) {
 }
 
 /*Modal registro tutorados*/
-function AbrirModalRegistroTutorados() {
+function AbrirModalRegistroTutorados(variable,objeto) {
 	
 	
 var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: none;">
@@ -2824,6 +2824,11 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
     			}else{
     			$$('#btnguadartuto').attr('onclick','GuardarTutorado('+v+')');
 
+    			}
+
+    			if (variable==1) {
+
+    				
     			}
 
     			

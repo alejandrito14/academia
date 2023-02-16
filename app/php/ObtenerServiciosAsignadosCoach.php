@@ -40,7 +40,14 @@ try
 	$idusuario=$_POST['idusuario'];
 	$calificacion->idusuario=$idusuario;
 	$lo->idusuario=$idusuario;
-	$obtenerservicios=$lo->obtenerServiciosAsignadosCoach();
+	$vcategoria=0;
+	if (isset($_POST['vcategoria'])) {
+		$vcategoria=$_POST['vcategoria'];
+	}
+
+	$obtenerservicios=$lo->obtenerServiciosAsignadosCoach($vcategoria);
+
+
 
 	for ($i=0; $i <count($obtenerservicios) ; $i++) { 
 		

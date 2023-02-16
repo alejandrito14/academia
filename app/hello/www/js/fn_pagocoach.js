@@ -1,4 +1,6 @@
 function ListadoPagosCoachLista() {
+      $(".listadopagos").html('');
+
 	var pagina = "ObtenerTodosPagosCoach.php";
 	var id_user=localStorage.getItem('idcoach');
 	var datos="id_user="+id_user;
@@ -27,6 +29,8 @@ function ListadoPagosCoachLista() {
 		});
 }
 function ListadoPagosCoach() {
+    $(".listadopagos").html('');
+
 	var pagina = "ObtenerTodosPagosCoach.php";
 	var id_user=localStorage.getItem('id_user');
 	var datos="id_user="+id_user;
@@ -85,7 +89,7 @@ function PintarpagosCoach(pagos) {
         sumatotalcoach=0;
         sumatotalcoachpagado=0;
       	html=`
-      		<div class="row margin-bottom margin-top ">
+      		<div class="row margin-bottom margin-top pservicio_`+pagos[i].idservicio+`" id="pservicio_`+pagos[i].idservicio+`" >
                 <div class="col">
                 <h5 class="title" style="margin-left: -0.5em;">
               `+pagos[i].concepto+`
@@ -98,7 +102,7 @@ function PintarpagosCoach(pagos) {
                 <div class="col-auto align-self-center">
                 </div>
               </div>
-             	<div class="row">
+             	<div class="row pservicio_ pservicio_`+pagos[i].idservicio+`" id="pservicio1_`+pagos[i].idservicio+`">
 		             	<div class="col-100" style="background:white;">
 		               	<input type="text" style="width: 5%;float: left;color: black!important;" class="canti_`+pagos[i].idservicio+`" value="0" disabled>
 		               		<span style="line-height: 2.6;">alumno (s)</span>
@@ -108,7 +112,7 @@ function PintarpagosCoach(pagos) {
              	</div>
 
              	</div>
-               <ul class=" list media-list no-margin pagos_`+pagos[i].idservicio+`" style="list-style: none;background: white;">
+               <ul class=" list media-list no-margin pservicio_ pservicio_`+pagos[i].idservicio+` pagos_`+pagos[i].idservicio+`" style="list-style: none;background: white;">
         
                 </ul>
 
@@ -132,7 +136,7 @@ function PintarpagosCoach(pagos) {
       }
       var usuario=pagos[i].corresponde[0].nombre+' '+pagos[i].corresponde[0].paterno;
       html=`
-        <li class="list-item pago_`+pagos[i].idnotapago+`">
+        <li class="list-item pservicio_ pago_`+pagos[i].idnotapago+`" id="pago_`+pagos[i].idnotapago+`">
                     <div class="row">
                         <div class="col-70">
                             
@@ -404,7 +408,7 @@ function PintarListaCoaches(respuesta) {
 	if (respuesta.length>0) {
 
 		html+=`
-			<div style="list-style: none;height: 15em; overflow: scroll;">
+			<div style="list-style: none; overflow: scroll;">
 		`;
 		for (var i = 0; i <respuesta.length; i++) {
 
@@ -704,3 +708,66 @@ function Pintartipodepagos2(opciones,tipodepagoseleccionado) {
 
 
   }
+
+function BuscarEnListaPagos() {
+  var buscador=$(".v_buscador").val();
+  var pagina = "ObtenerTodosPagosCoach.php";
+  var id_user=localStorage.getItem('idcoach');
+  var datos="id_user="+id_user+"&buscador="+buscador;
+  $(".listadopagos").html('');
+  $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+    crossDomain: true,
+    cache: false,
+    data:datos,
+    async:false,
+    success: function(respuesta){
+
+      var pagos=respuesta.respuesta;
+      PintarpagosCoach(pagos);
+
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+            if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+            if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+          console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+      }
+
+    });
+}
+
+function ListadoPagosCoachListaBuscar() {
+    var buscador=$(".v_buscador1").val();
+  $(".listadopagos").html('');
+
+  var pagina = "ObtenerTodosPagosCoach.php";
+  var id_user=localStorage.getItem('idcoach');
+  var datos="id_user="+id_user+"&buscador="+buscador;
+  $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+    crossDomain: true,
+    cache: false,
+    data:datos,
+    async:false,
+    success: function(respuesta){
+
+      var pagos=respuesta.respuesta;
+      PintarpagosCoach(pagos);
+
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+            if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+            if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+          console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+      }
+
+    });
+}

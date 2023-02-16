@@ -88,12 +88,12 @@ var app = new Framework7({
 
  var pictureSource;   // picture source
  var destinationType; 
-var produccion = 0;
+var produccion = 1;
 
 var codigoservicio="0";
 $(document).ready(function() {
 
-    if (produccion == 0) {
+  if (produccion == 0) {
       codigoservicio='106';
 
     }else{
@@ -138,7 +138,7 @@ $(document).ready(function() {
 
 var lhost = "localhost:8888";
 var rhost = "issoftware1.com.mx";
-var version='1.0.21';
+var version='1.0.22';
 
 localStorage.setItem('versionapp',version);
 var abrir=0;
@@ -614,7 +614,7 @@ $$(document).on('page:init', '.page[data-name="homeadmin"]', function (e) {
   localStorage.setItem('valorlistado',0);
   localStorage.setItem('buscadorvalor','');
   localStorage.setItem('v_categoriasvalor',0);
-
+  localStorage.setItem('v_coachvalor',0);
   var pregunta=localStorage.getItem('pregunta');
 
     if (pregunta==0) {
@@ -665,7 +665,8 @@ $$(document).on('page:init', '.page[data-name="homecoach"]', function (e) {
   Cargarperfilfoto();
   CargarFoto();
   //$$(".iniciotab").attr('onclick','CargarInicio()');
- 
+  localStorage.setItem('categoriavalor',0);
+  localStorage.setItem('buscadorvalor','');
   CargarDatosCoach();
   var pregunta=localStorage.getItem('pregunta');
 
@@ -745,6 +746,7 @@ var tipoUsuario=localStorage.getItem('tipoUsuario');
   $$('#btncerrarsesion').attr('onclick','salir_app()')
   $$("#datosacceso").attr('onclick','Datosacceso()');
   $$(".badgefoto").attr('onclick','AbrirModalFoto()');
+  $$('#btncambiaralias').css('display','none');
   $$('#btncambiaralias').attr('onclick','AbrirModalAlias()')
   $$("#btnmembresia").attr('onclick','GoToPage("membresiaactiva")');
   $$("#btneliminarcuenta").attr('onclick','EliminarCuenta()');
@@ -819,6 +821,7 @@ $$(document).on('page:init', '.page[data-name="registrofoto"]', function (e) {
   $$('#v_alias').attr('onfocus',"Cambiar(this)");
   $$('#v_alias').attr('onblur',"Cambiar2(this);QuitarEspacios(this);");
   $$('.regreso').attr('onclick',"RegresarInicio()");
+  $$('#v_alias').attr('onkeyup','ValidarAlias()');
 
 });
 
@@ -1082,7 +1085,7 @@ $("#v_maternotu").attr('onblur','QuitarEspacios(this)');
 $$(document).on('page:init', '.page[data-name="nuevoasociado"]', function (e) {
    var id=-1;
    $("#v_idtu").val(id);
-  ObtenerParentesco();
+  ObtenerParentesco(0);
   OcultarCampos();
 
     var fecha=new Date();
@@ -1465,13 +1468,13 @@ $$(document).on('page:init', '.page[data-name="serviciosregistrados"]', function
 
   
  $(".v_buscador").attr('onkeyup','BuscarEnLista(".v_buscador",".list-item")');
-  $(".limpiarspan").attr('onclick','LimpiarResultado2()');
+  $(".limpiarspan").attr('onclick','LimpiarResultado3()');
 
 
  ObtenerServiciosRegistrados().then(r => {
         
       $("#filtrocoach").css('display','block');
-      $(".v_coach").attr('onchange','FiltrarServicios()');
+      $(".v_coach").attr('onchange','FiltroServiciosCoach()');
        localStorage.setItem('pantalla','serviciosregistrados');
       $("#filtrocategorias").css('display','block');
       $("#filtro").css('display','block');
@@ -1481,12 +1484,41 @@ $$(document).on('page:init', '.page[data-name="serviciosregistrados"]', function
 
 
         $("#v_categorias").attr('onchange','FiltroServiciosCat()');
-
+ 
         
        }).then(r => {
 
          ObtenerCategoriasFiltro();
+         ObtenerCoachesFiltro();
 
+         if (localStorage.getItem('v_categoriasvalor')!=undefined) {
+            
+              var valorlistado=localStorage.getItem('v_categoriasvalor');
+              $(".v_categorias").val(valorlistado);
+              FiltroServiciosCat();
+          
+          
+         
+             }
+
+        
+       }).then(r=>{
+
+
+         if (localStorage.getItem('v_coachvalor')!=undefined) {
+            
+              var valorlistado=localStorage.getItem('v_coachvalor');
+              $(".v_coach").val(valorlistado);
+                           FiltroServiciosCoach();
+         
+             }
+
+
+          
+
+       }).then(r=>{
+
+        
        });
        
 
@@ -1731,18 +1763,34 @@ $$(document).on('page:init', '.page[data-name="serviciosasignados"]', function (
 
 
   if (localStorage.getItem('idtipousuario')==3) {
-  
+        $("#filtrocategorias").css('display','none');
+   $(".v_buscador").attr('onkeyup','BuscarEnLista(".v_buscador",".list-item")');
+  $(".limpiarspan").attr('onclick','LimpiarResultado(".list-item")');
+
       ObtenerServiciosAsignados();
    }
    if (localStorage.getItem('idtipousuario')==5){
       
+      $("#filtrocategorias").css('display','block');
+      $(".v_categorias").attr('onchange','FiltroCategoriasCoach()');
      ObtenerServiciosAsignadosCoach();
+     ObtenerCategoriasFiltro();
+   if (localStorage.getItem('v_categoriasvalor')!=undefined) {
+            
+              var valorlistado=localStorage.getItem('categoriavalor');
+              $(".v_categorias").val(valorlistado);
+              FiltroCategoriasCoach();
+          
+          
+         
+             }
 
+
+     $(".v_buscador").attr('onkeyup','BuscardorServicio()');
+      $(".limpiarspan").attr('onclick','LimpiarResultado3(".list-item")');
 
    }
 
-   $(".v_buscador").attr('onkeyup','BuscarEnLista(".v_buscador",".list-item")');
-  $(".limpiarspan").attr('onclick','LimpiarResultado(".list-item")');
   regresohome();
 
 });
@@ -2520,6 +2568,7 @@ if (localStorage.getItem('idtipousuario')==5) {
 $$(document).on('page:init', '.page[data-name="listadopagosadmin"]', function (e) {
 regresohome();
      $(".btnclick").css('display','none');
+    $(".buscador").css('display','none');
 
 if (localStorage.getItem('idtipousuario')==0){
       
@@ -2528,11 +2577,13 @@ if (localStorage.getItem('idtipousuario')==0){
     }
 
 if (localStorage.getItem('idtipousuario')==5) {
+    $(".buscador").css('display','block');
+    $(".v_buscador").attr('onkeyup','BuscarEnListaPagos()');
     ListadoPagosCoach();
      $(".btnclick").css('display','block');
     $("#btnpendiente").attr('onclick','ActivoPagoCoach(1)')
     $("#btnhistorial").attr('onclick','ActivoPagoCoach(2)')
-
+    $(".limpiarspan").attr('onclick','ListadoPagosCoach()')
    }
 
 
@@ -2546,7 +2597,10 @@ $$(document).on('page:init', '.page[data-name="detallepagoscoach"]', function (e
     $("#btnpendiente1").attr('onclick','ActivoPagoCoachLis(1)')
     $("#btnhistorial1").attr('onclick','ActivoPagoCoachLis(2)')
 
-   
+    $(".v_buscador1").attr('onkeyup','ListadoPagosCoachListaBuscar()');
+
+    $(".limpiarspan").attr('onclick','ListadoPagosCoachLista()')
+
 
 
 });

@@ -33,13 +33,17 @@ try
 
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
+	$buscador="";
+	if (isset($_POST['buscador'])) {
+	$buscador=$_POST['buscador'];
+	}
 
 	$idusuarios=$_POST['id_user'];
 	$lo->idusuarios=$idusuarios;
 	$usuarios->idusuarios=$idusuarios;
     $datoscoach=$usuarios->ObtenerUsuarioDatos();
 	$asignacion->idusuario=$idusuarios;
-	$obtenerservicios=$asignacion->obtenerServiciosAsignadosCoach2();
+	$obtenerservicios=$asignacion->obtenerServiciosAsignadosCoach2($buscador);
 	$pagosdelcoach=array();
 
 	$textoestatus=array('Pendiente','Pagado','Cancelado');
@@ -47,7 +51,7 @@ try
 	for ($i=0; $i <count($obtenerservicios); $i++) {
 	 $idservicio=$obtenerservicios[$i]->idservicio;
 	 $servicios->idservicio=$idservicio;
-	 $obtenerperiodoshoras=$servicios->ObtenerPeriodosFechaHoras();
+	 $obtenerperiodoshoras=$servicios->ObtenerFechaHoras();
 			$idusuarios_servicios=$obtenerservicios[$i]->idusuarios_servicios;
 			$asignacion->idusuarios_servicios=$idusuarios_servicios;
 			$tipomontopago=$asignacion->ObtenertipoMontopago();
@@ -105,7 +109,7 @@ try
 					}
 						# code...
 					$pagos->idpago=$idpago;
-				    $buscarpago=$pagos->ObtenerPagoDescuento();
+				    $buscarpago=$pagos->ObtenerPagoSoloDescuento();
 
 				    $montopago=$buscarpago[0]->montocondescuento;
 
@@ -147,13 +151,13 @@ try
 	                	'montopago'=>$montopago,
 	                	'montosindescuento'=>$buscarpago[0]->monto,
 	                	'descuento'=>$buscarpago[0]->descuento!=0?$buscarpago[0]->descuento:0,
-	                	'descuentomembresia'=>$buscarpago[0]->descuentomembresia!=0?$buscarpago[0]->descuentomembresia:0,
+	                	'descuentomembresia'=>0,
 	                	'folio'=>$folio[0]->folio,
 	                	'tipopagonota'=>$folio[0]->tipopago,
 	                	'fechainicial'=>$fechainicial,
 	                	'fechafinal'=>$fechafinal,
-	                	'periodoinicial'=>date('d/m/Y',strtotime($obtenerperiodoshoras[0]->fecha)),
-	                	'periodofinal'=>date('d/m/Y',strtotime($obtenerperiodoshoras[1]->fecha)),
+	                	'periodoinicial'=>date('d/m/Y',strtotime($obtenerperiodoshoras[0]->fechamin)),
+	                	'periodofinal'=>date('d/m/Y',strtotime($obtenerperiodoshoras[0]->fechamax)),
 	                );
 
 	                 array_push($pagosdelcoach,$objeto);
@@ -261,8 +265,8 @@ try
 	                		'tipopagonota'=>'',
 	                		'fechainicial'=>$fechainicial,
 	                	'fechafinal'=>$fechafinal,
-	                	'periodoinicial'=>date('d/m/Y',strtotime($obtenerperiodoshoras[0]->fecha)),
-	                	'periodofinal'=>date('d/m/Y',strtotime($obtenerperiodoshoras[1]->fecha))
+	                	'periodoinicial'=>date('d/m/Y',strtotime($obtenerperiodoshoras[0]->fechamin)),
+	                	'periodofinal'=>date('d/m/Y',strtotime($obtenerperiodoshoras[0]->fechamax))
 	                );
 									
 								  						 array_push($pagosdelcoach,$objeto);

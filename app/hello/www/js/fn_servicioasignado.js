@@ -1402,7 +1402,7 @@ html+=`
  							</div>
 	                        `;
 	                    }
-	          if (localStorage.getItem('idtipousuario')==0 ||  localStorage.getItem('idtipousuario')==5) {
+	          if (localStorage.getItem('idtipousuario')==0 ) {
 
                      if (respuesta[i].aceptarterminos==0 || respuesta[i].pagado==0 ){
 

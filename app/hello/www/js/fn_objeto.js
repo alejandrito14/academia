@@ -149,7 +149,7 @@ function leerLocalStorage() {
 	productoLS.forEach(function (producto){
         //construir template
 
-      		
+      		console.log(producto);
 	//if (respuesta.length>0) {
 	//	for (var i = 0; i <respuesta.length; i++) {
 	html+=`
@@ -166,13 +166,24 @@ function leerLocalStorage() {
     <div class="col align-self-center no-padding-left">
     <div class="row margin-bottom-half"><div class="col">
 	    
-	    <p style="padding:.5em;">`+producto.v_nombretu+` `+producto.v_paternotu+` `+producto.v_maternotu+`</p>
-	    </div>
+	    <p style="padding:.5em;">`+producto.v_nombretu+` `+producto.v_paternotu+` `+producto.v_maternotu+`</p>`;
+	   
+	   if (producto.v_celulartu!='') {
+	   	asociado=1;
+	   	html+=`<p>`+producto.v_celulartu+`</p>`;
+	   	html+=`<p>Asociado</p>`;
+	   }else{
+
+	   	html+=`<p>Tutorado</p>`;
+	   	asociado=0;
+	   }
+
+	   html+=` </div>
 
 	  
 	    <div class="col-auto" style="text-align: right;">
 	    <span class="" style="float: left;padding: .5em;" onclick="EditarObjeto(`+i+`)"><i class="bi-pencil-fill"></i> </span>
-	    	<span class="" style="float: left;padding: 0.5em;" onclick="EliminarObjeto(`+i+`);"><i class="bi-x-circle-fill"></i></span>
+	    	<span class="" style="float: left;padding: 0.5em;" onclick="EliminarObjeto(`+i+`,`+asociado+`);"><i class="bi-x-circle-fill"></i></span>
 	    	</div>
 
 	    			</div>
@@ -230,7 +241,7 @@ function leerLocalStorage() {
 }
 
 //Eliminar curso del objeto en el DOM
-function EliminarObjeto(idcontador){
+function EliminarObjeto(idcontador,tipo){
    // e.preventDefault();
 
    let producto, productoId;
@@ -240,7 +251,13 @@ function EliminarObjeto(idcontador){
         productoId = curso.querySelector('a').getAttribute('data-id');
         e.target.parentElement.parentElement.remove();
     }*/
-  app.dialog.confirm('','¿Seguro de eliminar tutorado?', function () {
+
+    if (asociado==1) {
+    	asociado="asociado";
+    }else{
+    	asociado="tutorado";
+    }
+  app.dialog.confirm('','¿Seguro de eliminar '+asociado+'?', function () {
           
        
     $(".elemento").each(function(){
@@ -322,21 +339,36 @@ function EditarObjeto(idcontador) {
 	});
 
 		if ($(".my-sheet-swipe-to-close1").hasClass('modal-in')) {
-			
-						MostrarFormTutorado();
-						LlenarFormulario(producto,idcontador);
+						
+						MostrarFormTutorado(1);
+						/*if (producto.inputsincelular==1 && producto.inputsoytutor==1) {
+						EdicionTutorado();
+						}else{
+							alert('a');
+							EdicionAsociado();
+						}*/
+										
+					LlenarFormulario(producto,idcontador);
 							$$("#btnguadartuto").attr('onclick','GuardarTutorado('+idcontador+')');
 
 		}else{
 
 			$(".my-sheet-swipe-to-close1").remove();
-			AbrirModalRegistroTutorados();
+			AbrirModalRegistroTutorados(1,producto);
+
+			/*if (producto.inputsincelular==1 && producto.inputsoytutor==1) {
+						EdicionTutorado();
+						}else{
+							
+							EdicionAsociado();
+						}*/
 			MostrarFormTutorado();
 			$$("#btnguadartuto").attr('onclick','GuardarTutorado('+idcontador+')');
 
 			LlenarFormulario(producto,idcontador);
 		}
-			
+		
+
 				
 	
 		
@@ -378,14 +410,20 @@ function LlenarFormulario(producto,idcontador) {
 				$("#v_maternotu").css('color','gray');
 				$("#v_fechatu").css('color','gray');
 				$("#v_sexotu").css('color','gray');
+				$("#v_celulartu").css('color','gray');
 
+				$("#v_celulartu").attr('disabled',true);
 				$("#v_nombretu").attr('disabled',true);
 				$("#v_paternotu").attr('disabled',true);
 				$("#v_maternotu").attr('disabled',true);
 				$("#v_fechatu").attr('disabled',true);
 				$("#v_sexotu").prop('disabled','disabled');
-
+				$(".input-clear-button").css('display','none');
 	}
+
+
+
+
 
 }
 

@@ -137,8 +137,8 @@ class Usuarios
 
 	public function GuardarUsuarioTutorado($sincel)
 	{
-		$sql = "INSERT INTO usuarios (nombre,paterno,materno,fechanacimiento,sexo,celular,email,usuario,tipo,celular2,sincel)
-        VALUES ('$this->nombre','$this->paterno','$this->materno','$this->fecha','$this->sexo','$this->celular','$this->email','$this->usuario','$this->tipo','$this->celular2','$sincel')";
+		$sql = "INSERT INTO usuarios (nombre,paterno,materno,fechanacimiento,sexo,celular,email,usuario,tipo,celular2,sincel,estatus)
+        VALUES ('$this->nombre','$this->paterno','$this->materno','$this->fecha','$this->sexo','$this->celular','$this->email','$this->usuario','$this->tipo','$this->celular2','$sincel','$this->estatus')";
        
 
         $result  = $this->db->consulta($sql);
@@ -864,11 +864,12 @@ public function validarUsuarioClienteTokenCel()
         usuarios.paterno,
         usuarios.materno,
         usuarios.idusuarios,
-        usuarios.sexo
+        usuarios.sexo,
+        usuarios.estatus
         FROM
         usuarios
         JOIN usuariossecundarios
-        ON usuarios.idusuarios = usuariossecundarios.idusuariotutorado WHERE usuariossecundarios.idusuariostutor='$this->idusuarios' AND sincel=1";
+        ON usuarios.idusuarios = usuariossecundarios.idusuariotutorado WHERE usuariossecundarios.idusuariostutor='$this->idusuarios' AND sincel=1 AND usuarios.estatus=1 ";
 
        
         $resp=$this->db->consulta($sql);
@@ -1156,6 +1157,85 @@ public function validarUsuarioClienteTokenCel()
         return $array;
     }
 
+  
+  public function ObtenerCoincidencias($nombrecompleto,$celular)
+  {
+     $sql="SELECT* FROM (SELECT 
+        usuarios.idusuarios,
+        CONCAT(usuarios.nombre,' ',usuarios.paterno,' ', usuarios.materno) as nombrecompleto,
+        usuarios.nombre,
+        usuarios.paterno,
+        usuarios.materno,
+        usuarios.celular,
+        usuarios.fechanacimiento,
+        usuarios.sexo,
+        usuarios.email,
+        usuarios.usuario,
+        usuarios.tipo,
+        usuarios.alias
+        FROM usuarios
+         ) as tabla WHERE 1=1";
+
+         if ($nombrecompleto!='') {
+            $sql.=" AND nombrecompleto LIKE '%%".$nombrecompleto."%%'";
+         }
+
+         if ($celular!='') {
+            $sql.=" AND celular LIKE '%%".$celular."%%'"; 
+         }
+
+         
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+
+                $this->idusuarios=$objeto->idusuarios;
+
+                $verificarsiestutor=$this->VerificarSiesTutor();
+
+                if (count($verificarsiestutor)==0) {
+                   
+                    $array[$contador]=$objeto;
+                    $contador++;
+                }
+
+
+            } 
+        }
+        
+        return $array;
+  }
+
+   public function VerificarSiesTutor()
+    {
+        $sql="SELECT * FROM usuariossecundarios
+        WHERE usuariossecundarios.idusuariostutor='$this->idusuarios' ";
+
+       
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+    }
   
 
 

@@ -30,7 +30,7 @@ $iduser=$_POST['id_user'];
 $arrayservicio=array();
 $arraydescuentos=array();
 	$descuento->idusuario=$iduser;
-	$obtenerdescuentosUsuario=$descuento->ObtenerDescuentosUsuario();
+	//$obtenerdescuentosUsuario=$descuento->ObtenerDescuentosUsuario();
 	
 
 
@@ -39,6 +39,7 @@ $arraydescuentos=array();
 		$montopago=$pagoselegidos[$i]->{'monto'};
 		$pagos->idpago=$idpago;
 		$buscar=$pagos->ObtenerPago();
+		//$idusuariopago=$buscar[0]->idusuarios;
 
 		if (count($buscar)>0) {
 			# code...
@@ -75,6 +76,8 @@ $arraydescuentos=array();
 				$porparentesco=$obtenerdescuentos[$j]->porparentesco;
 				$porniveljerarquico=$obtenerdescuentos[$j]->porniveljerarquico;
 				$porclientenoasociado=$obtenerdescuentos[$j]->porclientenoasociado;
+
+				$porclientedirecto=$obtenerdescuentos[$j]->porclientedirecto;
 
 
 				$inpadre=$obtenerdescuentos[$j]->inppadre;
@@ -353,6 +356,19 @@ if ($validado==1) {
 
 	
 				}
+
+			if ($validado==1) {
+					if ($porclientedirecto==1) {
+						$obtenerdescuentosusuario=$descuento->ObtenerdescuentosUsuarioRelacionado();
+
+						$validado=0;
+						if (count($obtenerdescuentosusuario)>0) {
+							$validado=1;
+						}
+
+
+					}
+				}	
 
 			if ($validado==1) {
 				if($porcaracteristicasasociador==1){

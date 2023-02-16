@@ -1025,4 +1025,107 @@ class ServiciosAsignados
 	}
 
 
+	public function obtenerCoach2V()
+	{
+	
+		$sql="SELECT *,
+		(SELECT COUNT(*) FROM usuarios_servicios  INNER JOIN pagos on usuarios_servicios
+		.idusuarios=pagos.idusuarios   WHERE pagos.pagado=1 AND usuarios_servicios.idservicio=servicios.idservicio )  AS pagados,
+		(SELECT COUNT(*) FROM usuarios_servicios    WHERE usuarios_servicios.aceptarterminos=1  AND usuarios_servicios.idservicio=servicios.idservicio) as aceptados
+		FROM usuarios_servicios INNER JOIN 
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
+			AND cancelacion=0 AND servicios.validaradmin=1 
+			GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios";
+
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$fechaactual=date('Y-m-d');
+			/*if ($objeto->aceptados==$objeto->pagados && $objeto->pagados>=$objeto->aceptados) {*/
+
+				/*$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
+				$resphorarios=$this->db->consulta($sql1);
+
+				$conta = $this->db->num_rows($resphorarios);
+
+				if ($conta>0) {*/
+
+					$array[$contador]=$objeto;
+					$contador++;
+				
+				//}
+			/*}else{
+
+
+				$array[$contador]=$objeto;
+						$contador++;
+			}*/
+		}
+		
+		return $array;
+	}
+}
+
+
+	public function ObtenerNoVigentes()
+	{
+		$sql="SELECT *,
+				(SELECT COUNT(*) FROM usuarios_servicios  INNER JOIN pagos on usuarios_servicios
+		.idusuarios=pagos.idusuarios   WHERE pagos.pagado=1 AND usuarios_servicios.idservicio=servicios.idservicio )  AS pagados,
+		(SELECT COUNT(*) FROM usuarios_servicios    WHERE usuarios_servicios.aceptarterminos=1  AND usuarios_servicios.idservicio=servicios.idservicio) as aceptados
+		FROM usuarios_servicios INNER JOIN 
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
+			AND cancelacion=0 AND servicios.validaradmin=1 
+
+			GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios
+		 ";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$fechaactual=date('Y-m-d');
+			/*if ($objeto->aceptados==$objeto->pagados && $objeto->pagados>=$objeto->aceptados) {
+
+				$sql1="SELECT COUNT(*) AS horarios FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>'$fechaactual'";
+				$resphorarios=$this->db->consulta($sql1);
+
+				$horarios = $this->db->fetch_assoc($resphorarios);
+
+				$conta=$horarios['horarios'];
+
+				if ($conta==0) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				
+				}
+
+			}else{*/
+
+					$array[$contador]=$objeto;
+						$contador++;
+					
+
+				//}
+			} 
+		}
+		
+		return $array;
+	}
+
 }

@@ -72,7 +72,7 @@ for ($j=0; $j <count($pagoselegidos); $j++) {
 	$db->commit();
 
 	$respuesta['respuesta']=1;
-	$respuesta['pagosadeudados']=$contarpagos;
+	$respuesta['pagosadeudados']=0;
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);
 	echo $myJSON;

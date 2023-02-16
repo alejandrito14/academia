@@ -45,7 +45,10 @@ try
     $notapago->idnotapago=$idnotapago;
     $notapago->estatus=$estado;
     $notapago->descripcionaceptacion=$descripcion;
+    $notapago->idusuarioquiencambia=$_SESSION['se_sas_Usuario'];
+    $notapago->fechaaceptacion=date('Y-m-d H:i:s');
     $notapago->CambiarEstatus();
+   
 
     $obtenerdescripcionnota=$notapago->ObtenerdescripcionNota();
     if ($notapago->estatus==1) {
@@ -81,11 +84,16 @@ try
 
                $membresia->idusuarios=$idusuario;
                $membresia->idmembresia=$idmembresia;
+
                $obtenermembresia=$membresia->ObtenerMembresiaUsuarioPorPagar();
+
                $idusuarios_membresia=$obtenermembresia[0]->idusuarios_membresia;
                $membresia->ActualizarEstatusMembresia($idusuarios_membresia);
                ///falta por realizar el cambio a pagado
                }
+
+
+
 
             }
         }

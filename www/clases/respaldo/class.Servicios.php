@@ -903,6 +903,33 @@ class Servicios
 		return $array;
 	}
 
+
+	public function ObtenerPeriodosFechaHoras()
+	{
+		$sql="SELECT fecha FROM horariosservicio 
+	  where fecha = (SELECT MAX(fecha) FROM horariosservicio  WHERE idservicio='$this->idservicio')
+	    OR fecha = (SELECT MIN(fecha) FROM horariosservicio WHERE idservicio='$this->idservicio')
+	  GROUP BY  fecha";
+
+	    $resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
 }
 
 ?>

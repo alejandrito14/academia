@@ -378,16 +378,18 @@ function PintarTutorados(respuesta) {
 	    <p class="small text-muted no-margin-bottom">
 	    </p>
 	    <p>`+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`</p>`;
-
+	   var asociado=0;
 	    if (respuesta[i].celular!='' && respuesta[i].celular!=undefined) {
 	    	html+=`<p>`+respuesta[i].celular+`</p>`;
+	  	    asociado=1;
+
 	    }
 	   
 	   html+=`</div>
 
 	     <div class="col-auto" style="text-align: right;">
 	   	    <span class="" style="float: left;padding: .5em;" onclick="EditarTutorado(`+respuesta[i].idusuarios+`)"><i class="bi-pencil-fill"></i> </span>
-	    	<span class="" style="float: left;padding: 0.5em;" onclick="EliminarTutorado(`+respuesta[i].idusuarios+`);"><i class="bi-x-circle-fill"></i></span>
+	    	<span class="" style="float: left;padding: 0.5em;" onclick="EliminarTutorado(`+respuesta[i].idusuarios+`,`+asociado+`);"><i class="bi-x-circle-fill"></i></span>
 	    			</div>
 	    			</div>
     			</div>
@@ -451,16 +453,17 @@ function PintarAsociados(respuesta) {
 	    <p class="small text-muted no-margin-bottom">
 	    </p>
 	    <p>`+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`</p>`;
-
+	    var asociado=0;
 	    if (respuesta[i].celular!='' && respuesta[i].celular!=undefined) {
 	    	html+=`<p>`+respuesta[i].celular+`</p>`;
+	   	asociado=1;
 	    }
 	   
 	   html+=`</div>
 
 	     <div class="col-auto" style="text-align: right;">
 	   	    <span class="" style="float: left;padding: .5em;" onclick="EditarAsociado(`+respuesta[i].idusuarios+`)"><i class="bi-pencil-fill"></i> </span>
-	    	<span class="" style="float: left;padding: 0.5em;" onclick="EliminarTutorado(`+respuesta[i].idusuarios+`);"><i class="bi-x-circle-fill"></i></span>
+	    	<span class="" style="float: left;padding: 0.5em;" onclick="EliminarTutorado(`+respuesta[i].idusuarios+`,`+asociado+`);"><i class="bi-x-circle-fill"></i></span>
 	    			</div>
 	    			</div>
     			</div>
@@ -569,11 +572,38 @@ if (respuesta.sututor==1) {
 	localStorage.removeItem('idtutorado');
 
 
-	//$("#mensajevalidacion").html('<span style="color:#59c158;">Validado<i class="bi bi-check2"></i></span>')
+	$("#v_nombretu").css('color','gray');
+	$("#v_nombretu").css('color','gray');
+	$("#v_paternotu").css('color','gray');
+	$("#v_maternotu").css('color','gray');
+	$("#v_fechatu").css('color','gray');
+	$("#v_sexotu").css('color','gray');
+	$("#v_celulartu").css('color','gray');
+
+	$("#v_celulartu").attr('disabled',true);
+	$("#v_nombretu").attr('disabled',true);
+	$("#v_paternotu").attr('disabled',true);
+	$("#v_maternotu").attr('disabled',true);
+	$("#v_fechatu").attr('disabled',true);
+	$("#v_sexotu").prop('disabled','disabled');
+	$(".input-clear-button").css('display','none');
+
+	$(".linombretu").addClass('item-input-with-value');
+	$(".lipaternotu").addClass('item-input-with-value');
+	$(".limaternotu").addClass('item-input-with-value');
+	$(".lifechanacimientotu").addClass('item-input-with-value');
+	$(".licelulartu").addClass('item-input-with-value');
+
+	  ObtenerParentesco(respuesta.idparentesco);
 
 }
-function EliminarTutorado(idusuario) {
-	app.dialog.confirm('','¿Seguro de eliminar tutorado?', function () {
+function EliminarTutorado(idusuario,tipo) {
+	if (tipo==1) {
+		asociado="asociado";
+	}else{
+		asociado="tutorado";
+	}
+	app.dialog.confirm('','¿Seguro de eliminar '+asociado+'?', function () {
        
 	    $(".elemento").each(function(){
 	    	var id=$(this).attr('id');

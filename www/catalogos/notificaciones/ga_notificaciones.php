@@ -129,7 +129,7 @@ try
 		$arraytokensusuarios=array();
 
 
-		if ($clientesvar!='' && $notificacion->todosclientes==1) {
+		/*if ($clientesvar!='' && $notificacion->todosclientes==1) {
 		
 			$arregloclientes=explode(',', $clientesvar);
 
@@ -153,13 +153,13 @@ try
 						}
 						
 
-					}
+					}*/
 
 					/*$texto=$notificacion->titulo.'|'.$notificacion->mensaje;
 					$notificacionpushcliente->AgregarNotifcacionaCliente($arregloclientes[$i],$texto,'','',0);*/					
-				}
+			/*	}
 			}
-
+*/
 			if ($usuariosvar!='' && $notificacion->todosadmin==1) {
 				$arreglousuarios=explode(',', $usuariosvar);
 

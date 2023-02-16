@@ -216,7 +216,7 @@ function PintarUsuarios(usuarios) {
 }
 
 function Guardarnotificacion(form,regresar,donde,idmenumodulo)
-{
+{ 
 
 	var v_tclientes=$("#v_tclientes").val();
 	var v_tusuarios=$("#v_tusuarios").val();
@@ -253,10 +253,10 @@ function Guardarnotificacion(form,regresar,donde,idmenumodulo)
 	}
 
 
-	if (dirigido==0) {
+	/*if (dirigido==0) {
 		bandera=0;
-	}
-if ( dirigido==1 || dirigido==3) {
+	}*/
+/*if ( dirigido==1 || dirigido==3) {
 	if (v_tclientes==2) {
 
 		bandera=0;
@@ -273,9 +273,8 @@ if ( dirigido==1 || dirigido==3) {
 
 	}
 
-}
+}*/
 
-if ( dirigido==2 || dirigido==3) {
 
 	if (v_tusuarios==2) {
 
@@ -290,8 +289,8 @@ if ( dirigido==2 || dirigido==3) {
 				 	}
 				});
 
-	}
-}
+		}
+
 
 
 
@@ -319,11 +318,11 @@ if ( dirigido==2 || dirigido==3) {
 				});
 
 		datos1="clientes="+clientes+"&usuarios="+usuarios+"&todosadmin="+v_tusuarios+"&"+datos;
-	
+		console.log(datos1);
 	
 		 $('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
 				
-		setTimeout(function(){
+		/*setTimeout(function(){
 				  $.ajax({
 					url:'catalogos/notificaciones/ga_notificaciones.php', //Url a donde la enviaremos
 					type:'POST', //Metodo que usaremos
@@ -347,7 +346,7 @@ if ( dirigido==2 || dirigido==3) {
 						  	}			
 					  	}
 				  });				  					  
-		},1000);
+		},1000);*/
 	 } 
 
 
@@ -386,13 +385,13 @@ if ( dirigido==2 || dirigido==3) {
 
 	}
 
-		if (dirigido==0) {
+		/*if (dirigido==0) {
 			respuesta+="-Dirigido a es requerido"+"<br>";
 
 			}
-
+*/
 		
-	if ( dirigido==1 || dirigido==3) {
+	/*if ( dirigido==1 || dirigido==3) {
 
 			if (v_tclientes==2) {
 
@@ -419,9 +418,9 @@ if ( dirigido==2 || dirigido==3) {
 					respuesta+="-Clientes es requerido"+"<br>";
 				}
 
-			}
+			}*/
 
-	if ( dirigido==2 || dirigido==3) {
+	//if ( dirigido==2 || dirigido==3) {
 
 		if (v_tusuarios==2) {
 
@@ -447,7 +446,7 @@ if ( dirigido==2 || dirigido==3) {
 					respuesta+="-Clientes es requerido"+"<br>";
 				}
 
-		}
+		//}
 
 		AbrirNotificacion('Han ocurrido los siguientes errores:<br>'+respuesta,"mdi-checkbox-marked-circle");
 

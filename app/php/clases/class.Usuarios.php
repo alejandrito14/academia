@@ -129,7 +129,7 @@ class Usuarios
        	 email = '$this->email',
        	 usuario='$this->usuario',
        	 clave='$this->clave',
-         tipo='$this->tipo'
+         tipo='$this->tipousuario'
         WHERE idusuarios = '$this->idusuarios' ";
      
         $result = $this->db->consulta($query);
@@ -138,7 +138,7 @@ class Usuarios
 	public function GuardarUsuarioTutorado($sincel)
 	{
 		$sql = "INSERT INTO usuarios (nombre,paterno,materno,fechanacimiento,sexo,celular,email,usuario,tipo,celular2,sincel,estatus)
-        VALUES ('$this->nombre','$this->paterno','$this->materno','$this->fecha','$this->sexo','$this->celular','$this->email','$this->usuario','$this->tipo','$this->celular2','$sincel','$this->estatus')";
+        VALUES ('$this->nombre','$this->paterno','$this->materno','$this->fecha','$this->sexo','$this->celular','$this->email','$this->usuario','$this->tipo','$this->celular2','$sincel',1)";
        
 
         $result  = $this->db->consulta($sql);
@@ -954,6 +954,30 @@ public function validarUsuarioClienteTokenCel()
         
         return $array;
     }
+    public function VerificarSiesAsociado()
+    {
+        $sql="SELECT * FROM usuariossecundarios INNER JOIN usuarios ON usuarios.idusuarios=usuariossecundarios.idusuariostutor
+        WHERE usuariossecundarios.idusuariotutorado='$this->idusuarios' 
+            AND sututor=0
+        ";
+
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+    }
 
     public function ObtenerCategoriasServiciotutor($idtutor)
     {
@@ -1215,7 +1239,7 @@ public function validarUsuarioClienteTokenCel()
         usuarios.tipo,
         usuarios.alias
         FROM usuarios
-         ) as tabla WHERE 1=1 AND tipo=3 ";
+         ) as tabla WHERE 1=1 AND tipo IN (1,3) ";
 
          if ($nombre!='') {
 
@@ -1227,7 +1251,6 @@ public function validarUsuarioClienteTokenCel()
          if ($celular!='') {
             $sql.=" AND tabla.celular LIKE '%%".$celular."%%'"; 
          }
-
 
 
         $resp=$this->db->consulta($sql);
@@ -1262,6 +1285,19 @@ public function validarUsuarioClienteTokenCel()
                             
                         
 
+                        }else{
+
+                    
+                         $verificarsiesasociado=$this->VerificarSiesAsociado();
+
+                         if (count($verificarsiesasociado)>0) {
+                             $objeto->tutorado=2;
+                             $objeto->tutor=$verificarsiesasociado[0];
+
+                                  }
+                       
+
+
                         }
 
                      $array[$contador]=$objeto;
@@ -1285,6 +1321,30 @@ public function validarUsuarioClienteTokenCel()
     {
         $sql="SELECT * FROM usuariossecundarios
         WHERE  usuariossecundarios.idusuariostutor='$this->idusuarios'  ";
+
+       
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+    }
+
+    public function ValidarAlias()
+    {
+        $sql="SELECT * FROM usuarios
+        WHERE  usuarios.alias='$this->alias'";
 
        
         $resp=$this->db->consulta($sql);

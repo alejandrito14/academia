@@ -32,6 +32,8 @@ class Notapago
 
 	public $fechafactura;
 	public $foliofactura;
+	public $idusuarioquiencambia;
+	public $fechaaceptacion;
 
 	public function CrearNotapago()
 	{
@@ -242,8 +244,8 @@ class Notapago
 			$sql="UPDATE notapago SET 
 			  estatus = '$this->estatus',
 			  descripcionaceptacion='$this->descripcionaceptacion',
-			  fechaaceptacion=date('Y-m-d H:i:s'),
-			  idusuarioaceptacion=$_SESSION['se_sas_Usuario']
+			  fechaaceptacion='$this->fechaaceptacion',
+			  idusuarioaceptacion='$this->idusuarioquiencambia'
 			  WHERE idnotapago='$this->idnotapago'";
 
 		    $resp=$this->db->consulta($sql);
@@ -335,6 +337,30 @@ class Notapago
 		    $resp=$this->db->consulta($sql);
 	}
 
+
+	public function ObtenerNotaPagoporPago()
+	{
+		$sql="SELECT notapago.idnotapago,descripcion as concepto,monto,idpago,notapago.fecha,notapago.fechaaceptacion,cantidad,notapago.estatus,notapago.tipopago,notapago.folio  	FROM notapago_descripcion 
+		INNER JOIN notapago ON notapago.idnotapago=notapago_descripcion.idnotapago
+		 WHERE idpago='$this->idpago'";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 	
 	
 }

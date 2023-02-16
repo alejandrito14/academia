@@ -524,10 +524,6 @@ try {
                       $membresia->CrearRegistroMembresiaUsuario();
                    }
 
-                   if ($campomonto==1) {
-                     $membresia->pagado=0;
-                    }
- 
                   $membresia->ActualizarEstatusMembresiaUsuarioPagado();
 
           	   }

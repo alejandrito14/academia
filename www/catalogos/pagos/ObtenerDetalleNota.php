@@ -65,6 +65,7 @@ try
     $lo->idnotapago=$idnotapago;
     $lo->idusuario=$id_user;
     $pagos->idnotapago=$idnotapago;
+    
     $resultado=$lo->Obtenernota();
     $descuentos=array();
     $descuentosmembresia=array();
@@ -136,11 +137,11 @@ try
 
  	    	$pagos->descuentosmembresia=array();
 
- 	      if (count($pagosdescuentomembresia)>0) {
- 	      		$pagos->descuentosmembresia=$pagosdescuentomembresia;
- 	    	array_push($descuentosmembresia, $pagosdescuentomembresia);
+   	      if (count($pagosdescuentomembresia)>0) {
+   	      		$pagos->descuentosmembresia=$pagosdescuentomembresia;
+   	    	array_push($descuentosmembresia, $pagosdescuentomembresia);
 
- 	    	}
+   	    	}
  	    	
         }
        

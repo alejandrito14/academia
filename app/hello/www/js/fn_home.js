@@ -1248,6 +1248,11 @@ function VerificarServiciosAsignadosCoach() {
 			}
 		});
 }
+function BuscardorServicio() {
+	var valor=$(".v_buscador").val();
+	localStorage.setItem('buscadorvalor',valor);
+	BuscarEnLista(".v_buscador",".list-item")
+}
 
 function ObtenerServiciosAsignadosCoach() {
 	var idusuario=localStorage.getItem('id_user');
@@ -1257,14 +1262,47 @@ function ObtenerServiciosAsignadosCoach() {
 		type: 'POST',
 		dataType: 'json',
 		url: urlphp+pagina,
-		crossDomain: true,
-		cache: false,
 		data:datos,
+		async:false,
 		success: function(datos){
 
 			var respuesta=datos.respuesta;
 			var fechaactual=datos.fechaactual;
 			PintarServiciosAsignadosCoach2(respuesta,fechaactual);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+
+function FiltroCategoriasCoach() {
+	var categoria=$("#v_categorias").val();
+	localStorage.setItem('categoriavalor',categoria);
+	var idusuario=localStorage.getItem('id_user');
+	var datos="idusuario="+idusuario+"&vcategoria="+categoria;
+	var pagina = "ObtenerServiciosAsignadosCoach.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		data:datos,
+		async:false,
+		success: function(datos){
+
+			var respuesta=datos.respuesta;
+			var fechaactual=datos.fechaactual;
+			PintarServiciosAsignadosCoach2(respuesta,fechaactual);
+
+			if (localStorage.getItem('buscadorvalor')!=undefined) {
+        			var valor=localStorage.getItem('buscadorvalor');
+        			$(".v_buscador").val(valor);
+        			BuscardorServicio();
+     			 }
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
@@ -1377,7 +1415,7 @@ function PintarServiciosAsignadosCoach2(respuesta,fechaactual) {
                    
                   </div>
                   </div>
-                  <div class="row" style="height:10em;">
+                  <div class="row" style="height:11em;">
                   <div class="col-100" >
                    <div class="row" style="margin-top:.5em;">
                     `;
@@ -1435,7 +1473,7 @@ function PintarServiciosAsignadosCoach2(respuesta,fechaactual) {
 		html+=`
 			 <div class="list-item">
                 <div class="row text-color-theme">
-                  <h4 style="text-align:center;">En breve el administrador te asignará tus servicios</h4>
+                  <h4 style="text-align:center;">No se encontraron servicios</h4>
                 </div>
               </div>
 
@@ -2918,7 +2956,6 @@ function FiltroServiciosCat() {
 	$("#v_coach").val(0);
 	$(".buscador").val('');
 	localStorage.setItem('valorlistado',0);
-	localStorage.setItem('buscadorvalor','');
 	var pagina = "ObtenerServicios.php";
 	var v_categorias=$("#v_categorias").val();
 	var v_coach=$("#v_coach").val();
@@ -2929,7 +2966,7 @@ function FiltroServiciosCat() {
 		dataType: 'json',
 		url: urlphp+pagina,
 		data:datos,
-		
+		async:false,
 		success: function(datos){
 
 			localStorage.setItem('v_categoriasvalor',v_categorias);
@@ -2948,31 +2985,58 @@ function FiltroServiciosCat() {
 		});
 }
 
+function FiltroServiciosCoach() {
+	
+
+	var pagina = "ObtenerServicios.php";
+	var v_categorias=$("#v_categorias").val();
+	var v_coach=$("#v_coach").val();
+	var estatus=0;
+	var datos="estatus="+estatus+"&v_categorias="+v_categorias+"&v_coach="+v_coach;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		data:datos,
+		async:false,
+		success: function(datos){
+			localStorage.setItem('v_categoriasvalor',v_categorias);
+			localStorage.setItem('v_coachvalor',v_coach);
+
+			var respuesta=datos.respuesta;
+			var fechaactual=datos.fechaactual;
+			PintarServiciosRegistrados3(respuesta,fechaactual);
+			
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+
 function FiltroBuscador() {
 	var valor=$(".buscador").val();
 
 	if (valor.length>0) {
 
-		let mypromise = function functionOne(testInput){
-	    return new Promise((resolve ,reject)=>{
-				  setTimeout(
-           			()=>{
-					FiltrarServicios();
-					resolve(1);
-
-					} , 3000);
-
-				});
-			};
+	
 		localStorage.setItem('buscadorvalor',valor);
-		mypromise().then((res)=>{
 
 		BuscarEnLista(".buscador",".list-item");
 
-		})
+		
 	}else{
-		FiltrarServicios();	
+		LimpiarResultado3();
 	}
+
+}
+
+function LimpiarResultado3() {
+	localStorage.setItem('buscadorvalor','');
+	LimpiarResultado('.list-item');
 
 }
 
@@ -4738,7 +4802,7 @@ function ObtenerCoachesFiltro() {
 function PintarCoachesFiltro(respuesta,valorlistado) {
 	var html="";
 	if (respuesta.length>0) {
-		html+=`<option value="0">Todos los coaches</option>`;
+		html+=`<option value="0" selected>Todos los coaches</option>`;
 		html+=`<option value="-1">Sin coach</option>`;
 
 		for (var i = 0; i < respuesta.length;i++) {
@@ -4806,15 +4870,7 @@ function ObtenerCategoriasFiltro() {
 			var respuesta=datos.respuesta;
 			PintarCategoriasFiltro(respuesta);
 
-			if (localStorage.getItem('v_categoriasvalor')!=undefined) {
-            
-            	var valorlistado=localStorage.getItem('v_categoriasvalor');
-            	$(".v_categorias").val(valorlistado);
-           		FiltroServiciosCat();
-					
-   				
-         
-         		 }
+			
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
@@ -4827,7 +4883,7 @@ function ObtenerCategoriasFiltro() {
 }
 function PintarCategoriasFiltro(respuesta) {
 	var html="";
-			html+=`<option value="0">Todas las categorías</option>`;
+			html+=`<option value="0">Todos los tipos de servicio</option>`;
 
 	if (respuesta.length>0) {
 		for (var i =0; i < respuesta.length; i++) {
@@ -4934,10 +4990,11 @@ function PintarServiciosRegistrados3(respuesta,fechaactual) {
 
 			html+=`
 				 <div class="list-item `+clasesincoach+`"  style="background: white; margin: 1em;border-radius: 10px;" id="servicio_`+respuesta[i].idservicio+`">
-                <div class="row" style="margin-bottom: 2em;">
+                <div class="row" style="margin-bottom: 2em;margin-top:1em;">
 	                 <div class="col-10" style="padding-left: 10px;">
 	                  `+colocarnumero+`
 	                 </div>
+	                 <div class="col-90"></div>
                  </div>
                   <div class="row">
                
@@ -5029,6 +5086,15 @@ function PintarServiciosRegistrados3(respuesta,fechaactual) {
 		$$(".serviciosregistrados").html(html);
 
 	}
+
+
+	 if (localStorage.getItem('buscadorvalor')!=undefined) {
+            
+              var valorbuscador=localStorage.getItem('buscadorvalor');
+              $(".buscador").val(valorbuscador);
+                FiltroBuscador();       
+         
+             }
 }
 
 function AbrirModalAyuda() {
@@ -5173,11 +5239,16 @@ function ValidarNombreAlumno() {
 
 			if (resp.length>0) {
 				var estutorado=0;
+				var esasociado=0;
 				var estutor=0;
 				for (var i = 0; i <resp.length; i++) {
 					
-					if (resp[i].tutorado==1) {
+					if (resp[i].tutorado==1 ) {
 						estutorado++;
+					}
+
+					if (resp[i].tutorado==2) {
+						esasociado++;
 					}
 
 
@@ -5185,10 +5256,17 @@ function ValidarNombreAlumno() {
 						estutor++;
 					}
 				}
+
 				if (estutorado>0) {
 
+					alerta('','El usuario ya se encuentra tutorado');
+				}
+
+				else if(esasociado>0){
 					alerta('','El usuario ya se encuentra asociado');
-				}else{
+
+				}
+				else{
 
 					
 					Habilitar();
@@ -5196,7 +5274,7 @@ function ValidarNombreAlumno() {
 					$("#v_fechatu").val(resp[0].fechanacimiento);
 					$("#v_sexotu").val(resp[0].sexo);
 					$("#v_idusuario").val(resp[0].idusuarios);
-
+					ColocarDesabilitado();
 				}
 			}else{
 
@@ -5220,7 +5298,44 @@ function ValidarNombreAlumno() {
   	alerta('','Ingrese nombre para continuar');
   }
 }
+
+function ColocarDesabilitado() {
+	$("#v_nombretu").css('color','gray');
+	$("#v_paternotu").css('color','gray');
+	$("#v_maternotu").css('color','gray');
+	$("#v_fechatu").css('color','gray');
+	$("#v_sexotu").css('color','gray');
+	$("#v_celulartu").css('color','gray');
+
+	$("#v_celulartu").attr('disabled',true);
+	$("#v_nombretu").attr('disabled',true);
+	$("#v_paternotu").attr('disabled',true);
+	$("#v_maternotu").attr('disabled',true);
+	$("#v_fechatu").attr('disabled',true);
+	$("#v_sexotu").prop('disabled','disabled');
+	$(".input-clear-button").css('display','none');
+}
+
+function ColocarHabilitado(argument) {
+	$("#v_nombretu").css('color','black');
+	$("#v_nombretu").css('color','black');
+	$("#v_paternotu").css('color','black');
+	$("#v_maternotu").css('color','black');
+	$("#v_fechatu").css('color','black');
+	$("#v_sexotu").css('color','black');
+	$("#v_celulartu").css('color','black');
+
+	$("#v_celulartu").attr('disabled',false);
+	$("#v_nombretu").attr('disabled',false);
+	$("#v_paternotu").attr('disabled',false);
+	$("#v_maternotu").attr('disabled',false);
+	$("#v_fechatu").attr('disabled',false);
+	$("#v_sexotu").prop('disabled',false);
+	$(".input-clear-button").css('display','block');
+}
 function Habilitar() {
+					//$("#btnvalidartuto2").css('display','none');
+
 					$("#mensajevalidacion").html('<span style="color:#59c158;">Validado<i class="bi bi-check2"></i></span>')
 					$("#btnvalidartuto").css('display','none');
 					$(".lifechanacimientotu").css('display','block');
@@ -5248,6 +5363,7 @@ function DeshacerAccion(argument) {
 					$("#v_nombretu").val('');
 					$("#v_paternotu").val('');
 					$("#v_maternotu").val('');
+					ColocarHabilitado();
 					}
 
 function ElegirTipoBusqueda1() {
@@ -5289,6 +5405,7 @@ function OcultarCampos() {
 	$(".mostrar").css('display','none');
 	$(".licodigo").css('display','none');
 	$("#mensajevalidacion").html('')
+	$("#btnvalidartuto").css('display','block');
 
 	/*if ($("#inputsincelular").is(':checked')) {
 
@@ -5301,7 +5418,7 @@ function OcultarCampos() {
 	function MostrarCampos(argument) {
 
 		$("#mensajevalidacion").html('<span style="color:#59c158;">Validado<i class="bi bi-check2"></i></span>')
-
+		$("#btnvalidartuto").css('display','none');
 		$(".linombretu").css('display','block');
 		$(".lipaternotu").css('display','block');
 		$(".limaternotu").css('display','block');
@@ -5328,24 +5445,35 @@ function ValidarCelCodigo() {
 
 			var resp=respuesta.respuesta;
 
-			if (resp.length>0) {
+			if (resp.length>0) { 
 				var estutorado=0;
 				var estutor=0;
+				var esasociado=0;
 				for (var i = 0; i <resp.length; i++) {
 					
-					if (resp[i].tutorado==1) {
+					if (resp[i].tutorado==1 ) {
 						estutorado++;
 					}
 
+					if (resp[i].tutorado==2) {
+						esasociado++;
+					}
 
-					if (resp[i].tutor==1) {
+
+					if (resp[i].tutor==1 ) {
 						estutor++;
 					}
 				}
 				if (estutorado>0) {
 
+					alerta('','El usuario ya se encuentra tutorado');
+				}
+				else if(esasociado>0){
+
 					alerta('','El usuario ya se encuentra asociado');
-				}else{
+
+				}
+				else{
 
 					
 					MostrarCampos();
@@ -5359,7 +5487,7 @@ function ValidarCelCodigo() {
 					$("#v_fechatu").val(resp[0].fechanacimiento);
 					$("#v_sexotu").val(resp[0].sexo);
 					$("#v_idusuario").val(resp[0].idusuarios);
-				   
+				   ColocarDesabilitado();
 				}
 			}else{
 

@@ -111,7 +111,7 @@ class Servicios
 
 	public function ObtenerServiciosAdmin($idcategorias,$v_coach)
 	{
-		$sql="SELECT
+		$sql="SELECT *FROM(SELECT
 		servicios.idservicio,
 		servicios.titulo,
 		servicios.descripcion,
@@ -131,22 +131,33 @@ class Servicios
 		categorias.idcategorias,
 		(SELECT COUNT(*) FROM usuarios_servicios  INNER JOIN pagos on usuarios_servicios
 		.idusuarios=pagos.idusuarios   WHERE pagos.pagado=1 AND usuarios_servicios.idservicio=servicios.idservicio )  AS pagados,
-		(SELECT COUNT(*) FROM usuarios_servicios    WHERE usuarios_servicios.aceptarterminos=1  AND usuarios_servicios.idservicio=servicios.idservicio) as aceptados
+		(SELECT COUNT(*) FROM usuarios_servicios    WHERE usuarios_servicios.aceptarterminos=1  AND usuarios_servicios.idservicio=servicios.idservicio) as aceptados,
+		(SELECT GROUP_CONCAT(usuarios_servicios.idusuarios) FROM usuarios_servicios INNER JOIN usuarios ON usuarios_servicios.idusuarios=usuarios.idusuarios
+		where usuarios.tipo=5 and usuarios_servicios.idservicio=servicios.idservicio) AS coachesfiltro,
+		(SELECT COUNT(usuarios_servicios.idusuarios) FROM usuarios_servicios INNER JOIN usuarios ON usuarios_servicios.idusuarios=usuarios.idusuarios
+		where usuarios.tipo=5 and usuarios_servicios.idservicio=servicios.idservicio) AS cantidadcoach
+	
 		FROM
 		servicios
 		JOIN categorias
-		ON categorias.idcategorias = servicios.idcategoriaservicio WHERE categorias.avanzado=1 and servicios.validaradmin=1 and servicios.estatus=1 
-
+		ON categorias.idcategorias = servicios.idcategoriaservicio WHERE categorias.avanzado=1 and 
+		servicios.validaradmin=1 and servicios.estatus=1) AS TABLA WHERE 1=1
 		";
 
 		if ($idcategorias>0) {
-			$sql.=" AND categorias.idcategorias IN($idcategorias)";
+			$sql.=" AND TABLA.idcategorias IN($idcategorias)";
 		}
 
+		if ($v_coach>0) {
+			$sql.=" AND TABLA.coachesfiltro IN($v_coach)";
+		}
 
+		if ($v_coach=='-1') {
+			$sql.=" AND TABLA.cantidadcoach=0";
+		}
 
 		$sql.=" ORDER BY
-		servicios.orden ASC";
+		TABLA.orden ASC";
 
 
 		$resp=$this->db->consulta($sql);
@@ -1266,7 +1277,6 @@ public function Eliminardeencuestas()
 	    OR fecha = (SELECT MIN(fecha) FROM horariosservicio WHERE idservicio='$this->idservicio')
 	  GROUP BY  fecha";
 
-	  echo $sql;die();
 
 	    $resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

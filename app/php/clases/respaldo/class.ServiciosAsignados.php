@@ -59,17 +59,21 @@ public function obtenerServiciosAsignadosPendientes()
 				$fechaactual=date('Y-m-d');
 
 
-				$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
+				/*$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
 				$resphorarios=$this->db->consulta($sql1);
 
 				$conta = $this->db->num_rows($resphorarios);
-
-				if ($conta>0) {
+*/
+				//if ($conta>0) {
 
 					$array[$contador]=$objeto;
 					$contador++;
 				
-				}
+				//}
+
+
+
+
 			} 
 		}
 		
@@ -1475,46 +1479,7 @@ public function obtenerServiciosAsignadosPendientes()
 	}
 
 
-	public function obtenerServiciosAsignadosCoach2()
-	{
-		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
-		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
-			AND cancelacion=0 AND servicios.validaradmin=1 
-
-			GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios
-		 ";
-
-		$resp=$this->db->consulta($sql);
-		$cont = $this->db->num_rows($resp);
-
-
-		$array=array();
-		$contador=0;
-		if ($cont>0) {
-
-			while ($objeto=$this->db->fetch_object($resp)) {
-
-				/*$fechaactual=date('Y-m-d');
-
-
-				$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
-				$resphorarios=$this->db->consulta($sql1);
-
-				$conta = $this->db->num_rows($resphorarios);
-*/
-				//if ($conta>0) {
-
-					$array[$contador]=$objeto;
-					$contador++;
-				
-				//}
-			} 
-		}
-		
-		return $array;
-	}
-
-
+	
 	
 	public function obtenerUsuariosServiciosAsignadosAlumnos()
 	{
@@ -1559,7 +1524,44 @@ public function obtenerServiciosAsignadosPendientes()
 		return $array;
 	}
 
-	
+	public function obtenerServiciosAsignadosCoach2()
+	{
+		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
+			AND cancelacion=0 AND servicios.validaradmin=1 GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios
+		 ";
+
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				/*$fechaactual=date('Y-m-d');
+
+
+				$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
+				$resphorarios=$this->db->consulta($sql1);
+
+				$conta = $this->db->num_rows($resphorarios);
+*/
+				//if ($conta>0) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				
+				//}
+			} 
+		}
+		
+		return $array;
+	}
+
 
 
 }

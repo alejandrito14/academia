@@ -32,15 +32,15 @@ try
     $buscarUsuarioServicio=$lo->buscarUsuarioServicio();
 
 
-    if (count($buscarUsuarioServicio)>0) {
+    /*if (count($buscarUsuarioServicio)>0) {
     	$resultado=2;
     }
-    else{
+    else{*/
     	$usu->idusuarios=$idusuariotutorado;
     	$usu->EliminarUsuarioSecundario();
     	//$usu->EliminarUsuario();
     	$resultado=1;
-    }
+    //}
 
 
 

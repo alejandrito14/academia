@@ -183,8 +183,16 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 		    <th style="width: 20%;">ID SERVICIO</th>
 		    <th style="width: 20%;">SERVICIO</th>
 		   	<th style="width: 20%;">COACH</th>
+ 			<th style="width: 20%;">FOLIO TICKET</th>
+		   	<th style="width: 20%;">MONTO</th>
+		   	<th style="width: 20%;">NOMBRE DESCUENTO</th>
+		   	<th style="width: 20%;">DESCUENTO</th>
+		   	<th style="width: 20%;">NOMBRE MEMBRESÍA</th>
 
-		   
+		   	<th style="width: 20%;">DESCUENTO MEM.</th>
+
+		  
+		   	<th style="width: 20%;">TOTAL PAGADO</th>
 
 		  </tr>
 		  </thead>
@@ -204,17 +212,65 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 						$idusuarios=$participantes[$i]->idusuarios;
 						$asignacion->idusuario=$idusuarios;
 						$asignacion->idservicio=$idservicio;
-						$pagadoservicio=$asignacion->VerificarSihaPagado();
+						$obtenerpago=$asignacion->VerificarSihaPagado();
 
-						if (count($pagadoservicio)>0) {
+						if (count($obtenerpago)>0) {
 							$pagado=1;
 						}else{
 							$pagado=0;
 						}
 						$participantes[$i]->pagado=$pagado;
 
+			$descuentomembresia="";
+		 	$fechapago="";
+		 	$metodopago="";
+		 	$montopago=0;
+		 	$descuento=0;
+		 	$montocomision=0;
+		 	$descuentomem=0;
+		 	$nombredescuento="";
+		 	$nombremembresia="";
+		 	$descuentopago=0;
+		 	$totalpagado=0;
+		 	$folio="";
+
+				if ($pagado==1) {
+
+				if (count($obtenerpago)>0) {
+		 	
+
+		 		$notas->idpago=$obtenerpago[0]->idpago;
+		 		$pagos->idpago=$obtenerpago[0]->idpago;
+		 		$obtenernotapago=$notas->ObtenerNotaPagoporPago();
+					$fechapago=date('d-m-Y H:i:s',strtotime($obtenernotapago[0]->fecha));
+		 			$metodopago=$obtenernotapago[0]->tipopago;
+		 			$folio=$obtenernotapago[0]->folio;
+			 			if ($obtenernotapago[0]->estatus==1) {
+			 				$pagado=1;
+			 			
+
+			 			$montopago=$obtenerpago[0]->monto;
 
 
+			 			$descuento=$pagos->ObtenerPagoDescuento2();
+			 			$descuentomembresia=$pagos->ObtenerPagoDescuentoMembresia();
+
+			 			$nombremembresia=$descuentomembresia[0]->nombremembresia;
+
+			 			$nombredescuento=$descuento[0]->nombredescuento;
+			 				$montopagocondescuento=$montopago-$descuento[0]->montodescontar;
+			 			  $montocomision=$asignacion->CalcularMontoPago($tipomontopago[0]->tipopago,$tipomontopago[0]->monto,$montopagocondescuento);
+						$descuentomem=$descuentomembresia[0]->montodescontar;
+						$descuentopago=$descuento[0]->montodescontar;
+
+			 			  $totalpagado=$montopagocondescuento-$descuentomembresia[0]->montodescontar;
+
+			 		}
+		 	
+
+		 		}
+		 		
+			}
 
 
 						$objeto=array(
@@ -227,7 +283,14 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 							'celular'=>$participantes[$i]->celular,
 							'idservicio'=>$idservicio,
 							'servicio'=>$array[$j]->titulo,
-							'coachs'=>$obtenercoachs
+							'coachs'=>$obtenercoachs,
+							'folio'=>$folio,
+							'totalpagado'=>$totalpagado,
+							'descuento'=>$descuentopago,
+							'descuentomembresia'=>$descuentomem,
+							'montopago'=>$montopago,
+							'nombredescuento'=>$nombredescuento,
+							'nombremembresia'=>$nombremembresia
 
 
 						);
@@ -312,6 +375,17 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 		 				  ?>
 
 		 				 </td>
+		 				  <td><?php echo $arrayestatus[$e]['folio']; ?></td>
+		 				
+		 				    <td>$<?php echo number_format($arrayestatus[$e]['montopago'],2,'.', ','); ?></td>
+		 				    <td><?php echo $arrayestatus[$e]['nombredescuento']; ?></td>
+		 				     <td>$<?php echo number_format($arrayestatus[$e]['descuento'],2,'.', ','); ?></td>
+
+		 				      <td><?php echo $arrayestatus[$e]['nombremembresia']; ?></td>
+		 				      <td>$<?php echo number_format($arrayestatus[$e]['descuentomembresia'],2,'.', ','); ?></td>
+
+		 				       
+		 				   <td>$<?php echo number_format($arrayestatus[$e]['totalpagado'],2,'.', ','); ?></td>
 		 			</tr>
 			<?php
 

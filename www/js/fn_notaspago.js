@@ -1847,14 +1847,15 @@ function PintarDescuentosDetalleNota(respuesta) {
 
 function PintarDescuentosDetalleMembresiaNota(respuesta) {
 	var html="";
+
 	if (respuesta.length>0) {
 		for (var i = 0; i <respuesta.length; i++) {
 			
 			html+=` <li class="list-group-item  align-items-center" style="background: #46b2e2;">
 			   <div class="row">
 			   <div class="col-md-10">
-			   		<p id="">  Descuento `+respuesta[i][0].titulo+`</p>
-                    <p class="" style=" float: right;">$<span class="lbldescuento">`+formato_numero(respuesta[i][0].montoadescontar,2,'.',',')+`</span></p>
+			   		<p id="">  Descuento `+respuesta[i].titulo+`</p>
+                    <p class="" style=" float: right;">$<span class="lbldescuento">`+formato_numero(respuesta[i].montoadescontar,2,'.',',')+`</span></p>
 
                    </div>
                    <div class="col-md-2">
@@ -1924,7 +1925,7 @@ function GuardarValidacionNota(idnotapago) {
       async:false,
       success: function(msj){
 
-
+      	   $("#txtvalidacion").val('');
            $("#modalaceptacion").modal('hide');
            AbrirNotificacion("SE REALIZARON LOS CAMBIOS CORRECTAMENTE","mdi-checkbox-marked-circle ");
            ObtenerNotasPorvalidar();

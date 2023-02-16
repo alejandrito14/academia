@@ -142,11 +142,14 @@ $arraydescuentos=array();
 if ($validado==1) {
 		if ($porhorarioservicio==1) {
 					
-				$fechaactual=date('Y-m-d',strtotime($fechacreacionservicio));
+				$fechaactual=date('Y-m-d',strtotime($datosservicio[0]->fechainicial));
 
 				$fechades = date('Y-m-d',strtotime($fechaactual."+ ".$cantidaddias." days"));
 
+
 					$cantidadhorariosServicio=$descuento->ObtenerCantidadHorarios($fechaactual,$fechades);
+
+
 					//var_dump($cantidadhorariosServicio);die();
 					$canthorarios=$cantidadhorariosServicio[0]->cantidadhorarios;
 					
@@ -154,6 +157,8 @@ if ($validado==1) {
 					$validado=0;
 					if ($canthorarios==$cantidadhorariosservicios) {
 							$validado=1;
+
+
 						
 								}
 
@@ -164,24 +169,30 @@ if ($validado==1) {
 				if ($portiposervicio==1) {
 					
 					$obtenercategoriasservicio=$descuento->ObtenerCategoriasDescuento();
-
+					
 					$encontrado=0;
 					for ($k=0; $k < count($obtenercategoriasservicio); $k++) { 
 
+						//echo $obtenercategoriasservicio[$k]->idcategorias.'=='.$idcategoriatipo.'<br>';
+
 						if ($obtenercategoriasservicio[$k]->idcategorias==$idcategoriatipo) {
+							
 							$encontrado=1;
-							break;
+							
 						}
 						
 						
 					}
 
-					if ($encontrado==1) {
-									$validado=1;
+
+					if($encontrado==1) {
+						$validado=1;
 				 
 				 		}else{
 				 			$validado=0;
 				 		}
+
+				 		
 					
 
 				}
@@ -190,6 +201,8 @@ if ($validado==1) {
 if ($validado==1) {
 
 				if ($porservicio==1) {
+
+
 					$obtenerserviciosdescuento=$descuento->ObtenerServiciosDescuentos();
 
 					$encontrado=0;
@@ -212,6 +225,7 @@ if ($validado==1) {
 if ($validado==1) {
 				if ($porparentesco==1) {
 					
+
 					
 					$obtenerparentescosdescuento=$descuento->ObtenerDescuentoParentesco();
 					//$descuento->idusuario=$iduser;
@@ -270,7 +284,9 @@ if ($validado==1) {
 			}
 			//echo 'validado'.$validado;
 if ($validado==1) {
+
 				if ($porniveljerarquico==1) {
+					
 
 						if($inpadre==1){
 
@@ -313,10 +329,13 @@ if ($validado==1) {
 				
 
 			if ($porclientenoasociado==1) {
-					
-						$obtenermultinoasociados=$descuento->ObtenerMultinoAsociados();
+				
 
+						$obtenermultinoasociados=$descuento->ObtenerMultinoAsociados();
+						//var_dump($obtenermultinoasociados);die();
 						$obtenercantidadpersonasservicios=$descuento->ObtenerAsignadosServicio();
+
+
 						$validado=0;
 						$cantidad=$obtenercantidadpersonasservicios[0]->cantidad;
 							for ($o=0; $o < count($obtenermultinoasociados); $o++) { 
