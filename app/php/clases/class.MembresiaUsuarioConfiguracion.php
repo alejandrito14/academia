@@ -11,7 +11,7 @@ class MembresiaUsuarioConfiguracion
 	public $repetir;
 	public $fechacreacion;
 	public $db;
-
+	public $fechaexpiracion;
 
 	public function GuardarMembresiaUsuarioConfiguracion()
 	{ 
@@ -23,7 +23,7 @@ class MembresiaUsuarioConfiguracion
 
 	public function ObtenerConfiguracionMembresia()
 	{
-		$sql="SELECT *FROM usuario_membresia_configuracion WHERE idusuarios='$this->idusuarios' AND idmembresia='$this->' AND estatus=1 ";
+		$sql="SELECT *FROM usuario_membresia_configuracion WHERE idusuarios='$this->idusuarios' AND idmembresia='$this->idmembresia' AND fecha >'$this->fechaexpiracion' ORDER BY fecha ASC ";
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

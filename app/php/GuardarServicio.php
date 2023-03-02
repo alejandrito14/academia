@@ -276,7 +276,9 @@ try
 					$tipo=$porcentajescoachs[$i]->{'tipopago'};
 					$monto=$porcentajescoachs[$i]->{'monto'};
 
-						$emp->GuardarMontotipo($tipo,$monto);	
+						$emp->GuardarMontotipo($tipo,$monto);
+
+							
 						}
 					}
 				}

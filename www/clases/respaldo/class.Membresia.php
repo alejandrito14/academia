@@ -684,6 +684,63 @@ class Membresia
 
 	}
 
+	public function ObtenerMembresiaUsuarioPorPagar()
+	{
+		$sql="SELECT 
+			usuarios_membresia.idusuarios,
+			usuarios_membresia.idmembresia,
+			membresia.titulo,
+			membresia.imagen,
+			usuarios_membresia.fecha,
+			usuarios_membresia.estatus,
+			usuarios_membresia.renovacion,
+			usuarios_membresia.fechaexpiracion,
+			usuarios_membresia.pagado,
+			usuarios_membresia.idusuarios_membresia,
+			membresia.color
+		FROM usuarios_membresia
+		INNER JOIN membresia ON membresia.idmembresia=usuarios_membresia.idmembresia
+		 WHERE usuarios_membresia.idusuarios='$this->idusuarios' AND usuarios_membresia.idmembresia='$this->idmembresia' AND usuarios_membresia.estatus=1 ORDER BY idusuarios_membresia desc limit 1 
+		 ";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ActualizarEstatusMembresia($idusuarios_membresia)
+	{
+		$query="UPDATE usuarios_membresia 
+		SET
+		pagado=1
+		WHERE idusuarios_membresia='$idusuarios_membresia'";
+		$resp=$this->db->consulta($query);
+	}
+
+	public function ActualizarEstatusMembresiaCancelada($idusuarios_membresia)
+	{
+		$query="UPDATE usuarios_membresia 
+		SET
+		pagado=0
+		WHERE idusuarios_membresia='$idusuarios_membresia'";
+		$resp=$this->db->consulta($query);
+	}
+
+
 
 }
 

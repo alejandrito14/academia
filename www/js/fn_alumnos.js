@@ -640,3 +640,42 @@ function ObtenerDependencia(idusuario) {
 
 	});
 }
+
+function detalleAlumno(idusuario) {
+	
+		var datos="idusuario="+idusuario;
+		$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		data:datos,
+		url:'catalogos/alumnos/ObtenerDetalleUsuario.php', //Url a donde la enviaremos
+		async:false,
+		success: function(res){
+			console.log(res);
+			var usuario=res.respuesta[0];
+			Pintardatos(usuario);
+			//CargarServicios();
+
+		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+			var error;
+				if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+				//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+				console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+		}
+
+	});
+}
+
+function Pintardatos(respuesta) {
+	console.log(respuesta);
+	$(".imgperfil").attr('src',respuesta.imagenperfil);
+	var nombre=respuesta.nombre+' '+respuesta.paterno+' '+respuesta.materno;
+	$(".divalias").html(respuesta.alias);
+	$(".divnombre").html(nombre);
+	$(".divfechanacimiento").html(respuesta.fechanacimiento);
+	$(".divcorreo").html(respuesta.email);
+	$(".divsexo").html(respuesta.sexo);
+	$(".divcelular").html(respuesta.celular);
+	$("#modaldetallealumno").modal();
+}

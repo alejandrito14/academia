@@ -369,6 +369,7 @@ try {
                   
                   $buscarpago=$pagos->ObtenerPago();
 
+
                   if ($pagosconsiderados[$i]->idservicio>0) {
 
 
@@ -448,10 +449,11 @@ try {
 
               }
 
-              if ($pagosconsiderados[$i]->tipo==2) {
+              if ($pagosconsiderados[$i]->tipo==2) { 
 
                    $pagos->idpago=$pagosconsiderados[$i]->id;
                   $buscarpago=$pagos->ObtenerPago();
+                  $membresia->idpago=$pagos->idpago;
                    $membresia->idusuarios=$iduser;
                   if (count($buscarpago)==0) {
 
@@ -480,6 +482,7 @@ try {
 
                   }else{
                       $membresia->idmembresia=$buscarpago[0]->idmembresia;
+                      $membresia->idpago=$buscarpago[0]->idpago;
                       $obtenermembresia=$membresia->ObtenerMembresia();
 
                    $membresia->idusuarios=$buscarpago[0]->idusuarios;
@@ -495,7 +498,7 @@ try {
                    $pagos->ActualizarPagado();
 
                  
-                  $buscarmembresiausuario=$membresia->buscarMembresiaUsuario();
+                  $buscarmembresiausuario=$membresia->buscarMembresiaUsuario2();
                 
 
                    $dias=$obtenermembresia[0]->cantidaddias;
@@ -508,7 +511,13 @@ try {
                    if (count($buscarmembresiausuario)>0) {
                       $membresia->idusuarios_membresia= $buscarmembresiausuario[0]->idusuarios_membresia;
                
-                      $membresia->estatus=1;
+
+                  if($buscarmembresiausuario[0]->estatus!=2) {
+                    $membresia->estatus=1;
+                      }else{
+                     $membresia->estatus=2;
+                   }
+                      
                       $membresia->pagado=1;
 
                    }else{
@@ -530,7 +539,7 @@ try {
                      $membresia->pagado=0;
                     }
  
-                  $membresia->ActualizarEstatusMembresiaUsuarioPagado();
+                  $membresia->ActualizarEstatusMembresiaUsuarioPagado2();
 
           	   }
 
@@ -559,10 +568,11 @@ try {
 
 
           		}
-
+              $notapago->fechareporte=date('Y-m-d H:i:s');
               $notapago->idpagostripe=0;
               if ($constripe==1) {
                $notapago->idpagostripe=$obj->idintento;
+               
              }
                $notapago->descuento=0;
                $notapago->descuentomembresia=0;

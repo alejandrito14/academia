@@ -166,6 +166,8 @@ class Pagos
 		$sql="UPDATE pagos SET  pagado = '$this->pagado',
 		    fechapago='$this->fechapago'
 		 WHERE idpago = '$this->idpago'";
+
+		
 		$resp=$this->db->consulta($sql);
 
 	}

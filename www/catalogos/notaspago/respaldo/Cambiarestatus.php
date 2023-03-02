@@ -20,7 +20,7 @@ require_once("../../clases/class.Notapago.php");
 
 require_once("../../clases/class.Notapago.php");
 require_once('../../clases/class.MovimientoBitacora.php');
-
+require_once('../../clases/class.Membresia.php');
 try
 {
 
@@ -33,6 +33,9 @@ try
     $md->db = $db;  
     $pago->db=$db;
     $notapago->db=$db;
+
+    $membresia=new Membresia();
+    $membresia->db=$db;
     $idnotapago = $_POST['idnotapago'];
     $estado=$_POST['estado'];
     $descripcion=$_POST['descripcion'];
@@ -42,7 +45,11 @@ try
     $notapago->idnotapago=$idnotapago;
     $notapago->estatus=$estado;
     $notapago->descripcionaceptacion=$descripcion;
+    $notapago->idusuarioquiencambia=$_SESSION['se_sas_Usuario'];
+    $notapago->fechaaceptacion=date('Y-m-d H:i:s');
+    $notapago->fechareporte=$notapago->fechaaceptacion;
     $notapago->CambiarEstatus();
+  
 
     $obtenerdescripcionnota=$notapago->ObtenerdescripcionNota();
     if ($notapago->estatus==1) {
@@ -62,13 +69,39 @@ try
          for ($i=0; $i <count($obtenerdescripcionnota) ; $i++) { 
             
             $pago->idpago=$obtenerdescripcionnota[$i]->idpago;
+            $pago->estatus=2;
         
             $pago->ActualizarPagado();
+
+
+            $obtenerpago=$pago->BuscarPago2();
+            if(count($obtenerpago)>0) {
+                # code...
+            if($obtenerpago[0]->tipo == 2) {
+
+
+               $idusuario=$obtenerpago[0]->idusuarios;
+               $idmembresia=$obtenerpago[0]->idmembresia;
+
+               $membresia->idusuarios=$idusuario;
+               $membresia->idmembresia=$idmembresia;
+
+               $obtenermembresia=$membresia->ObtenerMembresiaUsuarioPorPagar();
+
+               $idusuarios_membresia=$obtenermembresia[0]->idusuarios_membresia;
+               $membresia->ActualizarEstatusMembresia($idusuarios_membresia);
+               ///falta por realizar el cambio a pagado
+               }
+
+
+
+
+            }
         }
 
 
 
-    $md->guardarMovimiento($f->guardar_cadena_utf8('nota de pago'),'nota de pago',$f->guardar_cadena_utf8('Cambio de estatus nota de pago ID-'.$pago->idpago.' por usuario '.$_SESSION['se_sas_Usuario']));
+    $md->guardarMovimiento($f->guardar_cadena_utf8('nota de pago'),'nota de pago',$f->guardar_cadena_utf8('Cambio de estatus a '.$notapago->estatus.' nota de pago ID-'.$notapago->idnotapago.' por usuario '.$_SESSION['se_sas_Usuario']));
 
     $db->commit();
 

@@ -1,7 +1,7 @@
 <?php
 
 /*======================= INICIA VALIDACIÓN DE SESIÓN =========================*/
-
+ 
 require_once("../../clases/class.Sesion.php");
 //creamos nuestra sesion.
 $se = new Sesion();

@@ -47,16 +47,20 @@ try
 	$db->begin();
 		
 		
-
+	$obtenerclavetoken=$notificacion->ObterClaveToken();
+		
+	$tokenapp=$obtenerclavetoken[0]->clavetokennotificacion;
+$notificacionpush->apikey=$tokenapp;
 
 	//Recbimos parametros
 	$notificacion->idnotificacion = trim($_POST['id']);
-
+	$titulo=$_POST['v_titulo'];
+	$mensaje=$_POST['mensaje'];
 	$notificacion->titulo = trim($f->guardar_cadena_utf8($_POST['v_titulo']));
 	$notificacion->mensaje=$_POST['mensaje'];
 	$notificacion->programado=$_POST['programado'];
 	$notificacion->seleccionar=$_POST['dirigido'];
-	$notificacion->todosclientes=$_POST['v_tclientes'];
+	$notificacion->todosclientes=$_POST['v_tusuarios'];
 	$notificacion->todosadmin=$_POST['todosadmin'];
 	$notificacion->estatus=$_POST['v_estatus'];
 	$notificacion->fechahora='';
@@ -82,12 +86,15 @@ try
 		$enviocliente=0;
 		$enviousuario=0;
 
-	if ($notificacion->seleccionar==1) {
-		$enviocliente=1;
-		$enviousuario=0;
+	if ($notificacion->seleccionar==-1) {
+		//$enviocliente=1;
+		$todosusuarios=1;
+	}else{
+
+		$todosusuarios=0;
 	}
 
-	if ($notificacion->seleccionar==2) {
+	/*if ($notificacion->seleccionar==2) {
 		$enviocliente=0;
 		$enviousuario=1;
 	}
@@ -95,12 +102,12 @@ try
 	if ($notificacion->seleccionar==3) {
 		$enviocliente=0;
 		$enviousuario=0;
-	}
+	}*/
 
 	$clientesvar=$_POST['clientes'];
 	$usuariosvar=$_POST['usuarios'];
 
-
+	$arraytokens=array();
 
 	
 	//Validamos si hacermos un insert o un update
@@ -160,8 +167,45 @@ try
 			/*	}
 			}
 */
-			if ($usuariosvar!='' && $notificacion->todosadmin==1) {
-				$arreglousuarios=explode(',', $usuariosvar);
+
+if ($todosusuarios==0) {
+	# code...
+
+			if ($notificacion->todosclientes==0) {
+				   $tipo=$_POST['dirigido'];
+						 $obtenertodosusuariostipo=$usuarios->ListadoUsuariostipo($tipo);	
+					
+						 $arreglousuarios= $obtenertodosusuariostipo;
+					
+						//echo 'aqi1';
+			}else{
+
+
+							$arreglousuarios=explode(',', $usuariosvar);
+
+					//	echo 'aqi2';
+
+			}
+
+		}else{
+
+						if($todosusuarios==1){
+						//echo 'aqi3';
+
+						$obtenerusuarios=$usuarios->ObtenerTodosUsuarios();
+
+					 $arreglousuarios= $obtenerusuarios;
+						
+
+					}
+				
+
+
+		}
+
+
+//var_dump(count($arreglousuarios));die();
+			if (count($arreglousuarios)>0 ) {
 
 				for ($i=0; $i < count($arreglousuarios); $i++) { 
 
@@ -176,85 +220,28 @@ try
 						for ($a=0; $a < count($tokens); $a++) { 
 
 								if ($tokens[$a]!='null') {
-								array_push($arraytokensusuarios,$tokens[$a]);
+
+								$dato=array('idusuario'=>$usuarios->id_usuario,'token'=>$tokens[$a],'ruta'=>$ruta,'titulonotificacion'=>$titulo,'mensaje'=>$mensaje);
+								array_push($arraytokens,$dato);
 
 								}
 							}
+
+
+									$texto='|'.$notificacion->titulo.'|'.$notificacion->mensaje;
+					$notificacionpush->AgregarNotifcacionaUsuarios($usuarios->id_usuario,$texto,'','',0);	
 					
-				}
+					}
 
 					
 				}
 			}
-				//programado 1= ahora,2=fecha hora
-			if ($notificacion->programado==1) {
 
 				
-				
-				$obtenerclavetoken=$notificacion->ObterClaveToken();
-				$tokenadmin=$obtenerclavetoken[0]->clavetokenadministrador;
-				$tokenapp=$obtenerclavetoken[0]->clavetokennotificacion;
-
-
-
-				
-				$notificacionpush->apikey=$tokenadmin;
-				$notificacionpushcliente->apikey=$tokenapp;
 
 			
-					
-				
 
-				$arreglousuarios=explode(',', $usuariosvar);
-				$arregloclientes=explode(',', $clientesvar);
-
-
-			if ($enviousuario==1) {
-				if ($arreglousuarios[0]!='') {
-				for ($i=0; $i < count($arreglousuarios); $i++) { 
-
-		
-					$texto='|'.$notificacion->titulo.'|'.$notificacion->mensaje;
-					$notificacionpush->AgregarNotifcacionaUsuarios($arreglousuarios[$i],$texto,'','',0);	
-					}
-
-				}else{
-
-
-					if($notificacion->todosadmin==0){
-
-						$obtenerusuarios=$usuarios->ObtTodosUsuarios();
-
-						for ($i=0; $i < count($obtenerusuarios); $i++) { 
-							
-					$usuarios->id_usuario=$obtenerusuarios[$i]->idusuarios;
-					$tokenusuarios=$usuarios->ObtenerTokenusuarios();
-					
-					if($tokenusuarios[0]->tokenusuario!=''){
-
-						$tokens=explode(',',$tokenusuarios[0]->tokenusuario);
-						for ($a=0; $a < count($tokens); $a++) { 
-
-							if ($tokens[$a]!='null') {
-								array_push($arraytokensusuarios,$tokens[$a]);
-
-								}
-							}
-					
-						}
-
-						$texto='|'.$notificacion->titulo.'|'.$notificacion->mensaje;
-					$notificacionpush->AgregarNotifcacionaUsuarios($obtenerusuarios[$i]->idusuarios,$texto,'','',0);	
-
-						}
-
-
-					}
-				}
-
-			}
-
-	if ($enviocliente==1) {
+	/*if ($enviocliente==1) {
 			if ($arregloclientes[0]!='') {
 
 				for ($i=0; $i < count($arregloclientes); $i++) { 
@@ -266,47 +253,16 @@ try
 			}else{
 
 
-				if($notificacion->todosclientes==0){
-					$obtenerclientes=$clientes->Todoslosclientes();
-
-
-					for ($i=0; $i <count($obtenerclientes) ; $i++) { 
-						
-
-					$clientes->idCliente=$obtenerclientes[$i]->idcliente;
-					$tokencliente=$clientes->ObtenerTokensfirebaseClientes();
-
-				
-							if($tokencliente[0]->token!=''){
-
-								$tokens=explode(',',$tokencliente[0]->token);
-								for ($a=0; $a < count($tokens); $a++) { 
-
-									if ($tokens[$a]!='null') {
-										array_push($arraytokensclientes,$tokens[$a]);
-
-									}
-								}
-								
-
-							}
-
-
-					$texto='|'.$notificacion->titulo.'|'.$notificacion->mensaje;
-					$notificacionpushcliente->AgregarNotifcacionaCliente($obtenerclientes[$i]->idcliente,$texto,'','',0);
-						}
-
-
-					}
+			
 
 
 				}
 
-		}
+		}*/
 
 		
 
-				if ($notificacion->seleccionar==4) {
+				/*if ($notificacion->seleccionar==4) {
 					
 					$obtenerclientes=$clientes->ObtenerTokensfirebase();
 
@@ -322,11 +278,11 @@ try
 								}
 						
 					}
-				}
+				}*/
 
 
 
-			}
+			
 
 
 
@@ -335,42 +291,30 @@ try
 		
 
 			$db->commit();
-			if ($notificacion->programado==1) {
-				if (count($arraytokensclientes)>0) {
+			
+		//	var_dump($arraytokens);die();
+			if (count($arraytokens)>0) {
+			$texto='';
+			for ($i=0; $i <count($arraytokens) ; $i++) { 
 
-					if (count($arraytokensclientes)>999) {
-						$parts = array_chunk($arraytokensclientes, 999, true);
-
-
-					for ($i=0; $i <count($parts) ; $i++) { 
-						
-						$arreglo=$parts[$i];
-
-						$notificacionpushcliente->EnviarNotificacion($arreglo,$notificacion->titulo,$notificacion->mensaje);
-					}
+				//if ($arraytokens[$i]!='') {
+					# code...
 				
-					}else{
-
-						
-							$notificacionpushcliente->EnviarNotificacion($arraytokensclientes,$notificacion->titulo,$notificacion->mensaje);
-							
-
-
-					}
+			 $idusuario=$arraytokens[$i]['idusuario'];
+			
+			 $notificacionpush->idcliente=$idusuario;
+			 $notificacionpush->valor='';
+			 $notificacionpush->navpage=$arraytokens[$i]['ruta'];
+			 $array=array();
+			 $texto="";
+			 $titulonotificacion=$arraytokens[$i]['mensaje'];
+			 array_push($array,$arraytokens[$i]['token']);
+			 $texto=$arraytokens[$i]['titulonotificacion'];
+			$notificacionpush->EnviarNotificacion($array,$texto,$titulonotificacion);
 				
-					
-					
-					
-
-				}
-
-
-				if (count($arraytokensusuarios)>0) {
-
-					$notificacionpush->EnviarNotificacion($arraytokensusuarios,$notificacion->titulo,$notificacion->mensaje);
-				}
 
 			}
+		}
 
 				
 	echo "1|".$notificacion->idnotificacion;

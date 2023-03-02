@@ -7,7 +7,9 @@ var seccion3=0;
 var seccion4=0;
 var zonasarray=[];
 var horarioscomparacion=[];
-
+var arrayinscritos=[];
+var arrayalumnos=[];
+var arrayquitar=[];
 function Guardarservicio2(form,regresar,donde,idmenumodulo)
 {
 	if(confirm("\u00BFDesea realizar esta operaci\u00f3n?"))
@@ -3731,3 +3733,273 @@ function deleteArchivo(idimageninformativa,idservicio) {
     
     return vattachedFileIndex;
  }
+
+
+function AbrirModalAsignacion(idservicio) {
+	$("#modalAlumnosAsignacion").modal();
+	$(".btnasignaralumnos").attr('onclick','GuardarAsignacionAlumnos('+idservicio+')');
+	var datos="idservicio="+idservicio;
+		$.ajax({
+					url: 'catalogos/servicios/ObtenerAlumnosServicio.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					dataType:'json',
+					data:datos,
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+						var respuesta=msj.asignados;
+						var servicio=msj.servicio;
+						$("#exampleModalTitleServicio").text(servicio.titulo);
+				     	
+
+				     	PintarAlumnosServiciosAsignados(respuesta);
+
+				     	ObtenerTodosLosAlumnos(idservicio);
+					}
+				});
+}
+
+
+function PintarAlumnosServiciosAsignados(respuesta) {
+	
+	var html=`
+		
+	`;
+	if (respuesta.length) {
+		arrayinscritos=respuesta;
+		for (var i = 0; i < respuesta.length; i++) {
+			html+=`<div class="usu_" id="alumnoinscrito_`+respuesta[i].idusuarios+`">`;
+			html+=`<div class="row " >
+				
+					<div class="col-md-6">
+						<span>`+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`
+						</span>
+					</div>
+					
+					<div class="col-md-6">`;
+					var pagado="";
+					if (respuesta[i].pagado==1) {
+						
+					
+					}else{
+						html+=`<span class="badge badge-danger" style="cursor:pointer;height: 20px;
+    width: 100px;" onclick="QuitarDiv(`+respuesta[i].idusuarios+`)">Quitar</span>
+						`;
+					}
+				html+=`</div>
+					</div>
+				</div>
+
+
+				</div>
+
+				</div>
+			`;
+
+		}
+	}
+
+	$("#usuariosinscritos2").html(html);
+}
+
+
+function ObtenerTodosLosAlumnos(idservicio) {
+		  var datos="idservicio="+idservicio;
+			$.ajax({
+					url: 'catalogos/servicios/ObtenerAlumnos.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					dataType:'json',
+					data:datos,
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+						var respuesta=msj.respuesta;
+				     	PintarAlumnosServiciosNoAsignados(respuesta);
+
+					}
+				});
+	}
+
+function PintarAlumnosServiciosNoAsignados(respuesta) {
+	var html=`
+		
+
+	`;
+	if (respuesta.length) {
+		arrayalumnos=respuesta;
+		for (var i = 0; i < respuesta.length; i++) {
+			html+=`<div class="alumno" id="usuario_`+respuesta[i].idusuarios+`">`;
+			html+=`<div class="row " >`;
+			var pagado="";
+			
+				pagado=`<div class="col-md-6">
+				<span class="badge badge-success" onclick="AgregarAdiv(`+respuesta[i].idusuarios+`)"  style="cursor:pointer;height: 20px;
+    width: 100px;">Agregar</span></div>`;
+			
+
+
+			html+=`
+				<div class="col-md-6">`+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`</span></div>`
+				+pagado+`
+
+				</div>
+
+				</div>
+				
+			`;
+		}
+	}
+	html+=`</div>`;
+
+	$("#usuariosnoinscritos").html(html);
+}
+
+function AgregarAdiv(idusuarios) {
+		  var datos="idusuario="+idusuarios;
+		  $("#usuario_"+idusuarios).remove();
+
+			$.ajax({
+					url: 'catalogos/servicios/ObtenerAlumno.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					dataType:'json',
+					data:datos,
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+						var respuesta=msj.respuesta;
+
+						for (var i =0; i <arrayalumnos.length; i++) {
+							if (arrayalumnos[i].idusuarios==idusuarios) {
+								arrayalumnos.splice(i,1);
+							}
+
+							
+						}
+
+						for (var i = 0; i < arrayquitar.length; i++) {
+							if (arrayquitar[i]==idusuarios) {
+								arrayquitar.splice(i,1);
+							}
+						}
+						arrayinscritos.push(respuesta);
+						PintarAlumnosServiciosAsignados(arrayinscritos);
+					}
+				});
+}
+
+function QuitarDiv(idusuarios) {
+	  var datos="idusuario="+idusuarios;
+		  $("#alumnoinscrito_"+idusuarios).remove();
+
+			$.ajax({
+					url: 'catalogos/servicios/ObtenerAlumno.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					dataType:'json',
+					data:datos,
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+						var respuesta=msj.respuesta;
+
+					for (var i =0; i <arrayinscritos.length; i++) {
+							if (arrayinscritos[i].idusuarios==idusuarios) {
+								arrayinscritos.splice(i,1);
+								arrayquitar.push(idusuarios);
+
+							}
+
+	
+						}
+						arrayalumnos.push(respuesta);
+						PintarAlumnosServiciosNoAsignados(arrayalumnos);
+					}
+				});
+}
+function GuardarAsignacionAlumnos(idservicio) {
+	var arrayusuario=[];
+	var bandera=1;
+	if (arrayinscritos.length==0 && arrayquitar.length==0) {
+		bandera=0;
+	}else{
+		for (var i = 0; i <arrayinscritos.length; i++) {
+			
+			idusuario=arrayinscritos[i].idusuarios;
+			arrayusuario.push(idusuario);
+		}
+
+	}
+	 var datos="idservicio="+idservicio+"&idusuarios="+arrayusuario+"&arrayquitar="+arrayquitar;
+	 if (bandera==1) {
+
+	 	$.ajax({
+					url: 'catalogos/servicios/GuardarAsignacionServicio.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					dataType:'json',
+					data:datos,
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+						
+
+						 var respuesta=msj.respuesta;
+						 var usuariosnoagregados=msj.usuariosnoagregados;
+
+						 if (usuariosnoagregados.length>0) {
+						 		var html="";
+						 			for (var i = 0; i <usuariosnoagregados.length; i++) {
+						 				html+=`<span>
+						 				El usuario `+usuariosnoagregados[i].nombre +' '+usuariosnoagregados[i].paterno+` `+usuariosnoagregados[i].materno+`
+						 				no puede ser asignado a este servicio debido a que pertenece a otro servicio en el mismo horario
+
+						 				</span>`;
+
+						 				var serviciosasignados=usuariosnoagregados[i].servicioscruzados;
+						 				for (var j =0; j < serviciosasignados.length; j++) {
+						 					html+=`<p>`+serviciosasignados[j].titulo+`</p>`
+						 				}
+						 				html+=`</br>`;
+
+
+						 			}
+
+
+							AbrirNotificacion(""+html,"mdi-checkbox-marked-circle ")
+
+						 }else{
+						 	arrayinscritos=[];
+							arrayalumnos=[];
+							arrayquitar=[];
+							AbrirNotificacion("SE REALIZARON LOS CAMBIOS CORRECTAMENTE","mdi-checkbox-marked-circle ")
+				 	
+						 }
+					}
+				});
+	 }
+			
+	}
+

@@ -1,5 +1,5 @@
 <?php 
- define('API_ACCESS_KEY','AAAAXK-GUvQ:APA91bGkGKIKJtDPriKumepreO21ycvwkmuNdsE_89VgbggDoBHaBlCb-2HA4i4rRD_9PFcS19cg9qPL7IP0F8rbbEVW9Ca9ooSfApT3T24u8yUSchyT1hoh4XMC88hlP7xJUR5mZGF0');
+ define('API_ACCESS_KEY','AAAAaWlau64:APA91bGYjpmrXrNETubVwPNOyUB0fYdUHIHlI98hM2CKm9cb-1G_gJsLFtMH1jM5cS2GNGTqk4zEru_pfxZUaOt0KmaAlWmnUovr3n1oZghjjueVMwEBah5oR-KdzgpJ-_CVzePMpJlu');
 
 class NotificacionPush 
 {
@@ -40,7 +40,7 @@ class NotificacionPush
         ];
 
         $headers = [
-            'Authorization: key=' . $this->apikey,
+            'Authorization: key=' .$this->apikey,
             'Content-Type: application/json'
         ];
 
@@ -55,7 +55,6 @@ class NotificacionPush
         $result = curl_exec($ch);
         curl_close($ch);
 
-       // echo $result;
 	
 	}
 
@@ -68,6 +67,8 @@ class NotificacionPush
         $resp=$this->db->consulta($sql);
 
     }
+
+    
 
     public function Cambiarestatusnotificacion()
     {
@@ -111,6 +112,27 @@ class NotificacionPush
 
     }
 	
+
+    public function VerificarSiTieneNotificacion()
+    {  $sql = "SELECT * FROM notificacioncliente WHERE idusuario='$this->idusuario' and valor='$this->valor' ";
+     
+            $resp = $this->db->consulta($sql);
+            $cont = $this->db->num_rows($resp);
+
+
+            $array=array();
+            $contador=0;
+            if ($cont>0) {
+
+                while ($objeto=$this->db->fetch_object($resp)) {
+
+                    $array[$contador]=$objeto;
+                    $contador++;
+                } 
+            }
+            return $array;
+       
+    }
 }
 
 

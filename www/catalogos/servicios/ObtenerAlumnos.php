@@ -44,7 +44,7 @@ try
 
 	$idusuariosservicio=$usuariosservicio[0]->idusuarios;
 
-	$obtenerusuarios=$lo->obtenerUsuariosAlumnosNoServicio($idusuariosservicio);
+	$obtenerusuarios=$lo->obtenerUsuariosAlumnosNoServicio2($idusuariosservicio);
 	$lo->idusuario=0;
 	$obtener=$serviciosasignados->obtenerUsuariosServiciosAlumnosAsignados();
 	$respuesta['respuesta']=$obtenerusuarios;

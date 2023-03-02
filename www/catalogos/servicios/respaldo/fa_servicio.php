@@ -171,6 +171,8 @@ if(!isset($_GET['idservicio'])){
 	$cancelaciondescripcion=$result_SERVICIO_row['cancelaciondescripcion'];
 	$reembolso=$result_SERVICIO_row['reembolso'];
 	$cantidadreembolso=$result_SERVICIO_row['cantidadreembolso'];
+		$tiporeembolso=$result_SERVICIO_row['tiporeembolso'];
+
 	$asignadocliente=$result_SERVICIO_row['asignadocliente'];
 	$asignadocoach=$result_SERVICIO_row['asignadocoach'];
 	$asignadoadmin=$result_SERVICIO_row['asignadoadmin'];
@@ -812,10 +814,22 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 										<input type="checkbox" id="v_reembolso" onchange="HabilitarcantidadReembolso()">
 
 									</div>
+
+							<div class="form-group m-t-20 divcantidadreembolso" style="display: none;">
+									<label for="">TIPO DE REEMBOLSO:</label>
+								<select name="v_tipodescuentoreembolso" id="v_tipodescuentoreembolso" class="form-control">
+									<option value="-1" selected="">SELECCIONAR TIPO DE REEMBOLSO</option>
+									<option value="0">PORCENTAJE</option>
+									<option value="1">MONTO</option>
+								</select>
+							</div>
+
  								<div class="form-group m-t-20 divcantidadreembolso" style="display: none;">
-									<label for="">CANTIDAD $:</label>
+									<label for="">CANTIDAD:</label>
 									<input type="text" id="v_cantidadreembolso" class="form-control" value="<?php echo $cantidadreembolso; ?>">
 								</div>
+
+							
 
 								<div class="form-group m-t-20" style="display: none;">
 									<label for="" id="lbldescripcionpolitica">DESCRIPCIÓN:</label>
@@ -1135,7 +1149,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		// ObtenerCoachs(5,idservicio);
 
 		VerificarSihaypago(idservicio);
-		ObtenerCoachs(5,idservicio);
+		ObtenerCoachsParticipantes(5,idservicio);
 
 		 ObtenerDescuentos(idservicio);
 		 ObtenerMembresias(idservicio);
@@ -1232,12 +1246,14 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		ObtenerHorariosSemana(idservicio);
 		ObtenerHorariosServicioComprobacion(idservicio);
 		ObtenerPeriodos(idservicio);
+		
 
 	abiertocliente='<?php echo $abiertocliente; ?>';
 	abiertocoach='<?php echo $abiertocoach; ?>';
 	abiertoadmin='<?php echo $abiertoadmin; ?>';
 	ligarcliente='<?php echo $ligarcliente; ?>';
 	reembolso='<?php echo $reembolso; ?>';
+	tiporeembolso='<?php echo $tiporeembolso ?>';
 	asistencia='<?php echo $asistencia; ?>';
 	//cantidadreembolso='<?php echo $cantidadreembolso; ?>';
 	asignadocliente='<?php echo $asignadocliente; ?>';
@@ -1268,6 +1284,9 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		if (reembolso==1) {
 			
 			$("#v_reembolso").attr('checked',true);
+			$("#v_tipodescuentoreembolso").val(tiporeembolso);
+		
+			HabilitarcantidadReembolso();
 		}
 
 		if (asignadocliente==1) {

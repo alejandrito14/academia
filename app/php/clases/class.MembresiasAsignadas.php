@@ -16,8 +16,9 @@ class MembresiasAsignadas
 	public $fechafinal;
 	public $fechapago;
 	public $pagado;
-
-
+	public $fechaexpiracion;
+	public $idusuarios_membresia;
+	public $idpago;
 
 	public function ObtenermembresiaActivosAsignados()
 	{
@@ -89,10 +90,10 @@ class MembresiasAsignadas
 
 	public function GuardarAsignacionmembresia()
 	{
-		$query = "INSERT INTO usuarios_membresia (idusuarios,idmembresia) VALUES ('$this->idusuarios','$this->idmembresia')";
+		$query = "INSERT INTO usuarios_membresia (idusuarios,idmembresia,fechaexpiracion) VALUES ('$this->idusuarios','$this->idmembresia','$this->fechaexpiracion')";
 		
 			$this->db->consulta($query);
-
+			$this->idusuarios_membresia=$this->db->id_ultimo();
 	}
 
 	public function VerificarAsignacionmembresia()
@@ -101,6 +102,14 @@ class MembresiasAsignadas
 	
 			$resp=$this->db->consulta($sql);
 			return $resp;
+	}
+
+	public function ActualizarIdPago($value='')
+	{
+		$sql = "UPDATE usuarios_membresia SET idpago='$this->idpago' WHERE idusuarios_membresia='$this->idusuarios_membresia' ";
+		
+		$resp=$this->db->consulta($sql);
+		
 	}
 
 }

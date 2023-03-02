@@ -52,7 +52,9 @@ function CargarFiltrosreportes(idreporte) {
 			var habilitaralumnos=respuesta.habilitaralumnos;
 			var funcionpantalla=respuesta.funcionpantalla;
 			var fechactual=msj.fechactual;
-			Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafin,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla);
+			var habilitartiposervicios=respuesta.habilitartiposervicios;
+
+			Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafin,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios);
 			
 
 			$("#fechainicio1").val(fechactual);
@@ -72,8 +74,8 @@ function CargarFiltrosreportes(idreporte) {
 	}
 }
 
-function Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafinal,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla) {
-
+function Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafinal,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios) {
+	$("#tiposervicios").css('display','none');
 	$("#servicios").css('display','none');
 	$("#fechainicio").css('display','none');
 	$("#fechafinal").css('display','none');
@@ -119,7 +121,56 @@ function Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafi
 	if (habilitarhorafin==1) {
 		$("#horafin").css('display','block');
 	}
+
+	if (habilitartiposervicios==1) {
+		$("#tiposervicios").css('display','block');
+		CargarTipoServiciosRe();
+	}
 	
+}
+
+function CargarTipoServiciosRe() {
+
+	 $.ajax({
+					url:'catalogos/membresia/ObtenerTipoServicios.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos
+					dataType:'json',
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+					  },
+					success:function(msj){
+						
+						var respuesta=msj.respuesta;
+						PintarTipoServiciosRe(respuesta);
+
+					  	}
+				  });
+	
+}
+
+function PintarTipoServiciosRe(respuesta) {
+	var html="";
+	if (respuesta.length>0) {
+
+		for (var i = 0; i <respuesta.length; i++) {
+			html+=`<option value="`+respuesta[i].idcategorias+`">`+respuesta[i].titulo+`</option>`;
+		}
+	}
+
+	$("#v_tiposervicios").html(html);
+	
+	$('#v_tiposervicios').SumoSelect({ 
+		    placeholder: 'Seleccionar tipo de servicio',
+			     selectAll : true,
+   				 selectAllPartialCheck : true,
+                 locale :  ['Aceptar', 'Cancelar', 'Seleccionar todos'],
+				closeAfterClearAll: true, 
+			    });
 }
 function CargarCategorias() {
 
@@ -137,7 +188,7 @@ function CargarCategorias() {
 		 },
 		success : function (msj){
 		
-			$('#v_categoria').html(msj);   
+			$('#tiposervicios').html(msj);   
 			}
 		}); 
 }
@@ -181,6 +232,63 @@ function GenerarPantallaReporteVentas(){
 	aparecermodulos('catalogos/reportes/GenerarPantallaReporteVentas.php?'+datos,'contenedor_reportes'); 
 }
 
+function GenerarReportePantallaTipoServicios() {
+	var idservicio=$("#v_servicios").val();
+	var fechainicio=$("#fechainicio1").val();
+	var fechafin=$("#fechafin").val();
+
+	var horainicio=$("#v_horainicio").val();
+	var horafin=$("#v_horafin").val();
+
+	var fechainicio1=fechainicio.split(' ')[0];
+	var fechafin1=fechafin.split(' ')[0];
+	var v_tiposervicios=$("#v_tiposervicios").val();
+	var datos="idservicio="+idservicio+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&v_tiposervicios="+v_tiposervicios+"&pantalla=1";
+
+	var url='modelosreportes/tiposervicios/excel/rpt_TipoServicios.php'; 
+
+
+	$.ajax({
+		type:'GET',
+		url: url,
+		cache:false,
+		data:datos,
+		async:false,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+		alert(error);						  
+		 },
+		success : function (msj){
+		
+			$("#contenedor_reportes").html(msj);
+
+			CargarEstilostable('.vertabla');
+			$("#btnpantalla").css('display','block');
+
+			}
+		}); 	
+}
+
+function GenerarReporteClases() {
+var idservicio=$("#v_servicios").val();
+	var fechainicio=$("#fechainicio1").val();
+	var fechafin=$("#fechafin").val();
+
+	var horainicio=$("#v_horainicio").val();
+	var horafin=$("#v_horafin").val();
+
+	var fechainicio1=fechainicio.split(' ')[0];
+	var fechafin1=fechafin.split(' ')[0];
+	var v_tiposervicios=$("#v_tiposervicios").val();
+	var datos="idservicio="+idservicio+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&v_tiposervicios="+v_tiposervicios+"&pantalla=0";
+
+	var url='modelosreportes/tiposervicios/excel/rpt_TipoServicios.php?'+datos; 
+	window.open(url, '_blank');
+}
+
 function GenerarReporteDetalladoVentas(){
 
 
@@ -218,7 +326,7 @@ function CargarServiciosReporte() {
 		success : function (msj){
 		
 			$('#v_servicios').html(msj);   
-			}
+			} 
 		}); 
 }
 
@@ -611,6 +719,27 @@ function GenerarReportePagosCoachPantallaNoVigentes(){
 			CargarEstilostable('.vertabla');
 			$("#btnpantalla").css('display','block');
 
+			}
+		}); 
+}
+
+function CargarTipoServicios() {
+
+	$.ajax({
+		type:'GET',
+		url: 'catalogos/reportes/li_tiposervicios.php',
+		cache:false,
+		async:false,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+		alert(error);						  
+		 },
+		success : function (msj){
+		
+			$('#v_tiposervicios').html(msj);   
 			}
 		}); 
 }

@@ -156,7 +156,6 @@ function CargarTipoServiciosRe() {
 function PintarTipoServiciosRe(respuesta) {
 	var html="";
 	if (respuesta.length>0) {
-			html+=`<option value="0">Todos los tipos de servicios</option>`;
 
 		for (var i = 0; i <respuesta.length; i++) {
 			html+=`<option value="`+respuesta[i].idcategorias+`">`+respuesta[i].titulo+`</option>`;
@@ -164,6 +163,14 @@ function PintarTipoServiciosRe(respuesta) {
 	}
 
 	$("#v_tiposervicios").html(html);
+	
+	$('#v_tiposervicios').SumoSelect({ 
+		    placeholder: 'Seleccionar tipo de servicio',
+			     selectAll : true,
+   				 selectAllPartialCheck : true,
+                 locale :  ['Aceptar', 'Cancelar', 'Seleccionar todos'],
+				closeAfterClearAll: true, 
+			    });
 }
 function CargarCategorias() {
 
@@ -733,6 +740,45 @@ function CargarTipoServicios() {
 		success : function (msj){
 		
 			$('#v_tiposervicios').html(msj);   
+			}
+		}); 
+}
+
+function GenerarReporteMembresias() {
+	// body...
+}
+
+function GenerarReportePantallaMembresias() {
+	
+	var fechainicio=$("#fechainicio1").val();
+	var fechafin=$("#fechafin").val();
+
+
+	var datos="fechainicio="+fechainicio+"&fechafin="+fechafin+"&pantalla=1";
+
+	var url='modelosreportes/membresias/excel/rpt_Membresias.php'; 
+
+
+	$.ajax({
+		type:'GET',
+		url: url,
+		cache:false,
+		data:datos,
+		async:false,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+		alert(error);						  
+		 },
+		success : function (msj){
+		
+			$("#contenedor_reportes").html(msj);
+
+			CargarEstilostable('.vertabla');
+			$("#btnpantalla").css('display','block');
+
 			}
 		}); 
 }

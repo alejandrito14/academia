@@ -34,6 +34,7 @@ class Notapago
 	public $foliofactura;
 	public $idusuarioquiencambia;
 	public $fechaaceptacion;
+	public $fechareporte;
 
 	public function CrearNotapago()
 	{
@@ -245,7 +246,8 @@ class Notapago
 			  estatus = '$this->estatus',
 			  descripcionaceptacion='$this->descripcionaceptacion',
 			  fechaaceptacion='$this->fechaaceptacion',
-			  idusuarioaceptacion='$this->idusuarioquiencambia'
+			  idusuarioaceptacion='$this->idusuarioquiencambia',
+			  fechareporte='$this->fechareporte'
 			  WHERE idnotapago='$this->idnotapago'";
 
 		    $resp=$this->db->consulta($sql);
@@ -340,7 +342,7 @@ class Notapago
 
 	public function ObtenerNotaPagoporPago()
 	{
-		$sql="SELECT notapago.idnotapago,descripcion as concepto,monto,idpago,notapago.fecha,notapago.fechaaceptacion,cantidad,notapago.estatus,notapago.tipopago  	FROM notapago_descripcion 
+		$sql="SELECT notapago.idnotapago,descripcion as concepto,monto,idpago,notapago.fecha,notapago.fechaaceptacion,cantidad,notapago.estatus,notapago.tipopago,notapago.folio  	FROM notapago_descripcion 
 		INNER JOIN notapago ON notapago.idnotapago=notapago_descripcion.idnotapago
 		 WHERE idpago='$this->idpago'";
 

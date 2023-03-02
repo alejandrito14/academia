@@ -38,7 +38,6 @@ try
     $pub_key=$obtenertipopago[0]->clavepublica;
     $obj->skey=$skey;
 
-
     switch ($fname) {
         case 'getCustomerId':
             $resultado=$obj->ObtenerID();

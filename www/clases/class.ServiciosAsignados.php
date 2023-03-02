@@ -1145,7 +1145,7 @@ class ServiciosAsignados
 		servicios ON usuarios_servicios.idservicio=servicios.idservicio
 		INNER JOIN usuarios ON usuarios.idusuarios=usuarios_servicios.idusuarios
 		 WHERE usuarios_servicios.idservicio='$this->idservicio' AND usuarios_servicios.estatus IN(0,1)
-			AND cancelacion=0 AND servicios.validaradmin=1 AND usuarios.tipo=5 ";
+			AND cancelacion=0 AND servicios.validaradmin IN(0,1) AND usuarios.tipo=5 ";
 
 
 
@@ -1170,6 +1170,13 @@ class ServiciosAsignados
 		}
 		
 		return $array;
+	}
+
+	public function EliminarAsignacionUsuario()
+	{
+		$sql="DELETE FROM usuarios_servicios WHERE idusuarios='$this->idusuario' AND idservicio='$this->idservicio'";
+		$resp=$this->db->consulta($sql);
+
 	}
 
 

@@ -133,7 +133,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 				  	<div class="form-group m-t-20">
 				  	<label>TIPO DE SERVICIOS</label>
-				  	<select id="v_tiposervicios" class="form-control">
+				  	<select id="v_tiposervicios" class="form-control" multiple="multiple" style="width: 100%;">
 				  		
 				  	</select>
 				   	</div>
@@ -282,12 +282,22 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		 	.datetimepicker th.switch{
 					width: 105px!important;
 				}
+
+				.SumoSelect{
+					width: 100%;
+				}
+
+				.SumoSelect .select-all{
+					height: 40px!important;
+				}
 		 </style>
 
 
 
 <!--  Funcion para llenar el list de sucursales dependiendo el id de empresa  -->
 <script type="text/javascript">
+
+
 	$("#servicios").css('display','none');
 	$("#fechainicio").css('display','none');
 	$("#fechafinal").css('display','none');

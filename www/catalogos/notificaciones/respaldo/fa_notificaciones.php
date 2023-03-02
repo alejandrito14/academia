@@ -243,7 +243,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<select class="form-control" name="programado" id="programado" onchange="programar();">
 									<option  value="0">SELECCIONAR OPCIÓN</option>
 									<option value="1">AHORA</option>
-									<option value="2" disabled>PROGRAMADO</option>
+									<option value="2">PROGRAMADO</option>
 								</select>
 							</div>
 
@@ -304,7 +304,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
                 <div class="card-body" id="lclientesdiv" style="display: block; padding: 0;">
                 
                     <div class="form-group m-t-20">	 
-						<input type="text" class="form-control" name="buscadorcli_?>" id="buscadorcli_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadorcli_','.cli_')">
+						<input type="text" class="form-control" name="buscadorcli_1" id="buscadorcli_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadorcli_','.cli_')">
 				    </div>
                     <div class="clientes"  style="overflow:scroll;height:100px;overflow-x: hidden" id="clientes_<?php echo $a_cliente['idcliente'];?>">
 					    <?php     	
@@ -316,7 +316,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						    			$valor="";
                                         $nombre=mb_strtoupper($f->imprimir_cadena_utf8($a_cliente['nombre']." ".$a_cliente['paterno']." ".$a_cliente['materno']));
 						    		?>
-									  <input  type="checkbox" onchange="ClienteSeleccionado()" name="chkclientes[]" value="<?php echo $a_cliente['idcliente']?>" class="form-check-input chkcliente" id="inputcli_<?php echo $a_cliente['idcliente']?>" <?php echo $valor; ?>>
+									  <input  type="checkbox" onchange="ClienteSeleccionado()"  value="<?php echo $a_cliente['idcliente']?>" class="form-check-input chkcliente" id="inputcli_<?php echo $a_cliente['idcliente']?>" <?php echo $valor; ?>>
 									  <label class="form-check-label" for="flexCheckDefault"><?php echo $nombre; ?></label>
 								</div>						    		
 						    	<?php
@@ -337,12 +337,12 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		<div class="card-body col-md-12">
 			<div class="col-md-6" style="float: left;">
 				<div class="card-header" style="padding-left: 0.45rem;"> TODOS LOS USUARIOS
-				 <input type="checkbox" id="v_tusuarios"  name="v_tusuarios" onchange="HabilitarDeshabilitarCheck3('#lusuariosdiv')" value="<?php echo $habilitadoadmin?>" title="PROMOCIÓN" placeholder='PROMOCIÓN' <?php  ?> >
+				 <input type="checkbox" id="v_tusuarios"  name="v_tusuarios" onchange="HabilitarDeshabilitarCheck3('#lusuariosdiv')" value="<?php echo $habilitadoadmin;?>" title="PROMOCIÓN" placeholder='PROMOCIÓN' >
 				</div>
                 <div class="card-body" id="lusuariosdiv" style="display: block; padding: 0;">
                 
                     <div class="form-group m-t-20">	 
-						<input type="text" class="form-control" name="buscadorcli_?>" id="buscadorusuario_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadorusuario_','.usu_')">
+						<input type="text" class="form-control" name="buscadorcli_2" id="buscadorusuario_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadorusuario_','.usu_')">
 				    </div>
 
 			
@@ -356,7 +356,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						    			$valor="";
                                         $nombre=mb_strtoupper($f->imprimir_cadena_utf8($a_usuarios['nombre']." ".$a_usuarios['paterno']." ".$a_usuarios['materno']));
 						    		?>
-									  <input  type="checkbox" name="usuarioscheck[]" onchange="UsuarioSeleccionado()" value="<?php echo $a_usuarios['idusuarios']?>" class="form-check-input chkusuario" id="inputcli_<?php echo $a_usuarios['idusuarios']?>" <?php echo $valor; ?>>
+									  <input  type="checkbox"  onchange="UsuarioSeleccionado()" value="<?php echo $a_usuarios['idusuarios']?>" class="form-check-input chkusuario" id="inputcli_<?php echo $a_usuarios['idusuarios']?>" <?php echo $valor; ?>>
 									  <label class="form-check-label" for="flexCheckDefault"><?php echo $nombre; ?></label>
 								</div>						    		
 						    	<?php

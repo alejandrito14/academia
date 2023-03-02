@@ -53,7 +53,7 @@ try
 
 			//obtenemos el nombre del archivo anterior para ser eliminado si existe
 
-			$sql = "SELECT imagen FROM imagentablero WHERE idtableroanuncio='".$emp->idtableroanuncio."'";
+			$sql = "SELECT imagen FROM imagentablero WHERE idimagentablero='".$emp->idimagentablero."'";
 
 			$result_borrar = $db->consulta($sql);
 			$result_borrar_row = $db->fetch_assoc($result_borrar);
@@ -66,7 +66,7 @@ try
 
 			move_uploaded_file($temporal, $ruta.$nombre); //Movemos el archivo temporal a la ruta especificada
 
-			$sql = "UPDATE imagentablero SET imagen = '$nombre' WHERE idtableroanuncio='".$emp->idtableroanuncio."'";   
+			$sql = "UPDATE imagentablero SET imagen = '$nombre' WHERE idimagentablero='".$emp->idimagentablero."'";   
 			$db->consulta($sql);	 
 		}
 	}

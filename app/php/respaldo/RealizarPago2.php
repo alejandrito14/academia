@@ -91,7 +91,7 @@ try {
                 $obtenertipopago=$tipopago->ObtenerTipodepago2();
              $variable=$obtenertipopago[0]->tipo;
 
-
+          
             }
 
            
@@ -103,7 +103,7 @@ try {
                 $tipopago->idtipodepago=$idtipodepago;
            
               $obtenertipopago=$tipopago->ObtenerTipodepago2();
-
+ 
               $variable=','.$variable;
 
              // var_dump($obtenertipopago);die();
@@ -111,6 +111,7 @@ try {
               $variable=str_replace(',','',$variable);
             }
           
+
             $constripe=$obtenertipopago[0]->constripe;
 
             if ($obtenertipopago[0]->constripe==1) {
@@ -410,7 +411,7 @@ try {
                 }
               }*/
 
-               
+                
                   $pagos->ActualizarEstatus();
                   $pagos->ActualizarPagado();
 
@@ -498,7 +499,7 @@ try {
                    $dias=$obtenermembresia[0]->cantidaddias;
                    $date = date("d-m-Y");
                    $mod_date = strtotime($date."+ ".$dias." days");
-                   $membresia->fechaexpiracion= date("Y-m-d",$mod_date).' 23:59:59';
+                   $membresia->fechaexpiracion='';
 
                  
                    $membresia->renovacion=0;
@@ -541,7 +542,7 @@ try {
               $notapago->monto=$buscarpago[0]->monto;
               $notapago->idpago=$buscarpago[0]->idpago;
                $notapago->Creardescripcionpago();
- 
+
                ///creacion pago a coach
 
                if ($constripe==1) {
@@ -552,10 +553,13 @@ try {
 
 
           		}
-
+              $notapago->fechareporte='';
+              $notapago->fechareporte=date('Y-m-d H:i:s');
               $notapago->idpagostripe=0;
               if ($constripe==1) {
                $notapago->idpagostripe=$obj->idintento;
+             
+
              }
                $notapago->descuento=0;
                $notapago->descuentomembresia=0;

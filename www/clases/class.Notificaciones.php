@@ -67,7 +67,6 @@ class Notificaciones
 	{
 		$query="INSERT INTO notificacion (titulo,mensaje,programado,fechahora,seleccionar,todosclientes,todosadmin,estatus,enviado) VALUES ('$this->titulo','$this->mensaje','$this->programado','$this->fechahora','$this->seleccionar','$this->todosclientes','$this->todosadmin','$this->estatus','$this->enviado')";
 		
-		
 		$resp=$this->db->consulta($query);
 		$this->idnotificacion = $this->db->id_ultimo();
 		

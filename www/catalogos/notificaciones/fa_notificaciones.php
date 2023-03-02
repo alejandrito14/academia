@@ -86,7 +86,6 @@ if(!isset($_GET['idnotificacion'])){
 	$idnotificacion = $_GET['idnotificacion'];
 	$emp->idnotificacion = $idnotificacion;
 
-	
 
 	//Realizamos la consulta en tabla Pagos
 	$result_NOTIFICACION = $emp->buscarnotificacion();
@@ -249,7 +248,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<select class="form-control" name="programado" id="programado" onchange="programar();">
 									<option  value="0">SELECCIONAR OPCIÓN</option>
 									<option value="1">AHORA</option>
-									<option value="2">PROGRAMADO</option>
+									
 								</select>
 							</div>
 
@@ -348,7 +347,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 			</div>
 		<div class="card-body col-md-12">
 			<div class="col-md-6" style="float: left;">
-				<div class="card-header" style="padding-left: 0.45rem;"> TODOS LOS USUARIOS
+				<div class="card-header" style="padding-left: 0.45rem;"> SELECCIONAR TODOS
 				 <input type="checkbox" id="v_tusuarios"  name="v_tusuarios" onchange="HabilitarDeshabilitarCheck3('#lusuariosdiv')" value="<?php echo $habilitadoadmin;?>" title="PROMOCIÓN" placeholder='PROMOCIÓN' >
 				</div>
                 <div class="card-body" id="lusuariosdiv" style="display: block; padding: 0;">
@@ -376,17 +375,19 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 <script>
 
-	var programado=<?php echo $programado;?>;
+	var programado='<?php echo $programado;?>';
 	$("#programado").val(programado);
+	var idnotificacion='<?php echo $emp->idnotificacion; ?>';
 
-	var dirigido=<?php echo $seleccionar; ?>;
+	
+	var dirigido='<?php echo $seleccionar; ?>';
 	$("#dirigido").val(dirigido);
 	programar();
-	dirigira();
+	dirigira(idnotificacion);
 
-	var idnotificacion=<?php echo $emp->idnotificacion; ?>;
-	var todosclientes=<?php echo $todosclientes;?>;
-	var todosadmin=<?php echo $todosadmin;?>;
+	
+	var todosclientes='<?php echo $todosclientes;?>';
+	var todosadmin='<?php echo $todosadmin;?>';
 
 	if (idnotificacion>0) {
 

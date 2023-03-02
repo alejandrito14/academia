@@ -48,6 +48,7 @@ try
 		
 		
 
+
 	//Recbimos parametros
 	$notificacion->idnotificacion = trim($_POST['id']);
 
@@ -56,11 +57,10 @@ try
 	$notificacion->programado=$_POST['programado'];
 	$notificacion->seleccionar=$_POST['dirigido'];
 	$notificacion->todosclientes=$_POST['v_tclientes'];
-	$notificacion->todosadmin=$_POST['v_tusuarios'];
+	$notificacion->todosadmin=$_POST['todosadmin'];
 	$notificacion->estatus=$_POST['v_estatus'];
 	$notificacion->fechahora='';
 	
-
 
 
 	if ($notificacion->programado==1) {
@@ -304,7 +304,7 @@ try
 
 		}
 
-	
+		
 
 				if ($notificacion->seleccionar==4) {
 					
@@ -337,7 +337,9 @@ try
 			$db->commit();
 			if ($notificacion->programado==1) {
 				if (count($arraytokensclientes)>0) {
-				$parts = array_chunk($arraytokensclientes, 999, true);
+
+					if (count($arraytokensclientes)>999) {
+						$parts = array_chunk($arraytokensclientes, 999, true);
 
 
 					for ($i=0; $i <count($parts) ; $i++) { 
@@ -345,6 +347,15 @@ try
 						$arreglo=$parts[$i];
 
 						$notificacionpushcliente->EnviarNotificacion($arreglo,$notificacion->titulo,$notificacion->mensaje);
+					}
+				
+					}else{
+
+						
+							$notificacionpushcliente->EnviarNotificacion($arraytokensclientes,$notificacion->titulo,$notificacion->mensaje);
+							
+
+
 					}
 				
 					

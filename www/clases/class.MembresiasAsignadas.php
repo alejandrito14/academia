@@ -17,7 +17,7 @@ class MembresiasAsignadas
 	public $fechapago;
 	public $pagado;
 	public $idusuarios_membresia;
-
+	public $idpago;
 
 	public function ObtenermembresiaActivosAsignados()
 	{
@@ -152,7 +152,9 @@ class MembresiasAsignadas
 	public function ActualizarFechaAsignacion($fecha)
 	{
 		$fecha=$fecha.' 23:59:59';
-		$sql="UPDATE usuarios_membresia SET fechaexpiracion='$fecha' WHERE idusuarios_membresia='$this->idusuarios_membresia'";
+		$sql="UPDATE usuarios_membresia SET fechaexpiracion='$fecha',
+			idpago='$this->idpago'
+		 WHERE idusuarios_membresia='$this->idusuarios_membresia'";
 		$resp=$this->db->consulta($sql);
 
 	}

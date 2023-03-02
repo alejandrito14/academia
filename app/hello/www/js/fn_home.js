@@ -1817,19 +1817,19 @@ imagenestablero.push(urlimagen);
 
     <div class="textolandig">
              	 <div class="">
-             		 <div class="">`;
+             	 <div class="">`;
 
       
              html2+=` </div>
-              		<div class="">
-              <div class="">`;
+              		  <div class="">
+             		   <div class="">`;
             
               
 
-             html2+=  `</div>
-   			 <div onclick="ExpandirImagen(0)">
-              <img class="row h-100" src="`+urlimagen+`" style="height:100%;width:100%;border-radius: 10px;"/>
-				</div>
+             	html2+=  `</div>
+			   			 <div onclick="ExpandirImagen(0)">
+			              <img class="row h-100" src="`+urlimagen+`" style="height:100%;width:100%;border-radius: 10px;"/>
+							</div>
               
                          </div>
                         </div>
@@ -1845,38 +1845,29 @@ imagenestablero.push(urlimagen);
 		imagenestablero.push(imagen);
 
 		html2+=`
-		  <div class="swiper-slide" role="group"   style="    padding: 0;
-    margin: 0; "  id="slider_`+(i+1)+`">
+		  <div class="swiper-slide" role="group"   style="padding: 0; margin: 0; "  id="slider_`+(i+1)+`">
 
-    <div class="textolandig">
+   			 <div class="textolandig">
              	 <div class="">
              		 <div class="">`;
-
-      
              html2+=` </div>
               		<div class="">
-              <div class="">`;
-              if (imagenes[i].tituloimagen!='') {
-              	html2+=`<h4 class="text-color-theme margin-bottom" style="font-size:30px;">
-             `+imagenes[i].tituloimagen+`
-             </h4>`;
+			              <div class="">`;
+			              if (imagenes[i].tituloimagen!='') {
+			              	html2+=`<h4 class="text-color-theme margin-bottom" style="font-size:30px;">
+				             `+imagenes[i].tituloimagen+`
+				             </h4>`;
 
-              }
-              
-
-             html2+=  `</div>
-   			 <div onclick="ExpandirImagen(`+(i+1)+`)">
-              <img class="row h-100" src="`+imagen+`" style="height:100%;width:100%;    border-radius: 10px;"/>
-				</div>
+			              }
+            html2+=`</div>
+		   			 <div onclick="ExpandirImagen(`+(i+1)+`)">
+		              <img class="row h-100" src="`+imagen+`" style="height:100%;width:100%;    border-radius: 10px;"/>
+						</div>
               
                          </div>
                         </div>
                        </div>
-                     </div>
-
-          </div>
-
-		`;
+                     </div>`;
 
 		}
 	}

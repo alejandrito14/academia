@@ -1715,7 +1715,7 @@ function DetalleNota(idnotapago) {
       }
 
       	if (descuentosmembresia.length>0) {
-      	PintarDescuentosDetalleMembresiaNota(descuentosmembresia[0]);
+      	PintarDescuentosDetalleMembresiaNota(descuentosmembresia);
 
       }
       	
@@ -1771,6 +1771,7 @@ estatus=['PENDIENTE','ACEPTADO','CANCELADO'];
 	$(".lblcomision").html(respuesta.comisiontotal);
 	$(".lbltotal").html(respuesta.total);
 	$(".btncambiarestatus").attr('onclick','Abrirmodalaceptacion('+respuesta.idnotapago+')');
+	$(".btncambiarcancelar").attr('onclick','Abrirmodalcancelacion('+respuesta.idnotapago+')');
 
 }
 
@@ -1779,7 +1780,15 @@ function Abrirmodalaceptacion(idnotapago) {
 	$("#txtdescripcion").text('');
 	$(".btnvalidacion").attr('onclick','GuardarValidacionNota('+idnotapago+')');
 	$("#modalaceptacion").modal();
+ 
+}
 
+function Abrirmodalcancelacion(idnotapago) {
+	$("#txtcancelacion").css('border','1px solid #e9ecef');
+	$("#txtdescripcioncancelacion").text('');
+	$(".btnvalidacioncancel").attr('onclick','GuardarCancelacion('+idnotapago+')');
+	$("#modalcancelacion").modal();
+ 
 }
 
 function PintarPagos(respuesta) {
@@ -1854,8 +1863,8 @@ function PintarDescuentosDetalleMembresiaNota(respuesta) {
 			html+=` <li class="list-group-item  align-items-center" style="background: #46b2e2;">
 			   <div class="row">
 			   <div class="col-md-10">
-			   		<p id="">  Descuento `+respuesta[i].titulo+`</p>
-                    <p class="" style=" float: right;">$<span class="lbldescuento">`+formato_numero(respuesta[i].montoadescontar,2,'.',',')+`</span></p>
+			   		<p id="">  Descuento `+respuesta[i][0].titulo+`</p>
+                    <p class="" style=" float: right;">$<span class="lbldescuento">`+formato_numero(respuesta[i][0].montoadescontar,2,'.',',')+`</span></p>
 
                    </div>
                    <div class="col-md-2">
@@ -1943,6 +1952,55 @@ function GuardarValidacionNota(idnotapago) {
   	if (descripcion=='') {
 		$("#txtvalidacion").css('border','1px solid red');
 		$("#txtdescripcion").text('Campo requerido');
+	}
+
+  }
+}
+
+function GuardarCancelacion(idnotapago) {
+	$("#txtdescripcioncancelacion").text('');
+	$("#txtdescripcioncancelacion").removeClass('inputrequerido');
+	$("#txtcancelacion").css('border','0px');
+
+	var descripcion=$("#txtcancelacion").val();
+	var datos="descripcion="+descripcion+"&idnotapago="+idnotapago+"&estado=2";
+	var pagina = "CancelarNota.php";
+     var bandera=1;
+	if (descripcion=='') {
+		bandera=0;
+		$("#txtcancelacion").css('border','1px solid red');
+		$("#txtdescripcioncancelacion").text('Campo requerido');
+		$("#txtdescripcioncancelacion").addClass('inputrequerido');
+	}
+
+	if (bandera==1) {
+      $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      data:datos,
+      url:'catalogos/notaspago/'+pagina, //Url a donde la enviaremos
+      async:false,
+      success: function(msj){
+
+      	   $("#txtcancelacion").val('');
+           $("#modalcancelacion").modal('hide');
+           AbrirNotificacion("SE REALIZARON LOS CAMBIOS CORRECTAMENTE","mdi-checkbox-marked-circle ");
+           ObtenerNotasPorvalidar();
+           $(".divdetalle").css('display','none');
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                  //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                  console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+            }
+      });
+  }else{
+
+  	if (descripcion=='') {
+		$("#txtcancelacion").css('border','1px solid red');
+		$("#txtdescripcioncancelacion").text('Campo requerido');
 	}
 
   }

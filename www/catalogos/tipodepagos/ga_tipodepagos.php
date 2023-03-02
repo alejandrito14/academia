@@ -50,8 +50,14 @@ try
 	$tipodepagos->habilitarcampomonto=$_POST['habilitarcampomonto'];
 	$tipodepagos->habilitarcampomontofactura=$_POST['habilitarcampomontofactura'];
 	$tipodepagos->habilitarparafactura=$_POST['chkparafactura'];
+	$tipodepagos->habilitartipodeservicio=$_POST['v_tiposervicio'];
 
+$idtiposervicio="";
+	if ($_POST['idtiposervicio']!='') {
+		# code...
+	
 	$idtiposervicio=explode(',',$_POST['idtiposervicio']);
+}
 	$v_tiposervicio=$_POST['v_tiposervicio'];
 
 	
@@ -74,12 +80,16 @@ try
 			$tipodepagos->EliminarRelacionCategoria();
 		}
 		
+		if ($idtiposervicio!='' && count($idtiposervicio)>0) {
+			# code...
+		
 		for ($i=0; $i < count($idtiposervicio); $i++) { 
 
 			$tipodepagos->tipodeservicio=$idtiposervicio[$i];
 			$tipodepagos->GuardarRelacionCategoria();
 
 		}
+	}
 
 	}
 				

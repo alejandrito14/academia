@@ -286,6 +286,31 @@ class Membresia
 		return $array;
 	}
 
+	public function buscarMembresiaUsuario2()
+	{
+		$sql="SELECT *
+		FROM usuarios_membresia WHERE idmembresia='$this->idmembresia' AND idusuarios='$this->idusuarios' AND idpago='$this->idpago'";
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+
+
+
+	}
+
 	public function buscarMembresiaUsuario()
 	{
 		$sql="SELECT *
@@ -310,6 +335,7 @@ class Membresia
 
 
 	}
+
 
 
 	public function ActualizarEstatusMembresiaUsuario()
@@ -376,9 +402,18 @@ class Membresia
 
 	public function GuardarPagoDescuentoMembresia()
 	{
-		$sql="INSERT INTO pagodescuentomembresia
-		(idpago, idmembresia, idservicio, descuento, monto,montoadescontar,idnotapago) VALUES ( '$this->idpago', '$this->idmembresia','$this->idservicio', '$this->descuento', '$this->monto','$this->montoadescontar','$this->idnotapago')";
+		try {
+
+			$sql="INSERT INTO pagodescuentomembresia
+		(idpago, idmembresia, idservicio, descuento, monto,montoadescontar,idnotapago) VALUES ( '$this->idpago', '$this->idmembresia',0, '$this->descuento', '$this->monto','$this->montoadescontar','$this->idnotapago')";
+
 		$resp=$this->db->consulta($sql);
+			
+		} catch (Exception $e) {
+			$this->db->rollback();
+			echo 'error'.$e;
+		}
+		
 
 	}
 
@@ -458,9 +493,22 @@ class Membresia
 		$query="UPDATE usuarios_membresia 
 		SET pagado='$this->pagado',
 		renovacion='$this->renovacion',
-		estatus='$this->estatus'
+		estatus='$this->estatus',
+		idpago='$this->idpago'
 		WHERE idusuarios_membresia='$this->idusuarios_membresia'";
 		$resp=$this->db->consulta($query);
+
+	}
+
+	public function ActualizarEstatusMembresiaUsuarioPagado2()
+	{
+		$query="UPDATE usuarios_membresia 
+		SET pagado='$this->pagado',
+		renovacion='$this->renovacion',
+		estatus='$this->estatus'
+		WHERE idusuarios_membresia='$this->idusuarios_membresia' AND idpago='$this->idpago'";
+		$resp=$this->db->consulta($query);
+
 	}
 
 	public function ObtenerMembresiasVencidas()
@@ -499,6 +547,7 @@ class Membresia
 			usuarios_membresia.fecha,
 			usuarios_membresia.estatus,
 			usuarios_membresia.pagado,
+			usuarios_membresia.fechaexpiracion,
 			membresia.titulo,
 			usuarios.paterno,
 			usuarios.nombre,
@@ -508,19 +557,22 @@ class Membresia
 			membresia.porcategoria,
 			membresia.porservicio,
 			membresia.color,
-			membresia.limite
+			membresia.limite,
+			(SELECT COUNT(*) from usuario_membresia_configuracion WHERE usuario_membresia_configuracion.idmembresia=idmembresia and 
+			usuario_membresia_configuracion.idusuarios=usuarios_membresia.idusuarios AND usuario_membresia_configuracion.fecha>'".$fechaactual."')as configuracion
 			FROM
 			usuarios_membresia
 			LEFT JOIN membresia
 			ON usuarios_membresia.idmembresia = membresia.idmembresia 
 			JOIN usuarios
-			ON usuarios_membresia.idusuarios = usuarios.idusuarios
-			WHERE usuarios_membresia.estatus=1 AND usuarios_membresia.pagado=1
-
-			AND usuarios_membresia.fechaexpiracion<='2023-03-01 00:00:01'
+			ON usuarios_membresia.idusuarios = usuarios.idusuarios";
+			$sql.=" AND usuarios_membresia.fechaexpiracion>='".$fechaactual." 00:00:00'"; 
+			$sql.=" AND usuarios_membresia.fechaexpiracion<='".$fechaactual." 23:59:59'"; 
+			$sql.=" GROUP BY usuarios_membresia.idusuarios,usuarios_membresia.idmembresia ORDER BY usuarios_membresia.fechaexpiracion
+			
 			";
 
-		
+
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -544,7 +596,7 @@ class Membresia
 		$query="UPDATE usuarios_membresia 
 		SET
 		estatus='$this->estatus'
-		WHERE idusuarios_membresia='$this->idusuarios_membresia'";
+		WHERE idusuarios='$this->idusuarios' AND idmembresia='$this->idmembresia' AND estatus IN(0,1)";
 		$resp=$this->db->consulta($query);
 	}
 
@@ -602,7 +654,7 @@ class Membresia
 	public function BuscarMembresiaAsociadaalapago()
 	{
 		$sql="SELECT *
-		FROM usuarios_membresia WHERE idmembresia='$this->idmembresia' AND idusuarios='$this->idusuarios' AND estatus IN (0)";
+		FROM usuarios_membresia WHERE idmembresia='$this->idmembresia' AND idusuarios='$this->idusuarios' AND idpago='$this->idpago'";
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

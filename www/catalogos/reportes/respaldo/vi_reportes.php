@@ -129,11 +129,11 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 				</div>
 				<div class="row" >
-				  <div class="col-md-6" id="servicios" style="display: none;">
+				  <div class="col-md-6" id="tiposervicios" style="display: none;">
 
 				  	<div class="form-group m-t-20">
-				  	<label>SERVICIOS</label>
-				  	<select id="v_servicios" class="form-control">
+				  	<label>TIPO DE SERVICIOS</label>
+				  	<select id="v_tiposervicios" class="form-control">
 				  		
 				  	</select>
 				   	</div>

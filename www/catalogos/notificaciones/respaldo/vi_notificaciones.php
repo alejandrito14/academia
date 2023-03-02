@@ -139,7 +139,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 					if($l_notificaciones_num== 0){
 						?>
 						<tr> 
-							<td colspan="7" style="text-align: center">
+							<td colspan="6" style="text-align: center">
 								<h5 class="alert_warning">NO EXISTEN REGISTROS EN LA BASE DE DATOS.</h5>
 							</td>
 						</tr>

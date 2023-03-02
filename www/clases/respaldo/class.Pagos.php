@@ -550,6 +550,57 @@ class Pagos
 			}
 			return $array;		
 		}
+
+
+	public function ObtenerPagoDescuento2()
+	{
+		
+
+				$sql2="SELECT SUM(montoadescontar) as montodescontar,GROUP_CONCAT(titulo) as nombredescuento
+				FROM pagodescuento
+				INNER JOIN descuento ON pagodescuento.iddescuento=descuento.iddescuento
+				 WHERE idpago='$this->idpago' AND idnotapago='$this->idnotapago' ";
+
+			$resp = $this->db->consulta($sql2);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;	
+		
+	}
+
+	public function ObtenerPagoDescuentoMembresia()
+	{
+		$sql2="SELECT SUM(montoadescontar) as montodescontar,GROUP_CONCAT(titulo) as nombremembresia FROM pagodescuentomembresia
+			INNER JOIN membresia ON membresia.idmembresia=pagodescuentomembresia.idmembresia
+		 WHERE idpago='$this->idpago' AND idnotapago='$this->idnotapago'";
+		 
+			$resp = $this->db->consulta($sql2);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;	
+	}
 	
 
 }

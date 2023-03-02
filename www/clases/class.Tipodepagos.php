@@ -21,7 +21,7 @@ class Tipodepagos
 	public $cuenta;
 	public $habilitarcampomonto;
 	public $habilitarcampomontofactura;
-	public $tipodeservicio;
+	public $habilitartipodeservicio;
 	
 	//Funcion para obtener todos los tipodepago activos
 	public function ObttipodepagoActivos()
@@ -68,8 +68,8 @@ class Tipodepagos
 	
 	public function Guardartipodepagos()
 	{
-		$query="INSERT INTO tipodepago (tipo,estatus,habilitarfoto,constripe,claveprivada,clavepublica,comisionporcentaje,comisionmonto,impuesto,cuenta,habilitarcampomonto,habilitarcampomontofactura) 
-		VALUES ('$this->tipo','$this->estatus','$this->habilitarfoto','$this->habilitarstripe','$this->claveprivada','$this->clavepublica','$this->porcentajecomision','$this->montotransaccion','$this->porcentajeimpuesto','$this->cuenta','$this->habilitarcampomonto','$this->habilitarcampomontofactura')";
+		$query="INSERT INTO tipodepago (tipo,estatus,habilitarfoto,constripe,claveprivada,clavepublica,comisionporcentaje,comisionmonto,impuesto,cuenta,habilitarcampomonto,habilitarcampomontofactura,habilitartipodeservicio) 
+		VALUES ('$this->tipo','$this->estatus','$this->habilitarfoto','$this->habilitarstripe','$this->claveprivada','$this->clavepublica','$this->porcentajecomision','$this->montotransaccion','$this->porcentajeimpuesto','$this->cuenta','$this->habilitarcampomonto','$this->habilitarcampomontofactura','$this->habilitartipodeservicio')";
 				
 
 		$resp=$this->db->consulta($query);
@@ -92,9 +92,9 @@ class Tipodepagos
 		impuesto='$this->porcentajeimpuesto',
 		cuenta='$this->cuenta',
 		habilitarcampomonto='$this->habilitarcampomonto',
-		habilitarcampomontofactura='$this->habilitarcampomontofactura'
+		habilitarcampomontofactura='$this->habilitarcampomontofactura',
+		habilitartiposervicio='$this->habilitartipodeservicio'
 		WHERE idtipodepago=$this->idtipodepago";
-
 		$resp=$this->db->consulta($query);
 	}
 	

@@ -892,10 +892,10 @@ function ObtenerZonas() {
 }
 
 
-function ObtenerCoachs(tipo,idservicio) {
+function ObtenerCoachsParticipantes(tipo,idservicio) {
 	var usuarios="";
 	var datos="tipo="+tipo+"&idservicio="+idservicio;
- return new Promise((resolve, reject) => {
+ //return new Promise((resolve, reject) => {
  			 $.ajax({
 					url: 'catalogos/servicios/ObtenerParticipantesCoach.php', //Url a donde la enviaremos
 					type: 'POST', //Metodo que usaremos
@@ -919,7 +919,7 @@ function ObtenerCoachs(tipo,idservicio) {
 								AgregarNuevoCoach2(usuarios[i].idusuarios,usuarios[i].tipopago,usuarios[i].monto);
 							
 							}
-							resolve(usuarios);
+							//resolve(usuarios);
 
 						
 						}
@@ -927,7 +927,7 @@ function ObtenerCoachs(tipo,idservicio) {
 					}
 				});
 	
- 			});
+ 		//	});
 	
 }
 
@@ -1607,9 +1607,12 @@ function CargarEventoSeleccionador() {
 									var color=zonaelegida.color;
 									
 						 			var dividirfecha=id.split('-');
+						 			console.log(dividirfecha);
+						 		console.log(dividirfecha[0]+'-'+dividirfecha[1]+'-'+dividirfecha[2]);
+
 						 			var objeto={
 						 				id:id,
-						 				fecha:dividirfecha[0]+'-'+dividirfecha[2]+'-'+dividirfecha[3],
+						 				fecha:dividirfecha[0]+'-'+dividirfecha[1]+'-'+dividirfecha[2],
 						 				idzona:dividirfecha[5],
 						 				horainicial:dividirfecha[3],
 						 				horafinal:dividirfecha[4],
@@ -2198,9 +2201,13 @@ function GuardarservicioForm(form,regresar,donde,idmenumodulo)
 		var v_politicascancelacion=$("#v_politicascancelacion").val();
 		var v_politicasaceptacion=$("#v_politicasaceptacion").val();
 		var v_reembolso=$("#v_reembolso").is(':checked')?1:0;
+
+		
 		var v_asistencia=$("#v_asistencia").is(':checked')?1:0;
 
 		var v_cantidadreembolso=$("#v_cantidadreembolso").val();
+		var v_tiporeembolso=$("#v_tipodescuentoreembolso").val();
+		
 		var v_asignadocliente=$("#v_asignadocliente").is(':checked')?1:0;
 		var v_asignadocoach=$("#v_asignadocoach").is(':checked')?1:0;
 		var v_asignadoadmin=$("#v_asignadoadmin").is(':checked')?1:0;
@@ -2256,6 +2263,7 @@ function GuardarservicioForm(form,regresar,donde,idmenumodulo)
 		datos.append('v_descripcionaviso',v_descripcionaviso);
 		datos.append('v_politicascancelacion',v_politicascancelacion);
 		datos.append('v_reembolso',v_reembolso);
+		datos.append('v_tiporeembolso',v_tiporeembolso);
 		datos.append('v_cantidadreembolso',v_cantidadreembolso);
 		datos.append('v_asignadocliente',v_asignadocliente);
 		datos.append('v_asignadocoach',v_asignadocoach);
@@ -3432,11 +3440,13 @@ function ComprobacionHorarios() {
 }
 
 function AbrirModalImagenes(idservicio) {
-
-	ListadoImagenesInformativas();
-	VerListadoImagenes();
-	$("#modalimagenservicio").modal();
+  
+	$("#modalimagenservicio").modal();  
+	$(".vfileNames").html("");
 	$("#idservicio").val(idservicio);
+	ListadoImagenesInformativas(idservicio);
+	VerListadoImagenes();
+
 }
 
 
@@ -3490,7 +3500,7 @@ function ListadoImagenesInformativas(idservicio) {
               </table>`;
 
 
-                $("#vfileNames").html(html);
+                $(".vfileNames").html(html);
             
     },
     error: function(vjqXHR, vtextStatus, verrorThrown){
@@ -3538,7 +3548,7 @@ function ListadoImagenesInformativas(idservicio) {
     }
 
     function NuevaImagen() {
-    	$("#vfileNames").css('display','none');
+    	$(".vfileNames").css('display','none');
     	$("#btnnuevaimagen").css('display','none');
     	$(".formimagen").css('display','block');
     	$(".btnguadarimagen").css('display','block');
@@ -3546,7 +3556,7 @@ function ListadoImagenesInformativas(idservicio) {
     }
 
     function VerListadoImagenes() {
-    	$("#vfileNames").css('display','block');
+    	$(".vfileNames").css('display','block');
     	$("#btnnuevaimagen").css('display','block');
     	$(".formimagen").css('display','none');
     	$(".btnguadarimagen").css('display','none');
@@ -3583,7 +3593,7 @@ function ListadoImagenesInformativas(idservicio) {
               if (res==1) {
               	$(".card-img-top").attr('src','');
               	VerListadoImagenes();
-              	ListadoImagenesInformativas();
+              	ListadoImagenesInformativas(idservicio);
               }
             },
 		    error: function(vjqXHR, vtextStatus, verrorThrown){
@@ -3688,7 +3698,7 @@ function deleteArchivo(idimageninformativa,idservicio) {
                            if ( vattachedFileIndex>=0){
                              vattachedFiles.splice(vattachedFileIndex,1);
                            }
-                           $("#vfileNames").html("");
+                           $(".vfileNames").html("");
                            showAttachedFiles();
                           
                            // alertify.alert('El archivo adjuntado ha sido eliminado correctamente.!');

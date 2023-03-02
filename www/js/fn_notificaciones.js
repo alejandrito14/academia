@@ -1,4 +1,4 @@
-function dirigira() {
+function dirigira(idnotificacion) {
 
 var valor=$("#dirigido").val();
 
@@ -35,10 +35,11 @@ var valor=$("#dirigido").val();
 	$(".usuarioslista").css('display','none');
 	if (valor!=-1) {
 
-		ObtenerUsuarios(valor);
+		ObtenerUsuarios(valor,idnotificacion);
 	   $(".usuarioslista").css('display','flex');
 
 	}
+
 	
 
 
@@ -218,6 +219,7 @@ function PintarUsuarios(usuarios) {
 function Guardarnotificacion(form,regresar,donde,idmenumodulo)
 { 
 
+	var nousuario=1;
 	var v_tclientes=$("#v_tclientes").val();
 	var v_tusuarios=$("#v_tusuarios").val();
 	var dirigido=$("#dirigido").val();
@@ -276,7 +278,7 @@ function Guardarnotificacion(form,regresar,donde,idmenumodulo)
 }*/
 
 
-	if (v_tusuarios==2) {
+	/*if (v_tusuarios==2) {
 
 		bandera=0;
 	}
@@ -290,7 +292,7 @@ function Guardarnotificacion(form,regresar,donde,idmenumodulo)
 				});
 
 		}
-
+*/
 
 
 
@@ -322,7 +324,7 @@ function Guardarnotificacion(form,regresar,donde,idmenumodulo)
 	
 		 $('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
 				
-		/*setTimeout(function(){
+		setTimeout(function(){
 				  $.ajax({
 					url:'catalogos/notificaciones/ga_notificaciones.php', //Url a donde la enviaremos
 					type:'POST', //Metodo que usaremos
@@ -346,7 +348,7 @@ function Guardarnotificacion(form,regresar,donde,idmenumodulo)
 						  	}			
 					  	}
 				  });				  					  
-		},1000);*/
+		},1000);
 	 } 
 
 
@@ -420,7 +422,7 @@ function Guardarnotificacion(form,regresar,donde,idmenumodulo)
 
 			}*/
 
-	//if ( dirigido==2 || dirigido==3) {
+	if ( dirigido>-1) {
 
 		if (v_tusuarios==2) {
 
@@ -446,7 +448,7 @@ function Guardarnotificacion(form,regresar,donde,idmenumodulo)
 					respuesta+="-Clientes es requerido"+"<br>";
 				}
 
-		//}
+		}
 
 		AbrirNotificacion('Han ocurrido los siguientes errores:<br>'+respuesta,"mdi-checkbox-marked-circle");
 
@@ -584,29 +586,28 @@ function ObtenerClientesNotificacion(idnotificacion) {
 					});
  }
 
- function PintarClientesNotificacion(clientes) {
+ /*function PintarClientesNotificacion(clientes) {
  	
  	if (clientes.length>0) {
  		for (var i =0; i <clientes.length; i++) {
-
  
- 			$("#inputcli_"+clientes[i].idcliente).prop('checked',true);
+ 			$("#inputcli_"+clientes[i].idusuario).prop('checked',true);
  			
  		}
  	}
- }
+ }*/
  function PintarUsuariosNotificacion(usuarios) {
 
  	if (usuarios.length>0) {
  		for (var i = 0; i<usuarios.length; i++) {
  			
- 		 	$("#inputusuario_"+usuarios[i].idusuario).prop('checked',true);
+ 		 	$("#inputcli_"+usuarios[i].idusuario).prop('checked',true);
 
  		}
  	}
  }
 
- function ObtenerUsuarios(valor) {
+ function ObtenerUsuarios(valor,idnotificacion) {
  		var datos='valor='+valor;
  				$.ajax({
 					url:'catalogos/notificaciones/ObtenerUsuarios.php', //Url a donde la enviaremos
@@ -626,7 +627,11 @@ function ObtenerClientesNotificacion(idnotificacion) {
 							
 							var respuesta=msj.usuarios;
 							PintarUsuarios(respuesta);	
-						
+							if (idnotificacion>0) {
+							
+								ObtenerUsuariosNotificacion(idnotificacion);
+
+							}
 						}
 					});
  }

@@ -926,6 +926,81 @@ class Usuarios
 		return $array;
 	}
 
+
+	public function ListadoUsuariostipo($tipo)
+	{
+		$sql = "SELECT
+				usuarios.idusuarios,
+				usuarios.tipo FROM
+					usuarios
+ 				INNER JOIN tipousuario ON usuarios.tipo=tipousuario.idtipousuario WHERE tipo IN($tipo)";
+		
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto->idusuarios;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+
+
+	public function ObtenerTodosUsuarios()
+	{
+		$sql = "SELECT idusuarios as idusuarios FROM usuarios WHERE estatus = 1";
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto->idusuarios;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+
+
+
+    public function obtenerUsuariosAlumnosNoServicio2($idusuariosservicio)
+    {
+         $sql = "SELECT * FROM usuarios INNER JOIN tipousuario ON tipousuario.idtipousuario=usuarios.tipo
+           WHERE tipo IN(3)";
+           
+        if ($idusuariosservicio!='') {
+             $sql.="AND idusuarios NOT IN($idusuariosservicio)";
+           }
+        $resp = $this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+        $array    = array();
+        $contador = 0;
+        if ($cont > 0) {
+
+            while ($objeto = $this->db->fetch_object($resp)) {
+
+                $array[$contador] = $objeto;
+                $contador++;
+            }
+        }
+        return $array;
+    }
+
+
+
 }
 
 ?>

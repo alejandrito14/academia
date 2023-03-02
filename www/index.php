@@ -60,6 +60,9 @@ $navegador = $f->navegador();
     <link href="assets/libs/flot/css/float-chart.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="dist/css/style.min.css" rel="stylesheet">
+
+    <link href="dist/css/sumoselect.css" rel="stylesheet">
+   
     <link href="assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="assets/libs/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css">
     <link rel="stylesheet" type="text/css" href="dist/css/modal.css">
@@ -1160,6 +1163,10 @@ $navegador = $f->navegador();
 <script src="dist/js/sidebarmenu.js"></script>
 <!--Custom JavaScript -->
 <script src="dist/js/custom.min.js"></script>
+<script src="dist/js/jquery.sumoselect.js"></script>
+
+<!-- <script src="dist/js/mdb.min.js"></script>
+ -->
 <!--This page JavaScript -->
 <!-- <script src="../../dist/js/pages/dashboards/dashboard1.js"></script> -->
 <!-- Charts js Files -->
@@ -1255,6 +1262,7 @@ $navegador = $f->navegador();
 <script src="js/fn_membresia.js"></script>
 <script src="js/fn_categoriasservicios.js"></script>
 <script src="js/fn_asignarusuarioservicio.js"></script>
+
 <script src="js/fn_tutor.js"></script>
 <script src="js/fn_clasificacion.js"></script>
 <script src="js/fn_llaves.js"></script>

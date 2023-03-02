@@ -88,7 +88,7 @@ var app = new Framework7({
 
  var pictureSource;   // picture source
  var destinationType; 
-var produccion = 1;
+var produccion = 0;
 
 var codigoservicio="0";
 $(document).ready(function() {
@@ -138,7 +138,7 @@ $(document).ready(function() {
 
 var lhost = "localhost:8888";
 var rhost = "issoftware1.com.mx";
-var version='1.0.22';
+var version='1.0.23';
 
 localStorage.setItem('versionapp',version);
 var abrir=0;

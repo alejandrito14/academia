@@ -559,7 +559,7 @@ class Pagos
 				$sql2="SELECT SUM(montoadescontar) as montodescontar,GROUP_CONCAT(titulo) as nombredescuento
 				FROM pagodescuento
 				INNER JOIN descuento ON pagodescuento.iddescuento=descuento.iddescuento
-				 WHERE idpago='$this->idpago'";
+				 WHERE idpago='$this->idpago' AND idnotapago='$this->idnotapago' ";
 
 			$resp = $this->db->consulta($sql2);
 			$cont = $this->db->num_rows($resp);
@@ -583,8 +583,8 @@ class Pagos
 	{
 		$sql2="SELECT SUM(montoadescontar) as montodescontar,GROUP_CONCAT(titulo) as nombremembresia FROM pagodescuentomembresia
 			INNER JOIN membresia ON membresia.idmembresia=pagodescuentomembresia.idmembresia
-		 WHERE idpago='$this->idpago'";
-
+		 WHERE idpago='$this->idpago' AND idnotapago='$this->idnotapago'";
+		 
 			$resp = $this->db->consulta($sql2);
 			$cont = $this->db->num_rows($resp);
 
@@ -600,6 +600,31 @@ class Pagos
 				} 
 			}
 			return $array;	
+	}
+
+
+	public function ObtenerDatosNotaPago()
+	{
+		$sql = "SELECT notapago.folio,notapago.tipopago,notapago.fechareporte,notapago.fecha,notapago.estatus FROM
+				notapago_descripcion
+				INNER JOIN notapago ON
+				notapago_descripcion.idnotapago=notapago.idnotapago	
+			    	WHERE notapago_descripcion.idpago='$this->idpago'";
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
 	}
 	
 

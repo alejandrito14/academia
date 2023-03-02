@@ -279,6 +279,17 @@ var oTable = $('#zero_config').dataTable( {
 													$bt->title="EDITAR";
 													$bt->class='btn btn_colorgray';
 													$bt->armar_boton();
+
+
+													$bt->titulo = "";
+													$bt->icon = "mdi-account";
+													$bt->funcion = "detalleAlumno(".$result_row['idusuarios'].")";
+													$bt->estilos = ""; 
+													$bt->permiso = $permisos;
+													$bt->tipo = 2;
+													$bt->title="DETALLE";
+													$bt->class='btn btn_colorgray';
+													$bt->armar_boton();
 											
 
 
@@ -340,6 +351,170 @@ var oTable = $('#zero_config').dataTable( {
 			</table>
 		</div>
   	</div>
+</div>
+
+
+<div class="modal fade" id="modaldetallealumno" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<div class="row">
+      		<div class="col-md-12"><h2 style="text-align: center;"></h2></div>
+      	</div>
+        <div class="row">
+        	<div class="col-md-4">
+        		<div class="row">
+        			<img src="" alt="" class="imgperfil" style="width: 100%;border-radius: 10px;">
+        		</div>
+
+
+        		<div class="row" style="margin-top: 1em;">
+							  <div class="" style="width: 100%;">
+							    <!-- Tab navs -->
+							    <div
+							      class="nav flex-column nav-pills text-center"
+							      id="v-pills-tab"
+							      role="tablist"
+							      aria-orientation="vertical"
+							    >
+							      <a
+							        class="nav-link active"
+							        id="v-pills-link1-tab"							       
+
+							        >Datos generales</a>
+							     
+							      <a
+							        class="nav-link"
+							        id="v-pills-link2-tab"
+							       
+							        >Servicios</a
+							      >
+
+							      <a
+							        class="nav-link"
+							        id="v-pills-link3-tab"
+							       
+							        >Membresias</a
+							      >
+
+							       <a
+							        class="nav-link"
+							        id="v-pills-link4-tab"
+							       
+							        >Asociados</a
+							      >
+							      <a
+							        class="nav-link"
+							        id="v-pills-link5-tab"
+							        
+							        >Tutorados</a
+							      >
+							    </div>
+							    <!-- Tab navs -->
+							  </div>
+
+ 
+</div>
+
+        	</div>
+        	<div class="col-md-8">
+        		<div class="">
+        				 <div class="col-9">
+    <!-- Tab content -->
+							    <div class="tab-content" id="v-pills-tabContent">
+							      <div
+							        class="tab-pane fade show active"
+							        id="v-pills-link1"
+							        role="tabpanel"
+							        aria-labelledby="v-pills-link1-tab"
+							      >
+
+							        <table class="table table-user-information">
+                    <tbody>
+                      <tr>
+                      	<td>Alias:</td>
+                        <td><p class="divalias"></p></td>
+
+                       </tr>
+                       <tr>
+                        <td>Nombre:</td>
+                        <td><p class="divnombre"></p></td>
+                      </tr>
+                      <tr>
+                        <td>Fecha Nac.:</td>
+                        <td> <p class="divfechanacimiento"></p></td>
+                      </tr>
+                      <tr>
+                        <td>Correo:</td>
+                        <td><p class="divcorreo"></p></td>
+                      </tr>
+                  
+                       <tr>
+                        <td>Sexo:</td>
+                        <td><p class="divsexo"></p></td>
+                      </tr>
+                      <tr>
+                      			  <td>Celular:</td>
+                       			 <td><p class="divcelular"></p>
+                        		</td>
+                      </tr>
+                     
+                      
+                           
+                      </tr>
+                     
+                    </tbody>
+                  </table>
+							       
+							       
+							      </div>
+							      <div
+							        class="tab-pane fade"
+							        id="v-pills-link2"
+							        role="tabpanel"
+							        aria-labelledby="v-pills-link2-tab">
+							       	<div class="divservicios"></div>
+							       
+							      </div>
+							      <div
+							        class="tab-pane fade"
+							        id="v-pills-link3"
+							        >
+							        <div class="divmembresias"></div>
+							      </div>
+							      <div
+							        class="tab-pane fade"
+							        id="v-pills-link4"
+							       >
+							       <div class="divasociados"></div>
+							      </div>
+
+							        <div
+							        class="tab-pane fade"
+							        id="v-pills-link4"
+							       >
+							       <div class="divtutorados"></div>
+							      </div>
+							    </div>
+    <!-- Tab content -->
+  </div>
+        	
+        		</div>
+        	</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <!-- <button type="button" class="btn btn-primary"></button> -->
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>

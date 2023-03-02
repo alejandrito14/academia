@@ -47,8 +47,14 @@ function Guardartipopago(form,regresar,donde,idmenumodulo)
 
 		var tiposervicio=[];
 		$(".tiposervicios").each(function( index ) {
-			var idtiposervicio=$(this).val();
-			tiposervicio.push(idtiposervicio);
+			if ($(this).is(':checked')) {
+			var idtiposervicio=$(this).attr('id');
+			var dividir=idtiposervicio.split('_')[1];
+
+			tiposervicio.push(dividir);
+
+			}
+			
 
 		});
 
@@ -109,26 +115,29 @@ function habilitarmontofactura() {
 }
 
 
-function AgregarTipopago(){
+function AgregarTipopago(tipo){
 
-		contadortipo=parseFloat($(".tipoincluye").length)+1;
+		var contadortipo= document.getElementsByClassName("tipoincluye").length+1;
 
 		tabindex=parseFloat(6)+parseFloat(contadortipo);
 		var htmls="";
 		var html="";
-		CargarTipoServicios().then(r => {
+		CargarTipoServicios2().then(r => {
 								 	
           		if (r.length>0) {
 													
 					htmls+=`<option value="0">SELECCIONAR TIPO DE SERVICIO</option>`;
-					for (var i = 0; i <r.length; i++) {								
+					for (var i = 0; i <r.length; i++) {		
+
+
 						htmls+=`<option value="`+r[i].idcategorias+`">`+r[i].titulo+`</option>`;
 					}
 
 				}
-       		
 
-			 html=`
+			}).then(r=>{
+
+				 html=`
 					<div class="row tipoincluye" id="contadort`+contadortipo+`">
 										<div class="col-md-3">
 									<label>TIPO DE SERVICIO:</label>	
@@ -147,8 +156,19 @@ function AgregarTipopago(){
 	`;
 
 	
-	$("#tiposervicios").append(html);
-	});
+				$("#tiposervicios").append(html);
+
+					if (tipo>0) {
+
+						$("#selecttiposervicio_"+contadortipo).val(tipo);
+
+					}
+
+			});
+       		
+
+			
+	
 	//CargarServicios();
 
 }
@@ -159,7 +179,7 @@ function Desplegartiposerviciotipo() {
 	if ($("#v_tiposervicio").is(':checked')) {
 		$(".divtiposervicio").css('display','block');	
 		$("#v_tiposervicio").val(1);
-		
+			CargarTipoServicios2();
 		}else{
 
 		$(".divtiposervicio").css('display','none');	
@@ -186,6 +206,11 @@ function ObtenerCategoriasTipo(idtipodepago) {
 					success:function(msj){
 								var resp=msj.respuesta;
 
+								if (resp.length>0) {
+
+									$(".divtiposervicio").css('display','block');
+								}
+
 								PintarCategoriasTipopago(resp);	
 					  	
 					  	}
@@ -194,15 +219,67 @@ function ObtenerCategoriasTipo(idtipodepago) {
 
 function PintarCategoriasTipopago(respuesta) {
 	if (respuesta.length>0) {
-		
-		for (var i = 0; i < respuesta.length; i++) {
-			
-			AgregarTipopago();
-
-			var tipo=respuesta[i].idcategorias;
-						alert(tipo);
-
-			$("#selecttiposervicio_"+i).val(tipo);
+		for (var i = 0; i <respuesta.length; i++) {
+			console.log(respuesta[i].idcategorias);
+			$("#vtiposervicio_"+respuesta[i].idcategorias).attr('checked',true);
 		}
 	}
+}
+
+
+function CargarTipoServicios2() {
+	//return new Promise((resolve, reject) => {
+
+	$.ajax({
+		type:'POST',
+		url: 'catalogos/tipodepagos/tiposervicios.php',
+		cache:false,
+		dataType:'json',
+		async:false,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+			alert(error);						  
+		 },
+		success : function (msj){
+		
+			PintarTipoServicios2(msj.respuesta);   
+			}
+		}); 
+
+	//});
+}
+
+function PintarTipoServicios2(respuesta) {
+	
+	var html="";
+	if (respuesta.length>0) {
+		for (var i = 0; i < respuesta.length; i++) {
+			html+=`
+			<div class="pasucat_" id="cate_`+respuesta[i].idcategorias+`">
+			<div class="row">
+				<div class="col-md-12">
+									<div class="form-check" style="margin-bottom: 1em;">
+                    
+					<input type="checkbox" class="form-check-input tiposervicios"  id="vtiposervicio_`+respuesta[i].idcategorias+`" onchange="" style="top: -0.3em;">
+					<label class="form-check-label">`+respuesta[i].titulo+`</label>
+			</div>
+								
+									
+								</div>
+					<div class="col-md-3">
+										
+									</div>
+							</div>
+
+			</div>
+			`;
+		}
+	}
+
+	console.log(html);
+
+	$("#todostiposervicios").html(html);
 }

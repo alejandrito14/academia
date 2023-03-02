@@ -18,6 +18,7 @@ require_once("../../clases/class.Usuarios.php");
 require_once("../../clases/class.Funciones.php");
 require_once("../../clases/class.Fechas.php");
 require_once("../../clases/class.ServiciosAsignados.php");
+require_once("../../clases/class.Servicios.php");
 
 try
 {
@@ -28,6 +29,8 @@ try
 	$f=new Funciones();
 	$fechas=new Fechas();
 	$serviciosasignados= new ServiciosAsignados();
+	$servicio= new Servicios();
+	$servicio->db=$db;
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
 	$serviciosasignados->db=$db;
@@ -35,6 +38,8 @@ try
 
 	$idservicio=$_POST['idservicio'];
 	$lo->idservicio=$idservicio;
+	$servicio->idservicio=$idservicio;
+	$obtenerservicio=$servicio->ObtenerServicio();
 
 	$serviciosasignados->idservicio=$idservicio;
 	$usuariosservicio=$serviciosasignados->obtenerUsuariosServiciosAsignadosAgrupado();
@@ -60,6 +65,7 @@ try
 
 	$respuesta['respuesta']=1;
 	$respuesta['asignados']=$obtener;
+	$respuesta['servicio']=$obtenerservicio[0];
 	
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);

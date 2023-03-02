@@ -28,8 +28,9 @@ try
 	$membresiaconfi->db=$db;
 	$db->begin();
 
-	$fechaactual=date('Y-m-d').' 23:59:59';
-	
+	$fechaactual=date('Y-m-d');
+		//$fechaactual='2023-02-28';
+
 	$arraysinmembresia=array();
 	$arrayconmembresia=array();
 
@@ -44,32 +45,31 @@ try
 		# code...
 	
 	for ($i=0; $i < count($membresias); $i++) { 
-		$lo->idusuarios_membresia=$membresias[$i]->idusuarios_membresia;
+		$lo->idusuarios=$membresias[$i]->idusuarios;
+		$lo->idmembresia=$membresias[$i]->idmembresia;
 		$lo->estatus=2;
 		$lo->ActualizarEstatusMembresia();
 
-		//OBTENER CONFIGURACION DE MEMRESIA
+		$membresiaconfi->idusuarios=$membresias[$i]->idusuarios;
+		$membresiaconfi->idmembresia=$membresias[$i]->idmembresia;
+		
 
-		//$lo->
+		if ($membresias[$i]->fechaexpiracion!='' && $membresias[$i]->fechaexpiracion!=null) {
+			# code...
+			$membresiaconfi->fechaexpiracion=date('Y-m-d',strtotime($membresias[$i]->fechaexpiracion));
+		//var_dump($configuracion);die();
+		if ($membresias[$i]->configuracion>0) {
+			# code...
+				$configuracion=$membresiaconfi->ObtenerConfiguracionMembresia();
+			
+			$lo->idmembresia=$membresias[$i]->idmembresia;
 
-
-		//$membresiaconfi->idusuarios=$membresias[$i]->idusuarios;
-		//$membresiaconfi->idmembresia=$membresias[$i]->idmembresia;
-		//$configuracionmembresia=$membresiaconfi->ObtenerConfiguracionMembresia();
-
-		$lo->idmembresia=$membresias[$i]->idmembresia;
-
-		$asignar->idusuarios = $membresias[$i]->idusuarios;
-		$asignar->idmembresia = $lo->idmembresia;
-		//$asignacion=$asignar->ObtenerAsignacionMembresia();
-		$asignar->GuardarAsignacionmembresia();
-		//$obtenercaducadas=$lo->ObtenerMembresiasCaducadas();
-
-		//$cantidadcaducadas=count($obtenercaducadas);
-		//if ($cantidadcaducadas<$configuracionmembresia[0]->repetir) {
-				
-		$lo->idmembresia=$membresias[$i]->idmembresia;
-        $obtenermembresia=$lo->ObtenerMembresia();
+			$asignar->idusuarios = $membresias[$i]->idusuarios;
+			$asignar->idmembresia = $lo->idmembresia;
+			$asignar->fechaexpiracion=$configuracion[0]->fecha.' 23:59:59';
+		    $asignar->GuardarAsignacionmembresia();
+			$lo->idmembresia=$membresias[$i]->idmembresia;
+        	$obtenermembresia=$lo->ObtenerMembresia();
 
                       $pagos->idusuarios=$asignar->idusuarios;
                       $pagos->idmembresia=$membresias[$i]->idmembresia;
@@ -82,34 +82,61 @@ try
                       $pagos->fechafinal='';
                       $pagos->concepto=$obtenermembresia[0]->titulo;
                     
-                      $pagos->folio='';
-                      $pagos->CrearRegistroPago();
+                     $pagos->folio='';
+                     $pagos->CrearRegistroPago();
+
+                     $asignar->idpago=$pagos->idpago;
+                     $asignar->ActualizarIdPago();
+
+                      $valor=array('idusuarios'=> $pagos->idusuarios,'idmembresia'=>$pagos->idmembresia,'fechaexpiracion'=>$asignar->fechaexpiracion);
+				array_push($arrayconmembresia,$valor);
+
+		}
+	}
+
+		//OBTENER CONFIGURACION DE MEMRESIA
+
+		//$lo->
 
 
+		//$membresiaconfi->idusuarios=$membresias[$i]->idusuarios;
+		//$membresiaconfi->idmembresia=$membresias[$i]->idmembresia;
+		//$configuracionmembresia=$membresiaconfi->ObtenerConfiguracionMembresia();
+
+		
+		//$obtenercaducadas=$lo->ObtenerMembresiasCaducadas();
+
+		//$cantidadcaducadas=count($obtenercaducadas);
+		//if ($cantidadcaducadas<$configuracionmembresia[0]->repetir) {
+				
+		
 
 
 			//}
-      $valor=$usuariosid[$k];
-		array_push($arrayconmembresia,$valor);                
+                     
 
 	}
 
 	}else{
 
 
-		$valor=$usuariosid[$k];
-		array_push($arraysinmembresia,$valor);
+		
 
 	}
 
 //}
 	$db->commit();
 	$respuesta['respuesta']=1;
-	$respuesta['valoressinmembresia']=$arraysinmembresia;
+
+	$nombreArchivo = "salidacronmembresia.txt";
+
+	
+	
 	$respuesta['valoresconmembresia']=$arrayconmembresia;
 	
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);
+	file_put_contents($nombreArchivo, $myJSON, FILE_APPEND);
 	echo $myJSON;
 
 }catch(Exception $e){

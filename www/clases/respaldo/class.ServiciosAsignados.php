@@ -866,13 +866,22 @@ class ServiciosAsignados
 	}
 
 	
-	public function obtenerServiciosAsignadosCoach2()
+	public function obtenerServiciosAsignadosCoach2($sqlcategorias)
 	{
 		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
-		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
-			AND cancelacion=0 AND servicios.validaradmin=1 GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios
-		 ";
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio
+		INNER JOIN usuarios ON usuarios.idusuarios=usuarios_servicios.idusuarios
+		 WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
+			AND cancelacion=0 AND servicios.validaradmin=1 ";
 
+		/*if ($sqlcategorias!='') {
+			
+			$sql.=$sqlcategorias;
+		}*/
+
+
+		$sql.="	GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios
+		 ";
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -968,7 +977,8 @@ class ServiciosAsignados
 				usuarios.idusuarios,
 				usuarios.foto,
 				usuarios.tipo,
-				tipousuario.nombretipo
+				tipousuario.nombretipo,
+				usuarios_servicios.aceptarterminos
 				FROM
 				usuarios_servicios
 				JOIN usuarios
@@ -1127,5 +1137,40 @@ class ServiciosAsignados
 		
 		return $array;
 	}
+
+
+		public function obtenerServiciosAsignadosCoach3($sqlcategorias)
+	{
+		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio
+		INNER JOIN usuarios ON usuarios.idusuarios=usuarios_servicios.idusuarios
+		 WHERE usuarios_servicios.idservicio='$this->idservicio' AND usuarios_servicios.estatus IN(0,1)
+			AND cancelacion=0 AND servicios.validaradmin=1 AND usuarios.tipo=5 ";
+
+
+
+	/*	$sql.="	GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios
+		 ";*/
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				
+					$array[$contador]=$objeto;
+					$contador++;
+				
+			} 
+		}
+		
+		return $array;
+	}
+
 
 }

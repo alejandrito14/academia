@@ -1196,6 +1196,7 @@ $navegador = $f->navegador();
 <script src="js/fn_LoginTime.js"></script>
 <!-- <script src="js/fn_presentacion.js"></script>
  -->
+ <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js' type='text/javascript'></script>
  <script src="js/fn_categorias.js"></script>
 <script src="js/fn_notificacion.js"></script>
 <script src="js/fn_politicasaceptacion.js"></script>
@@ -1214,6 +1215,8 @@ $navegador = $f->navegador();
 <script src="js/fn_subirarchivos.js?<?php echo time(); ?>"></script>
 <script src="js/fn_subirarchivoscategorias.js?<?php echo time(); ?>"></script>
 <script src="js/fn_subirarchivospaquetes.js?<?php echo time(); ?>"></script>
+<script src="js/fn_productos.js"></script>
+<script src="js/fn_categoriaproducto.js"></script>
 
 <!-- js nuevos de mike -->
 <!-- <script src="js/fn_banner.js"></script>
@@ -1227,7 +1230,8 @@ $navegador = $f->navegador();
 <script src="js/fn_funcionesextras.js?<?php echo time(); ?>"></script>
 
 
-<!-- <script src="js/fn_monedero.js?<?php echo time(); ?>"></script>
+ <script src="js/fn_monedero.js?<?php echo time(); ?>"></script>
+ <!--
 <script src="js/fn_paginas.js?<?php echo time(); ?>"></script>
 <script src="js/fn_contacto.js?<?php echo time(); ?>"></script> -->
 
@@ -1253,6 +1257,8 @@ $navegador = $f->navegador();
 <script src="js/fn_asignarusuarioservicio.js"></script>
 <script src="js/fn_tutor.js"></script>
 <script src="js/fn_clasificacion.js"></script>
+<script src="js/fn_llaves.js"></script>
+
 <script src="js/fn_nivel.js?<?php echo time(); ?>"></script>
 <script src="js/fn_deportes.js?<?php echo time(); ?>"></script>
 <script src="js/fn_descuento.js?<?php echo time(); ?>"></script>

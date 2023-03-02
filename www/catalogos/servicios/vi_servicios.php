@@ -248,12 +248,26 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 					<?php
 						//SCRIPT PARA CONSTRUIR UN clonar
 						$bt->titulo = "";
-						$bt->icon = "mdi-account-multiple";
+						$bt->icon = "mdi-account-check";
 						$bt->funcion = "AbrirModalUsuarios('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$l_Servicios_row['titulo']."')";
 
 						/*$bt->permiso = $permisos;*/
 						$bt->tipo = 4;
 						$bt->title="ALUMNOS INSCRITOS";
+
+						$bt->armar_boton();
+					?>
+
+
+							<?php
+						//SCRIPT PARA CONSTRUIR UN clonar
+						$bt->titulo = "";
+						$bt->icon = "mdi-account-multiple";
+						$bt->funcion = "AbrirModalAsignacion('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$l_Servicios_row['titulo']."')";
+
+						/*$bt->permiso = $permisos;*/
+						$bt->tipo = 4;
+						$bt->title="ASIGNACIÓN DE ALUMNOS";
 
 						$bt->armar_boton();
 					?>
@@ -551,6 +565,54 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
 
 
+<div class="modal fade" id="modalAlumnosAsignacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalTitleServicio"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <div class="row">
+       	<div class="col-md-6">
+       		<h3 style="text-align: center;">Todos los alumnos</h3>
+       		<div class="row" style="margin-bottom:1em;">
+									<div class="col-md-12">	 
+										<input type="text" class="form-control" name="buscadorusuario2_" id="buscadorusuario2_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadorusuario2_','.alumno')">
+									</div>
+		</div>
+       		<div id="usuariosnoinscritos" style="height: 250px;overflow: scroll;"></div>
+       	</div>
+       	<div class="col-md-6">
+       		<h3 style="text-align: center;">Alumnos inscritos</h3>
+
+       		<div class="row" style="margin-bottom:1em;">
+									<div class="col-md-12">	 
+										<input type="text" class="form-control" name="buscadorcli_2" id="buscadorusuario_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadorusuario_','.usu_')">
+									</div>
+									</div>
+
+       		<div id="usuariosinscritos2" style="height: 250px;overflow: scroll;"></div>
+
+       	</div>
+
+       </div>
+      </div>
+      <div class="modal-footer">
+
+      	 <button type="button" class="btn btn-success btnasignaralumnos" data-dismiss="modal">Guardar</button>
+
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+       	
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <div class="modal" id="modalimagenservicio" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -790,5 +852,17 @@ $estatus=array('DESACTIVADO','ACTIVADO');
     font-size:16px; 
     font-weight:normal;
     font-family: 'Lato';
+}
+.alumno{
+	    border-top: 1px solid #f0eee5;
+    border-bottom: 1px solid #f0eee5;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+.usu_{
+	 border-top: 1px solid #f0eee5;
+    border-bottom: 1px solid #f0eee5;
+    padding-top: 1px;
+    padding-bottom: 1px;
 }
 </style>

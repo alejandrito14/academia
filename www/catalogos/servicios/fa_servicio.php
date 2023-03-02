@@ -943,7 +943,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						    	<div class="form-check descuentos_"  id="cli_<?php echo $a_descuentos['iddescuento'];?>">
 						    	    <?php 	
 						    			$valor="";
-                                        $nombre=mb_strtoupper($f->imprimir_cadena_utf8($a_descuentos['titulo']));
+           	 $nombre=mb_strtoupper($f->imprimir_cadena_utf8($a_descuentos['titulo']));
 						    		?>
 									  <input  type="checkbox"  value="<?php echo $a_descuentos['iddescuento']?>" class="form-check-input chkdescuento" id="inputdescuento_<?php echo $a_descuentos['iddescuento']?>" <?php echo $valor; ?>>
 									  <label class="form-check-label" for="flexCheckDefault" style="margin-top: 0.2em;"><?php echo $nombre; ?></label>

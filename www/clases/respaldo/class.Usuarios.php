@@ -248,7 +248,26 @@ class Usuarios
 
 	public function lista_Usuarios($tipo)
 	{
-		$sql = "SELECT * FROM usuarios INNER JOIN tipousuario ON usuarios.tipo=tipousuario.idtipousuario WHERE tipo IN($tipo)";
+		$sql = "SELECT
+				usuarios.idusuarios,
+				usuarios.idperfiles,
+				usuarios.nombre,
+				usuarios.paterno,
+				usuarios.alias,
+				usuarios.materno,
+				usuarios.foto,
+				usuarios.telefono,
+				usuarios.celular,
+				tipousuario.nombretipo,
+				tipousuario.mostrarenapp,
+				usuarios.estatus,
+				tipousuario.sistema,
+				usuarios.sexo,
+				usuarios.email,
+				usuarios.usuario,
+				usuarios.tipo FROM
+					usuarios
+ INNER JOIN tipousuario ON usuarios.tipo=tipousuario.idtipousuario WHERE tipo IN($tipo)";
 		
 		$resp = $this->db->consulta($sql);
 		return $resp;
@@ -901,6 +920,53 @@ class Usuarios
 			while ($objeto=$this->db->fetch_object($resp)) {
 
 				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+
+
+	public function ListadoUsuariostipo($tipo)
+	{
+		$sql = "SELECT
+				usuarios.idusuarios,
+				usuarios.tipo FROM
+					usuarios
+ 				INNER JOIN tipousuario ON usuarios.tipo=tipousuario.idtipousuario WHERE tipo IN($tipo)";
+		
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto->idusuarios;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+
+
+	public function ObtenerTodosUsuarios()
+	{
+		$sql = "SELECT idusuarios as idusuarios FROM usuarios WHERE estatus = 1";
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto->idusuarios;
 				$contador++;
 			} 
 		}

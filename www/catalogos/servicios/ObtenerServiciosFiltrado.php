@@ -51,13 +51,16 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
 	if (count($obtener)>0) {
 		for ($i=0; $i <count($obtener) ; $i++) { 
-
-			$idcategoria=$obtener[$i]->idcategorias;
-			$categorias->idcategoria=$idcategoria;
-			$detalle=$categorias->ObtenerCategoria();
+			$avanzado=0;
+			if ($obtener[$i]->idcategorias!='' && $obtener[$i]->idcategorias!=0) {
+				$idcategoria=$obtener[$i]->idcategorias;
+				$categorias->idcategoria=$idcategoria;
+				$detalle=$categorias->ObtenerCategoria();
 
 			
-			$avanzado=$detalle[0]->avanzado;
+				$avanzado=$detalle[0]->avanzado;
+			}
+			
 			
 		 ?>
 			<tr>
@@ -135,7 +138,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 					<?php
 						//SCRIPT PARA CONSTRUIR UN clonar
 						$bt->titulo = "";
-						$bt->icon = "mdi-account-multiple";
+						$bt->icon = "mdi-account-check";
 						$bt->funcion = "AbrirModalUsuarios('".$obtener[$i]->idservicio."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$obtener[$i]->titulo."')";
 
 						/*$bt->permiso = $permisos;*/
@@ -144,6 +147,20 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
 						$bt->armar_boton();
 					?>
+
+							<?php
+						//SCRIPT PARA CONSTRUIR UN clonar
+						$bt->titulo = "";
+						$bt->icon = "mdi-account-multiple";
+						$bt->funcion = "AbrirModalAsignacion('".$obtener[$i]->idservicio."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$obtener[$i]->titulo."')";
+
+						/*$bt->permiso = $permisos;*/
+						$bt->tipo = 4;
+						$bt->title="ASIGNACIÓN DE ALUMNOS";
+
+						$bt->armar_boton();
+					?>
+
 
 					<?php
 						//SCRIPT PARA CONSTRUIR UN clonar

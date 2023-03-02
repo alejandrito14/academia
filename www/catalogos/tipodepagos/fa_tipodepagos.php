@@ -90,6 +90,7 @@ if(!isset($_GET['idtipodepago'])){
 	$habilitarcampo=$f->imprimir_cadena_utf8($result_tipodepagos_row['habilitarcampomonto']);
 
 	$habilitarcampomontofactura=$result_tipodepagos_row['habilitarcampomontofactura'];
+	$habilitartiposervicio=$result_tipodepagos_row['habilitartiposervicio'];
 	
 
 	$che="";
@@ -304,7 +305,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 				</div>
 				<div class="card-body">
-						<div style="margin-top: 3em">
+						<div style="margin-top: 3em;margin-left: 1em;">
 
 							<div class="row">
 								<div class="col-md-12">
@@ -320,17 +321,32 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 										
 									</div>
 							</div>
-						<div class="divtiposervicio" style="display: none;">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="divtiposervicio" style="display: none;">
 							<div class="row">
 								<div class="col-md-12">
-									<button class="btn btn-primary" type="button" style=" float: right;   margin-top: -1em;" onclick="AgregarTipopago()">NUEVO TIPO DE SERVICIO</button>
+									<!-- <button class="btn btn-primary" type="button" style=" float: right;   margin-top: -1em;" onclick="AgregarTipopago()">NUEVO TIPO DE SERVICIO</button> -->
 								</div>
 								
 							</div>
 								
-							<div id="tiposervicios"></div>
+							<div id="tiposervicios">
+								<div class="form-group m-t-20">  
+		                        <input type="text" class="form-control" name="buscadortipo_" id="buscadortipo_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadortipo_','.pasucat_')" style="    margin-bottom: 1em;">
+		                        <div id="todostiposervicios" style="    overflow: scroll;height: 200px;"></div>
+		                    </div>
+
+
+
+
+
+							</div>
 						</div>
 
+								</div>
+							</div>
+						
 
 
 					</div>
@@ -356,8 +372,18 @@ input[type=number] { -moz-appearance:textfield; }
 
 <script>
 	var idtipodepago='<?php echo $idtipodepago ?>';
+	var habilitartiposervicio='<?php echo $habilitartiposervicio ?>';
+
+	
 
 	if (idtipodepago>0) {
+
+		if (habilitartiposervicio==1) {
+			$(".divtiposervicio").css('display','block');
+			$("#v_tiposervicio").val(habilitartiposervicio);
+			$("#v_tiposervicio").attr('checked',true);
+			CargarTipoServicios2();
+		}
 
 		ObtenerCategoriasTipo(idtipodepago);
 	}
