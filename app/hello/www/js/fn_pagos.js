@@ -3,6 +3,8 @@ var descuentosmembresia=[];
 var arraycomentarios=[];
 var resultimagendatosfactura=[];
 var dynamicSheet4="";
+var dynamicSheet5="";
+
 function ObtenerTotalPagos() {
 	var pagina = "ObtenerTodosPagos.php";
 	var id_user=localStorage.getItem('id_user');
@@ -71,7 +73,6 @@ function VerListadoPago() {
 
 
 function ObtenerTodosPagos() {
-
 	var pagina = "ObtenerTodosPagos.php";
 	var id_user=localStorage.getItem('id_user');
 	var datos="id_user="+id_user;
@@ -147,6 +148,8 @@ function Pintarpagos(pagos) {
                          html+=` <p class="text-muted small">$`+pagos[i].monto+`</p>
 
                           <input type="hidden" value="`+pagos[i].monto+`" class="montopago" id="val_`+pagos[i].idpago+`">
+                         <input type="hidden" value="`+pagos[i].tipopago+`" class="tipopago" id="tipopago_`+pagos[i].idpago+`">
+
                         </div>
                         <div class="col-20">`;
 
@@ -299,7 +302,7 @@ function HabilitarBotonPago() {
             usuario="";
            }
 
-
+          tipopago=$("#tipopago_"+dividir).val();
          
 		 	contar++;
       console.log(contar)
@@ -311,18 +314,18 @@ function HabilitarBotonPago() {
         servicio:servicio,
         fechainicial:fechainicial,
         fechafinal:fechafinal,
-        usuario:usuario
+        usuario:usuario,
+        tipopago:tipopago
 		 	};
 		 	pagosarealizar.push(objeto);
 
 
-      
-
+     
 		 }
 	
 	});
-  console.log(contar+''+contarseleccionadoscero);
-  console.log('pago cero'+pagocero);
+ // console.log(contar+''+contarseleccionadoscero);
+ // console.log('pago cero'+pagocero);
    if (contar!=contarseleccionadoscero) {
     if (pagocero==1) {
       
@@ -397,8 +400,118 @@ function HabilitarBotonPago() {
 }
 
 function ResumenPago() {
+/*var contartipo=0;
+var sintitpo=0;
+var concepto="";
+var contipo=[];
+  if (pagosarealizar.length>0) {
+    for (var i =0; i < pagosarealizar.length; i++) {
+      
+      var tipopago=pagosarealizar[i].tipopago;
 
-	GoToPageHistory('resumenpago');
+      if (tipopago>0) {
+         concepto=concepto+'*'+pagosarealizar[i].concepto+'<br>';
+        contartipo++;
+        contipo.push(pagosarealizar[i]);
+
+      }else{
+        sintitpo++;
+      }
+    }
+
+  }
+  var pasa=0;
+  if (contartipo>0 && sintitpo==0) {
+
+        var tipo=0;
+        if (contipo.length>=2) {
+          
+          var igual=0;
+              for(var i = 0; i < contipo.length; i++) {
+                 tipo=contipo[i].tipopago
+
+                 if (i< contipo.length-1) {
+                   if (contipo[i + 1].tipopago === contipo[i].tipopago) {
+                   igual++;
+                  }
+                }
+
+            }
+            var con=contipo.length-1;
+
+
+            if (igual==con) {
+              pasa=1;
+            }else{
+              pasa=0;
+            }
+        }else{
+
+          pasa=1;
+        }
+    
+
+    
+  }
+
+  else if (sintitpo>0 && contartipo==0) {
+    pasa=1;
+  }
+
+  else{
+
+    pasa=0;
+  }*/
+
+  VerificarPagosRelacionados().then(r => {
+    var concepto="";
+    var pasa=r.pasa;
+      if (pasa==1) {
+      GoToPageHistory('resumenpago');
+
+       }else{
+
+        var conceptos=r.conceptos;
+
+        for (var i = 0; i < conceptos.length; i++) {
+          concepto+=conceptos[i]+'<br>';
+        }
+
+        alerta('','Los siguientes pagos <br>  '+concepto+' se deberán de realizar de forma individual');
+      }
+
+  });
+
+
+  
+}
+
+
+function VerificarPagosRelacionados() {
+      return new Promise(function(resolve, reject) {
+
+        var pagina = "VerificarPagosRelacionados.php";
+        var iduser=localStorage.getItem('id_user');
+        var datos="pagosarealizar="+JSON.stringify(pagosarealizar)+"&iduser="+iduser;
+        $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: urlphp+pagina,
+        data:datos,
+        async:false,
+        success: function(resp){
+          resolve(resp);
+        },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+          var error;
+            if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+            if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                    //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                    console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+        }
+
+      });
+
+    });
 }
 
 function CargarPagosElegidos() {
@@ -462,6 +575,37 @@ function Cargartipopago(tipodepagoseleccionado) {
 
   });
 }
+
+function CargartipopagoSeleccionado(tipodepagoseleccionado) {
+     return new Promise(function(resolve, reject) {
+
+   var pagina = "obtenertipodepagos3.php";
+    var datos="tipodepagoseleccionado="+tipodepagoseleccionado;
+    $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+    data:datos,
+    async:false,
+    success: function(datos){
+
+      var opciones=datos.respuesta;
+  
+      Pintartipodepagos(opciones,tipodepagoseleccionado);
+      resolve(1);
+    },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+      var error;
+        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+    }
+
+  });
+  });
+}
+
+
 
 function CargartipopagoFactura(tipodepagoseleccionado) {
    var pagina = "obtenertipodepagos2.php";
@@ -2619,6 +2763,11 @@ function RequiereFactura() {
     HabilitarOpcionespago(0,0,0,0,0);
     CalcularTotales();
 }
+function RequiereFactura2() {
+    AbrirModalDatos2();
+
+
+}
 
 function AbrirModalDatos() {
   var html="";
@@ -2946,6 +3095,324 @@ function AbrirModalDatos() {
       });
 
        dynamicSheet4.open();
+
+}
+
+function AbrirModalDatos2() {
+  var html="";
+
+  html+=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: none;">
+            <div class="toolbar">
+              <div class="toolbar-inner">
+                <div class="left"></div>
+                <div class="right">
+                  <a class="link sheet-close"></a>
+                </div>
+              </div> 
+            </div>
+            <div class="sheet-modal-inner" style="background: white;border-top-left-radius: 20px;border-top-right-radius:20px; ">
+              <div class="iconocerrar link sheet-close" style="z-index:100;">
+                    <span class="bi bi-x-circle-fill"></span>
+                       </div>
+
+              <div class="" style="height: 100%;">
+                   <div class="row">
+                     <div class="col-20">
+                        
+                    </div>
+
+                     <div class="col-60">
+                     <span class="titulomodal"></span>
+                     </div>
+                     <div class="col-20">
+                     <span class="limpiarfiltros"></span>
+                     </div>
+                 </div>
+                <div class="page-content" style="background: white; height: 100%;width: 100%;border-radius: 20px;">
+              
+                 <div class="" style="position: absolute;top:2em;width: 100%;">
+                  
+                    <div class="">
+                      <div class="block" style="margin-right:1em;margin-left:1em;">
+
+                        `;
+        
+
+                    html+=`
+                    <div class="formulario" style="display:none">
+                    <h3 style="text-align:center;font-size:22px;margin-bottom:1em;">Datos de facturación</h3>
+                        <div class="row">
+                        <form class="was-validated needs-validation">
+                            <div class="list form-list no-margin margin-bottom">
+                              <ul>
+                                <input type="hidden" id="v_idfactura" value="0"/>
+                                <li class="item-content item-input lirazonsocial is-valid">
+                                <div class="item-inner">
+                                <div class="item-title item-floating-label" id="flotante">Razon social</div>
+                                <div class="item-input-wrap">
+                                     <input type="text"   id="v_razonsocial">
+                                     <span class="input-clear-button">
+                                     </span>
+                                  </div>
+                                </div>
+                                </li>
+
+                                 <li class="item-content item-input lirfc is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Rfc</div>
+                                  <div class="item-input-wrap">
+                                  <input type="text"  id="v_rfc">
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+
+
+                                 <li class="item-content item-input liemail is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Email</div>
+                                  <div class="item-input-wrap">
+                                  <input type="text"   id="v_email">
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+
+                                <li class="item-content item-input licodigopostal is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Código postal</div>
+                                  <div class="item-input-wrap">
+                                  <input type="text"   id="v_codigopostal" onkeyup="Buscarcodigo()">
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+
+                                <li class="item-content item-input lipais is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">País</div>
+                                  <div class="item-input-wrap">
+                                  <select id="v_pais" onchange="ObtenerEstado(0,$(this).val())"></select>
+                                       
+                                    </div>
+                                  </div>
+                                </li>
+
+                                 <li class="item-content item-input liestado is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Estado</div>
+                                  <div class="item-input-wrap">
+                                  <select name="v_estado" id="v_estado" onchange="ObtenerMunicipios(0,$(this).val())"></select>
+                                  
+                                    </div>
+                                  </div>
+                                </li>
+
+                                 <li class="item-content item-input limunicipio is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Municipio</div>
+                                  <div class="item-input-wrap">
+                                  <select name="v_municipio" id="v_municipio"></select>
+                                 
+                                    </div>
+                                  </div>
+                                </li>
+
+                                 <li class="item-content item-input licolonia is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Asentamiento</div>
+                                  <div class="item-input-wrap">
+                                  <input type="text"   id="v_colonia" onclick="FiltrarColonias()">
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+
+                                 <li class="item-content item-input licalle is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Calle</div>
+                                  <div class="item-input-wrap">
+                                  <input type="text"   id="v_calle">
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+
+                                 <li class="item-content item-input linoexterior is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">No. exterior</div>
+                                  <div class="item-input-wrap">
+                                  <input type="text"   id="v_noexterior">
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+                                 <li class="item-content item-input linointerior is-valid">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">No. interior</div>
+                                  <div class="item-input-wrap">
+                                  <input type="text"   id="v_nointerior">
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+
+                                <li class="item-content item-input liformapago is-valid item-input-with-value">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Forma de pago</div>
+                                  <div class="item-input-wrap">
+                                  <select name="" id="v_formapago"></select>
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+
+                                <li class="item-content item-input limetodopago is-valid item-input-with-value">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Método de pago</div>
+                                  <div class="item-input-wrap">
+                                        <select name="" id="v_metodopago"></select>
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+
+                                <li class="item-content item-input liusocfdi is-valid item-input-with-value">
+                                 <div class="item-inner">
+                                  <div class="item-title item-floating-label" id="flotante">Uso de cfdi</div>
+                                  <div class="item-input-wrap">
+                                        <select name="" id="v_usocfdi"></select>
+                                       <span class="input-clear-button">
+                                       </span>
+                                    </div>
+                                  </div>
+                                </li>
+
+                                
+                                
+                              </ul>
+                            </div>
+
+                        </form>
+                        </div>
+                        <div class="row">
+                          <div class="" id="vimagen" style="display:none;"></div>
+                        </div>
+                        <div class="row">
+                          <a id="btnsubirimagen" onclick="AbrirModalImagenDatosFactura()" style="border-radius: 10px;
+                          height: 60px;margin-left:1em;margin-right:1em;" class="button button-fill button-large button-raised margin-bottom color-theme">
+                            <div class="fab-text">Subir imagen de constancia (SAT)</div>
+                          </a>
+                        </div>
+
+                         <div class="row" style="margin-bottom:1em;margin-top:3em;">
+
+                           <a id="btnguardardatosfactura" onclick="GuardarDatosfactura()" style="border-radius: 10px;
+                            height: 60px;margin-left:1em;margin-right:1em" class="button button-fill button-large button-raised margin-bottom color-theme">
+                              <div class="fab-text">Guardar</div>
+                            </a>
+
+                            <a id="btnregresar" onclick="RegresarFormfactura()" style="border-radius: 10px;
+                            height: 60px;margin-left:1em;margin-right:1em" class="button button-fill button-large button-raised margin-bottom color-theme">
+                              <div class="fab-text">Cancelar</div>
+                            </a>
+                          </div>
+
+                    </div>
+                    <div class="divcolonias" style="display:none;">
+
+                       <form class="searchbar bordesredondeados" style="background: #ffffff!important;margin-left: 1em;margin-right: 1em;">
+                        <div class="searchbar-inner">
+                          <div class="searchbar-input-wrap">
+                            <input type="search" placeholder="Buscar asentamiento" id="buscador4" style="font-size: 16px;background: white;" />
+                            <i class="searchbar-icon"></i>
+                            <span class="input-clear-button" onclick="Vertodoscolonia()" ></span>
+                          </div>
+                          <span class="searchbar-disable-button if-not-aurora">Cancel</span>
+                        </div>
+                      </form>
+
+                      <div class="list media-list" style="margin-top: 1em;">
+
+                        <ul id="listadocolonias" style="font-size: 14px;"></ul>
+                         <a id="btnseleccionar" onclick="GuardarColonia()" style="border-radius: 10px;
+                            height: 60px;color: white;" class="button button-fill button-large button-raised margin-bottom color-theme">
+                              <div class="fab-text">Aceptar</div>
+                            </a>
+                      </div>
+                    </div>
+
+
+                    <div class="divlistadodatosfiscales" >
+                         <div class="list media-list" style="margin-top: 1em;">
+
+                           <ul id="listadodatosfiscales" style="font-size: 14px;"></ul>
+                            
+
+                            
+                        </div>
+                    </div>
+
+                   
+
+
+                    </div>
+                    </div>
+                 </div>
+              </div>
+                    
+                  </div>
+                </div>
+              </div>`;
+    dynamicSheet5 = app.sheet.create({
+        content: html,
+      swipeToClose: true,
+        backdrop: true,
+        // Events
+        on: {
+          open: function (sheet) {
+              ObtenerDatosfiscales();
+              ObtenerMetodoPago();
+              ObtenerFormaPago();
+              ObtenerPais(0);
+              ObtenerUsoCfdi();
+              $(".lipais").addClass('item-input-focused');
+
+
+          },
+          opened: function (sheet) {
+            console.log('Sheet opened');
+          },
+
+           close:function (sheet) {
+             PintarDatofiscalElegido();
+
+         
+            
+           },
+
+           closed:function (sheet) {
+             if (localStorage.getItem('idusuariosdatosfiscales')==undefined) {
+                
+                 $("#requierefactura").prop('checked', false);
+             }
+
+             
+
+          },
+        }
+      });
+
+       dynamicSheet5.open();
 
 }
 function ObtenerDatosfiscales() {

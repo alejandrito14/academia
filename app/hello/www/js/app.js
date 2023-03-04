@@ -2039,14 +2039,46 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
   $("#btnpagarresumen").attr('disabled',true);
   $$("#btnatras").attr('onclick','Atras()');
   $$("#btnatras").css('display','none');
-
- Cargartipopago(0) 
+  $$(".btnmonedero").attr('onclick','AbrirModalmonedero()');
+  $$(".btncupon").attr('onclick','AbrirModalcupon()');
  
- $$(".btnmonedero").attr('onclick','AbrirModalmonedero()');
- $$(".btncupon").attr('onclick','AbrirModalcupon()');
+  var listado=JSON.parse(localStorage.getItem('pagos'));
+  console.log(listado);
+  var html="";
+  var tipopago='';
+  for (var i = 0; i < listado.length; i++) {
+      if (listado[i].tipopago!='' && listado[i].tipopago!=null) {
+
+         tipopago=listado[i].tipopago;
+      }
+   
+  }
+ 
+ if (tipopago!='') {
+
+  
+  CargartipopagoSeleccionado(tipopago).then(r => {
+
+   // $("#tipopago").val(tipopago);
+    CargarOpcionesTipopago();
  
 
- $$("#requierefactura").attr('onchange','RequiereFactura()');
+  });
+
+  //$("#tipopago").val(tipopago);
+  $$("#requierefactura").attr('onchange','RequiereFactura2()');
+  
+   // CargarOpcionesTipopago();
+ 
+
+ }else{
+    Cargartipopago(0);
+
+   $$("#requierefactura").attr('onchange','RequiereFactura()');
+
+ }
+ 
+
   
 
   ObtenerDescuentosRelacionados();//manda a llamar calcular totales al finalizar los descuentos

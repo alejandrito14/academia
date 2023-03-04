@@ -760,3 +760,13 @@ input[type=date]:focus::-webkit-datetime-edit {
   font-size: 18px;
 }
 
+.numero2{
+      color: white;
+    position: absolute;
+    top: 0;
+    margin-top: 1.6em;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    margin-left: 40px;
+}

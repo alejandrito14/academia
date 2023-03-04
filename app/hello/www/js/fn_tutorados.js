@@ -691,12 +691,10 @@ function VerificarSiExisteTuTorados() {
 		type: 'POST',
 		dataType: 'json',
 		url: urlphp+pagina,
-		crossDomain: true,
-		cache: false,
 		data:datos,
 		success: function(res){
 			var respuesta=res.respuesta;
-
+			
 			if (respuesta.length>0) {
 				$(".divserviciostutorados").css('display','block');
 				PintarSelecttutorados(respuesta);
@@ -716,72 +714,6 @@ function VerificarSiExisteTuTorados() {
 		});
 }
 
-/*
-function PintarSelecttutorados(respuesta) {
-	var html="";
-	if (respuesta.length>0) {
-
-		for (var i =0; i < respuesta.length; i++) {
-
-			if (respuesta[i].foto!='' && respuesta[i].foto!=null && respuesta[i].foto!='null') {
-
-				urlimagen=urlphp+`upload/perfil/`+respuesta[i].foto;
-				imagen='<img src="'+urlimagen+'" alt="" />';
-				}else{
-
-
-				if (respuesta[i].sexo=='M') {
-
-					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarmujer');
-	
-				}else{
-					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarhombre');
-		
-				}
-
-					imagen='<img src="'+urlimagen+'" alt=""  />';
-				}
-
-			html+=`
-
-			<div class="row" style="margin-bottom: 1em;">
-                                <div class="col-auto">
-                                    <div class="form-check avatar">
-                                       
-                                        <label for="contact11" class="avatar avatar-44 elevation-2 rounded-10">
-                                           `+imagen+`
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col align-self-center ">
-                                    <p class="no-margin-bottom text-color-theme">`+respuesta[i].nombre+' '+respuesta[i].paterno+` `+respuesta[i].materno+`</p>
-                                    <p class="text-muted size-12"></p>
-                                </div>
-                                 <div class="col">`;
-                                 if (respuesta[i].chat==1) {
-                                 html+=`<a onclick="Tutoradochat(`+respuesta[i].idusuarios+`)" class="button button-fill button-44 color-theme button-raised" style="width:100px;">
-                                        <i class="bi bi-chat-text" style="margin-right: 2px;"></i>Chat
-                                        <span class="numeros numerochattuto" id="numerochattuto" style="width: 25px;height: 25px;
-    right: 0;justify-content: center;display: flex;align-items: center;">`+respuesta[i].cantidadchat+`</span>
-                                   	   </a>`;
-                                }
-
-                              html+=`  </div>
-                                <div class="col">
-                                    <a onclick="InformacionTutorado(`+respuesta[i].idusuarios+`)" class="button button-fill button-44 color-theme button-raised" style="width:100px;">
-                                        <i class="bi bi-arrow-up-right-circle" style="margin-right: 2px;"></i>Servicios
-                                    </a>
-                                </div>
-                            </div>
-
-
-			`;
-
-		}
-	}
-
-	$(".listatutorados").html(html);
-}*/
 
 
 function PintarSelecttutorados(respuesta) {
@@ -834,18 +766,49 @@ function PintarSelecttutorados(respuesta) {
                             <div class="col" style="justify-content: center;display: flex;align-items: center;">
                                 <a onclick="InformacionTutorado(`+respuesta[i].idusuarios+`)" class="button button-fill button-44 color-theme button-raised" style="width:100px;">
                                         <i class="bi bi-calendar-check" style="margin-right: 2px;"></i>
-                                    </a>
-                            </div>
-                            <div class="col" style="justify-content: center;display: flex;align-items: center;">`;
-                                html+=`<a onclick="Tutoradochat(`+respuesta[i].idusuarios+`)" class="button button-fill button-44 color-theme button-raised" style="width:100px;">
+                                    </a>`;
+ 							if (respuesta[i].contadorasignados>0) {
+
+ 				               html+=`<span class="numeros  numero2" id="">`+respuesta[i].contadorasignados+`</span>`;
+				
+ 							}
+
+                           html+= `</div>
+
+                            <div class="col" style="justify-content: center;display: flex;align-items: center;">
+                                <a onclick="InformacionTutorado(`+respuesta[i].idusuarios+`)" class="button button-fill button-44 color-theme button-raised" style="width:100px;">
+                                        <i class="bi bi-calendar-check" style="margin-right: 2px;"></i>
+                                    </a>`;
+                                    if (respuesta[i].contadorasignadospendientes>0) {
+                                    html+=`  <span class="numeros  numero2" id="">`+respuesta[i].contadorasignadospendientes+`</span>`;
+      	
+                                    }
+
+                           html+=` </div>
+                            <div class="col" style="justify-content: center;display: flex;align-items: center;">
+                                <a onclick="InformacionTutorado(`+respuesta[i].idusuarios+`)" class="button button-fill button-44 color-theme button-raised" style="width:100px;">
+                                        <i class="bi bi-calendar-check" style="margin-right: 2px;"></i>
+                                    </a>`;
+
+                                    if (respuesta[i].obtenerserviciosActivos>0) {
+                             html+=`<span class="numeros  numero2" id="">`+respuesta[i].obtenerserviciosActivos+`</span>`;
+      	
+                                    }
+
+                         html+=`</div>
+                            <div class="col-100" style="justify-content: center;display: flex;align-items: center;    margin-top: 1em;">`;
+                                html+=`<a onclick="Tutoradochat(`+respuesta[i].idusuarios+`)" class="button button-fill button-44 color-theme button-raised" style="width:100%;">
                                         <i class="bi bi-chat-text" style="margin-right: 2px;"></i>`;
                                 	if (respuesta[i].cantidadchat>0) {
-                                 html+=`<span class="numeros numerochattuto" id="numerochattuto" style="width: 25px;height: 25px;
-    right: 0;justify-content: center;display: flex;align-items: center;">`+respuesta[i].cantidadchat+`</span>
+                                 html+=`
+
+                               <span class="numeros  numero2" id="">`+respuesta[i].cantidadchat+`</span>
 
                                    	   `; 
 
                                    	}
+
+
                            html+=`</a> </div>
                         </div>
                     </div>

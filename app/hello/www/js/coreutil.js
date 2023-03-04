@@ -37,6 +37,21 @@ function GoToPageHistory(page)
 	}
 }
 
+function GoToPagePrevius(page) {
+if (page == "/")
+		app.views.main.router.navigate("/",{reloadCurrent: true});
+	
+	else{
+		
+		app.views.main.router.navigate("/"+page+"/",{reloadPrevious: true,clearPreviousHistory:true,});
+    	//	app.views.main.router.navigate("/"+page+"/",{reloadCurrent: false,clearPreviousHistory:true,});
+
+    //GoToPage("/"+page+"/",{reloadCurrent: false});
+	}
+
+	// body...
+}
+
 function GetServerData(sUrl,sParams,sPage){
 	var rdata 
 	jQuery.support.cors = true;

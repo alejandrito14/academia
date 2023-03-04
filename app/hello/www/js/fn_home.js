@@ -46,7 +46,7 @@ function CargarDatos() {
 
 	localStorage.setItem('variable',0);
 	localStorage.setItem('idusuertutorado','');
-  var nombreusuario= localStorage.getItem('alias');
+    var nombreusuario= localStorage.getItem('alias');
 	$$(".nombreusuario").text(nombreusuario);
 	var tipousuario=localStorage.getItem('tipoUsuario');
 	$$(".tipousuario").text(tipousuario);
@@ -82,21 +82,12 @@ function CargarDatos() {
       var activarpopupmembresia=localStorage.getItem('activarpopupmembresia');
 
       if (activarpopupmembresia==1) {
-      	/*	var promesa2=getUsuario();
-      		  promesa2.then(r2 => {
-      		  
-      		  	var visto=r2.respuesta.popupmembresia;
-      		  	if (visto==0) {
-*/
+      
       		  		ObtenerMembresiaActivas();
 
-      		  //	}
-
-      		//  });
-
+      		
       }
 
-   // });
 
 	var iduser=localStorage.getItem('id_user');
 	socket=io.connect(globalsockect, { transports : ["websocket"],rejectUnauthorized: false });
