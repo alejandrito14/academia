@@ -47,8 +47,8 @@ function ProximopagoaVencer() {
 
 				if (resultado.length>0) {
           if (resultado[0].fechaformato!='') {
-             $(".divvencimiento").css('display','block');
-             $(".vencimiento").text(resultado[0].fechaformato);
+             //$(".divvencimiento").css('display','block');
+            // $(".vencimiento").text(resultado[0].fechaformato);
           }
          
 				}
@@ -474,10 +474,10 @@ var contipo=[];
         var conceptos=r.conceptos;
 
         for (var i = 0; i < conceptos.length; i++) {
-          concepto+=conceptos[i]+'<br>';
+          concepto+='*'+conceptos[i]+'<br>';
         }
 
-        alerta('','Los siguientes pagos <br>  '+concepto+' se deberán de realizar de forma individual');
+        alerta('','Los siguientes pagos: <br>  '+concepto+' se deberán de pagar de forma individual');
       }
 
   });
@@ -579,7 +579,7 @@ function Cargartipopago(tipodepagoseleccionado) {
 function CargartipopagoSeleccionado(tipodepagoseleccionado) {
      return new Promise(function(resolve, reject) {
 
-   var pagina = "obtenertipodepagos3.php";
+   var pagina = "obtenertipodepagos4.php";
     var datos="tipodepagoseleccionado="+tipodepagoseleccionado;
     $.ajax({
     type: 'POST',
@@ -771,6 +771,11 @@ function CalcularTotales() {
         $(".divtipopago").css('display','none');
         $(".preguntafactura").css('display','none');
 
+    }else{
+      
+        $("#btnpagarresumen").attr('disabled',true);
+        $(".divtipopago").css('display','block');
+        $(".preguntafactura").css('display','block');
     }
 
 
@@ -792,12 +797,14 @@ function AbrirModalmonedero() {
                 	<label style="font-size:16px;padding:1px;">Cantidad a utilizar:</label>
                 	<input type="number" name="txtcantidad" id="txtcantidad" onkeyup="ValidarNumero()";  />
                 </div>
+                <p id="txtadvertencia" style="color:red;"></p>
               </div>
            
          
         `;
        app.dialog.create({
           title: 'Monedero',
+
           //text: 'Dialog with vertical buttons',
           content:html,
           buttons: [
@@ -812,7 +819,7 @@ function AbrirModalmonedero() {
 
            onClick: function (dialog, index) {
                     if(index === 0){
-              
+                CerrarDialog();
           }
           else if(index === 1){
                 AplicarMonedero();
@@ -821,47 +828,89 @@ function AbrirModalmonedero() {
            },
 
           verticalButtons: false,
+           close:false,
         }).open();
 		
 		ObtenerMonedero();
 
 }
 
+function CerrarDialog() {
+     app.dialog.close();
+
+}
 function ValidarNumero() {
-  var numero= $("#txtcantidad").replace(/\D/g, "")
+ /* var numero= $("#txtcantidad").replace(/\D/g, "")
         .replace(/([0-9])([0-9]{2})$/, '$1$2');
 
-    $("#txtcantidad").val(numero);
+    $("#txtcantidad").val(numero);*/
 }
 
 function AplicarMonedero() {
+
+  $("#txtadvertencia").text('');
 	var monederousuario=parseFloat($("#monedero").text());
 	var txtcantidad=parseFloat($("#txtcantidad").val());
-
+  var sumatotalapagar=localStorage.getItem('sumatotalapagar');
 	if (monederousuario>0) {
 	if (txtcantidad!='' &&txtcantidad!=0) {
 			if (txtcantidad>monederousuario) {
-				alerta('','La cantidad supera el monedero acumulado');
-			}else{
+				 $("#txtadvertencia").text('La cantidad supera el monedero acumulado');
+			   alerta('','La cantidad supera el monedero acumulado');
 
-				localStorage.setItem('monedero',txtcantidad);
+      }else{
 
-				CalcularTotales();
-				app.dialog.close();
-				$(".monedero").text(formato_numero(txtcantidad,2,'.',','));
+
+
+        if (txtcantidad>parseFloat(sumatotalapagar)) {
+          console.log('1');
+          $("#txtadvertencia").text('La cantidad ingresada es mayor al total');
+              alerta('','La cantidad ingresada es mayor al total');
+
+        }else{
+            if (txtcantidad>0) {
+              localStorage.setItem('monedero',txtcantidad);
+
+              CalcularTotales();
+             
+              $(".monedero").text(formato_numero(txtcantidad,2,'.',','));
+              console.log('2');
+
+              $(".btnmonedero .chip-label").text('Revertir');
+              $(".btnmonedero").attr('onclick','RevertirMonedero()');
+
+            }
+
+             app.dialog.close();
+
+        }
+			
 			}
 
 		}else{
+                    app.dialog.close();
+                              console.lo('3');
 
 				alerta('','Ingrese una cantidad válida')
 			}
 
 	}else{
 
+              app.dialog.close();
+          console.log('4');
 
 		alerta('','No cuenta con monedero acumulado');
 	}
 	
+}
+
+function RevertirMonedero() {
+        $(".monedero").text(formato_numero(0,2,'.',','));
+        localStorage.setItem('monedero',0);
+        CalcularTotales();
+        $(".btnmonedero .chip-label").text('Aplicar');
+        $(".btnmonedero").attr('onclick','AbrirModalmonedero()');
+
 }
 
 function ObtenerMonedero() {
@@ -879,6 +928,17 @@ function ObtenerMonedero() {
     var respuesta=datos.respuesta;
     $("#monedero").text(respuesta);
     $(".monederotxt").text(respuesta);
+    var sumatotalapagar=localStorage.getItem('sumatotalapagar');
+
+
+   /* if (parseFloat(respuesta)>=parseFloat(sumatotalapagar)) {
+
+      $("#txtcantidad").val(sumatotalapagar);
+    }else{
+    
+      $("#txtcantidad").val(respuesta);
+
+    }*/
 
     },error: function(XMLHttpRequest, textStatus, errorThrown){ 
       var error;
@@ -1828,6 +1888,7 @@ function RealizarCargo() {
 
 
 function ObtenerDescuentosRelacionados() {
+  console.log('descuentos');
    var iduser=localStorage.getItem('id_user');
  descuentosaplicados=[];
  $$("#uldescuentos").html('');

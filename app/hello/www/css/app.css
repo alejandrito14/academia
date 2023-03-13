@@ -769,4 +769,7 @@ input[type=date]:focus::-webkit-datetime-edit {
     justify-content: center;
     text-align: center;
     margin-left: 40px;
+    height: 25px;
+    width: 28px;
+    padding-top: 2px;
 }

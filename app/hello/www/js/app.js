@@ -138,7 +138,7 @@ $(document).ready(function() {
 
 var lhost = "localhost:8888";
 var rhost = "issoftware1.com.mx";
-var version='1.0.23';
+var version='1.0.25';
 
 localStorage.setItem('versionapp',version);
 var abrir=0;
@@ -1470,15 +1470,15 @@ $$(document).on('page:init', '.page[data-name="serviciosregistrados"]', function
  $(".v_buscador").attr('onkeyup','BuscarEnLista(".v_buscador",".list-item")');
   $(".limpiarspan").attr('onclick','LimpiarResultado3()');
 
-
- ObtenerServiciosRegistrados().then(r => {
+ //ObtenerServiciosRegistrados().then(r => {
         
       $("#filtrocoach").css('display','block');
       $(".v_coach").attr('onchange','FiltroServiciosCoach()');
        localStorage.setItem('pantalla','serviciosregistrados');
       $("#filtrocategorias").css('display','block');
       $("#filtro").css('display','block');
- 
+      $("#filtromes").css('display','block');
+      $("#filtroanio").css('display','block');
        
       $(".buscador").attr('onkeyup','FiltroBuscador()');
 
@@ -1486,40 +1486,42 @@ $$(document).on('page:init', '.page[data-name="serviciosregistrados"]', function
         $("#v_categorias").attr('onchange','FiltroServiciosCat()');
  
         
-       }).then(r => {
+       //}).then(r => {
 
          ObtenerCategoriasFiltro();
          ObtenerCoachesFiltro();
 
-         if (localStorage.getItem('v_categoriasvalor')!=undefined) {
+         if (localStorage.getItem('v_categoriasvalor')!=undefined && localStorage.getItem('v_categoriasvalor')!=0 ) {
             
               var valorlistado=localStorage.getItem('v_categoriasvalor');
               $(".v_categorias").val(valorlistado);
-              FiltroServiciosCat();
+            //  FiltroServiciosCat();
           
-          
+         
          
              }
 
         
-       }).then(r=>{
+       //}).then(r=>{
 
 
-         if (localStorage.getItem('v_coachvalor')!=undefined) {
+         if (localStorage.getItem('v_coachvalor')!=undefined && localStorage.getItem('v_coachvalor')!=0) {
             
               var valorlistado=localStorage.getItem('v_coachvalor');
               $(".v_coach").val(valorlistado);
-                           FiltroServiciosCoach();
-         
+                         
+                    
+
              }
 
 
-          
-
-       }).then(r=>{
+            FiltroServiciosCoach();
+            CargarMeses();
+            Cargaranios();
+      // }).then(r=>{
 
         
-       });
+      // });
        
 
        
@@ -1672,16 +1674,18 @@ $$(document).on('page:init', '.page[data-name="detalleservicioactivo"]', functio
   $$("#btncalendario").attr('onclick','FechasServicio()');
 
   Verificarcantidadhorarios();
+ var idusuertutorado=localStorage.getItem('idusuertutorado');
 
- // $$("#abrirpantallacali").attr('onclick','PantallaCalificacion()');
-  /*$$("#Abrirchat").attr('onclick','ElegirParticipantesChat()');
-  
-  ObtenerImagenesGrupal();
-  Verificarcantidadhorarios();
-  VerificarSihayEvaluacion();
+  if (idusuertutorado=='') {
+ 
 
-  $$(".btnasistencia").attr('onclick','Asistencia()');
- */
+  }else{
+
+  $(".regreso").attr('href','/listadotutoservicios/');
+
+ }
+
+
 });
 
 $$(document).on('page:init', '.page[data-name="detalleservicioactivocoach"]', function (e) {
@@ -1695,6 +1699,9 @@ $$(document).on('page:init', '.page[data-name="detalleservicioactivocoach"]', fu
   $$("#btnasignaralumno").attr('onclick','GuardarAsignacionServicioCoach()');
   $$("#btncalendario").attr('onclick','FechasServicio()');
   Verificarcantidadhorarios();
+
+
+
 
 
 });
@@ -1825,7 +1832,7 @@ myStopFunction(identificadorDeTemporizador);
   $$("#btnaceptartermino").attr('onclick','AceptarTerminosTutorado()');
   $$("#btnrechazartermino").attr('onclick','PantallaRechazarTerminosTutorado()');
 
-  $(".regreso").attr('href','/serviciospendientesasignadostutorado/');
+  $(".regreso").attr('href','/listadotutoservicios/');
 
  }
 
@@ -2054,8 +2061,8 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
    
   }
  
- if (tipopago!='') {
-
+ if (tipopago!='' && tipopago!=undefined) {
+ 
   
   CargartipopagoSeleccionado(tipopago).then(r => {
 
@@ -2068,20 +2075,18 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
   //$("#tipopago").val(tipopago);
   $$("#requierefactura").attr('onchange','RequiereFactura2()');
   
-   // CargarOpcionesTipopago();
- 
-
  }else{
+
     Cargartipopago(0);
-
-   $$("#requierefactura").attr('onchange','RequiereFactura()');
-
+    ObtenerDescuentosRelacionados();
+    $$("#requierefactura").attr('onchange','RequiereFactura()');
+ 
  }
  
 
-  
+ 
 
-  ObtenerDescuentosRelacionados();//manda a llamar calcular totales al finalizar los descuentos
+ //manda a llamar calcular totales al finalizar los descuentos
   
 //PintarlistaImagen();
   $$("#tipopago").attr('onchange','CargarOpcionesTipopago()');
@@ -2427,6 +2432,21 @@ $$(document).on('page:init', '.page[data-name="listadotutoservicios"]', function
  $(".btnserviciosactivos").attr('onclick','GoToPage("serviciosactivostutorado")');
  $(".btnmisservicios").attr('onclick','GoToPage("serviciosasignadostutorado")');
 
+var filtrotuto=localStorage.getItem('filtrotuto');
+ if (filtrotuto==1) {
+
+  $(".titulo").html('Mis servicios');
+  ObtenerServiciosAsignadosTutorado();
+ }
+ if (filtrotuto==2) {
+    $(".titulo").html('Mis servicios pendientes');
+
+  ObtenerServiciosAsignadospendientesTutorado();
+ }
+ if (filtrotuto==3) {
+  $(".titulo").html('Servicios abiertos');
+  ObtenerServiciosActivos();
+ }
  /* if (localStorage.getItem('iduserrespaldo')!=undefined && localStorage.getItem('iduserrespaldo')!=0) {
     var idusuariotuto=localStorage.getItem('idusuariotuto');
     localStorage.setItem('id_user',idusuariotuto);
@@ -2610,7 +2630,7 @@ if (localStorage.getItem('idtipousuario')==0){
 
 if (localStorage.getItem('idtipousuario')==5) {
     $(".buscador").css('display','block');
-    $(".v_buscador").attr('onkeyup','BuscarEnListaPagos()');
+    $(".v_buscador").attr('onkeyup','BuscarEnListaPagos2()');
     ListadoPagosCoach();
      $(".btnclick").css('display','block');
     $("#btnpendiente").attr('onclick','ActivoPagoCoach(1)')

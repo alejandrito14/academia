@@ -1,4 +1,8 @@
 var asignacionperiodos=[];
+var meses = [
+  "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+];
 function ObtenerServiciosAdicionales() {
 	var pagina = "ObtenerServiciosAdicionales.php";
 	$.ajax({
@@ -1392,3 +1396,65 @@ function GuardarCancelacion(idservicio) {
 				}
 							
 }
+
+
+
+function CargarMeses() {
+	var html="";
+	html+=`<option value="0">Seleccionar mes</option>
+			`;
+	if (meses.length>0) {
+		for (var i = 0; i <meses.length; i++) {
+			html+=` <option value="`+(i+1)+`">`+meses[i]+`</option>`;
+		}
+	}
+
+	$("#v_meses").html(html);
+
+	const fechaActual = new Date();
+	const mesActual = fechaActual.getMonth() + 1;
+	//$("#v_meses").val(mesActual);
+
+	}
+
+function Cargaranios() {
+
+			$.ajax({
+					url: urlphp+'Obteneranios.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					dataType:'json',
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+						alert('a');
+					var respuesta=msj.respuesta;
+					Pintaranios(respuesta);	
+					}
+				});
+}
+	
+function Pintaranios(anios) {
+	var html="";
+	html+=`<option value="0">Seleccionar año</option>
+			`;
+	if (anios.length>0) {
+		for (var i = 0; i <anios.length; i++) {
+			html+=`
+			<option value="`+anios[i].valor+`">`+anios[i].valor+`</option>
+			`;
+		}
+	}
+
+	$("#v_anios").html(html);
+
+	const fechaActual = new Date();
+	const mesanio = fechaActual.getFullYear();
+	
+	//$("#v_anios").val(mesanio);
+}
+

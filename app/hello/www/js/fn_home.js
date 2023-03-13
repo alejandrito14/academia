@@ -1010,7 +1010,7 @@ function PintarServiciosAsignados2(respuesta,fechaactual) {
                     </div>
                   </div>
                   </div>
-                  <div class="row" style="height:10em;">
+                  <div class="row" style="height:12em;">
                   <div class="col-100" >
                    <div class="row" style="margin-top:.5em;">
                     `;
@@ -1029,8 +1029,10 @@ function PintarServiciosAsignados2(respuesta,fechaactual) {
  					<span class="text-muted no-margin-bottom tituloserviciolista"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAsignado(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</span>
                            <a class="btncalendario" style="text-align:center;color:#007aff;font-size: 14px;" onclick="VisualizarHorarios(`+respuesta[i].idservicio+`)">Ver horarios</a>
 
+                   <a class="btncoaches" style="text-align:center;color:#007aff;font-size: 14px;" onclick="VisualizarCoaches(`+respuesta[i].idservicio+`)">Ver coach</a>
 
                   </div>
+                  
                   <div class="row" style="margin-top:1em;">
                   	<div class="col" style="text-align:center;" >`;
 
@@ -1207,6 +1209,175 @@ function PintarServiciosAsignados3(respuesta,fechaactual) {
 function VisualizarHorarios(idservicio) {
 	localStorage.setItem('idservicio',idservicio);
 	MostrarHorarios();
+}
+
+function VisualizarCoaches(idservicio) {
+	localStorage.setItem('idservicio',idservicio);
+	MostrarCoaches();
+}
+
+function MostrarCoaches(idservicio) {
+	var html="";
+
+
+html+=`	<div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: none;">
+            <div class="toolbar">
+              <div class="toolbar-inner">
+                <div class="left"></div>
+                <div class="right">
+                  <a class="link sheet-close"></a>
+                </div>
+              </div>
+            </div>
+            <div class="sheet-modal-inner" style="background: white;border-top-left-radius: 20px;border-top-right-radius:20px; ">
+              <div class="iconocerrar link sheet-close" style="z-index:100;">
+	 									<span class="bi bi-x-circle-fill"></span>
+	   						    	 </div>
+
+              <div class="" style="height: 100%;">
+                   <div class="row">
+	   						     <div class="col-20">
+	   						      	
+	   						    </div>
+
+   						    	 <div class="col-60">
+   						    	 <span class="titulomodal"></span>
+   						    	 </div>
+   						    	 <div class="col-20">
+   						    	 <span class="limpiarfiltros"></span>
+   						    	 </div>
+   							 </div>
+                				<div class="page-content" style="background: white; height: 100%;width: 100%;border-radius: 20px;">
+   						
+   							 		<div class="" style="position: absolute;top:2em;width: 100%;">
+   							 	
+	   							  	<div class="">
+		   										
+
+		   							`;
+
+		   				html+=`
+								<div class="row padding-vertical"><h2 style="text-align: center;font-size: 18px;" id="tituloservicio" class="tituloservicio"> </h2>
+								 <h3 class="fechasservicio" style=" text-align: center;font-weight: bold; 
+									    color: #919191;font-size: 16px;"></h3>
+								</div>
+									  
+								<div class="">
+									<div id="demo-calendar" style="margin-left: 1em;margin-right: 1em;"></div>
+								</div>
+
+									      <div class="row divcoaches padding-vertical">
+									        
+
+									      </div>
+
+										`;
+								             
+		   							 html+=`	</div>
+	   							 	</div>
+   							 </div>
+		   				</div>
+		                
+		              </div>
+		            </div>
+		          </div>`;
+	 var dynamicSheet6 = app.sheet.create({
+        content: html,
+
+    	swipeToClose: true,
+        backdrop: true,
+        // Events
+        on: {
+          open: function (sheet) {
+           // CargarFechas();
+   			ConsultarCoachesServicio();
+          },
+          opened: function (sheet) {
+            console.log('Sheet opened');
+          },
+        }
+      });
+
+       dynamicSheet6.open();
+
+}
+function ConsultarCoachesServicio() {
+	var idservicio=localStorage.getItem('idservicio');
+	var datos="idservicio="+idservicio;
+
+	var id_user=localStorage.getItem('id_user');
+	var pagina="ObtenerCoaches.php";
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(respuesta){
+			
+
+			var respuesta=respuesta.respuesta;
+			PintarCoachesServicio(respuesta);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+		 		  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+
+		});
+}
+
+function PintarCoachesServicio(respuesta) {
+	var html="";
+	if (respuesta.length>0) {
+		for (var i = 0; i <respuesta.length; i++) {
+			if (respuesta[i].foto!='' && respuesta[i].foto!=null && respuesta[i].foto!='null') {
+
+				urlimagen=urlphp+`upload/perfil/`+respuesta[i].foto;
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:100px;height:80px;"/>';
+			}else{
+
+				if (respuesta[i].sexo=='M') {
+
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarmujer');
+	
+				}else{
+					urlimagen=urlphp+`imagenesapp/`+localStorage.getItem('avatarhombre');
+		
+				}
+
+				imagen='<img src="'+urlimagen+'" alt=""  style="width:80px;height:80px;"/>';
+			}
+			html+=`
+
+				<div class="col-100 ">
+		        <div class="card shadow-sm margin-bottom-half">
+		          <div class="card-content card-content-padding">
+		            <div class="row">
+		              <div class="col-auto no-padding-horizontal">
+		                <div class="avatar text-color-white shadow-sm rounded-10-right" style=" padding-left: 1em;" >
+		                 `+imagen+`
+		               
+		                </div>
+		              </div>
+		              <div class="col">
+
+		                <p class="text-muted size-14 no-margin-bottom">`+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`</p>
+		                <p></p>
+		              </div>
+		            </div>
+		          </div>
+		        </div>
+		      </div>
+			`;
+		}
+	}
+	$(".divcoaches").html(html);
 }
 
 function VerificarServiciosAsignadosCoach() {
@@ -2973,6 +3144,8 @@ function FiltroServiciosCoach() {
 	var pagina = "ObtenerServicios.php";
 	var v_categorias=$("#v_categorias").val();
 	var v_coach=$("#v_coach").val();
+	var v_mes=$("#v_meses").val();
+	var v_anio=$("#v_anios").val();
 	var estatus=0;
 	var datos="estatus="+estatus+"&v_categorias="+v_categorias+"&v_coach="+v_coach;
 	$.ajax({

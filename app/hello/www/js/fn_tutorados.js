@@ -755,6 +755,7 @@ function PintarSelecttutorados(respuesta) {
                             </div>
                             <div class="col no-padding-horizontal align-self-center">
                                 <h3 class="no-margin-bottom text-color-theme">`+respuesta[i].nombre+' '+respuesta[i].paterno+` `+respuesta[i].materno+`</h3>
+                            	<p class="no-margin-bottom text-color-theme">`+respuesta[i].parentesco+`</p>
                             </div>
                         </div>
                     </div>
@@ -764,7 +765,7 @@ function PintarSelecttutorados(respuesta) {
                         </p>
                         <div class="row">
                             <div class="col" style="justify-content: center;display: flex;align-items: center;">
-                                <a onclick="InformacionTutorado(`+respuesta[i].idusuarios+`)" class="button button-fill button-44 color-theme button-raised" style="width:100px;">
+                                <a onclick="InformacionTutorado(`+respuesta[i].idusuarios+`,1)" class="button button-fill button-44 color-theme button-raised" style="width:60px;">
                                         <i class="bi bi-calendar-check" style="margin-right: 2px;"></i>
                                     </a>`;
  							if (respuesta[i].contadorasignados>0) {
@@ -772,31 +773,36 @@ function PintarSelecttutorados(respuesta) {
  				               html+=`<span class="numeros  numero2" id="">`+respuesta[i].contadorasignados+`</span>`;
 				
  							}
-
+  							/* asignados*/
                            html+= `</div>
 
                             <div class="col" style="justify-content: center;display: flex;align-items: center;">
-                                <a onclick="InformacionTutorado(`+respuesta[i].idusuarios+`)" class="button button-fill button-44 color-theme button-raised" style="width:100px;">
-                                        <i class="bi bi-calendar-check" style="margin-right: 2px;"></i>
+                                <a onclick="InformacionTutorado(`+respuesta[i].idusuarios+`,2)" class="button button-fill button-44 color-theme button-raised" style="width:60px;">
+                                        <i class="bi bi-card-checklist" style="margin-right: 2px;"></i>
                                     </a>`;
                                     if (respuesta[i].contadorasignadospendientes>0) {
                                     html+=`  <span class="numeros  numero2" id="">`+respuesta[i].contadorasignadospendientes+`</span>`;
       	
                                     }
+                                /* pendientes*/
 
                            html+=` </div>
-                            <div class="col" style="justify-content: center;display: flex;align-items: center;">
-                                <a onclick="InformacionTutorado(`+respuesta[i].idusuarios+`)" class="button button-fill button-44 color-theme button-raised" style="width:100px;">
-                                        <i class="bi bi-calendar-check" style="margin-right: 2px;"></i>
+                            	<div class="col" style="justify-content: center;display: flex;align-items: center;">
+                                	<a onclick="InformacionTutorado(`+respuesta[i].idusuarios+`,3)" class="button button-fill button-44 color-theme button-raised" style="width:60px;">
+                                        <i class="bi bi-card-heading" style="margin-right: 2px;"></i>
                                     </a>`;
 
-                                    if (respuesta[i].obtenerserviciosActivos>0) {
-                             html+=`<span class="numeros  numero2" id="">`+respuesta[i].obtenerserviciosActivos+`</span>`;
+                                    if (respuesta[i].contadorActivos>0) {
+                             html+=`<span class="numeros  numero2" id="">`+respuesta[i].contadorActivos+`</span>`;
       	
                                     }
-
+                                      
                          html+=`</div>
-                            <div class="col-100" style="justify-content: center;display: flex;align-items: center;    margin-top: 1em;">`;
+
+                         </div>
+
+                         <div class="row">
+                            <div class="col-100" style="justify-content: center;display: flex;align-items: center;    margin-top: 1em;margin-left: 0.6em;margin-right: 0.6em;">`;
                                 html+=`<a onclick="Tutoradochat(`+respuesta[i].idusuarios+`)" class="button button-fill button-44 color-theme button-raised" style="width:100%;">
                                         <i class="bi bi-chat-text" style="margin-right: 2px;"></i>`;
                                 	if (respuesta[i].cantidadchat>0) {
@@ -823,14 +829,20 @@ function PintarSelecttutorados(respuesta) {
 	$(".listatutorados").html(html);
 }
 
-function InformacionTutorado(idusertutorado) {
+function InformacionTutorado(idusertutorado,filtro) {
 	var idusuarioresp=localStorage.getItem('id_user');
 	localStorage.setItem('iduserrespaldo',idusuarioresp);
 	localStorage.setItem('idusuertutorado',idusertutorado);
 	localStorage.setItem('id_user',idusertutorado);
+	localStorage.setItem('filtrotuto',filtro);
 	GoToPage('listadotutoservicios');
 
 }
+
+
+
+
+
 
 function Tutoradochat(idusertutorado) {
 
