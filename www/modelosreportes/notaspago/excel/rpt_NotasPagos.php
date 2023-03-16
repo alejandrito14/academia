@@ -109,7 +109,7 @@ if ($obtenerconfi['iva']!='' && $obtenerconfi['iva']>0) {
 	}
 
 	if ($fechainicio!='' && $fechafin!='') {
-		$sqlfecha=" AND  notapago.fecha>= '$fechainicio' AND notapago.fecha <='$fechafin'";
+		$sqlfecha=" AND  notapago.fechareporte>= '$fechainicio' AND notapago.fechareporte <='$fechafin'";
 	}
 
 

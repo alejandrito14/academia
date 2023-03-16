@@ -537,7 +537,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<div id="leyendahorarios" style="margin-left: 1em;margin-bottom: 1em;">
 
 								Selecciona la fecha inicial y final para el periodo del servicio </div>
-
+								<div class="row">
 							<div class="col-md-3" style="float:left;">
 							<div class="form-group m-t-20">
 								<label>* FECHA INICIAL:</label>
@@ -550,6 +550,25 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<label>* FECHA FINAL:</label>
 								<input type="date" class="form-control" id="v_fechafinal" name="v_fechafinal" value="<?php echo $fechafinal; ?>" title="FECHA FINAL" placeholder='FECHA FINAL'>
 							</div>
+						</div>
+
+						<div class="col-md-3">
+							
+							<div class="form-group m-t-20">
+								<label>CANCHA:</label>
+								<select name="" class="form-control" id="v_zonas"></select>
+							</div>
+						</div>
+
+
+						<div class="col-md-3">
+							
+							<div class="form-group m-t-20">
+								<label>HORARIOS:</label>
+								<select  id="v_horarios" class="form-control" ></select>
+							</div>
+						</div>
+
 						</div>
 
 						<div class="col-md-3" style="float:left;">
@@ -1418,6 +1437,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
   </script>
 
    <script type="text/javascript">
+
+   	$("#v_categoriaservicio").attr('onchange','CargarHorariosZonas()');
+
+   	  	$("#v_zonas").attr('onchange','ObtenerHorariosCategoria()');
         (function($) {
           $('#picker').markyourcalendar({
           	 startDate: new Date(),

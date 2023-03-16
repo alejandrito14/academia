@@ -87,6 +87,7 @@ public function obtenerServiciosAsignadosPendientes()
 		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(1)
 			AND cancelacion=0 and servicios.estatus=1
 		 ";
+		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -916,6 +917,8 @@ public function obtenerServiciosAsignadosPendientes()
 		$sql="SELECT GROUP_CONCAT(usuarios_servicios.idservicio) as serviciosasignados FROM usuarios_servicios INNER JOIN 
 		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
 		 ";
+
+		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -1569,6 +1572,51 @@ public function obtenerServiciosAsignadosPendientes()
 					$contador++;
 				
 				//}
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerCoachesServicio()
+	{
+		$sql="SELECT
+				usuarios.nombre,
+				usuarios.paterno,
+				usuarios.telefono,
+				usuarios.materno,
+				usuarios.email,
+				usuarios.celular,
+				usuarios.usuario,
+				usuarios.idusuarios,
+				usuarios.foto,
+				usuarios.tipo,
+				tipousuario.nombretipo,
+				usuarios.alias,
+				usuarios.sexo,
+				usuarios_servicios.aceptarterminos
+				FROM
+				usuarios_servicios
+				JOIN usuarios
+				ON usuarios_servicios.idusuarios = usuarios.idusuarios
+				JOIN tipousuario
+				ON tipousuario.idtipousuario=usuarios.tipo
+				WHERE
+				usuarios_servicios.idservicio='$this->idservicio' AND usuarios.tipo=5 and usuarios_servicios.cancelacion=0 ORDER BY usuarios.tipo DESC 
+		 ";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
 			} 
 		}
 		

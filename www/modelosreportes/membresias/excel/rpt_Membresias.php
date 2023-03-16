@@ -202,7 +202,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 		 			//echo $array[$k]->idpago;
 		 			$pagos->idpago=$array[$k]->idpago;
 		 			$buscarpagonota=$pagos->ObtenerDatosNotaPago();
-		 			//var_dump($buscarpagonota);die();
+		 			
 
 		 			if (count($buscarpagonota)>0) {
 		 				$tipopago=$buscarpagonota[0]->tipopago;

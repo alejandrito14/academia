@@ -62,6 +62,14 @@ try
 		$pagos->idservicio=$obtenerservicios[$i]->idservicio;
 		$servicios->idservicio=$idservicio;
 		$obtenerservicio=$servicios->ObtenerServicio();
+		$tipopago='';
+		$servicios->idcategoria=$obtenerservicio[0]->idcategoriaservicio;
+		$verificartipopago=$servicios->checarcategoriaRelacionadaTipopago();
+		if (count($verificartipopago)>0) {
+
+			$obtenertipospagos=$servicios->ObtenerRelacionadaTipopago();
+			$tipopago=$obtenertipospagos[0]->tipopago;
+		}
 
 		$obtenerperiodos=$servicios->ObtenerPeriodosPagos();
 
@@ -144,7 +152,7 @@ try
 
 
 		}
-				 
+				 $lo->idtipopago=$tipopago;
 				 $lo->idusuarios=$idusuarios;
                  $lo->estatus=0;
                  $lo->pagado=0;
@@ -173,7 +181,8 @@ try
 
 				$objeto=array('idusuarios'=>$idusuarios,'idmembresia'=>$idmembresia,'idservicio'=>$idservicio,'tipo'=>$tipo,'monto'=>$f->redondear_dos_decimal($montoapagar),'estatus'=>$estatus,'dividido'=>$dividido,'fechainicial'=>$fechainicial,'fechafinal'=>$fechafinal,'concepto'=>$concepto,'folio'=>$folio,'fechaformato'=>$fechaformato,'nombre'=>$datosusuario[0]->nombre,'paterno'=>$datosusuario[0]->paterno,'materno'=>$datosusuario[0]->materno,'idpago'=>$lo->idpago,'aceptados'=>count($obtenerparticipantesaceptados),'alumnos'=>count($ObtenerTodosParticipantes),'completo'=>$completo,
 					'fechamin'=>date('d-m-Y',strtotime($obtenerfechas[0]->fechamin)),
-					'fechamax'=>date('d-m-Y',strtotime($obtenerfechas[0]->fechamax))
+					'fechamax'=>date('d-m-Y',strtotime($obtenerfechas[0]->fechamax)),
+					'tipopago'=>$tipopago
 			);
 				$total=$total+$montoapagar;
 				array_push($pagosencontrados,$objeto);
@@ -216,6 +225,7 @@ try
 				$fechafinal="";
 				$folio="";
 				$concepto=$obtenerpagostipotres[$i]->concepto;
+				$tipopago='';
 
 				if ($tipo==2) {
 					$membresia->idmembresia=$idmembresia;
@@ -227,7 +237,8 @@ try
 
 				}
 			$objeto=array('idusuarios'=>$idusuarios,'idmembresia'=>$idmembresia,'idservicio'=>$idservicio,'tipo'=>$tipo,'monto'=>$montoapagar,'estatus'=>$estatus,'dividido'=>$dividido,'fechainicial'=>$fechainicial,'fechafinal'=>$fechafinal,'concepto'=>$concepto,'folio'=>$folio,'fechaformato'=>'','nombre'=>$datosusuario[0]->nombre,'paterno'=>$datosusuario[0]->paterno,'materno'=>$datosusuario[0]->materno,'idpago'=>$idpago,'aceptados'=>'','alumnos'=>'','completo'=>'',
-				'fechamin'=>'','fechamax'=>''
+				'fechamin'=>'','fechamax'=>'',
+				'tipopago'=>$tipopago
 			);
 
 				$total=$total+$montoapagar;

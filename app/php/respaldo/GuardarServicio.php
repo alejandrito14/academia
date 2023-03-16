@@ -676,7 +676,7 @@ try
 			}
 		}
 
-		if ($emp->tituloaviso!='' && $emp->tiempoaviso>0) {
+		if ($emp->tiempoaviso>0) {
 		# code...
 	
 	if (count($arrayhorarios)>0 && $arrayhorarios[0]!='') {
@@ -751,7 +751,7 @@ try
 			 $texto="";
 			 $titulonotificacion=$arraytokens[$i]['titulonotificacion'];
 			 array_push($array,$arraytokens[$i]['token']);
-			$notificaciones->EnviarNotificacion($array,$texto,$titulonotificacion);
+			//$notificaciones->EnviarNotificacion($array,$texto,$titulonotificacion);
 				
 
 			}

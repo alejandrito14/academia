@@ -88,7 +88,7 @@ var app = new Framework7({
 
  var pictureSource;   // picture source
  var destinationType; 
-var produccion = 0;
+var produccion = 1;
 
 var codigoservicio="0";
 $(document).ready(function() {
@@ -615,6 +615,8 @@ $$(document).on('page:init', '.page[data-name="homeadmin"]', function (e) {
   localStorage.setItem('buscadorvalor','');
   localStorage.setItem('v_categoriasvalor',0);
   localStorage.setItem('v_coachvalor',0);
+    localStorage.setItem('v_mes',0);
+      localStorage.setItem('v_anio',0);
   var pregunta=localStorage.getItem('pregunta');
 
     if (pregunta==0) {
@@ -1479,9 +1481,12 @@ $$(document).on('page:init', '.page[data-name="serviciosregistrados"]', function
       $("#filtro").css('display','block');
       $("#filtromes").css('display','block');
       $("#filtroanio").css('display','block');
-       
-      $(".buscador").attr('onkeyup','FiltroBuscador()');
 
+      $("#v_meses").attr('onchange','FiltroServiciosCoach()');
+      $("#v_anios").attr('onchange','FiltroServiciosCoach()');
+
+      $(".buscador").attr('onkeyup','FiltroBuscador()');
+      filtrar=0;
 
         $("#v_categorias").attr('onchange','FiltroServiciosCat()');
  
@@ -1497,7 +1502,7 @@ $$(document).on('page:init', '.page[data-name="serviciosregistrados"]', function
               $(".v_categorias").val(valorlistado);
             //  FiltroServiciosCat();
           
-         
+              filtrar=1;
          
              }
 
@@ -1510,14 +1515,37 @@ $$(document).on('page:init', '.page[data-name="serviciosregistrados"]', function
               var valorlistado=localStorage.getItem('v_coachvalor');
               $(".v_coach").val(valorlistado);
                          
-                    
+                  filtrar=1;   
 
              }
 
 
-            FiltroServiciosCoach();
+            //FiltroServiciosCoach();
             CargarMeses();
-            Cargaranios();
+          
+
+
+            if (localStorage.getItem('v_mes')!=0) {
+               filtrar=1;
+               var valormes=localStorage.getItem('v_mes');
+              $(".v_meses").val(valormes);
+
+            }
+
+          var valoranio=0;
+            if (localStorage.getItem('v_anio')!=0) {
+                filtrar=1;
+
+                valoranio=localStorage.getItem('v_anio');
+               
+            }
+
+              Cargaranios(valoranio);
+
+            if ( filtrar==1) {
+             FiltroServiciosCoach(); 
+            }
+            
       // }).then(r=>{
 
         

@@ -36,6 +36,11 @@ class Notapago
 	public $fechaaceptacion;
 	public $fechareporte;
 
+	public $fechacancelacion;
+	public $descripcioncancelacion;
+	public $canceladonota;
+	public $idusuariocancelado;
+
 	public function CrearNotapago()
 	{
 		$sql="INSERT INTO notapago( idusuario, subtotal, iva, total, comisiontotal, montomonedero, estatus, idtipopago, tipopago, confoto, datostarjeta,datostarjeta2,idpagostripe, folio) VALUES ('$this->idusuario', '$this->subtotal','$this->iva', '$this->total', '$this->comisiontotal','$this->montomonedero','$this->estatus','$this->idtipopago','$this->tipopago','$this->confoto','$this->datostarjeta','$this->datostarjeta2','$this->idpagostripe','$this->folio')";
@@ -342,7 +347,7 @@ class Notapago
 
 	public function ObtenerNotaPagoporPago()
 	{
-		$sql="SELECT notapago.idnotapago,descripcion as concepto,monto,idpago,notapago.fecha,notapago.fechaaceptacion,cantidad,notapago.estatus,notapago.tipopago,notapago.folio  	FROM notapago_descripcion 
+		$sql="SELECT notapago.idnotapago,descripcion as concepto,monto,idpago,notapago.fecha,notapago.fechaaceptacion,cantidad,notapago.estatus,notapago.tipopago,notapago.folio,notapago.fechareporte  	FROM notapago_descripcion 
 		INNER JOIN notapago ON notapago.idnotapago=notapago_descripcion.idnotapago
 		 WHERE idpago='$this->idpago'";
 
@@ -362,6 +367,23 @@ class Notapago
 		}
 		
 		return $array;
+	}
+
+
+
+	public function CambiarEstatusCancelado()
+	{
+			$sql="UPDATE notapago SET 
+				canceladonota=1,
+			  estatus = '$this->estatus',
+			  descripcioncancelacion='$this->descripcioncancelacion',
+			  fechacancelacion='$this->fechacancelacion',
+			  idusuariocancelado='$this->idusuariocancelado',
+			  fechacancelacion='$this->fechacancelacion'
+			  WHERE idnotapago='$this->idnotapago'";
+
+		    $resp=$this->db->consulta($sql);
+
 	}
 	
 	

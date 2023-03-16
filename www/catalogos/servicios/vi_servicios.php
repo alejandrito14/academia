@@ -132,8 +132,24 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 			   
 			  </div>
 			</div>
-			<div class="col-md-4">
-				 <div class="form-group" style="margin: 2em;display: flex;">
+
+			<div class="col-md-2">
+				 <div class="form-group">
+			    <label for="">MES</label>
+			   	<select class="form-control" id="v_meses"></select>
+			   
+			  </div>
+			</div>
+
+			<div class="col-md-2">
+				 <div class="form-group">
+			    <label for="">AÑO</label>
+			   	<select class="form-control" id="v_anios"></select>
+			   
+			  </div>
+			</div>
+			<div class="col-md-4 ml-auto">
+				 <div class="form-group" style="   text-align: right;">
 			    <button class="btn btn-primary" onclick="FiltrarServicios(<?php echo $idmenumodulo;?> )">FILTRAR SERVICIOS</button>
 			</div>
 			</div>
@@ -180,14 +196,31 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 							
 						
 							
-							<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($l_Servicios_row['titulo']);?></td>
+							<td style="text-align: center;"><p><?php echo $f->imprimir_cadena_utf8($l_Servicios_row['titulo']);?></p>
+								<p>Periodo: <?php echo date('d/m/Y',strtotime($l_Servicios_row['fechamin'])).'-'.date('d/m/Y',strtotime($l_Servicios_row['fechamax'])); ?> </p>
+								
+								<?php 
+								$coaches=explode(',',$obtener[$i]->coachesfiltro2);
+								if ($coaches[0]!='' ) {
+									for ($j=0; $j <count($coaches) ; $j++) { 
+										
+										?>
+										 <p style="margin: 0;"><?php echo $coaches[$j]; ?></p> 
+
+										<?php
+									}
+								}
+							 ?>	
+
+
+							</td>
 
 						 <td style="text-align: center;">
 		                    <?php 
 		                     $img='./catalogos/servicios/imagenes/'.$_SESSION['codservicio'].'/'.$f->imprimir_cadena_utf8($l_Servicios_row['imagen']);
 
 		                     ?>
-		                     <img src="<?php echo $img; ?>" alt=""style="width: 400px;">
+		                     <img src="<?php echo $img; ?>" alt=""style="width: 200px;">
 		                   </td>
 
 							<td style="text-align: center;"><?php echo $l_Servicios_row['nombrecategoria'];?></td>
@@ -204,13 +237,13 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 													//SCRIPT PARA CONSTRUIR UN BOTON
 									$bt->titulo = "";
 									$bt->icon = "mdi-table-edit";
-									$bt->funcion = "aparecermodulos('catalogos/servicios/fa_servicio.php?idmenumodulo=$idmenumodulo&idservicio=".$l_Servicios_row['idservicio']."','main')";
+									$bt->funcion = "GuardarFiltro();aparecermodulos('catalogos/servicios/fa_servicio.php?idmenumodulo=$idmenumodulo&idservicio=".$l_Servicios_row['idservicio']."','main')";
 									$bt->estilos = "";
 									$bt->permiso = $permisos;
 									$bt->tipo = 2;
 									$bt->title="EDITAR";
 									$bt->class='btn btn_colorgray';
-									$bt->armar_boton();
+									$bt->armar_boton(); 
 
 
 
@@ -537,7 +570,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+        <h5 class="modal-title" id="tituloservicio"></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -547,6 +580,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
        	<thead>
        		<tr>
        			<th>ALUMNO</th>
+       				<th>ACEPTADO</th>
        			<th>PAGADO</th>
        		</tr>
        	</thead>
@@ -814,6 +848,12 @@ $estatus=array('DESACTIVADO','ACTIVADO');
     //call a function to handle file upload on select file
     $('#imageninformativa').on('change', SubirImagenservicioInformativa);
 });
+
+       CargarMeses();
+       Cargaranios();
+       CargarVariables();
+
+      
 </script>
 
 <style>

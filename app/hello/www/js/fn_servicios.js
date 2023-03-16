@@ -1417,12 +1417,13 @@ function CargarMeses() {
 
 	}
 
-function Cargaranios() {
+function Cargaranios(anio) {
 
 			$.ajax({
 					url: urlphp+'Obteneranios.php', //Url a donde la enviaremos
 					type: 'POST', //Metodo que usaremos
 					dataType:'json',
+					async:false,
 					error: function (XMLHttpRequest, textStatus, errorThrown) {
 						var error;
 						console.log(XMLHttpRequest);
@@ -1431,9 +1432,13 @@ function Cargaranios() {
 						$("#divcomplementos").html(error);
 					},	
 					success: function (msj) {
-						alert('a');
+					
 					var respuesta=msj.respuesta;
-					Pintaranios(respuesta);	
+					Pintaranios(respuesta);
+					if (anio>0) {
+					$("#v_anios").val(anio);
+
+					}	
 					}
 				});
 }

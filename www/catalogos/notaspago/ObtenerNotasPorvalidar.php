@@ -52,7 +52,12 @@ try
 			$obtener[$i]->fechafinal=$fecha;
 			}
 
+			$nota->idnotapago=$obtener[$i]->idnotapago;
+			$conceptosnota=$nota->ObtenerdescripcionNotapago();
 
+			$obtener[$i]->descripcionnota=$conceptosnota;
+
+			
 
 		}
 

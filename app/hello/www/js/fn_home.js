@@ -3108,6 +3108,9 @@ function ObtenerServiciosRegistrados() {
 function FiltroServiciosCat() {
 	$("#v_coach").val(0);
 	$(".buscador").val('');
+	$("#v_meses").val(0);
+	$("#v_anios").val(0);
+
 	localStorage.setItem('valorlistado',0);
 	var pagina = "ObtenerServicios.php";
 	var v_categorias=$("#v_categorias").val();
@@ -3147,7 +3150,7 @@ function FiltroServiciosCoach() {
 	var v_mes=$("#v_meses").val();
 	var v_anio=$("#v_anios").val();
 	var estatus=0;
-	var datos="estatus="+estatus+"&v_categorias="+v_categorias+"&v_coach="+v_coach;
+	var datos="estatus="+estatus+"&v_categorias="+v_categorias+"&v_coach="+v_coach+"&v_mes="+v_mes+"&v_anio="+v_anio;
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
@@ -3157,7 +3160,8 @@ function FiltroServiciosCoach() {
 		success: function(datos){
 			localStorage.setItem('v_categoriasvalor',v_categorias);
 			localStorage.setItem('v_coachvalor',v_coach);
-
+			localStorage.setItem('v_mes',v_mes);
+			localStorage.setItem('v_anio',v_anio);
 			var respuesta=datos.respuesta;
 			var fechaactual=datos.fechaactual;
 			PintarServiciosRegistrados3(respuesta,fechaactual);

@@ -25,7 +25,7 @@ class Pagos
 	public function CrearRegistroPago()
 	{
 		$sql="INSERT INTO pagos(idusuarios, idservicio, idmembresia, tipo, monto, estatus,fechainicial,fechafinal,pagado,concepto,folio) VALUES ( '$this->idusuarios','$this->idservicio','$this->idmembresia','$this->tipo','$this->monto', '$this->estatus','$this->fechainicial','$this->fechafinal',0,'$this->concepto','$this->folio')";
-
+		
 		$resp=$this->db->consulta($sql);
 		$this->idpago=$this->db->id_ultimo();
 
@@ -417,7 +417,7 @@ class Pagos
 			    FROM pagos
 				LEFT JOIN usuarios ON usuarios.idusuarios=pagos.idusuarios
 			    WHERE pagos.estatus=0 AND pagos.pagado=0 AND pagos.idusuarios  IN($this->idusuarios) AND pagos.tipo IN(2,3) GROUP BY idpago,idusuarios ORDER BY idpago ";
-			    
+			 
 			$resp = $this->db->consulta($sql);
 			$cont = $this->db->num_rows($resp);
 
@@ -616,7 +616,54 @@ class Pagos
 			}
 			return $array;
 	}
-	
+
+
+
+
+	public function ObtenerPagoSoloDescuento()
+	{
+		$sql="SELECT *FROM pagos WHERE idpago='$this->idpago'";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+				$resta=0;
+
+				$sql2="SELECT SUM(montoadescontar) as montodescontar FROM pagodescuento WHERE idpago='$objeto->idpago'";
+
+				$resp2=$this->db->consulta($sql2);
+
+				$rowdescuento=$this->db->fetch_assoc($resp2);
+				$montodescontar1=$rowdescuento['montodescontar'];
+
+				
+
+				//echo $objeto->monto.'-'.$montodescontar1.'-'.$montodescontar2;die();
+				$resta=$objeto->monto-$montodescontar1;
+			
+
+			
+				$objeto->montocondescuento=$resta;
+				$objeto->descuento=$montodescontar1;
+				$objeto->descuentomembresia=0;
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+
+
 }
 
  ?>

@@ -71,7 +71,7 @@ try
     $descuentosmembresia=array();
     if ($resultado[0]->idpagostripe!=0) {
 
-    	
+    	 $obtenerpagosstripe=$lo->ObtenerdescripcionNota();
 
 /*
  	    for ($i=0; $i < count($obtenerpagosstripe); $i++) { 

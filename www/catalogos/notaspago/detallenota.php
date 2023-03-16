@@ -214,6 +214,33 @@ $idnotapago=$_POST['idnotapago'];
 								<span id="estatus"></span>
 							</div>
 							</div>
+							<div class="requierefactura">
+								<div class="row">
+									<div class="col-md-12">
+										<label for="">REQUIERE FACTURA:</label>
+									<span id="requierefactura"></span>
+								</div>
+								</div>
+							</div>
+
+
+								<div class="foliofacturacion" style="display: none;">
+								<div class="row">
+									<div class="col-md-12">
+										<label for="">FOLIO DE FACTURA:</label>
+									<span id="foliofactura"></span>
+								</div>
+								</div>
+							</div>
+
+								<div class="fechafac" style="display: none;">
+								<div class="row">
+									<div class="col-md-12">
+										<label for="">FECHA DE FACTURA:</label>
+									<span id="fechafactura"></span>
+								</div>
+								</div>
+							</div>
 
 							<!-- <div class="row">
 								<div class="col-md-12">

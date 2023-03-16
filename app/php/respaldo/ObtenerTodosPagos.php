@@ -220,6 +220,7 @@ try
 				if ($tipo==2) {
 					$membresia->idmembresia=$idmembresia;
 					$membresia->idusuarios=$idusuarios;
+					$membresia->idpago=$idpago;
 					$buscarmembresiaasociada=$membresia->BuscarMembresiaAsociadaalapago();
 
 					$concepto=$concepto.'   Vigencia:'.date('d-m-Y',strtotime($buscarmembresiaasociada[0]->fechaexpiracion));

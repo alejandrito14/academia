@@ -36,6 +36,7 @@ class Membresia
 	
 	public $idusuarios;
 	public $idmembresias;
+	public $idpago;
 
 
 	public function ObtenerTodosmembresia()
@@ -740,6 +741,31 @@ class Membresia
 		$resp=$this->db->consulta($query);
 	}
 
+
+		public function buscarMembresiaUsuario2()
+	{
+		$sql="SELECT *
+		FROM usuarios_membresia WHERE idmembresia='$this->idmembresia' AND idusuarios='$this->idusuarios' AND idpago='$this->idpago'";
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+
+
+
+	}
 
 
 }

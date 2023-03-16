@@ -71,6 +71,7 @@ class Servicios
 
 	public $horainicial;
 	public $horafinal;
+	public $v_politicaaceptacionseleccion;
 
 	public function ObtenerServicios()
 	{
@@ -154,11 +155,12 @@ class Servicios
 		numligarclientes,
 		politicasaceptacion,
 		controlasistencia,
+		agregousuario,
 		tiporeembolso,
 		validaradmin,
 		idpoliticaaceptacion
 
-		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes','$this->politicasaceptacion','$this->controlasistencia','$this->tiporeembolso','$this->validaradmin','$this->v_politicasaceptacionid')";
+		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes','$this->politicasaceptacion','$this->controlasistencia','$this->idusuarios','$this->tiporeembolso','$this->validaradmin','$this->v_politicaaceptacionseleccion')";
 		
 		$resp=$this->db->consulta($query);
 		$this->idservicio = $this->db->id_ultimo();
@@ -211,7 +213,7 @@ class Servicios
 		controlasistencia='$this->controlasistencia',
 		tiporeembolso='$this->tiporeembolso',
 		validaradmin='$this->validaradmin',
-		idpoliticaaceptacion='$this->v_politicasaceptacionid'
+		idpoliticaaceptacion='$this->v_politicaaceptacionseleccion'
 		WHERE idservicio=$this->idservicio";
 
 		

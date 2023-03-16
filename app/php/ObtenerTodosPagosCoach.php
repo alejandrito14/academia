@@ -81,17 +81,14 @@ try
 
 
 
-							$fechainicial=$obtenerperiodos[$a]->fechainicial;
+				$fechainicial=$obtenerperiodos[$a]->fechainicial;
 			   	$fechafinal=$obtenerperiodos[$a]->fechafinal;
 
 			   	$pagos->fechainicial=$fechainicial;
 			   	$pagos->fechafinal=$fechafinal;
 							$obtenerpagos=$pagos->ObtenerPagosServicio($sqlfecha);
 
-		/*if ($idservicio==262) {
-			echo 'usuario'.$idusuariosalumno.'<br>';
-			var_dump($obtenerperiodos);die();
-			}*/
+		
 			if (count($obtenerpagos)>0) {
 				# code...
 
@@ -171,7 +168,11 @@ try
 
 						$usuarios->idusuarios=$idusuariosalumno;
 					
-				 $corresponde=$usuarios->ObtenerUsuarioDatos();
+				        $corresponde=$usuarios->ObtenerUsuarioDatos();
+				        /* if ($idservicio==437) {
+			
+								var_dump($corresponde);die();
+								}*/
 
 			
 			
@@ -180,8 +181,8 @@ try
 								$pagos->fechainicial=$fechainicial;
 								$pagos->fechafinal=$fechafinal;
 
-								$modalidad=$obtenerservicios[0]->modalidad;
-								$costo=$obtenerservicios[0]->precio;
+								$modalidad=$obtenerservicios[$i]->modalidad;
+								$costo=$obtenerservicios[$i]->precio;
 								if ($modalidad==1) {
 									
 									$montoapagar=$costo;
@@ -195,13 +196,25 @@ try
 								$obtenerparticipantes=$servicios->ObtenerParticipantes(3);
 							
 								$cantidadparticipantes=count($obtenerparticipantes);
-								$costo=$obtenerservicios[0]->precio;
+								$costo=$obtenerservicios[$i]->precio;
 
 								$obtenerhorarios=$servicios->ObtenerHorariosSemana();
 								
+								
+							
+
+							
 								$monto=$costo*count($obtenerhorarios);
 
 								$montoapagar=$monto/$cantidadparticipantes;
+
+								/*if ($idservicio==437) {
+									echo 'horarios'.count($obtenerhorarios);
+									echo 'costo'.$costo;
+									echo 'monto'.$monto;
+			
+								var_dump($montoapagar);die();
+								}*/
 
 							}
 

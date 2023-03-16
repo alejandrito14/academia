@@ -149,7 +149,9 @@ class Servicios
 		}
 
 		if ($v_coach>0) {
-			$sql.=" AND TABLA.coachesfiltro IN($v_coach)";
+
+			$sql.=" AND FIND_IN_SET('$v_coach',TABLA.coachesfiltro)";
+			/*$sql.=" AND TABLA.coachesfiltro IN($v_coach)";*/
 		}
 
 		if ($v_coach=='-1') {
@@ -159,7 +161,7 @@ class Servicios
 		$sql.=" ORDER BY
 		TABLA.orden ASC";
 
-
+		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -1335,6 +1337,167 @@ public function Eliminardeencuestas()
 
 				$array[$contador]=$objeto;
 				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function checarcategoriaRelacionadaTipopago()
+	{
+		$sql="SELECT * FROM categorias_tipodepago WHERE idcategorias='$this->idcategoria'";
+		
+	    $resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerRelacionadaTipopago()
+	{
+		$sql="SELECT  GROUP_CONCAT(idtipodepago) as tipopago FROM categorias_tipodepago WHERE idcategorias='$this->idcategoria' ORDER BY idtipodepago";
+		
+	    $resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+
+	public function ObtenerServiciosAdmin2($idcategorias,$v_coach,$v_mes,$v_anio)
+	{
+		$sql="SELECT *FROM(SELECT
+		servicios.idservicio,
+		servicios.titulo,
+		servicios.descripcion,
+		servicios.estatus,
+		servicios.imagen,
+		servicios.fechacreacion,
+		servicios.orden,
+		servicios.fechainicial,
+		servicios.fechafinal,
+		categorias.avanzado,
+		categorias.estatus AS estatuscategoria,
+		servicios.numeroparticipantes,
+		servicios.numeroparticipantesmax,
+		servicios.abiertocoach,
+		servicios.abiertoadmin,
+		servicios.abiertocliente,
+		categorias.idcategorias,
+		MONTH((SELECT MIN(fecha) from horariosservicio WHERE horariosservicio.idservicio =servicios.idservicio))AS MES,
+		YEAR((SELECT MIN(fecha) from horariosservicio WHERE horariosservicio.idservicio =servicios.idservicio)) as ANIO,
+	(SELECT MIN(fecha) from horariosservicio WHERE horariosservicio.idservicio =servicios.idservicio) as fechamin,
+	(SELECT MAX(fecha) from horariosservicio WHERE horariosservicio.idservicio =servicios.idservicio) as fechamax,
+		(SELECT COUNT(*) FROM usuarios_servicios  INNER JOIN pagos on usuarios_servicios
+		.idusuarios=pagos.idusuarios   WHERE pagos.pagado=1 AND usuarios_servicios.idservicio=servicios.idservicio )  AS pagados,
+		(SELECT COUNT(*) FROM usuarios_servicios    WHERE usuarios_servicios.aceptarterminos=1  AND usuarios_servicios.idservicio=servicios.idservicio) as aceptados,
+		(SELECT GROUP_CONCAT(usuarios_servicios.idusuarios) FROM usuarios_servicios INNER JOIN usuarios ON usuarios_servicios.idusuarios=usuarios.idusuarios
+		where usuarios.tipo=5 and usuarios_servicios.idservicio=servicios.idservicio) AS coachesfiltro,
+		(SELECT COUNT(usuarios_servicios.idusuarios) FROM usuarios_servicios INNER JOIN usuarios ON usuarios_servicios.idusuarios=usuarios.idusuarios
+		where usuarios.tipo=5 and usuarios_servicios.idservicio=servicios.idservicio) AS cantidadcoach
+
+	
+		FROM
+		servicios
+		JOIN categorias
+		ON categorias.idcategorias = servicios.idcategoriaservicio WHERE categorias.avanzado=1 and 
+		servicios.validaradmin=1 and servicios.estatus=1) AS TABLA WHERE 1=1
+		";
+
+		if ($idcategorias>0) {
+			$sql.=" AND TABLA.idcategorias IN($idcategorias)";
+		}
+
+		if ($v_coach>0) {
+
+			$sql.=" AND FIND_IN_SET('$v_coach',TABLA.coachesfiltro)";
+			/*$sql.=" AND TABLA.coachesfiltro IN($v_coach)";*/
+		}
+
+		if ($v_coach=='-1') {
+			$sql.=" AND TABLA.cantidadcoach=0";
+		}
+
+		if ($idcategorias>0 || $v_coach>-1) {
+			if ($v_mes!=0) {
+				$sql.=" and TABLA.MES='$v_mes'  ";
+			}
+
+			if ($v_anio!=0) {
+				$sql.=" AND TABLA.ANIO='$v_anio'";
+			}
+
+		}
+
+		$sql.=" ORDER BY
+		TABLA.orden ASC";
+
+		
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$fechaactual=date('Y-m-d');
+
+				if ($objeto->aceptados==$objeto->pagados && $objeto->pagados>=$objeto->aceptados) {
+					# code...
+				
+				$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
+				$resphorarios=$this->db->consulta($sql1);
+
+				$conta = $this->db->num_rows($resphorarios);
+ 
+				if ($conta>0) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				
+					}
+
+				}else{
+
+
+					$array[$contador]=$objeto;
+					$contador++;
+				
+
+
+
+				}
 			} 
 		}
 		

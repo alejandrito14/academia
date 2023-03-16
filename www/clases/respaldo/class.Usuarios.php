@@ -973,6 +973,34 @@ class Usuarios
 		return $array;
 	}
 
+
+
+    public function obtenerUsuariosAlumnosNoServicio2($idusuariosservicio)
+    {
+         $sql = "SELECT * FROM usuarios INNER JOIN tipousuario ON tipousuario.idtipousuario=usuarios.tipo
+           WHERE tipo IN(3) AND usuarios. estatus=1";
+           
+        if ($idusuariosservicio!='') {
+             $sql.=" AND idusuarios NOT IN($idusuariosservicio)";
+           }
+        $resp = $this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+        $array    = array();
+        $contador = 0;
+        if ($cont > 0) {
+
+            while ($objeto = $this->db->fetch_object($resp)) {
+
+                $array[$contador] = $objeto;
+                $contador++;
+            }
+        }
+        return $array;
+    }
+
+
+
 }
 
 ?>

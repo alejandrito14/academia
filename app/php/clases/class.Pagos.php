@@ -21,10 +21,11 @@ class Pagos
 	public $pagado;
 	public $fechapago;
 	public $idpago;
+	public $idtipopago;
 
 	public function CrearRegistroPago()
 	{
-		$sql="INSERT INTO pagos(idusuarios, idservicio, idmembresia, tipo, monto, estatus,fechainicial,fechafinal,pagado,concepto,folio) VALUES ( '$this->idusuarios','$this->idservicio','$this->idmembresia','$this->tipo','$this->monto', '$this->estatus','$this->fechainicial','$this->fechafinal',0,'$this->concepto','$this->folio')";
+		$sql="INSERT INTO pagos(idusuarios, idservicio, idmembresia, tipo, monto, estatus,fechainicial,fechafinal,pagado,concepto,folio,idtipopago) VALUES ( '$this->idusuarios','$this->idservicio','$this->idmembresia','$this->tipo','$this->monto', '$this->estatus','$this->fechainicial','$this->fechafinal',0,'$this->concepto','$this->folio','$this->idtipopago')";
 		
 		$resp=$this->db->consulta($sql);
 		$this->idpago=$this->db->id_ultimo();

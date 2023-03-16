@@ -771,11 +771,6 @@ function CalcularTotales() {
         $(".divtipopago").css('display','none');
         $(".preguntafactura").css('display','none');
 
-    }else{
-      
-        $("#btnpagarresumen").attr('disabled',true);
-        $(".divtipopago").css('display','block');
-        $(".preguntafactura").css('display','block');
     }
 
 

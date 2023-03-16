@@ -243,6 +243,34 @@ class Sala
 	}
 
 
+	public function ObtenerSalasUsuarioServicio()
+	{
+		$sql="SELECT *FROM usuarios_sala 
+		INNER JOIN salachat 
+		ON salachat.idsalachat=usuarios_sala.idsalachat 
+		WHERE  usuarios_sala.idusuarios='$this->idusuario' AND  salachat.idservicio='$this->idservicio' ";
+
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+
 }
 
 ?>

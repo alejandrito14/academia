@@ -91,6 +91,13 @@ $idtiposervicio="";
 		}
 	}
 
+	}else{
+
+		$existe=$tipodepagos->ObtenerCategoriasTipopago();
+		if (count($existe)>0) {
+			$tipodepagos->EliminarRelacionCategoria();
+		}
+		
 	}
 				
 	$db->commit();

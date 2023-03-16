@@ -247,7 +247,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 								</div>
 							</div>
 
-							<div class="row">
+							<div class="row" style="margin-top: 1em;">
 								<div class="col-md-12">
 									<label for="">MÉTODO DE PAGO:</label>
 									<span id="tipopago"></span>
@@ -360,7 +360,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">AÑADIR FOLIO DE FACTURA <span id="folionotaestatus"></span></h5>
+        <h5 class="modal-title">AÑADIR FOLIO DE FACTURA A NOTA DE PAGO <span id="folionotaestatus"></span></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -373,7 +373,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 
 			  	<label for="">Folio factura</label>
 			  	<input type="text" name="" id="txtfolio" class="form-control" />
-			  	<label for="" id="txtfoliofactura"></label>
+			  	<label for="" id="txtfoliofactura" style="color:red;"></label>
 			  </div>
 			</form>
       		</div>

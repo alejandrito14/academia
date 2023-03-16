@@ -133,7 +133,7 @@ public function obtenerServiciosAsignadosPendientes()
 		return $array;
 	}
 
-	public function obtenerServiciosAsignadosCoach()
+	public function obtenerServiciosAsignadosCoach($vcategoria)
 	{
 		$sql="SELECT *,
 
@@ -142,9 +142,16 @@ public function obtenerServiciosAsignadosPendientes()
 		(SELECT COUNT(*) FROM usuarios_servicios    WHERE usuarios_servicios.aceptarterminos=1  AND usuarios_servicios.idservicio=servicios.idservicio) as aceptados
 		FROM usuarios_servicios INNER JOIN 
 		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
-			AND cancelacion=0 AND servicios.validaradmin=1 GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios
+			AND cancelacion=0 AND servicios.validaradmin=1
 		 ";
 
+		 if ($vcategoria>0) {
+		 	$sql.=" AND servicios.idcategoriaservicio IN($vcategoria)";
+		 }
+
+		 $sql.=" GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios";
+
+		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -1524,13 +1531,19 @@ public function obtenerServiciosAsignadosPendientes()
 		return $array;
 	}
 
-	public function obtenerServiciosAsignadosCoach2()
+	public function obtenerServiciosAsignadosCoach2($buscador)
 	{
 		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
 		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
-			AND cancelacion=0 AND servicios.validaradmin=1 GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios
-		 ";
+			AND cancelacion=0 AND servicios.validaradmin=1 ";
+			if ($buscador!='') {
+			$sql.=" AND servicios.titulo LIKE '%%$buscador%%'";
+			}
 
+	$sql.="
+		GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios
+		ORDER BY servicios.idservicio desc
+		 ";
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

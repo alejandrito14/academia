@@ -88,7 +88,8 @@ try
                $membresia->idpago=$obtenerpago[0]->idpago;
 
                $obtenermembresia=$membresia->buscarMembresiaUsuario2();
-
+               $idusuarios_membresia=$obtenermembresia[0]->idusuarios_membresia;
+               
                $membresia->ActualizarEstatusMembresia($idusuarios_membresia);
            
               

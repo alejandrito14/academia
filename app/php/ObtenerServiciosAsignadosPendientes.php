@@ -30,7 +30,7 @@ try
 	$calificacion=new Calificacion();
 	$comentarios=new Comentarios();
 	$salachat=new Chat();
-
+ 
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
 	$espacios->db=$db;

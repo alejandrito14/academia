@@ -64,6 +64,8 @@ try
 
 				$idtutor=$verificarsiestutorado[0]->idusuariostutor;
 
+
+
 				$buscarSiTutorTieneMembresia=$membresia->buscarSiTutorTieneMembresia($idtutor);
 				//var_dump($buscarSiTutorTieneMembresia);die();
 				
@@ -98,7 +100,20 @@ try
 				//}
 				
 
-			}
+				}else{
+
+					if ($verificarsiestutorado[0]->sututor==1) {
+							$inpnieto=1;
+							$inphijo="";
+						}else{
+							$inpnieto="";
+							$inphijo=1;
+						}
+
+
+					$obtenermembresias=$membresia->ObtenerMembresiasDependen2(0,$inphijo,$inpnieto);
+
+				}
 			
 			}else{
 

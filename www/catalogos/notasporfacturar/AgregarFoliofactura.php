@@ -38,6 +38,13 @@ try
 
     $db->begin();
 
+    $notapago->foliofactura=$folio;
+   $buscarfolio=$notapago->BuscarFoliofactura();
+
+
+   if (count($buscarfolio)==0) {
+       # code...
+   
     $notapago->idnotapago=$idnotapago;
     $notapago->fechafactura=date('Y-m-d H:i:s');
     $notapago->foliofactura=$folio;
@@ -47,8 +54,13 @@ try
     $md->guardarMovimiento($f->guardar_cadena_utf8('nota de pago'),'nota de pago',$f->guardar_cadena_utf8('Añadió folio factura a nota de pago ID-'.$notapago->idnotapago.' por usuario '.$_SESSION['se_sas_Usuario']));
 
     $db->commit();
+    $res=1;
+    
+    }else{  
+    $res=0;
+}
 
-    $respuesta['respuesta']=1;
+    $respuesta['respuesta']=$res;
     echo json_encode($respuesta);
 
     

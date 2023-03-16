@@ -121,7 +121,10 @@ try
 			$obtenerservicios[$i]->conchat=1;
 		}
 
+	
+		//$obtenercoaches=$lo->ObtenerCoachesServicio();
 
+		//$obtenerservicios[$i]->coaches=$obtenercoaches;
 	}
 
 

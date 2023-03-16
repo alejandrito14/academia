@@ -34,26 +34,80 @@ try
 	$asignar->db=$db;
 	$membresia->db=$db;
 	$asignar->idusuarios=$idusuario;
+	$membresia->idusuarios=$idusuario;
 	$obtenermembresiasAsignados=$asignar->ObtenermembresiaActivosAsignados();
-
+	
 	$arraymembresia="";
 	$contador=0;
+	$idmembresias="";
 	for ($i=0; $i <count($obtenermembresiasAsignados) ; $i++) { 
 		
 		$idmembresia=$obtenermembresiasAsignados[$i]->idmembresia;
 
-		$arraymembresia.=$idmembresia;
+		$idmembresias.=$idmembresia;
 
 		if ($i<(count($obtenermembresiasAsignados)-1)) {
-			$arraymembresia.=",";
+			$idmembresias.=",";
 			}
 
-		$membresia->idmembresia=$idmembresia;
+		//$idmembresias=$idmembresia;
 		
 
 	}
+	
+	$membresia->idmembresias=$idmembresias;
+	$obtenermembresias=array();
 
-	$obtenermembresias=$membresia->ObtenermembresiaActivosMenos($arraymembresia);
+	$verificarsiestutorado=$membresia->VerificarSiesTutorado();
+	
+	if (count($verificarsiestutorado)>0) {
+
+				$idtutor=$verificarsiestutorado[0]->idusuariostutor;
+
+				$buscarSiTutorTieneMembresia=$membresia->buscarSiTutorTieneMembresia($idtutor);
+				//var_dump($buscarSiTutorTieneMembresia);die();
+				
+				if (count($buscarSiTutorTieneMembresia)>0) {
+					$idmembresiapadre=$buscarSiTutorTieneMembresia[0]->idmembresia;
+				
+
+				if ($verificarsiestutorado[0]->sututor==1) {
+					$inpnieto=1;
+					$inphijo="";
+				}else{
+					$inpnieto="";
+					$inphijo=1;
+				}
+
+				//if ($buscarSiTutorTieneMembresia[0]->pagado == 1) {
+					 
+					$obtenermembresias=$membresia->ObtenerMembresiasDependen($idmembresiapadre,$inphijo,$inpnieto);
+					
+					for ($i=0; $i <count($obtenermembresias) ; $i++) { 
+						$membresia->idmembresia=$obtenermembresias[$i]->idmembresia;
+						$ObtenerSiTutoradosMembresia=$membresia->ObtenerSiTutoradosMembresia($idtutor);
+						//var_dump($ObtenerSiTutoradosMembresia);die();
+						//var_dump($obtenerMembresias[$i]->limite);die();
+
+
+						if($obtenermembresias[$i]->limite <= count($ObtenerSiTutoradosMembresia)) {
+							unset($obtenermembresias[$i]);
+						}
+
+					}
+				//}
+				
+
+			}
+			
+			}else{
+
+				
+					# code...
+				
+				$obtenermembresias=$membresia->ObtenerMembresiasDisponibles($idmembresias);
+
+			}
 
 
 	$respuesta['respuesta']=1;

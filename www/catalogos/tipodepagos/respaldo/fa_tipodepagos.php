@@ -59,6 +59,7 @@ if(!isset($_GET['idtipodepago'])){
 	$habilitarcampo=0;
 	$confoto=0;
 	$constripe=0;
+	$habilitarcampomontofactura=0;
 
 }else{
 	//El formulario funcionara para modificacion de un registro
@@ -79,8 +80,16 @@ if(!isset($_GET['idtipodepago'])){
 	$confoto=$f->imprimir_cadena_utf8($result_tipodepagos_row['habilitarfoto']);
 	$constripe=$f->imprimir_cadena_utf8($result_tipodepagos_row['constripe']);
 	$cuenta=$f->imprimir_cadena_utf8($result_tipodepagos_row['cuenta']);
+	$clavepublica = $f->imprimir_cadena_utf8($result_tipodepagos_row['clavepublica']);
+	$claveprivada = $f->imprimir_cadena_utf8($result_tipodepagos_row['claveprivada']);
+	$porcentajecomision = $f->imprimir_cadena_utf8($result_tipodepagos_row['comisionporcentaje']);
+	$montotransaccion = $f->imprimir_cadena_utf8($result_tipodepagos_row['comisionmonto']);
+	$porcentajeimpuesto = $f->imprimir_cadena_utf8($result_tipodepagos_row['impuesto']);
+
 
 	$habilitarcampo=$f->imprimir_cadena_utf8($result_tipodepagos_row['habilitarcampomonto']);
+
+	$habilitarcampomontofactura=$result_tipodepagos_row['habilitarcampomontofactura'];
 
 	$che="";
 	$visualizarcuenta='none';
@@ -100,6 +109,12 @@ if(!isset($_GET['idtipodepago'])){
 
 	if ($habilitarcampo==1) {
 		$che3="checked";
+	}
+
+	$che4="";
+
+	if ($habilitarcampomontofactura==1) {
+		$che4="checked";
 	}
 
 	$col = "col-md-12";
@@ -221,15 +236,35 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<input type="checkbox" class="" id="habilitarcampomonto" name="habilitarcampomonto" onchange="habilitarmonto()" value="<?php echo $habilitarcampo; ?>" title="HABILITAR CAMPO" placeholder='HABILITAR CAMPO' <?php echo $che3?>>
 							</div>
 
+
+							<div class="form-group">
+								<label>HABILITAR CAMPO DE MONTO FACTURACIÓN :</label>
+								<input type="checkbox" class="" id="habilitarcampomontofactura" name="habilitarcampomontofactura" onchange="habilitarmontofactura()" value="<?php echo $habilitarcampomontofactura; ?>" title="HABILITAR CAMPO DE MONTO FACTURACIÓN" placeholder='HABILITAR DE MONTO FACTURACIÓN' <?php echo $che4?>>
+							</div>
+
 							<div class="form-group privada" style="display: <?php echo $visualizar;?>;">
 								<label>CLAVE PRIVADA:</label>
 								<input type="text" class="form-control" id="claveprivada" name="claveprivada" value="<?php echo $claveprivada; ?>" title="CLAVE PRIVADA" placeholder='CLAVE PRIVADA'>
 							</div>
 
-
 							<div class="form-group publica" style="display: <?php echo $visualizar;?>;">
 								<label>CLAVE PUBLICA:</label>
-								<input type="text" class="form-control" id="clavepublica" name="clavepublica" value="<?php echo $claveprivada; ?>" title="CLAVE PUBLICA" placeholder='CLAVE PUBLICA'>
+								<input type="text" class="form-control" id="clavepublica" name="clavepublica" value="<?php echo $clavepublica; ?>" title="CLAVE PUBLICA" placeholder='CLAVE PUBLICA'>
+							</div>
+
+							<div class="form-group publica" style="display: <?php echo $visualizar;?>;">
+								<label>PORCENTAJE DE COMISIÓN:</label>
+								<input type="text" class="form-control" id="porcentajecomision" name="porcentajecomision" value="<?php echo $porcentajecomision; ?>" title="PORCENTAJE COMISION" placeholder='PORCENTAJE DE COMISIÓN'>
+							</div>
+
+							<div class="form-group publica" style="display: <?php echo $visualizar;?>;">
+								<label>MONTO POR TRANSACCIÓN:</label>
+								<input type="text" class="form-control" id="montotransaccion" name="montotransaccion" value="<?php echo $montotransaccion; ?>" title="MONTO TRANSACCION" placeholder='MONTO POR TRANSACCIÓN'>
+							</div>
+
+							<div class="form-group publica" style="display: <?php echo $visualizar;?>;">
+								<label>PORCENTAJE DE IMPUESTO:</label>
+								<input type="text" class="form-control" id="porcentajeimpuesto" name="porcentajeimpuesto" value="<?php echo $porcentajeimpuesto; ?>" title="PORCENTAJE IMPUESTO" placeholder='PORCENTAJE DE IMPUESTO'>
 							</div>
 
 
@@ -259,8 +294,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 	</div>
 </form>
-<script  type="text/javascript" src="./js/mayusculas.js"></script>
-
+<!-- <script  type="text/javascript" src="./js/mayusculas.js"></script>
+ -->
 <style type="text/css">
 	input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 

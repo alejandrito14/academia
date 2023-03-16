@@ -41,13 +41,15 @@ try
 	$lo->db=$db;
 	$tiposervicio=$_POST['tiposervicio'];
 	$coach=$_POST['coach'];
+	$mes=$_POST['v_meses'];
+	$anio=$_POST['v_anios'];
 
 
 
 $estatus=array('DESACTIVADO','ACTIVADO');
 
 
-	$obtener=$lo->ObtenerServiciosFiltrado($tiposervicio,$coach);
+	$obtener=$lo->ObtenerServiciosFiltrado($tiposervicio,$coach,$mes,$anio);
 
 	if (count($obtener)>0) {
 		for ($i=0; $i <count($obtener) ; $i++) { 
@@ -67,7 +69,26 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 							
 						
 							
-				<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($obtener[$i]->titulo);?></td>
+				<td style="text-align: center;">
+					<p><?php echo $f->imprimir_cadena_utf8($obtener[$i]->titulo);?></p>
+				
+				<p>Periodo: <?php echo date('d/m/Y',strtotime($obtener[$i]->fechamin)).'-'.date('d/m/Y',strtotime($obtener[$i]->fechamax)); ?> </p>	
+
+				<?php 
+					$coaches=explode(',',$obtener[$i]->coachesfiltro2);
+					if ($coaches[0]!='' ) {
+						for ($j=0; $j <count($coaches) ; $j++) { 
+							
+							?>
+							 <p style="margin: 0;"><?php echo $coaches[$j]; ?></p> 
+
+							<?php
+						}
+					}
+				 ?>	
+
+
+				</td>
 
 						 <td style="text-align: center;">
 		                    <?php 
@@ -91,7 +112,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 								//SCRIPT PARA CONSTRUIR UN BOTON
 									$bt->titulo = "";
 									$bt->icon = "mdi-table-edit";
-									$bt->funcion = "aparecermodulos('catalogos/servicios/fa_servicio.php?idmenumodulo=$idmenumodulo&idservicio=".$obtener[$i]->idservicio."','main')";
+									$bt->funcion = "GuardarFiltro();aparecermodulos('catalogos/servicios/fa_servicio.php?idmenumodulo=$idmenumodulo&idservicio=".$obtener[$i]->idservicio."','main')";
 									$bt->estilos = "";
 									$bt->permiso = $permisos;
 									$bt->tipo = 2;

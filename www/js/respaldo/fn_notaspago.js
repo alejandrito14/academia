@@ -1658,16 +1658,30 @@ function PintarNotasporvalidar(respuesta) {
 	var html="";
 	if (respuesta.length>0) {
 		for (var i = 0; i <respuesta.length; i++) {
+			var descripcionnota= respuesta[i].descripcionnota;
+				var desc="";
+				if (descripcionnota.length>0) {
+
+					for (var j = 0; j <descripcionnota.length; j++) {
+						desc+=`<div class="col-md-12">
+						<span>CONCEPTO: `+descripcionnota[j].concepto+`</span><br>`;
+						desc+=`<span>ALUMNO: `+descripcionnota[j].nombreusuario+`</span></div>`;
+					}
+
+				}
+
 			 html+=`
 		    <li class="list-group-item  align-items-center linotasporvalidar" id="nota_`+respuesta[i].idnotapago+`" style="" >
 					   <div class="row">
 					   <div class="col-md-9">
-					   		<p id="">Pago #`+respuesta[i].folio+` </p>
-					   		<p>`+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`</p>
+					   		<p style="font-weight:bold;" id="">Pago #`+respuesta[i].folio+` </p>
+					   		<p>Realizó el pago `+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`</p>
 		              		<p class="" style="">`+respuesta[i].fechaformato+`</p>
 
 		                    <p class="" style="">$<span class="">`+formato_numero(respuesta[i].total,2,'.',',')+`</span></p>
 
+		                    <p style="font-weight:bold;" >Detalle</p>
+		                    <div class="row">`+desc+`</div>
 		                   </div>
 		                   <div class="col-md-3">
 
@@ -1715,7 +1729,7 @@ function DetalleNota(idnotapago) {
       }
 
       	if (descuentosmembresia.length>0) {
-      	PintarDescuentosDetalleMembresiaNota(descuentosmembresia[0]);
+      	PintarDescuentosDetalleMembresiaNota(descuentosmembresia);
 
       }
       	
@@ -1771,6 +1785,29 @@ estatus=['PENDIENTE','ACEPTADO','CANCELADO'];
 	$(".lblcomision").html(respuesta.comisiontotal);
 	$(".lbltotal").html(respuesta.total);
 	$(".btncambiarestatus").attr('onclick','Abrirmodalaceptacion('+respuesta.idnotapago+')');
+	$(".btncambiarcancelar").attr('onclick','Abrirmodalcancelacion('+respuesta.idnotapago+')');
+
+
+	var requierefactura=respuesta.requierefactura;
+	var foliofactura=respuesta.foliofactura;
+	var fechafactura=respuesta.fechafactura;
+
+	if (requierefactura==1) {
+		$("#requierefactura").html('SI');
+		$(".foliofacturacion").css('display','block');
+		$(".fechafac").css('display','block');
+	}else{
+		$("#requierefactura").html('NO');
+
+	}
+
+	if (foliofactura!='') {
+		$("#foliofactura").html(foliofactura);
+	}
+
+	if (fechafactura!='') {
+		$("#fechafactura").html(fechafactura);
+	}
 
 }
 
@@ -1779,7 +1816,15 @@ function Abrirmodalaceptacion(idnotapago) {
 	$("#txtdescripcion").text('');
 	$(".btnvalidacion").attr('onclick','GuardarValidacionNota('+idnotapago+')');
 	$("#modalaceptacion").modal();
+ 
+}
 
+function Abrirmodalcancelacion(idnotapago) {
+	$("#txtcancelacion").css('border','1px solid #e9ecef');
+	$("#txtdescripcioncancelacion").text('');
+	$(".btnvalidacioncancel").attr('onclick','GuardarCancelacion('+idnotapago+')');
+	$("#modalcancelacion").modal();
+ 
 }
 
 function PintarPagos(respuesta) {
@@ -1854,8 +1899,8 @@ function PintarDescuentosDetalleMembresiaNota(respuesta) {
 			html+=` <li class="list-group-item  align-items-center" style="background: #46b2e2;">
 			   <div class="row">
 			   <div class="col-md-10">
-			   		<p id="">  Descuento `+respuesta[i].titulo+`</p>
-                    <p class="" style=" float: right;">$<span class="lbldescuento">`+formato_numero(respuesta[i].montoadescontar,2,'.',',')+`</span></p>
+			   		<p id="">  Descuento `+respuesta[i][0].titulo+`</p>
+                    <p class="" style=" float: right;">$<span class="lbldescuento">`+formato_numero(respuesta[i][0].montoadescontar,2,'.',',')+`</span></p>
 
                    </div>
                    <div class="col-md-2">
@@ -1943,6 +1988,55 @@ function GuardarValidacionNota(idnotapago) {
   	if (descripcion=='') {
 		$("#txtvalidacion").css('border','1px solid red');
 		$("#txtdescripcion").text('Campo requerido');
+	}
+
+  }
+}
+
+function GuardarCancelacion(idnotapago) {
+	$("#txtdescripcioncancelacion").text('');
+	$("#txtdescripcioncancelacion").removeClass('inputrequerido');
+	$("#txtcancelacion").css('border','0px');
+
+	var descripcion=$("#txtcancelacion").val();
+	var datos="descripcion="+descripcion+"&idnotapago="+idnotapago+"&estado=2";
+	var pagina = "CancelarNota.php";
+     var bandera=1;
+	if (descripcion=='') {
+		bandera=0;
+		$("#txtcancelacion").css('border','1px solid red');
+		$("#txtdescripcioncancelacion").text('Campo requerido');
+		$("#txtdescripcioncancelacion").addClass('inputrequerido');
+	}
+
+	if (bandera==1) {
+      $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      data:datos,
+      url:'catalogos/notaspago/'+pagina, //Url a donde la enviaremos
+      async:false,
+      success: function(msj){
+
+      	   $("#txtcancelacion").val('');
+           $("#modalcancelacion").modal('hide');
+           AbrirNotificacion("SE REALIZARON LOS CAMBIOS CORRECTAMENTE","mdi-checkbox-marked-circle ");
+           ObtenerNotasPorvalidar();
+           $(".divdetalle").css('display','none');
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                  //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                  console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+            }
+      });
+  }else{
+
+  	if (descripcion=='') {
+		$("#txtcancelacion").css('border','1px solid red');
+		$("#txtdescripcioncancelacion").text('Campo requerido');
 	}
 
   }
@@ -2049,7 +2143,7 @@ function DetalleNotaFactu(idnotapago) {
       	PintarDescuentosDetalleMembresiaNota(descuentosmembresia[0]);
 
       }
-      	
+      	$(".imagenescomprobante").html('');
       	if (imagenescomprobante.length>0) {
       		PintarImagenesNota(imagenescomprobante,rutaimagenes);
       	}
@@ -2100,20 +2194,113 @@ estatus=['PENDIENTE','ACEPTADO','CANCELADO'];
 	$(".lblresumen").html(respuesta.subtotal);
 	$(".lblcomision").html(respuesta.comisiontotal);
 	$(".lbltotal").html(respuesta.total);
-	$(".btncambiarestatus").attr('onclick','Abrirmodalfactura('+respuesta.idnotapago+')');
+	$(".btncambiarestatus").attr('onclick','Abrirmodalfactura('+respuesta.idnotapago+',"'+respuesta.folio+'")');
 
 	html+=`
-	<p>RAZÓN SOCIAL:`+respuesta.razonsocial+`</p>
-	<p>RFC:`+respuesta.rfc+`</p>
-	<p>EMAIL:`+respuesta.email+`</p>
-	<p>CÓDIGO POSTAL:`+respuesta.codigopostal+`</p>
-	<p>PAÍS:`+respuesta.nombrepais.pais+`</p>
-	<p>ESTADO:`+respuesta.nombrestado.nombre+`</p>
-	<p>MUNICIPIO:`+respuesta.nombremunicipio.nombre+`</p>
-	<p>ASENTAMIENTO:`+respuesta.asentamiento+`</p>
-	<p>CALLE:`+respuesta.calle+`</p>
-	<p>NO.INTERIOR:`+respuesta.nointerior+`</p>
-	<p>NO.EXTERIOR:`+respuesta.noexterior+`</p>
+	<label>DATOS DE FACTURACIÓN:</label>
+
+	  <div class="row">
+       <div class="col-md-6">
+           <label>Razón social:</label>
+       </div>
+       <div class="col-md-6">
+           <p>`+respuesta.razonsocial+`</p>
+       </div>
+     </div>
+
+     <div class="row">
+       <div class="col-md-6">
+           <label>RFC:</label>
+       </div>
+       <div class="col-md-6">
+           <p>`+respuesta.rfc+`</p>
+       </div>
+     </div>
+
+     <div class="row">
+       <div class="col-md-6">
+           <label>Email:</label>
+       </div>
+       <div class="col-md-6">
+           <p>`+respuesta.correo+`</p>
+       </div>
+     </div>
+	
+
+	<div class="row">
+       <div class="col-md-6">
+           <label>Código postal:</label>
+       </div>
+       <div class="col-md-6">
+           <p>`+respuesta.codigopostal+`</p>
+       </div>
+     </div>
+
+     <div class="row">
+       <div class="col-md-6">
+           <label>País:</label>
+       </div>
+       <div class="col-md-6">
+           <p>`+respuesta.nombrepais.pais+`</p>
+       </div>
+     </div>
+
+     <div class="row">
+       <div class="col-md-6">
+           <label>Estado:</label>
+       </div>
+       <div class="col-md-6">
+           <p>`+respuesta.nombrestado.nombre+`</p>
+       </div>
+     </div>
+
+      <div class="row">
+       <div class="col-md-6">
+           <label>Municipio:</label>
+       </div>
+       <div class="col-md-6">
+           <p>`+respuesta.nombremunicipio.nombre+`</p>
+       </div>
+     </div>
+
+      <div class="row">
+       <div class="col-md-6">
+           <label>Asentamiento:</label>
+       </div>
+       <div class="col-md-6">
+           <p>`+respuesta.asentamiento+`</p>
+       </div>
+     </div>
+
+       <div class="row">
+       <div class="col-md-6">
+           <label>Calle:</label>
+       </div>
+       <div class="col-md-6">
+           <p>`+respuesta.calle+`</p>
+       </div>
+     </div>
+
+       <div class="row">
+       <div class="col-md-6">
+           <label>No.exterior:</label>
+       </div>
+       <div class="col-md-6">
+           <p>`+respuesta.noexterior+`</p>
+       </div>
+     </div>
+
+
+	 <div class="row">
+       <div class="col-md-6">
+           <label>No.interior:</label>
+       </div>
+       <div class="col-md-6">
+           <p>`+respuesta.nointerior+`</p>
+       </div>
+     </div>
+      
+
 
 	`;
 
@@ -2123,20 +2310,21 @@ estatus=['PENDIENTE','ACEPTADO','CANCELADO'];
 
 
 
-function Abrirmodalfactura(idnotapago) {
+function Abrirmodalfactura(idnotapago,folio) {
 
-	$("#txtvalidacion").css('border','1px solid #e9ecef');
+	$("#folionotaestatus").text('#'+folio);
+	$("#txtfolio").css('border','1px solid #e9ecef');
 	$("#txtdescripcion").text('');
 	$(".btnvalidacion").attr('onclick','GuardarFoliofactura('+idnotapago+')');
 	$("#modalfoliofactura").modal();
-
+	$("#txtfoliofactura").text('');
+	$("#txtfolio").val('');
 }
 
 function GuardarFoliofactura(idnotapago) {
 
     $("#txtfoliofactura").text('');
     $("#txtfolio").removeClass('inputrequerido');
-    $("#txtfolio").css('border','0px');
 
 	var txtfolio=$("#txtfolio").val();
 	var datos="folio="+txtfolio+"&idnotapago="+idnotapago;
@@ -2158,11 +2346,21 @@ function GuardarFoliofactura(idnotapago) {
       async:false,
       success: function(msj){
 
+      	var res=msj.respuesta;
+
+      	if (res==1) {
+
       	   $("#txtfolio").val('');
            $("#modalfoliofactura").modal('hide');
            AbrirNotificacion("SE REALIZARON LOS CAMBIOS CORRECTAMENTE","mdi-checkbox-marked-circle ");
            ObtenerNotasPorFacturar();
            $(".divdetalle").css('display','none');
+
+       }else{
+
+
+       	$("#txtfoliofactura").text('El folio ya se encuentra registrado');
+       }
 
       },error: function(XMLHttpRequest, textStatus, errorThrown){ 
         var error;

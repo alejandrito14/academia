@@ -581,6 +581,49 @@ class Membresia
 	}
 
 
+		public function ObtenerMembresiasDependen2($idmembresiapadre,$inphijo,$inpnieto){
+		$sql="SELECT *
+		FROM membresia WHERE depende=0 AND estatus=1";
+		if ($inphijo!='') {
+			$sql.= " AND inphijo='$inphijo'";
+
+		}
+
+		if ($inpnieto!='') {
+			$sql.=" AND inpnieto='$inpnieto'";
+			}
+
+		if ($idmembresiapadre!=0) {
+			$sql.=" AND idmembresiadepende='$idmembresiapadre'";
+		}
+
+		if ($this->idmembresias!='') {
+			$sql.=" AND idmembresia 
+			 NOT IN('$this->idmembresias')";
+		}
+
+		$sql.=" ORDER BY orden";
+		
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
 	public function ObtenerSiTutoradosMembresia($idtutor)
 	{
 		$sql="SELECT *FROM usuariossecundarios
