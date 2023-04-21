@@ -41,6 +41,7 @@ class Notapago
 	public $canceladonota;
 	public $idusuariocancelado;
 
+
 	public function CrearNotapago()
 	{
 		$sql="INSERT INTO notapago( idusuario, subtotal, iva, total, comisiontotal, montomonedero, estatus, idtipopago, tipopago, confoto, datostarjeta,datostarjeta2,idpagostripe, folio) VALUES ('$this->idusuario', '$this->subtotal','$this->iva', '$this->total', '$this->comisiontotal','$this->montomonedero','$this->estatus','$this->idtipopago','$this->tipopago','$this->confoto','$this->datostarjeta','$this->datostarjeta2','$this->idpagostripe','$this->folio')";
@@ -437,6 +438,32 @@ class Notapago
 			}
 			return $array;
 	}
+
+	public function BuscarEnNotasPagadas()
+	{
+		$sql="SELECT *from notapago_descripcion inner join pagos on pagos.idpago=notapago_descripcion.idpago 
+				left join notapago on notapago_descripcion.idnotapago=notapago.idnotapago
+			WHERE  notapago.estatus=1 and 
+			 notapago_descripcion.idpago='$this->idpago'";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
 
 	
 	

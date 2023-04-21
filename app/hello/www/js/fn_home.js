@@ -5669,3 +5669,32 @@ function ValidarCelCodigo() {
 	}
 
 }
+
+
+function ChecarSiFaltaPago() {
+	var pagina = "ObtenerSiFaltaPago.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="iduser="+id_user;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		async:false,
+		success: function(datos){
+
+			
+			
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+
+function ChecarSiExisteServicioPendiente(argument) {
+	// body...
+}

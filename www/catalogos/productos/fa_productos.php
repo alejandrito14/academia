@@ -24,11 +24,11 @@ $lista_empresas = $_SESSION['se_liempresas']; //variables de sesion
 //Importamos nuestras clases
 require_once("../../clases/conexcion.php");
 require_once("../../clases/class.Productos.php");
-/*require_once("../../clases/class.Productos_descripcion.php");*/
+require_once("../../clases/class.Productos_descripcion.php");
 require_once("../../clases/class.Funciones.php");
 require_once("../../clases/class.Botones.php");
-/*require_once("../../clases/class.Categoriasprecios.php");
-require_once("../../clases/class.Unidadmedida.php");*/
+require_once("../../clases/class.Categoriasprecios.php");
+require_once("../../clases/class.Unidadmedida.php");
 
 
 $idmenumodulo = $_GET['idmenumodulo'];
@@ -36,16 +36,16 @@ $idmenumodulo = $_GET['idmenumodulo'];
 //Se crean los objetos de clase
 $db = new MySQL();
 $emp = new Productos();
-/*$cat=new Categoriasprecios();
-$productos_descripcion=new Productos_descripcion();*/
+$cat=new Categoriasprecios();
+$productos_descripcion=new Productos_descripcion();
 $f = new Funciones();
 $bt = new Botones_permisos();
-/*$productos_descripcion->db=$db;
-*/
-/*$un = new UnidadMedida();
+$productos_descripcion->db=$db;
+
+$un = new UnidadMedida();
 
 $un->db = $db;
-*/
+
 $emp->tipo_usuario = $tipousaurio;
 $emp->lista_empresas = $lista_empresas;
 
@@ -55,15 +55,15 @@ $cat->db=$db;
 
 
 //obtenemos la lista de medidas..
-/*$lista_medidas = $un->ListaMedidas();
+$lista_medidas = $un->ListaMedidas();
 $lista_medidas_row = $db->fetch_assoc($lista_medidas);
 $lista_medidas_num = $db->num_rows($lista_medidas );
-*/
+
 
 //Validamos si cargar el formulario para nuevo registro o para modificacion
 if(!isset($_GET['idproducto'])){
 	//El formulario es de nuevo registro
-	$idpresentacion = 0;
+	$idproducto = 0;
 
 	//Se declaran todas las variables vacias
 	$nombreproducto = "";
@@ -98,6 +98,7 @@ if(!isset($_GET['idproducto'])){
 
 					 }";
 
+
 }else{
 	//El formulario funcionara para modificacion de un registro
 	$_SESSION['CarritoProducto']=null;
@@ -129,7 +130,7 @@ if(!isset($_GET['idproducto'])){
 	$foto = $f->imprimir_cadena_utf8($result_presentacion_row['foto']);
 	$estatus = $f->imprimir_cadena_utf8($result_presentacion_row['estatus']);
 	$categoria = $f->imprimir_cadena_utf8($result_presentacion_row['idcategorias']);
-	$empresa= $f->imprimir_cadena_utf8($result_presentacion_row['idempresas']);
+	
 	$idtipopresentacion= $f->imprimir_cadena_utf8($result_presentacion_row['idtipo_presentacion']);
 	$idtipomedida=$f->imprimir_cadena_utf8($result_presentacion_row['idtipomedida']);
 
@@ -138,7 +139,6 @@ if(!isset($_GET['idproducto'])){
 	$precioventa=$result_presentacion_row['pv'];
 
 	$productos_descripcion->idproducto=$idproducto;
-	$productos_descripcion->idempresas=$emp->empresa;
 	/*$resul=$productos_descripcion->ObtenerDescripcionProducto();
 	$resul_row=$db->fetch_assoc($resul);
 	$num=$db->num_rows($resul);*/
@@ -163,7 +163,6 @@ if(!isset($_GET['idproducto'])){
 */
 		$validacion=2;
 	
-	
 	if($foto==""){
 		$ruta="images/sinfoto.png";
 	}
@@ -178,7 +177,7 @@ if(!isset($_GET['idproducto'])){
 	$nuevo=1;
 
 	$codigo="";
-
+	
 }
 
 
@@ -221,7 +220,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 			<div style="float: right;">
 				
 				<?php
-			
+				
 					//SCRIPT PARA CONSTRUIR UN BOTON
 					$bt->titulo = "GUARDAR";
 					$bt->icon = "mdi mdi-content-save";
@@ -232,28 +231,25 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					
 					var id=$('#id').val();
 					var v_categoria=$('#v_categoria').val();
-					var v_presentacion=$('#v_presentacion').val();
+					var v_idtipo_medida=$('#v_idtipo_medida').val();
 					var v_categoriaprecios=$('#v_categoriaprecios').val();
 					bandera=1;
 					var html='';
 					
-					if(v_categoria==0){
-						bandera=0;
-						html+='CAMPO FAMILIA DE PRODUCTOS  Es requerido'+'<br>';
-
-					}
-					if(v_presentacion==0){
+				
+					if(v_idtipo_medida==0){
 
 						bandera=0;
-					html+='CAMPO PRESENTACIÓN Es requerido'+'<br>';
+					html+='TIPO DE MEDIDA Es requerido'+'<br>';
 
 					}
 					
 
 					if(bandera==1){
 					 if(resp==1){ 
+					 	PreguntarSiesproducto('f_productos','catalogos/productos/vi_productos.php','main','$idmenumodulo');
 
-					 	Guardarproducto('f_productos','catalogos/productos/vi_productos.php','main','$idmenumodulo');}
+					 	}
 
 					}else{
 
@@ -278,6 +274,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					}
 			
 					$bt->armar_boton();
+
+
 				?>
 				
 				<!--<button type="button" onClick="var resp=MM_validateForm('v_empresa','','R','v_direccion','','R','v_tel','','R','v_email','',' isEmail R'); if(resp==1){ GuardarEmpresa('f_empresa','catalogos/empresas/fa_empresas.php','main');}" class="btn btn-success" style="float: right;"><i class="mdi mdi-content-save"></i>  GUARDAR</button>-->
@@ -307,7 +305,6 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						<div class="tab-pane active show" id="generales" role="tabpanel">
 							<h5>DATOS GENERALES</h5>
 									
-									
 
 						<div class="form-group m-t-20">
 						<label>CÓDIGO PRODUCTO</label>
@@ -316,6 +313,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						    
 						    <input type="text" onblur="validarProducto(this.value,'alt_btn')" name="codigoproducto" id="codigoproducto" class="form-control" title="CODIGO DE PRODUCTO" value="<?php echo ($codigoproducto); ?>" placeholder="CÓDIGO" >
 
+						   
 
 						    <span style="margin-left:2%" id="error" ></span>
 					</div>
@@ -332,14 +330,26 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<textarea id="v_descripcion" name="v_descripcion" title="DESCRIPCION" class="form-control" style="height: 85px;"><?php echo $descripcion; ?></textarea>
 							</div>
 						
-						
 					
 						
 						<div class="form-group m-t-20" style="display: none;">
 								<label>CATEGORÍA:</label>
+								<?php 
 								
+									$categorias= $emp->obtenerCategorias();
+									$categorias_num=$db->num_rows($categorias);
+									$categorias_row=$db->fetch_assoc($categorias);
+								?>
 								<select  class="form-control" id="v_categoria" name="v_categoria" title="FAMILIA DE PRODUCTOS">
+									<option value="0">SELECCIONAR CATEGORÍA</option>
+									<?php
+									do{
+									?>
+									<option value="<?php echo ($categorias_row['idcategorias']);?>" <?php if($categorias_row['idcategorias']==$categoria){ echo ("selected");}?>><?php echo ($categorias_row['categoria']);?></option>
 									
+									<?php 
+										} while($categorias_row=$db->fetch_assoc($categorias));
+									?>
 								</select>
 							</div>
 
@@ -347,11 +357,64 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						<label>UNIDAD DE MEDIDA</label>
 						
 						<select id="v_idtipo_medida" name="v_idtipo_medida" class="form-control">
-							
+							<option value="0">SELECCIONAR UNIDAD DE MEDIDA</option>
+							<?php
+							do
+							{
+								?>
+							<option value="<?php echo $lista_medidas_row['idtipo_medida'] ;?>" <?php if($lista_medidas_row['idtipo_medida']==$idtipomedida){ echo ("selected");} ?>><?php echo $lista_medidas_row['nombre'] ;?></option>
+							<?php
+							}while($lista_medidas_row = $db->fetch_assoc($lista_medidas));
+							?>
+						  
 						</select>
 
 					</div>
-						
+
+					<div class="form-group m-t-20">
+								<label>ESTATUS:</label>
+							<select class="form-control" id="v_estatus" name="v_estatus">
+							<option value="1" <?php if(1==$estatus){echo "selected";}?>>ACTIVADO</option>
+							<option value="0" <?php if(0==$estatus){echo "selected";}?>>DESACTIVADO</option>
+							</select>
+								
+							</div>
+
+						<!-- <div class="form-group m-t-20">
+
+
+								<label>PRESENTACION:</label>
+								<?php 
+
+								
+									$presentacion= $emp->obtenerPresentacion();
+									$presentacion_num=$db->num_rows($presentacion);
+									$presentacion_row=$db->fetch_assoc($presentacion);
+								
+								?>
+								<select  class="form-control" id="v_presentacion" name="v_presentacion" title="PRESENTACIÓN">
+									<option value="0">SELECCIONAR PRESENTACIÓN</option>
+									<?php
+									do{
+									?>
+									<option value="<?php echo ($presentacion_row['idtipo_presentacion']);?>" <?php if($presentacion_row['idtipo_presentacion']==$idtipopresentacion){ echo "selected";}?>>
+										<?php echo ($presentacion_row['nombre']);?></option>
+									
+									<?php 
+										} while($presentacion_row=$db->fetch_assoc($presentacion));
+									?>
+								</select>
+							</div> -->
+
+
+							<!-- <div class="form-group m-t-20">
+								<label>CATEGORIA DE PRECIOS:</label>
+							
+								<select  class="form-control" id="v_categoriaprecios" name="v_categoriaprecios" title="CATEGORIA DE PRECIOS" onchange="CargaInsumoEmpresa()">
+									<option value="0">SELECCIONAR CATEGORIA DE PRECIOS</option>
+								</select>
+							</div> -->
+
 
 
 						
@@ -368,14 +431,6 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								
 							</div>
 
-						<div class="form-group m-t-20">
-								<label>ESTATUS:</label>
-							<select class="form-control" id="v_estatus" name="v_estatus">
-							<option value="1" <?php if(1==$estatus){echo "selected";}?>>ACTIVADO</option>
-							<option value="0" <?php if(0==$estatus){echo "selected";}?>>DESACTIVADO</option>
-							</select>
-								
-							</div>
 
 
 
@@ -383,7 +438,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						</div>
 
 
-
+						
 
 						
 						
@@ -416,8 +471,9 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 	
 	//CargaInsumoEmpresa();
-/*	ObtenerCategoriasPrecios(0,<?php echo $categoria;?>);
-	CargaInsumoEmpresa2(<?php echo $idcategorias;?>);*/
+	ObtenerCategoriasPrecios(0,<?php echo $categoria;?>);
+	CargaInsumoEmpresa2(<?php echo $idcategorias;?>);
+
 </script>
 
 <script>
@@ -428,6 +484,9 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 	    $("#v_estatus").chosen({width:"100%"});
    
 	    $("#v_idtipo_medida").chosen({width:"100%"});
+
+
+
 
 </script>
 	

@@ -64,6 +64,8 @@ try
 
 				$idtutor=$verificarsiestutorado[0]->idusuariostutor;
 
+
+
 				$buscarSiTutorTieneMembresia=$membresia->buscarSiTutorTieneMembresia($idtutor);
 				//var_dump($buscarSiTutorTieneMembresia);die();
 				
@@ -79,10 +81,10 @@ try
 					$inphijo=1;
 				}
 
-				//if ($buscarSiTutorTieneMembresia[0]->pagado == 1) {
+				//if ($buscarSiTutorTieneMembresia[0]->pagado == 1) { verificacion si la membresia del tutor ha sido pagada
 					 
 					$obtenermembresias=$membresia->ObtenerMembresiasDependen($idmembresiapadre,$inphijo,$inpnieto);
-					
+					//var_dump($obtenermembresias);die();
 					for ($i=0; $i <count($obtenermembresias) ; $i++) { 
 						$membresia->idmembresia=$obtenermembresias[$i]->idmembresia;
 						$ObtenerSiTutoradosMembresia=$membresia->ObtenerSiTutoradosMembresia($idtutor);
@@ -98,7 +100,20 @@ try
 				//}
 				
 
-			}
+				}else{
+
+					if ($verificarsiestutorado[0]->sututor==1) {
+							$inpnieto=1;
+							$inphijo="";
+						}else{
+							$inpnieto="";
+							$inphijo=1;
+						}
+
+
+					$obtenermembresias=$membresia->ObtenerMembresiasDependen2(0,$inphijo,$inpnieto);
+
+				}
 			
 			}else{
 

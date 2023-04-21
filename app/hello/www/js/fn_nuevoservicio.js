@@ -108,7 +108,7 @@ function CargarFechasNuevoServicio() {
             monthYearChangeStart: function (c) {
             $('.calendar-custom-toolbar .center').text(monthNames[c.currentMonth] + ', ' + c.currentYear);
              //$('.current-month-value').text(monthNames[c.currentMonth] + ' ' + c.currentYear);
-             console.log('entro');
+             //console.log('entro');
 
           },
 
@@ -1498,7 +1498,7 @@ function EliminarHorariosFueraPeriodo(noseencuentra) {
 
 		for (var i = 0; i < noseencuentra.length; i++) {
  				for (var j = 0; j < arraydiaseleccionados.length; j++) {
- 					console.log(noseencuentra[i]+'=='+arraydiaseleccionados[j].id);
+ 					//console.log(noseencuentra[i]+'=='+arraydiaseleccionados[j].id);
  					if (noseencuentra[i] == arraydiaseleccionados[j].id) {
  						//EliminarHorario(noseencuentra[i]);
  						BorrarElemento(noseencuentra[i]);
@@ -1522,7 +1522,7 @@ function HorariosDisponibles() {
 
 	var v_zonas=[];
 	//arraydiaselegidos=[];
-	arraydiaseleccionados=[];
+	//arraydiaseleccionados=[];
 	var domingo=0,lunes=0,martes=0,miercoles=0,jueves=0,Viernes=0,sabado=0;
 	
 		if($("#Domingo").is(':checked')){
@@ -1800,7 +1800,7 @@ return new Promise((resolve, reject) => {
 
 						 var respuesta=msj.respuesta;
 						 zonasarray=msj.zonas;
-						 console.log(zonasarray);
+						 //console.log(zonasarray);
 						 resolve(respuesta);
 						
 
@@ -1912,8 +1912,8 @@ function Resumenfechas() {
 		$("#selected-dates").html('');
 		let days = ['Domingo','Lunes','Martes','Miércoles', 'Jueves', 'Viernes', 'Sábado','Domingo'];
 		
-		console.log('resumenfechas');
-		console.log(arraydiaseleccionados);
+		//console.log('resumenfechas');
+		//console.log(arraydiaseleccionados);
 		var ordenado =arraydiaseleccionados.sort(generateSortFn([{name: 'idzona'}, {name: 'fecha',reverse: false}]));
 
 
@@ -2239,7 +2239,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
           
              $("#btnguardarcoach").attr('onclick','GuardarCoachServicio()');
 
-             console.log(val);
+             //console.log(val);
              if (val>=0) {
 
              	if (asignacioncoach.length>0) {
@@ -2850,6 +2850,12 @@ function Guardarservicio()
         }).open();
 
 }
+
+function LimpiarVariableHorarios() {
+	 arraydiaselegidos=[];
+ 	arraydiaseleccionados=[];
+
+}
 	/*if(confirm("\u00BFDesea realizar esta operaci\u00f3n?"))
 	{	
 */
@@ -3052,7 +3058,7 @@ function GuardarservicioNuevo() {
 
 		});
 
-		console.log(porcentajescoachs);
+		//console.log(porcentajescoachs);
 
 		$(".from").each(function(){
 			var valor=$(this).val();

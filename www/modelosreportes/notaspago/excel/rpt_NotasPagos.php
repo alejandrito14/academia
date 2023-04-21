@@ -144,7 +144,9 @@ if ($obtenerconfi['iva']!='' && $obtenerconfi['iva']>0) {
 			usuarios.nombre,
 			usuarios.paterno,
 			usuarios.materno,
-			usuarios.telefono
+			usuarios.telefono,
+			notapago.fechaaceptacion,
+			notapago.fechareporte
 			FROM
 			notapago
 			JOIN usuarios
@@ -260,7 +262,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 		 				$objeto=array(
 		 					'folioticket'=>$array[$k]->folio,
 		 					'fechahora'=>$array[$k]->fecha,
-		 					'fechaaceptacion'=>$obtenerpago[0]->fechapago,
+		 					'fechaaceptacion'=>$array[$k]->fechaaceptacion,
 		 					'idcliente'=>$array[$k]->idusuarios,
 		 					'nombrecliente'=>$array[$k]->nombre.' '.$array[$k]->paterno.' '.$array[$k]->materno,
 		 					'cantidad'=>$obtenerdescripcionnota[$j]->cantidad,

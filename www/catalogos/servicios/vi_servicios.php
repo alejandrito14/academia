@@ -118,14 +118,14 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 <div class="card">
 	<div class="card-body">
 		<div class="row">
-			<div class="col-md-4">
+			<div class="col-md-6">
 				 <div class="form-group">
 			    <label for="">FORMATO DE SERVICIO</label>
 			   	<select class="form-control" id="v_categoria"></select>
 			   
 			  </div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-6">
 				 <div class="form-group">
 			    <label for="">COACH</label>
 			   	<select class="form-control" id="v_coach"></select>
@@ -133,7 +133,9 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 			  </div>
 			</div>
 
-			<div class="col-md-2">
+			
+
+			<div class="col-md-6">
 				 <div class="form-group">
 			    <label for="">MES</label>
 			   	<select class="form-control" id="v_meses"></select>
@@ -141,23 +143,42 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 			  </div>
 			</div>
 
-			<div class="col-md-2">
+			<div class="col-md-6">
 				 <div class="form-group">
 			    <label for="">AÑO</label>
 			   	<select class="form-control" id="v_anios"></select>
 			   
 			  </div>
 			</div>
-			<div class="col-md-4 ml-auto">
+		
+		</div>
+		<div class="row">
+			<div class="col-md-6 ">
+</div>
+			<div class="col-md-6 ">
 				 <div class="form-group" style="   text-align: right;">
 			    <button class="btn btn-primary" onclick="FiltrarServicios(<?php echo $idmenumodulo;?> )">FILTRAR SERVICIOS</button>
 			</div>
 			</div>
+
 		</div>
+			
 	</div>
 </div>
 
+
+
 <div class="card divservicios"  style="display: none;" >
+	<div class="row">
+		<div class="col-md-12">
+	    <div class="row" style="margin-right: 1em;margin-left: 1em;">
+				<div class="col-md-8"></div>
+				<div class="col-md-4">
+					<input type="text" placeholder="Buscar" id="buscadorservicio"  class="form-control" onkeyup="FiltrarServicios('<?php echo $idmenumodulo; ?>')" style="width: 70%;float: right;margin-right: 1em;">
+				</div>
+	    </div>
+		</div>
+	</div>
 	<div class="card-body">
 		<div class="table-responsive" id="contenedor_Servicios">
 			<table id="tbl_Servicios" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
@@ -168,6 +189,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
 						<th style="text-align: center;">IMÁGEN </th> 
 						<th style="text-align: center;">FORMATO DE SERVICIO </th> 
+						<th style="text-align: center;">FECHA CREACIÓN</th>
 						<th style="text-align: center;">ORDEN </th> 
 						<th style="text-align: center;">ESTATUS</th>
 
@@ -224,6 +246,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 		                   </td>
 
 							<td style="text-align: center;"><?php echo $l_Servicios_row['nombrecategoria'];?></td>
+							<td style="text-align: center;"><?php echo $l_Servicios_row['fechacreacion'];?></td>
 							
 
 							<td style="text-align: center;"><?php echo $l_Servicios_row['orden'];?></td>
@@ -739,7 +762,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 		 	"ordering": false,
 
         	  "paging": false,
-    		"searching": true,
+    		"searching": false,
 		} );
 </script>
 <style>

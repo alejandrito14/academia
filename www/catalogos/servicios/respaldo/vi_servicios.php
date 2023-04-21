@@ -132,8 +132,24 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 			   
 			  </div>
 			</div>
-			<div class="col-md-4">
-				 <div class="form-group" style="margin: 2em;display: flex;">
+
+			<div class="col-md-2">
+				 <div class="form-group">
+			    <label for="">MES</label>
+			   	<select class="form-control" id="v_meses"></select>
+			   
+			  </div>
+			</div>
+
+			<div class="col-md-2">
+				 <div class="form-group">
+			    <label for="">AÑO</label>
+			   	<select class="form-control" id="v_anios"></select>
+			   
+			  </div>
+			</div>
+			<div class="col-md-4 ml-auto">
+				 <div class="form-group" style="   text-align: right;">
 			    <button class="btn btn-primary" onclick="FiltrarServicios(<?php echo $idmenumodulo;?> )">FILTRAR SERVICIOS</button>
 			</div>
 			</div>
@@ -141,7 +157,19 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 	</div>
 </div>
 
+
+
 <div class="card divservicios"  style="display: none;" >
+	<div class="row">
+		<div class="col-md-12">
+	    <div class="row" style="margin-right: 1em;margin-left: 1em;">
+				<div class="col-md-8"></div>
+				<div class="col-md-4">
+					<input type="text" placeholder="Buscar" id="buscadorservicio"  class="form-control" onkeyup="FiltrarServicios('<?php echo $idmenumodulo; ?>')" style="width: 70%;float: right;margin-right: 1em;">
+				</div>
+	    </div>
+		</div>
+	</div>
 	<div class="card-body">
 		<div class="table-responsive" id="contenedor_Servicios">
 			<table id="tbl_Servicios" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
@@ -172,19 +200,39 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 					}else{
 						do
 						{
+
+										$avanzado=$l_Servicios_row['avanzado'];
+
 							?>
 							<tr>
 							
 						
 							
-							<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($l_Servicios_row['titulo']);?></td>
+							<td style="text-align: center;"><p><?php echo $f->imprimir_cadena_utf8($l_Servicios_row['titulo']);?></p>
+								<p>Periodo: <?php echo date('d/m/Y',strtotime($l_Servicios_row['fechamin'])).'-'.date('d/m/Y',strtotime($l_Servicios_row['fechamax'])); ?> </p>
+								
+								<?php 
+								$coaches=explode(',',$obtener[$i]->coachesfiltro2);
+								if ($coaches[0]!='' ) {
+									for ($j=0; $j <count($coaches) ; $j++) { 
+										
+										?>
+										 <p style="margin: 0;"><?php echo $coaches[$j]; ?></p> 
+
+										<?php
+									}
+								}
+							 ?>	
+
+
+							</td>
 
 						 <td style="text-align: center;">
 		                    <?php 
 		                     $img='./catalogos/servicios/imagenes/'.$_SESSION['codservicio'].'/'.$f->imprimir_cadena_utf8($l_Servicios_row['imagen']);
 
 		                     ?>
-		                     <img src="<?php echo $img; ?>" alt=""style="width: 400px;">
+		                     <img src="<?php echo $img; ?>" alt=""style="width: 200px;">
 		                   </td>
 
 							<td style="text-align: center;"><?php echo $l_Servicios_row['nombrecategoria'];?></td>
@@ -201,13 +249,13 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 													//SCRIPT PARA CONSTRUIR UN BOTON
 									$bt->titulo = "";
 									$bt->icon = "mdi-table-edit";
-									$bt->funcion = "aparecermodulos('catalogos/servicios/fa_servicio.php?idmenumodulo=$idmenumodulo&idservicio=".$l_Servicios_row['idservicio']."','main')";
+									$bt->funcion = "GuardarFiltro();aparecermodulos('catalogos/servicios/fa_servicio.php?idmenumodulo=$idmenumodulo&idservicio=".$l_Servicios_row['idservicio']."','main')";
 									$bt->estilos = "";
 									$bt->permiso = $permisos;
 									$bt->tipo = 2;
 									$bt->title="EDITAR";
 									$bt->class='btn btn_colorgray';
-									$bt->armar_boton();
+									$bt->armar_boton(); 
 
 
 
@@ -228,6 +276,8 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 					?>
 
 								<?php
+
+								if ($avanzado==1) {
 						//SCRIPT PARA CONSTRUIR UN clonar
 						$bt->titulo = "";
 						$bt->icon = "mdi-book-multiple";
@@ -243,7 +293,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 					<?php
 						//SCRIPT PARA CONSTRUIR UN clonar
 						$bt->titulo = "";
-						$bt->icon = "mdi-account-multiple";
+						$bt->icon = "mdi-account-check";
 						$bt->funcion = "AbrirModalUsuarios('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$l_Servicios_row['titulo']."')";
 
 						/*$bt->permiso = $permisos;*/
@@ -251,6 +301,36 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 						$bt->title="ALUMNOS INSCRITOS";
 
 						$bt->armar_boton();
+					?>
+
+
+							<?php
+						//SCRIPT PARA CONSTRUIR UN clonar
+						$bt->titulo = "";
+						$bt->icon = "mdi-account-multiple";
+						$bt->funcion = "AbrirModalAsignacion('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$l_Servicios_row['titulo']."')";
+
+						/*$bt->permiso = $permisos;*/
+						$bt->tipo = 4;
+						$bt->title="ASIGNACIÓN DE ALUMNOS";
+
+						$bt->armar_boton();
+					?>
+
+
+						<?php
+						//SCRIPT PARA CONSTRUIR UN clonar
+						$bt->titulo = "";
+						$bt->icon = "mdi-cloud-upload";
+						$bt->funcion = "AbrirModalImagenes('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$l_Servicios_row['titulo']."')";
+
+						/*$bt->permiso = $permisos;*/
+						$bt->tipo = 4;
+						$bt->title="IMÁGENES INFORMATIVAS";
+
+						$bt->armar_boton();
+
+					}
 					?>
 
 								</td>
@@ -502,7 +582,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+        <h5 class="modal-title" id="tituloservicio"></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -512,6 +592,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
        	<thead>
        		<tr>
        			<th>ALUMNO</th>
+       				<th>ACEPTADO</th>
        			<th>PAGADO</th>
        		</tr>
        	</thead>
@@ -521,6 +602,54 @@ $estatus=array('DESACTIVADO','ACTIVADO');
        </table>
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+       	
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="modalAlumnosAsignacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalTitleServicio"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <div class="row">
+       	<div class="col-md-6">
+       		<h3 style="text-align: center;">Todos los alumnos</h3>
+       		<div class="row" style="margin-bottom:1em;">
+									<div class="col-md-12">	 
+										<input type="text" class="form-control" name="buscadorusuario2_" id="buscadorusuario2_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadorusuario2_','.alumno')">
+									</div>
+		</div>
+       		<div id="usuariosnoinscritos" style="height: 250px;overflow: scroll;"></div>
+       	</div>
+       	<div class="col-md-6">
+       		<h3 style="text-align: center;">Alumnos inscritos</h3>
+
+       		<div class="row" style="margin-bottom:1em;">
+									<div class="col-md-12">	 
+										<input type="text" class="form-control" name="buscadorcli_2" id="buscadorusuario_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadorusuario_','.usu_')">
+									</div>
+									</div>
+
+       		<div id="usuariosinscritos2" style="height: 250px;overflow: scroll;"></div>
+
+       	</div>
+
+       </div>
+      </div>
+      <div class="modal-footer">
+
+      	 <button type="button" class="btn btn-success btnasignaralumnos" data-dismiss="modal">Guardar</button>
+
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
        	
       </div>
@@ -581,9 +710,9 @@ $estatus=array('DESACTIVADO','ACTIVADO');
                   </form>
 </div>
 
-					<div class="">
-                    <div class="vfileNames" id="vfileNames"></div>
-                </div>
+
+       <div class="vfileNames" id="vfileNames"></div>
+
 
        <div class="tbl"></div>
       </div>
@@ -622,7 +751,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 		 	"ordering": false,
 
         	  "paging": false,
-    		"searching": true,
+    		"searching": false,
 		} );
 </script>
 <style>
@@ -731,6 +860,12 @@ $estatus=array('DESACTIVADO','ACTIVADO');
     //call a function to handle file upload on select file
     $('#imageninformativa').on('change', SubirImagenservicioInformativa);
 });
+
+       CargarMeses();
+       Cargaranios();
+       CargarVariables();
+
+      
 </script>
 
 <style>
@@ -769,5 +904,17 @@ $estatus=array('DESACTIVADO','ACTIVADO');
     font-size:16px; 
     font-weight:normal;
     font-family: 'Lato';
+}
+.alumno{
+	    border-top: 1px solid #f0eee5;
+    border-bottom: 1px solid #f0eee5;
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+.usu_{
+	 border-top: 1px solid #f0eee5;
+    border-bottom: 1px solid #f0eee5;
+    padding-top: 1px;
+    padding-bottom: 1px;
 }
 </style>

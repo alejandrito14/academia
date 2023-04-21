@@ -37,9 +37,15 @@ class Zonas
 		return $array;
 	}
 
-	public function ObtZonasActivosConcat()
+	public function ObtZonasActivosConcat($filtrozona)
 	{
 		$sql = "SELECT GROUP_CONCAT(idzona) as idzonas FROM zonas WHERE estatus = 1";
+		if($filtrozona!='') {
+			
+		$sql.=" AND idzona IN ($filtrozona)";
+		
+		}
+		
 		
 		$resp = $this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

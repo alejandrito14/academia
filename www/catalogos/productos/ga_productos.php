@@ -161,7 +161,7 @@ try
 	
 		
 	$db->commit();
-	echo 1;
+	echo '1|'.$emp->idproducto;
 	
 }catch(Exception $e)
 {

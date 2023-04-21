@@ -1342,6 +1342,51 @@ public function Eliminardeencuestas()
 	}
 
 
+	public function checarcategoriaRelacionadaTipopago()
+	{
+		$sql="SELECT * FROM categorias_tipodepago WHERE idcategorias='$this->idcategoria'";
+		
+	    $resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerRelacionadaTipopago()
+	{
+		$sql="SELECT  GROUP_CONCAT(idtipodepago) as tipopago FROM categorias_tipodepago WHERE idcategorias='$this->idcategoria' ORDER BY idtipodepago";
+		
+	    $resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
 
 
 }

@@ -52,19 +52,19 @@ try
   
 
     $obtenerdescripcionnota=$notapago->ObtenerdescripcionNota();
-    if ($notapago->estatus==1) {
+   // if ($notapago->estatus==1) {
 
             $pago->estatus=2;
             $pago->pagado=1;
 
-         }
+       //  }
 
-        if ($notapago->estatus==0) {
+       /* if ($notapago->estatus==0) {
             $pago->estatus=0;
             $pago->pagado=0;
          
         }
-
+*/
 
          for ($i=0; $i <count($obtenerdescripcionnota) ; $i++) { 
             

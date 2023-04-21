@@ -40,7 +40,7 @@ try
 	$idusuario=$_POST['idusuario'];
 	$calificacion->idusuario=$idusuario;
 	$lo->idusuario=$idusuario;
-	$obtenerservicios=$lo->obtenerServiciosAsignados();
+	$obtenerservicios=$lo->obtenerServiciosAsignadosTuto();
 
 	for ($i=0; $i <count($obtenerservicios) ; $i++) { 
 		
@@ -50,7 +50,7 @@ try
 	 	$participantes=$lo->obtenerUsuariosServiciosAlumnosAsignados();
 		$obtenerservicios[$i]->cantidadalumnos=count($participantes);
 		$porpasar=1;
-
+		
 		if (count($obtenerhorarios)==0) {
 			
 		//horarios pasados

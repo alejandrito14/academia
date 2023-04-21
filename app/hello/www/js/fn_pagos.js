@@ -4,7 +4,7 @@ var arraycomentarios=[];
 var resultimagendatosfactura=[];
 var dynamicSheet4="";
 var dynamicSheet5="";
-
+var dynamicSheet1="";
 function ObtenerTotalPagos() {
 	var pagina = "ObtenerTodosPagos.php";
 	var id_user=localStorage.getItem('id_user');
@@ -1607,18 +1607,101 @@ function ValidacionCargosTutorados() {
 
 }
 
+function ValidacionAceptar() {
+
+ return new Promise(function(resolve, reject) {
+   var pagina = "ValidacionPagoAceptarServicio.php";
+   var iduser = localStorage.getItem('id_user');
+   var datos='pagos='+localStorage.getItem('pagos')+"&id_user="+iduser;
+
+    $.ajax({
+      url: urlphp+pagina,
+      type: 'post',
+      dataType: 'json',
+      data:datos,
+    success: function(res) {
+    
+     
+       
+      resolve(res);
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+                        var error;
+                        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+                        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                                                 //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                         app.dialog.alert('Error leyendo fichero jsonP '+error,'Error');
+                     $(".check-list").css('display','none');
+                     $("#aparecerimagen").css('display','none');
+                    }
+                                       
+
+          }); 
+  });
+}
+
+function ValidacionBuscarasignacion() {
+
+ return new Promise(function(resolve, reject) {
+   var pagina = "ValidacionBuscarasignacion.php";
+   var iduser = localStorage.getItem('id_user');
+   var datos='pagos='+localStorage.getItem('pagos')+"&id_user="+iduser;
+
+    $.ajax({
+      url: urlphp+pagina,
+      type: 'post',
+      dataType: 'json',
+      data:datos,
+    success: function(res) {
+    
+     
+       
+      resolve(res);
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+                        var error;
+                        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+                        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                                                 //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                         app.dialog.alert('Error leyendo fichero jsonP '+error,'Error');
+                     $(".check-list").css('display','none');
+                     $("#aparecerimagen").css('display','none');
+                    }
+                                       
+
+          }); 
+  });
+}
+
 function RealizarCargo() {
+
+
+
  app.dialog.confirm('','¿Está seguro  de realizar el pago?' , function () {
 
-  ValidacionCargosTutorados().then(r => {
+   ValidacionBuscarasignacion().then(r=>{
+  var noencontrado=0;
+      var pagosencontrados=r.pagosencontrados;
+      if (pagosencontrados.length>0) {
 
+        for (var i = 0; i < pagosencontrados.length; i++) {
+          console.log(pagosencontrados[i].idusuarios_servicios);
+          if (pagosencontrados[i].idusuarios_servicios == 'null' || pagosencontrados[i].idusuarios_servicios==null) {
+
+            noencontrado++;
+          }
+       }
+      }
+
+       if (noencontrado==0) {
+
+  ValidacionCargosTutorados().then(r => {
+ 
  
     if (r.pagosadeudados==0) {
        var respuesta=0;
      var mensaje='';
      var pedido='';
      var informacion='';
-   var pagina = "RealizarPago3.php";
+   var pagina = "RealizarPago4.php";
    var iduser=localStorage.getItem('id_user');
    var constripe=localStorage.getItem('constripe');
    var idtipodepago=localStorage.getItem('idtipodepago');
@@ -1867,13 +1950,23 @@ function RealizarCargo() {
               }
         })
 
+
+  }else{
+
+    GoToPage('listadopagos');
+  }
+
+});
   
       },function () {
 
           
            
 
-    });
+});
+
+
+
         
   
          //  });
@@ -4636,4 +4729,302 @@ function onPhotoDataSuccessdatosfactura(imageData) {
          PintarlistaImagenfactura();
       });
     }
+var pagosenmodal=[];
 
+function AbrirModalPagosParaAceptar(pagosporaceptar,posicion) {
+  
+pagosenmodal=pagosporaceptar;
+var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: none;">
+            <div class="toolbar">
+              <div class="toolbar-inner">
+                <div class="left"></div>
+                <div class="right">
+                
+                </div>
+              </div>
+            </div>
+            <div class="sheet-modal-inner" style="background: white;border-top-left-radius: 20px;border-top-right-radius:20px; ">
+               
+              <div class="page-content" style="height: 100%;">
+                <div style="background: white; height: 100%;width: 100%;border-radius: 20px;">
+                   <div class="row">
+                     <div class="col-20">
+                        
+                    </div>
+
+                     <div class="col-60">
+                     <span class="titulomodal"></span>
+                     </div>
+                     <div class="col-20">
+                     <span class="limpiarfiltros"></span>
+                     </div>
+                 </div>
+                 <div class="" style="position: absolute;top:2em;width: 100%;">
+                  
+                    <div class=""> 
+                      <div class="block" style="margin-right:1em;margin-left:1em;">`;
+                       
+                     //  for (var i = 0; i < pagosporaceptar.length; i++) {
+                      html+=`
+
+                      <div class="row" style="height:12em;">
+                       <div class="col-100">
+                       <div class="row" style="margin-top:.5em;">
+                    
+                     <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick=""><span style="color:black;font-size:18px;"> </span><br><span style="margin-top:.5em;font-size:16px;"></span></span>
+                     <span class="text-color-theme size-12" style="text-align:center;"></span>
+
+                     <h3 class="text-muted no-margin-bottom" style="text-align: center;" >`+pagosporaceptar[posicion].concepto+`</h3>
+                          
+                     <h3 class="fechasservicio" style=" text-align: center;font-weight: bold; 
+    color: #919191;font-size: 16px;">`+pagosporaceptar[posicion].fechainicial+` - `+pagosporaceptar[posicion].fechafinal+`</h3>
+                         <h4 style="text-align: center;font-size: 18px;" class="">Numero de horarios: <span class="cantidadhorarios">`+pagosporaceptar[posicion].horarios+`</span></h4>  
+                           <a class="btncalendario" style="text-align:center;color:#007aff;font-size: 14px;" onclick="VerHorarios(`+pagosporaceptar[posicion].idservicio+`)">Ver horarios
+                           </a>
+
+
+                  </div>
+                  <div class="row">
+                   <div class="col">
+                    <p style="text-align:center;">`+pagosporaceptar[posicion].politicasservicio+`</p></div>
+                  </div>
+                  
+                  <div class="row" style="margin-top:1em;">
+
+                    <div class="col-100" style="text-align:center;">
+                    
+                    <button class="button button-fill button-large color-theme button-raised margin-bottom-half" id="btnaceptartermino_`+pagosporaceptar[posicion].idpago+`" onclick="AceptarTerminosPago(`+pagosporaceptar[posicion].idpago+`,`+pagosporaceptar.length+`,`+posicion+`)">Aceptar</button>
+                      <div style="display:none;">
+                       <input type="checkbox" id="check_`+pagosporaceptar[posicion].idpago+`" class="checkaceptar">
+                     </div>
+                    </div>
+                    <div class="col-100">
+                    <button class="button button-fill button-large color-theme button-raised margin-bottom-half" id="btnrechazarterminos" onclick="RechazarTerminospago(`+pagosporaceptar[posicion].idusuarios_servicios+`)" style="background:gray;">Rechazar</button>
+                    </div>
+                  
+                                  
+
+                  </div>
+
+                </div>
+                  
+                </div>
+
+         
+
+
+                      `;
+                     //  }
+
+
+                
+                      html+=`
+                             <div class="row" style="margin-top: 100px;">
+
+                   
+
+                </div>
+
+                      <div class="row" style="padding-top: 100px;">
+                      <div class="col-100">
+                    <button class="button button-fill button-large color-theme button-raised margin-bottom-half" id="btnregresar" onclick="Regresarapagos()" style="background:gray;   ">Regresar a pagos</button>
+                    </div>
+                </div>
+
+                      </div>
+
+                    </div>
+
+                 </div>
+
+          </div>
+                
+              </div>
+            </div>
+          </div>`;
+          
+    dynamicSheet1 = app.sheet.create({
+        content: html,
+ closeByBackdropClick: false,
+        backdrop: true,
+        // Events
+        on: {
+          open: function (sheet) {
+           
+          },
+          opened: function (sheet) {
+            console.log('Sheet opened');
+          },
+          close:function (sheet) {
+            console.log('Sheet close');
+           /* var valor=pagosporaceptar.length-1;
+            if (posicion<valor) {
+              posicion=posicion+1;
+              AbrirModalPagosParaAceptar(pagosporaceptar,posicion);
+            }*/
+          }
+        }
+      });
+
+       dynamicSheet1.open();
+}
+function AceptarTerminosPago(idpago,contador,posicion) {
+     app.dialog.confirm('','¿Está seguro  de aceptar el servicio?' , function () {
+
+  $("#check_"+idpago).prop('checked',true);
+  $("#btnaceptartermino_"+idpago).css('background','#ededed');
+    GuardarAceptarTerminosPago(idpago);
+    var con=0;
+   /* $(".checkaceptar" ).each(function( index ) {
+      if($( this ).is(':checked')){
+
+        con++;
+      }
+    });*/
+
+    dynamicSheet1.close();
+
+
+           var valor=contador-1;
+            if (posicion<valor) {
+              posicion=posicion+1;
+              AbrirModalPagosParaAceptar(pagosenmodal,posicion);
+            }
+    
+    });
+
+}
+function RechazarTerminospago(idusuarios_servicios) {
+  PantallaRechazarTerminos2(idusuarios_servicios);
+
+
+}
+
+function PantallaRechazarTerminos2(idusuarios_servicios) {
+   var html=`
+         
+              <div class="">
+
+                <div class="row" style="padding-top:1em;">
+                  <label style="font-size:16px;padding:1px;">Motivo:</label>
+                  <textarea name="" id="txtcomentariorechazo" cols="30" rows="3"></textarea>
+                <span class="mensajemotivo"></span>
+                </div>
+              </div>
+           
+         
+        `;
+       app.dialog.create({
+          title: 'Rechazar servicio',
+          //text: 'Dialog with vertical buttons',
+          content:html,
+          buttons: [
+            {
+              text: 'Cancelar',
+            },
+            {
+              text: 'Aceptar',
+            },
+            
+          ],
+
+           onClick: function (dialog, index) {
+            if(index === 0){
+             
+          }
+          else if(index === 1){
+               RechazarTerminos2(idusuarios_servicios);
+
+            }
+
+        },
+          verticalButtons: false,
+        }).open();
+  
+}
+
+function VerHorarios(idservicio) {
+ localStorage.setItem('idservicio',idservicio);
+  MostrarHorarios();
+}
+
+function RechazarTerminos2(idusuarios_servicios) {
+  var pagina = "RechazarTerminos.php";
+  var id_user=localStorage.getItem('id_user');
+  var motivo=$("#txtcomentariorechazo").val();
+  var datos="id_user="+id_user+"&idusuarios_servicios="+idusuarios_servicios+"&motivocancelacion="+motivo;
+
+  if (motivo!='' && motivo.length>=10) {
+      app.dialog.close();
+      CrearModalEsperaDialog();
+
+  $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+    crossDomain: true,
+    cache: false,
+    data:datos,
+    success: function(datos){
+
+      if (datos.respuesta==1) {
+
+         $(".mensajeproceso").css('display','none');
+             $(".mensajeerror").css('display','none');
+             $(".mensajeexito").css('display','block');
+             $(".botonok").css('display','block');
+        Regresarapagos();
+        //alerta('','Operación realizada');
+       // GoToPage('home');
+      }
+      
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+            if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+            if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+          console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+          $(".mensajeproceso").css('display','none');
+                    $(".mensajeerror").css('display','block');
+                    $(".mensajeexito").css('display','none');
+                    $(".botonok").css('display','block');
+      }
+
+    });
+  }else{
+
+    alerta('','Para continuar coloque un motivo de rechazo, cantidad mínima de 10 caracteres');
+  }
+}
+
+function Regresarapagos() {
+ dynamicSheet1.close();
+ GoToPage('listadopagos');
+}
+
+function ContinuarPago() {
+  dynamicSheet1.close();
+ 
+}
+
+function GuardarAceptarTerminosPago(idpago) {
+   var pagina = "GuardarAceptarTerminosPago.php";
+    var datos="idpago="+idpago;
+      $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: urlphp+pagina,
+      data:datos,
+      async:false,
+      success: function(resp){
+       
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                  //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                  console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+            }
+      });
+}

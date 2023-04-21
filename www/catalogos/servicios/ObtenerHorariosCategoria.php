@@ -55,8 +55,8 @@ try
 	$viernes=$_POST['viernes'];
 	$sabado=$_POST['sabado'];
 	$domingo=$_POST['domingo'];
-	$obtenerzonas=$zonas->ObtZonasActivosConcat();
-	$v_zonas=explode(',',$obtenerzonas[0]->idzonas);
+	/*$obtenerzonas=$zonas->ObtZonasActivosConcat();
+	$v_zonas=explode(',',$obtenerzonas[0]->idzonas);*/
 	$v_fechainicial=$_POST['v_fechainicial'];
 	$v_fechafinal=$_POST['v_fechafinal'];
 	$dias="";
@@ -115,7 +115,7 @@ try
 				$horafinal=$intervalos[$i+1];
 			
 
-			$objeto=array('horainicial'=>$horainicial,'horafinal'=>$horafinal);
+			$objeto=array('horainicial'=>substr($horainicial, 0,5),'horafinal'=>substr($horafinal,0,5));
 
 			array_push($horariosintervalos, $objeto);
 		}

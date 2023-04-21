@@ -152,7 +152,7 @@ try
 		$usuarioinvita=$obtenerusuarioinvita[0]->nombre.', ';
 		
 		$consulta=$serviciosasignados->BuscarAsignacion();
-
+ 
 		$invitacion->idservicio=$idservicioasignar;
 		$invitacion->idusuarioinvitado=$idusuarios[$i];
 		$invitacion->idusuarioinvita=$iduser;

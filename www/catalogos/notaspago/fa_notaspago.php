@@ -164,7 +164,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							</div>
 							
 
-						<div class="todospagos" style="background: #a09f9a;height: 400px;"></div>
+						<div class="todospagos" style="background: #a09f9a;height: 500px;overflow: scroll;"></div>
 
 						</div>
 					</div>
@@ -173,7 +173,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							
 						</div>
 						<div class="divresumenpago" style="display: none;">
-							<div class="row">
+							<div class="row" style="margin-top: 2.4em;">
 								<div class="col-md-6">
 							   <label for="">RESUMEN DE PAGO</label>
 								</div>

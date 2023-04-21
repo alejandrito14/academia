@@ -64,7 +64,7 @@ function SeleccionarClientePagos(idcliente) {
 						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
 					  },
 					success:function(msj){
-						CalcularTotales();
+						//CalcularTotales();
 
 						var respuesta=msj.respuesta;
 						var monedero=msj.monedero;

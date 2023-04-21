@@ -1505,6 +1505,42 @@ public function Eliminardeencuestas()
 	}
 
 
+	public function ObtenerServicioPolitica($value='')
+	{
+		
+		$sql="SELECT 
+			politicasaceptacion.nombre,
+			politicasaceptacion.descripcion,
+			servicios.idservicio,
+			servicios.titulo,
+			politicasaceptacion.idpoliticasaceptacion,
+			servicios.fechainicial,
+			servicios.fechafinal
+		FROM servicios
+		left JOIN politicasaceptacion ON
+				servicios.idpoliticaaceptacion=politicasaceptacion.idpoliticasaceptacion
+		 WHERE idservicio='$this->idservicio'";
+
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
 
 
 }

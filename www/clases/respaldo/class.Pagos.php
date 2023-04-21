@@ -529,11 +529,30 @@ class Pagos
 
 	public function ChecarPagosServicio()
 		{
-			$sql = "SELECT * FROM pagos WHERE pagado=1 AND
-			  idservicio='$this->idservicio' AND idusuarios='$this->idusuarios'
-			  
+			$sql = "
+			SELECT
+			pagos.idusuarios,
+			pagos.idservicio,
+			pagos.idpago,
+			pagos.pagado,
+			notapago.idnotapago,
+			notapago.estatus,
+			pagos.monto,
+			notapago.total,
+			notapago.tipopago,
+			notapago.idtipopago,
+			pagos.concepto
+			FROM
+			notapago_descripcion
+			JOIN pagos
+			ON notapago_descripcion.idpago = pagos.idpago 
+			JOIN notapago
+			ON notapago.idnotapago = notapago_descripcion.idnotapago
+			WHERE
+			pagado=1 AND notapago.estatus=1 AND
+			  pagos.idservicio='$this->idservicio' AND pagos.idusuarios='$this->idusuarios'
 			  ORDER BY idpago ";
-
+			  
 			$resp = $this->db->consulta($sql);
 			$cont = $this->db->num_rows($resp);
 

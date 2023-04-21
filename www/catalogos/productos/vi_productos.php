@@ -117,6 +117,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						<th>ID</th> 
 						<th>NOMBRE</th> 
 						<th>CATEGORIA</th> 
+						<th>PRESENTACION</th> 
 						
 						<th>ACCI&Oacute;N</th>
 					</tr>
@@ -137,54 +138,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 
-<!-- MODAL FILTRO -->
-<div class="modal fade" tabindex="-1" role="dialog" id="modal-filtros">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content" style="height: 100%;">
-			<div class="modal-header" id="modal-header-filtros">
-				<span class="modal-title" id="modal-title" style="font-size: 14px; font-weight: bold;">FILTRO</span> 
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<!--<input type="hidden" name="bandera_modal" id="bandera_modal" value="0">-->
-			<div class="modal-body" id="modal-body-filtros">
-				<div class="widget-box">
-					<div class="widget-content">
-						<div class="form-group">
-							<label for="exampleInputEmail1">ID</label>
-				
-						    <input type="text" class="form-control" id="b_id" name="b_id"  title="ID">
-							
-						 </div>
-						
-						<div class="form-group">
-							<label for="exampleInputEmail1">NOMBRE</label>
-							<input type="text" class="form-control" id="b_nombre" name="b_nombre"  title="NOMBRE">
-						 </div>
-						
-						<div class="form-group m-t-20">
-								<label>EMPRESA:</label>
-								
-							</div>
-
-						<div class="span3" style="margin: 0; float: right;">
-							<br>
-							<button class="btn btn-primary" onClick="Buscar_Productos(<?php echo $idmenumodulo; ?>);" style="margin-top: 5px;"><i class="mdi mdi-account-search"></i>  BUSCAR</button>
-						</div>
-
-						<div style="clear: both;"></div>
-					</div>
-				</div>
-			</div>
-
-		</div>
-	</div>
-</div>
 
 
 <script type="text/javascript">
-	//Buscar_Productos(<?php echo $idmenumodulo; ?>);
+	Buscar_Productos(<?php echo $idmenumodulo; ?>);
 </script>
 <div id="modales"></div>
 

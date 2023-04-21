@@ -43,7 +43,7 @@ class ServiciosAsignados
 public function obtenerServiciosAsignadosPendientes()
 	{
 		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
-		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0) AND servicios.estatus=1
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0) AND servicios.estatus=1 and servicios.aceptarserviciopago=0
 			AND cancelacion=0
 		 ";
 		$resp=$this->db->consulta($sql);
@@ -267,6 +267,7 @@ public function obtenerServiciosAsignadosPendientes()
 		estatus=1, 
 		fechaaceptacion = '".date('Y-m-d H:i:s')."'
 		WHERE idusuarios_servicios = '$this->idusuarios_servicios'";
+		
 		$resp=$this->db->consulta($sql);
 
 	}
@@ -1424,11 +1425,81 @@ public function obtenerServiciosAsignadosPendientes()
 				servicios.asignadoadmin,
 				servicios.asignadocoach,
 				servicios.asignadocliente,
-				servicios.cantidadreembolso
+				servicios.cantidadreembolso,
+					servicios.aceptarserviciopago
 
 		FROM usuarios_servicios INNER JOIN 
-		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios IN($this->idusuario) AND usuarios_servicios.estatus IN(1)
-			AND usuarios_servicios.cancelacion=0 AND usuarios_servicios.aceptarterminos=1
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio    WHERE usuarios_servicios.idusuarios IN($this->idusuario) AND usuarios_servicios.estatus IN(1)
+			AND usuarios_servicios.cancelacion=0 AND usuarios_servicios.aceptarterminos=1 
+			
+			UNION 
+			
+			
+			SELECT 
+			usuarios_servicios.idusuarios_servicios,
+				usuarios_servicios.idusuarios,
+				usuarios_servicios.idservicio,
+				usuarios_servicios.fechacreacion,
+				usuarios_servicios.aceptarterminos,
+				usuarios_servicios.fechaaceptacion,
+				usuarios_servicios.cancelacion,
+				usuarios_servicios.motivocancelacion,
+				usuarios_servicios.estatus,
+				usuarios_servicios.fechacancelacion,
+				servicios.idservicio AS idservicio_0,
+				servicios.titulo,
+				servicios.descripcion,
+				servicios.idcategoriaservicio,
+				servicios.imagen,
+				servicios.orden,
+				servicios.fechainicial,
+				servicios.fechafinal,
+				servicios.nodedias,
+				servicios.idcategoria,
+				servicios.precio,
+				servicios.totalclases,
+				servicios.montopagarparticipante,
+				servicios.montopagargrupo,
+				servicios.modalidad,
+				servicios.modalidaddepago,
+				servicios.periodo,
+				servicios.lunes,
+				servicios.martes,
+				servicios.miercoles,
+				servicios.jueves,
+				servicios.viernes,
+				servicios.sabado,
+				servicios.domingo,
+				servicios.numeroparticipantes,
+				servicios.numeroparticipantesmax,
+				servicios.abiertocliente,
+				servicios.abiertocoach,
+				servicios.abiertoadmin,
+				servicios.ligarcliente,
+				servicios.reembolso,
+				servicios.cancelaciondescricion,
+				servicios.idpoliticaaceptacion,
+				servicios.tiporeembolso,
+				servicios.validaradmin,
+				servicios.agregousuario,
+				servicios.habilitarclonadocoach,
+				servicios.habilitarclonadoadmin,
+				servicios.controlasistencia,
+				servicios.politicasaceptacion,
+				servicios.numligarclientes,
+				servicios.politicascancelacion,
+				servicios.descripcionaviso,
+				servicios.tiempoaviso,
+				servicios.tituloaviso,
+				servicios.asignadoadmin,
+				servicios.asignadocoach,
+				servicios.asignadocliente,
+				servicios.cantidadreembolso,
+					servicios.aceptarserviciopago
+
+		FROM usuarios_servicios INNER JOIN 
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio    WHERE usuarios_servicios.idusuarios IN($this->idusuario) AND usuarios_servicios.estatus IN(0)
+			AND usuarios_servicios.cancelacion=0 and servicios.aceptarserviciopago=1
 		 ";
 		
 		$resp=$this->db->consulta($sql);
@@ -1623,11 +1694,33 @@ public function obtenerServiciosAsignadosPendientes()
 		return $array;
 	}
 
-
-	public function EliminarAsignacion()
+	public function BuscarAsignacionServicio()
 	{
+		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE usuarios_servicios.idusuarios='$this->idusuario' AND usuarios_servicios.idservicio='$this->idservicio' AND usuarios_servicios.estatus IN(0)
+			AND cancelacion=0
+		 ";
 		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
 	}
+
+
+
 
 
 }

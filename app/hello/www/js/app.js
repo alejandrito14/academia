@@ -88,7 +88,7 @@ var app = new Framework7({
 
  var pictureSource;   // picture source
  var destinationType; 
-var produccion = 1;
+ var produccion = 0;
 
 var codigoservicio="0";
 $(document).ready(function() {
@@ -138,7 +138,7 @@ $(document).ready(function() {
 
 var lhost = "localhost:8888";
 var rhost = "issoftware1.com.mx";
-var version='1.0.25';
+var version='1.0.26';
 
 localStorage.setItem('versionapp',version);
 var abrir=0;
@@ -2110,8 +2110,26 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
     $$("#requierefactura").attr('onchange','RequiereFactura()');
  
  }
- 
 
+ 
+           
+      ValidacionAceptar().then(r => {
+
+      if (r.pagoparaaceptar.length>0) {
+          var contapagos=r.pagoparaaceptar.length;
+          var pagosparaaceptar=r.pagoparaaceptar;
+          
+           AbrirModalPagosParaAceptar(pagosparaaceptar,0);
+
+
+         }
+
+        });
+    
+
+ 
+ 
+  
  
 
  //manda a llamar calcular totales al finalizar los descuentos
@@ -2236,6 +2254,7 @@ $$(document).on('page:init', '.page[data-name="nuevoservicio"]', function (e) {
   
   regresohome();
 
+
    var demo1 = new Promise((resolve, reject) => {
      
      resolve(ObtenerOrdenServicio());
@@ -2337,7 +2356,7 @@ $$(document).on('page:init', '.page[data-name="nuevoservicio"]', function (e) {
         $("#btncancelar").css('display','none');
         if (localStorage.getItem('idtipousuario')==0){
           var paginaregreso=localStorage.getItem('pantalla');
-          $(".regreso").attr('onclick','GoToPage("'+paginaregreso+'")');
+          $(".regreso").attr('onclick','LimpiarVariableHorarios();GoToPage("'+paginaregreso+'");');
       }
     }else{
 

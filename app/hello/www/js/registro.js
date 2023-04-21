@@ -4178,10 +4178,10 @@ function IrRegistro() {
 		$(".lialias").removeClass('is-valid');
 		$(".lialias").addClass('is-invalid');
 	}
-	if (localStorage.getItem('foto')=='' || localStorage.getItem('foto')==null) {
+	/*if (localStorage.getItem('foto')=='' || localStorage.getItem('foto')==null) {
 
 		bandera=0;
-	}
+	}*/
 
 	if (deportes.length==0) {
 		bandera=0;
@@ -4261,11 +4261,11 @@ function IrRegistro() {
 			bandera=0;
 		}
 
-		if (localStorage.getItem('foto')=='' || localStorage.getItem('foto')==null) {
+		/*if (localStorage.getItem('foto')=='' || localStorage.getItem('foto')==null) {
 				bandera=0;
 		alerta('','Para continuar es necesario una imagen para el perfil');
 	
-		}
+		}*/
 		if (alias==1) {
 			
 			alerta('','Campo alias supera el límite de 15 caracteres');

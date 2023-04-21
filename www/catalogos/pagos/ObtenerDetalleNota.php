@@ -181,6 +181,10 @@ try
         $resultado[0]->cmetodopago=$obtenermetodo[0];
 
         $resultado[0]->cformapago=$obtenerforma[0];
+
+      $idusuariodatofiscal= $resultado[0]->idusuariodatofiscal;
+        $obtenerdatosfiscalimagen=$usocfdi->ObtenerImagenesConstancia($idusuariodatofiscal);
+        $resultado[0]->imagenesconstancia= $obtenerdatosfiscalimagen;
        }
     
 

@@ -85,11 +85,14 @@ try
 
                $membresia->idusuarios=$idusuario;
                $membresia->idmembresia=$idmembresia;
+               $membresia->idpago=$obtenerpago[0]->idpago;
 
-               $obtenermembresia=$membresia->ObtenerMembresiaUsuarioPorPagar();
-
+               $obtenermembresia=$membresia->buscarMembresiaUsuario2();
                $idusuarios_membresia=$obtenermembresia[0]->idusuarios_membresia;
+               
                $membresia->ActualizarEstatusMembresia($idusuarios_membresia);
+           
+              
                ///falta por realizar el cambio a pagado
                }
 

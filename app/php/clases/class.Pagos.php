@@ -22,10 +22,12 @@ class Pagos
 	public $fechapago;
 	public $idpago;
 	public $idtipopago;
+	public $idnotapago;
+	public $requiereaceptacion;
 
 	public function CrearRegistroPago()
 	{
-		$sql="INSERT INTO pagos(idusuarios, idservicio, idmembresia, tipo, monto, estatus,fechainicial,fechafinal,pagado,concepto,folio,idtipopago) VALUES ( '$this->idusuarios','$this->idservicio','$this->idmembresia','$this->tipo','$this->monto', '$this->estatus','$this->fechainicial','$this->fechafinal',0,'$this->concepto','$this->folio','$this->idtipopago')";
+		$sql="INSERT INTO pagos(idusuarios, idservicio, idmembresia, tipo, monto, estatus,fechainicial,fechafinal,pagado,concepto,folio,idtipopago,requiereaceptacion) VALUES ('$this->idusuarios','$this->idservicio','$this->idmembresia','$this->tipo','$this->monto', '$this->estatus','$this->fechainicial','$this->fechafinal',0,'$this->concepto','$this->folio','$this->idtipopago','$this->requiereaceptacion')";
 		
 		$resp=$this->db->consulta($sql);
 		$this->idpago=$this->db->id_ultimo();
@@ -208,7 +210,7 @@ class Pagos
 		{
 			$sql = "SELECT * FROM pagodescuento
 			INNER JOIN descuento ON descuento.iddescuento=pagodescuento.iddescuento
-			 WHERE idpago='$this->idpago' ORDER BY idpago ";
+			 WHERE idpago='$this->idpago' AND idnotapago='$this->idnotapago'  ORDER BY idpago ";
 
 	
 			$resp = $this->db->consulta($sql);
@@ -232,7 +234,7 @@ class Pagos
 		{
 			$sql = "SELECT * FROM pagodescuentomembresia
 			INNER JOIN membresia ON membresia.idmembresia=pagodescuentomembresia.idmembresia
-			 WHERE idpago='$this->idpago' ORDER BY idpago ";
+			 WHERE idpago='$this->idpago' AND idnotapago='$this->idnotapago' ORDER BY idpago ";
 
 	
 			$resp = $this->db->consulta($sql);
@@ -662,6 +664,16 @@ class Pagos
 		}
 		
 		return $array;
+	}
+
+
+	public function GuardarAceptarserviciopago()
+	{
+		$sql="UPDATE pagos SET  aceptarserviciopago = 1,
+			fechaacepta='".date('Y-m-d H:i:s')."'
+		 WHERE idpago = '$this->idpago'";
+		
+		$resp=$this->db->consulta($sql);
 	}
 
 

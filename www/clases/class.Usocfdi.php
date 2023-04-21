@@ -136,6 +136,27 @@ class Usocfdi
 				return $array;
 	}
 	
+
+	public function ObtenerImagenesConstancia($iddatofiscal)
+	{
+		$query="SELECT * FROM imagenesconstancia WHERE idusuariosdatosfiscales='$iddatofiscal'";
+		
+		$resp = $this->db->consulta($query);
+				$cont = $this->db->num_rows($resp);
+
+
+				$array=array();
+				$contador=0;
+				if ($cont>0) {
+
+					while ($objeto=$this->db->fetch_object($resp)) {
+
+						$array[$contador]=$objeto;
+						$contador++;
+					} 
+				}
+				return $array;
+	}
 	
 }
 ?>

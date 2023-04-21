@@ -164,13 +164,10 @@ function PintarTipoServiciosRe(respuesta) {
 
 	$("#v_tiposervicios").html(html);
 	
-	$('#v_tiposervicios').SumoSelect({ 
-		    placeholder: 'Seleccionar tipo de servicio',
-			     selectAll : true,
-   				 selectAllPartialCheck : true,
-                 locale :  ['Aceptar', 'Cancelar', 'Seleccionar todos'],
-				closeAfterClearAll: true, 
-			    });
+	
+
+	$('#v_tiposervicios').SumoSelect().sumo.reload();
+
 }
 function CargarCategorias() {
 
@@ -834,6 +831,67 @@ function GenerarReportePantallaCobranza() {
 	var datos="idservicio="+idservicio+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&v_tiposervicios="+v_tiposervicios+"&pantalla=1";
 
 	var url='modelosreportes/cobranza/excel/rpt_Cobranza.php'; 
+
+
+	$.ajax({
+		type:'GET',
+		url: url,
+		cache:false,
+		data:datos,
+		async:false,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+		alert(error);						  
+		 },
+		success : function (msj){
+		
+			$("#contenedor_reportes").html(msj);
+
+			CargarEstilostable('.vertabla');
+			$("#btnpantalla").css('display','block');
+
+			}
+		}); 
+}
+
+
+function GenerarReporteMonedero() {
+	var idservicio=$("#v_servicios").val();
+	var fechainicio=$("#fechainicio1").val();
+	var fechafin=$("#fechafin").val();
+
+	var horainicio=$("#v_horainicio").val();
+	var horafin=$("#v_horafin").val();
+
+	var fechainicio1=fechainicio.split(' ')[0];
+	var fechafin1=fechafin.split(' ')[0];
+
+	var datos="idservicio="+idservicio+"&alumno="+v_alumnos+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&pantalla=0";
+
+	var url='modelosreportes/monedero/excel/rpt_monedero.php?'+datos; 
+
+	//alert(url);
+	window.open(url, '_blank');	
+}
+
+function GenerarReportePantallaMonedero() {
+	
+	var idservicio=$("#v_servicios").val();
+	var fechainicio=$("#fechainicio1").val();
+	var fechafin=$("#fechafin").val();
+
+	var horainicio=$("#v_horainicio").val();
+	var horafin=$("#v_horafin").val();
+
+	var fechainicio1=fechainicio.split(' ')[0];
+	var fechafin1=fechafin.split(' ')[0];
+	var v_tiposervicios=$("#v_tiposervicios").val();
+	var datos="idservicio="+idservicio+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&v_tiposervicios="+v_tiposervicios+"&pantalla=1";
+
+	var url='modelosreportes/monedero/excel/rpt_monedero.php'; 
 
 
 	$.ajax({

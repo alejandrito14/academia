@@ -499,6 +499,7 @@ function GenerarReporteEstatusAlumno() {
 function CargarEstilostable(elemento) {
 	$(''+elemento).DataTable( {		
 		 	"pageLength": 100,
+		 	"info": true,
 			"oLanguage": {
 						"sLengthMenu": "Mostrar _MENU_ ",
 						"sZeroRecords": "NO EXISTEN REGISTROS CON EL FILTRO SELECCIONADO.",
@@ -516,7 +517,7 @@ function CargarEstilostable(elemento) {
 		   "sPaginationType": "full_numbers", 
 		 	"paging":   true,
 		 	"ordering": true,
-        	"info":     false,
+        	
         	"bAutoWidth": false,
 
 

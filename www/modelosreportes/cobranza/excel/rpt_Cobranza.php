@@ -142,7 +142,7 @@ ON servicios.idcategoriaservicio = categorias.idcategorias
 JOIN usuarios
 ON usuarios_servicios.idusuarios = usuarios.idusuarios
 WHERE
-servicios.estatus IN(0,1) and categorias.avanzado=1 and usuarios.tipo=3
+servicios.estatus IN(0,1) and categorias.avanzado=1 and usuarios.tipo=3 and usuarios_servicios.cancelacion=0 
 
 $sqlconcan $sqalumnoconcan $sqlcategorias
 GROUP BY

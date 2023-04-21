@@ -2432,7 +2432,10 @@ background: white;
     margin-right: 0.5em;
 }
 .btnservicios{
-  background: #4b4b4b!important;
+  background: #59c158!important;
+}
+.btnserviciospendientes{
+  background: #ee5d36!important;
 }
 
 .btnservicios2{

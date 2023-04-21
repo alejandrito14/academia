@@ -128,7 +128,7 @@ try
 	$emp->idcategoria=$categoriaservicio;
 	$emp->fechainicial=$_POST['v_fechainicial'];
 	$emp->fechafinal=$_POST['v_fechafinal'];
-
+	$emp->aceptarserviciopago=$_POST['aceptarserviciopago'];
 	$emp->modalidadpago=$_POST['v_modalidadpago']!='undefined'?$_POST['v_modalidadpago']:0;
 	$emp->periodo=$_POST['v_perido']!='undefined'? $_POST['v_perido']:0;
 	$emp->numparticipantes=$_POST['v_numparticipantes'];
@@ -140,7 +140,10 @@ try
 	$emp->ligarclientes=$_POST['ligarclientes'];
 	$emp->tiempoaviso=$_POST['v_tiempoaviso'];
 	$emp->tituloaviso=$_POST['v_tituloaviso'];
-	$emp->descripcionaviso=$_POST['v_descripcionaviso'];
+	
+
+	$emp->descripcionaviso=$_POST['v_descripcionaviso']!='undefined'?$_POST['v_descripcionaviso']:'';
+
 	$emp->politicascancelacion='';
 	$emp->politicasaceptacion=$_POST['v_politicasaceptacion'];
 	$emp->v_politicaaceptacionseleccion=$_POST['v_politicasaceptacionid'];
@@ -153,6 +156,7 @@ try
 	$emp->asignadoadmin=$_POST['v_asignadoadmin'];
 	$emp->numligarclientes=$_POST['v_numligarclientes'];
 	$emp->controlasistencia=$_POST['v_asistencia'];
+	$emp->aceptarserviciopago =$_POST['v_aceptarserviciopago'];
 	$arraytokens=array();
 
 	$usuarios->id_usuario=$_SESSION['se_sas_Usuario'];
@@ -166,6 +170,7 @@ try
 	$usuarioinvita="";
 	$titulonotificacion="";
 	$emp->validaradmin=$validaradmin;
+
 	//Validamos si hacermos un insert o un update
 	if($emp->idservicio == 0)
 	{
@@ -568,16 +573,13 @@ try
 	}
 
 	
-	if ($noexiste>0) {
+/*	if ($noexiste>0) {
 		 if($emp->estatus==1) {
 			# code...
 			$obtenerser=$emp->ObtenerServicio();
 
 		if ($tipousuario==0) {
-			/*$usuarios->id_usuario=$emp->idusuarios;
-		$obtenerusuario=$usuarios->ObtenerUsuario();
-		$nombrequienagrega=$obtenerusuario[0]->nombre." ".$obtenerusuario[0]->paterno;
-*/
+		
 			$idusuario=$obtenerser[0]->agregousuario;
 		if ($idusuario>0) {
 				# code...
@@ -682,7 +684,7 @@ try
 
 		}
 
-	}
+	}*/
 
 	
 				

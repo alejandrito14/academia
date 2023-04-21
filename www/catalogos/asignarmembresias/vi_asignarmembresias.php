@@ -364,7 +364,19 @@ $estatus=array('DESACTIVADO','ACTIVADO');
         });
 		
         $('#btnRight').click(function (e) {
-          AbrirModalFormulario();
+           var promesa=VerificarUsuarioTieneAsignadaMembresia();
+            promesa.then(r => {
+                console.log(r);
+              if (r.respuesta==0) {
+
+                 AbrirModalFormulario();
+
+              }else{
+
+                 AbrirNotificacion("La membresia no se puede mover , el usuario tiene una membresía asignada ","mdi-close-circle");
+
+              }
+            });
            
             e.preventDefault();
         });

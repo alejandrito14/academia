@@ -1784,9 +1784,8 @@ estatus=['PENDIENTE','ACEPTADO','CANCELADO'];
 	$(".lblresumen").html(respuesta.subtotal);
 	$(".lblcomision").html(respuesta.comisiontotal);
 	$(".lbltotal").html(respuesta.total);
-	$(".btncambiarestatus").attr('onclick','Abrirmodalaceptacion('+respuesta.idnotapago+')');
-	$(".btncambiarcancelar").attr('onclick','Abrirmodalcancelacion('+respuesta.idnotapago+')');
-
+	$(".btncambiarestatus").attr('onclick','Abrirmodalaceptacion('+respuesta.idnotapago+',"'+respuesta.folio+'")');
+	$(".btncambiarcancelar").attr('onclick','Abrirmodalcancelacion('+respuesta.idnotapago+',"'+respuesta.folio+'")');
 
 	var requierefactura=respuesta.requierefactura;
 	var foliofactura=respuesta.foliofactura;
@@ -1811,20 +1810,24 @@ estatus=['PENDIENTE','ACEPTADO','CANCELADO'];
 
 }
 
-function Abrirmodalaceptacion(idnotapago) {
+function Abrirmodalaceptacion(idnotapago,folio) {
 	$("#txtvalidacion").css('border','1px solid #e9ecef');
 	$("#txtdescripcion").text('');
 	$(".btnvalidacion").attr('onclick','GuardarValidacionNota('+idnotapago+')');
+	$(".folionotaestatus").text('#'+folio);
+
 	$("#modalaceptacion").modal();
- 
+
 }
 
-function Abrirmodalcancelacion(idnotapago) {
+function Abrirmodalcancelacion(idnotapago,folio) {
 	$("#txtcancelacion").css('border','1px solid #e9ecef');
 	$("#txtdescripcioncancelacion").text('');
 	$(".btnvalidacioncancel").attr('onclick','GuardarCancelacion('+idnotapago+')');
+ 	$(".folionotaestatus").text('#'+folio);
+	
 	$("#modalcancelacion").modal();
- 
+
 }
 
 function PintarPagos(respuesta) {

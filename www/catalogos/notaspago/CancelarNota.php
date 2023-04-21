@@ -63,11 +63,19 @@ try
          for ($i=0; $i <count($obtenerdescripcionnota) ; $i++) { 
             
             $pago->idpago=$obtenerdescripcionnota[$i]->idpago;
-        
-            $pago->ActualizarPagado();
-
-
+            $notapago->idpago=$pago->idpago;
             $obtenerpago=$pago->BuscarPago2();
+
+
+            $checarPago=$notapago->BuscarEnNotasPagadas();
+        
+            if (count($checarPago)==0) {
+                $pago->ActualizarPagado();
+           
+             }
+           
+
+
             if(count($obtenerpago)>0) {
                 # code...
             if($obtenerpago[0]->tipo == 2) {

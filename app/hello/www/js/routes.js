@@ -437,7 +437,6 @@ var routes = [
     path: '/datospersonales/',
     componentUrl: './pages/datospersonales.html',
   },
-
    //nuevadireccion
   {
     path: '/nuevadireccion/',
@@ -502,8 +501,35 @@ var routes = [
   },
  {
     path:'/resumenpago/',
-    componentUrl: './pages/resumenpago.html',
-  },
+     async({ resolve, reject }) {
+
+      ValidacionBuscarasignacion().then(r=>{
+  var noencontrado=0;
+      var pagosencontrados=r.pagosencontrados;
+      if (pagosencontrados.length>0) {
+
+        for (var i = 0; i < pagosencontrados.length; i++) {
+          console.log(pagosencontrados[i].idusuarios_servicios);
+          if (pagosencontrados[i].idusuarios_servicios == 'null' || pagosencontrados[i].idusuarios_servicios==null) {
+
+            noencontrado++;
+          }
+       }
+      }
+
+       if (noencontrado==0) {
+             resolve({componentUrl: './pages/resumenpago.html', })
+
+        }else{
+
+             resolve({componentUrl: './pages/listadopagos.html', })
+
+        }
+
+     });
+  }
+
+},
     {
     path: '/detallepago/',
     componentUrl:'./pages/detallepago.html',

@@ -23,7 +23,10 @@ class Pagos
 	public $tipo;
 	public $fechapago;
 	public $pagado;
-	//Funcion para obtener todos los niveles activos
+
+	public $idtipopago;
+	public $requiereaceptacion;
+	//Funcion para obtener todos
 	public function ObtPagosActivos()
 	{
 		$sql = "SELECT * FROM pagos WHERE estatus = 1";
@@ -203,7 +206,10 @@ class Pagos
 
 	public function CrearRegistroPago()
 	{
-		$sql="INSERT INTO pagos(idusuarios, idservicio, idmembresia, tipo, monto, estatus,fechainicial,fechafinal,pagado,concepto,folio) VALUES ( '$this->idusuarios','$this->idservicio','$this->idmembresia','$this->tipo','$this->monto', '$this->estatus','$this->fechainicial','$this->fechafinal',0,'$this->concepto','$this->folio')";
+		
+
+		$sql="INSERT INTO pagos(idusuarios, idservicio, idmembresia, tipo, monto, estatus,fechainicial,fechafinal,pagado,concepto,folio,idtipopago,requiereaceptacion) VALUES ('$this->idusuarios','$this->idservicio','$this->idmembresia','$this->tipo','$this->monto', '$this->estatus','$this->fechainicial','$this->fechafinal',0,'$this->concepto','$this->folio','$this->idtipopago','$this->requiereaceptacion')";
+		
 		
 		$resp=$this->db->consulta($sql);
 		$this->idpago=$this->db->id_ultimo();
@@ -435,7 +441,7 @@ class Pagos
 
 	public function ObtenerPagoDescuento()
 	{
-		$sql="SELECT *FROM pagos WHERE idpago='$this->idpago'";
+		$sql="SELECT *FROM pagos WHERE idpago='$this->idpago' ";
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -448,14 +454,14 @@ class Pagos
 			while ($objeto=$this->db->fetch_object($resp)) {
 				$resta=0;
 
-				$sql2="SELECT SUM(montoadescontar) as montodescontar FROM pagodescuento WHERE idpago='$objeto->idpago'";
+				$sql2="SELECT SUM(montoadescontar) as montodescontar FROM pagodescuento WHERE idpago='$objeto->idpago' AND idnotapago='$this->idnotapago'";
 
 				$resp2=$this->db->consulta($sql2);
 
 				$rowdescuento=$this->db->fetch_assoc($resp2);
 				$montodescontar1=$rowdescuento['montodescontar'];
 
-				$sql3="SELECT SUM(montoadescontar) as montodescontar FROM pagodescuentomembresia WHERE idpago='$objeto->idpago'";
+				$sql3="SELECT SUM(montoadescontar) as montodescontar FROM pagodescuentomembresia WHERE idpago='$objeto->idpago' and idnotapago='$this->idnotapago'";
 
 				$resp3=$this->db->consulta($sql3);
 				$rowdescuentomembresia=$this->db->fetch_assoc($resp3);
@@ -646,6 +652,67 @@ class Pagos
 			return $array;
 	}
 	
+
+	public function EliminarPagoNoPagado()
+		{
+			
+			$sql = "DELETE FROM pagos 
+				WHERE pagado=0 AND estatus=0 AND
+			  idservicio='$this->idservicio' AND fechainicial='$this->fechainicial' AND fechafinal='$this->fechafinal' AND idusuarios='$this->idusuarios' ";
+
+			  $this->db->consulta($sql);
+		}
+
+
+		
+		public function PagosNoPagados()
+		{
+			
+			$sql = "SELECT * FROM pagos WHERE pagado=0 AND
+			  idservicio='$this->idservicio' AND fechainicial='$this->fechainicial' AND fechafinal='$this->fechafinal' AND idusuarios='$this->idusuarios' AND fechapago IS NULL";
+
+			
+			   
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
+		}
+
+		public function ExistePago()
+		{
+			$sql = "SELECT * FROM pagos WHERE pagado IN(0,1) AND estatus IN(1,2) AND
+			  idservicio='$this->idservicio' AND fechainicial='$this->fechainicial' AND fechafinal='$this->fechafinal' AND idusuarios='$this->idusuarios'  ORDER BY idpago ";
+
+			
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
+		}
+
 
 }
 

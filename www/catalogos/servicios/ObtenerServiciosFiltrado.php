@@ -43,13 +43,13 @@ try
 	$coach=$_POST['coach'];
 	$mes=$_POST['v_meses'];
 	$anio=$_POST['v_anios'];
-
+	$v_buscar=$_POST['v_buscar'];
 
 
 $estatus=array('DESACTIVADO','ACTIVADO');
 
 
-	$obtener=$lo->ObtenerServiciosFiltrado($tiposervicio,$coach,$mes,$anio);
+	$obtener=$lo->ObtenerServiciosFiltrado($tiposervicio,$coach,$mes,$anio,$v_buscar);
 
 	if (count($obtener)>0) {
 		for ($i=0; $i <count($obtener) ; $i++) { 
@@ -72,7 +72,12 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 				<td style="text-align: center;">
 					<p><?php echo $f->imprimir_cadena_utf8($obtener[$i]->titulo);?></p>
 				
-				<p>Periodo: <?php echo date('d/m/Y',strtotime($obtener[$i]->fechamin)).'-'.date('d/m/Y',strtotime($obtener[$i]->fechamax)); ?> </p>	
+				<?php if ($obtener[$i]->fechamin!='' && $obtener[$i]->fechamin!=null) { ?>
+
+					<p>Periodo: <?php echo date('d/m/Y',strtotime($obtener[$i]->fechamin)).'-'.date('d/m/Y',strtotime($obtener[$i]->fechamax)); ?> </p>	
+					
+			<?php	} ?>
+				
 
 				<?php 
 					$coaches=explode(',',$obtener[$i]->coachesfiltro2);
@@ -99,6 +104,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 		                   </td>
 
 							<td style="text-align: center;"><?php echo $obtener[$i]->nombrecategoria;?></td>
+							<td style="text-align: center;"><?php echo date('d-m-Y H:i:s',strtotime($obtener[$i]->fechacreacion));?></td>
 							
 
 							<td style="text-align: center;"><?php echo $obtener[$i]->orden;?></td>

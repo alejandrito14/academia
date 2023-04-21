@@ -83,11 +83,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 <table class="table table-striped table-bordered" id="productos" cellpadding="0" cellspacing="0" style="overflow: auto">
 	<thead>
 		<tr style="text-align: center">
-			<th width="40">ID</th> 
+			<th width="50">CÓDIGO</th> 
 			<th width="50">NOMBRE</th> 
-			<th  width="100">DESCRIPCION</th>
-<!-- 			<th width="50">CATEGORIA</th> 
- -->
+ 			<th width="50">MEDIDA</th> 
+ 
 			<th width="50">ESTATUS</th> 
 						
 			<th width="50">ACCI&Oacute;N</th>
@@ -109,13 +108,15 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				{
 			?>
 			<tr>
-			    <td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($resultado_empresas_row['idproducto']); ?></td>
+			    <td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($resultado_empresas_row['codigoproducto']); ?></td>
 				<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($resultado_empresas_row['nombre']); ?></td>
 				
-				<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($resultado_empresas_row['descripcion']);?></td>
+			
+
+				<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($resultado_empresas_row['tp']);?></td>
+
 				
-<!-- 				<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($resultado_empresas_row['categoria']); ?></td>
- -->					
+			
 
 				<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($t_estatus[$resultado_empresas_row['estatus']]);?></td>
 		
@@ -152,9 +153,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						$bt->armar_boton();
 					?>
 
-					<button class="btn btn-primary" type="button" onclick="Subirimagen('<?php echo $resultado_empresas_row['idproducto'];?>',<?php echo $resultado_empresas_row['idempresas'];?>)">
-						<i class="mdi mdi-arrow-up-bold-circle"></i>
-					</button>
+					
 					
 					
 						<!--<i class="mdi mdi-delete-empty" style="cursor: pointer" onclick="BorrarDatos('<?php echo $resultado_empresas_row['idempresas'];?>','idempresas','empresas','n','catalogos/empresas/vi_empresas.php','main')" ></i>-->
@@ -173,7 +172,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		 	"pageLength": 100,
 			"oLanguage": {
 						"sLengthMenu": "Mostrar _MENU_ ",
-						"sZeroRecords": "NO EXISTEN PRESENTACIONES EN LA BASE DE DATOS.",
+						"sZeroRecords": "NO EXISTEN PRODUCTOS EN LA BASE DE DATOS.",
 						"sInfo": "Mostrar _START_ a _END_ de _TOTAL_ Registros",
 						"sInfoEmpty": "desde 0 a 0 de 0 records",
 						"sInfoFiltered": "(filtered desde _MAX_ total Registros)",

@@ -636,6 +636,8 @@ class Membresia
 			 NOT IN('$this->idmembresias')";
 		}
 
+		$sql.=" GROUP BY idusuarios";
+
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

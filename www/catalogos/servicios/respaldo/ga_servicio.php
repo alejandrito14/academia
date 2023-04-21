@@ -19,6 +19,10 @@ require_once("../../clases/conexcion.php");
 require_once("../../clases/class.Servicios.php");
 require_once("../../clases/class.Funciones.php");
 require_once('../../clases/class.MovimientoBitacora.php');
+require_once("../../clases/class.NotificacionPush.php");
+require_once("../../clases/class.Tareas.php");
+require_once("../../clases/class.Usuarios.php");
+require_once("../../clases/class.ServiciosAsignados.php");
 try
 {
 	//declaramos los objetos de clase
@@ -26,7 +30,17 @@ try
 	$emp = new Servicios();
 	$f = new Funciones();
 	$md = new MovimientoBitacora();
+	$notificaciones=new NotificacionPush();
+	$notificaciones->db=$db;
+	$api=$notificaciones->ObtenerApiKey();
+	$notificaciones->apikey=$api['clavetokennotificacion'];
 	
+	$tareas=new Tareas();
+	$tareas->db=$db;
+	$usuarios=new Usuarios();
+	$usuarios->db=$db;
+	$asignados=new ServiciosAsignados();
+	$asignados->db=$db;
 	//enviamos la conexión a las clases que lo requieren
 	$emp->db=$db;
 	$md->db = $db;	
@@ -40,6 +54,20 @@ try
 	
 	$emp->orden = trim($f->guardar_cadena_utf8($_POST['v_orden']));
 	$emp->estatus = trim($f->guardar_cadena_utf8($_POST['v_estatus']));
+	$emp->validaradmin=0;
+	if ($emp->estatus==1) {
+		$emp->validaradmin=1;
+
+	}
+
+
+	//$emp->v_politicaaceptacionseleccion=$_POST['v_politicaaceptacionseleccion'];
+
+	if ($emp->v_politicaaceptacionseleccion=='') {
+		$emp->v_politicaaceptacionseleccion=0;
+	}
+
+	$tipousuario=$_SESSION['se_sas_Tipo'];
 
 	$emp->idcategoriaservicio = $_POST['v_categoria'];
 	$emp->precio=$_POST['v_costo'];
@@ -100,7 +128,7 @@ try
 	$emp->idcategoria=$categoriaservicio;
 	$emp->fechainicial=$_POST['v_fechainicial'];
 	$emp->fechafinal=$_POST['v_fechafinal'];
-
+	$emp->aceptarserviciopago=$_POST['aceptarserviciopago'];
 	$emp->modalidadpago=$_POST['v_modalidadpago']!='undefined'?$_POST['v_modalidadpago']:0;
 	$emp->periodo=$_POST['v_perido']!='undefined'? $_POST['v_perido']:0;
 	$emp->numparticipantes=$_POST['v_numparticipantes'];
@@ -112,20 +140,51 @@ try
 	$emp->ligarclientes=$_POST['ligarclientes'];
 	$emp->tiempoaviso=$_POST['v_tiempoaviso'];
 	$emp->tituloaviso=$_POST['v_tituloaviso'];
-	$emp->descripcionaviso=$_POST['v_descripcionaviso'];
-	$emp->politicascancelacion=$_POST['v_politicascancelacion'];
+	
+
+	$emp->descripcionaviso=$_POST['v_descripcionaviso']!='undefined'?$_POST['v_descripcionaviso']:'';
+
+	$emp->politicascancelacion='';
 	$emp->politicasaceptacion=$_POST['v_politicasaceptacion'];
+	$emp->v_politicaaceptacionseleccion=$_POST['v_politicasaceptacionid'];
+	//var_dump($emp->v_politicasaceptacionid);die();
 	$emp->reembolso=$_POST['v_reembolso'];
 	$emp->cantidadreembolso=$_POST['v_cantidadreembolso'];
+	$emp->tiporeembolso=$_POST['v_tiporeembolso'];
 	$emp->asignadocliente=$_POST['v_asignadocliente'];
 	$emp->asignadocoach=$_POST['v_asignadocoach'];
 	$emp->asignadoadmin=$_POST['v_asignadoadmin'];
 	$emp->numligarclientes=$_POST['v_numligarclientes'];
 	$emp->controlasistencia=$_POST['v_asistencia'];
+	$emp->aceptarserviciopago =$_POST['v_aceptarserviciopago'];
+	$arraytokens=array();
+
+	$usuarios->id_usuario=$_SESSION['se_sas_Usuario'];
+	$emp->idusuarios=$_SESSION['se_sas_Usuario'];
+
+	$tipousuario=$_SESSION['se_sas_Tipo'];
+
+	$obtenerusuario=$usuarios->ObtenerUsuario();
+
+	$nombrequienagrega=$obtenerusuario[0]->nombre;
+	$usuarioinvita="";
+	$titulonotificacion="";
+	$emp->validaradmin=$validaradmin;
 
 	//Validamos si hacermos un insert o un update
 	if($emp->idservicio == 0)
 	{
+		$titulonotificacion="Solicitud de nuevo servicio ".$nombrequienagrega;
+	if ($tipousuario==0){
+
+		if ($emp->estatus==1) {
+			$emp->validaradmin=1;
+		}else{
+
+			$emp->validaradmin=0;
+		}
+		
+	}
 		//guardando 
 		$emp->GuardarServicio();
 		$md->guardarMovimiento($f->guardar_cadena_utf8('Servicio'),'Servicio',$f->guardar_cadena_utf8('Nuevo Servicio creado con el ID-'.$emp->idservicio));
@@ -161,6 +220,7 @@ try
 				}
 
 			if (count($coachs)>0 && $coachs[0]!='') {
+
 				for ($i=0; $i < count($coachs); $i++) { 
 						$emp->idparticipantes=$coachs[$i];
 						$emp->Guardarparticipantes();
@@ -169,8 +229,30 @@ try
 						$monto=$porcentajescoachs[$i]->{'monto'};
 
 						$emp->GuardarMontotipo($tipo,$monto);	
+
+
+						$idusuario=$coachs[$i];
+
+						$usuarios->id_usuario=$idusuario;
+						$obtenerusuarioinvita=$usuarios->ObtenerUsuario();
+						$usuarioinvita=$obtenerusuarioinvita[0]->nombre.', ';
+
+						$ruta='detalleserviciocoach2';
+						$valor=$emp->idservicio;
+						$texto='|Se te asignó un nuevo servicio|'.$emp->titulo.'|';
+						$estatus=0;
+						$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
+
+						$notificaciones->idusuario=$idusuario;
+							$obtenertokenusuario=$notificaciones->Obtenertoken();
+						$titulonotificacion=$usuarioinvita.$nombrequienagrega." te asignó un nuevo servicio ".$emp->titulo;
+							$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[0]->token,'ruta'=>$ruta,'titulonotificacion'=>$titulonotificacion);
+						array_push($arraytokens,$dato);
 					}
+
 				}
+
+
 
 				if (count($porcentajescoachs)>0) {
 					for ($i=0; $i <count($porcentajescoachs) ; $i++) { 
@@ -196,7 +278,7 @@ try
 					}
 				}
 
-			if (count($descuentos)>0 && $descuentos[0]!='') {
+			/*if (count($descuentos)>0 && $descuentos[0]!='') {
 					for ($i=0; $i < count($descuentos); $i++) { 
 						$emp->iddescuento=$descuentos[$i];
 
@@ -211,7 +293,7 @@ try
 
 						$emp->Guardarmembresias();
 					}
-				}
+				}*/
 
 				if (count($encuestas)>0 && $encuestas[0]!='') {
 				for ($i=0; $i < count($encuestas); $i++) { 
@@ -222,10 +304,70 @@ try
 				}
 
 
+
+		if ($tipousuario==0) {
+				$obtenercoachesservicio=$emp->ObtenerParticipantesCoach(5);
+
+		for ($i=0; $i <count($obtenercoachesservicio) ; $i++) { 
+					
+
+			$idusuario=$obtenercoachesservicio[$i]->idusuarios;
+			$usuarios->id_usuario=$idusuario;
+			$obtenerusuarioinvita=$usuarios->ObtenerUsuario();
+
+			$usuarioinvita=$obtenerusuarioinvita[0]->nombre.', ';
+
+			$ruta='detalleserviciocoach2';
+			$valor=$emp->idservicio;
+			$texto='|Se te asignó un nuevo servicio|'.$emp->titulo.'|';
+			$estatus=0;
+			$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
+
+			$notificaciones->idusuario=$idusuario;
+				$obtenertokenusuario=$notificaciones->Obtenertoken();
+			$titulonotificacion=$usuarioinvita.$nombrequienagrega." te asignó un nuevo servicio ".$emp->titulo;
+				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[0]->token,'ruta'=>$ruta,'titulonotificacion'=>$titulonotificacion);
+			array_push($arraytokens,$dato);
+
+			
+
+				}
+				$notificaciones->navpage="detalleserviciocoach2";
+
+			
+			}
+
 	}else{
+		$obtenerservicio=$emp->ObtenerServicio();
+		$emp->validaradmin=$obtenerservicio[0]->validaradmin;
 		$emp->ModificarServicio();	
 		$md->guardarMovimiento($f->guardar_cadena_utf8('Servicio'),'Servicio',$f->guardar_cadena_utf8('Modificación del Servicio -'.$emp->idservicio));
 
+		$existe=0;
+		$noexiste=0;
+	if (count($arrayhorarios)>0 && $arrayhorarios[0]!='') {
+		
+		for ($i=0; $i < count($arrayhorarios); $i++) { 
+
+			$dividircadena=explode('-', $arrayhorarios[$i]);
+				 $fecha=$dividircadena[0].'-'.$dividircadena[1].'-'.$dividircadena[2];
+				 $horainicial=substr($dividircadena[3],0,5);
+				 $horafinal=substr($dividircadena[4],0,5);
+
+			$emp->fecha=$fecha;
+			$emp->horainicial=$horainicial;
+			$emp->horafinal=$horafinal;
+
+			$registrohorario=$emp->ExisteHorario();
+			if (count($registrohorario)>0) {
+				$existe++;
+			}else{
+				$noexiste++;
+			}
+
+		}
+	}
+	/*var_dump($noexiste);die();*/
 	if (count($arrayhorarios)>0 && $arrayhorarios[0]!='') {
 			$emp->EliminarHorarioSemana();
 		
@@ -244,6 +386,8 @@ try
 				$emp->idzona=$idzona;
 
 				$emp->GuardarHorarioSemana();
+
+
 			}
 		}
 		
@@ -273,11 +417,39 @@ try
 						$emp->idparticipantes=$coachs[$i];
 						$emp->Guardarparticipantes();
 
-						
 						$tipo=$porcentajescoachs[$i]->{'tipopago'};
 						$monto=$porcentajescoachs[$i]->{'monto'};
 
-						$emp->GuardarMontotipo($tipo,$monto);	
+						$emp->GuardarMontotipo($tipo,$monto);
+
+						$idusuario=$coachs[$i];
+
+						$usuarios->id_usuario=$idusuario;
+						$obtenerusuarioinvita=$usuarios->ObtenerUsuario();
+						$usuarioinvita=$obtenerusuarioinvita[0]->nombre.', ';
+						$ruta='detalleserviciocoach2';
+						$valor=$emp->idservicio;
+						$texto='|Se te asignó un nuevo servicio|'.$emp->titulo.'|';
+						$estatus=0;
+						$notificaciones->idusuario=$idusuario;
+						$notificaciones->valor=$valor;
+						$verificar=$notificaciones->VerificarSiTieneNotificacion();
+
+					if (count($verificar)==0) {
+							# code...
+						
+						$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
+
+						$notificaciones->idusuario=$idusuario;
+							$obtenertokenusuario=$notificaciones->Obtenertoken();
+						$titulonotificacion=$usuarioinvita.$nombrequienagrega." te asignó un nuevo servicio ".$emp->titulo;
+							$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[0]->token,'ruta'=>$ruta,'titulonotificacion'=>$titulonotificacion);
+
+							if ($noexiste==0) {
+								array_push($arraytokens,$dato);	
+							}
+						
+						}
 					}
 				}	
 
@@ -354,8 +526,192 @@ try
 			$db->consulta($sql);	 
 		}
 	}
+
+
+	if ($emp->tituloaviso!='' && $emp->tiempoaviso>0) {
+		# code...
+	
+	if (count($arrayhorarios)>0 && $arrayhorarios[0]!='') {
+			$tareas->idservicio=$emp->idservicio;
+
+			$obtenertareas=$tareas->ObtenerTareasServicio();
+			if (count($obtenertareas)>0) {
+				$tareas->EliminarTareasNoCompletadas();
+
+			}
+			
+		
+		for ($i=0; $i < count($arrayhorarios); $i++) { 
+				 $dividircadena=explode('-', $arrayhorarios[$i]);
+			     $fecha=$dividircadena[0].'-'.$dividircadena[1].'-'.$dividircadena[2];
+				 $horainicial=substr($dividircadena[3],0,5);
+				 $horafinal=substr($dividircadena[4],0,5);
+				 $idzona=$dividircadena[5];
+				 $numdia=date('w',strtotime($fecha));
+
+				$emp->dia=$numdia;
+				$emp->horainiciosemana=$horainicial;
+				$emp->horafinsemana=$horafinal;
+				$emp->fecha=$fecha.' '.$horainicial.':00';
+				$emp->idzona=$idzona;
+
+				
+				$fechaUno = new DateTime($emp->fecha);
+				$NuevaFecha= $fechaUno->modify("-".$emp->tiempoaviso." minute")->format("Y-m-d h:i");
+
+				$tareas->nombretarea='Envio notificacion servicio';
+				$tareas->titulo=$emp->tituloaviso;
+				$tareas->descripcion=$emp->descripcionaviso;
+				$tareas->programada=$NuevaFecha;
+				$tareas->idservicio=$emp->idservicio;
+				$tareas->estatus=0;
+				$tareas->envio=0;
+				$tareas->CrearTarea();
+				
+			}
+		}
+	}
+
+	
+	if ($noexiste>0) {
+		 if($emp->estatus==1) {
+			# code...
+			$obtenerser=$emp->ObtenerServicio();
+
+		if ($tipousuario==0) {
+			/*$usuarios->id_usuario=$emp->idusuarios;
+		$obtenerusuario=$usuarios->ObtenerUsuario();
+		$nombrequienagrega=$obtenerusuario[0]->nombre." ".$obtenerusuario[0]->paterno;
+*/
+			$idusuario=$obtenerser[0]->agregousuario;
+		if ($idusuario>0) {
+				# code...
+			
+		$ruta='detalleserviciocoach2';
+		$valor=$emp->idservicio;
+		$texto='|Se reagendo el servicio|'.$emp->titulo.'|'.$nombrequienagrega.'|Periodo: '.date('d-m-Y',strtotime($emp->fechainicial)).' '.date('d-m-Y',strtotime($emp->fechafinal));
+		$estatus=0;
+		$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
+
+		$notificaciones->idusuario=$idusuario;
+		$obtenertokenusuario=$notificaciones->Obtenertoken();
+		$usuarios->id_usuario=$idusuario;
+		$obtenerusuarioinvita=$usuarios->ObtenerUsuario();
+		$usuarioinvita=$obtenerusuarioinvita[0]->nombre.', ';
+		$titulonotificacion=$usuarioinvita.$nombrequienagrega."se reagendó el servicio ".$emp->titulo;
+
+			for ($i=0; $i < count($obtenertokenusuario); $i++) { 
+
+				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$i]->token,'titulonotificacion'=>$titulonotificacion,'ruta'=>$ruta);
+
+					array_push($arraytokens,$dato);
+				}
+			
+		
+				}
+
+			
+			}
+		
+		$asignados->idusuario=0;
+		$asignados->idservicio=$emp->idservicio;
+		$obtenerusuariosarignados=$asignados->obtenerUsuariosServiciosAlumnosAsignados();
+		
+		if(count($obtenerusuariosarignados)>0){
+			
+		for ($i=0; $i <count($obtenerusuariosarignados) ; $i++) { 
+			$idusuario=$obtenerusuariosarignados[$i]->idusuarios;
+			$usuarios->id_usuario=$idusuario;
+			$obtenerusuarioinvita=$usuarios->ObtenerUsuario();
+		$usuarioinvita=$obtenerusuarioinvita[0]->nombre.', ';
+
+
+			$titulonotificacion=$usuarioinvita.$nombrequienagrega." reagendó el servicio ".$emp->titulo;
+			$valor=$emp->idservicio;
+			$texto='|Se reagendo el servicio|'.$emp->titulo.'|Periodo: '.date('d-m-Y',strtotime($emp->fechainicial)).' '.date('d-m-Y',strtotime($emp->fechafinal));
+			$estatus=0;
+			$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
+
+		$usuarios->idusuarios=$idusuario;
+		$obtenerdependencia=$usuarios->ObtenerUsuarioDependencia();
+		$ruta="";
+		if (count($obtenerdependencia)>0) {
+			$obtenerdatousuario=$usuarios->ObtenerUsuario();
+			
+			if($obtenerdatousuario[0]->sincel==1) {
+				$notificaciones->idusuario=$obtenerdependencia[0]->idusuariostutor;
+				$ruta="";
+				$banderatuto=1;
+			}else{
+			   $notificaciones->idusuario=$idusuario;
+			  if ($obtenerusuariosarignados[$i]->aceptarterminos==1) {
+				$ruta='detalleservicio2';
+
+				}else{
+				$ruta='aceptacionservicio2';
+
+			}
+
+			}
+			
+
+
+
+					}else{
+			$notificaciones->idusuario=$idusuario;
+			if ($obtenerusuariosarignados[$i]->aceptarterminos==1) {
+				$ruta='detalleservicio2';
+
+				}else{
+				$ruta='aceptacionservicio2';
+
+			}
+
+		}
+
+				
+				$obtenertokenusuario=$notificaciones->Obtenertoken();
+
+			for ($j=0; $j < count($obtenertokenusuario); $j++) { 
+
+				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$j]->token,'titulonotificacion'=>$titulonotificacion,'ruta'=>$ruta);
+
+					array_push($arraytokens,$dato);
+				}
+				
+
+			}
+		}
+
+
+
+		}
+
+	}
+
+	
 				
 	$db->commit();
+	
+	if (count($arraytokens)>0) {
+			$texto='';
+			for ($i=0; $i <count($arraytokens) ; $i++) { 
+
+			
+			 $idusuario=$arraytokens[$i]['idusuario'];
+			
+			 $notificaciones->idcliente=$idusuario;
+			 $notificaciones->valor=$emp->idservicio;
+			 $notificaciones->navpage=$arraytokens[$i]['ruta'];
+			 $array=array();
+			 $texto="";
+			 $titulonotificacion=$arraytokens[$i]['titulonotificacion'];
+			 array_push($array,$arraytokens[$i]['token']);
+			$notificaciones->EnviarNotificacion($array,$texto,$titulonotificacion);
+				
+
+			}
+		}
 	echo "1|".$emp->idservicio;
 	
 }catch(Exception $e)

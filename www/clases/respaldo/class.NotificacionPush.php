@@ -68,6 +68,8 @@ class NotificacionPush
 
     }
 
+    
+
     public function Cambiarestatusnotificacion()
     {
           $query = "UPDATE notificacionadmin SET estatus = '$this->estatus' WHERE idnotificacionadmin = '$this->idnotificacionadmin'";
@@ -110,6 +112,27 @@ class NotificacionPush
 
     }
 	
+
+    public function VerificarSiTieneNotificacion()
+    {  $sql = "SELECT * FROM notificacioncliente WHERE idusuario='$this->idusuario' and valor='$this->valor' ";
+     
+            $resp = $this->db->consulta($sql);
+            $cont = $this->db->num_rows($resp);
+
+
+            $array=array();
+            $contador=0;
+            if ($cont>0) {
+
+                while ($objeto=$this->db->fetch_object($resp)) {
+
+                    $array[$contador]=$objeto;
+                    $contador++;
+                } 
+            }
+            return $array;
+       
+    }
 }
 
 

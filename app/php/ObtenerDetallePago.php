@@ -73,6 +73,7 @@ try
     
       for ($i=0; $i < count($obtenerpagosstripe); $i++) { 
             $pagos->idpago=$obtenerpagosstripe[$i]->idpago;
+            $pagos->idnotapago=$idnotapago;
             $pagosdescuentos=$pagos->ObtenerdescuentosPagos();
 
         $pagos->descuentos=array();

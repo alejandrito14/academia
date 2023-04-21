@@ -1898,12 +1898,12 @@ function PintarDescuentosDetalleMembresiaNota(respuesta) {
 
 	if (respuesta.length>0) {
 		for (var i = 0; i <respuesta.length; i++) {
-			
+			console.log(respuesta[i]);
 			html+=` <li class="list-group-item  align-items-center" style="background: #46b2e2;">
 			   <div class="row">
 			   <div class="col-md-10">
-			   		<p id="">  Descuento `+respuesta[i][0].titulo+`</p>
-                    <p class="" style=" float: right;">$<span class="lbldescuento">`+formato_numero(respuesta[i][0].montoadescontar,2,'.',',')+`</span></p>
+			   		<p id="">  Descuento `+respuesta[i].titulo+`</p>
+                    <p class="" style=" float: right;">$<span class="lbldescuento">`+formato_numero(respuesta[i].montoadescontar,2,'.',',')+`</span></p>
 
                    </div>
                    <div class="col-md-2">
@@ -2133,7 +2133,7 @@ function DetalleNotaFactu(idnotapago) {
       	var usuario=resp.usuario;
       	var rutaimagenes=resp.rutaimagenes;
       	var imagenescomprobante=resp.imagenescomprobante;
-      	PintardetalleNotapagoFactu(respuesta[0]);
+      	PintardetalleNotapagoFactu(respuesta[0],rutaimagenes);
       	PintarPagos(pagos);
 		$("#uldescuentos").html('');
       	if (descuentos.length>0) {
@@ -2161,7 +2161,7 @@ function DetalleNotaFactu(idnotapago) {
       });
 }
 
-function PintardetalleNotapagoFactu(respuesta) {
+function PintardetalleNotapagoFactu(respuesta,rutaimagenes) {
 	$(".divdetalle").css('display','block');
 estatus=['PENDIENTE','ACEPTADO','CANCELADO'];
 
@@ -2199,6 +2199,7 @@ estatus=['PENDIENTE','ACEPTADO','CANCELADO'];
 	$(".lbltotal").html(respuesta.total);
 	$(".btncambiarestatus").attr('onclick','Abrirmodalfactura('+respuesta.idnotapago+',"'+respuesta.folio+'")');
 
+	var imagenesconstancia=respuesta.imagenesconstancia;
 	html+=`
 	<label>DATOS DE FACTURACIÓN:</label>
 
@@ -2303,9 +2304,31 @@ estatus=['PENDIENTE','ACEPTADO','CANCELADO'];
        </div>
      </div>
       
-
-
 	`;
+
+	if (imagenesconstancia.length>0) {
+
+	if (rutaimagenes!='' && rutaimagenes!=null) {
+	var ruta="app/"+rutaimagenes+"/php/upload/datosfactura/";
+		}else{
+	var ruta="app/php/upload/datosfactura/";
+
+		}
+		for (var i = 0; i < imagenesconstancia.length; i++) {
+			
+			html+=`
+				<div class="card" style="width: 18rem;">
+				  <img class="card-img-top" src="`+ruta+imagenesconstancia[i].ruta+`" >
+				  <div class="card-body">
+				    <h5 class="card-title"></h5>
+				  </div>
+				</div>
+
+			`;
+		}
+	
+
+	}
 
 	$(".datosfacturacion").html(html);
 

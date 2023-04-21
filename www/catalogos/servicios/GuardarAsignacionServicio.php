@@ -21,7 +21,9 @@ require_once("../../clases/class.Funciones.php");
 require_once('../../clases/class.MovimientoBitacora.php');
 require_once("../../clases/class.ServiciosAsignados.php");
 require_once("../../clases/class.Usuarios.php");
+require_once("../../clases/class.Invitacion.php");
 
+require_once("../../clases/class.NotificacionPush.php");
 try
 {
 	//declaramos los objetos de clase
@@ -34,6 +36,12 @@ try
 	$usuarios->db=$db;
 	$serviciosasignados->db=$db;
 
+	$invitacion=new Invitacion();
+	$invitacion->db=$db;
+	$notificaciones=new NotificacionPush();
+	$notificaciones->db=$db;
+	$api=$notificaciones->ObtenerApiKey();
+	$notificaciones->apikey=$api['clavetokennotificacion'];
 	//enviamos la conexión a las clases que lo requieren
 	$emp->db=$db;
 	$md->db = $db;	
@@ -50,6 +58,7 @@ try
 	$iduser=$_SESSION['se_sas_Usuario'];
 	$serviciosasignados->idservicio=$idservicio;
 	$obtenerdatosservicio=$serviciosasignados->ObtenerServicio();
+	$aceptarserviciopago=$obtenerdatosservicio[0]->aceptarserviciopago;
 	$arrayquitar=explode(',', $_POST['arrayquitar']);
 	$idusuariosparaquitar=$_POST['arrayquitar'];
 	/*$usuariosquitados=$_POST['usuariosquitados'];
@@ -58,8 +67,10 @@ try
 	$usuariosnoagregados=array();
 	$db->begin();
 
-
-
+	$usuarios->id_usuario=$iduser;
+	$obtenerUsu=$usuarios->ObtenerUsuario();
+	
+	$arraytokens=array();
 	/*if ($$idusuariosparaquitar!='') {
 		
 	
@@ -98,9 +109,18 @@ try
 				$horainicial=$obtenerHorarios[$k]->horainicial;
 				$horafinal=$obtenerHorarios[$k]->horafinal;
 
+				
+				$minutoAnadir=1;
+				$segundos_horaInicial=strtotime($horafinal);
+				$segundos_minutoAnadir=$minutoAnadir*60;
+				$nuevaHora=date("H:i",$segundos_horaInicial-$segundos_minutoAnadir);
+
+
+
 				$serviciosasignados->fecha=$fecha;
 				$serviciosasignados->horainicial=$horainicial;
-				$serviciosasignados->horafinal=$horafinal;
+				$serviciosasignados->horafinal=$nuevaHora;
+				
 				$cruzahorario=$serviciosasignados->EvaluarHorarioFechaZona($idservicioasignar);
 				
 				if (count($cruzahorario)) {
@@ -167,11 +187,8 @@ try
 	for ($i=0; $i <count($idusuarios) ; $i++) { 
 		$serviciosasignados->idusuario=$idusuarios[$i];
 		$serviciosasignados->idservicio=$idservicioasignar;
-		
-		$consulta=$serviciosasignados->BuscarAsignacion();
-
-
-		$usuarios->idusuarios=$idusuarios[$i];
+		$usuarioinvita="";
+		$usuarios->id_usuario=$idusuarios[$i];
 		$obtenerusuarioinvita=$usuarios->ObtenerUsuario();
 		$usuarioinvita=$obtenerusuarioinvita[0]->nombre.', ';
 		
@@ -184,13 +201,14 @@ try
 		$invitacion->EliminarInvitacion();
 
 		if (count($consulta)==0) {
+
 		$serviciosasignados->GuardarAsignacion();
 
 		}
-
+		$invitacion->GuardarInvitacion();
 
 		$banderatuto=0;
-		$usuarios->idusuarios=$idusuarios[$i];
+		$usuarios->id_usuario=$idusuarios[$i];
 		$obtenerdependencia=$usuarios->ObtenerUsuarioDependencia();
 		$ruta="";
 		if (count($obtenerdependencia)>0) {
@@ -214,11 +232,15 @@ try
 			$ruta="serviciospendientesasignados";
 
 		}
-		//$notificaciones->idusuario=$idusuarios[$i];
+
+		if ($aceptarserviciopago==1) {
+			$ruta="listadopagos";
+		}
+		
 		$obtenertokenusuario=$notificaciones->Obtenertoken();
 
 		$idusuario=$idusuarios[$i];
-	/*	array_push($arraytokens,$obtenertokenusuario[0]->token);*/
+	
 	$titulonotificacion=$usuarioinvita.$obtenerUsu[0]->nombre." ".$obtenerUsu[0]->paterno." te ha asignado a ".$obtenerdatosservicio[0]->titulo;
 
 		for ($j=0; $j < count($obtenertokenusuario); $j++) { 
@@ -233,7 +255,6 @@ try
 			$estatus=0;
 			$valor=$obtenerdatosservicio[0]->idservicio;
 			$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
-
 	}
 
 
@@ -252,38 +273,86 @@ if($idusuariosparaquitar!='') {
 
 			$idusuariocancelado=$obtenerusuarioscancelacion[$i]->idusuarios;
 
+			$usuarioinvita="";
+		$usuarios->id_usuario=$idusuariocancelado;
+		$obtenerusuarioinvita=$usuarios->ObtenerUsuario();
+		$usuarioinvita=$obtenerusuarioinvita[0]->nombre.', ';
+
+
 			$serviciosasignados->idusuario=$idusuariocancelado;
 
 			$serviciosasignados->motivocancelacion="cancelado desde la web por usuario ".$iduser;
 			$serviciosasignados->cancelado=1;
 			$serviciosasignados->CambiarEstatusServicio($obtenerusuarioscancelacion[$i]->idusuarios_servicios);
 
-			/*if ($obtenerusuarioscancelacion[$i]->aceptarterminos==1) {
-				$pagos=$serviciosasignados->BuscarPagos();
-
-				for ($j=0; $j < count($pagos); $j++) { 
-					
-					if ($pagos[$j]->pagado==1 && $pagos[$j]->estatus==2) {
-						$idpago=$pagos[$j]->idpago;
-						
-						if($obtenerdatosservicio[0]->reembolso==1){
-							$estatus=4;
-
-							//mandar a monedero
-						
-							}else{
-								$estatus=5;
-							}
-						
-						$serviciosasignados->CambiarEstatusPago($idpago,$estatus);
-					}
-				}
-
-			}*/
 			
+			$usuarios->id_usuario=$idusuariocancelado;
+		$obtenerdependencia=$usuarios->ObtenerUsuarioDependencia();
+		$ruta="";
+		if (count($obtenerdependencia)>0) {
+			$obtenerdatousuario=$usuarios->ObtenerUsuario();
+			
+			if($obtenerdatousuario[0]->sincel==1) {
+				$notificaciones->idusuario=$obtenerdependencia[0]->idusuariostutor;
+				$ruta="";
+				$banderatuto=1;
+			}else{
+			   $notificaciones->idusuario=$idusuariocancelado;
+			   $ruta="";
+
+			}
+			
+
+
+
+					}else{
+			$notificaciones->idusuario=$idusuariocancelado;
+			$ruta="";
+
+		}
+		
+		$obtenertokenusuario=$notificaciones->Obtenertoken();
+
+		$idusuario=$idusuariocancelado;
+	
+	$titulonotificacion=$usuarioinvita.$obtenerUsu[0]->nombre." ".$obtenerUsu[0]->paterno." te quitó de ".$obtenerdatosservicio[0]->titulo;
+
+		for ($j=0; $j < count($obtenertokenusuario); $j++) { 
+
+				$dato=array('idusuario'=>$idusuario,'token'=>$obtenertokenusuario[$j]->token,'ruta'=>$ruta,'titulonotificacion'=>$titulonotificacion,'banderatuto'=>$banderatuto);
+
+					array_push($arraytokens,$dato);
+				}
+			$nombrequienasigna='Quitado por: '.$obtenerUsu[0]->nombre.' '.$obtenerUsu[0]->paterno;
+			
+			$texto='|Quitado del servicio|'.$obtenerdatosservicio[0]->titulo.'|'.$nombrequienasigna.'|Periodo: '.date('d-m-Y',strtotime($obtenerdatosservicio[0]->fechainicial)).' '.date('d-m-Y',strtotime($obtenerdatosservicio[0]->fechafinal));
+			$estatus=0;
+			$valor=$obtenerdatosservicio[0]->idservicio;
+			$notificaciones->AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus);
 		}
 	}
 }
+$db->commit();
+
+
+if (count($arraytokens)>0) {
+			$texto='';
+			for ($i=0; $i <count($arraytokens) ; $i++) { 
+
+				
+				$idusuario=$arraytokens[$i]['idusuario'];
+				$notificaciones->navpage=$arraytokens[$i]['ruta'];
+			 	$notificaciones->idcliente=$idusuario;
+			 	$notificaciones->valor="";
+			 	$notificaciones->banderatuto=$arraytokens[$i]['banderatuto'];
+			 	$array=array();
+			 	array_push($array,$arraytokens[$i]['token']);
+			 	$titulonotificacion=$arraytokens[$i]['titulonotificacion'];
+			$notificaciones->EnviarNotificacion($array,$texto,$titulonotificacion);
+				//}
+
+			}
+		}
 
 		/*	$emp->EliminarParticipantes();
 		if (count($participantes)>0 && $participantes[0]!='') {
@@ -297,7 +366,7 @@ if($idusuariosparaquitar!='') {
 	$md->guardarMovimiento($f->guardar_cadena_utf8('Servicio'),'Asignación',$f->guardar_cadena_utf8('Asignación del Servicio -'.$emp->idservicio));
 */
 				
-	$db->commit();
+	
 	$respuesta['respuesta']=1;
 	$respuesta['usuariosnoagregados']=$usuariosnoagregados;
 	echo json_encode($respuesta);

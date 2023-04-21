@@ -189,6 +189,7 @@ if(!isset($_GET['idservicio'])){
 	$asistencia=$result_SERVICIO_row['controlasistencia'];
 
 $idpoliticaaceptacion=$f->imprimir_cadena_utf8($result_SERVICIO_row['idpoliticaaceptacion']);
+$aceptarserviciopago=$result_SERVICIO_row['aceptarserviciopago'];
 
 	$col = "col-md-12";
 	$ver = "";
@@ -268,7 +269,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				
 			
 				
-				<button type="button" onClick="aparecermodulos('catalogos/servicios/vi_servicios.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" style="float: right; margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
+				<button type="button" onClick="Limpiarvariables();aparecermodulos('catalogos/servicios/vi_servicios.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" style="float: right; margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
 				<div style="clear: both;"></div>
 				
 				<input type="hidden" id="id" name="id" value="<?php echo $idservicio; ?>" />
@@ -527,7 +528,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 				<div class="card" style="" id="divhorarios">
 				<div class="card-header" style="margin-top: 1em;">
-					<h5>ASIGNAR HORARIOS</h5>
+					<h5 id="lblhorarios">ASIGNAR HORARIOS</h5>
 
 				</div>
 				<div class="card-body">
@@ -537,7 +538,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<div id="leyendahorarios" style="margin-left: 1em;margin-bottom: 1em;">
 
 								Selecciona la fecha inicial y final para el periodo del servicio </div>
-								<div class="row">
+						<div class="row">
 							<div class="col-md-3" style="float:left;">
 							<div class="form-group m-t-20">
 								<label>* FECHA INICIAL:</label>
@@ -552,11 +553,14 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							</div>
 						</div>
 
+					</div>
+
+					<div class="row">
 						<div class="col-md-3">
 							
 							<div class="form-group m-t-20">
 								<label>CANCHA:</label>
-								<select name="" class="form-control" id="v_zonas"></select>
+								<select name="" class="form-control" id="v_zonas" multiple="multiple"></select>
 							</div>
 						</div>
 
@@ -565,23 +569,49 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							
 							<div class="form-group m-t-20">
 								<label>HORARIOS:</label>
-								<select  id="v_horarios" class="form-control" ></select>
+								<select  id="v_horarios" class="form-control" multiple="multiple" >
+									<option value="0">Seleccionar horario</option>
+								</select>
 							</div>
 						</div>
 
 						</div>
 
-						<div class="col-md-3" style="float:left;">
-							<button type="button" style="    margin-top: 2em;" onclick="Aplicar()" class="btn btn-primary">APLICAR</button>
+						<div class="row">
+							<div class="form-check" style="margin-left: 1em;">
+	    <input type="checkbox" id="habilitarseleccion" class="form-check-input " value="0" style="top: -0.3em;" onchange="HabilitarSeleccion()">
+	    <label for="" class="form-check-label">Selección automática</label>
+
+	   </div>
+						</div>
+								<div class="row"  style="margin-bottom: 1em;margin-top: 1em;">
+
+													<div class="col-md-3" style="float:left;">
+														<button type="button" style="    width: 100%;" onclick="Aplicar()" class="btn btn-primary">APLICAR</button>
+													</div>
+
+							</div>
+							<div class="row">
+								<div class="btnfechas" style="    width: 100%;display: none;margin-bottom: 1em;">
+											<div class="col-md-3" style="float:left;">
+												<button type="button" style="    width: 100%;" class="btn btn-primary" onclick="AbrirModalResumen();">
+												  Resumen de fechas
+												</button>
+								   </div>
+
+								   <div class="col-md-3" style="    margin-top: 40px;">
+								   	<h4 id="titulototalhorarios" style="font-size: 18px!important;">Total de horarios: <span id="totalhorarios">0</span></h4>
+								   </div>
+
+								</div>
+							</div>
 						</div>
 
-						</div>
-
-						<div class="col-md-12">
+						<!-- <div class="col-md-12">
 						<div class="form-group m-t-20 col-md-3">
 							<label id="lblhorarios">* ASIGNAR HORARIOS</label>
 						</div>
-					</div>
+					</div> -->
 
 					</div>
 
@@ -590,12 +620,36 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 							 <div id="picker"></div>
-					    <div class="row">
-					    	<div class="col-md-4">
-					        <label>Fechas/Horas Seleccionadas:</label>
-					        <div id="selected-dates" class="list-group"></div>
-					        </div>
+
+
+
+						 <div class="modal fade" id="exampleModalhorarios" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					  <div class="modal-dialog" role="document">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <h5 class="modal-title" id="exampleModalLabel">Fechas/Horas Seleccionadas</h5>
+					        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					          <span aria-hidden="true">&times;</span>
+					        </button>
+					      </div>
+					      <div class="modal-body">
+					        <div class="row">
+										    	<div class="col-md-12">
+										        <label></label>
+										        <div id="selected-dates" class="list-group"></div>
+										        </div>
+										    </div>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
+					        <!--  <button type="button" class="btn btn-success" onclick="GuardarHorariostem()">Guardar</button> -->
+					       
+					      </div>
 					    </div>
+					  </div>
+					</div>
+					   
 
 
 					    <div class="form-group">
@@ -649,13 +703,13 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					<div class="card-body">
 						
 							
-					<div class="col-md-6">
+					<div class="col-md-12">
 						<p for=""><label for="" class="divmodo">* MONTO:</label></p>
 
-						<div class="form-group" style="float: left;width: 30%;">
+						<div class="col-md-6" style="float: left;width: 30%;">
 								 	<div class="form-check">
 					               
-					                  <input type="radio" class="form-check-input " name="v_grupo" value="1" id="v_individual" style="" >
+					                  <input type="radio" class="form-check-input " name="v_grupo" value="1" id="v_individual" style="" onclick="ValidarCheckmodalidad(1)">
 					                   <label class="form-check-label" style=" padding-top: 0.3em;">
 										MONTO FIJO
 					                </label>
@@ -663,18 +717,36 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				              </div>
 
 
-				              <div class="form-group" style="float: left;width: 30%;">
+				              <div class="col-md-6" style="float: left;width: 30%;">
 								 	<div class="form-check">
-					                 <input type="radio" class="form-check-input " name="v_grupo" value="2" id="v_grupal" style="" >
+					                 <input type="radio" class="form-check-input " name="v_grupo" value="2" id="v_grupal" style="" onclick="ValidarCheckmodalidad(2)">
 					                   <label class="form-check-label" style=" padding-top: 0.3em;">
 										MONTO DIVIDIDO
 					                </label>
 				                </div>
 				              </div>
+				             </div>
+
+
+				              <div class="" style="display: none;margin-top: 20px;
+    padding-top: 20px;" id="divaceptarserviciopago" >
+				              	<div class="col-md-6">
+
+																			   		 <div class="" style="    margin-left: 10px;margin-top: 10px;">
+																			   		 		<input type="checkbox" id="v_aceptarserviciopago" value="0" onchange="HabilitarOpcionaceptarserviciopago()">
+																			   		 		
+																							<label for="" style="margin-left: 3px;">ACEPTAR SERVICIO EN EL PAGO</label>
+
+																							<span style="width: 20px;margin-left: 0.5em;"></span>
+																							
+
+																							</div>
+																						</div>
+				              </div>
 				          </div>
 				      </div>
 						
-					</div>
+			
 				</div>
 
 				<div class="card">
@@ -1070,7 +1142,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							<div class="row">
 								<div class="col-md-6">
 								<div class="form-group m-t-20" style="">
-									<label for="" id="lblseleccionarpoliticaaceptacion">POLÍTICA DE ACEPTACIÓN</label>
+									<label for="" id="lblseleccionarpoliticaaceptacion">*POLÍTICA DE ACEPTACIÓN</label>
 									<select name="" id="v_politicasaceptacionid" class="form-control">
 										
 										<option value="0" >SELECCIONAR POLÍTICA DE ACEPTACIÓN</option>
@@ -1108,7 +1180,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 											<input type="number" id="v_tiempoaviso" class="form-control" value="<?php echo $tiempoaviso; ?>">
 								</div>
 
-								<div class="form-group m-t-20">
+								<div class="form-group m-t-20" style="display: none;">
 											<label for="">MENSAJE:</label>
 											<input type="text" id="v_tituloaviso" class="form-control" value="<?php echo $tituloaviso; ?>">
 								</div>
@@ -1160,6 +1232,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 </form>
 
 <script>
+		CargarCalendario();
 	$("#profile-tab").css('display','none');
 	$("#contact-tab").css('display','none');
 	$("#costos-tab").css('display','none');
@@ -1179,7 +1252,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 	var arraydiaseleccionados=[];
 	if (idservicio>0) {
 		var idcategoriaservicio='<?php echo $idcategoriaservicio; ?>';
-
+var aceptarserviciopago='<?php echo $aceptarserviciopago; ?>';
 		var idcategoria='<?php echo $idcategoria; ?>';
 		$("#v_categoria").val(idcategoriaservicio);
 
@@ -1204,6 +1277,13 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 		 if (modalidad==1) {
 		 	 $("#v_individual").attr('checked',true);
+				ValidarCheckmodalidad(1);
+		 	 if (aceptarserviciopago==1) {
+
+		 	 	$("#v_aceptarserviciopago").val(1);
+		 	 	$("#v_aceptarserviciopago").attr('checked',true);
+
+		 	 }
 		 }
 
 		 if (modalidad==2) {
@@ -1291,7 +1371,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		ObtenerHorariosSemana(idservicio);
 		ObtenerHorariosServicioComprobacion(idservicio);
 		ObtenerPeriodos(idservicio);
-		
+		ObtenerEspacios();
 
 	abiertocliente='<?php echo $abiertocliente; ?>';
 	abiertocoach='<?php echo $abiertocoach; ?>';
@@ -1304,6 +1384,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 	asignadocliente='<?php echo $asignadocliente; ?>';
 	asignadocoach='<?php echo $asignadocoach; ?>';
 	asignadoadmin='<?php echo $asignadoadmin; ?>';
+	
 	/*tiempoaviso='<?php echo $tiempoaviso; ?>';
 	tituloaviso='<?php echo $tituloaviso; ?>';
 	descripcionaviso='<?php echo $descripcionaviso; ?>';
@@ -1437,115 +1518,54 @@ if(isset($_SESSION['permisos_acciones_erp'])){
   </script>
 
    <script type="text/javascript">
+  $('#v_horarios').SumoSelect({placeholder: 'Seleccionar horarios',
+			     selectAll : true,
+   				 selectAllPartialCheck : true,
+       locale :  ['Aceptar', 'Cancelar', 'Seleccionar todos'],
+					closeAfterClearAll: true,
+				 });
+  $('#v_zonas').SumoSelect({placeholder: 'Seleccionar espacios',
+			    selectAll : true,
+   				selectAllPartialCheck : true,
+       locale :  ['Aceptar', 'Cancelar', 'Seleccionar todos'],
+				closeAfterClearAll: true
+  	 });
 
-   	$("#v_categoriaservicio").attr('onchange','CargarHorariosZonas()');
+
+
+   	$("#v_categoriaservicio").attr('onchange','ObtenerEspacios()');
 
    	  	$("#v_zonas").attr('onchange','ObtenerHorariosCategoria()');
-        (function($) {
-          $('#picker').markyourcalendar({
+
+      /*  (function($) {*/
+   /* var calendario=$('#picker').markyourcalendar({
           	 startDate: new Date(),
-          /*  availability: [
-              ['1:00', '2:00', '3:00', '4:00', '5:00'],
-              ['2:00'],
-              ['3:00'],
-              ['4:00'],
-              ['5:00'],
-              ['6:00'],
-              ['7:00']
-            ],*/
+         
 
              months: ['ene','feb','mar','abr','may','jun','jul','agos','sep','oct','nov','dic'],
 
               weekdays: ['dom','lun','mar','mier','jue','vier','sab'],
 
             isMultiple: true,
-            onClick: function(ev, data) {
-            	alert('a');
-              // data is a list of datetimes
-              console.log(data);
-             /* var html = ``;
-              $.each(data, function() {
-                var d = this.split(' ')[0];
-                var t = this.split(' ')[1];
-                html += `<p>` + d + ` ` + t + `</p>`;
-              });
-              $('#selected-dates').html(html);*/
-            },
+            
             onClickNavigator: function(ev, instance) {
 
             	HorariosDisponibles2();
-              /*var arr = [
-                [
-                  ['4:00', '5:00', '6:00', '7:00', '8:00'],
-                  ['1:00', '5:00'],
-                  ['2:00', '5:00'],
-                  ['3:30'],
-                  ['2:00', '5:00'],
-                  ['2:00', '5:00'],
-                  ['2:00', '5:00']
-                ],
-                [
-                  ['2:00', '5:00'],
-                  ['4:00', '5:00', '6:00', '7:00', '8:00'],
-                  ['4:00', '5:00'],
-                  ['2:00', '5:00'],
-                  ['2:00', '5:00'],
-                  ['2:00', '5:00'],
-                  ['2:00', '5:00']
-                ],
-                [
-                  ['4:00', '5:00'],
-                  ['4:00', '5:00'],
-                  ['4:00', '5:00', '6:00', '7:00', '8:00'],
-                  ['3:00', '6:00'],
-                  ['3:00', '6:00'],
-                  ['3:00', '6:00'],
-                  ['3:00', '6:00']
-                ],
-                [
-                  ['4:00', '5:00'],
-                  ['4:00', '5:00'],
-                  ['4:00', '5:00'],
-                  ['4:00', '5:00', '6:00', '7:00', '8:00'],
-                  ['4:00', '5:00'],
-                  ['4:00', '5:00'],
-                  ['4:00', '5:00']
-                ],
-                [
-                  ['4:00', '6:00'],
-                  ['4:00', '6:00'],
-                  ['4:00', '6:00'],
-                  ['4:00', '6:00'],
-                  ['4:00', '5:00', '6:00', '7:00', '8:00'],
-                  ['4:00', '6:00'],
-                  ['4:00', '6:00']
-                ],
-                [
-                  ['3:00', '6:00'],
-                  ['3:00', '6:00'],
-                  ['3:00', '6:00'],
-                  ['3:00', '6:00'],
-                  ['3:00', '6:00'],
-                  ['4:00', '5:00', '6:00', '7:00', '8:00'],
-                  ['3:00', '6:00']
-                ],
-                [
-                  ['3:00', '4:00'],
-                  ['3:00', '4:00'],
-                  ['3:00', '4:00'],
-                  ['3:00', '4:00'],
-                  ['3:00', '4:00'],
-                  ['3:00', '4:00'],
-                  ['4:00', '5:00', '6:00', '7:00', '8:00']
-                ]
-              ]
-              var rn = Math.floor(Math.random() * 10) % 7;*/
-             // instance.setAvailability(arr[rn]);
+              
             }
-          });
-        })(jQuery);
+          });*/
+       /* })(jQuery);*/
     </script>
 
+    <style>
+    	.SumoSelect{
+					width: 100%;
+				}
+
+				.SumoSelect .select-all{
+					height: 40px!important;
+				}
+    </style>
 
 <?php
 

@@ -40,6 +40,8 @@ class Zonas
 	public function ObtZonasActivosConcat()
 	{
 		$sql = "SELECT GROUP_CONCAT(idzona) as idzonas FROM zonas WHERE estatus = 1";
+
+		
 		
 		$resp = $this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

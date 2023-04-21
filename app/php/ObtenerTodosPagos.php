@@ -64,6 +64,7 @@ try
 		$obtenerservicio=$servicios->ObtenerServicio();
 		$tipopago='';
 		$servicios->idcategoria=$obtenerservicio[0]->idcategoriaservicio;
+		$aceptacionpagoservicio=$obtenerservicio[0]->aceptarserviciopago;
 		$verificartipopago=$servicios->checarcategoriaRelacionadaTipopago();
 		if (count($verificartipopago)>0) {
 
@@ -81,6 +82,7 @@ try
 				$lo->idservicio=$idservicio;
 				$lo->fechainicial=$fechainicial;
 				$lo->fechafinal=$fechafinal;
+				$lo->requiereaceptacion=$aceptacionpagoservicio;
 
 				$PagosNoPagados=$lo->PagosNoPagados();
 				if (count($PagosNoPagados)>0) {
@@ -182,7 +184,8 @@ try
 				$objeto=array('idusuarios'=>$idusuarios,'idmembresia'=>$idmembresia,'idservicio'=>$idservicio,'tipo'=>$tipo,'monto'=>$f->redondear_dos_decimal($montoapagar),'estatus'=>$estatus,'dividido'=>$dividido,'fechainicial'=>$fechainicial,'fechafinal'=>$fechafinal,'concepto'=>$concepto,'folio'=>$folio,'fechaformato'=>$fechaformato,'nombre'=>$datosusuario[0]->nombre,'paterno'=>$datosusuario[0]->paterno,'materno'=>$datosusuario[0]->materno,'idpago'=>$lo->idpago,'aceptados'=>count($obtenerparticipantesaceptados),'alumnos'=>count($ObtenerTodosParticipantes),'completo'=>$completo,
 					'fechamin'=>date('d-m-Y',strtotime($obtenerfechas[0]->fechamin)),
 					'fechamax'=>date('d-m-Y',strtotime($obtenerfechas[0]->fechamax)),
-					'tipopago'=>$tipopago
+					'tipopago'=>$tipopago,
+					'aceptacionpagoservicio'=>$aceptacionpagoservicio
 			);
 				$total=$total+$montoapagar;
 				array_push($pagosencontrados,$objeto);
@@ -238,7 +241,8 @@ try
 				}
 			$objeto=array('idusuarios'=>$idusuarios,'idmembresia'=>$idmembresia,'idservicio'=>$idservicio,'tipo'=>$tipo,'monto'=>$montoapagar,'estatus'=>$estatus,'dividido'=>$dividido,'fechainicial'=>$fechainicial,'fechafinal'=>$fechafinal,'concepto'=>$concepto,'folio'=>$folio,'fechaformato'=>'','nombre'=>$datosusuario[0]->nombre,'paterno'=>$datosusuario[0]->paterno,'materno'=>$datosusuario[0]->materno,'idpago'=>$idpago,'aceptados'=>'','alumnos'=>'','completo'=>'',
 				'fechamin'=>'','fechamax'=>'',
-				'tipopago'=>$tipopago
+				'tipopago'=>$tipopago,
+				'aceptacionpagoservicio'=>$aceptacionpagoservicio
 			);
 
 				$total=$total+$montoapagar;
