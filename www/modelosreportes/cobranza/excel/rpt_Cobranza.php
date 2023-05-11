@@ -207,7 +207,9 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 
 		    <th>ID</th>
 		    <th>SERVICIO</th>
-
+		    <th>FECHA INICIAL</th>
+		    <th>FECHA FINAL</th>
+		    <th>COACHES</th>
 		   	<th>ACEPTADO</th>
 		  	<th>PAGADO</th>	
 		  		
@@ -218,7 +220,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 		  </thead>
 		  <tbody>
 		 	<?php 
-		 	for ($k=0; $k <count($array); $k++) { 
+		 for ($k=0; $k <count($array); $k++) { 
 		 		$pagosservicios=array();
 		 		$nombrecategoria=$array[$k]->nombrecategoria;
 		 		$nombreservicio=$array[$k]->titulo;
@@ -325,7 +327,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 	
 		}
 
-
+		$coaches=$asignacion->BuscarAsignacionCoach();
 
 		 	
 		 	$aceptado=$array[$k]->aceptarterminos;
@@ -353,7 +355,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 								'fechahoramax'=>date('d-m-Y',strtotime($peridohorario[0]->fechamax)),
 								'folio'=>$folio,
 								'totalpagado'=>$totalpagado,
-								'coaches'=>'',
+								'coaches'=>$coaches,
 								'tutor'=>$array[$k]->tutor,
 								'celulartutor'=>$array[$k]->celulartutor
 
@@ -404,12 +406,32 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 				     <td><?php echo $pagosservicios[$l]['idservicio']; ?></td>
 				     <td><?php echo $pagosservicios[$l]['nombreservicio']?>
 				     	
-				     	<p> PERIODO: <?php echo $pagosservicios[$l]['fechahoramin'].' / '. $pagosservicios[$l]['fechahoramax'];?></p>
-				     </td>
-				     
+				  
 
+				     	<!-- <p style="padding: 0;margin: 0;">
+				     		COACHES:
+
+				     	</p> -->
+
+				     	
+				     </td>
+				     <td><?php echo $pagosservicios[$l]['fechahoramin']; ?></td>
+				     
+				     <td><?php echo $pagosservicios[$l]['fechahoramax']; ?></td>
 			
- 							
+ 					<td>
+ 						<?php 
+				     	$coaches=$pagosservicios[$l]['coaches'];
+
+				     	
+				     		for ($n=0; $n < count($coaches); $n++) { 
+				     			?>
+				     			<p style="padding: 0;margin: 0;"><?php echo $coaches[$n]->nombre.' '.$coaches[$n]->paterno.' '.$coaches[$n]->materno;?></p>
+
+				     		<?php
+				     		}
+				     	 ?>
+ 					</td>
 
 				     <td><?php echo $estatusaceptado[$pagosservicios[$l]['aceptado']]; ?></td>
 				  	

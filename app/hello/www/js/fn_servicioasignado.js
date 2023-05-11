@@ -136,6 +136,7 @@ function ObtenerServicioAsignado() {
 
 				if (respuesta.abiertocoach == 1) {
 					$("#permisoasignaralumno").css('display','block');
+					$(".habilitareliminacion").css('display','block');
 				}
 			}
 
@@ -144,6 +145,9 @@ function ObtenerServicioAsignado() {
 
 			if (respuesta.abiertoadmin == 1) {
 				$("#permisoasignaralumno").css('display','block');
+				$(".habilitareliminacion").css('display','block');
+
+
 			}
 		}
 			
@@ -1402,12 +1406,12 @@ html+=`
  							</div>
 	                        `;
 	                    }
-	          if (localStorage.getItem('idtipousuario')==0 ) {
+	          if (localStorage.getItem('idtipousuario')==0 || localStorage.getItem('idtipousuario')==5 ) {
 
                      if (respuesta[i].aceptarterminos==0 || respuesta[i].pagado==0 ){
 
                    		html+=`<div class="col-50"> 
-                        	<button id="" class="button " style="font-size: 26px;color:red;" onclick="CancelarUsuarioServicio(`+respuesta[i].idusuarios+`)">
+                        	<button id="" class="button habilitareliminacion " style="font-size: 26px;color:red;" onclick="CancelarUsuarioServicio(`+respuesta[i].idusuarios+`)">
 								<i class="bi-trash-fill"></i>	                        </button> 
 	                        </div>`;
                     		
@@ -1548,42 +1552,57 @@ function PintarAlumnosAdmin(respuesta) {
                          <div class="col-50">
 	                         <div class="row">
 
-	                         <div class="row">`;
-		             		  if(respuesta[i].alias!='' && respuesta[i].alias!=null) {
+	                         `;
+		           
+	             		  
 
-	                         html+=` <div class="col-100 item-text" style="font-size:20px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">Alias: `+respuesta[i].alias+`
-		             		    	 </div>`;	
-	                         }
-		             		   
-	             		    html+=` </div>
+                      		  //if(respuesta[i].alias!='' && respuesta[i].alias!=null) {
+
+	                         html+=`
+	                         <div class="row">
+	                          		<div class="col-100 item-text" style="font-size:20px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">Alias: `+respuesta[i].alias+`
+		             		    	
+		             		    	 </div>
+		             		    </div>
+		             		    	 `;	
+	                        // }
+
+	                           html+=` 
              		  
 	                       <div class="row">
 
-	                        <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
+	                        <div class="col-100 " style="font-size:18px;word-break: break-word;color: rgba(0, 0, 0, 0.45);" id="participante_`+respuesta[i].idusuarios+`">Nombre: `+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`
 	             		    </div>
-	             		   </div>
+	             		  </div>
 
 
                     `;
-
+		             		   
+		
 
 	             		   html+=` <div class="row">
-	             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].celular+`
+	             		    	 <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">Celular: `+respuesta[i].celular+`
+	             		     	</div>
 	             		     </div>
              		   `;
 
              		   html+=`<div class="row">`;
+
+             			       t=`<i class="bi-x-circle"></i>`;
+             		   		
              		   		if (respuesta[i].tutorado==1) {
-
-             		   		html+=`<div class="item-text">Tutorado</div>`;
-
+             		   			t=`	<i class="bi-check-circle"></i>`;
              		   		}
+
+             		   		html+=`<div class="item-text">Tutorado: `+t+`</div>`;
+
+             		   		
 
 
 
                   			html+= `</div>
 
-                   		 </div>
+                   		
 
                         	</div>
 
@@ -1753,24 +1772,42 @@ function PintarAlumnos(respuesta) {
 
 function SeleccionarAsignado(idusuarios) {
 	var contar=0;
-	$(".idusuariosiniciar").each(function( index ) {
-  			if ($(this).is(':checked')) {
-  				contar++;
-  			}
-	});
+
+	if($("#idusuarios_"+idusuarios).is(':checked')) {
+
+	 var promesa=VerificacionUsuarioServicio(idusuarios);
+     promesa.then(r => {
+
+    	if (r.pagospendientes==0) {
+		    	$(".idusuariosiniciar").each(function( index ) {
+		  			if ($(this).is(':checked')) {
+		  				contar++;
+		  			}
+				});
 
 
-	if (contar>0) {
-		$("#btnpasar2").text('Agregar ('+contar+') elemento(s)');
-		$("#btnpasar2").css('display','block');
-		$(".divflotanteasignacion").css('display','block');
+			if (contar>0) {
+				$("#btnpasar2").text('Agregar ('+contar+') elemento(s)');
+				$("#btnpasar2").css('display','block');
+				$(".divflotanteasignacion").css('display','block');
 
-	}else{
+			}else{
 
-		$("#btnpasar2").text('Agregar elementos');
-		$("#btnpasar2").css('display','none');
-		$(".divflotanteasignacion").css('display','none');
+				$("#btnpasar2").text('Agregar elementos');
+				$("#btnpasar2").css('display','none');
+				$(".divflotanteasignacion").css('display','none');
 
+			}
+			
+		}else{
+			alerta('','El usuario no se puede asignar a este servicio, cuenta con pago(s) pendiente(s)');
+			
+			$("#idusuarios_"+idusuarios).prop('checked',false);
+
+		}
+
+    });
+	
 	}
 
 	/*if (contar>0) {
@@ -1781,6 +1818,35 @@ function SeleccionarAsignado(idusuarios) {
 		$("#btnguardarasignacion").css('display','none');
 	
 	}*/
+}
+
+function VerificacionUsuarioServicio(idusuario) {
+	    return new Promise(function(resolve, reject) {
+	   
+	    var idservicio=localStorage.getItem('idservicio');
+	    var datos="idusuario="+idusuario+"&idservicio="+idservicio;
+	    var pagina = "VerificacionUsuarioServicio.php";
+		$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		data:datos,
+		async:false,
+		success: function(resp){
+
+			resolve(resp);
+
+		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+			var error;
+				if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+								console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+		}
+
+	});
+
+	});
 }
 function SeleccionarUsuarioAsignado(argument) {
 	var contar=0;

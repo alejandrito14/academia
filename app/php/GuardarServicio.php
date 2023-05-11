@@ -55,6 +55,11 @@ try
 	$diasemanas=explode(',', $_POST['diasemana']);
 	$horainiciosemana=explode(',', $_POST['horainiciodia']);
 	$horafinsemana=explode(',', $_POST['horafindia']);
+	$v_aceptarserviciopago=0;
+	if (isset($_POST['v_aceptarserviciopago'])) {
+		$v_aceptarserviciopago=$_POST['v_aceptarserviciopago'];
+	}
+	
 	
 	$zonas=explode(',',$_POST['zonas']);
 	$coachs=explode(',',$_POST['coachs']);
@@ -102,6 +107,7 @@ try
 	$emp->viernes=$viernes;
 	$emp->sabado=$sabado;
 	$emp->domingo=$domingo;
+	$emp->aceptarserviciopago=$v_aceptarserviciopago;
 
 	$emp->totalclase=$totalclase;
 	$emp->modalidad=$modalidad;
@@ -630,13 +636,14 @@ try
 		$usuarios->idusuarios=$obtenerparticipantes[$k]->idusuarios;
 		$obtenerusuario=$usuarios->ObtenerUsuario();
 
-		
+		$idusuario=$obtenerparticipantes[$k]->idusuarios;
 			$obtenerusuarioinvita=$usuarios->ObtenerUsuario();
 			$usuarioinvita=$obtenerusuarioinvita[0]->nombre.', ';
 
 
-		$usuarios->idusuarios=$idusuario;
+		//$usuarios->idusuarios=$idusuario;
 		$obtenerdependencia=$usuarios->ObtenerUsuarioDependencia();
+
 		if (count($obtenerdependencia)>0) {
 			$obtenerdatousuario=$usuarios->ObtenerUsuario();
 			
@@ -753,7 +760,7 @@ try
 			 $texto="";
 			 $titulonotificacion=$arraytokens[$i]['titulonotificacion'];
 			 array_push($array,$arraytokens[$i]['token']);
-			$notificaciones->EnviarNotificacion($array,$texto,$titulonotificacion);
+			//$notificaciones->EnviarNotificacion($array,$texto,$titulonotificacion);
 				
 
 			}

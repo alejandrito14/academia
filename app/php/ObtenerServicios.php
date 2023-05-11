@@ -170,6 +170,10 @@ try
 		$obtenerservicios[$i]->fechainicial=date('d/m/Y',strtotime($obtenerservicios[$i]->fechainicial));
 		$obtenerservicios[$i]->fechafinal=date('d/m/Y',strtotime($obtenerservicios[$i]->fechafinal));
 
+		$obtenerservicios[$i]->fechacreacion=date('d/m/Y H:i:s',strtotime($obtenerservicios[$i]->fechacreacion));
+
+
+
 	}
 
 	usort($obtenerservicios, function ($a, $b) {

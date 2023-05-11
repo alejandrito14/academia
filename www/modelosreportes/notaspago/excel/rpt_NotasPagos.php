@@ -201,7 +201,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
  			<thead >
 		  <tr bgcolor="#3B3B3B" style="color: #FFFFFF; text-align: left;">
 		    <th style="width: 30%;">FOLIO DEL TICKET</th>
-		    <th style="width: 20%;">FECHA Y HORA DE PAGO</th>
+		    <th style="width: 20%;">FECHA DE ACEPTACIÓN EN LA APP</th>
 		    <th style="width: 20%;">ID CLIENTE</th>
 		    <th style="width: 20%;">NOMBRE DEL CLIENTE</th>
 		    <th style="width: 20%;">CANTIDAD</th>
@@ -216,7 +216,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 		   	<th style="width: 20%;">TOTAL</th>
 			<th style="width: 20%;">TIPO DE PAGO</th>
 		   	<th style="width: 20%;">CUENTA DE PAGO</th>
-		   	<th style="">FECHA DE ACEPTACIÓN</th>
+		   	<th style=""> FECHA DE VALIDACIÓN DE PAGO</th>
 
 
 		  </tr>

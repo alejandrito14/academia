@@ -88,7 +88,7 @@ var app = new Framework7({
 
  var pictureSource;   // picture source
  var destinationType; 
- var produccion = 0;
+ var produccion = 1;
 
 var codigoservicio="0";
 $(document).ready(function() {
@@ -1621,7 +1621,7 @@ $$(document).on('page:init', '.page[data-name="detalleserviciocoach"]', function
   $(".regreso").attr('href','/serviciosasignados/');
 
 
-  ObtenerServicioAsignado();
+  
   
  // $$("#abrirpantallacali").attr('onclick','PantallaCalificacion()');
   $$("#Abrirchat").attr('onclick','AbrirPantallaChats()');
@@ -1631,7 +1631,7 @@ $$(document).on('page:init', '.page[data-name="detalleserviciocoach"]', function
   ObtenerParticipantesAlumnos();
   
   VerificarSihayEvaluacion();
-
+ObtenerServicioAsignado();
   $$(".btnasistencia").attr('onclick','Asistencia()');
   $$("#btnpermisoasignaralumno").attr('onclick','VerificarTotalAlumnos()');
   //Verificarcantidadhorarios();
@@ -1669,12 +1669,14 @@ $$(document).on('page:init', '.page[data-name="detalleservicioadmin"]', function
   $(".regreso").attr('href','/serviciosregistrados/');
   myStopFunction(identificadorDeTemporizador);
 
-  ObtenerServicioAdmin();
+ 
   ObtenerParticipantesAlumnosAdmin();
+   VerificarcantidadhorariosAdmin();
+   ObtenerServicioAdmin();
   $$("#btnpermisoasignaralumno").attr('onclick','VerificarTotalAlumnos()');
   $$("#btncalendario").attr('onclick','FechasServicio()');
 
-  VerificarcantidadhorariosAdmin();
+ 
   $$("#abrirpantallacali").attr('onclick','PantallaCalificacion()');
   $$("#Abrirchat").attr('onclick','AbrirPantallaChats()');
  /* $$("#btncalendario").attr('onclick','FechasServicio()');
@@ -2280,6 +2282,7 @@ $$(document).on('page:init', '.page[data-name="nuevoservicio"]', function (e) {
   $("#btnaplicar").attr('onclick','AplicarFechas()');
   $("#v_reembolso").attr('onchange','HabilitarcantidadReembolso()');
   ObtenerTodasEncuestas();
+  CargarZonas();
   //$$(".imglogoimagenservicio").attr('src',urlimagendefault);
   $("#btnagregarcoach").attr('onclick','NuevoCoach(-1)');
   //$$(".fotoimagen").attr('onclick','AbrirModalFotoimagenservicio()');
@@ -2337,7 +2340,12 @@ $$(document).on('page:init', '.page[data-name="nuevoservicio"]', function (e) {
   $$('#v_numparticipantesmax').attr('onfocus',"CambiarColor('linumparticipantesmax');");
   $("#btncancelar").css('display','none');
 
+  $("#v_individual").attr("onclick","ValidarCheckmodalidad(1)");
+  $("#v_grupal").attr("onclick","ValidarCheckmodalidad(2)");
+  $("#v_aceptarserviciopago").attr("onchange","HabilitarOpcionaceptarserviciopago()");
 
+  $("#v_zonas").attr("onchange","ObtenerHorariosCategoria()");
+  $("#habilitarseleccion").attr("onchange","HabilitarSeleccion()");
     }).then(()=>{
         if (localStorage.getItem('idtipousuario')==5) {
       //$("#v_estatus").val(0);

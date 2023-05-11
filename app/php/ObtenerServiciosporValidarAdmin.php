@@ -160,6 +160,7 @@ if (count($obtenerhorarios)>0) {
 		$obtenerserviciosActivos[$i]->coaches=$obtenescoachesServicios;
 
 
+		$obtenerserviciosActivos[$i]->fechacreacion=date('d/m/Y H:i:s',strtotime($obtenerserviciosActivos[$i]->fechacreacion));
 	}
 
 	usort($obtenerserviciosActivos, function ($a, $b) {

@@ -260,14 +260,20 @@ class Notapago
 
 	}
 
-	public function ListadoNotasPagosPorvalidar()
+	public function ListadoNotasPagosPorvalidar($idtipodepago)
 	{
 		
 			$sql = "SELECT *FROM
 					notapago INNER JOIN usuarios ON notapago.idusuario=usuarios.idusuarios		
 			    	WHERE  
-			    	 notapago.estatus IN(0) ORDER BY idnotapago DESC";
+			    	 notapago.estatus IN(0)";
 
+			    if ($idtipodepago>0) {
+			    	 	
+			    	 	$sql.=" AND idtipopago=".$idtipodepago."";
+			    	 }
+			   $sql.=" ORDER BY idnotapago DESC";
+			
 			$resp = $this->db->consulta($sql);
 			$cont = $this->db->num_rows($resp);
 

@@ -142,8 +142,8 @@ if(!isset($_GET['idservicio'])){
 	//Cargamos en las variables los datos 
 
 	//DATOS GENERALES
-	$titulo1=$f->imprimir_cadena_utf8($result_SERVICIO_row['titulo']);
-	$descripcion=$f->imprimir_cadena_utf8($result_SERVICIO_row['descripcion']);
+	$titulo1=$result_SERVICIO_row['titulo'];
+	$descripcion=$result_SERVICIO_row['descripcion'];
 	$imagen=$f->imprimir_cadena_utf8($result_SERVICIO_row['imagen']);
 	$orden=$f->imprimir_cadena_utf8($result_SERVICIO_row['orden']);
 	$estatus = $f->imprimir_cadena_utf8($result_SERVICIO_row['estatus']);
@@ -366,7 +366,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							<div class="col-md-6">
 							<div class="form-group m-t-20">
 								<label id="lbltitulo">* TÍTULO:</label>
-								<input type="text" class="form-control" id="v_titulo" name="v_titulo" value="<?php echo $titulo1; ?>" title="TÍTULO" placeholder='TÍTULO' onblur="Colocardescripcion()">
+								<!-- <input type="text" class="form-control" id="v_titulo" name="v_titulo" title="TÍTULO" placeholder='TÍTULO' value="<?php echo trim($titulo1); ?>" > -->
+
+								<textarea name="v_titulo" id="v_titulo" placeholder="DESCRIPCIÓN" class="form-control" onblur="Colocardescripcion()"><?php echo $titulo1; ?>
+								</textarea>
 							</div>
 
 							<div class="form-group m-t-20">

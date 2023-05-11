@@ -20,6 +20,44 @@ try
 	$servicio->idservicio = trim($_POST['idservicio']);
 	$servicio->fecha='';
 	$obtener=$servicio->ObtenerTodosHorarios();
+	$fechaactual=date('Y-m-d');
+
+	if (count($obtener)>0) {
+		for ($i=0; $i <count($obtener) ; $i++) { 
+			$fecha=date('Y-m-d',strtotime($obtener[$i]->fecha));
+			$obtener[$i]->tachado=0;
+			if ($fecha>=$fechaactual) {
+
+				$horaactual=date('H:i');
+
+				$hora=date('H:i',strtotime($obtener[$i]->horainicial));
+
+				if ($fecha==$fechaactual) {
+					# code...
+				
+				if ($hora>$horaactual) {
+					$obtener[$i]->tachado=0;
+				}else{
+
+					$obtener[$i]->tachado=1;
+				}
+			}else{
+				$obtener[$i]->tachado=0;
+				
+			}
+				
+
+			}else{
+				
+				$obtener[$i]->tachado=1;
+
+			}
+
+
+
+
+		}
+	}
 	$respuesta['respuesta']=$obtener;
 
 	echo json_encode($respuesta);

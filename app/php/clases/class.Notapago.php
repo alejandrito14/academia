@@ -259,5 +259,14 @@ class Notapago
 
   
 	}
+
+public function ActualizarNotaAIncompleto()
+	{
+		$sql="UPDATE notapago SET 
+				  estatus =3 
+		WHERE idnotapago='$this->idnotapago'";
+				  
+			$resp=$this->db->consulta($sql);
+	}
 }
  ?>

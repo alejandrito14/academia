@@ -40,8 +40,22 @@ try
 	$viernes=$_POST['viernes'];
 	$sabado=$_POST['sabado'];
 	$domingo=$_POST['domingo'];
-	$obtenerzonas=$zonas->ObtZonasActivosConcat();
+
+	$zonaelegida=$_POST['v_zonas'];
+
+	$filtrarzona='';
+	$obtenertodaszonas=$zonas->ObtZonasActivos();
+
+
+	if($zonaelegida!='' && $zonaelegida!=0) {
+		$filtrarzona=$zonaelegida;
+	}
+
+	$obtenerzonas=$zonas->ObtZonasActivosConcat($filtrarzona);
 	$v_zonas=explode(',',$obtenerzonas[0]->idzonas);
+
+	/*$obtenerzonas=$zonas->ObtZonasActivosConcat();
+	$v_zonas=explode(',',$obtenerzonas[0]->idzonas);*/
 	$v_fechainicial=$_POST['v_fechainicial'];
 	$v_fechafinal=$_POST['v_fechafinal'];
 	$dias="";
@@ -146,6 +160,8 @@ try
 		}
 
 	}
+	$horariosseleccionados=explode(',',$_POST['v_horarios']);
+	//var_dump($horariosdeseados);die();
 	//var_dump($arreglodiasfechas);die();
 	$diashoras=array();
 	for ($i=0; $i <count($horariosdeseados) ; $i++) { 
@@ -154,19 +170,35 @@ try
 			$arrayformateado=array();
 				
 				for ($j=0; $j <count($horariosdeseados[$i]['horas']) ; $j++) { 
-					
+						
 					for ($k=0; $k <count($horariosdeseados[$i]['horas'][$j]) ; $k++) { 
-					/*	echo date('H:i:s',strtotime($horariosdeseados[$i]['horas'][$j][$k])).' '.date('H:i:s',strtotime($horaactual)).'<br>';*/
+						$agregar=1;
+						if ($horariosseleccionados[0]!=0) {
+							$agregar=0;
+							for ($l=0; $l <count($horariosseleccionados) ; $l++) { 
+								$dividirhora=explode('-',$horariosseleccionados[$l]);
+							
+								if (substr($horariosdeseados[$i]['horas'][$j][$k],0,5)==substr($dividirhora[0],0,5) && substr($horariosdeseados[$i]['horas'][$j][$k+1],0,5)==substr($dividirhora[1],0,5) ) {
+								
+									$agregar=1;
+									break;
+								}
 
-						//if(date('H:i:s',strtotime($horariosdeseados[$i]['horas'][$j][$k])) >=  date('H:i:s',strtotime($horaactual)))
-						//	{
 
-					 				$arreglo=array('horainicial'=> $horariosdeseados[$i]['horas'][$j][$k],'horafinal'=> $horariosdeseados[$i]['horas'][$j][$k+1],'disponible'=>0);
+							}
+						
+
+						}
+
+						if ($agregar==1) {
+							
+							 $arreglo=array('horainicial'=> $horariosdeseados[$i]['horas'][$j][$k],'horafinal'=> $horariosdeseados[$i]['horas'][$j][$k+1],'disponible'=>0);
 					 			array_push($arrayformateado, $arreglo);
-					 	//	}
+					 			
+						
+							}
 
-
-					 } 
+						}
 				
 				}
 				$arreglo=array('dia'=>$dia,'horas'=>$arrayformateado);
@@ -175,6 +207,8 @@ try
 				
 
 			}
+
+
 
 		
 			for ($i=0; $i <count($arreglodiasfechas) ; $i++) { 

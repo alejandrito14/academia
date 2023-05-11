@@ -108,7 +108,7 @@ $estatusapagado=array('NO PAGADO','PAGADO');
 	}
 
 
-
+ 
 
 	$sql="
 			SELECT *from servicios
@@ -404,6 +404,22 @@ $fechafin=date('Y-m-d',strtotime($fechafin));
 				     <td><?php echo $pagosservicios[$l]['nombreservicio']?>
 				     	
 				     	<p> PERIODO: <?php echo $pagosservicios[$l]['fechahoramin'].' / '. $pagosservicios[$l]['fechahoramax'];?></p>
+				     	<p style="padding: 0;margin: 0;">
+				     		COACHES:
+
+				     	</p>
+
+				     	<?php $coaches= $pagosservicios[$l]['coaches'];
+				 	
+				 		for ($c=0; $c < count($coaches); $c++) {  ?>
+				 			
+				 			<p style="margin: 0;padding: 0;"><?php echo $coaches[$c]['coach']; ?></p>
+				 		<?php
+				 			}
+
+				 	 ?>
+				 		
+
 				     </td>
 				  
 

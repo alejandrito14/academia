@@ -573,16 +573,13 @@ try
 	}
 
 	
-	if ($noexiste>0) {
+/*	if ($noexiste>0) {
 		 if($emp->estatus==1) {
 			# code...
 			$obtenerser=$emp->ObtenerServicio();
 
 		if ($tipousuario==0) {
-			/*$usuarios->id_usuario=$emp->idusuarios;
-		$obtenerusuario=$usuarios->ObtenerUsuario();
-		$nombrequienagrega=$obtenerusuario[0]->nombre." ".$obtenerusuario[0]->paterno;
-*/
+		
 			$idusuario=$obtenerser[0]->agregousuario;
 		if ($idusuario>0) {
 				# code...
@@ -687,7 +684,7 @@ try
 
 		}
 
-	}
+	}*/
 
 	
 				

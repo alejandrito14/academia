@@ -64,8 +64,14 @@ $variable="";
 try {
 	 $db = new MySQL();
 	 $obj = new ClienteStripe();
+   $datosfiscales=new Datosfiscales();
+   $datosfiscales->db=$db;
+   $notapago=new Notapago();
+   $notapago->db=$db;
 
-	 $obj->db=$db;
+        
+
+	  $obj->db=$db;
      $db->begin();
      $f = new Funciones();
    $lo=new ServiciosAsignados();
@@ -115,6 +121,63 @@ try {
 
             $constripe=$obtenertipopago[0]->constripe;
 
+
+
+         $notapago->idusuario=$iduser;
+         $notapago->subtotal=$subtotalsincomision;
+         $notapago->iva=0;
+         $notapago->total=$sumatotalapagar;
+         $notapago->comisiontotal=$comisiontotal;
+         $notapago->montomonedero=$montomonedero;
+         $notapago->estatus=0;
+         $notapago->tipopago=$obtenertipopago[0]->tipo.$variable;
+         $notapago->idtipopago=$idtipodepago;
+         $notapago->confoto=$confoto;
+         $notapago->datostarjeta=$datostarjeta;
+         $notapago->datostarjeta2=$datostarjeta2;
+         $notapago->idpagostripe=0;
+         $notapago->folio=$folio;
+         $notapago->descuento=0;
+         $notapago->descuentomembresia=0;
+         $notapago->requierefactura=$requierefactura;
+
+         $notapago->comisionpornota=$comisionpornota;
+         $notapago->comisionnota=$comisionnota;
+         $notapago->tipocomisionpornota=$tipocomisionpornota;
+         $notapago->idusuariodatofiscal=0;
+          if ($requierefactura==1) {
+            $datosfiscales->idusuariosdatosfiscales=$idusuariosdatosfiscales;
+             $datosf=$datosfiscales->Obtenerdatofiscal();
+
+              $notapago->razonsocial=$datosf[0]->razonsocial;
+              $notapago->rfc=$datosf[0]->rfc;
+              $notapago->direccion=$datosf[0]->direccion;
+              $notapago->nointerior=$datosf[0]->nointerior;
+              $notapago->noexterior=$datosf[0]->noexterior;
+              $notapago->colonia=$datosf[0]->colonia;
+              $notapago->municipio=$datosf[0]->municipio;
+              $notapago->estado=$datosf[0]->estado;
+              $notapago->codigopostal=$datosf[0]->codigopostal;
+              $notapago->correo=$datosf[0]->correo;
+              $notapago->pais=$datosf[0]->pais;
+              $notapago->asentamiento=$datosf[0]->asentamiento;
+              $notapago->calle=$datosf[0]->calle;
+              $notapago->formapago=$datosf[0]->formapago;
+              $notapago->metodopago=$datosf[0]->metodopago;
+              $notapago->usocfdi=$datosf[0]->usocfdi;
+              $buscarimagenes=$datosfiscales->ObtenerImagenesfiscalAgrupado();
+              $imagenesfac="";
+              if (count($buscarimagenes)>0){
+                $imagenesfac=$buscarimagenes[0]->imagenesconstancia;
+              }
+
+              $notapago->imagenconstancia=$imagenesfac;
+              $notapago->idusuariodatofiscal=$idusuariosdatosfiscales;
+         }
+
+         $notapago->CrearNotapago();
+
+
             if ($obtenertipopago[0]->constripe==1) {
               # code...
             
@@ -125,7 +188,7 @@ try {
              $cantidadintentos=$obtenerconfiguracion['intentostarjeta'];
             $monto =  $sumatotalapagar*100;  
             $descripcion = "Pago servicio ".$obtenerconfiguracion['nombrenegocio1'].' '.$folio;
-
+                $obj->idNotaRemision=$notapago->idnotapago;
                 $obj->idTransaccion = '';
                 $obj->monto = $monto;
                 $obj->digitosTarjeta ='';
@@ -138,8 +201,8 @@ try {
 				$obj->subtotalsincomision = $subtotalsincomision;
 				$obj->impuesto=$impuesto;
 				$obj->total=$sumatotalapagar;
-                $obj->RegistrarIntentoPago();
-                $db->commit();
+        $obj->RegistrarIntentoPago2();
+        $db->commit();
 
             //////SOLO TEST
             //$idpedido = rand(1,1000);  //SOLOTEST
@@ -159,6 +222,8 @@ try {
                   ]);
                      
                 $db = new MySQL();
+               // $db->begin();
+
                 $obj->db = $db; 
             
                 $dbresult=$obj->ObtenerLastCard();
@@ -187,7 +252,7 @@ try {
                   $paymentIntent->id,
                   []
                 );
-               // echo $intent->status;
+              
 
                 $obj->idTransaccion = $paymentIntent->id;
                 $obj->monto = $monto;
@@ -198,6 +263,8 @@ try {
                     
                 $db = new MySQL();
                 $obj->db = $db; 
+               
+                $db->begin();
                 $obj->ActualizarIntento();
                 $db->commit();
 
@@ -273,72 +340,19 @@ try {
                $membresia->db=$db;
                $invitacion=new Invitacion();
                $invitacion->db=$db;
-
-               $notapago=new Notapago();
+              
                $notapago->db=$db;
 
+             /*  $notapago=new Notapago();
+               $notapago->db=$db;
+*/
                $pagocoach=new PagosCoach();
                $pagocoach->db=$db;
                $servicios=new Servicios();
                $servicios->db=$db;
-               $datosfiscales=new Datosfiscales();
+               /*$datosfiscales=new Datosfiscales();
                $datosfiscales->db=$db;
-
-
-         $notapago->idusuario=$iduser;
-         $notapago->subtotal=$subtotalsincomision;
-         $notapago->iva=0;
-         $notapago->total=$sumatotalapagar;
-         $notapago->comisiontotal=$comisiontotal;
-         $notapago->montomonedero=$montomonedero;
-         $notapago->estatus=0;
-         $notapago->tipopago=$obtenertipopago[0]->tipo.$variable;
-         $notapago->idtipopago=$idtipodepago;
-         $notapago->confoto=$confoto;
-         $notapago->datostarjeta=$datostarjeta;
-         $notapago->datostarjeta2=$datostarjeta2;
-         $notapago->idpagostripe=0;
-         $notapago->folio=$folio;
-         $notapago->descuento=0;
-         $notapago->descuentomembresia=0;
-         $notapago->requierefactura=$requierefactura;
-
-         $notapago->comisionpornota=$comisionpornota;
-         $notapago->comisionnota=$comisionnota;
-         $notapago->tipocomisionpornota=$tipocomisionpornota;
-         $notapago->idusuariodatofiscal=0;
-         if ($requierefactura==1) {
-            $datosfiscales->idusuariosdatosfiscales=$idusuariosdatosfiscales;
-             $datosf=$datosfiscales->Obtenerdatofiscal();
-
-              $notapago->razonsocial=$datosf[0]->razonsocial;
-              $notapago->rfc=$datosf[0]->rfc;
-              $notapago->direccion=$datosf[0]->direccion;
-              $notapago->nointerior=$datosf[0]->nointerior;
-              $notapago->noexterior=$datosf[0]->noexterior;
-              $notapago->colonia=$datosf[0]->colonia;
-              $notapago->municipio=$datosf[0]->municipio;
-              $notapago->estado=$datosf[0]->estado;
-              $notapago->codigopostal=$datosf[0]->codigopostal;
-              $notapago->correo=$datosf[0]->correo;
-              $notapago->pais=$datosf[0]->pais;
-              $notapago->asentamiento=$datosf[0]->asentamiento;
-              $notapago->calle=$datosf[0]->calle;
-              $notapago->formapago=$datosf[0]->formapago;
-              $notapago->metodopago=$datosf[0]->metodopago;
-              $notapago->usocfdi=$datosf[0]->usocfdi;
-              $buscarimagenes=$datosfiscales->ObtenerImagenesfiscalAgrupado();
-              $imagenesfac="";
-              if (count($buscarimagenes)>0){
-                $imagenesfac=$buscarimagenes[0]->imagenesconstancia;
-              }
-
-              $notapago->imagenconstancia=$imagenesfac;
-              $notapago->idusuariodatofiscal=$idusuariosdatosfiscales;
-         }
-         $notapago->CrearNotapago();
-
-
+               */
         
           	for ($i=0; $i < count($pagosconsiderados); $i++) { 
                $pagos->pagado=1;
@@ -708,6 +722,11 @@ try {
               }
 
              
+          }else{
+
+
+            $notapago->ActualizarNotaAIncompleto();
+            $db->commit();
           }
 
             
@@ -732,10 +751,22 @@ catch (\Stripe\Exception\CardException $err) {
     $obj->digitosTarjeta = $err->getError()->payment_method->id;
     $obj->estatus = $error_code;
     $obj->fechaTransaccion = $err->getError()->payment_intent->created;   
-    
+    $obj->idNotaRemision=$notapago->idnotapago;
     $db = new MySQL();
     $obj->db = $db; 
-    $obj->RegistrarIntentoPagoFallido();
+    $obj->RegistrarIntentoPagoFallido2();
+    $notapago->ActualizarNotaAIncompleto();
+
+
+    $obj->idTransaccion = $paymentIntent->id;
+    $obj->monto = $monto;
+    $obj->digitosTarjeta = $paymentIntent->payment_method;
+    $obj->estatus = $intent->status;
+    $obj->fechaTransaccion = $paymentIntent->created;   
+                
+    $obj->ActualizarIntento();
+
+           
      $db->commit();
     if($error_code == 'authentication_required') {
    

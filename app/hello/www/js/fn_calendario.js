@@ -254,10 +254,17 @@ function PintarEventos(resultado) {
 		                 <i class="bi bi-alarm-fill"></i>
 		                </div>
 		              </div>
-		              <div class="col">
-		           		 <p class="text-muted size-14 no-margin-bottom" style="font-weight:bold;">`+dividir[2]+`/`+dividir[1]+`/`+dividir[0]+ `</p>
+		              <div class="col">`;
+		              tachado="";
+		              if (resultado[i].tachado==1) {
+		              	tachado="text-decoration:line-through;";
+		             
+		              }
+		           		html+= `
+		           		<p class="text-muted size-14 no-margin-bottom" style="font-weight:bold;`+tachado+`">`+dividir[2]+`/`+dividir[1]+`/`+dividir[0]+ `</p>`;
 
-		                <p class="text-muted size-14 no-margin-bottom">`+zona+`</p>
+		               html+=` <p class="text-muted size-14 no-margin-bottom">`+zona+`</p>
+
 		                <p>Horario `+resultado[i].horainicial +` - `+ resultado[i].horafinal+`</p>
 		              </div>
 		            </div>
@@ -882,6 +889,7 @@ html+=`	<div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;ba
         on: {
           open: function (sheet) {
            // CargarFechas();
+
    			ConsultarTodosHorarios();
           },
           opened: function (sheet) {

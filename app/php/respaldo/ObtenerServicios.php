@@ -45,9 +45,20 @@ try
 	$lo->db = $db;
 
 	$lo->estatus=$_POST['estatus'];
-	 
-	$obtenerservicios=$lo->ObtenerServiciosAdmin();
+	$idcategorias=0;
+	$v_coach=0;
+	if (isset($_POST['v_categorias'])) {
+		$idcategorias=$_POST['v_categorias'];
+	}
 
+	if (isset($_POST['v_coach'])) {
+		$v_coach=$_POST['v_coach'];
+
+	}
+
+	 
+	$obtenerservicios=$lo->ObtenerServiciosAdmin($idcategorias,$v_coach);
+ 
 
 	for ($i=0; $i <count($obtenerservicios) ; $i++) { 
 		
@@ -143,7 +154,12 @@ try
 		}
 
 
+		$lo->idservicio=$asignados->idservicio;
+		$obtenescoachesServicios=$lo->ObtenerParticipantesCoach(5);
+		$obtenerservicios[$i]->coaches=$obtenescoachesServicios;
 
+		$obtenerservicios[$i]->fechainicial=date('d/m/Y',strtotime($obtenerservicios[$i]->fechainicial));
+		$obtenerservicios[$i]->fechafinal=date('d/m/Y',strtotime($obtenerservicios[$i]->fechafinal));
 
 	}
 

@@ -117,6 +117,14 @@ $estatuspago = array('NO PAGADO','PAGADO');
 <div class="card">
 	<div class="card-body">
 		<div class="table-responsive" id="contenedor_Pagos">
+			<div class="row" style="margin-bottom: 1em;">
+				<div class="col-md-6">
+				<label for="">TIPO DE PAGOS</label>
+				<div class="" id="tipodepagos">
+					
+				</div>
+			</div>
+			</div>
 			<div class="row">
 				<div class="col-md-6">
 					<label for="">BUSCAR:</label>
@@ -426,6 +434,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 
 
 <script type="text/javascript">
-	ObtenerNotasPorvalidar();
+	ObtenerNotasPorvalidar(0);
+	ObtenerTipoDepagosNotasValidar();
 </script>
 

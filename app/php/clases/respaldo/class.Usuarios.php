@@ -904,11 +904,14 @@ public function validarUsuarioClienteTokenCel()
         usuarios.materno,
         usuarios.idusuarios,
         usuarios.sexo,
-        usuarios.estatus
+        usuarios.estatus,
+        parentesco.parentesco
         FROM
         usuarios
         JOIN usuariossecundarios
-        ON usuarios.idusuarios = usuariossecundarios.idusuariotutorado WHERE usuariossecundarios.idusuariostutor='$this->idusuarios' AND sincel=1 AND usuarios.estatus=1 ";
+        ON usuarios.idusuarios = usuariossecundarios.idusuariotutorado
+        JOIN  parentesco ON usuariossecundarios.idparentesco=parentesco.idparentesco
+         WHERE usuariossecundarios.idusuariostutor='$this->idusuarios' AND sincel=1 AND usuarios.estatus=1 ";
 
        
         $resp=$this->db->consulta($sql);

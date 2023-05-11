@@ -140,17 +140,23 @@ function ObtenerServicioAdmin() {
 				if(respuesta.abiertocliente == 1) {
 				$("#permisoasignaralumno").css('display','block');
 				}
-			}
+			}					
+		$(".habilitareliminacion").css('display','none');
+
+
 		if(localStorage.getItem('idtipousuario')==5) {
 
 				if(respuesta.abiertocoach == 1) {
 					$("#permisoasignaralumno").css('display','block');
+					$(".habilitareliminacion").css('display','block');
 				}
 			}
 	if(localStorage.getItem('idtipousuario')==0) {
 	
 			if(respuesta.abiertoadmin == 1) {
 				$("#permisoasignaralumno").css('display','block');
+				$(".habilitareliminacion").css('display','block');
+
 			}
 		}
 			
@@ -194,7 +200,7 @@ function ObtenerParticipantesAlumnosAdmin() {
 		crossDomain: true,
 		cache: false,
 		data:datos,
-		success: function(datos){
+		success: function(datos){ 
 			var respuesta=datos.respuesta;
 			$(".cantidadalumnos").text(respuesta.length);
 			PintarParticipantesAlumnos(respuesta);
@@ -206,7 +212,7 @@ function ObtenerParticipantesAlumnosAdmin() {
 								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
 					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
 			}
-
+ 
 		});
 }
 
@@ -553,7 +559,7 @@ function ObtenerServicioNuevo(valor) {
 		cache: false,
 		data:datos,
 		success: function(datos){
- 		
+ 		var encontropago=datos.encontropago;
 		var respuesta=datos.respuesta;
 		var idcategoriaservicio=respuesta.idcategoriaservicio;
 		var idservicio=respuesta.idservicio;
@@ -566,10 +572,11 @@ function ObtenerServicioNuevo(valor) {
 		var idpoliticaaceptacion=respuesta.idpoliticaaceptacion;
 		var tiempoaviso=respuesta.tiempoaviso;
 		var tituloaviso=respuesta.tituloaviso;
+		var aceptarserviciopago=respuesta.aceptarserviciopago;
 		$("#v_tiempoaviso").val(tiempoaviso);
 		$("#v_tituloaviso").val(tituloaviso);
 		//$("#v_estatus").val(estatus);
- 
+ 	
 		if (estatus==1) {
 			$("#v_estatus").prop('checked',true);
 		}else{
@@ -611,14 +618,28 @@ function ObtenerServicioNuevo(valor) {
 		 ObtenerEncuestas(idservicio);
 
 		 var modalidad=respuesta.modalidad;
+		 ValidarCheckmodalidad(modalidad);
 
 		 if (modalidad==1) {
 		 	 $("#v_individual").attr('checked',true);
+
+		 	 if (aceptarserviciopago==1) {
+		 	 	$("#v_aceptarserviciopago").val(1);
+		 	 	$("#v_aceptarserviciopago").attr('checked',true);
+
+		 	 }
 		 }
 
 		 if (modalidad==2) {
+
 		 	 $("#v_grupal").attr('checked',true);
+		 	 $("#v_aceptarserviciopago").attr('checked',false);
+		 	 $("#v_aceptarserviciopago").val(0);
+
 		 }
+
+
+
 
 		 
 		 var numparticipantes=respuesta.numeroparticipantes;
@@ -749,6 +770,13 @@ function ObtenerServicioNuevo(valor) {
 
 		$("#cantidadhorarios").text(arraydiaselegidos.length);
 
+			if (encontropago>0) {
+
+				$("#v_fechainicial").attr('disabled',true);
+				$("#v_fechafinal").attr('disabled',true);
+				$("#btnaplicar").attr('disabled',true);
+				$(".btneliminarhorario").css('display','none');
+			}
 		  }
     );
 	//	Permitirligar();
@@ -1315,9 +1343,40 @@ function PintarAlumnosServicio(respuesta) {
 	$(".usuarios").html(html);
 }
 
+function VerificarSiElServicioUsuarios(idservicio) {
+		    return new Promise(function(resolve, reject) {
+
+				var iduser=localStorage.getItem('id_user');
+				var datos="idservicio="+idservicio+"&id_user="+iduser;
+			
+					$.ajax({
+					url: urlphp+'VerificarServicioUsuarios.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					dataType:'json',
+
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+
+						resolve(msj);
+						
+					}
+				});
+				
+			});
+}
+
 function CancelarServicioAdmin(idservicio) {
 
-	
+	VerificarSiElServicioUsuarios(idservicio).then(r => {
+
+		if (r.existeasignados==0) {
 	
        var html=`
          
@@ -1360,6 +1419,14 @@ function CancelarServicioAdmin(idservicio) {
 
           verticalButtons: false,
         }).open();
+	   }else{
+
+
+	   	alerta('','El servicio no se puede cancelar, cuenta con usuarios asignados');
+	   }
+
+
+       });
 		
 }
 

@@ -257,6 +257,51 @@
 
               
               </div>
+              <div class="row divrow" style="margin-top: 1em;">
+
+                 <div class="item-title item-label">Seleccionar cancha</div>
+
+                    <li style="    margin: 0;padding: 0;">
+                    <a class="item-link smart-select smart-select-init smartselectzonas" data-open-in="popover">
+                      <select name="superhero" id="v_zonas" multiple>
+                       
+                      </select>
+                      <div class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title">Canchas</div>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+              </div>
+
+               <div class="row" style="margin-top: 1em;">
+
+                 <div class="item-title item-label">Seleccionar horario</div>
+
+                    <li style="    margin: 0;padding: 0;">
+                    <a class="item-link smart-select smart-select-init smartselectorhora" data-open-in="popover">
+                      <select name="horarios" id="v_horarios" multiple>
+                       
+                      </select>
+                      <div class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title">Horarios</div>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+              </div>
+
+              <div class="row">
+              <div class="form-check" >
+                  <input type="checkbox" id="habilitarseleccion" class="form-check-input " value="0" style="top: -0.3em;" />
+                  <label for="" class="form-check-label">Selección automática</label>
+
+                 </div>
+            </div>
+
+
               <div class="row" style="margin-top: 1em;">
                 <div class="col">
                    <button class="link button " style="font-size: 17px;background: white;" id="btnaplicar" style="">Aplicar</button>
@@ -322,6 +367,10 @@
               <div class="row">
                 <label class="btn btn_colorgray2  btn_colorgray3">
                     <input type="radio" name="v_grupo" id="v_individual" class="" value="1" /> Monto fijo
+                  </label>
+
+                  <label for="" style="    margin-left: 1em;height: 40px;    margin-top: 1em;display: none;" id="divaceptarserviciopago">
+                    <input type="checkbox" name="" id="v_aceptarserviciopago" value="0" />Aceptar el servicio en el pago
                   </label>
 
 
@@ -676,4 +725,7 @@
 
 </div>
 
+
+
 </template>
+

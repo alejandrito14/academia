@@ -184,7 +184,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 			<table id="tbl_Servicios" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
 				<thead>
 					<tr>
-						 
+						 <th style="text-align: center;">ID</th>
 						<th style="text-align: center;">TÍTULO </th> 
 
 						<th style="text-align: center;">IMÁGEN </th> 
@@ -217,7 +217,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 							<tr>
 							
 						
-							
+							<td><?php echo $l_Servicios_row['idservicio'];?></td>
 							<td style="text-align: center;"><p><?php echo $f->imprimir_cadena_utf8($l_Servicios_row['titulo']);?></p>
 								<p>Periodo: <?php echo date('d/m/Y',strtotime($l_Servicios_row['fechamin'])).'-'.date('d/m/Y',strtotime($l_Servicios_row['fechamax'])); ?> </p>
 								
@@ -305,7 +305,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 						//SCRIPT PARA CONSTRUIR UN clonar
 						$bt->titulo = "";
 						$bt->icon = "mdi-account-check";
-						$bt->funcion = "AbrirModalUsuarios('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$l_Servicios_row['titulo']."')";
+						$bt->funcion = "AbrirModalUsuarios('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".htmlentities(addslashes($l_Servicios_row['titulo']))."')";
 
 						/*$bt->permiso = $permisos;*/
 						$bt->tipo = 4;
@@ -319,12 +319,12 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 						//SCRIPT PARA CONSTRUIR UN clonar
 						$bt->titulo = "";
 						$bt->icon = "mdi-account-multiple";
-						$bt->funcion = "AbrirModalAsignacion('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$l_Servicios_row['titulo']."')";
+						$bt->funcion = "AbrirModalAsignacion('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".htmlentities(addslashes($l_Servicios_row['titulo']))."')";
 
 						/*$bt->permiso = $permisos;*/
 						$bt->tipo = 4;
 						$bt->title="ASIGNACIÓN DE ALUMNOS";
-
+ 
 						$bt->armar_boton();
 					?>
 
@@ -333,7 +333,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 						//SCRIPT PARA CONSTRUIR UN clonar
 						$bt->titulo = "";
 						$bt->icon = "mdi-cloud-upload";
-						$bt->funcion = "AbrirModalImagenes('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$l_Servicios_row['titulo']."')";
+						$bt->funcion = "AbrirModalImagenes('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".htmlentities(addslashes($l_Servicios_row['titulo']))."')";
 
 						/*$bt->permiso = $permisos;*/
 						$bt->tipo = 4;

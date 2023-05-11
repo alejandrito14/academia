@@ -49,8 +49,8 @@ try
 		
 	//Recbimos parametros
 	$emp->idservicio = trim($_POST['id']);
-	$emp->titulo = trim($f->guardar_cadena_utf8($_POST['v_titulo']));
-	$emp->descripcion = trim($f->guardar_cadena_utf8($_POST['v_descripcion']));
+	$emp->titulo = $_POST['v_titulo'];
+	$emp->descripcion = $_POST['v_descripcion'];
 	
 	$emp->orden = trim($f->guardar_cadena_utf8($_POST['v_orden']));
 	$emp->estatus = trim($f->guardar_cadena_utf8($_POST['v_estatus']));

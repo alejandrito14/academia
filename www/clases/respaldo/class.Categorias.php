@@ -71,6 +71,7 @@ class Categorias
 		
 		
 		$sql = "SELECT C.* FROM categorias C ORDER BY orden asc ";
+		
 		/*$sql .= ($this->nombre != '')? " AND C.categoria LIKE '%$this->nombre%'":"";
 		$sql .= ($this->idcategoria != '')? " AND C.idcategorias = '$this->idcategoria'":"";*/
 
@@ -339,6 +340,26 @@ class Categorias
 		return $array;
 	}
 	
+
+	public function ObtenerCategoria()
+	{
+	$sql="SELECT *FROM categorias WHERE idcategorias ='$this->idcategoria'";
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 
 }
 ?>

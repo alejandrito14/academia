@@ -43,10 +43,10 @@ try
 			$lo->idusuarios=$obtenerusuarios[$i]->idusuarios;
 			$estutorado=$lo->ObtenerparentescoUsuario();
 			$row=$db->fetch_assoc($estutorado);
-			$coun=$db->num_rows($estutorado);
+			$contador=$db->num_rows($estutorado);
 
 			$obtenerusuarios[$i]->tutorado=0;
-			if ($coun>0) {
+			if ($contador>0) {
 			$obtenerusuarios[$i]->tutorado=1;
 
 			}

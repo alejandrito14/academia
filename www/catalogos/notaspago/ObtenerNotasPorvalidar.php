@@ -30,9 +30,11 @@ try
 	$se = new Sesion();
 	//enviamos la conexión a las clases que lo requieren
 	$nota->db=$db;
-	$md->db = $db;	
+	$md->db = $db;
+	$idtipodepago=$_POST['idtipodepago'];
+		
 	
-	$obtener=$nota->ListadoNotasPagosPorvalidar();
+	$obtener=$nota->ListadoNotasPagosPorvalidar($idtipodepago);
 
 
 	for ($i=0; $i < count($obtener); $i++) { 

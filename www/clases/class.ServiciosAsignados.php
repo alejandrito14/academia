@@ -276,6 +276,7 @@ class ServiciosAsignados
 	public function obtenerUsuariosServiciosAlumnosAsignados()
 	{
 		$sql="SELECT
+				usuarios_servicios.idservicio,
 				usuarios.nombre,
 				usuarios.paterno,
 				usuarios.telefono,
@@ -289,7 +290,10 @@ class ServiciosAsignados
 				tipousuario.nombretipo,
 				usuarios.alias,
 				usuarios_servicios.estatus,
-				usuarios_servicios.aceptarterminos
+				usuarios_servicios.aceptarterminos,
+				(SELECT COUNT(*)  FROM horariosservicio WHERE horariosservicio.idservicio=usuarios_servicios.idservicio) as cantidadhorarios,
+				(SELECT COUNT(*) FROM usuariossecundarios WHERE usuariossecundarios.idusuariostutor=usuarios.idusuarios) as tutor
+
 				FROM
 				usuarios_servicios
 				JOIN usuarios

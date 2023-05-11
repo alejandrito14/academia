@@ -118,14 +118,14 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 <div class="card">
 	<div class="card-body">
 		<div class="row">
-			<div class="col-md-4">
+			<div class="col-md-6">
 				 <div class="form-group">
 			    <label for="">FORMATO DE SERVICIO</label>
 			   	<select class="form-control" id="v_categoria"></select>
 			   
 			  </div>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-6">
 				 <div class="form-group">
 			    <label for="">COACH</label>
 			   	<select class="form-control" id="v_coach"></select>
@@ -133,7 +133,9 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 			  </div>
 			</div>
 
-			<div class="col-md-2">
+			
+
+			<div class="col-md-6">
 				 <div class="form-group">
 			    <label for="">MES</label>
 			   	<select class="form-control" id="v_meses"></select>
@@ -141,19 +143,26 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 			  </div>
 			</div>
 
-			<div class="col-md-2">
+			<div class="col-md-6">
 				 <div class="form-group">
 			    <label for="">AÑO</label>
 			   	<select class="form-control" id="v_anios"></select>
 			   
 			  </div>
 			</div>
-			<div class="col-md-4 ml-auto">
+		
+		</div>
+		<div class="row">
+			<div class="col-md-6 ">
+</div>
+			<div class="col-md-6 ">
 				 <div class="form-group" style="   text-align: right;">
 			    <button class="btn btn-primary" onclick="FiltrarServicios(<?php echo $idmenumodulo;?> )">FILTRAR SERVICIOS</button>
 			</div>
 			</div>
+
 		</div>
+			
 	</div>
 </div>
 
@@ -180,6 +189,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
 						<th style="text-align: center;">IMÁGEN </th> 
 						<th style="text-align: center;">FORMATO DE SERVICIO </th> 
+						<th style="text-align: center;">FECHA CREACIÓN</th>
 						<th style="text-align: center;">ORDEN </th> 
 						<th style="text-align: center;">ESTATUS</th>
 
@@ -236,6 +246,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 		                   </td>
 
 							<td style="text-align: center;"><?php echo $l_Servicios_row['nombrecategoria'];?></td>
+							<td style="text-align: center;"><?php echo $l_Servicios_row['fechacreacion'];?></td>
 							
 
 							<td style="text-align: center;"><?php echo $l_Servicios_row['orden'];?></td>
@@ -294,7 +305,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 						//SCRIPT PARA CONSTRUIR UN clonar
 						$bt->titulo = "";
 						$bt->icon = "mdi-account-check";
-						$bt->funcion = "AbrirModalUsuarios('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$l_Servicios_row['titulo']."')";
+						$bt->funcion = "AbrirModalUsuarios('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".htmlentities(addslashes($l_Servicios_row['titulo']))."')";
 
 						/*$bt->permiso = $permisos;*/
 						$bt->tipo = 4;
@@ -308,12 +319,12 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 						//SCRIPT PARA CONSTRUIR UN clonar
 						$bt->titulo = "";
 						$bt->icon = "mdi-account-multiple";
-						$bt->funcion = "AbrirModalAsignacion('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$l_Servicios_row['titulo']."')";
+						$bt->funcion = "AbrirModalAsignacion('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".htmlentities(addslashes($l_Servicios_row['titulo']))."')";
 
 						/*$bt->permiso = $permisos;*/
 						$bt->tipo = 4;
 						$bt->title="ASIGNACIÓN DE ALUMNOS";
-
+ 
 						$bt->armar_boton();
 					?>
 
@@ -322,7 +333,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 						//SCRIPT PARA CONSTRUIR UN clonar
 						$bt->titulo = "";
 						$bt->icon = "mdi-cloud-upload";
-						$bt->funcion = "AbrirModalImagenes('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$l_Servicios_row['titulo']."')";
+						$bt->funcion = "AbrirModalImagenes('".$l_Servicios_row['idservicio']."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".htmlentities(addslashes($l_Servicios_row['titulo']))."')";
 
 						/*$bt->permiso = $permisos;*/
 						$bt->tipo = 4;

@@ -269,6 +269,12 @@ $estatuspago = array('NO PAGADO','PAGADO');
 								</div>
 							</div>
 
+							<div class="row" style="margin-top:1em;">
+								<div class="col-md-12">
+									<button class="btn btn_rojo btncambiarcancelar" onclick="">CANCELAR PAGO</button>
+								</div>
+							</div>
+
 							</div>
 				</div>
 			</div>
@@ -353,7 +359,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">ACEPTAR PAGO <span id="folionotaestatus"></span></h5>
+        <h5 class="modal-title">ACEPTAR PAGO <span id="folionotaestatus" class="folionotaestatus"></span></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -382,6 +388,39 @@ $estatuspago = array('NO PAGADO','PAGADO');
   </div>
 </div>
 
+
+<div class="modal" id="modalcancelacion" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">CANCELAR PAGO <span id="folionotaestatus" class="folionotaestatus"></span></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<div class="row">
+      		<div class="col-md-12">
+      			<form>
+			  <div class="form-group">
+
+			  	<label for="">DESCRIPCIÓN</label>
+			  	<textarea name="" id="txtcancelacion" cols="10" rows="5" class="form-control"></textarea>
+			  	<label for="" id="txtdescripcioncancelacion"></label>
+			  </div>
+			</form>
+      		</div>
+      		<div class="col-md-6"></div>
+      	</div>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success btnvalidacioncancel" onclick="GuardarCancelacion()">GUARDAR</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 

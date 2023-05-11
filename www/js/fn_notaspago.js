@@ -1631,12 +1631,13 @@ suma=0;
 }
 
 function ObtenerNotasPorvalidar() {
-	
+	 var datos="idtipodepago=0";
 	 var pagina = "ObtenerNotasPorvalidar.php";
       $.ajax({
       type: 'POST',
       dataType: 'json',
       url:'catalogos/notaspago/'+pagina, //Url a donde la enviaremos
+      data:datos,
       async:false,
       success: function(msj){
 
@@ -2403,4 +2404,93 @@ function GuardarFoliofactura(idnotapago) {
 	}
 
   }
+}
+
+function ObtenerTipoDepagosNotasValidar() {
+			$.ajax({
+					url:'catalogos/notaspago/ObtenerTipodepagos.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos
+					dataType:'json',
+					async:false,
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+					  },
+					success:function(msj){
+
+							if (msj.respuesta.length>0) {
+								PintarTipoPagosNotasValidar(msj.respuesta);
+							}
+								
+					  	}
+				  });
+}
+
+function PintarTipoPagosNotasValidar(respuesta) {
+
+	var html="";
+	if (respuesta.length>0) {
+		html+=`<div class="btn-group btn-group-toggle" data-toggle="buttons">`;
+		html+=`
+
+			  <label class="btn btn-primary">
+			    <input type="radio" name="options" id="option0" autocomplete="off" onchange="FiltrarPagos(0)" checked>Todos <span style="color:#2255a4;font-weight:bold;" id="sumatodos"></span>
+			  </label>
+
+			`;
+			var sumatodos=0;
+		for (var i = 0; i <respuesta.length; i++) {
+
+			html+=`
+
+			  <label class="btn btn-primary">
+			    <input type="radio" name="options" id="option_`+respuesta[i].idtipodepago+`" autocomplete="off" onchange="FiltrarPagos(`+respuesta[i].idtipodepago+`)" checked> `+respuesta[i].tipo;
+			    if (respuesta[i].cantidadnota>0) {
+			   html+=` <span style="color:#2255a4;font-weight:bold;">(`+respuesta[i].cantidadnota+`)</span>`;
+
+			    }
+			    html+=`
+			  </label>
+
+			`;
+			sumatodos=parseFloat(sumatodos)+parseFloat(respuesta[i].cantidadnota);
+		}
+		html+=`</div>`;
+	}
+	$("#tipodepagos").html(html);
+
+	if (sumatodos>0) {
+		$("#sumatodos").text('('+sumatodos+')');
+	}
+}
+
+function FiltrarPagos(idtipodepago) {
+	
+	var datos="idtipodepago="+idtipodepago;
+
+	 var pagina = "ObtenerNotasPorvalidar.php";
+      $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url:'catalogos/notaspago/'+pagina, //Url a donde la enviaremos
+      async:false,
+      data:datos,
+      success: function(msj){
+      	$(".notasporvalidar").html("");
+      	var respuesta=msj.pagos;
+      	PintarNotasporvalidar(respuesta);
+     
+           
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                  //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                  console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+            }
+      });
 }

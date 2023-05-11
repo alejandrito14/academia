@@ -703,10 +703,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					<div class="card-body">
 						
 							
-					<div class="col-md-6">
+					<div class="col-md-12">
 						<p for=""><label for="" class="divmodo">* MONTO:</label></p>
 
-						<div class="form-group" style="float: left;width: 30%;">
+						<div class="col-md-6" style="float: left;width: 30%;">
 								 	<div class="form-check">
 					               
 					                  <input type="radio" class="form-check-input " name="v_grupo" value="1" id="v_individual" style="" onclick="ValidarCheckmodalidad(1)">
@@ -717,7 +717,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				              </div>
 
 
-				              <div class="form-group" style="float: left;width: 30%;">
+				              <div class="col-md-6" style="float: left;width: 30%;">
 								 	<div class="form-check">
 					                 <input type="radio" class="form-check-input " name="v_grupo" value="2" id="v_grupal" style="" onclick="ValidarCheckmodalidad(2)">
 					                   <label class="form-check-label" style=" padding-top: 0.3em;">
@@ -725,11 +725,14 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					                </label>
 				                </div>
 				              </div>
+				             </div>
 
-				              <div class="form-group" style="display: none;float: left;" id="divaceptarserviciopago" >
-				              	<div class="col-md-12">
 
-																			   		 <div class="form-group m-t-20" style="margin-left: -10px;">
+				              <div class="" style="display: none;margin-top: 20px;
+    padding-top: 20px;" id="divaceptarserviciopago" >
+				              	<div class="col-md-6">
+
+																			   		 <div class="" style="    margin-left: 10px;margin-top: 10px;">
 																			   		 		<input type="checkbox" id="v_aceptarserviciopago" value="0" onchange="HabilitarOpcionaceptarserviciopago()">
 																			   		 		
 																							<label for="" style="margin-left: 3px;">ACEPTAR SERVICIO EN EL PAGO</label>
@@ -743,7 +746,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				          </div>
 				      </div>
 						
-					</div>
+			
 				</div>
 
 				<div class="card">

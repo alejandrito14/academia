@@ -214,6 +214,37 @@ public function ObtenerTipodepago2()
  	}
 
 
+ 	public function ObttipodepagoEfectivoTransferencia()
+	{
+		$sql = "SELECT *,
+				(SELECT COUNT(*) FROM
+					notapago INNER JOIN 
+					usuarios ON notapago.idusuario=usuarios.idusuarios		
+			    	WHERE   notapago.estatus 
+			    	IN(0) AND 
+			    	notapago.idtipopago= tipodepago.idtipodepago)as cantidadnota
+				FROM tipodepago WHERE estatus = 1 AND (habilitarcampomonto=1 OR habilitarfoto=1) ORDER by tipo asc";
+
+
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+
+
+
 }
 
 ?>

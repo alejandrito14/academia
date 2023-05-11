@@ -4492,7 +4492,7 @@ function ObtenerServiciosporValidarAdmin() {
 			var respuesta=res.respuesta;
 			var fechaactual=res.fechaactual;
 			if (respuesta.length>0) {
-
+ 
 			//PintarServicioporvalidarAdmin(respuesta,fechaactual);
 			PintarServicioporvalidarAdmin2(respuesta,fechaactual);
 		
@@ -4831,6 +4831,7 @@ function PintarServicioporvalidarAdmin2(respuesta,fechaactual) {
  					<span class="text-muted no-margin-bottom "  style="text-align: center;font-weight:bold;font-size: 14px;color:#007aff!important;" onclick="EditarServicio(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</span>
 
  					<span class="text-muted no-margin-bottom "  style="text-align: center;font-weight:bold;font-size: 12px;color:#007aff!important;" onclick="EditarServicio(`+respuesta[i].idservicio+`)"><span class="text-muted" style="color:#a09f9a!important;">Fecha inicial: </span>`+respuesta[i].fechainicial+` `+`<span class="text-muted" style="color:#a09f9a!important;">Fecha final: </span>`+respuesta[i].fechafinal+`</span>
+ 					<span class="text-muted no-margin-bottom "  style="text-align: center;font-weight:bold;font-size: 12px;color:#007aff!important;" onclick="EditarServicio(`+respuesta[i].idservicio+`)"><span class="text-muted" style="color:#a09f9a!important;">Fecha de creación: </span>`+respuesta[i].fechacreacion+`</span>
 
  					`;
                   
@@ -5174,6 +5175,7 @@ function PintarServiciosRegistrados3(respuesta,fechaactual) {
  					<span class="text-muted no-margin-bottom "  style="text-align: center;font-weight:bold;font-size: 14px;color:#007aff!important;" onclick="EditarServicio(`+respuesta[i].idservicio+`)">`+respuesta[i].titulo+`</span>
 
  					<span class="text-muted no-margin-bottom "  style="text-align: center;font-weight:bold;font-size: 12px;color:#007aff!important;" onclick="EditarServicio(`+respuesta[i].idservicio+`)"><span class="text-muted" style="color:#a09f9a!important;">Fecha inicial: </span>`+respuesta[i].fechainicial+` `+`<span class="text-muted" style="color:#a09f9a!important;">Fecha final: </span>`+respuesta[i].fechafinal+`</span>
+ 					<span class="text-muted no-margin-bottom "  style="text-align: center;font-weight:bold;font-size: 12px;color:#007aff!important;" onclick="EditarServicio(`+respuesta[i].idservicio+`)"><span class="text-muted" style="color:#a09f9a!important;">Fecha de creación: </span>`+respuesta[i].fechacreacion+`</span>
 
  					`;
 

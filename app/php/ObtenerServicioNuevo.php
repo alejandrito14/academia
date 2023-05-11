@@ -31,10 +31,22 @@ try
 	$lo->idservicio=$_POST['idservicio'];
 	$obtenerservicio=$lo->ObtenerServicio();
 
+	$asignar->idservicio=$idservicio;
+	$asignados=$asignar->BuscarAsignaciones();
+	$seencontropago=0;
+	for ($i=0; $i <count($asignados) ; $i++) { 
+		# code...
+		$asignar->idusuario=$asignados[$i]->idusuarios;
+		$pago=$asignar->VerificarSihaPagado();
+
+		if (count($pago)>0) {
+			$seencontropago++;
+		}
+	}
 
 
 	$respuesta['respuesta']=$obtenerservicio[0];
-
+	$respuesta['encontropago']=$seencontropago;
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);
 	echo $myJSON;

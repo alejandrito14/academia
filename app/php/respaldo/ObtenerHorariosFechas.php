@@ -72,7 +72,7 @@ try
 	$obtenerintervalo=$categoriasservicios->buscarcategoriasservicio();
 	$row=$db->fetch_assoc($obtenerintervalo);
 
-	
+	 
 	$horaactual=date('H:i:s');
 	$categorias->idcategoria=$idtipocategoria;
 	$obtenerzonaho=$categorias->ObtenerHorariosSemanaCategorias();
@@ -158,12 +158,12 @@ try
 					for ($k=0; $k <count($horariosdeseados[$i]['horas'][$j]) ; $k++) { 
 					/*	echo date('H:i:s',strtotime($horariosdeseados[$i]['horas'][$j][$k])).' '.date('H:i:s',strtotime($horaactual)).'<br>';*/
 
-						/*if(date('H:i:s',strtotime($horariosdeseados[$i]['horas'][$j][$k])) >=  date('H:i:s',strtotime($horaactual)))
-							{*/
+						//if(date('H:i:s',strtotime($horariosdeseados[$i]['horas'][$j][$k])) >=  date('H:i:s',strtotime($horaactual)))
+						//	{
 
 					 				$arreglo=array('horainicial'=> $horariosdeseados[$i]['horas'][$j][$k],'horafinal'=> $horariosdeseados[$i]['horas'][$j][$k+1],'disponible'=>0);
 					 			array_push($arrayformateado, $arreglo);
-					 		//}
+					 	//	}
 
 
 					 } 
@@ -177,11 +177,34 @@ try
 			}
 
 		
-
 			for ($i=0; $i <count($arreglodiasfechas) ; $i++) { 
 					$arreglodiasfechas[$i]['horasposibles']=array();
 
-					for ($j=0; $j < count($diashoras); $j++) { 
+					if (date('Y-m-d',strtotime($arreglodiasfechas[$i]['fecha']))==date('Y-m-d')) {
+
+							for ($j=0; $j < count($diashoras); $j++) { 
+						$arrayhoras=array();
+						if ($arreglodiasfechas[$i]['numdia']==$diashoras[$j]['dia']) {
+
+							for ($k=0; $k <count($diashoras[$j]['horas']) ; $k++) { 
+							
+								if(date('H:i:s',strtotime($diashoras[$j]['horas'][$k]['horainicial'])) >= $horaactual)
+								{
+								
+									array_push($arrayhoras, $diashoras[$j]['horas'][$k]);
+								}
+							
+							}
+						
+							array_push($arreglodiasfechas[$i]['horasposibles'], $arrayhoras);
+						}
+					}
+						
+					}else{
+
+
+
+							for ($j=0; $j < count($diashoras); $j++) { 
 						
 						if ($arreglodiasfechas[$i]['numdia']==$diashoras[$j]['dia']) {
 
@@ -189,6 +212,10 @@ try
 							array_push($arreglodiasfechas[$i]['horasposibles'], $diashoras[$j]['horas']);
 						}
 					}
+
+					}
+
+				
 
 			}
 			

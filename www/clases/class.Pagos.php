@@ -714,6 +714,42 @@ class Pagos
 		}
 
 
+
+	public function ChecarPagosServicioTotal()
+		{
+			$sql = "
+			SELECT
+			
+			IFNULL(SUM(notapago.total),0) AS total
+			FROM
+			notapago_descripcion
+			JOIN pagos
+			ON notapago_descripcion.idpago = pagos.idpago 
+			JOIN notapago
+			ON notapago.idnotapago = notapago_descripcion.idnotapago
+			WHERE
+			pagado=1 AND notapago.estatus=1 AND
+			  pagos.idservicio='$this->idservicio' 
+			  ORDER BY idpago ";
+			  
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;		
+		}
+
+
 }
 
 ?>

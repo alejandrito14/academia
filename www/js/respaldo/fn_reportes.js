@@ -164,13 +164,10 @@ function PintarTipoServiciosRe(respuesta) {
 
 	$("#v_tiposervicios").html(html);
 	
-	$('#v_tiposervicios').SumoSelect({ 
-		    placeholder: 'Seleccionar tipo de servicio',
-			     selectAll : true,
-   				 selectAllPartialCheck : true,
-                 locale :  ['Aceptar', 'Cancelar', 'Seleccionar todos'],
-				closeAfterClearAll: true, 
-			    });
+	
+
+	$('#v_tiposervicios').SumoSelect().sumo.reload();
+
 }
 function CargarCategorias() {
 

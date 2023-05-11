@@ -67,7 +67,9 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 		 ?>
 			<tr>
 							
-						
+				<td style="text-align: center;">
+					<?php echo $f->imprimir_cadena_utf8($obtener[$i]->idservicio);?>
+				</td>		
 							
 				<td style="text-align: center;">
 					<p><?php echo $f->imprimir_cadena_utf8($obtener[$i]->titulo);?></p>
@@ -166,7 +168,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 						//SCRIPT PARA CONSTRUIR UN clonar
 						$bt->titulo = "";
 						$bt->icon = "mdi-account-check";
-						$bt->funcion = "AbrirModalUsuarios('".$obtener[$i]->idservicio."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$obtener[$i]->titulo."')";
+						$bt->funcion = "AbrirModalUsuarios('".$obtener[$i]->idservicio."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".htmlentities(addslashes($obtener[$i]->titulo))."')";
 
 						/*$bt->permiso = $permisos;*/
 						$bt->tipo = 4;
@@ -179,7 +181,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 						//SCRIPT PARA CONSTRUIR UN clonar
 						$bt->titulo = "";
 						$bt->icon = "mdi-account-multiple";
-						$bt->funcion = "AbrirModalAsignacion('".$obtener[$i]->idservicio."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$obtener[$i]->titulo."')";
+						$bt->funcion = "AbrirModalAsignacion('".$obtener[$i]->idservicio."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".htmlentities(addslashes($obtener[$i]->titulo))."')";
 
 						/*$bt->permiso = $permisos;*/
 						$bt->tipo = 4;
@@ -193,7 +195,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 						//SCRIPT PARA CONSTRUIR UN clonar
 						$bt->titulo = "";
 						$bt->icon = "mdi-cloud-upload";
-						$bt->funcion = "AbrirModalImagenes('".$obtener[$i]->idservicio."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$obtener[$i]->titulo."')";
+						$bt->funcion = "AbrirModalImagenes('".$obtener[$i]->idservicio."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".htmlentities(addslashes($obtener[$i]->titulo))."')";
 
 						/*$bt->permiso = $permisos;*/
 						$bt->tipo = 4;

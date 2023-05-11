@@ -385,6 +385,59 @@ class Notapago
 		    $resp=$this->db->consulta($sql);
 
 	}
+
+
+	public function ObtenerdescripcionNotapago()
+	{
+		$sql="SELECT idnotapago,descripcion as concepto,notapago_descripcion.monto,notapago_descripcion.idpago,fecha,notapago_descripcion.cantidad,
+		CONCAT(usuarios.nombre,' ',usuarios.paterno,' ',usuarios.materno) as nombreusuario,
+		(SELECT CONCAT(u.nombre,' ',u.paterno,' ',u.materno) FROM usuariossecundarios inner JOIN usuarios as u on u.idusuarios=usuariossecundarios.idusuariostutor WHERE idusuariotutorado=pagos.idusuarios ) as tutor
+		FROM notapago_descripcion
+		INNER JOIN pagos on pagos.idpago=notapago_descripcion.idpago
+		INNER JOIN usuarios ON usuarios.idusuarios=pagos.idusuarios WHERE idnotapago='$this->idnotapago'";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function BuscarFoliofactura()
+	{
+		$sql = "SELECT *FROM
+					notapago 
+			    	WHERE  
+			    	 foliofactura='$this->foliofactura' ";
+
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
+	}
+
 	
 	
 }
