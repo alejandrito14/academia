@@ -42,6 +42,15 @@ try
 	$emp->orden = trim($f->guardar_cadena_utf8($_POST['v_orden']));
 	$emp->estatus = trim($f->guardar_cadena_utf8($_POST['v_estatus']));
 
+		$emp->habilitarcostos=0;
+		$emp->habilitarmodalidad=0;
+		$emp->habilitarcampopreciounitario=0;
+		$emp->habilitarmodalidadpago=0;
+		$emp->activarcategoria=0;
+		$emp->activardias=0;
+		$emp->coachs=0;
+		$emp->horarios=0;
+		$emp->zonas=0;
 
 	$emp->numerodias=$_POST['v_numerodias'];
 

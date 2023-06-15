@@ -111,7 +111,9 @@ $estatusapagado=array('NO PAGADO','PAGADO');
  
 
 	$sql="
-			SELECT *from servicios
+			SELECT *,
+		(SELECT COUNT(*) from horariosservicio WHERE horariosservicio.idservicio =servicios.idservicio) as cantidadhorarios
+			from servicios
 
 LEFT JOIN categorias on categorias.idcategorias=servicios.idcategoriaservicio
 WHERE   servicios.estatus IN(0,1) and categorias.avanzado=1
@@ -163,6 +165,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 		   
 		    <th>ID</th>
 		    <th>SERVICIO</th>
+		    <th>HORARIOS</th>
 		    <th>ID</th>
 		    <th>ALUMNO</th>
 		    <th>CELULAR</th>
@@ -368,7 +371,8 @@ $fechafin=date('Y-m-d',strtotime($fechafin));
 								'fechahoramax'=>date('d-m-Y',strtotime($peridohorario[0]->fechamax)),
 								'folio'=>$folio,
 								'totalpagado'=>$totalpagado,
-								'coaches'=>$arraycoachcomision
+								'coaches'=>$arraycoachcomision,
+								'cantidadhorarios'=>$array[$k]->cantidadhorarios
 
 
 
@@ -402,6 +406,7 @@ $fechafin=date('Y-m-d',strtotime($fechafin));
 		 			 <tr>
 				     <td><?php echo $pagosservicios[$l]['idservicio']; ?></td>
 				     <td><?php echo $pagosservicios[$l]['nombreservicio']?>
+
 				     	
 				     	<p> PERIODO: <?php echo $pagosservicios[$l]['fechahoramin'].' / '. $pagosservicios[$l]['fechahoramax'];?></p>
 				     	<p style="padding: 0;margin: 0;">
@@ -421,6 +426,8 @@ $fechafin=date('Y-m-d',strtotime($fechafin));
 				 		
 
 				     </td>
+
+				     <td><?php echo $pagosservicios[$l]['cantidadhorarios'];?></td>
 				  
 
 				      <td><?php echo $pagosservicios[$l]['idalumno']; ?></td>

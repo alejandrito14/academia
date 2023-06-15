@@ -650,10 +650,18 @@ function detalleAlumno(idusuario) {
 		data:datos,
 		url:'catalogos/alumnos/ObtenerDetalleUsuario.php', //Url a donde la enviaremos
 		async:false,
-		success: function(res){
+		success: function(res){ 
 			console.log(res);
 			var usuario=res.respuesta[0];
 			Pintardatos(usuario);
+			var serviciosasignados=res.asignados;
+			var membresias=res.membresias;
+			var asociados=res.asociados;
+			var tutorados=res.tutorados;
+			PintarServiciosAsignados(serviciosasignados,usuario.tipo);
+			PintarServiciosMembresias(membresias);
+			PintarAsociadosdetalle(asociados);
+			PintarTutoradosdetalle(tutorados);
 			//CargarServicios();
 
 		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -666,7 +674,7 @@ function detalleAlumno(idusuario) {
 
 	});
 }
-
+ 
 function Pintardatos(respuesta) {
 	console.log(respuesta);
 	$(".imgperfil").attr('src',respuesta.imagenperfil);
@@ -677,5 +685,223 @@ function Pintardatos(respuesta) {
 	$(".divcorreo").html(respuesta.email);
 	$(".divsexo").html(respuesta.sexo);
 	$(".divcelular").html(respuesta.celular);
+	$(".divtipousuario").html(respuesta.nombretipo);
 	$("#modaldetallealumno").modal();
+	CambioTab(1);
+}
+
+function PintarServiciosAsignados(respuesta,tipo) {
+	var html="";
+	html+=`<div class="table-responsive">`;
+	if (respuesta.length>0) {
+		html+=`<table class="table" id="serviciosasi">
+			<thead>
+			<th>Id</th>
+			<th>Servicio</th>
+			<th>Periodo inicial</th>
+			<th>Periodo final</th>`;
+			if (tipo==3) {
+			html+=`<th>Estatus</th>`;
+
+			html+=`<th>Pagado</th>`;
+		}
+
+			html+=`</thead>
+			<tbody>
+
+		`;
+		for (var i =0; i <respuesta.length; i++) {
+				var aceptado='NO ACEPTADO';
+				var coloraceptado="background:#da542e;color: white;";
+			if (respuesta[i].aceptarterminos==1) {
+				aceptado='ACEPTADO';
+				coloraceptado="background:#007aff;color: white;";
+			}
+			var colorpagado="background:#da542e;color: white;";
+			pagado='NO PAGADO';
+			if (respuesta[i].pagado>=1) {
+				pagado='PAGADO';
+				colorpagado="background:#28b779;color:white;";
+			}
+
+			html+=`
+				<tr>
+				<td>`+respuesta[i].idservicio+`</td>
+				<td>`+respuesta[i].titulo+`</td>
+				<td>`+respuesta[i].fechamin+`</td>
+				<td>`+respuesta[i].fechamax+`</td>`;
+				if (tipo==3) {
+				html+=`<td><span  class="badge" style="`+coloraceptado+`">`+aceptado+`</span></td>`;
+			
+				html+=`<td><span  class="badge" style="`+colorpagado+`">`+pagado+`</span></td>`;
+				
+				}
+
+				html+=`</tr>`;
+		}
+
+		html+=`
+			</tbody>
+		</table>`;
+
+	}
+	html+=`</div>`;
+
+	$(".divservicios").html(html);
+	CargarPaginacion('serviciosasi');
+}
+
+function CambioTab(numtab) {
+	
+	$(".tabskardex").removeClass('active');
+	$("#v_tab_"+numtab).addClass('active');
+
+	$(".tabsk").removeClass('show');
+	$(".tabsk").removeClass('active');
+	$("#v-pills-link"+numtab).addClass('active');
+	$("#v-pills-link"+numtab).addClass('show');
+
+	
+}
+
+function CargarPaginacion(id) {
+
+
+var oTable = $('#'+id).dataTable( {		
+			 "oLanguage": {
+					"sLengthMenu": "Mostrar _MENU_ Registros por pagina",
+					"sZeroRecords": "Nada Encontrado - Disculpa",
+					"sInfo": "Mostrar _START_ a _END_ de _TOTAL_ Registros",
+					"sInfoEmpty": "desde 0 a 0 de 0 records",
+					"sInfoFiltered": "(filtered desde _MAX_ total Registros)",
+					"sSearch": "Buscar",
+					"oPaginate": {
+								 "sFirst":    "Inicio",
+								 "sPrevious": "Anterior",
+								 "sNext":     "Siguiente",
+								 "sLast":     "Ultimo"
+								 }
+					},
+	   "sPaginationType": "full_numbers",
+	   		 	"ordering": true,
+
+});
+//});
+
+
+}
+
+function PintarServiciosMembresias(respuesta) {
+	var html="";
+	if (respuesta.length>0) {
+
+		html+=`<table class="table" id="membresiasasi">
+			<thead>
+			<th>Id</th>
+			<th>Membresía</th>
+			<th>Pagado</th>
+			<th>Fecha expiración</th>
+
+			</thead>
+			<tbody>
+
+		`;
+		for (var i = 0; i < respuesta.length; i++) {
+				var pagado='NO PAGADO';
+				if (respuesta[i].pagado>=1) {
+					
+					pagado='PAGADO';
+				}
+
+			html+=`
+			<tr>
+				<td>`+respuesta[i].idmembresia+`</td>
+				<td>`+respuesta[i].titulo+`</td>
+				<td>`+pagado+`</td>
+				<td>`+respuesta[i].fechaexpiracion+`</td>
+				
+				</tr>	
+
+
+			`;
+		}
+
+		html+=`
+			</tbody>
+		</table>`;
+	}
+
+	$(".divmembresias").html(html);
+
+	CargarPaginacion('membresiasasi');
+}
+
+function PintarAsociadosdetalle(respuesta) {
+	var html="";
+
+	if (respuesta.length>0) {
+			html+=`<table class="table" id="asociadostbl">
+			<thead>
+			<th>Id</th>
+			<th>Nombre</th>
+			<th>Celular</th>
+
+			</thead>
+			<tbody>
+
+		`;
+		for (var i = 0; i<respuesta.length; i++) {
+				html+=`
+				<tr>
+				<td>`+respuesta[i].idusuariotutorado+`</td>
+				<td>`+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`</td>
+				<td>`+respuesta[i].celular+`</td>
+				
+				</tr>	
+			`;
+		}
+
+		html+=`
+			</tbody>
+		</table>`;
+		
+	}
+
+	$(".divasociados").html(html);
+
+	CargarPaginacion('asociadostbl');
+}
+
+function PintarTutoradosdetalle(respuesta) {
+	var html="";
+	
+	if (respuesta.length>0) {
+			html+=`<table class="table" id="tutoradostbl">
+			<thead>
+			<th>Id</th>
+			<th>Nombre</th>
+
+			</thead>
+			<tbody>
+
+		`;
+		for (var i = 0; i<respuesta.length; i++) {
+				html+=`
+				<tr>
+				<td>`+respuesta[i].idusuariotutorado+`</td>
+				<td>`+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`</td>
+				
+				</tr>	
+			`;
+		}
+
+		html+=`
+			</tbody>
+		</table>`;
+		
+	}
+
+	$(".divtutorados").html(html);
+
+	CargarPaginacion('tutoradostbl');
 }

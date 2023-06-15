@@ -18,14 +18,14 @@ function ObtenerClientes() {
 		  var resp = msj.usuarios;
 		  $("#myModalUsuarios").modal();
 
-		  PintarUsuariosAlumnos(resp);
+		  PintarUsuariosAlumnosAs(resp);
 
 			 			
 			}
 	});
 }
 
-function PintarUsuariosAlumnos(respuesta) {
+function PintarUsuariosAlumnosAs(respuesta) {
 	var html="";
 	if (respuesta.length>0) {
 
@@ -35,8 +35,8 @@ function PintarUsuariosAlumnos(respuesta) {
 			html+=`
 
 				<div class="form-check alumnos_"  id="alumnos_`+respuesta[i].idusuarios+`">		 
-		  		<input  type="checkbox"   value="`+respuesta[i].idusuarios+`" class="form-check-input chkalumno" id="inputalumno_`+respuesta[i].idusuarios+`" onchange="SeleccionarAlumno(`+respuesta[i].idusuarios+`,'`+nombre+`')">
-		  		<label class="form-check-label" for="flexCheckDefault" style="margin-top: 0.2em;" id="nombrealumnos_`+respuesta[i].idusuarios+`">`+nombre+`</label> 
+		  		<input  type="checkbox"   value="`+respuesta[i].idusuarios+`" class="form-check-input chkalumno" id="inputalumno_`+respuesta[i].idusuarios+`" onchange="SeleccionarAlumno2(`+respuesta[i].idusuarios+`,'`+nombre+`')" />
+		  		<label class="form-check-label" for="flexCheckDefault" style="margin-top: 0.2em;" id="nombrealumnos_`+respuesta[i].idusuarios +`" >`+nombre+`</label> 
 				</div>						    		
 
 			`;
@@ -46,7 +46,10 @@ function PintarUsuariosAlumnos(respuesta) {
 }
 var alumnoseleccionado=[];
 var nombreseleccionado=[];
-function SeleccionarAlumno(idusuario,nombre) {
+
+  var idusuarioseleccion=0;
+
+function SeleccionarAlumno2(idusuario,nombre) {
 	
 	/*$(".chkalumno").prop('checked',false);
 	$("#inputalumno_"+idusuario).prop('checked',true);
@@ -54,6 +57,7 @@ function SeleccionarAlumno(idusuario,nombre) {
 	alumnoseleccionado=idusuario;
 	nombreseleccionado=nombre;
 */alumnoseleccionado=[];
+	idusuarioseleccion=idusuario;
 	$(".chkalumno").each(function( index ) {
 	   if($(this).is(':checked')){
 	   	var id=$(this).attr('id');
@@ -82,11 +86,10 @@ function AceptarSeleccion() {
 	$("#lstBox1").html('');
 	$("#lstBox2").html('');
 		ObtenerServiciosporasignar();
-	
 
 	var html="";
 	for (var i = 0; i < alumnoseleccionado.length; i++) {
-		html+=`<p style="margin:0;" id="seleccionado_`+alumnoseleccionado[i].idusuario+`">`+alumnoseleccionado[i].nombre+`</p>`;
+		html+=`<p style="margin:0;" id="seleccionado_`+alumnoseleccionado[i]+`">`+alumnoseleccionado[i].nombre+`</p>`;
 	}
 	$("#listarseleccionados").html(html);
 	
@@ -385,5 +388,37 @@ function VerificarServicio(idservicio) {
 
 }
 
+function ValidacionUsuarioServicio(e) {
+	 		 var idservicios=[];
+             $("#lstBox1 option:selected").each(function(){
+                 idservicios.push($(this).val());
+               });
+
+             for (var i = 0; i < idservicios.length; i++) {
+
+              
+                idservicioglobal=idservicios[i];
+                idusuarios=idusuarioseleccion;
+                console.log(idusuarios+''+idservicioglobal);
+                 var promesa=VerificacionUsuarioServicio(idusuarios);
+                   promesa.then(r => {
+
+                    if (r.pagospendientes==0) {
+
+                          $('select').moveToListAndDelete('#lstBox1', '#lstBox2');
+                          e.preventDefault();
+
+                    }else{
+
+                    	alert('El usuario no se puede asignar a este servicio, debido a que tiene un pago pendiente');
+			
+
+                    }
+
+                  });
+
+             }
+          
+}
 
 

@@ -793,7 +793,7 @@ public function validarUsuarioClienteTokenCel()
     public function obtenerUsuariosAlumnos($idusuariosservicio)
     {
          $sql = "SELECT * FROM usuarios INNER JOIN tipousuario ON tipousuario.idtipousuario=usuarios.tipo
-           WHERE tipo IN(3) ";
+           WHERE tipo IN(3) AND usuarios.estatus=1 ";
            
         if ($idusuariosservicio!='') {
              $sql.="AND idusuarios NOT IN($idusuariosservicio)";

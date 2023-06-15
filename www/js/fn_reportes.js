@@ -21,6 +21,30 @@ function CargarSucursales()
 }
 
 
+function CargarCoaches()
+{
+	
+	$.ajax({
+		type:'POST',
+		url: 'catalogos/reportes/li_coaches.php',
+		cache:false,
+		async:false,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+		alert(error);						  
+		 },
+		success : function (msj){
+		
+			$('#v_coaches').html(msj);   
+			$('#v_coaches').SumoSelect().sumo.reload();
+
+			}
+		}); 
+}
+
 function CargarFiltrosreportes(idreporte) {
 
 	if (idreporte>0) {
@@ -54,7 +78,12 @@ function CargarFiltrosreportes(idreporte) {
 			var fechactual=msj.fechactual;
 			var habilitartiposervicios=respuesta.habilitartiposervicios;
 
-			Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafin,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios);
+
+			var estatusaceptado=respuesta.habilitarestatusaceptado;
+			var estatuspagado=respuesta.habilitarestatuspagado;
+			var coaches=respuesta.habilitarcoaches;
+
+			Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafin,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios,estatusaceptado,estatuspagado,coaches);
 			
 
 			$("#fechainicio1").val(fechactual);
@@ -74,7 +103,7 @@ function CargarFiltrosreportes(idreporte) {
 	}
 }
 
-function Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafinal,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios) {
+function Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafinal,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios,estatusaceptado,estatuspagado,coaches) {
 	$("#tiposervicios").css('display','none');
 	$("#servicios").css('display','none');
 	$("#fechainicio").css('display','none');
@@ -85,6 +114,10 @@ function Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafi
 	$("#horafin").css('display','none');
 	$("#contenedor_reportes").html('');
 	$("#btnpantalla").css('display','none');
+	$("#estatusaceptado").css('display','none');
+	$("#estatuspagado").css('display','none');
+	$("#coaches").css('display','none');
+
 	//$("#btnpantalla").css('display','block');
 	$("#btnpantalla").attr('onclick',funcion);
 
@@ -127,6 +160,24 @@ function Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafi
 		CargarTipoServiciosRe();
 	}
 	
+
+	if (estatusaceptado==1){
+	$("#estatusaceptado").css('display','block');
+		$('#v_estatusaceptado').SumoSelect().sumo.reload();
+
+	}
+	if (estatuspagado==1){
+	$("#estatuspagado").css('display','block');
+	$('#v_estatuspagado').SumoSelect().sumo.reload();
+
+	}
+	if (coaches==1) {
+		CargarCoaches();
+	$("#coaches").css('display','block');
+
+
+
+	}
 }
 
 function CargarTipoServiciosRe() {
@@ -955,11 +1006,14 @@ function GenerarReportePantallaTotalizado() {
 
 	var horainicio=$("#v_horainicio").val();
 	var horafin=$("#v_horafin").val();
+	var estatusaceptado=$("#v_estatusaceptado").val();
+	var estatuspagado=$("#v_estatuspagado").val();
+	var v_coaches=$("#v_coaches").val();
 
 	var fechainicio1=fechainicio.split(' ')[0];
 	var fechafin1=fechafin.split(' ')[0];
 	var v_tiposervicios=$("#v_tiposervicios").val();
-	var datos="idservicio="+idservicio+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&v_tiposervicios="+v_tiposervicios+"&pantalla=1";
+	var datos="idservicio="+idservicio+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&v_tiposervicios="+v_tiposervicios+"&estatusaceptado="+estatusaceptado+"&estatuspagado="+estatuspagado+"&v_coaches="+v_coaches+"&pantalla=1";
 
 	var url='modelosreportes/notaspago/excel/rpt_Totalizado.php'; 
 
@@ -982,6 +1036,85 @@ function GenerarReportePantallaTotalizado() {
 			$("#contenedor_reportes").html(msj);
 
 			CargarEstilostable2('.vertabla',5,'asc');
+			$("#btnpantalla").css('display','block');
+
+			}
+		}); 
+}
+
+function GenerarReporteTotalizado() {
+	var idservicio=$("#v_servicios").val();
+	var fechainicio=$("#fechainicio1").val();
+	var fechafin=$("#fechafin").val();
+
+	var horainicio=$("#v_horainicio").val();
+	var horafin=$("#v_horafin").val();
+	var estatusaceptado=$("#v_estatusaceptado").val();
+	var estatuspagado=$("#v_estatuspagado").val();
+	var v_coaches=$("#v_coaches").val();
+	var fechainicio1=fechainicio.split(' ')[0];
+	var fechafin1=fechafin.split(' ')[0];
+	var v_tiposervicios=$("#v_tiposervicios").val();
+	var datos="idservicio="+idservicio+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&v_tiposervicios="+v_tiposervicios+"&estatusaceptado="+estatusaceptado+"&estatuspagado="+estatuspagado+"&v_coaches="+v_coaches+"&pantalla=0";
+
+	var url='modelosreportes/notaspago/excel/rpt_Totalizado.php?'+datos; 
+
+	//alert(url);
+	window.open(url, '_blank');	
+}
+
+function GenerarReporteClasesModificado() {
+	
+	var idservicio=$("#v_servicios").val();
+	var fechainicio=$("#fechainicio1").val();
+	var fechafin=$("#fechafin").val();
+
+	var horainicio=$("#v_horainicio").val();
+	var horafin=$("#v_horafin").val();
+
+	var fechainicio1=fechainicio.split(' ')[0];
+	var fechafin1=fechafin.split(' ')[0];
+	var v_tiposervicios=$("#v_tiposervicios").val();
+	var datos="idservicio="+idservicio+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&v_tiposervicios="+v_tiposervicios+"&pantalla=0";
+
+	var url='modelosreportes/tiposervicios/excel/rpt_TipoServiciosModificado.php?'+datos; 
+	window.open(url, '_blank');
+}
+
+function GenerarReportePantallaClasesModificado() {
+	var idservicio=$("#v_servicios").val();
+	var fechainicio=$("#fechainicio1").val();
+	var fechafin=$("#fechafin").val();
+
+	var horainicio=$("#v_horainicio").val();
+	var horafin=$("#v_horafin").val();
+
+	var fechainicio1=fechainicio.split(' ')[0];
+	var fechafin1=fechafin.split(' ')[0];
+	var v_tiposervicios=$("#v_tiposervicios").val();
+	var datos="idservicio="+idservicio+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&v_tiposervicios="+v_tiposervicios+"&pantalla=1";
+
+	var url='modelosreportes/tiposervicios/excel/rpt_TipoServiciosModificado.php'; 
+
+
+	$.ajax({
+		type:'GET',
+		url: url,
+		cache:false,
+		data:datos,
+		async:false,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+		alert(error);						  
+		 },
+		success : function (msj){
+		
+			$("#contenedor_reportes").html(msj);
+
+			CargarEstilostable('.vertabla');
 			$("#btnpantalla").css('display','block');
 
 			}

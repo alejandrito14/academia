@@ -1928,7 +1928,7 @@ function PintarImagenesNota(imagenes,rutaimagenes) {
 	if (rutaimagenes!='' && rutaimagenes!=null) {
 	var ruta="app/"+rutaimagenes+"/php/upload/comprobante/";
 		}else{
-	var ruta="app/php/upload/comprobante/";
+	var ruta="../app/php/upload/comprobante/";
 
 		}
 	if (imagenes.length>0) {
@@ -1936,7 +1936,7 @@ function PintarImagenesNota(imagenes,rutaimagenes) {
 			
 			html+=`
 				<div class="card" style="width: 18rem;">
-				  <img class="card-img-top" src="`+ruta+imagenes[i].rutacomprobante+`" >
+				  <img class="card-img-top" src="`+ruta+imagenes[i].rutacomprobante+`" style="cursor:pointer;"  onclick="mostrarModal(this)">
 				  <div class="card-body">
 				    <h5 class="card-title"></h5>
 				    <p class="card-text">`+imagenes[i].comentario+`</p>
@@ -1998,12 +1998,16 @@ function GuardarValidacionNota(idnotapago) {
 }
 
 function GuardarCancelacion(idnotapago) {
+
+
 	$("#txtdescripcioncancelacion").text('');
 	$("#txtdescripcioncancelacion").removeClass('inputrequerido');
 	$("#txtcancelacion").css('border','0px');
 
 	var descripcion=$("#txtcancelacion").val();
-	var datos="descripcion="+descripcion+"&idnotapago="+idnotapago+"&estado=2";
+	var contra=$("#txtcontrase").val();
+	var myString   = "issoftware";
+	var datos="descripcion="+descripcion+"&idnotapago="+idnotapago+"&estado=2"+"&pass="+contra;
 	var pagina = "CancelarNota.php";
      var bandera=1;
 	if (descripcion=='') {
@@ -2022,11 +2026,19 @@ function GuardarCancelacion(idnotapago) {
       async:false,
       success: function(msj){
 
+      	if (msj.respuesta==1) {
+      	   $("#txtcontrase").val('');
       	   $("#txtcancelacion").val('');
            $("#modalcancelacion").modal('hide');
            AbrirNotificacion("SE REALIZARON LOS CAMBIOS CORRECTAMENTE","mdi-checkbox-marked-circle ");
            ObtenerNotasPorvalidar();
            $(".divdetalle").css('display','none');
+
+       	}else{
+
+
+       		alert('Contraseña Inválida');
+       }
 
       },error: function(XMLHttpRequest, textStatus, errorThrown){ 
         var error;
@@ -2312,14 +2324,14 @@ estatus=['PENDIENTE','ACEPTADO','CANCELADO'];
 	if (rutaimagenes!='' && rutaimagenes!=null) {
 	var ruta="app/"+rutaimagenes+"/php/upload/datosfactura/";
 		}else{
-	var ruta="app/php/upload/datosfactura/";
+	var ruta="../app/php/upload/datosfactura/";
 
 		}
 		for (var i = 0; i < imagenesconstancia.length; i++) {
 			
 			html+=`
 				<div class="card" style="width: 18rem;">
-				  <img class="card-img-top" src="`+ruta+imagenesconstancia[i].ruta+`" >
+				  <img class="card-img-top" src="`+ruta+imagenesconstancia[i].ruta+`" style="cursor:pointer;"  onclick="mostrarModal(this)">
 				  <div class="card-body">
 				    <h5 class="card-title"></h5>
 				  </div>
@@ -2335,6 +2347,17 @@ estatus=['PENDIENTE','ACEPTADO','CANCELADO'];
 
 }
 
+function mostrarModal(imagen) {
+ 
+  var imagenModal = document.getElementById('imagenModal');
+  imagenModal.src = imagen.src;
+  $("#modalimagen").modal();
+}
+
+function zoomImagen(event) {
+  var imagen = event.target;
+  imagen.classList.toggle('zoom');
+}
 
 
 function Abrirmodalfactura(idnotapago,folio) {

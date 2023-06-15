@@ -117,14 +117,24 @@ $estatuspago = array('NO PAGADO','PAGADO');
 <div class="card">
 	<div class="card-body">
 		<div class="table-responsive" id="contenedor_Pagos">
+				<div class="row" style="margin-bottom:1em;">
+				<div class="col-md-9"></div>
+					<div class="col-md-3">
+							<button id="exportarBtn" class="btn btn-success" style="margin-left: 70px;">Exportar a Excel</button>
+					</div>
+			</div>
+		
+
 			<table id="tbl_pagos" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
 				<thead>
 					<tr>
 						 
 						<th style="text-align: center;">FOLIO </th> 
 						<th style="text-align: center;">ALUMNO</th>
+							<th style="text-align: center;">DESCRIPCIÓN</th>
 						<th style="text-align: center;">FECHA</th>
 						<th style="text-align: center;">MÉTODO DE PAGO</th>
+					
 						<th style="text-align: center;">MONTO</th>
 						<th style="text-align: center;">ESTATUS</th>
 
@@ -154,8 +164,25 @@ $estatuspago = array('NO PAGADO','PAGADO');
 
 							<td style="text-align: center;"><?php echo $l_pagos_row['nombre'].' '.$l_pagos_row['paterno'].' '.$l_pagos_row['materno'];?></td>
 
+									<td style="text-align: center;"><?php 
+								$notapago->idnotapago=$l_pagos_row['idnotapago'];
+								$obtenerdescripcion=$notapago->ObtenerdescripcionNota();
+							$concepto="";
+								for ($i=0; $i <count($obtenerdescripcion) ; $i++) { 
+								 $concepto.=$obtenerdescripcion[$i]->concepto.'<br>';
+								}
+
+								echo $concepto;
+
+							?></td>
+
+								<td style="text-align: center;"><?php echo $l_pagos_row['tipopago'];?></td>
+							
+
 							<td style="text-align: center;"><?php echo date('d-m-Y H:i:s',strtotime($l_pagos_row['fecha']));?></td>
-							<td style="text-align: center;"><?php echo $l_pagos_row['tipopago'];?></td>
+
+
+
 
 							<td style="text-align: center;">$<?php echo $l_pagos_row['total'];?></td>
 							<?php 
@@ -283,6 +310,40 @@ $estatuspago = array('NO PAGADO','PAGADO');
   </div>
 </div>
 
+<div class="modal" id="modalfiltro" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">EXPORTAR A EXCEL</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<form action="">
+      		  <div class="form-group">
+			    <label for="formGroupExampleInput">Fecha inicio</label>
+			    <input type="date" class="form-control" id="txtfechainicio" placeholder="">
+			  </div>
+
+			  <div class="form-group">
+			    <label for="formGroupExampleInput">Fecha final</label>
+			    <input type="date" class="form-control" id="txtfechafinal" placeholder="">
+			  </div>
+      	</form>
+     	
+
+      		
+      </div>
+      <div class="modal-footer">
+
+      	<button type="button" class="btn btn-success" onclick="ExportarExcel()">EXPORTAR</button>
+        
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
@@ -313,5 +374,30 @@ $estatuspago = array('NO PAGADO','PAGADO');
 
 
 		} );
+
+
+	  $('#exportarBtn').click(function() {
+
+	  	$("#modalfiltro").modal();
+	  	
+		});
+
+		function ExportarExcel() {
+	var idservicio='';
+	var fechainicio=$("#txtfechainicio").val();
+	var fechafin=$("#txtfechafinal").val();
+
+	var horainicio='';
+	var horafin='';
+
+	var fechainicio1=fechainicio.split(' ')[0];
+	var fechafin1=fechafin.split(' ')[0];
+
+	var datos="idservicio="+idservicio+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&pantalla=0";
+
+	var url='catalogos/notaspago/reporte/reportenotas.php?'+datos; 
+
+			window.open(url, '_blank');
+		}
 </script>
 

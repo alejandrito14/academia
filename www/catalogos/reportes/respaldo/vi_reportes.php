@@ -304,6 +304,15 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 	$("#alumnos").css('display','none');
 	$("#horainicio").css('display','none');
 	$("#horafin").css('display','none');
+
+		$('#v_tiposervicios').SumoSelect({ 
+			    placeholder: 'Seleccionar tipo de servicio',
+				     selectAll : true,
+	   				 selectAllPartialCheck : true,
+	                 locale :  ['Aceptar', 'Cancelar', 'Seleccionar todos'],
+					closeAfterClearAll: true, 
+				    });
+		
 	//CargarSucursales();
 //	CargarCategorias();
 	

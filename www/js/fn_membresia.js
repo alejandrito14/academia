@@ -97,9 +97,36 @@ function Guardarmembresia(form,regresar,donde,idmenumodulo)
 			}
 		}
 
+				var diasemana=[];
+				var horainicio=[];
+				var horafin=[];
+		$(".diasemana").each(function(){
+					var valor=$(this).val();
+					diasemana.push(valor);
+				});
+
+
+		$(".horainiciodia").each(function(){
+			var valor=$(this).val();
+			horainicio.push(valor);
+
+		});
+
+
+		$(".horafindia").each(function(){
+			var valor=$(this).val();
+			horafin.push(valor);
+
+		});
+
 		var porcategoria=$("#v_tiposervicio").is(':checked')?1:0;
 		var porservicio=$("#v_servicio").is(':checked')?1:0;
+		var porhorario=$("#v_horarioseleccion").is(':checked')?1:0;
 		var v_color=$("#v_color").val();
+		var v_porhorariodescuento=$("#v_porhorariodescuento").val();
+		var v_porhorariomonto=$("#v_porhorariomonto").val();
+		var v_porhorariodescuento=$("#v_porhorariodescuento").val();
+		var v_porhorariomonto=$("#v_porhorariomonto").val();
 		var id=$("#id").val();
 		var datos = new FormData();
 
@@ -134,7 +161,16 @@ function Guardarmembresia(form,regresar,donde,idmenumodulo)
 		datos.append('v_limitemembresia',v_limitemembresia);
 		datos.append('v_fecha',fecha);
 		datos.append('v_repetir',repetir);
-		
+		datos.append('porhorario',porhorario);
+		datos.append('v_porhorariodescuento',v_porhorariodescuento);
+		datos.append('v_porhorariomonto',v_porhorariomonto);
+		datos.append('diasemana',diasemana);
+		datos.append('horainicio',horainicio);
+		datos.append('horafin',horafin);
+
+
+
+
 		if (bandera==1) {
 		$('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
 
@@ -580,6 +616,18 @@ function Desplegarporservicio() {
 }
 
 
+function Desplegarhorarioselecciona() {
+
+		if ($("#v_horarioseleccion").is(':checked')) {
+		
+		$(".divhorarios").css('display','block');	
+	
+	}else{
+		$(".divhorarios").css('display','none');	
+
+	}
+}
+
 
 function AgregarTipoNuevo(){
 
@@ -727,3 +775,172 @@ function CargarMembresias(valor) {
 					}
 				});
 }
+
+
+
+function AgregarHorarioNuevo(){
+			
+
+
+	contadorhorarioatencion=parseFloat($(".horariosatencion").length)+1;
+
+		tabindex=parseFloat(6)+parseFloat(contadorhorarioatencion);
+
+
+	var html=`
+					<div class="row horariosatencion" id="contador`+contadorhorarioatencion+`">
+										<div class="col-md-3">
+									<label>DIA</label>	
+
+									<select class="form-control diasemana" tabindex="`+tabindex+`">
+										<option value="t">SELECCIONAR DIA</option>
+										<option value="0">DOMINGO</option>
+										<option value="1">LUNES</option>
+										<option value="2">MARTES</option>
+										<option value="3">MIÉRCOLES</option>
+										<option value="4">JUEVES</option>
+										<option value="5">VIERNES</option>
+										<option value="6">SÁBADO</option>
+
+									</select>
+									</div>
+									<div class="col-md-4">
+									<label>HORA INICIO:</label>
+										<div class="form-group mb-2" style="">
+											<input type="time"  class="form-control horainiciodia" tabindex="`+(tabindex+1)+`"  >
+										</div>
+
+									</div>
+
+								
+									<div class="col-md-4">
+
+										<label>HORA FIN:</label>
+										<div class="form-group mb-2" style="">
+											<input type="time"  class="form-control horafindia" tabindex="`+(tabindex+1)+`" >
+										</div>
+									</div>
+									<div class="col-md-1">
+										<button type="button"  style="margin-top: 2em;" onclick="EliminarOpcionHorario(`+contadorhorarioatencion+`)" class="btn btn_rojo"><i class="mdi mdi-delete-empty"></i></button>
+									</div>
+								</div>
+
+	`;
+
+
+	$("#horarios").append(html)
+
+
+	
+	
+	
+	//CargarServicios();
+
+}
+
+function ObtenerHorariosMembresia(idmembresia) {
+
+		var datos="idmembresia="+idmembresia;
+
+
+		$.ajax({
+					url: 'catalogos/membresia/ObtenerHorariosMembresia.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					dataType:'json',
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+
+						var horarios=msj.respuesta;
+
+						if (horarios.length>0) {
+							$(".divhorarios").css('display','block');
+					
+							PintarHorariosmembresia(horarios);
+						}
+
+
+					}
+				});
+}
+
+function PintarHorariosmembresia(respuesta) {
+			var html="";
+	var htmls="";
+
+	
+
+				for (var i = 0; i <respuesta.length; i++) {
+
+						obtenerdiv=$("#horarios").html();
+						contadorhorarioatencion=parseFloat($(".horariosatencion").length)+1;
+						tabindex=parseFloat(6)+parseFloat(contadorhorarioatencion);
+	
+					var html=`
+					<div class="row horariosatencion" id="contador`+contadorhorarioatencion+`">
+										<div class="col-md-3">
+									<label>DIA</label>	
+
+									<select class="form-control diasemana" id="diaelegido_`+contadorhorarioatencion+`" tabindex="`+tabindex+`">
+										<option value="t">SELECCIONAR DIA</option>
+										<option value="0">DOMINGO</option>
+										<option value="1">LUNES</option>
+										<option value="2">MARTES</option>
+										<option value="3">MIÉRCOLES</option>
+										<option value="4">JUEVES</option>
+										<option value="5">VIERNES</option>
+										<option value="6">SÁBADO</option>
+
+									</select>
+									</div>
+									<div class="col-md-4">
+									<label>HORA INICIO:</label>
+										<div class="form-group mb-2" style="">
+											<input type="time"  class="form-control horainiciodia" id="horarioinicio_`+contadorhorarioatencion+`" tabindex="`+(tabindex+1)+`"  >
+										</div>
+
+									</div>
+
+								
+									<div class="col-md-4">
+
+										<label>HORA FIN:</label>
+										<div class="form-group mb-2" style="">
+											<input type="time"  class="form-control horafindia" id="horariofin_`+contadorhorarioatencion+`" tabindex="`+(tabindex+1)+`" >
+										</div>
+									</div>
+									<div class="col-md-1">
+										<button type="button"  style="margin-top: 2em;" onclick="EliminarOpcionHorario(`+contadorhorarioatencion+`)" class="btn btn_rojo"><i class="mdi mdi-delete-empty"></i></button>
+									</div>
+								</div>
+
+	`;
+
+
+	
+
+	 	colocarhtml=obtenerdiv+html;
+			var dia=respuesta[i].dia;
+			var horainicial=respuesta[i].horainicial;
+			var horafinal=respuesta[i].horafinal;
+
+
+			$("#horarios").append(html);
+			$("#diaelegido_"+contadorhorarioatencion).val(dia);
+			$("#horarioinicio_"+contadorhorarioatencion).val(horainicial);
+ 		$("#horariofin_"+contadorhorarioatencion).val(horafinal);
+	
+
+			
+	}
+
+			
+
+}
+

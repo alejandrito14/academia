@@ -14,7 +14,17 @@ class CategoriasServicios
 	//Funcion para obtener todos los categoriasservicio activos
 	public function ObtcategoriasservicioActivos()
 	{
-		$sql = "SELECT * FROM categoriasservicio WHERE estatus = 1";
+		$sql = "SELECT
+		categoriasservicio.nombrecategoria,
+		categoriasservicio.estatus,
+		clasificacion.nombre,
+		categoriasservicio.idcategoriasservicio
+		FROM
+		categoriasservicio
+		JOIN clasificacion
+		ON categoriasservicio.idclasificacion = clasificacion.idclasificacion
+		WHERE
+		categoriasservicio.estatus = 1";
 	
 		$resp = $this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -100,7 +110,26 @@ class CategoriasServicios
 		return $resp;
 	}
 
+	public function ObtenerIntervaloBajo()
+	{
+		$sql="SELECT MIN(intervalo) as minimo,idcategoriasservicio FROM categoriasservicio ";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
 
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 	
 
 }

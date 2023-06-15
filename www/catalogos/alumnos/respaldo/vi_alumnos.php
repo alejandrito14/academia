@@ -133,6 +133,8 @@ var oTable = $('#zero_config').dataTable( {
 				<table id="zero_config" class="table table-bordered table-hover" cellpadding="0" cellspacing="0">
 				<thead>
 					<tr>
+						<th>ID</th>
+
  						<th>TIPO</th>
  					 <th>FOTO</th>
  	 				<th>ALIAS</th>
@@ -145,6 +147,7 @@ var oTable = $('#zero_config').dataTable( {
 						<th width="88">CELULAR</th>
 						<th>CORREO</th>
 						<th>ASOCIADOS</th>
+						<th>ASOCIADO DE</th>
 <!-- 						<th width="97">LOCALIDAD</th>
  --> 
 						<th>ESTATUS</th>
@@ -167,6 +170,8 @@ var oTable = $('#zero_config').dataTable( {
 					?>
 
 						<tr> 
+
+							<td width="30"><?php echo utf8_encode($result_row['idusuarios']); ?></td>
 						  
 							<td width="30"><?php echo utf8_encode($result_row['nombretipo']); ?></td>
 							<td width="30"><?php
@@ -215,20 +220,44 @@ var oTable = $('#zero_config').dataTable( {
 						  					$icono="";
 						  						$color="";
 						  					if ($obtenerasociados[$i]->sututor==1) {
-						  						$color="#46b2e2";
+						  						$color="#85cceb";
 						  					}
 
 						  					if ($obtenerasociados[$i]->celular!='') {
-						  						$icono='<span class="mdi-cellphone" style="font-size:20px;"></span>';
+						  						$icono='<a href="tel://'.$obtenerasociados[$i]->celular.'"> '.$obtenerasociados[$i]->celular.'</a>';
 						  					}
 
 						  				 ?>
+
 						  						<p style="background: <?php echo $color; ?>"><?php echo $nombre; ?><?php echo $icono ?></p>
 						  			
 						  			<?php	
 						  					}
 						  			}
 						  		 ?>	
+
+						  		</td>
+						  		<td>
+
+						  			<?php 
+						  			$nombre="";
+						  				if (count($obtenerasociados)==0) {
+
+						  						$cli->id_usuario=$result_row['idusuarios'];
+						  					$buscartutor=$cli->ObtenerTutor();
+
+						  					if (count($buscartutor)>0) {
+						  								$nombre=$buscartutor[0]->nombre.' '.$buscartutor[0]->paterno.' '.$buscartutor[0]->materno;
+
+						  					
+						  					}
+
+						  				}
+
+						  				echo $nombre;
+
+						  			 ?>
+						  			
 
 						  		</td>
 						  

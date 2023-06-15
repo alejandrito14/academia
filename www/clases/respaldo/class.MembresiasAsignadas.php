@@ -159,5 +159,38 @@ class MembresiasAsignadas
 
 	}
 
+
+	public function ObtenerAsignacionMembresiaUsuario()
+	{
+		$sql="SELECT *FROM usuarios_membresia WHERE  idusuarios='$this->idusuarios' AND estatus IN(0,1) ";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function VerificarAsignacionmembresiaUsuario()
+	{
+		$sql="SELECT *FROM  usuarios_membresia WHERE  idusuarios='$this->idusuarios' AND idmembresia='$this->idmembresia' AND estatus(0,1) ";
+	
+			$resp=$this->db->consulta($sql);
+			return $resp;
+	}
+
+
 }
  ?>

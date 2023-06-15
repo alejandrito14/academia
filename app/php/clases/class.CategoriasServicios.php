@@ -24,7 +24,7 @@ class CategoriasServicios
 		JOIN clasificacion
 		ON categoriasservicio.idclasificacion = clasificacion.idclasificacion
 		WHERE
-		categoriasservicio.estatus = 1";
+		categoriasservicio.estatus = 1 ORDER by categoriasservicio.nombrecategoria asc";
 	
 		$resp = $this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

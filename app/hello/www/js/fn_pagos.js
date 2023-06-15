@@ -1697,11 +1697,14 @@ function RealizarCargo() {
  
  
     if (r.pagosadeudados==0) {
+
+      $$("#btnpagarresumen").attr('onclick','');
+      $$("#btnpagarresumen").addClass('disabled-button');
        var respuesta=0;
      var mensaje='';
      var pedido='';
      var informacion='';
-   var pagina = "RealizarPago4.php";
+   var pagina = "RealizarPago5.php";
    var iduser=localStorage.getItem('id_user');
    var constripe=localStorage.getItem('constripe');
    var idtipodepago=localStorage.getItem('idtipodepago');
@@ -1837,6 +1840,9 @@ function RealizarCargo() {
                                         $(".mensajeexito").css('display','none');
                                         $(".butonok").css('display','none');
                                         $(".butoerror").css('display','block');
+                                        $$("#btnpagarresumen").removeClass('disabled-button');
+                                        $$("#btnpagarresumen").attr('onclick','RealizarCargo()');
+
                     // PagoNorealizado(mensaje,output.paymentIntent,notapago);
                          // alerta('',mensaje);
 
@@ -1852,6 +1858,9 @@ function RealizarCargo() {
                                         $(".mensajeexito").css('display','none');
                                         $(".butonok").css('display','none');
                                         $(".butoerror").css('display','block');
+                                        $$("#btnpagarresumen").removeClass('disabled-button');
+                                        $$("#btnpagarresumen").attr('onclick','RealizarCargo()');
+
                     }
                      else if (output.error) {
                       var mensaje = "La tarjeta fue declinada";
@@ -1863,7 +1872,10 @@ function RealizarCargo() {
                                         $(".mensajeexito").css('display','none');
                                         $(".butonok").css('display','none');
                                         $(".butoerror").css('display','block');
+                                        $$("#btnpagarresumen").removeClass('disabled-button');
+                                        $$("#btnpagarresumen").attr('onclick','RealizarCargo()');
 
+                    
                      } else if (output.succeeded) {
                       // Card was successfully charged off-session
                       // No recovery flow needed

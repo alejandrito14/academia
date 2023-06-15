@@ -273,6 +273,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 		 	$nombremembresia="";
 		 	$totalpagado=0;
 		 	$folio="";
+		 	$fechareporte="";
 		 	if (count($obtenerpago)>0) {
 		 	
 
@@ -282,6 +283,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 
 		 		if(count($obtenernotapago)>0) {
 		 			$fechapago=date('d-m-Y H:i:s',strtotime($obtenernotapago[0]->fecha));
+		 			$fechareporte=date('d-m-Y H:i:s',strtotime($obtenernotapago[0]->fechareporte));
 		 			$metodopago=$obtenernotapago[0]->tipopago;
 		 			$folio=$obtenernotapago[0]->folio;
 			 			if ($obtenernotapago[0]->estatus==1) {
@@ -324,7 +326,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 		 		$agrega=0;
 		 		if ($fechapago!='') {
 		 			
-		 		 			$fechapago2=date('Y-m-d',strtotime($obtenernotapago[0]->fecha));
+		 		 			$fechapago2=date('Y-m-d',strtotime($obtenernotapago[0]->fechareporte));
 
 $fechainicio=date('Y-m-d',strtotime($fechainicio));
 $fechafin=date('Y-m-d',strtotime($fechafin));
@@ -352,7 +354,7 @@ $fechafin=date('Y-m-d',strtotime($fechafin));
 								'aceptado'=>$aceptado,
 								'pagado'=>$pagado,
 								'montopago'=>$montopago,
-								'fechapago'=>$fechapago,
+								'fechapago'=>$fechareporte,
 								'metodopago'=>$metodopago,
 								'nombredescuento'=>$nombredescuento,
 								'descuento'=>$descuento[0]->montodescontar,

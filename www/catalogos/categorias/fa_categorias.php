@@ -80,7 +80,7 @@ if(!isset($_GET['idcategoria'])){
 
 	//DATOS GENERALES
 	$nombre = $f->imprimir_cadena_utf8($result_presentacion_row['titulo']);
-	//$depende = $f->imprimir_cadena_utf8($result_presentacion_row['depende']);
+	$depende = $f->imprimir_cadena_utf8($result_presentacion_row['depende']);
 	//$empresa = $f->imprimir_cadena_utf8($result_presentacion_row['idempresas']);
 	$foto = $f->imprimir_cadena_utf8($result_presentacion_row['foto']);
 	$orden = $f->imprimir_cadena_utf8($result_presentacion_row['orden']);
@@ -255,8 +255,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								 	<div class="form-check">
 					               
 					                  <input type="checkbox" class="form-check-input " name="v_activaravanzado" onchange="ActivarAvanzado()"  value="0" id="v_activaravanzado" style="top: -0.3em;">
-					                   <label class="form-check-label">
-										 AVANZADO
+					                   <label class="form-check-label">AVANZADO
 					                </label>
 				                </div>
 				              </div>
@@ -444,6 +443,28 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 				              </div>
+
+				         <div class="form-group m-t-20" style="">
+								<label>DEPENDE:</label>
+								<?php 
+									$categorias= $emp->ObtenerCategoriasTodas();
+									
+									$categorias_num=$db->num_rows($categorias);
+									$categorias_row=$db->fetch_assoc($categorias);
+								
+								?>
+								<select  class="form-control" id="v_depende" name="v_depende" >
+									<option value="0" <?php if($depende==0){ echo ("selected");}?>>NINGUNO</option>
+									<?php
+									do{
+									?>
+									<option value="<?php echo ($categorias_row['idcategorias']);?>" <?php if($categorias_row['idcategorias']==$depende){ echo ("selected");}?>><?php echo ($categorias_row['titulo']);?></option>
+									
+									<?php 
+										} while($categorias_row=$db->fetch_assoc($categorias));
+									?>
+								</select>
+							</div>     
 
 
 							<div class="form-group m-t-20">

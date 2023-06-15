@@ -34,7 +34,7 @@ try
 	$md->db = $db;	
 
 
-	$obtener=$categoria->obtenerTodasCategorias();
+	$obtener=$categoria->ObtenerCategoriasEstatus(1);
 
 
 	$respuesta['respuesta']=$obtener;

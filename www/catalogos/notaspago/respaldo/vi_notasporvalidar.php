@@ -117,6 +117,14 @@ $estatuspago = array('NO PAGADO','PAGADO');
 <div class="card">
 	<div class="card-body">
 		<div class="table-responsive" id="contenedor_Pagos">
+			<div class="row" style="margin-bottom: 1em;">
+				<div class="col-md-6">
+				<label for="">TIPO DE PAGOS</label>
+				<div class="" id="tipodepagos">
+					
+				</div>
+			</div>
+			</div>
 			<div class="row">
 				<div class="col-md-6">
 					<label for="">BUSCAR:</label>
@@ -422,10 +430,48 @@ $estatuspago = array('NO PAGADO','PAGADO');
   </div>
 </div>
 
+<div class="modal" id="modalimagen" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      	  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
 
+		 <div class="modal-body">
+		      	<div class="row">
+		       <img id="imagenModal" src="" alt="Imagen" onclick="zoomImagen(event)">
+		   </div>
+		</div>
+  </div>
+</div>
+</div>
+
+
+
+
+<style>
+	.modal img {
+  display: block;
+  margin: 0 auto;
+  max-width: 90%;
+  max-height: 90%;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.modal img.zoom {
+  transform: scale(1.5);
+  max-width: 100%;
+  max-height: 100%;
+}
+
+</style>
 
 
 <script type="text/javascript">
-	ObtenerNotasPorvalidar();
+	ObtenerNotasPorvalidar(0);
+	ObtenerTipoDepagosNotasValidar();
 </script>
 

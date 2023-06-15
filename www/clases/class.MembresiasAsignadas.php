@@ -28,7 +28,8 @@ class MembresiasAsignadas
 		membresia.descripcion,
 		membresia.estatus,
 		membresia.costo,
-		membresia.cantidaddias
+		membresia.cantidaddias,
+		usuarios_membresia.fechaexpiracion
 
 		FROM
 		usuarios_membresia
@@ -190,6 +191,50 @@ class MembresiasAsignadas
 			$resp=$this->db->consulta($sql);
 			return $resp;
 	}
+
+
+	public function MembresiasUsuariosAsignadas()
+	{
+		
+	
+
+		$sql="SELECT
+		membresia.idmembresia,
+		membresia.titulo,
+		membresia.descripcion,
+		usuarios_membresia.estatus,
+		membresia.costo,
+		membresia.cantidaddias,
+		usuarios_membresia.fechaexpiracion,
+		(SELECT COUNT(*) FROM pagos INNER JOIN  notapago_descripcion ON pagos.idpago=notapago_descripcion.idpago
+		INNER JOIN notapago on notapago.idnotapago=notapago_descripcion.idnotapago WHERE notapago.estatus=1 AND 
+		pagos.idmembresia=membresia.idmembresia and pagos.idusuarios=usuarios_membresia.idusuarios and pagos.idpago=usuarios_membresia.idpago
+	) as pagado
+
+		FROM
+		usuarios_membresia
+		JOIN membresia
+		ON usuarios_membresia.idmembresia = membresia.idmembresia 
+		  WHERE usuarios_membresia.estatus IN(0,1,2)  AND usuarios_membresia.idusuarios='$this->idusuarios' ORDER BY usuarios_membresia.idusuarios_membresia ";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+	
 
 
 }

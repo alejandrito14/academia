@@ -337,6 +337,17 @@ try
 			}
 		}
 	//var_dump($arreglodiasfechas);
+			$obtenerzonas2=$zonas->ObtZonasActivosConcat('');
+			$v_zonas=explode(',',$obtenerzonas2[0]->idzonas);
+			$zonasarray=$v_zonas;
+			$arraydatoszona=array();
+
+			for ($h=0; $h <count($zonasarray); $h++) { 
+				$zonas->idzona=$zonasarray[$h];
+				$datoszona=$zonas->ObtenerZona();
+				array_push($arraydatoszona, $datoszona[0]);
+
+			}
 
 	$respuesta['respuesta']=$arraydiaszonas;
 	$respuesta['zonas']=$arraydatoszona;

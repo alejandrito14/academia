@@ -77,6 +77,7 @@ try
                       $pagos->fechainicial='';
                       $pagos->fechafinal='';
                       $pagos->concepto=$obtenermembresia[0]->titulo;
+                      $pagos->requiereaceptacion=0;
                       /*$contador=$emp->ActualizarConsecutivo();
                           $fecha = explode('-', date('d-m-Y'));
                         $anio = substr($fecha[2], 2, 4);

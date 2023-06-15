@@ -89,6 +89,7 @@ class Clientes
 	public $opcionestipopagobloqueada;
 	public $validacioncel;
 	public $bloquearediciondedatos;
+	public $mostraranuncios;
 	
 	//funcion para guarda una nueva empresas
 	public function GuardarNewCliente()
@@ -148,7 +149,8 @@ class Clientes
 		celular='$this->celular',
 		opcionespagobloqueadas='$this->opcionestipopagobloqueada',
 		validartelefono='$this->validacioncel',
-		bloquearediciondatos='$this->bloquearediciondedatos'
+		bloquearediciondatos='$this->bloquearediciondedatos',
+		anunciovisto='$this->mostraranuncios'
 		WHERE idcliente = '$this->idCliente'";
 
 
@@ -837,6 +839,14 @@ class Clientes
 		return $array;
 	}
 	
+
+	public function ActualizarAnunciovisto()
+	{
+		$sql = "UPDATE clientes SET anunciovisto='$this->mostraranuncios'
+		WHERE idcliente='$this->idCliente'";
+		$r = $this->db->consulta($sql);
+		return $r; 
+	}
 	
 }
 ?>

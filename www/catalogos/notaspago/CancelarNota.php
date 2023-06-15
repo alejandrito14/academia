@@ -20,6 +20,12 @@ require_once("../../clases/class.Notapago.php");
 
 require_once('../../clases/class.MovimientoBitacora.php');
 require_once('../../clases/class.Membresia.php');
+
+require_once('../../clases/class.PagConfig.php');
+
+
+
+
 try
 {
 
@@ -32,14 +38,23 @@ try
     $md->db = $db;  
     $pago->db=$db;
     $notapago->db=$db;
-
+    $confi=new PagConfig();
+    $confi->db=$db;
+    $db->begin();
+    $infoconfi=$confi->ObtenerInformacionConfiguracion();
+    
+    $contraseguardada=$infoconfi['contracancelaciones'];
     $membresia=new Membresia();
     $membresia->db=$db;
     $idnotapago = $_POST['idnotapago'];
     $estado=$_POST['estado'];
     $descripcion=$_POST['descripcion'];
-
-    $db->begin();
+    $contraencrip=$_POST['pass'];
+   
+    if ($contraencrip == $contraseguardada) {
+        # code...
+    
+   
 
     $notapago->idnotapago=$idnotapago;
     $notapago->estatus=$estado;
@@ -106,7 +121,15 @@ try
 
     $db->commit();
 
-    $respuesta['respuesta']=1;
+    $resp=1;
+
+    }else{
+
+    $resp=0;
+
+}
+
+    $respuesta['respuesta']=$resp;
     echo json_encode($respuesta);
 
     

@@ -558,7 +558,10 @@ class Pagos
 			pagado=1 AND notapago.estatus=1 AND
 			  pagos.idservicio='$this->idservicio' AND pagos.idusuarios='$this->idusuarios'
 			  ORDER BY idpago ";
-			  
+			 /* if ($this->idservicio==714) {
+			  	echo $sql;die();
+			  }
+			*/
 			$resp = $this->db->consulta($sql);
 			$cont = $this->db->num_rows($resp);
 
@@ -576,6 +579,51 @@ class Pagos
 			return $array;		
 		}
 
+
+		public function ChecarPagosServicioPendiente()
+		{
+			$sql = "
+			SELECT
+			pagos.idusuarios,
+			pagos.idservicio,
+			pagos.idpago,
+			pagos.pagado,
+			notapago.idnotapago,
+			notapago.estatus,
+			pagos.monto,
+			notapago.total,
+			notapago.tipopago,
+			notapago.idtipopago,
+			pagos.concepto
+			FROM
+			notapago_descripcion
+			JOIN pagos
+			ON notapago_descripcion.idpago = pagos.idpago 
+			JOIN notapago
+			ON notapago.idnotapago = notapago_descripcion.idnotapago
+			WHERE
+			pagos.estatus=1 AND notapago.estatus=0 AND
+			  pagos.idservicio='$this->idservicio' AND pagos.idusuarios='$this->idusuarios'
+			  ORDER BY idpago ";
+
+			 
+			 
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;		
+		}
 
 	public function ObtenerPagoDescuento2()
 	{

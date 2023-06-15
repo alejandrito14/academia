@@ -684,7 +684,7 @@ z-index:0;
     text-align: center;
     background: red;
     border-radius: 10px;
-    margin-top: 1em;
+    margin-top: 0.5em;
     color: white;
   }
 
@@ -692,7 +692,7 @@ z-index:0;
     text-align: center;
     background: #59c158!important;
     border-radius: 10px;
-    margin-top: 1em;
+    margin-top: 0.5em;
     color: white;
   }
 
@@ -701,7 +701,7 @@ z-index:0;
     text-align: center;
     background: #ebc418!important;
     border-radius: 10px;
-    margin-top: 1em;
+    margin-top: 0.5em;
     color: white;
   }
 
@@ -772,4 +772,10 @@ input[type=date]:focus::-webkit-datetime-edit {
     height: 25px;
     width: 28px;
     padding-top: 2px;
+}
+
+.disabled-button {
+  opacity: 0.6; /* Reducir la opacidad del botón */
+  pointer-events: none; /* Desactivar eventos de puntero */
+  cursor: not-allowed; /* Cambiar el cursor a "no permitido" */
 }

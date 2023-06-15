@@ -53,7 +53,7 @@ try
 			$asignados->idservicio=$emp->idservicio;
 			$asignados->idusuario=0;
 			$obtenerusuarios=$asignados->obtenerUsuariosServiciosAsignados();
-			var_dump($obtenerusuarios);
+			
 			$fechanoti="";
 			$horanoti="";
 			$canchanoti="";

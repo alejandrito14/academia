@@ -176,9 +176,9 @@ try
 
 	}
 
-	usort($obtenerservicios, function ($a, $b) {
+	/*usort($obtenerservicios, function ($a, $b) {
     return strcmp($b->fechahora,$a->fechahora);
-	});
+	});*/
 
 
 	$fechaactual=date('Y-m-d');

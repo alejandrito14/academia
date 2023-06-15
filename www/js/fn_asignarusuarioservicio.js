@@ -1,5 +1,6 @@
 var arrayquitar=[];
 var arrayagregar=[];
+var idservicioglobal=0;
 function UsuariosServicio(idservicio) {
 	
 	var datos="idservicio="+idservicio;
@@ -31,6 +32,7 @@ function UsuariosServicio(idservicio) {
 		 	$("#lista_"+idservicio).addClass('active');
 			$("#listausuarios").css('display','block');
 			$(".mostrar").css('display','block');
+			idservicioglobal=idservicio;
 			$(".btnguardar").attr('onclick','GuardarAsignacion('+idservicio+')');
 			$("#btnconsultar").attr('onclick','ObterHorariosServicio('+idservicio+')');
 
@@ -86,6 +88,7 @@ function GuardarAsignacion(idservicio) {
 	  	arrayagregar=[];
 		 var respuesta=msj.respuesta;
 		 var usuariosnoagregados=msj.usuariosnoagregados;
+		 idservicioglobal=idservicio;
 		 UsuariosServicio(idservicio);
 		 if (usuariosnoagregados.length>0) {
 		 		var html="";
@@ -450,18 +453,71 @@ function PintarSeleccionados2() {
 
 
 function CapturarValor(idcliente) {
+
 	
-	if ($("#inputcli_"+idcliente).is(':checked')) {
-		var resp=BuscarEnarrayQuitar(idcliente);
-		arrayagregar.push(idcliente)
-
-	}else{
-		var resp=BuscarEnarrayagregar(idcliente);
-		arrayquitar.push(idcliente);
-	}
 
 
 
+	var contar=0;
+
+	if($("#inputcli_"+idcliente).is(':checked')) {
+
+	 var promesa=VerificacionUsuarioServicio(idcliente);
+     promesa.then(r => {
+
+    	if (r.pagospendientes==0) {
+
+	    			if ($("#inputcli_"+idcliente).is(':checked')) {
+							var resp=BuscarEnarrayQuitar(idcliente);
+							arrayagregar.push(idcliente)
+
+						}else{
+							var resp=BuscarEnarrayagregar(idcliente);
+							arrayquitar.push(idcliente);
+						}
+			    	
+			
+		}else{
+			alert('El usuario no se puede asignar a este servicio, debido a que tiene un pago pendiente');
+			
+			$("#inputcli_"+idcliente).prop('checked',false);
+
+		}
+
+    });
+
+
+}
+
+}
+
+
+
+function VerificacionUsuarioServicio(idusuario) {
+	    return new Promise(function(resolve, reject) {
+	   
+	    var datos="idusuario="+idusuario+"&idservicio="+idservicioglobal;
+		$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: 'catalogos/asignarusuarioservicios/VerificacionUsuarioServicio.php', //Url a donde la enviaremos
+		data:datos,
+		async:false,
+		success: function(resp){
+
+			resolve(resp);
+
+		},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+			var error;
+				if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+								console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+		}
+
+	});
+
+	});
 }
 
 

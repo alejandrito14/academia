@@ -2906,15 +2906,16 @@ if (r.length>valorcoach.length) {
 
 												var encontrado=0;
 												for (var j = 0; j < valorcoach.length; j++) {
-													if(r[i].idusuarios=valorcoach[j]){
+													if(r[i].idusuarios==valorcoach[j]){
 
 														encontrado=1;
-														break;
+														
 													}
 												}
+												console.log(encontrado);
 												if (encontrado==0) {
 
-													html+=`<option value="`+r[i].idusuarios+`">`+r[i].nombre+` `+r[i].paterno+` `+r[i].materno+`</option>`;
+													html +=`<option value="`+r[i].idusuarios+`">`+r[i].nombre+` `+r[i].paterno+` `+r[i].materno+`</option>`;
 		
 												}
 
@@ -2929,6 +2930,8 @@ if (r.length>valorcoach.length) {
 											<select name=""  class="form-control tipo" id="tipo_`+contadorcoach+`" style="padding-top:1em;" class="form-control">
 											<option value="0">PORCENTAJE</option>
 											<option value="1">MONTO</option>
+											<option value="2">POR HORARIOS</option>
+	
 											</select> 
 
 										</div>
@@ -3091,6 +3094,8 @@ function AgregarNuevoCoach2(idusuarios,tipo,monto) {
 											<select name=""  class="form-control tipo" id="tipo_`+contadorcoach+`" style="padding-top:1em;" class="form-control">
 											<option value="0">PORCENTAJE</option>
 											<option value="1">MONTO</option>
+											<option value="2">POR HORARIOS</option>
+
 											</select> 
 
 										</div>
@@ -4036,6 +4041,7 @@ function deleteArchivo(idimageninformativa,idservicio) {
 
 
 function AbrirModalAsignacion(idservicio) {
+	idservicioglobal=idservicio;
 	$("#modalAlumnosAsignacion").modal();
 	$(".btnasignaralumnos").attr('onclick','GuardarAsignacionAlumnos('+idservicio+')');
 	var datos="idservicio="+idservicio;
@@ -4170,6 +4176,11 @@ function PintarAlumnosServiciosNoAsignados(respuesta) {
 }
 
 function AgregarAdiv(idusuarios) {
+	 var promesa=VerificacionUsuarioServicio(idusuarios);
+     promesa.then(r => {
+
+    	if (r.pagospendientes==0) {
+
 		  var datos="idusuario="+idusuarios;
 		  $("#usuario_"+idusuarios).remove();
 
@@ -4205,6 +4216,14 @@ function AgregarAdiv(idusuarios) {
 						PintarAlumnosServiciosAsignados(arrayinscritos);
 					}
 				});
+
+			}else{
+			alert('El usuario no se puede asignar a este servicio, debido a que tiene un pago pendiente');
+			
+			$("#inputcli_"+idusuarios).prop('checked',false);
+
+		}
+	});
 }
 
 function QuitarDiv(idusuarios) {

@@ -5075,12 +5075,12 @@ function PintarServiciosRegistrados3(respuesta,fechaactual) {
 
 
 			var clasecantidad="";
-
+clasecantidad="colorred";
 		if (respuesta[i].cantidadalumnos!='' && respuesta[i].numeroparticipantesmax!='') {
 
 			if (respuesta[i].cantidadalumnos==0) {
 				clasecantidad="colorred";
-				
+					console.log(clasecantidad);
 				}
 
 		
@@ -5137,7 +5137,8 @@ function PintarServiciosRegistrados3(respuesta,fechaactual) {
                if(respuesta[i].numeroparticipantesmin=='' ) {
 				respuesta[i].numeroparticipantesmin=0;
               }
-                colocarnumero+=`<div style="text-align:center;`+opacidad+`" class="textoarribaizquierda `+clasecantidad+`">`;
+                colocarnumero+=`<div style="text-align:center;width: 20%;
+    float: left;`+opacidad+`" class=" `+clasecantidad+`">`;
 						                 
                  colocarnumero+=`<span>`+respuesta[i].cantidadalumnos+ ` </span>de<span> `+respuesta[i].numeroparticipantesmax+`</span></div>`;
                   		
@@ -5152,7 +5153,7 @@ function PintarServiciosRegistrados3(respuesta,fechaactual) {
 				 <div class="list-item `+clasesincoach+`"  style="background: white; margin: 1em;border-radius: 10px;" id="servicio_`+respuesta[i].idservicio+`">
                 <div class="row" style="margin-bottom: 2em;margin-top:1em;">
 	                 <div class="col-10" style="padding-left: 10px;">
-	                  `+colocarnumero+`
+	                  
 	                 </div>
 	                 <div class="col-90"></div>
                  </div>
@@ -5177,11 +5178,15 @@ function PintarServiciosRegistrados3(respuesta,fechaactual) {
  					<span class="text-muted no-margin-bottom "  style="text-align: center;font-weight:bold;font-size: 12px;color:#007aff!important;" onclick="EditarServicio(`+respuesta[i].idservicio+`)"><span class="text-muted" style="color:#a09f9a!important;">Fecha inicial: </span>`+respuesta[i].fechainicial+` `+`<span class="text-muted" style="color:#a09f9a!important;">Fecha final: </span>`+respuesta[i].fechafinal+`</span>
  					<span class="text-muted no-margin-bottom "  style="text-align: center;font-weight:bold;font-size: 12px;color:#007aff!important;" onclick="EditarServicio(`+respuesta[i].idservicio+`)"><span class="text-muted" style="color:#a09f9a!important;">Fecha de creación: </span>`+respuesta[i].fechacreacion+`</span>
 
+					
  					`;
 
  					 if (respuesta[i].idcategorias>0) {
                		  html+=` <div class="" style="width:100%;text-align:center;margin-top: 1em;">
-                  	<div class="" >
+                  	`+colocarnumero+`
+
+                  	<div class="" style="margin-right:3em;" >	
+
                                     	<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle convalor iconos" style="`+opacidad+`" onclick="DetalleServicioAdmin(`+respuesta[i].idservicio+`)"><i class="bi bi-eye-fill"></i></div>
 
                   		<div class="avatar avatar-40 alert-primary text-color-blue rounded-circle `+clasecomentario+` iconos" style="`+opacidad+`" onclick="OpinionesServicioAdmin(`+respuesta[i].idservicio+`)"><i class="bi bi-chat-square-dots"></i></div>

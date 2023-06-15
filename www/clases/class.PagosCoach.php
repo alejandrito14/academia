@@ -364,7 +364,32 @@ class PagosCoach
 		}
 
 
+	public function ObtenerPagoCoachVeri($idpago,$idservicio)
+	{
+		$sql="SELECT *FROM pagoscoach 
+		WHERE idpago='$idpago' AND idservicio='$idservicio'
+			AND fechainicial='$this->fechainicial' AND fechafinal='$this->fechafinal'
+			AND idusuarios='$this->idusuarios'
+
+		";
+	
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
 		
+		return $array;
+	}
 
 
 

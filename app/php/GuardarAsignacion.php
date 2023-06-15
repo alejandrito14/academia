@@ -190,7 +190,7 @@ try
 		}
 		//$notificaciones->idusuario=$idusuarios[$i];
 		$obtenertokenusuario=$notificaciones->Obtenertoken();
-
+		
 		$idusuario=$idusuarios[$i];
 	/*	array_push($arraytokens,$obtenertokenusuario[0]->token);*/
 	$titulonotificacion=$usuarioinvita.$obtenerUsu[0]->nombre." ".$obtenerUsu[0]->paterno." te ha asignado a ".$obtenerdatosservicio[0]->titulo;

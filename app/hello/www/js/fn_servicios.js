@@ -617,6 +617,7 @@ function ObtenerServicioNuevo(valor) {
    	SeleccionarCategoriaNuevo2(idcategoriaservicio,valor,lunes,martes,miercoles,jueves,viernes,sabado,domingo);
 		 ObtenerEncuestas(idservicio);
 
+
 		 var modalidad=respuesta.modalidad;
 		 ValidarCheckmodalidad(modalidad);
 
@@ -691,6 +692,7 @@ function ObtenerServicioNuevo(valor) {
 		//ObtenerHorariosServicioComprobacion(idservicio);
 		ObtenerPeriodos(idservicio);
 		ObtenerCoachesServicio(idservicio);
+		
 	abiertocliente=respuesta.abiertocliente;
 	abiertocoach=respuesta.abiertocoach;
 	abiertoadmin=respuesta.abiertoadmin;
@@ -779,6 +781,12 @@ function ObtenerServicioNuevo(valor) {
 			}
 		  }
     );
+
+demo.then(()=>{
+		ObtenerHorariosCategoria2(idcategoria,idcategoriaservicio,valor,lunes,martes,miercoles,jueves,viernes,sabado,domingo);
+
+
+});
 	//	Permitirligar();
 		//HabilitarcantidadReembolso();
 
@@ -1126,8 +1134,10 @@ function PintarHorariosServicio(horarios,servicio) {
 		for (var i = 0; i <horarios.length; i++) {
 				var fecha=horarios[i].fecha;
 				var dividir=fecha.split('-');
-				var id=dividir[2]+'-'+dividir[1]+'-'+dividir[0]+'-'+horarios[i].horainicial+'-'+horarios[i].horafinal+'-'+horarios[i].idzona;
+				//aqui
+				var id=dividir[0]+'-'+dividir[1]+'-'+dividir[2]+'-'+horarios[i].horainicial+'-'+horarios[i].horafinal+'-'+horarios[i].idzona;
 			
+
 				//10-10-2022-19:00-20:00-6
 				arraydiaselegidos.push(id);
 				var iddividido = id.split('-');

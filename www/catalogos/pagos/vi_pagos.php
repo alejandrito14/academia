@@ -117,6 +117,15 @@ $estatuspago = array('NO PAGADO','PAGADO');
 <div class="card">
 	<div class="card-body">
 		<div class="table-responsive" id="contenedor_Pagos">
+			<div class="row" style="margin-bottom:1em;">
+				<div class="col-md-9"></div>
+					<div class="col-md-3">
+							<button id="exportarBtn" class="btn btn-success" style="margin-left: 70px;">Exportar a Excel</button>
+					</div>
+			</div>
+		
+
+
 			<table id="tbl_pagos" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
 				<thead>
 					<tr>
@@ -272,11 +281,12 @@ $estatuspago = array('NO PAGADO','PAGADO');
 
 
 <script type="text/javascript">
+	 $(document).ready(function() {
 	 $('#tbl_pagos').DataTable( {		
 		 	"pageLength": 100,
 			"oLanguage": {
 						"sLengthMenu": "Mostrar _MENU_ ",
-						"sZeroRecords": "NO EXISTEN PROVEEDORES EN LA BASE DE DATOS.",
+						"sZeroRecords": "NO EXISTEN REGISTROS EN LA BASE DE DATOS.",
 						"sInfo": "Mostrar _START_ a _END_ de _TOTAL_ Registros",
 						"sInfoEmpty": "desde 0 a 0 de 0 records",
 						"sInfoFiltered": "(filtered desde _MAX_ total Registros)",
@@ -289,11 +299,37 @@ $estatuspago = array('NO PAGADO','PAGADO');
 									 }
 						},
 		   "sPaginationType": "full_numbers", 
-		 	"paging":   true,
-		 	"ordering": true,
-        	"info":     false
+		 	 "paging":   true,
+		 	 "ordering": true,
+     "info":     false
+
+		});
+
+	
+
+  
 
 
-		} );
+	  $('#exportarBtn').click(function() {
+
+	  	var type, fn, dl;
+	  	  var tabla = $('#tbl_pagos').DataTable();
+	  	   var elt = document.getElementById('tbl_pagos');
+	  
+				  var libro = XLSX.utils.table_to_book(elt);
+				  console.log(libro);
+						// Obtiene la primera hoja del libro
+						var nombreHoja = libro.SheetNames[0];
+						var hoja = libro.Sheets[nombreHoja];
+						delete hoja['G1'];
+
+
+			// Guarda el libro en un archivo
+			var libroModificado = XLSX.utils.book_new();
+			XLSX.utils.book_append_sheet(libroModificado, hoja, nombreHoja);
+			XLSX.writeFile(libroModificado, 'LISTADO DE NOTAS DE PAGO.xlsx');
+				});
+});
+
 </script>
 

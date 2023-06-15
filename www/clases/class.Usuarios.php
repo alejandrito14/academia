@@ -335,7 +335,10 @@ class Usuarios
 	public function ObtenerUsuario()
 	{
 		
-		$sql="SELECT *FROM usuarios WHERE idusuarios='$this->id_usuario'";
+		$sql="SELECT *
+	 FROM usuarios
+       LEFT JOIN tipousuario ON usuarios.tipo=tipousuario.idtipousuario
+ WHERE idusuarios='$this->id_usuario'";
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

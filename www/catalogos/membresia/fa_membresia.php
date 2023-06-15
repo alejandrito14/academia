@@ -90,6 +90,7 @@ if(!isset($_GET['idmembresia'])){
 	$descripcion=$result_membresia_row['descripcion'];
 	$porcategoria=$result_membresia_row['porcategoria'];
 	$porservicio=$result_membresia_row['porservicio'];
+	$porhorario=$result_membresia_row['porhorario'];
 	$color=$result_membresia_row['color'];
 	$depende=$result_membresia_row['depende'];
 	$membresiadepende=$result_membresia_row['idmembresiadepende'];
@@ -99,6 +100,9 @@ if(!isset($_GET['idmembresia'])){
 	$v_limitemembresia=$result_membresia_row['limite'];
 	$repetir=$result_membresia_row['repetir'];
 	$fecha=$result_membresia_row['fecha'];
+	$tipodescuentoporhorario=$result_membresia_row['tipodescuentoporhorario'];
+	$montoporhorario=$result_membresia_row['montoporhorario'];
+
 	
 	$ruta='';
 	if($foto==""){
@@ -440,6 +444,70 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				</div>
 			</div>
 
+
+					<div class="card" style="" id="divhorarios">
+				<div class="card-header" style="">
+
+				</div>
+				<div class="card-body">
+						<div style="margin-top: 3em">
+
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-check" style="margin-bottom: 1em;">
+                    
+					       <input type="checkbox" class="form-check-input " name="v_horarioseleccion" value="1" id="v_horarioseleccion" onclick="Desplegarhorarioselecciona()" style="top: -0.3em;" />
+					            <label class="form-check-label">POR HORARIO</label>
+					       </div>
+								
+									
+								</div>
+								<div class="col-md-3">
+										
+									</div>
+							</div>
+						<div class="divhorarios" style="display: none;">
+
+
+
+							<div class="row">
+								<div class="col-md-12">
+									<div class="col-md-6">
+									<label>DESCUENTO:</label>
+										<div class="form-group mb-2" style="">
+											<select class=" form-control " id="v_porhorariodescuento" tabindex="">
+												<option value="0" >SELECCIONAR TIPO</option>
+												<option value="1" >MONTO</option>
+												<option value="2" >PORCENTAJE</option>
+											
+
+											</select>
+										</div>
+
+											<label>MONTO:</label>
+											<div class="form-group mb-2" style="">
+												<input type="text" id="v_porhorariomonto" class="form-control">
+											</div>
+
+										</div>
+								</div>
+								<div class="col-md-12">
+
+									<button class="btn btn-primary" type="button" style=" float: right;   margin-top: -1em;" onclick="AgregarHorarioNuevo()">NUEVO HORARIO</button>
+								</div>
+								
+							</div>
+								
+							<div id="horarios"></div>
+						</div>
+
+
+
+					</div>
+				</div>
+			</div>
+
+
 			</div>
 		</div>
 
@@ -453,16 +521,20 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 	var idmembresia='<?php echo $idmembresia; ?>';
 	var porcategoria='<?php echo $porcategoria; ?>';
 	var porservicio='<?php echo $porservicio; ?>';
+		var porhorario='<?php echo $porhorario; ?>';
 	var depende='<?php echo $depende; ?>';
 	var membresiadepende='<?php echo $membresiadepende; ?>';
 	var inppadre='<?php echo $inppadre; ?>';
 	var inphijo='<?php echo $inphijo; ?>';
 	var inpnieto='<?php echo $inpnieto; ?>';
+	var tipodescuentoporhorario='<?php echo $tipodescuentoporhorario;?>';
+	var montoporhorario='<?php echo $montoporhorario;?>';
 
 	if (idmembresia>0) {
 
 		ObtenerServiciosMembresia(idmembresia);
 		ObtenerCategoriasMembresia(idmembresia);
+		ObtenerHorariosMembresia(idmembresia);
 		if (porservicio==1) {
 			$("#v_servicio").attr('checked',true);
 			Desplegarporservicio();
@@ -470,6 +542,11 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		if (porcategoria==1) {
 			$("#v_tiposervicio").attr('checked',true);
 			Desplegartiposervicio();
+		}
+		if (porhorario==1) {
+		 $("#v_horarioseleccion").attr('checked',true);
+		 Desplegarhorarioselecciona();
+
 		}
 		if (depende==1) {
 			$("#dependede").prop('checked',true);
@@ -488,6 +565,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 		$("#inpnieto").prop('checked',true);
 		}
+
+		$("#v_porhorariodescuento").val(tipodescuentoporhorario);
+		$("#v_porhorariomonto").val(montoporhorario);
+
 		
 	}
 			 

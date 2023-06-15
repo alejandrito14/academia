@@ -39,7 +39,7 @@ class Categorias
 
 	public function ObtenerCategorias()
 	{
-		$sql="SELECT *FROM categorias WHERE estatus=1";
+		$sql="SELECT *FROM categorias WHERE estatus=1 ORDER by titulo asc";
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

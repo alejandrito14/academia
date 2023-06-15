@@ -225,6 +225,7 @@ class Notapago
 		return $array;
 	}
 
+	
 	public function ObtenerImagenesComprobante()
 	{
 		$sql="SELECT * FROM notapago_comprobante WHERE idnotapago='$this->idnotapago'";

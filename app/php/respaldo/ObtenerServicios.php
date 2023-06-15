@@ -47,6 +47,8 @@ try
 	$lo->estatus=$_POST['estatus'];
 	$idcategorias=0;
 	$v_coach=0;
+	$v_mes=0;
+	$v_anio=0;
 	if (isset($_POST['v_categorias'])) {
 		$idcategorias=$_POST['v_categorias'];
 	}
@@ -55,9 +57,16 @@ try
 		$v_coach=$_POST['v_coach'];
 
 	}
+	if (isset($_POST['v_mes'])) {
+		$v_mes=$_POST['v_mes'];
+	}
 
-	 
-	$obtenerservicios=$lo->ObtenerServiciosAdmin($idcategorias,$v_coach);
+	if (isset($_POST['v_anio'])) {
+		$v_anio=$_POST['v_anio'];
+	}
+
+	
+	$obtenerservicios=$lo->ObtenerServiciosAdmin2($idcategorias,$v_coach,$v_mes,$v_anio);
  
 
 	for ($i=0; $i <count($obtenerservicios) ; $i++) { 
@@ -160,6 +169,10 @@ try
 
 		$obtenerservicios[$i]->fechainicial=date('d/m/Y',strtotime($obtenerservicios[$i]->fechainicial));
 		$obtenerservicios[$i]->fechafinal=date('d/m/Y',strtotime($obtenerservicios[$i]->fechafinal));
+
+		$obtenerservicios[$i]->fechacreacion=date('d/m/Y H:i:s',strtotime($obtenerservicios[$i]->fechacreacion));
+
+
 
 	}
 

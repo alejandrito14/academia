@@ -37,6 +37,12 @@ class Membresia
 	public $montoadescontar;
 	public $idnotapago;
 
+	//por horarios membresia
+
+	public $horainicial;
+	public $horafinal;
+	public $dia;
+
 	public function ObtenerTodosmembresia()
 	{
 		$query = "SELECT *
@@ -655,6 +661,56 @@ class Membresia
 	{
 		$sql="SELECT *
 		FROM usuarios_membresia WHERE idmembresia='$this->idmembresia' AND idusuarios='$this->idusuarios' AND idpago='$this->idpago'";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerHorarioMembresia()
+	{
+		
+		$sql="SELECT *
+		FROM horariosmembresia WHERE idmembresia='$this->idmembresia'";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ValidarHorarioMembresia()
+	{
+		
+		$sql="SELECT *
+		FROM horariosmembresia WHERE 
+		dia='$this->dia' AND horainicial<='$this->horainicial' AND horafinal>='$this->horafinal' AND idmembresia='$this->idmembresia'";
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

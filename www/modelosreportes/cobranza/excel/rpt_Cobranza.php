@@ -57,7 +57,7 @@ $nota=new Notapago();
 $nota->db=$db;
 $estatuspago=array('pendiente','proceso','aceptado','rechazado','reembolso','sin reembolso');
 $estatusaceptado=array('NO ACEPTADO','ACEPTADO');
-$estatusapagado=array('NO PAGADO','PAGADO');
+$estatusapagado=array('NO PAGADO','PAGADO','PENDIENTE POR VALIDAR');
 //Recibo parametros del filtro
 	$idservicio=$_GET['idservicio'];
 	$pantalla=$_GET['pantalla'];
@@ -233,16 +233,32 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 		 	$celularalumno=$array[$k]->celular;
 
 		 	$pagos->idservicio=$idservicio;
-
+            	$pagado=0;
 		 	$obtenerpago=$pagos->ChecarPagosServicio();
+		 		if (count($obtenerpago)>0) {
+		 			$pagado=1;
+		 		}
 
+		 		//echo '1aq2';
+
+		 	
+		 		
+		 		$obtenerpago2=$pagos->ChecarPagosServicioPendiente();
+
+		 		if (count($obtenerpago2)>0) {
+		 			$pagado=2;
+		 		}
+		 		
+		 	
+		 	
+		 	
 		 	/*if ($pagos->idservicio==212 && $pagos->idusuarios==406) {
 
 
 		 		var_dump($obtenerpago);die();
 		 	}*/
 
-		 	$pagado=0;
+		 
 		 	$descuentomembresia="";
 		 	$fechapago="";
 		 	$metodopago="";
@@ -255,7 +271,9 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 		 	$totalpagado=0;
 		 	$folio="";
 		 	$fechareporte="";
-		 	if (count($obtenerpago)==0) {
+
+
+		 	if ($pagado==0 || $pagado==2) {
 
 		 	$obtenerperiodos=$servicios->ObtenerPeriodosPagos();
 
@@ -337,6 +355,8 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 
 		 		}*/
 
+		 	}
+
 		 		$peridohorario=$servicios->ObtenerFechaHoras();
 						$objeto=array(
 								'idservicio'=>$idservicio,
@@ -375,7 +395,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 
 						
 
-		}
+		
 	}
 
 	

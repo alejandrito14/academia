@@ -312,7 +312,7 @@ class Usuarios
 
 	public function ObtenerUsuariosAlumnos()
 	{
-		$sql="SELECT *FROM usuarios WHERE tipo=3 ";
+		$sql="SELECT *FROM usuarios WHERE tipo=3 AND estatus=1 ";
 
 		$resp = $this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

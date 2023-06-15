@@ -44,11 +44,13 @@ try
 			$estutorado=$lo->ObtenerparentescoUsuario();
 			$row=$db->fetch_assoc($estutorado);
 			$contador=$db->num_rows($estutorado);
-
+			$obtenerusuarios[$i]->tutor="";
 			$obtenerusuarios[$i]->tutorado=0;
 			if ($contador>0) {
 			$obtenerusuarios[$i]->tutorado=1;
 
+
+			$obtenerusuarios[$i]->tutor=$row['nombre'].' '.$row['paterno'].' '.$row['materno'];
 			}
 		}
 	$respuesta['respuesta']=$obtenerusuarios;

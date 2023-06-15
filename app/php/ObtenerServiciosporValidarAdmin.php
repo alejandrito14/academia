@@ -49,7 +49,7 @@ try
 	$serviciosasignados='';
 	$lo->idusuarios=$iduser;
 	$obtenerserviciosActivos=$lo->ObtenerServiciosporvalidarAdmin($serviciosasignados);
-	
+		//var_dump($obtenerserviciosActivos);die();
 	$fechaactual=date('Y-m-d');
 	for ($i=0; $i <count($obtenerserviciosActivos) ; $i++) { 
 			$fechainicial=date('Y-m-d',strtotime($obtenerserviciosActivos[$i]->fechainicial));
@@ -61,9 +61,7 @@ try
 			$obtenerserviciosActivos[$i]->disponible=0;
 		}
 
-		$obtenerserviciosActivos[$i]->fechai=date('d/m/Y',strtotime($obtenerserviciosActivos[$i]->fechainicial));
-		$obtenerserviciosActivos[$i]->fechaf=date('d/m/Y',strtotime($obtenerserviciosActivos[$i]->fechafinal));
-
+		
 
 		$asignados->idservicio=$obtenerserviciosActivos[$i]->idservicio;
 		
@@ -161,11 +159,16 @@ if (count($obtenerhorarios)>0) {
 
 
 		$obtenerserviciosActivos[$i]->fechacreacion=date('d/m/Y H:i:s',strtotime($obtenerserviciosActivos[$i]->fechacreacion));
+
+
+		$obtenerserviciosActivos[$i]->fechainicial=date('d/m/Y',strtotime($obtenerserviciosActivos[$i]->fechainicial));
+		$obtenerserviciosActivos[$i]->fechafinal=date('d/m/Y',strtotime($obtenerserviciosActivos[$i]->fechafinal));
+
 	}
 
-	usort($obtenerserviciosActivos, function ($a, $b) {
+	/*usort($obtenerserviciosActivos, function ($a, $b) {
     return strcmp($b->fechahora,$a->fechahora);
-	});
+	});*/
 
 
 	$fechaactual=date('Y-m-d');

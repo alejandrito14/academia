@@ -138,10 +138,10 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
 				<div class="subject-info-arrows text-center">
 					<br /><br />
-					<input type='button' id='btnAllRight' value='>>' class="btn btn-default" /><br />
+					<!-- <input type='button' id='btnAllRight' value='>>' class="btn btn-default" /><br /> -->
 					<input type='button' id='btnRight' value='>' class="btn btn-default" /><br />
 					<input type='button' id='btnLeft' value='<' class="btn btn-default" /><br />
-					<input type='button' id='btnAllLeft' value='<<' class="btn btn-default" />
+				<!-- 	<input type='button' id='btnAllLeft' value='<<' class="btn btn-default" /> -->
 				</div>
 
 				<div class="subject-info-box-2">
@@ -306,14 +306,17 @@ $estatus=array('DESACTIVADO','ACTIVADO');
         });
 		
         $('#btnRight').click(function (e) {
-            $('select').moveToListAndDelete('#lstBox1', '#lstBox2');
-            e.preventDefault();
+
+          console.log(e);
+           ValidacionUsuarioServicio(e);
+
+
         });
 
         $('#btnAllRight').click(function (e) {
             $('select').moveAllToListAndDelete('#lstBox1', '#lstBox2');
             e.preventDefault();
-        });
+        }); 
 
         $('#btnLeft').click(function (e) {
            var opts = $('#lstBox2' + ' option:selected');

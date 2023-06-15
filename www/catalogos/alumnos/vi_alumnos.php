@@ -369,12 +369,12 @@ var oTable = $('#zero_config').dataTable( {
       	</div>
         <div class="row">
         	<div class="col-md-4">
-        		<div class="row">
-        			<img src="" alt="" class="imgperfil" style="width: 100%;border-radius: 10px;">
+        		<div class="row" style="margin-left: 1em;">
+        			<img src="" alt="" class="imgperfil" style="height: 250px;width: 250px;border-radius: 10px;">
         		</div>
 
 
-        		<div class="row" style="margin-top: 1em;">
+        		<div class="row" style="margin-top: 1em;margin-left: 1em;">
 							  <div class="" style="width: 100%;">
 							    <!-- Tab navs -->
 							    <div
@@ -384,34 +384,34 @@ var oTable = $('#zero_config').dataTable( {
 							      aria-orientation="vertical"
 							    >
 							      <a
-							        class="nav-link active"
-							        id="v-pills-link1-tab"							       
+							        class="nav-link tabskardex active"
+							        id="v_tab_1"	 style="cursor:pointer;" onclick="CambioTab(1)"						       
 
 							        >Datos generales</a>
 							     
 							      <a
-							        class="nav-link"
-							        id="v-pills-link2-tab"
+							        class="nav-link tabskardex"
+							        id="v_tab_2" style="cursor:pointer;" onclick="CambioTab(2)"
 							       
 							        >Servicios</a
 							      >
 
 							      <a
-							        class="nav-link"
-							        id="v-pills-link3-tab"
+							        class="nav-link tabskardex"
+							        id="v_tab_3" style="cursor:pointer;" onclick="CambioTab(3)"
 							       
 							        >Membresias</a
 							      >
 
 							       <a
-							        class="nav-link"
-							        id="v-pills-link4-tab"
+							        class="nav-link tabskardex"
+							        id="v_tab_4" style="cursor:pointer;" onclick="CambioTab(4)"
 							       
 							        >Asociados</a
 							      >
 							      <a
-							        class="nav-link"
-							        id="v-pills-link5-tab"
+							        class="nav-link tabskardex"
+							        id="v_tab_5" style="cursor:pointer;" onclick="CambioTab(5)"
 							        
 							        >Tutorados</a
 							      >
@@ -425,11 +425,11 @@ var oTable = $('#zero_config').dataTable( {
         	</div>
         	<div class="col-md-8">
         		<div class="">
-        				 <div class="col-9">
+        				 <div class="col-md-12">
     <!-- Tab content -->
 							    <div class="tab-content" id="v-pills-tabContent">
 							      <div
-							        class="tab-pane fade show active"
+							        class="tab-pane tabsk fade show active"
 							        id="v-pills-link1"
 							        role="tabpanel"
 							        aria-labelledby="v-pills-link1-tab"
@@ -438,36 +438,40 @@ var oTable = $('#zero_config').dataTable( {
 							        <table class="table table-user-information">
                     <tbody>
                       <tr>
-                      	<td>Alias:</td>
-                        <td><p class="divalias"></p></td>
+                      	<td style="    font-weight: bold;">Alias:</td>
+                        <td><p class="divalias" style="color: gray;"></p></td>
 
                        </tr>
                        <tr>
-                        <td>Nombre:</td>
-                        <td><p class="divnombre"></p></td>
+                        <td style="    font-weight: bold;">Nombre:</td>
+                        <td><p class="divnombre" style="color: gray;"></p></td>
                       </tr>
                       <tr>
-                        <td>Fecha Nac.:</td>
-                        <td> <p class="divfechanacimiento"></p></td>
+                        <td style="    font-weight: bold;">Fecha Nac.:</td>
+                        <td> <p class="divfechanacimiento" style="color: gray;"></p></td>
                       </tr>
                       <tr>
-                        <td>Correo:</td>
-                        <td><p class="divcorreo"></p></td>
+                        <td style="    font-weight: bold;">Correo:</td>
+                        <td><p class="divcorreo" style="color: gray;"></p></td>
                       </tr>
                   
                        <tr>
-                        <td>Sexo:</td>
-                        <td><p class="divsexo"></p></td>
+                        <td style="    font-weight: bold;">Sexo:</td>
+                        <td><p class="divsexo" style="color: gray;"></p></td>
                       </tr>
                       <tr>
-                      			  <td>Celular:</td>
-                       			 <td><p class="divcelular"></p>
+                      			  <td style="    font-weight: bold;">Celular:</td>
+                       			 <td><p class="divcelular" style="color: gray;"></p>
                         		</td>
                       </tr>
                      
                       
-                           
-                      </tr>
+                        <tr>
+                      			  <td style="    font-weight: bold;">Tipo de usuario:</td>
+                       			 <td><p class="divtipousuario" style="color: gray;"></p>
+                        		</td>
+                      </tr>    
+                    
                      
                     </tbody>
                   </table>
@@ -475,7 +479,7 @@ var oTable = $('#zero_config').dataTable( {
 							       
 							      </div>
 							      <div
-							        class="tab-pane fade"
+							        class="tab-pane tabsk fade"
 							        id="v-pills-link2"
 							        role="tabpanel"
 							        aria-labelledby="v-pills-link2-tab">
@@ -483,21 +487,21 @@ var oTable = $('#zero_config').dataTable( {
 							       
 							      </div>
 							      <div
-							        class="tab-pane fade"
+							        class="tab-pane tabsk fade"
 							        id="v-pills-link3"
 							        >
 							        <div class="divmembresias"></div>
 							      </div>
 							      <div
-							        class="tab-pane fade"
+							        class="tab-pane tabsk fade"
 							        id="v-pills-link4"
 							       >
 							       <div class="divasociados"></div>
 							      </div>
 
 							        <div
-							        class="tab-pane fade"
-							        id="v-pills-link4"
+							        class="tab-pane tabsk fade"
+							        id="v-pills-link5"
 							       >
 							       <div class="divtutorados"></div>
 							      </div>

@@ -770,7 +770,9 @@ public function validarUsuarioClienteTokenCel()
 
     public function ObtenerparentescoUsuario()
     {
-         $sql = "SELECT * FROM usuariossecundarios WHERE idusuariotutorado = '$this->idusuarios'";
+         $sql = "SELECT * FROM usuariossecundarios
+            LEFT JOIN usuarios ON usuariossecundarios.idusuariostutor=usuarios.idusuarios
+          WHERE idusuariotutorado = '$this->idusuarios'";
 
 
         $result = $this->db->consulta($sql);

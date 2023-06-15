@@ -1553,25 +1553,27 @@ function PintarAlumnosAdmin(respuesta) {
 	                         <div class="row">
 
 	                         `;
-		           
-	             		  
-
-                      		  //if(respuesta[i].alias!='' && respuesta[i].alias!=null) {
 
 	                         html+=`
-	                         <div class="row">
-	                          		<div class="col-100 item-text" style="font-size:20px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">Alias: `+respuesta[i].alias+`
-		             		    	
-		             		    	 </div>
-		             		    </div>
+	                         <div class="row">`;
+		           			if (respuesta[i].alias!='') {
+
+	                          		html+=`
+	                          		<div class="col-100 item-text" style="font-size:20px;word-break: break-word;color:#7a7a7a;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].alias+`
+		            
+		             		    	 </div>`;
+
+		             		    	}
+		             		   html+=` </div>
 		             		    	 `;	
+		             		    
 	                        // }
 
 	                           html+=` 
              		  
 	                       <div class="row">
 
-	                        <div class="col-100 " style="font-size:18px;word-break: break-word;color: rgba(0, 0, 0, 0.45);" id="participante_`+respuesta[i].idusuarios+`">Nombre: `+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`
+	                        <div class="col-100 " style="font-size:18px;word-break: break-word;color:#9c9c9c;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`
 	             		    </div>
 	             		  </div>
 
@@ -1580,21 +1582,24 @@ function PintarAlumnosAdmin(respuesta) {
 		             		   
 		
 
-	             		   html+=` <div class="row">
-	             		    	 <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">Celular: `+respuesta[i].celular+`
-	             		     	</div>
-	             		     </div>
-             		   `;
+	             		   html+=` <div class="row">`;
+	             		   if (respuesta[i].celular!='') {
+	             		    	html+=`
+	             		    	<div class="col-100 item-text" style="font-size:18px;word-break: break-word;color:#7a7a7a;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].celular+`
+	             		     	</div>`;
+	             		     }
+	             		    html+=` </div> `;
 
              		   html+=`<div class="row">`;
 
-             			       t=`<i class="bi-x-circle"></i>`;
              		   		
              		   		if (respuesta[i].tutorado==1) {
-             		   			t=`	<i class="bi-check-circle"></i>`;
+             		   		html+=`<div class="item-text"><span class="badge" style="background:#38a2f7;">Tutorado</span></div>`;
+             		   		html+=`<div class="item-text" style="color:#9c9c9c;">`+respuesta[i].tutor+`</div>`;
+
              		   		}
 
-             		   		html+=`<div class="item-text">Tutorado: `+t+`</div>`;
+             		   	//	html+=`<div class="item-text">Tutorado: `+t+`</div>`;
 
              		   		
 
@@ -1709,7 +1714,7 @@ function PintarAlumnos(respuesta) {
 	                         <div class="row">`;
 
 	                         if (respuesta[i].alias!='' && respuesta[i].alias!=null) {
-	                         html+=` <div class="col-100 item-text" style="font-size:20px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">Alias: `+respuesta[i].alias+`
+	                         html+=` <div class="col-100 item-text" style="font-size:20px;word-break: break-word;color:#7a7a7a;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].alias+`
 		             		     </div>`;	
 	                         }
 		             		   
@@ -1719,7 +1724,7 @@ function PintarAlumnos(respuesta) {
              		  
 	                       <div class="row">
 
-	                        <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+`
+	                        <div class="col-100 item-text" style="font-size:18px;word-break: break-word;color:#9c9c9c;" id="participante_`+respuesta[i].idusuarios+`">`+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`
 	             		    </div>
 	             		   </div>
 
@@ -1728,14 +1733,15 @@ function PintarAlumnos(respuesta) {
 
 
 	             		   html+=` <div class="row">
-	             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].celular+`
+	             		     <div class="col-100 item-text" style="font-size:18px;word-break: break-word;color:#7a7a7a;" id="correo_`+respuesta[i].idusuarios+`">`+respuesta[i].celular+`
 	             		     </div>
              		   `;
 
              	
              		   html+=`<div class="row">`;
              		   		if (respuesta[i].tutorado==1) {
-             		   		html+=`<div class="item-text">Tutorado</div>`;
+             		   		html+=`<div class="item-text"><span class="badge" style="background:#38a2f7;">Tutorado</span></div>`;
+             		   		html+=`<div class="item-text" style="color:#9c9c9c;">`+respuesta[i].tutor+`</div>`;
 
              		   		}
 
@@ -1800,7 +1806,7 @@ function SeleccionarAsignado(idusuarios) {
 			}
 			
 		}else{
-			alerta('','El usuario no se puede asignar a este servicio, cuenta con pago(s) pendiente(s)');
+			alerta('','El usuario no se puede asignar a este servicio, debido a que tiene un pago pendiente');
 			
 			$("#idusuarios_"+idusuarios).prop('checked',false);
 

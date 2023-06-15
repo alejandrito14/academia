@@ -18,6 +18,7 @@ class Membresia
 	public $limite;
 	public $porcategoria;
 	public $porservicio;
+	public $porhorario;
 	public $color;
 	public $depende;
 	public $membresiadepende;
@@ -38,6 +39,11 @@ class Membresia
 	public $idmembresias;
 	public $idpago;
 
+	public $dia;
+	public $horainiciosemana;
+	public $horafinsemana;
+	public $porhorariodescuento;
+	public $porhorariomonto;
 
 	public function ObtenerTodosmembresia()
 	{
@@ -83,7 +89,7 @@ class Membresia
 
 	public function guardarmembresia($value='')
 	{
-		$query="INSERT INTO membresia (titulo,estatus,orden,descripcion,costo,cantidaddias,tiempodepago,porcategoria,porservicio,color,depende,idmembresiadepende,inppadre,inphijo,inpnieto,limite,fecha,repetir) VALUES ('$this->titulo','$this->estatus','$this->orden','$this->descripcion','$this->costo','$this->duracion','$this->limite','$this->porcategoria','$this->porservicio','$this->color','$this->depende','$this->membresiadepende','$this->inppadre','$this->inphijo','$this->inpnieto','$this->v_limitemembresia','$this->fecha','$this->repetir')";
+		$query="INSERT INTO membresia (titulo,estatus,orden,descripcion,costo,cantidaddias,tiempodepago,porcategoria,porservicio,color,depende,idmembresiadepende,inppadre,inphijo,inpnieto,limite,fecha,repetir,porhorario,tipodescuentoporhorario,montoporhorario) VALUES ('$this->titulo','$this->estatus','$this->orden','$this->descripcion','$this->costo','$this->duracion','$this->limite','$this->porcategoria','$this->porservicio','$this->color','$this->depende','$this->membresiadepende','$this->inppadre','$this->inphijo','$this->inpnieto','$this->v_limitemembresia','$this->fecha','$this->repetir','$this->porhorario','$this->porhorariodescuento','$this->porhorariomonto')";
 		
 		$resp=$this->db->consulta($query);
 		$this->idmembresia = $this->db->id_ultimo();
@@ -101,6 +107,7 @@ class Membresia
 		     cantidaddias='$this->duracion',
 		     tiempodepago='$this->limite',
 		     porcategoria='$this->porcategoria',
+		     porhorario='$this->porhorario',
 		     porservicio='$this->porservicio',
 		     color='$this->color',
 		     depende='$this->depende',
@@ -110,7 +117,9 @@ class Membresia
 			 inpnieto='$this->inpnieto',
 			 limite='$this->v_limitemembresia',
 			 repetir='$this->repetir',
-			 fecha='$this->fecha'
+			 fecha='$this->fecha',
+			 tipodescuentoporhorario='$this->porhorariodescuento',
+			 montoporhorario='$this->porhorariomonto'
 		   	 WHERE idmembresia=$this->idmembresia";
 
 		$resp=$this->db->consulta($query);
@@ -809,6 +818,44 @@ class Membresia
 		return $array;
 
 
+
+	}
+
+	public function GuardarHorarioMembresia()
+	{
+		$query = "INSERT INTO horariosmembresia (idmembresia,dia,horainicial,horafinal) VALUES ('$this->idmembresia','$this->dia','$this->horainiciosemana','$this->horafinsemana');";
+			
+		$this->db->consulta($query);
+
+	}
+
+	public function EliminarHorarioMembresia()
+	{
+		$query="DELETE FROM horariosmembresia WHERE idmembresia=".$this->idmembresia;
+
+		$resp=$this->db->consulta($query);
+	}
+
+	public function ObtenerHorariosMembresia()
+	{
+			$sql="SELECT *
+		FROM horariosmembresia WHERE idmembresia='$this->idmembresia'";
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
 
 	}
 

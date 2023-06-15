@@ -1095,7 +1095,9 @@ public function Eliminardeencuestas()
 			categorias.descripcion AS descripcioncategoria,
 			servicios.numeroparticipantesmax
 		FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio WHERE 
-			categorias.avanzado IN(0,1) AND servicios.estatus IN (0) ";
+			  servicios.estatus=0 and categorias.avanzado IN(0,1) ";
+
+
 
 			if($serviciosasignados!=''){
 
@@ -1104,7 +1106,9 @@ public function Eliminardeencuestas()
 			}
 
 
-			$sql.=" ORDER BY servicios.orden asc";
+	$sql.=" GROUP BY servicios.idservicio";
+			$sql.=" ORDER BY servicios.fechacreacion asc";
+
 			
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -1117,9 +1121,14 @@ public function Eliminardeencuestas()
 			while ($objeto=$this->db->fetch_object($resp)) {
 
 				$fechaactual=date('Y-m-d');
+				$fechafiltro=date("Y-m-d",strtotime($fechaactual."- 15 days")); 
 
-
-				$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
+				$sql1="SELECT
+						* 
+					FROM
+						( SELECT MAX( fecha ) AS fechamax, MIN( fecha ) AS fechamin FROM horariosservicio where idservicio = $objeto->idservicio ) AS TABLA 
+					  where TABLA.fechamax>='$fechafiltro'";
+					
 				$resphorarios=$this->db->consulta($sql1);
 
 				$conta = $this->db->num_rows($resphorarios);
@@ -1460,7 +1469,7 @@ public function Eliminardeencuestas()
 		}
 
 		$sql.=" ORDER BY
-		TABLA.orden ASC";
+		TABLA.fechacreacion ASC";
 
 		
 
@@ -1544,6 +1553,44 @@ public function Eliminardeencuestas()
 	}
 
 	
+
+	public function ServiciosCron()
+	{
+		$sql="SELECT *from(SELECT *,
+		(SELECT CONCAT( fecha, ' ', horainicial ) FROM horariosservicio 
+	WHERE horariosservicio.idservicio = servicios.idservicio ORDER BY idhorarioservicio DESC LIMIT 1 ) AS horarioinicio,
+		(SELECT
+				COUNT(*)
+				FROM
+				usuarios_servicios
+				JOIN usuarios
+				ON usuarios_servicios.idusuarios = usuarios.idusuarios
+				JOIN tipousuario
+				ON tipousuario.idtipousuario=usuarios.tipo
+				WHERE
+				usuarios_servicios.idservicio= servicios.idservicio AND usuarios.idusuarios AND usuarios.tipo=3 and usuarios_servicios.cancelacion=0 ORDER BY usuarios.tipo DESC ) AS alumnos,
+				(SELECT COUNT(*) FROM usuarios_servicios  LEFT JOIN pagos on usuarios_servicios
+		.idusuarios=pagos.idusuarios AND pagos.idservicio=usuarios_servicios.idservicio  WHERE pagos.pagado=1 and usuarios_servicios.idservicio=servicios.idservicio)  AS pagados
+		FROM servicios)as tabla  WHERE horarioinicio='$this->fecha' and  alumnos>pagados ";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+
+	}
 
 
 

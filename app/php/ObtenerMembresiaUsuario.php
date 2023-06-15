@@ -39,6 +39,9 @@ for ($i=0; $i <count($pagoselegidos) ; $i++) {
 		$obtenerdatosmembresia=$membresias->ObtenerMembresia();
 		$porcategoria=$obtenerdatosmembresia[0]->porcategoria;
 		$porservicio=$obtenerdatosmembresia[0]->porservicio;
+		$porhorario=$obtenerdatosmembresia[0]->porhorario;
+		$tipodescuentoporhorario=$obtenerdatosmembresia[0]->tipodescuentoporhorario;
+		$montoporhorario=$obtenerdatosmembresia[0]->montoporhorario;
 
 			$evaluar=1;
 			if ($porcategoria==1) {
@@ -133,6 +136,52 @@ for ($i=0; $i <count($pagoselegidos) ; $i++) {
 							
 						}
 
+						if ($porhorario==1) {
+
+							
+							$encontrado=0;
+							$obtenerhorarios=$servicios->ObtenerHorariosSemana();
+								if (count($obtenerhorarios)>0) {
+									for ($i=0; $i <count($obtenerhorarios) ; $i++) { $horainicial=$obtenerhorarios[$i]->horainicial;
+										$horafinal=$obtenerhorarios[$i]->horafinal;
+										$dia=$obtenerhorarios[$i]->dia;
+
+										$membresias->horainicial=$horainicial;
+										$membresias->horafinal=$horafinal;
+										$membresias->dia=$dia;
+										$validar=$membresias->ValidarHorarioMembresia();
+
+
+										if (count($validar)>0) {
+
+
+										$encontrado++;
+										}
+										
+									}
+								
+							
+							}
+
+							if ($encontrado>0) {
+
+								$objeto = (object) [
+								    'idmembresia' => $idmembresia,
+								    'monto' => $montoporhorario,
+								    'descuento'=>$tipodescuentoporhorario,
+								    'idpago'=>$idpago,
+								    'montopago'=>$montopago
+								];
+
+
+			
+
+								array_push($descuentosmembresia,$objeto);
+							}
+							
+
+						}
+
 
 				
 
@@ -146,12 +195,14 @@ for ($i=0; $i <count($pagoselegidos) ; $i++) {
 		
 
 
-	for ($i=0; $i < count($descuentosmembresia); $i++) {	
-		$tipo=$descuentosmembresia[$i]->descuento;
+	for ($k=0; $k < count($descuentosmembresia); $k++) {	
 
 	
-		$monto=$descuentosmembresia[$i]->monto;
-		$total=$descuentosmembresia[$i]->montopago;
+		$tipo=$descuentosmembresia[$k]->descuento;
+
+	
+		$monto=$descuentosmembresia[$k]->monto;
+		$total=$descuentosmembresia[$k]->montopago;
 
 
 		if ($tipo==2) {
@@ -162,9 +213,9 @@ for ($i=0; $i <count($pagoselegidos) ; $i++) {
 		 	$montoadescontar=$monto;
 		 }
 
-		 $descuentosmembresia[$i]->montoadescontar=$montoadescontar;
-		 $descuentosmembresia[$i]->titulomembresia=$obtenerdatosmembresia[0]->titulo;
-		  $descuentosmembresia[$i]->color=$obtenerdatosmembresia[0]->color;
+		 $descuentosmembresia[$k]->montoadescontar=$montoadescontar;
+		 $descuentosmembresia[$k]->titulomembresia=$obtenerdatosmembresia[0]->titulo;
+		  $descuentosmembresia[$k]->color=$obtenerdatosmembresia[0]->color;
 		
 	}
 
