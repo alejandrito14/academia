@@ -156,4 +156,27 @@ class ClienteStripe
 	}
 
 
+
+	public function RegistrarIntentoPagoFallido2()
+	{
+		$sql = "INSERT INTO intentospagosfallidos (idtransaccion, monto, digitostarjeta, idusuarios, estatus, fechatransaccion,idnotaremision) 
+		VALUES ('$this->idTransaccion',$this->monto,'$this->digitosTarjeta',$this->idusuarios,'$this->estatus','$this->fechaTransaccion','$this->idNotaRemision')";	
+		
+		$result = $this->db->consulta($sql);
+	}
+
+
+	public function RegistrarIntentoPago2()
+	{
+		
+		$sql = "INSERT INTO pagostripe (idtransaccion, monto, digitostarjeta, idusuarios, estatus, fechatransaccion,comision,comisiontotal,comisionmonto,impuestototal,subtotalsincomision,total,impuesto,id) 
+		VALUES ('$this->idTransaccion',$this->monto,'$this->digitosTarjeta',$this->idusuarios,'$this->estatus','$this->fechaTransaccion','$this->comision','$this->comisiontotal','$this->comisionmonto','$this->impuestototal','$this->subtotalsincomision','$this->total','$this->impuesto','$this->idNotaRemision')";	
+		$result = $this->db->consulta($sql);
+		$this->idintento=$this->db->id_ultimo();
+
+		
+	}
+
+
+
 }

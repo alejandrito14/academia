@@ -86,7 +86,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 <div class="card">
 	<div class="card-body">
-		<h5 class="card-title" style="float: left;">FORMATO DE SERVICIOS</h5>
+		<h5 class="card-title" style="float: left;">LISTADO DE CATEGORIAS</h5>
 		
 		<div style="float:right;">
 		

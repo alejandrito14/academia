@@ -19,6 +19,10 @@ class MembresiasAsignadas
 	public $idusuarios_membresia;
 	public $idpago;
 
+	public $fechacancelacion;
+	public $usuariocancelacion;
+
+
 	public function ObtenermembresiaActivosAsignados()
 	{
 
@@ -107,7 +111,7 @@ class MembresiasAsignadas
 
 	public function ConsultarSiTienelamembresia()
 	{
-		$sql="SELECT *FROM usuarios_membresia WHERE idmembresia='$this->idmembresia' AND idusuarios='$this->idusuarios' AND estatus=1";
+		$sql="SELECT *FROM usuarios_membresia WHERE idmembresia='$this->idmembresia' AND idusuarios='$this->idusuarios' AND estatus IN(0)";
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -129,10 +133,22 @@ class MembresiasAsignadas
 
 	public function ActualizarEstatusAsignacion()
 	{
-		$sql="UPDATE usuarios_membresia SET estatus='$this->estatus' WHERE idusuarios_membresia='$this->idusuarios_membresia'";
+		$sql="UPDATE usuarios_membresia SET estatus='$this->estatus',
+			fechacancelacion='$this->fechacancelacion',
+			usuariocancelacion='$this->usuariocancelacion'
+
+		 WHERE idusuarios_membresia='$this->idusuarios_membresia'";
+	
 		$resp=$this->db->consulta($sql);
 
 
+	}
+
+	public function ActualizarPagoMembresia()
+	{
+		$sql="UPDATE pagos SET estatus='$this->estatus'
+		 WHERE idpago='$this->idpago'";
+		$resp=$this->db->consulta($sql);
 	}
 
 	public function BuscarFechasArray($arrayfechas,$idmembresia)
@@ -234,8 +250,108 @@ class MembresiasAsignadas
 		
 		return $array;
 	}
+
+
+	public function obtenerPagoInscripcion()
+	{
+		$sql="SELECT *FROM pagoinscripcionmembresia WHERE idusuarios_membresia='$this->idusuarios_membresia'";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 	
 
+	public function ObtenerAsignacionMembresiaId()
+	{
+		$sql="SELECT usuarios_membresia.idusuarios_membresia,usuarios_membresia.estatus,pagos.estatus as estatuspago,pagos.pagado,pagos.idpago FROM usuarios_membresia
+			LEFT JOIN pagos ON pagos.idpago=usuarios_membresia.idpago
+		 WHERE idusuarios_membresia='$this->idusuarios_membresia'";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function CambiarEstatusAsignacion()
+	{
+		$sql="UPDATE usuarios_membresia SET 
+		 estatus='$this->estatus',
+		 pagado='$this->pagado'
+		 WHERE idusuarios_membresia='$this->idusuarios_membresia'";
+		
+		$resp=$this->db->consulta($sql);
+	}
+
+	public function CambiarEstatusAsignacionPago()
+	{
+		$sql="UPDATE pagos SET 
+		 estatus='$this->estatus',
+		 pagado='$this->pagado'
+		 WHERE idpago='$this->idpago'";
+		
+		$resp=$this->db->consulta($sql);
+		
+	}
+
+	public function GuardarHistorial($estatusasignacion,$estatuspago,$pagado)
+	{
+		$sql="
+		INSERT INTO historialmembresiaestatus(idusuarios_membresia, estatus, idpago, estatuspago, pagado) VALUES ('$this->idusuarios_membresia','$estatusasignacion','$this->idpago',$estatuspago,$pagado)
+		";
+		
+		$resp=$this->db->consulta($sql);
+
+	}
+
+
+	public function ObtenerHistorial()
+	{
+		$sql="SELECT * FROM historialmembresiaestatus WHERE idusuarios_membresia='$this->idusuarios_membresia' ORDER BY idhistorialmembresiaestatus DESC LIMIT 1";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 
 }
  ?>

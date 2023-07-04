@@ -12,7 +12,6 @@ class PagosCoach
 	public $monto;
 	public $estatus;
 	public $dividido;
-	public $fechainicial;
 	public $fechapago;
 	public $concepto;
 	public $folio;
@@ -27,6 +26,9 @@ class PagosCoach
 	public $tipopagocoach;
 	public $montopagocoach;
 	public $montopago;
+
+	public $fechainicial;
+	public $fechafinal;
 
 	public function CrearRegistroPagoCoach()
 	{
@@ -138,6 +140,7 @@ class PagosCoach
 			AND fechainicial='$this->fechainicial' AND fechafinal='$this->fechafinal'
 
 		";
+
 	
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -357,14 +360,15 @@ class PagosCoach
 
 		public function GuardarPagoCoach()
 		{
-			$sql="INSERT INTO pagoscoach(idusuarios, idservicio, monto, fechapago, estatus, folio,concepto,idtipopago,tipopago,pagado,idpago,descripcionpago,idusuarioquienpaga,tipopagocoach,montopagocoach,montopago) VALUES ('$this->idusuarios','$this->idservicio','$this->monto','$this->fechapago','$this->estatus','$this->folio','$this->concepto','$this->idtipopago','$this->tipopago','$this->pagado','$this->idpago','$this->descripcionpago','$this->idusuariocreado','$this->tipopagocoach','$this->montopagocoach','$this->montopago')";
+			$sql="INSERT INTO pagoscoach(idusuarios, idservicio, monto, fechapago, estatus, folio,concepto,idtipopago,tipopago,pagado,idpago,descripcionpago,idusuarioquienpaga,tipopagocoach,montopagocoach,montopago,fechainicial,fechafinal) VALUES ('$this->idusuarios','$this->idservicio','$this->monto','$this->fechapago','$this->estatus','$this->folio','$this->concepto','$this->idtipopago','$this->tipopago','$this->pagado','$this->idpago','$this->descripcionpago','$this->idusuariocreado','$this->tipopagocoach','$this->montopagocoach','$this->montopago',
+			    '$this->fechainicial','$this->fechafinal')";
 
 			$resp = $this->db->consulta($sql);
 
 		}
 
 
-	public function ObtenerPagoCoachVeri($idpago,$idservicio)
+		public function ObtenerPagoCoachVeri($idpago,$idservicio)
 	{
 		$sql="SELECT *FROM pagoscoach 
 		WHERE idpago='$idpago' AND idservicio='$idservicio'
@@ -390,7 +394,6 @@ class PagosCoach
 		
 		return $array;
 	}
-
 
 
 }

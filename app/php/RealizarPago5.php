@@ -326,8 +326,7 @@ try {
         }
 
 
-     
-          if ($estatusdeproceso==1) {
+   
           	   $db = new MySQL();
           	   $db->begin();
           	   $pagos=new Pagos();
@@ -428,57 +427,12 @@ try {
 
                     }
 
-                  /*   if (count($descuentosaplicados)>0) {
-              
-               for ($p=0; $p <count($descuentosaplicados) ; $p++) { 
-                    if ($descuentosaplicados[$p]->idpago==$pagosconsiderados[$i]->idpago) {
-                        $descuentosaplicados[$p]->idpago=$pagos->idpago;
-                        }
-
-                      }
-                   }*/
-
-
-             /* if (count($descuentosmembresia)>0) {
-                
-                for ($i=0; $i <count($descuentosmembresia) ; $i++) { 
-                   if($descuentosmembresia[$i]->idpago==$pagosconsiderados[$i]->idpago){
-                    $descuentosmembresia[$i]->idpago=$pagos->idpago;
-
-                   }
-                  
-                }
-              }*/
-
-               
+               if ($estatusdeproceso==1) {
                   $pagos->ActualizarEstatus();
                   $pagos->ActualizarPagado();
 
-
-             /* $pagos->idpago=$pagosconsiderados[$i]->id;
-              $buscarpago=$pagos->ObtenerPago();
-              
-              $montopago=$buscarpago[0]->monto;
-              $lo->idservicio=$buscarpago[0]->idservicio;
-             $obtenercorachs=$lo->BuscarAsignacionCoach();
-              if (count($obtenercorachs)>0) {
-                for ($j=0; $j <count($obtenercorachs) ; $j++) { 
-
-                    $lo->idusuarios_servicios=$obtenercorachs[$j]->idusuarios_servicios;
-                    $tipomontopago= $lo->ObtenertipoMontopago();
-                    $pagocoach->idusuarios=$obtenercorachs[$j]->idusuarios;
-                    $pagocoach->idservicio=$lo->idservicio;
-                    $pagocoach->monto=$lo->CalcularMontoPago($tipomontopago[0]->tipopago,$tipomontopago[0]->monto,$montopago);
-                    $pagocoach->estatus=0;
-                    $pagocoach->pagado=0;
-                    $pagocoach->folio=$pagocoach->ObtenerFolioPagoCoach();
-                    $pagocoach->concepto=$buscarpago[0]->concepto;
-                    $pagocoach->idpago=$buscarpago[0]->idpago;
-                 
-                  
                 }
-              }*/
-
+          
            
             
 
@@ -532,9 +486,12 @@ try {
                       $pagos->estatus=1;
 
                    }
+
+                  if ($estatusdeproceso==1) {
+
                    $pagos->ActualizarEstatus();
                    $pagos->ActualizarPagado();
-
+                 }
                  
                   $buscarmembresiausuario=$membresia->buscarMembresiaUsuario2();
                 
@@ -570,14 +527,19 @@ try {
                           $membresia->renovacion=1;
                         }
 
-                      $membresia->CrearRegistroMembresiaUsuario();
+                     // $membresia->CrearRegistroMembresiaUsuario();
                    }
 
                    if ($campomonto==1) {
                      $membresia->pagado=0;
                     }
+
+              if ($estatusdeproceso==1) {
+
  
                   $membresia->ActualizarEstatusMembresiaUsuarioPagado2();
+
+                }
 
           	   }
 
@@ -585,8 +547,13 @@ try {
 
                     $pagos->estatus=2;
                     $pagos->idpago=$pagosconsiderados[$i]->id;
+
+                  if ($estatusdeproceso==1) {
+
                     $pagos->ActualizarEstatus();
                     $pagos->ActualizarPagado();
+
+                  }
                 }
                //creacion de descripcion de pago
               $buscarpago=$pagos->ObtenerPago();
@@ -597,6 +564,7 @@ try {
                $notapago->Creardescripcionpago();
  
                ///creacion pago a coach
+             if ($estatusdeproceso==1) {
 
                if ($constripe==1) {
              
@@ -604,14 +572,20 @@ try {
 
                  }
 
+               }
+
 
           		}
               $notapago->fechareporte=date('Y-m-d H:i:s');
               $notapago->idpagostripe=0;
+          if ($estatusdeproceso==1) {
+
               if ($constripe==1) {
                $notapago->idpagostripe=$obj->idintento;
                
              }
+
+           }
                $notapago->descuento=0;
                $notapago->descuentomembresia=0;
 
@@ -649,11 +623,17 @@ try {
                   $notapago->descuentomembresia=$notapago->descuentomembresia+$descuentosmembresia[$i]->montoadescontar;
                 }
               }
+
+        if ($estatusdeproceso==1) {
+
               $notapago->estatus=1;
               $notapago->ActualizarNotapago();
 
+            }
 
 
+
+               if ($estatusdeproceso==1) {
 
   if ($montomonedero!='' && $montomonedero!=0) {
             $usuarios=new Usuarios();
@@ -678,6 +658,8 @@ try {
 
 
    }
+
+ }
 
     if ($confoto == 1) {
 
@@ -721,8 +703,8 @@ try {
                     ]; 
               }
 
-             
-          }else{
+
+          if($estatusdeproceso==0){
 
 
             $notapago->ActualizarNotaAIncompleto();
@@ -755,6 +737,7 @@ catch (\Stripe\Exception\CardException $err) {
     $db = new MySQL();
     $obj->db = $db; 
     $obj->RegistrarIntentoPagoFallido2();
+    $notapago->db=$db;
     $notapago->ActualizarNotaAIncompleto();
 
 
@@ -765,6 +748,220 @@ catch (\Stripe\Exception\CardException $err) {
     $obj->fechaTransaccion = $paymentIntent->created;   
                 
     $obj->ActualizarIntento();
+               $pagos=new Pagos();
+               $pagos->db=$db;
+               $descuentos=new Descuentos();
+               $descuentos->db=$db;
+               $lo=new ServiciosAsignados();
+               $lo->db=$db;
+               $membresia=new Membresia();
+
+               $membresia->db=$db;
+               $invitacion=new Invitacion();
+               $invitacion->db=$db;
+               $pagocoach=new PagosCoach();
+               $pagocoach->db=$db;
+               $servicios=new Servicios();
+               $servicios->db=$db;
+
+
+
+
+
+            for ($i=0; $i < count($pagosconsiderados); $i++) { 
+               
+                  $pagos->pagado=0;
+                
+               
+               
+
+                $pagos->estatus=6;
+
+                $pagos->fechapago='';
+                $pagos->idpagostripe=$obj->idintento;
+              if ($pagosconsiderados[$i]->tipo==1) {
+                  
+                 $servicios->idservicio= $pagosconsiderados[$i]->idservicio;
+                 $datosservicio=$servicios->ObtenerServicio();
+
+                
+                  $pagos->idpago=$pagosconsiderados[$i]->id;
+
+                  
+                  $buscarpago=$pagos->ObtenerPago();
+
+                  
+                  if ($pagosconsiderados[$i]->idservicio>0) {
+
+
+                      $idcadena=explode('-', $pagosconsiderados[$i]->id);
+                      
+
+                      $pagos->idusuarios=$pagosconsiderados[$i]->usuario;
+                   
+                      $pagos->idservicio=$pagosconsiderados[$i]->servicio;
+                      $pagos->tipo=$pagosconsiderados[$i]->tipo;
+                      $pagos->monto=$pagosconsiderados[$i]->monto;
+                      $pagos->dividido='';
+                      $pagos->fechainicial=$pagosconsiderados[$i]->fechainicial;
+                      $pagos->fechafinal=$pagosconsiderados[$i]->fechafinal;
+                      $pagos->concepto=$datosservicio[0]->titulo;
+                      $pagos->idmembresia=0;
+                     // $pagos->CrearRegistroPago();
+                    }
+
+                  
+
+              }
+
+              if ($pagosconsiderados[$i]->tipo==2) { 
+
+                   $pagos->idpago=$pagosconsiderados[$i]->id;
+                  $buscarpago=$pagos->ObtenerPago();
+                  $membresia->idpago=$pagos->idpago;
+                   $membresia->idusuarios=$iduser;
+                  if (count($buscarpago)==0) {
+
+
+                      $idcadena=explode('-', $pagosconsiderados[$i]->id);
+                       $membresia->idmembresia=$idcadena[1];
+                      $obtenermembresia=$membresia->ObtenerMembresia();
+
+                      $pagos->idusuarios=$iduser;
+                      $pagos->idmembresia=$idcadena[1];
+                      $pagos->idservicio=0;
+                      $pagos->tipo=2;
+                      $pagos->monto=$pagosconsiderados[$i]->monto;
+                      $pagos->dividido='';
+                      $pagos->fechainicial='';
+                      $pagos->fechafinal='';
+                      $pagos->concepto=$obtenermembresia[0]->titulo;
+                     
+                        
+                      $pagos->folio=$folio;
+                      $pagos->CrearRegistroPago();
+
+
+               
+
+                  }else{
+                      $membresia->idmembresia=$buscarpago[0]->idmembresia;
+                      $membresia->idpago=$buscarpago[0]->idpago;
+                      $obtenermembresia=$membresia->ObtenerMembresia();
+
+                   $membresia->idusuarios=$buscarpago[0]->idusuarios;
+
+                  }
+
+                 
+                 
+                  $buscarmembresiausuario=$membresia->buscarMembresiaUsuario2();
+                
+
+                   $dias=$obtenermembresia[0]->cantidaddias;
+                   $date = date("d-m-Y");
+                   $mod_date = strtotime($date."+ ".$dias." days");
+                   $membresia->fechaexpiracion='';
+
+                 
+                   $membresia->renovacion=0;
+                   if (count($buscarmembresiausuario)>0) {
+                      $membresia->idusuarios_membresia= $buscarmembresiausuario[0]->idusuarios_membresia;
+               
+
+                  if($buscarmembresiausuario[0]->estatus!=2) {
+                    $membresia->estatus=1;
+                      }else{
+                     $membresia->estatus=2;
+                   }
+                      
+                      $membresia->pagado=1;
+
+                   }else{
+
+                     
+                      $membresia->estatus=1;
+                      $membresia->pagado=1;
+
+                      $ChecarVencidas=$membresia->ObtenerMembresiasVencidas();
+
+                      if (count($ChecarVencidas)>0) {
+                          $membresia->renovacion=1;
+                        }
+                         if ($estatusdeproceso==1) {
+
+                      $membresia->CrearRegistroMembresiaUsuario();
+
+                    }
+                   }
+
+                   if ($campomonto==1) {
+                     $membresia->pagado=0;
+                    }
+
+              if ($estatusdeproceso==1) {
+
+ 
+                  $membresia->ActualizarEstatusMembresiaUsuarioPagado2();
+
+                }
+
+               }
+
+                if ($pagosconsiderados[$i]->tipo==3) {
+
+                    $pagos->idpago=$pagosconsiderados[$i]->id;
+
+                
+                }
+               //creacion de descripcion de pago
+              $buscarpago=$pagos->ObtenerPago();
+              $notapago->descripcion=$buscarpago[0]->concepto;
+              $notapago->cantidad=1;
+              $notapago->monto=$buscarpago[0]->monto;
+              $notapago->idpago=$buscarpago[0]->idpago;
+               $notapago->Creardescripcionpago();
+ 
+           
+                $pagos->ActualizarEstatus();
+
+
+              }
+
+                if (count($descuentosaplicados)>0) {
+              
+              for ($i=0; $i <count($descuentosaplicados) ; $i++) { 
+                  
+              $descuentos->iddescuento=$descuentosaplicados[$i]->iddescuento;
+              $descuentos->montopago=$descuentosaplicados[$i]->montopago;
+              $descuentos->montoadescontar=$descuentosaplicados[$i]->montoadescontar;
+              $descuentos->idpago=$descuentosaplicados[$i]->idpago;
+              $descuentos->tipo=$descuentosaplicados[$i]->tipo;
+              $descuentos->monto=$descuentosaplicados[$i]->monto;
+              $descuentos->idnotapago= $notapago->idnotapago;
+               
+              $descuentos->GuardarDescuentoPago();
+              $notapago->descuento= $notapago->descuento+$descuentosaplicados[$i]->montoadescontar;
+                }
+
+              }
+
+              if (count($descuentosmembresia)>0) {
+                
+                for ($i=0; $i <count($descuentosmembresia) ; $i++) { 
+                  $membresia->idpago=$descuentosmembresia[$i]->idpago;
+                  $membresia->idmembresia=$descuentosmembresia[$i]->idmembresia;
+
+                  $membresia->idservicio=$descuentosmembresia[$i]->idservicio;
+                  $membresia->descuento=$descuentosmembresia[$i]->descuento;
+                  $membresia->monto=$descuentosmembresia[$i]->monto;
+                  $membresia->montoadescontar=$descuentosmembresia[$i]->montoadescontar;
+
+                   $membresia->idnotapago=$notapago->idnotapago;
+                  $membresia->GuardarPagoDescuentoMembresia();
+                  $notapago->descuentomembresia=$notapago->descuentomembresia+$descuentosmembresia[$i]->montoadescontar;
+                }
+              }
 
            
      $db->commit();
@@ -781,7 +978,7 @@ catch (\Stripe\Exception\CardException $err) {
                     ]; 
 
     $respuesta['respuesta']       = 1;
-    $respuesta['mensaje']         = "";
+    $respuesta['mensaje']         = "entro aqui";
     $respuesta['output']=$output;
 
     //Retornamos en formato JSON
@@ -799,7 +996,7 @@ catch (\Stripe\Exception\CardException $err) {
                     ]; 
 
     $respuesta['respuesta']       = 1;
-    $respuesta['mensaje']         = "";
+    $respuesta['mensaje']         = "entro aqui";
     $respuesta['output']=$output;
 
     //Retornamos en formato JSON

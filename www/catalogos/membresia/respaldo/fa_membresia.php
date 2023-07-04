@@ -88,7 +88,16 @@ if(!isset($_GET['idmembresia'])){
 	$duracion=$result_membresia_row['cantidaddias'];
 	$limite=$result_membresia_row['tiempodepago'];
 	$descripcion=$result_membresia_row['descripcion'];
-
+	$porcategoria=$result_membresia_row['porcategoria'];
+	$porservicio=$result_membresia_row['porservicio'];
+	$color=$result_membresia_row['color'];
+	$depende=$result_membresia_row['depende'];
+	$membresiadepende=$result_membresia_row['idmembresiadepende'];
+	$inppadre=$result_membresia_row['inppadre'];
+	$inphijo=$result_membresia_row['inphijo'];
+	$inpnieto=$result_membresia_row['inpnieto'];
+	$v_limitemembresia=$result_membresia_row['limite'];
+	
 	$ruta='';
 	if($foto==""){
 		$ruta="images/sinfoto.png";
@@ -249,11 +258,69 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 							</div>
 
+							<div class="form-group m-t-20">
+								<label for="">*COLOR</label>
+								<input type="color" id="v_color" class="form-control" name="v_color" value="<?php echo $color; ?>" placeholder="COLOR" title="COLOR"> 
+							</div>
+
 
 							<div class="form-group m-t-20">
 								<label>*ORDEN:</label>
 							<input type="number" class="form-control" id="v_orden" name="v_orden" value="<?php echo $orden; ?>" title="orden" placeholder='ORDEN'>
 							</div>
+
+						 <div class="form-check" style="margin-top: 1em;margin-bottom: 1em;">
+						    <input type="checkbox" id="dependede" class="form-check-input " style="top: -0.3em;" onchange="HabilitarDepende()">
+						    <label for="" class="form-check-label"> ASOCIADO CON</label>
+
+						   </div>
+
+		<div class="form-group m-t-20 divmembresia" style="display: none;">
+							<label>MEMBRESÍA:</label>
+							<select name="v_membresia" id="v_membresia" title="Membresia" class="form-control"  >
+							<option value="0"> Seleccionar membresía</option> 
+							</select>
+						</div>
+
+			<div class="divmembresia" style="display: none;">
+				
+				<div class="form-group">
+					<label for="">LÍMITE DE MEMBRESÍAS :</label>
+					<input type="number" id="v_limitemembresia" value="<?php echo $v_limitemembresia; ?>" class="form-control">
+				</div>
+			</div>
+
+		 <div class="form-group divniveljerarquico" >
+          <label for="">APLICAR A:</label>
+
+     <div class="form-check">
+     
+     <input type="checkbox" id="inppadre" class="form-check-input" name="nivelj" style="top: -0.3em;" >
+     <label for="" class="form-check-label">NIVEL 1 (el que asocia)</label>
+
+    </div>
+
+    <div class="form-check">
+     
+     <input type="checkbox" id="inphijo" class="form-check-input" name="nivelj" style="top: -0.3em;" >
+     <label for="" class="form-check-label">NIVEL 2 (los asociados)</label>
+
+
+    </div>
+
+   <div class="form-check">
+    
+    <input type="checkbox" id="inpnieto" class="form-check-input" name="nivelj" style="top: -0.3em;" >
+    <label for="" class="form-check-label">NIVEL 3 (los tutorados)</label>
+
+
+   </div>
+
+</div>
+
+
+
+
 
 
 
@@ -278,10 +345,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					</div>
 				</div>
 
-
 				<div class="card" style="" id="divhorarios">
 				<div class="card-header" style="">
-					<h5>ASIGNAR SERVICIOS</h5>
 
 				</div>
 				<div class="card-body">
@@ -289,16 +354,68 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 							<div class="row">
 								<div class="col-md-12">
+									<div class="form-check" style="margin-bottom: 1em;">
+                    
+					       <input type="checkbox" class="form-check-input " name="v_tiposervicio" value="1" id="v_tiposervicio" onclick="Desplegartiposervicio()" style="top: -0.3em;" />
+					            <label class="form-check-label">POR TIPO SERVICIO</label>
+					       </div>
 								
-									<button class="btn btn-primary" type="button" style=" float: right;   margin-top: -1em;" onclick="AgregarServicioNuevo()">NUEVO SERVICIO</button>
+									
 								</div>
 								<div class="col-md-3">
 										
 									</div>
 							</div>
+						<div class="divtiposervicio" style="display: none;">
+							<div class="row">
+								<div class="col-md-12">
+									<button class="btn btn-primary" type="button" style=" float: right;   margin-top: -1em;" onclick="AgregarTipoNuevo()">NUEVO TIPO DE SERVICIO</button>
+								</div>
+								
+							</div>
+								
+							<div id="tiposervicios"></div>
+						</div>
 
+
+
+					</div>
+				</div>
+			</div>
+
+				<div class="card" style="" id="divhorarios">
+				<div class="card-header" style="">
+					
+				</div>
+				<div class="card-body">
+						<div style="margin-top: 3em">
+
+							<div class="row">
+								<div class="col-md-12">
+
+									<div class="form-check" style="margin-bottom: 1em;">
+                    
+					       <input type="checkbox" class="form-check-input " name="v_servicio" value="1" id="v_servicio" onclick="Desplegarporservicio()" style="top: -0.3em;">
+					            <label class="form-check-label">POR SERVICIO</label>
+					       </div>
+								
+								
+								</div>
+								<div class="col-md-3">
+										
+									</div>
+							</div>
+							<div class="divservicio" style="display: none;">
+							<div class="row">
+								<div class="col-md-12">
+									
+									<button class="btn btn-primary" type="button" style=" float: right;   margin-top: -1em;" onclick="AgregarServicioNuevo()">NUEVO SERVICIO</button>
+								</div>
+							</div>
 								
 								<div id="servicios"></div>
+
+							</div>
 
 
 
@@ -318,11 +435,44 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 <script>
 	var ruta='<?php echo $ruta;?>';
 	var idmembresia='<?php echo $idmembresia; ?>';
-
+	var porcategoria='<?php echo $porcategoria; ?>';
+	var porservicio='<?php echo $porservicio; ?>';
+	var depende='<?php echo $depende; ?>';
+	var membresiadepende='<?php echo $membresiadepende; ?>';
+	var inppadre='<?php echo $inppadre; ?>';
+	var inphijo='<?php echo $inphijo; ?>';
+	var inpnieto='<?php echo $inpnieto; ?>';
 
 	if (idmembresia>0) {
 
 		ObtenerServiciosMembresia(idmembresia);
+		ObtenerCategoriasMembresia(idmembresia);
+		if (porservicio==1) {
+			$("#v_servicio").attr('checked',true);
+			Desplegarporservicio();
+		}
+		if (porcategoria==1) {
+			$("#v_tiposervicio").attr('checked',true);
+			Desplegartiposervicio();
+		}
+		if (depende==1) {
+			$("#dependede").prop('checked',true);
+			HabilitarDepende();
+			
+			CargarMembresias(membresiadepende);
+		}
+
+		if (inppadre==1) {
+			$("#inppadre").prop('checked',true);
+		}
+		if (inphijo==1) {
+		$("#inphijo").prop('checked',true);
+		}
+		if (inpnieto==1) {
+
+		$("#inpnieto").prop('checked',true);
+		}
+		
 	}
 			 
 

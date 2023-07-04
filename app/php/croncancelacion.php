@@ -14,7 +14,7 @@ require_once("clases/class.NotificacionPush.php");
 require_once("clases/class.Usuarios.php");
 require_once("clases/class.PagConfig.php");
 require_once("clases/class.ServiciosAsignados.php");
-
+require_once("clases/class.Pagos.php");
 
 try
 {
@@ -69,6 +69,10 @@ try
 						$serviciosasignados->idusuario=$obteneralumnos[$k]->idusuario;
 						
 						$serviciosasignados->GuardarCancelacion();
+
+
+
+							$buscarpago->
 
 					}
 

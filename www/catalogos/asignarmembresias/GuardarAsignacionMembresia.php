@@ -85,14 +85,32 @@ try
                         */
                       $pagos->folio='';
                       $pagos->CrearRegistroPago();
+                      $primerpago=$pagos->idpago;
+                      $buscarpagoinscripcion=$pagos->BuscarPagoInscripcion();
+                      if (count($buscarpagoinscripcion)==0) {
+                      	# code...
+                      
+                      if ($obtenermembresia[0]->costoinscripcion>0) {
+                      	# code...
+                      
+                       $pagos->monto=$obtenermembresia[0]->costoinscripcion;
+ 											 $pagos->concepto='INSCRIPCIÓN '.$obtenermembresia[0]->titulo;
+ 											 $pagos->pagoinscripcion=1;
+                       $pagos->CrerPagoInscripcion();
 
+
+                       $pagos->GuardarPagoInscripcion($asignar->idusuarios_membresia);
+
+                      	}
+
+                      }
 
 						}
 
 						$buscarfechasarray=$asignar->BuscarFechasArray($membresiaseleccionada,$idmembresias[$i]);
 
 						//var_dump($buscarfechasarray);
-						$asignar->idpago=$pagos->idpago;
+						$asignar->idpago=$primerpago;
 
 						if (count($buscarfechasarray)>0) {
 
@@ -120,9 +138,11 @@ try
 				}
 
 				}
+
+				$md->guardarMovimiento($f->guardar_cadena_utf8('Membresia'),'Asignación a usuario membresia',$f->guardar_cadena_utf8('Asignación a usuario -'.$asignar->idusuarios.' membresia: '.$idmembresias));
 			}
 
-	$md->guardarMovimiento($f->guardar_cadena_utf8('Membresia'),'Asignación a usuario membresia',$f->guardar_cadena_utf8('Asignación a usuario -'.$asignar->idusuarios.' membresia: '.$idmembresias));
+	
 
 		
 
@@ -135,14 +155,31 @@ try
 					/*var_dump($membresiaacaducar);die();*/
 					if (count($membresiaacaducar)>0) {
 							$asignar->idusuarios_membresia=$membresiaacaducar[0]->idusuarios_membresia;
-							$asignar->estatus=2;
+							$asignar->estatus=3;
+							$asignar->fechacancelacion=date('Y-m-d H:i:s');
+							$asignar->usuariocancelacion=$_SESSION['se_sas_Usuario'];
 							$asignar->ActualizarEstatusAsignacion();
-							
+
+							$asignar->idpago=$membresiaacaducar[0]->idpago;
+							$asignar->estatus=3;
+							$asignar->ActualizarPagoMembresia();
+
+
+							$obtenerpago=$asignar->obtenerPagoInscripcion();
+								if (count($obtenerpago)>0) {
+									
+									$asignar->idpago=$obtenerpago[0]->idpago;
+									$asignar->ActualizarPagoMembresia();
+
+									}
+							$md->guardarMovimiento($f->guardar_cadena_utf8('Membresia'),'Cancelación membresia',$f->guardar_cadena_utf8('Cancelación a usuario -'.$asignar->idusuarios.' membresia: '.$idmembresia));	
 							
 						}
 
 						
-					}	
+					}
+
+
 
 				}	
 

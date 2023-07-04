@@ -1,0 +1,129 @@
+-- MySQL Workbench Synchronization
+-- Generated: 2023-07-04 11:35
+-- Model: New Model
+-- Version: 1.0
+-- Project: Name of the project
+-- Author: iss02
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+ALTER TABLE `bd109`.`grupo_integrantes` 
+DROP FOREIGN KEY `fk_grupo_has_integrantes_grupo1`;
+
+ALTER TABLE `bd109`.`grupo` 
+DROP FOREIGN KEY `fk_grupo_juego1`;
+
+CREATE TABLE IF NOT EXISTS `bd109`.`grupoequipo` (
+  `idgrupoequipo` INT(11) NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(255) NULL DEFAULT NULL,
+  `idnivel` INT(11) NULL DEFAULT NULL,
+  `fecha` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `idjuego` INT(11) NOT NULL,
+  PRIMARY KEY (`idgrupoequipo`),
+  INDEX `fk_grupo_juego1_idx` (`idjuego` ASC),
+  CONSTRAINT `fk_grupo_juego1`
+    FOREIGN KEY (`idjuego`)
+    REFERENCES `bd109`.`juego` (`idjuego`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+ALTER TABLE `bd109`.`membresia` 
+ADD COLUMN `costoinscripcion` FLOAT(12,2) NULL DEFAULT 0 AFTER `montoporhorario`;
+
+ALTER TABLE `bd109`.`notapago` 
+CHANGE COLUMN `estatus` `estatus` INT(11) NULL DEFAULT '0' COMMENT '0 - pendiente \\n1-aceptado \\n2.- cancelado\\n3.- no procesado' ;
+
+ALTER TABLE `bd109`.`notapago_descripcion` 
+ADD COLUMN `idpaquete` INT(11) NULL DEFAULT NULL AFTER `fecha`,
+ADD COLUMN `costounitario` VARCHAR(45) NULL DEFAULT NULL AFTER `idpaquete`;
+
+ALTER TABLE `bd109`.`pagos` 
+ADD COLUMN `pagoinscripcion` INT(11) NULL DEFAULT 0 AFTER `fechaacepta`,
+CHANGE COLUMN `estatus` `estatus` INT(11) NULL DEFAULT NULL COMMENT '0.-pendiente\\n1.-proceso\\n2.-aceptado\\n3.-cancelado\\n4.-reembolso\\n5.-sin reembolso\\n\\n6.-rechazado' ;
+
+ALTER TABLE `bd109`.`paquetesproducto` 
+CHANGE COLUMN `idpaquete` `idpaquete` INT(11) NOT NULL AFTER `subtotalmedida`,
+ADD INDEX `fk_paquetesproducto_paquetes1_idx` (`idpaquete` ASC);
+;
+
+ALTER TABLE `bd109`.`usuarios` 
+ADD COLUMN `habilitarhorarios` INT(11) NULL DEFAULT 1 AFTER `aceptopolitica`;
+
+ALTER TABLE `bd109`.`usuarios_membresia` 
+ADD COLUMN `fechacancelacion` VARCHAR(45) NULL DEFAULT NULL AFTER `idpago`,
+ADD COLUMN `usuariocancelacion` INT(11) NULL DEFAULT 0 AFTER `fechacancelacion`,
+CHANGE COLUMN `estatus` `estatus` INT(11) NULL DEFAULT '0' COMMENT '0.-inactiva\\n1.-activa\\n2.-caducada\\n3cancelada' ;
+
+ALTER TABLE `bd109`.`usuarioscoachs` 
+CHANGE COLUMN `tipopago` `tipopago` INT(11) NULL DEFAULT NULL COMMENT '0.-porcentaje\\n1.-monto\\n2por horarios' ;
+
+ALTER TABLE `bd109`.`grupo` 
+DROP COLUMN `idjuego`,
+DROP COLUMN `fecha`,
+DROP COLUMN `idnivel`,
+DROP COLUMN `nombre`,
+ADD COLUMN `nombregrupo` VARCHAR(255) NULL DEFAULT NULL AFTER `idgrupo`,
+ADD COLUMN `descripcion` TEXT NULL DEFAULT NULL AFTER `nombregrupo`,
+ADD COLUMN `sincoprecio` INT(11) NULL DEFAULT NULL AFTER `descripcion`,
+ADD COLUMN `multiple` INT(11) NULL DEFAULT NULL AFTER `sincoprecio`,
+ADD COLUMN `estatus` INT(11) NULL DEFAULT NULL AFTER `multiple`,
+ADD COLUMN `tope` INT(11) NULL DEFAULT NULL AFTER `estatus`,
+ADD COLUMN `obligatorio` INT(11) NULL DEFAULT NULL AFTER `tope`,
+CHANGE COLUMN `idgrupo` `idgrupo` INT(11) NOT NULL ,
+DROP INDEX `fk_grupo_juego1_idx` ;
+;
+
+CREATE TABLE IF NOT EXISTS `bd109`.`pagoinscripcionmembresia` (
+  `idpagoinscripcionmembresia` INT(11) NOT NULL AUTO_INCREMENT,
+  `idusuarios_membresia` INT(11) NOT NULL,
+  `idpago` INT(11) NOT NULL,
+  PRIMARY KEY (`idpagoinscripcionmembresia`),
+  INDEX `fk_pagoinscripcionmembresia_usuarios_membresia1_idx` (`idusuarios_membresia` ASC),
+  INDEX `fk_pagoinscripcionmembresia_pagos1_idx` (`idpago` ASC),
+  CONSTRAINT `fk_pagoinscripcionmembresia_usuarios_membresia1`
+    FOREIGN KEY (`idusuarios_membresia`)
+    REFERENCES `bd109`.`usuarios_membresia` (`idusuarios_membresia`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_pagoinscripcionmembresia_pagos1`
+    FOREIGN KEY (`idpago`)
+    REFERENCES `bd109`.`pagos` (`idpago`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+CREATE TABLE IF NOT EXISTS `bd109`.`historialmembresiaestatus` (
+  `idhistorialmembresiaestatus` INT(11) NOT NULL AUTO_INCREMENT,
+  `idusuarios_membresia` INT(11) NULL DEFAULT NULL,
+  `estatus` INT(11) NULL DEFAULT NULL,
+  `fecha` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `idpago` INT(11) NULL DEFAULT NULL,
+  `estatuspago` INT(11) NULL DEFAULT NULL,
+  `pagado` INT(11) NULL DEFAULT 0,
+  PRIMARY KEY (`idhistorialmembresiaestatus`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+ALTER TABLE `bd109`.`grupo_integrantes` 
+ADD CONSTRAINT `fk_grupo_has_integrantes_grupo1`
+  FOREIGN KEY (`idgrupo`)
+  REFERENCES `bd109`.`grupoequipo` (`idgrupoequipo`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+ALTER TABLE `bd109`.`paquetesproducto` 
+ADD CONSTRAINT `fk_paquetesproducto_paquetes1`
+  FOREIGN KEY (`idpaquete`)
+  REFERENCES `bd109`.`paquetes` (`idpaquete`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;

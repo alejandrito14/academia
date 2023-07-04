@@ -148,6 +148,55 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				  	</select>
 				   	</div>
 				  </div>
+
+				  <div class="row" >
+				  <div class="col-md-6" id="estatusaceptado" style="display: none;">
+
+				  	<div class="form-group m-t-20">
+				  	<label>ESTATUS ACEPTADO</label>
+				  	<select id="v_estatusaceptado" class="form-control" multiple="multiple" style="width: 100%;">
+				  		
+				  		<option value="1">ACEPTADO</option>
+				  		<option value="0">NO ACEPTADO</option>
+				  	</select>
+
+
+				   	</div>
+				  </div>
+				</div>
+
+
+				 <div class="row" >
+				  <div class="col-md-6" id="estatuspagado" style="display: none;">
+
+				  	<div class="form-group m-t-20">
+				  	<label>ESTATUS PAGADO</label>
+				  	<select id="v_estatuspagado" class="form-control" multiple="multiple" style="width: 100%;">
+				  		<option value="1">PAGADO</option>
+				  		<option value="0">NO PAGADO</option>
+				  	</select>
+
+				  	
+				   	</div>
+				  </div>
+				</div>
+
+
+
+				 <div class="row" >
+				  <div class="col-md-6" id="coaches" style="display: none;">
+
+				  	<div class="form-group m-t-20">
+				  	<label>COACHES</label>
+				  	<select id="v_coaches" class="form-control" multiple="multiple" style="width: 100%;">
+				  		
+				  	</select>
+
+				  	
+				   	</div>
+				  </div>
+				</div>
+			
 			
 
 

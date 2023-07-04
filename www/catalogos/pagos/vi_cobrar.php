@@ -119,7 +119,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 		
 		<div style="clear: both;"></div>
 	</div>
-</div>
+
 
 <div class="row">
 	<div class="col-md-6" style="">
@@ -135,10 +135,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
           </div>
                    
           <div class="col">
-                     <!--  <div class="form-check">
-                        <input type="checkbox" id="v_tclientes"  name="v_tclientes" onchange="HabilitarDeshabilitarCheck('#lclientesdiv')" class="form-check-input " title="" placeholder=''  >
-                        <label for="">SELECCIONAR TODOS</label>
-                      </div> -->
+                   
               <div class="clientes "  style="overflow:scroll;height:100px;overflow-x: hidden" id="clientes_<?php echo $a_cliente['idusuarios'];?>"> 
                <?php      
               if ($r_clientes_num>0) {  
@@ -164,29 +161,93 @@ $estatuspago = array('NO PAGADO','PAGADO');
 		
 
 	</div>
-	<div class="col-md-8" style="">
-		<!-- <div class="">
-			<div class="card">
-			<div class="card-body">
-				<div class="col-md-6" style="float: left;"></div>
-				<div class="col-md-6" style="float: right;">
-					<button class="btn btn_azul">NUEVO PAGO</button>
-				</div>
-			</div>
-			</div>
-	
-		</div> -->
+</div>
+
+<div class="tabs" style="width: 100%;">
+  <button class="tab boton1" id="punto-venta-tab" style="width: 50%;" onclick="openTab('punto-venta')">Punto de Venta</button>
+  <button class="tab boton1" id="pagos-tab" style="width: 50%;" onclick="openTab('pagos')">Pagos</button>
+</div>
+
+<div id="punto-venta" class="tab-content">
+  <!-- Contenido del punto de venta -->
+	  <div class="row" style="    background: gray;
+	    padding-top: 1em;margin-top: 1em;    margin-right: 0.2em;
+	    margin-left: 0.2em;">
+		    <div class="col-md-12">
+		    	<div class="row" style="    margin-left: 0.5em;">
+		    		 <div class="col-md-12">
+		    		 	 
+		    		 	 <div class="container">
+						  <input type="text" class="form-control" id="searchInput" placeholder="Buscar...">
+						  <ul id="searchResults" class="list-group"></ul>
+						</div>
+					  
+		    		 </div>
+		    		
+
+
+		    	</div>
+
+	<div class="row" style="    margin-left: 1.4em;
+    margin-top: 1em;
+    margin-right: 0.2em;">
+		    		<div class="col-md-12">
+		    		<table class="table table-striped table-bordered " style="background: white">
+		  <thead>
+		    <tr>
+		       <th scope="col">Cantidad</th>
+		       <th scope="col">Nombre</th>
+		      <th scope="col">Precio</th>
+		      <th scope="col">Importe</th>
+		      <th scope="col">Acciones</th>
+		    </tr>
+		  </thead>
+		  <tbody id="tblpaquetes">
+		   
+		    
+		    <!-- Agrega más filas según tus necesidades -->
+		  </tbody>
+		</table>
+
+		</div>
+		</div>
+    	</div>
+
+  		
+  		</div>
+
+
+
+</div>
+
+<div id="pagos" class="tab-content">
+  <!-- Contenido de los pagos -->
+ 
+  	<div class="row" style="    background: gray;
+    padding-top: 1em;margin-top: 1em;    margin-right: 0.2em;
+    margin-left: 0.2em;">
+  		
+
+	<div class="col-md-12" style="">
+		
 
 		<div class="card">
 	<div class="card-body">
-		<div class="col-md-6" style="float: left;"></div>
-				<div class="col-md-6" style="float: right;">
-					<button style="float: right;display: none;" class="btn btnnuevopago btn_azul" onclick="AbrirModalNuevoPago()">NUEVO PAGO</button>
+	
+				<div class="col-md-6" style="float: left;">
+				
 				</div>
 
-		<div class="table-responsive" id="contenedor_Pagos">
-			<label for="">PAGOS</label>
-			<table id="tbl_pagos" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
+		<!-- <div class="table-responsive" id="contenedor_Pagos"> -->
+	<div class="col-md-6" style="float: left;">
+			<div class="col-md-12" style="text-align: right;">
+					<button style="display: none;margin-bottom: 1em;" class="btn btnnuevopago btn_azul" onclick="AbrirModalNuevoPago()">NUEVO PAGO</button>
+			</div>
+				<div class="col-md-12">
+				<div class="todospagos" style="background: #a09f9a;height: 500px;overflow: scroll;"></div>
+			</div>
+		</div>
+			<!-- <table id="tbl_pagos" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
 				<thead>
 					<tr style="text-align: center;">
 						 <th > <input type="checkbox" id="inputtodos" onchange="SeleccionarTodosPagos()"> </th> 
@@ -200,7 +261,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 				<tbody id="listadopagos">
 					
 				</tbody>
-			</table>
+			</table> -->
 		</div>
 
 		<div class="table-responsive" id="contenedor_descuentos" style="display: none;">
@@ -232,27 +293,18 @@ $estatuspago = array('NO PAGADO','PAGADO');
 </div>
 
 	</div>
-		<!-- <div class="col-md-6">
-		<div class="row">
-			<div class="col-md-12">
-				<div class="card">
-				<div class="card-body" style="display: none;">
-					<label for="" class="active">FORMA DE PAGO</label>
-					<div class="">
-						
-					</div>
-				</div>
-			</div>
-			</div>
-	 		
-			
-		</div>
-		
-		
+  	</div>
 
 
-	</div> -->
-<div class="col-md-4">
+</div>
+
+<div class="row">
+	
+
+<div class="col-md-6"></div>
+
+		
+<div class="col-md-6">
 	<div class="row" style="margin-top: 40px;">
 	
 	<div class="col-md-12">
@@ -294,7 +346,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 				<div class="card-body" style="    padding-left: 0;
     padding-right: 1px;">
 			<div class="row" >
-				<div class="col-md-12" style="text-align: right;">$<span id="subtotal" style="
+				<div class="col-md-12" style="text-align: right;">$<span id="subtotal" class="lbltotal" style="
     font-size: 16px;
 ">0.00</span></div>
 						<div class="col-md-12" style="text-align: right;">$<span id="monedero" style="
@@ -310,8 +362,8 @@ $estatuspago = array('NO PAGADO','PAGADO');
 ">0.00</span><br>
 				</div><br>
 
-	<div class="col-md-12 divcomision" style="text-align: right;display: none;">$<span id="comision" style="
-    font-size: 16px;">0.00</span></div>
+	<div class="col-md-12 divcomision" style="text-align: right;display: none;">$<span id="comision" class="lblcomision" style="font-size: 16px;">0.00</span>
+	</div>
 
 
 				<div class="col-md-12" style="text-align: right;font-size: 20px;/* padding-top: 6px; */">$<span id="total">0.00</span></div></div>
@@ -403,7 +455,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 
       <div class="row">
 	<div class="col-md-12">
-		<label class="">Cambio de $<span id="cambio">0.00</span></label>
+		<label class="">Cambio $<span id="cambio">0.00</span></label>
 	</div>
 	
 </div>
@@ -558,6 +610,9 @@ $estatuspago = array('NO PAGADO','PAGADO');
 	</div>
 </div>
 </div>
+</div>
+
+<div class="row">
 
 	<div class="col-md-5"></div>
 	<div class="col-md-2"></div>
@@ -569,6 +624,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 
 </div>
 
+</div>
 
 <div class="modal" id="modalmetodopago" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
@@ -775,8 +831,416 @@ $estatuspago = array('NO PAGADO','PAGADO');
 </div>
 
 
+<style>
+	.tabs {
+  display: flex;
+}
 
+.tab {
+  padding: 10px 20px;
+  background-color: #ddd;
+  border: none;
+  cursor: pointer;
+}
+
+.tab-content {
+  display: none;
+}
+
+.container {
+  position: relative;
+}
+
+#searchResults {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  display: none;
+  z-index: 1;
+      margin-left: 0.8em;
+    margin-right: 0.8em;
+}
+
+#searchResults li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+#searchResults li:hover {
+  background-color: #f4f4f4;
+}
+
+
+</style>
 
 <script type="text/javascript">
 	ObtenerTipodepagos();
+var arraypaquetes=[];
+	function openTab(tabName) {
+  // Ocultar todos los contenidos de las pestañas
+  var tabContents = document.getElementsByClassName('tab-content');
+  for (var i = 0; i < tabContents.length; i++) {
+    tabContents[i].style.display = 'none';
+  }
+  
+  // Mostrar el contenido de la pestaña seleccionada
+  document.getElementById(tabName).style.display = 'block';
+  
+  // Agregar la clase "active" al botón de la pestaña seleccionada
+  var tabs = document.getElementsByClassName('tab');
+  for (var i = 0; i < tabs.length; i++) {
+    tabs[i].classList.remove('active');
+  }
+  document.getElementById(tabName + '-tab').classList.add('active');
+
+  if (tabName=='punto-venta') {
+
+  	pagosarealizar=[];
+
+  	$("#btnpagarresumen").attr('onclick','RealizarpagoClientePunto()');
+  }
+
+   if (tabName=='pagos') {
+
+  	arraypaquetes=[];
+
+  	$("#btnpagarresumen").attr('onclick','RealizarpagoCliente()');
+  }
+
+
+}
+
+var searchInput = document.getElementById('searchInput');
+var searchResults = document.getElementById('searchResults');
+
+searchInput.addEventListener('input', function() {
+  const searchTerm = this.value.toLowerCase();
+  const results = filterResults(searchTerm);
+
+  
+});
+
+function filterResults(searchTerm) {
+  // Implementa aquí la lógica para filtrar los resultados según el término de búsqueda
+  	  var valor=searchTerm;
+  	  var datos="valor="+valor;
+      $.ajax({
+      type: 'POST',
+      data:datos,
+      dataType:'json',
+	  url:'catalogos/pagos/ObtenerPaquetes.php',
+      async:false,
+      success: function(msj){
+      	console.log(msj.respuesta);
+      		  const data = msj.respuesta;
+
+			displayResults(data);
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server 
+           console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+            }
+      });
+
+  
+
+
+
+
+}
+
+function displayResults(results) {
+  searchResults.innerHTML = '';
+
+  if (results.length > 0) {
+    results.forEach(result => {
+      const li = document.createElement('li');
+      li.textContent = result.nombrepaquete;
+      li.id="paquete_"+result.idpaquete;
+      li.setAttribute('data-recurso',JSON.stringify(result));
+      li.onclick=function() {
+		 SeleccionarPaquete(result.idpaquete);
+		};
+
+      li.classList.add('list-group-item');
+      searchResults.appendChild(li);
+    });
+    searchResults.style.display = 'block';
+  } else {
+    searchResults.style.display = 'none';
+  }
+}
+
+// Cerrar el buscador si se hace clic fuera de él
+document.addEventListener('click', function(e) {
+  const isSearchInput = searchInput.contains(e.target);
+  const isSearchResults = searchResults.contains(e.target);
+
+  if (!isSearchInput && !isSearchResults) {
+    searchResults.style.display = 'none';
+  }
+});
+
+
+function SeleccionarPaquete(idpaquete) {
+	var elemento=$("#paquete_"+idpaquete);
+	var dataelemento=elemento.data('recurso');
+	 searchResults.style.display = 'none';
+
+	 var encontrado=0;
+	 for (var i = 0; i <arraypaquetes.length; i++) {
+	 	
+	 		if (arraypaquetes[i].idpaquete==idpaquete) {
+	 			encontrado=1;
+	 			break;
+	 		}
+
+	 }
+
+	 if (encontrado==0) {
+
+	 	if (dataelemento.hasOwnProperty('cantidad')) {
+	 		dataelemento.cantidad=parseFloat(dataelemento.cantidad)+1;
+	 	}else{
+	 		dataelemento.cantidad=1;
+	 	}
+	 	
+	 	arraypaquetes.push(dataelemento);
+	 }
+
+
+	 console.log(arraypaquetes);
+
+	 PintarElementos(arraypaquetes);
+
+}
+
+
+function PintarElementos(arraypaquetes) {
+	var html="";
+	if (arraypaquetes.length>0) {
+		 for (var i = 0; i <arraypaquetes.length; i++) {
+		 	html+=`
+		 			<tr>
+      <td>
+      	 <div class="container">
+				    <div class="row">
+				      <div class="col-6">
+				        <div class="input-group">
+				          <div class="input-group-prepend">
+				            <button class="btn btn-primary" onclick="decrement(`+arraypaquetes[i].idpaquete+`)">-</button>
+				          </div>
+				          <input type="text" id="quantity" class="form-control" style="border: none;width:40px;text-align:center;" value="`+arraypaquetes[i].cantidad+`">
+				          <div class="input-group-append">
+				            <button class="btn btn-primary" onclick="increment(`+arraypaquetes[i].idpaquete+`)">+</button>
+				          </div>
+				        </div>
+				      </div>
+				    </div>
+				  </div>
+
+      </td>
+      <td>`+arraypaquetes[i].nombrepaquete+`</td>
+      <td>$`+arraypaquetes[i].precioventa+`</td>`;
+      var total=arraypaquetes[i].precioventa*arraypaquetes[i].cantidad;
+      arraypaquetes[i].importe=total;
+      html+=`<td>$`+total+`</td>
+      <td>
+
+      <button type="button" onclick="BorrarPaqueteArray(`+arraypaquetes[i].idpaquete+`)" class="btn btn_rojo" style="" title="BORRAR">
+								<i class="mdi mdi-delete-empty"></i>
+						</button>
+
+      </td>	
+    </tr>
+
+		 	`;
+			 }
+
+
+	}
+
+	$("#tblpaquetes").html(html);
+
+	CalcularTotales();
+}
+
+function decrement(idpaquete) {
+	var encontrado=0;
+	var posicion=-1;
+	for (var i = 0; i <arraypaquetes.length; i++) {
+	 	
+	 		if (arraypaquetes[i].idpaquete==idpaquete) {
+	 			encontrado=1;
+	 			posicion=i;
+	 			break;
+	 		}
+
+	 }
+
+	 if (encontrado==1) {
+	 			var cantidad=arraypaquetes[posicion].cantidad;
+	 				var total=cantidad-1;
+
+	 				if (total>=1) {
+	 						arraypaquetes[posicion].cantidad=total;
+
+	 				}
+
+	 }
+
+	  PintarElementos(arraypaquetes);
+}
+
+function increment(idpaquete) {
+		var encontrado=0;
+	var posicion=-1;
+	for (var i = 0; i <arraypaquetes.length; i++) {
+	 	
+	 		if (arraypaquetes[i].idpaquete==idpaquete) {
+	 			encontrado=1;
+	 			posicion=i;
+	 			break;
+	 		}
+
+	 }
+
+	 if (encontrado==1) {
+	 			var cantidad=arraypaquetes[posicion].cantidad;
+	 				var total=cantidad+1;
+
+	 				if (total>=1) {
+	 						arraypaquetes[posicion].cantidad=total;
+
+	 				}
+
+	 }
+
+
+	 PintarElementos(arraypaquetes);
+}
+
+
+function BorrarPaqueteArray(idpaquete) {
+		var encontrado=0;
+	var posicion=-1;
+	for (var i = 0; i <arraypaquetes.length; i++) {
+	 	
+	 		if (arraypaquetes[i].idpaquete==idpaquete) {
+	 			encontrado=1;
+	 			posicion=i;
+	 			break;
+	 		}
+
+	 }
+
+	 if (encontrado==1) {
+	 			arraypaquetes.splice(posicion, 1); // Elimina el elemento en el índice 
+	 }
+	 PintarElementos(arraypaquetes);
+}
+
+/*
+function CalcularTotalesPuntoVenta() {
+	var suma=0;
+	pagos=[];
+	
+	if (arraypaquetes.length>0) {
+
+		for (var i = 0; i <arraypaquetes.length; i++) {
+			suma=parseFloat(suma)+parseFloat(arraypaquetes[i].importe);
+		}
+	
+	}
+
+	var montodescuento=0;
+	for (var i = 0; i < descuentosaplicados.length; i++) {
+		montodescuento=parseFloat(montodescuento)+parseFloat(descuentosaplicados[i].montoadescontar);
+	}
+	
+
+	var montodescuentomembresia=0;
+	for (var i = 0; i < descuentosmembresia.length; i++) {
+		montodescuentomembresia=parseFloat(montodescuentomembresia)+parseFloat(descuentosmembresia[i].montoadescontar);
+	}
+
+	$("#descuento").html(formato_numero(montodescuento,2,'.',','));
+	$("#descuentomembresia").html(formato_numero(montodescuentomembresia,2,'.',','));
+
+	// total=parseFloat(suma)-parseFloat(monedero)-parseFloat(montodescuento)+parseFloat(montodescuentomembresia);
+	console.log(monedero);
+	console.log(montodescuento);
+	console.log(montodescuentomembresia);
+	var resta=parseFloat(suma)-parseFloat(monedero)-parseFloat(montodescuento)-parseFloat(montodescuentomembresia);
+    var sumaconcomision=resta;
+	subtotalsincomision=resta;
+	console.log(resta);
+
+	$("#subtotal").html(formato_numero(suma,2,'.',','));
+
+	$("#total").html(formato_numero(resta,2,'.',','));
+
+
+      if (comisionporcentaje!=0 ){
+       // comisionporcentaje=localStorage.getItem('comisionporcentaje');
+        comimonto=parseFloat(comisionporcentaje)/100;
+        
+        comimonto=parseFloat(comimonto)*parseFloat(sumaconcomision);
+
+        comision=parseFloat(comimonto)+parseFloat(comisionmonto);
+      
+       // localStorage.setItem('comision',comision);
+
+     }
+
+
+     // if (localStorage.getItem('impuesto')!=0 ){
+       // impuesto=localStorage.getItem('impuesto');
+        impumonto=impuesto/100;
+
+        comision1=parseFloat(comision)*parseFloat(impumonto);
+        impuestotal=comision1;
+       // localStorage.setItem('impuestotal',comision1);
+        comision=parseFloat(comision1)+parseFloat(comision);
+
+
+     // }
+        $(".divcomision").css('display','none');
+
+
+      if (comision!=0 || comisionmonto!=0 ) {
+
+        $(".divcomision").css('display','block');
+        $(".lblcomision").text(formato_numero(comision,2,'.',','));
+       // localStorage.setItem('comisiontotal',comision);
+        comisiontotal=comision;
+        sumaconcomision=parseFloat(sumaconcomision)+parseFloat(comision);
+      }
+   // subtotalsincomision=total.toFixed(2);
+    //localStorage.setItem('subtotalsincomision',resta.toFixed(2));
+	  //localStorage.setItem('sumatotalapagar',sumaconcomision.toFixed(2));
+	//$(".lblresumen").text(formato_numero(resta,2,'.',','));
+   // $(".lbltotal").text(formato_numero(sumaconcomision,2,'.',','));
+
+   $("#total").html(formato_numero(sumaconcomision,2,'.',','));
+    $("#monedero").text(formato_numero(monedero,2,'.',','));	
+    var suma=sumaconcomision;
+
+    total=sumaconcomision;
+    if (suma==0 && monederoaplicado!=0) {
+
+      $("#btnpagarresumen").attr('disabled',false);
+    }
+}*/
+
+
+
+
+
 </script>

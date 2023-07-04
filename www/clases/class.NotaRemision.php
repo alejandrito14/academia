@@ -1040,6 +1040,22 @@ public function ObtenerTodosPedidosClienteEstatus2()
 		return $array;
 	}
 
+	
+public function ActualizarNotaAIncompleto()
+	{
+		try {
+			$sql="UPDATE notapago SET 
+				  estatus =3 
+		WHERE idnotapago='$this->idnotapago'";
+				  
+			$resp=$this->db->consulta($sql);
+			
+		} catch (Exception $e) {
+			echo $e;
+		}
+		
+	}
+
 }
 
  ?>

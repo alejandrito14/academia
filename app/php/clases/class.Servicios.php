@@ -815,6 +815,22 @@ class Servicios
 
 	}
 
+	public function GuardarHorarioPrevio()
+	{
+		$query = "INSERT INTO horarioservicioreferencia (idservicio,dia,horainicial,horafinal,fecha) VALUES ('$this->idservicio','$this->dia','$this->horainiciosemana','$this->horafinsemana','$this->fecha');";
+
+			
+		$this->db->consulta($query);
+	}
+
+
+	public function EliminarHorarioPrevio()
+	{
+		$sql="DELETE FROM horarioservicioreferencia WHERE idservicio='$this->idservicio'";
+		$resp = $this->db->consulta($sql);
+		return $resp;
+	}
+
 	public function EliminarHorarioSemana()
 	{
 		$sql="DELETE FROM horariosservicio WHERE idservicio='$this->idservicio'";

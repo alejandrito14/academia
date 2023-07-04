@@ -16,8 +16,7 @@ class Grupos
 	public $estatus;
 	public $tope;
 	public $obligatorio;
-	public $idnivel;
-	public $idjuego;
+	
 
 	
 	//Funcion para obtener todos los niveles activos
@@ -57,9 +56,9 @@ class Grupos
 	
 		//funcion para guardar Grupos
 	
-	public function Guardargrupo()
+	public function Guardargrupos()
 	{
-		$query="INSERT INTO grupo (nombre,idnivel,idjuego) VALUES ('$this->nombregrupo','$this->idnivel','$this->idjuego')";
+		$query="INSERT INTO grupo (nombregrupo,descripcion,sincoprecio,multiple,estatus,tope,obligatorio) VALUES ('$this->nombregrupo','$this->descripcion','$this->sinprecio','$this->multiple','$this->estatus','$this->tope','$this->obligatorio')";
 		
 		
 		$resp=$this->db->consulta($query);

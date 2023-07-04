@@ -86,14 +86,14 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 			<th  width="70">DESCRIPCION</th>
 			<th width="45">PRECIO</th>
 			<th width="45">CATEGORÍA</th>
-			<th width="40">ORDEN</th>
-
+<!-- 			<th width="40">ORDEN</th>
+ -->
 			<th width="20">ESTATUS</th> 
-			<th width="90">INCLUYE</th>
+			<!-- <th width="90">INCLUYE</th>
 			<th width="90">COMPLEMENTOS</th>
 
 			<th width="160">PROMOCIÓN</th>
-
+ -->
 						
 			<th width="40">ACCI&Oacute;N</th>
 		</tr>
@@ -121,159 +121,31 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				<td>
 					$<?php echo $resultado_empresas_row['precioventa'] ?>
 				</td>
-				<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($resultado_empresas_row['titulo']);?></td>
 				<td style="text-align: center;">
+
+
+
+					<?php
+
+						$dependencia=$emp->obtenerDependenciaHaciaArriba($resultado_empresas_row['idcategoriapaquete']);
+						
+						echo $emp->mostrarEstructuraDependencia($dependencia);
+					// echo $f->imprimir_cadena_utf8($resultado_empresas_row['titulo']);?>
+					
+
+
+				</td>
+				<!-- <td style="text-align: center;">
 
 					<span id="span_<?php echo $resultado_empresas_row['idpaquete'];?>" onclick="ActualizarOrden(<?php echo $resultado_empresas_row['idpaquete'];?>,<?php echo $resultado_empresas_row['orden'];?>)"><?php echo $f->imprimir_cadena_utf8($resultado_empresas_row['orden']);?></span>
 
 					<div id="pintar_<?php echo $resultado_empresas_row['idpaquete'];?>"></div>
 
 
-				</td>
+				</td> -->
 				
 				<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($t_estatus[$resultado_empresas_row['estatus']]);?></td>
 
-
-				<?php 
-
-					$emp->idpaquete=$resultado_empresas_row['idpaquete'];
-					$result=$emp->Obtenerproductodepaquete();
-					$productodescripcion='';
-				if (count($result)>0) {
-							
-					for ($i=0; $i <count($result); $i++) { 
-						$codigo =$result[$i]->codigoproducto;
-						$nombre=$result[$i]->nombre;
-
-						$productodescripcion.='<p>'.$codigo.'-'.$f->imprimir_cadena_utf8($nombre).'<p>';
-
-
-					}
-				}
-
-				 ?>
-
-				<td>
-					
-					<?php echo $productodescripcion ?>
-
-				</td>
-
-					<?php 
-
-					$emp->idpaquete=$resultado_empresas_row['idpaquete'];
-					$result2=$emp->Obtenergrupospaquete();
-
-					$grupospaquete='';
-				if (count($result2)>0) {
-							
-					for ($i=0; $i <count($result2); $i++) { 
-						$nombregrupo=$result2[$i]->nombregrupo;
-
-						$grupospaquete.='<p>*'.$f->imprimir_cadena_utf8($nombregrupo).'<p>';
-
-
-					}
-				}
-
-					 ?>
-
-				<td>
-					
-						<?php echo $grupospaquete; ?>
-
-
-
-				</td>
-
-				<td>
-
-	<?php 	if ($resultado_empresas_row['promocion']==1 ) { ?>
-
-        
-        
-			
-        	<span style="margin-left:.8em;margin-bottom:.8em;background: yellow; border-radius: 40px;">Promoción</span>
-
-   <?php     	if ($resultado_empresas_row['definirfecha']==1) { ?>
-
-        	<div style="margin-left:1.2em;font-size:10px;">Promoción por fechas</div>
-
-        		<div style="margin-left:1.2em;font-size:10px;">De <?php echo date('d-m-Y',strtotime($resultado_empresas_row['fechainicial']))?></div>
-        		<div style="margin-left:1.2em;font-size:10px;">Hasta <?php echo date('d-m-Y',strtotime($resultado_empresas_row['fechafinal']))?></div>
-	
-        <?php 	} ?>
-
-       <?php 	if($resultado_empresas_row['aplicardirecto']==1){ ?>
-
-               <div style="margin-left:1.2em;font-size:10px;">Promoción directa</div>
-
-     <?php   	} ?>
-
-        <?php	if ($resultado_empresas_row['repetitivo']==1) { 
-
-	        		$lunes=1;
-					$martes=2;
-					$miercoles=3;
-					$jueves=4;
-					$viernes=5;
-					$sabado=6;
-					$domingo=7;
-
-        			 $lu="";$ma="";$mie="";$jue="";$vie="";$sa="";$domi="";
-
-					if ($resultado_empresas_row['lunes']==1) {
-						$lu="divdias";
-					}
-					if ($resultado_empresas_row['martes']==1) {
-						$ma="divdias";
-					}
-					if($resultado_empresas_row['miercoles']==1){
-						$mie="divdias";
-					}
-					if($resultado_empresas_row['jueves']==1){
-						$jue="divdias";
-					}
-					if ($resultado_empresas_row['viernes']==1) {
-						$vie="divdias";
-					}
-
-					if ($resultado_empresas_row['sabado']==1) {
-						$sa="divdias";
-					}
-					if ($resultado_empresas_row['domingo']==1) {
-						$domi="divdias";
-					}
-
-				
-					 $dias='';
-
-					$dias.='<span style="padding:.3em;" class="'.$lu.'">L</span> ';
-					$dias.='<span style="padding:.3em;" class="'.$ma.'">M</span> ';
-					$dias.='<span style="padding:.3em;" class="'.$mie.'">M</span> ';
-					$dias.='<span style="padding:.3em;" class="'.$jue.'">J</span> ';
-					$dias.='<span style="padding:.3em;" class="'.$vie.'">V</span> ';
-					$dias.='<span style="padding:.3em;" class="'.$sa.'">S</span>  ';
-					$dias.='<span style="padding:.3em;" class="'.$domi.'">D</span>';
-
-							?>
-
-       		<div style="font-size:10px;margin-top: 1em;"><?php echo $dias?></div>
-
-
-        <?php 	} ?>
-
-       <?php 	if ($resultado_empresas_row['considerar']>1) { ?>
-        	<div style="margin-left:1.2em;font-size:10px;"><?php echo $resultado_empresas_row['considerar'].'x'.$resultado_empresas_row['cantidad'];?></div>
-
-
-        <?php 	} ?>
-
-
-        	
-    <?php     } ?>
-					
-				</td>
 		
 				<td style="text-align: center; font-size: 15px;">
 				   <!--<i class="mdi mdi-table-edit" onclick="aparecermodulos('catalogos/empresas/fa_empresas.php?idempresas=<?php echo $resultado_empresas_row['idempresas'];?>','main')" style="cursor: pointer" title="Modificar Empresas"></i>-->
@@ -308,9 +180,9 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						$bt->armar_boton();
 					?>
 
-					<button class="btn btn-primary" type="button" onclick="Subirimagenpaquete('<?php echo $resultado_empresas_row['idpaquete'];?>')">
+				<!-- 	<button class="btn btn-primary" type="button" onclick="Subirimagenpaquete('<?php echo $resultado_empresas_row['idpaquete'];?>')">
 						<i class="mdi mdi-arrow-up-bold-circle"></i>
-					</button> 
+					</button>  -->
 					
 					
 						<!--<i class="mdi mdi-delete-empty" style="cursor: pointer" onclick="BorrarDatos('<?php echo $resultado_empresas_row['idempresas'];?>','idempresas','empresas','n','catalogos/empresas/vi_empresas.php','main')" ></i>-->
@@ -400,6 +272,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 <script type="text/javascript">
 	 $('#Paquetes').DataTable( {		
 		 	"pageLength": 100,
+		 	"order": [[3, "asc"]],  // Ordenar por la tercera columna en orden ascendente
+
 			"oLanguage": {
 						"sLengthMenu": "Mostrar _MENU_ ",
 						"sZeroRecords": "NO EXISTEN PAQUETES EN LA BASE DE DATOS.",

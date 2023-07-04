@@ -62,10 +62,19 @@ try
 		$pagos->idservicio=$obtenerservicios[$i]->idservicio;
 		$servicios->idservicio=$idservicio;
 		$obtenerservicio=$servicios->ObtenerServicio();
+		$tipopago='';
+		$servicios->idcategoria=$obtenerservicio[0]->idcategoriaservicio;
+		$aceptacionpagoservicio=$obtenerservicio[0]->aceptarserviciopago;
+		$verificartipopago=$servicios->checarcategoriaRelacionadaTipopago();
+		if (count($verificartipopago)>0) {
+
+			$obtenertipospagos=$servicios->ObtenerRelacionadaTipopago();
+			$tipopago=$obtenertipospagos[0]->tipopago;
+		}
 
 		$obtenerperiodos=$servicios->ObtenerPeriodosPagos();
 
-		for ($k=0; $k <count($obtenerperiodos) ; $k++) { 
+		for ($k=0; $k <1 ; $k++) { 
 			# code...
 				$fechainicial=$obtenerperiodos[$k]->fechainicial;
 				$fechafinal=$obtenerperiodos[$k]->fechafinal;
@@ -73,6 +82,7 @@ try
 				$lo->idservicio=$idservicio;
 				$lo->fechainicial=$fechainicial;
 				$lo->fechafinal=$fechafinal;
+				$lo->requiereaceptacion=$aceptacionpagoservicio;
 
 				$PagosNoPagados=$lo->PagosNoPagados();
 				if (count($PagosNoPagados)>0) {
@@ -110,7 +120,7 @@ try
 
 			$obtenerperiodos=$servicios->ObtenerPeriodosPagos();
 
-			$numeroperiodos=count($obtenerperiodos);
+			$numeroperiodos=1;
 			$montoapagar=$montoapagar/$numeroperiodos;
 
 
@@ -144,7 +154,7 @@ try
 
 
 		}
-				 
+				 $lo->idtipopago=$tipopago;
 				 $lo->idusuarios=$idusuarios;
                  $lo->estatus=0;
                  $lo->pagado=0;
@@ -173,7 +183,9 @@ try
 
 				$objeto=array('idusuarios'=>$idusuarios,'idmembresia'=>$idmembresia,'idservicio'=>$idservicio,'tipo'=>$tipo,'monto'=>$f->redondear_dos_decimal($montoapagar),'estatus'=>$estatus,'dividido'=>$dividido,'fechainicial'=>$fechainicial,'fechafinal'=>$fechafinal,'concepto'=>$concepto,'folio'=>$folio,'fechaformato'=>$fechaformato,'nombre'=>$datosusuario[0]->nombre,'paterno'=>$datosusuario[0]->paterno,'materno'=>$datosusuario[0]->materno,'idpago'=>$lo->idpago,'aceptados'=>count($obtenerparticipantesaceptados),'alumnos'=>count($ObtenerTodosParticipantes),'completo'=>$completo,
 					'fechamin'=>date('d-m-Y',strtotime($obtenerfechas[0]->fechamin)),
-					'fechamax'=>date('d-m-Y',strtotime($obtenerfechas[0]->fechamax))
+					'fechamax'=>date('d-m-Y',strtotime($obtenerfechas[0]->fechamax)),
+					'tipopago'=>$tipopago,
+					'aceptacionpagoservicio'=>$aceptacionpagoservicio
 			);
 				$total=$total+$montoapagar;
 				array_push($pagosencontrados,$objeto);
@@ -216,6 +228,7 @@ try
 				$fechafinal="";
 				$folio="";
 				$concepto=$obtenerpagostipotres[$i]->concepto;
+				$tipopago='';
 
 				if ($tipo==2) {
 					$membresia->idmembresia=$idmembresia;
@@ -227,7 +240,9 @@ try
 
 				}
 			$objeto=array('idusuarios'=>$idusuarios,'idmembresia'=>$idmembresia,'idservicio'=>$idservicio,'tipo'=>$tipo,'monto'=>$montoapagar,'estatus'=>$estatus,'dividido'=>$dividido,'fechainicial'=>$fechainicial,'fechafinal'=>$fechafinal,'concepto'=>$concepto,'folio'=>$folio,'fechaformato'=>'','nombre'=>$datosusuario[0]->nombre,'paterno'=>$datosusuario[0]->paterno,'materno'=>$datosusuario[0]->materno,'idpago'=>$idpago,'aceptados'=>'','alumnos'=>'','completo'=>'',
-				'fechamin'=>'','fechamax'=>''
+				'fechamin'=>'','fechamax'=>'',
+				'tipopago'=>$tipopago,
+				'aceptacionpagoservicio'=>$aceptacionpagoservicio
 			);
 
 				$total=$total+$montoapagar;

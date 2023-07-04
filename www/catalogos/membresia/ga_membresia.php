@@ -46,6 +46,7 @@ try
 	$emp->costo=$_POST['v_costo'];
 	$emp->duracion=$_POST['v_duracion'];
 	$emp->limite=$_POST['v_limite'];
+	$emp->costoinscripcion=$_POST['v_costoinscripcion'];
 
 	$serviciosasignados=json_decode($_POST['serviciosasignados']);
 	$tiposerviciosasignados=json_decode($_POST['tiposerviciosasignados']);

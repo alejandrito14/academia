@@ -32,6 +32,7 @@ require_once("../../clases/class.Categoriasprecios.php");
 require_once("../../clases/class.Grupos.php");
 require_once("../../clases/class.Paquetes.php");
 require_once('../../clases/class.Paquetesproductos.php');
+require_once("../../clases/class.Sucursal.php");
 
 
 
@@ -55,8 +56,8 @@ $cat->db=$db;
 
 $grupos = new Grupos();
 $grupos->db=$db;
-
-
+$sucursal = new Sucursal();
+$sucursal->db=$db;
 
 $paquetes = new Paquetes();
 $paquetes->db=$db;
@@ -66,6 +67,8 @@ $num_rows=$db->num_rows($obtenergrupos);
 $rowsgrupos=$db->fetch_assoc($obtenergrupos);
 $arrayopcion=array('NO','SI');
 
+/*$obtenersucursales=$sucursal->ObtenerSucursalesLista();
+*/
 //Validamos si cargar el formulario para nuevo registro o para modificacion
 if(!isset($_GET['idpaquete'])){
 	//El formulario es de nuevo registro
@@ -95,7 +98,7 @@ if(!isset($_GET['idpaquete'])){
 	$nuevo=0;
 	$numgrupopaquete=0;
 	$promocion=0;
-
+	$tiempoestimado=0;
 	$che2="checked";
 	$che3="";
 	$che5="";
@@ -118,16 +121,16 @@ if(!isset($_GET['idpaquete'])){
 	$siniva=0;
 	$iva=0;
 	$mensajev="";
+	$idcategoriapaquete=0;
 
-
-	/*$obtenerorden=$paquetes->ObtenerUltimoOrdenpaquete();
+	$obtenerorden=$paquetes->ObtenerUltimoOrdenpaquete();
 	$roworden=$db->fetch_assoc($obtenerorden);
 	$num=$db->num_rows($obtenerorden);
 	if ($num>0) {
-		$orden=$roworden['ordenar']+1;
+		$orden=$roworden['orden']+1;
 	}else{
 		$orden=0;
-	}*/
+	}
 }else{
 	//El formulario funcionara para modificacion de un registro
 	$_SESSION['CarritoProducto']=null;
@@ -143,7 +146,7 @@ if(!isset($_GET['idpaquete'])){
 	$result_presentacion = $paquetes->ObtenerPaquete();
 	$result_presentacion_row = $db->fetch_assoc($result_presentacion);
 	//Cargamos en las variables los datos de las empresas
-
+	
 	//DATOS GENERALES
 	$nombreproducto = $f->imprimir_cadena_utf8($result_presentacion_row['nombrepaquete']);
 	$descripcion = $f->imprimir_cadena_utf8($result_presentacion_row['descripcion']);
@@ -155,7 +158,7 @@ if(!isset($_GET['idpaquete'])){
 	
 	$foto = $f->imprimir_cadena_utf8($result_presentacion_row['foto']);
 	$estatus = $f->imprimir_cadena_utf8($result_presentacion_row['estatus']);
-	$categoria = $f->imprimir_cadena_utf8($result_presentacion_row['idcategorias']);
+	$idcategoriapaquete = $f->imprimir_cadena_utf8($result_presentacion_row['idcategoriapaquete']);
 
 	$preciouni=$result_presentacion_row['precionormal'];
 	$precioventa=$result_presentacion_row['precioventa'];
@@ -185,10 +188,14 @@ if(!isset($_GET['idpaquete'])){
 	$horainicio=$result_presentacion_row['horainicialpromo'];
 	$horafin=$result_presentacion_row['horafinalpromo'];
 	$mensajev=$result_presentacion_row['mensaje'];
+	$tiempoestimado=$result_presentacion_row['intervaloservicio'];
 
 	$siniva=$result_presentacion_row['siniva'];
 
 	$iva=$result_presentacion_row['iva'];
+	$paquetes->idpaquete=$idpaquete;
+	$paquetesucursal=$paquetes->ObtenerSucursalPaquete();
+	$idsucursal=$paquetesucursal[0]->idsucursal;
 
 	$checkediva="";
 	if ($siniva==1) {
@@ -360,7 +367,7 @@ if ($numgrupopaquete>0) {
 	$codigo="";
 
 
-	$orden=$result_presentacion_row['orden'];
+	$orden=$result_presentacion_row['orden']==''?0:$result_presentacion_row['orden'];
 	$activarcomentario=$result_presentacion_row['activarcomentario'];
 	$che6;
 	if ($activarcomentario==1) {
@@ -523,7 +530,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								        </div>
 								    </div>
 								</form>
-								<p style="text-align: center;">Dimensiones de la imagen Ancho:640px Alto:426px</p>
+								<p style="text-align: center;">Dimensiones de la imagen Ancho:1280px Alto:852px</p>
 									<!-- <div class="" style="text-align: center;">
 										<div id="d_foto" style="text-align:center; margin-top: 10px; margin-bottom: 20px;">
 											<img src="<?php echo $ruta; ?>" width="150" height="150" alt="" style="border: 1px #777 solid"/> 
@@ -539,7 +546,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 									<div class="tab-content tabcontent-border">
 										<div class="tab-pane active show" id="generales" role="tabpanel">
-											<h5>DATOS GENERALES</h5>
+											<h5 style="margin-top: 10px;">DATOS GENERALES</h5>
 
 
 
@@ -572,23 +579,13 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 								<div class="form-group m-t-20">
 								<label>CATEGORÍA:</label>
-								<?php 
-								
-								$categorias= $emp->obtenerCategorias();
-								$categorias_num=$db->num_rows($categorias);
-								$categorias_row=$db->fetch_assoc($categorias);
-								?>
-								<select onchange="ObtenerOrden()"  class="form-control" id="v_categoria" name="v_categoria" title="CATEGORIA">
-									<option value="0">SELECCIONAR CATEGORÍA</option>
-									<?php
-									do{
-										?>
-										<option value="<?php echo ($categorias_row['idcategorias']);?>" <?php if($categorias_row['idcategorias']==$categoria){ echo ("selected");}?>><?php echo ($categorias_row['titulo']);?></option>
 
-										<?php 
-									} while($categorias_row=$db->fetch_assoc($categorias));
-									?>
-								</select>
+										<div id="category-selector">
+									  <ul id="category-list">
+									    <!-- Aquí se agregarán las categorías y subcategorías dinámicamente -->
+									  </ul>
+									</div>
+							
 							</div>
 
 							<div class="form-group">
@@ -632,13 +629,41 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 						
 
-							<div class="form-group m-t-20" style="">
+							<div class="form-group m-t-20" style="display: none;">
 								SERVICIO:
 							
 								<input type="checkbox" name="servicio" id="servicio" onchange="Habilitarservicio()" value="<?php echo $servicio?>" <?php echo $che4;?>>
 						
 								
 							</div>
+
+								<div class="form-group m-t-20" id="divtiempoestimado" style="display: none;">
+								TIEMPO ESTIMADO EN MINUTOS:
+							
+								<input type="number" name="tiempoestimado" id="tiempoestimado" value="<?php echo $tiempoestimado?>" class="form-control"  >
+						
+								
+							</div>
+							<br>
+
+								<div class="form-group m-t-20">
+							<!-- 	<label>SUCURSAL:</label>
+								<select name="v_sucursal" class="form-control" id="v_sucursal">
+									<option value="0">SELECCIONAR SUCURSAL </option>
+									<?php if (count($obtenersucursales)>0){ 
+									 for ($i=0; $i < count($obtenersucursales); $i++) {  ?>
+																		<option value="<?php echo $obtenersucursales[$i]->idsucursal; ?>" ><?php echo $obtenersucursales[$i]->titulo; ?></option>
+											<?php		
+													} 
+											} ?>
+										
+									
+								</select> -->
+
+							</div>
+					
+
+					
 
 							<br>
 							<div class="form-group m-t-20">
@@ -691,7 +716,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 </div>
 
 
-<div class="col-md-12">
+<div class="col-md-12" style="" id="divpromociones">
 	<div class="card">
 		<div class="card-header">
 
@@ -860,7 +885,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 			</div>
 		<div class="card-body col-md-12">
 
-							<div style="margin-top: 3em">
+							<div style="margin-top: 3em;display: none;" >
 								<label>HORARIO DE PROMOCIÓN</label>
 
 									<form class="form-inline">
@@ -880,7 +905,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 									</form>
 
 							</div>
-							<div style="margin-top: 5em;">
+							<div style="margin-top: 5em;display: none;">
 							<label>FACTOR MULTIPLICADOR:</label>
 							<form class="form-inline" style="">
 
@@ -895,6 +920,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							 
 							</form>
 
+								</div>
+
 							<label>PRECIO FIJO</label>
 
 							<div class="" style="width: 18em;">
@@ -904,7 +931,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							  
 							
 						
-						</div>
+					
 				</div>
 
 
@@ -939,7 +966,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 
-<div class="col-md-12">
+<div class="col-md-12" style="" id="divproducto">
 	<div class="card">
 		<div class="card-header">
 
@@ -954,7 +981,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				<div class="" style="margin-top: 1em;">
 					<input placeholder="BUSCAR" type="text" id="FiltrarContenido" name="FiltrarContenido" onkeyup="BuscarProductosLista();" class="form-control">
 				</div>
-				<div class="aqui " style="overflow: scroll;height:400px; margin-top: 1em;">
+				<div class="aqui " style="overflow: scroll;height:200px; margin-top: 1em;">
 					<div class="row " >
 						<div class="col-md-12 col-sm-3 col-xs-2" id="contenedor_insumos">
 							<div class="card">
@@ -1093,8 +1120,31 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 	</div>
 </div>
 
+<div class="col-md-12" id="divespecialistas" style="display: none;">
+	<div class="card">
+		<div class="card-body">
 
-<div class="col-md-12">
+			<div class="card-header">
+
+
+				<label style="font-size: 16px;">ESPECIALISTAS</label>
+
+		</div>
+
+		</div>
+			<div class="card-body">
+				<div class="col-sm-12 col-md-12" style="">
+					<button class="btn btn-primary" onclick="NuevoEspecialista()">AGREGAR ESPECIALISTA</button>
+
+					<div class="listadoespecialistas" style="margin-top: 1em;"></div>
+
+				</div>
+			</div>
+</div>
+</div>
+
+
+<div class="col-md-12" style="display: none;">
 	<div class="card">
 		<div class="card-body">
 
@@ -1186,8 +1236,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<div class="col-md-12" style="margin-top: 1em;
 								">
 
-<!-- 								<button type="button" style="width: 9em;" onclick="AgregarComplemento(<?php echo $rowsgrupos['idgrupo'] ?>);" class="btn btn-primary">AGREGAR</button>
- -->							</div>
+							</div>
 						</div>
 
 					</div>
@@ -1470,6 +1519,9 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 	</div>
+
+
+</div>
 </div>
 
 
@@ -1482,6 +1534,34 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 	.table-condensed th, .table-condensed td {
     padding: 4px 5px;
 }
+
+
+#category-list {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  #category-list li {
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
+
+  #category-list li input[type="checkbox"] {
+    margin-right: 5px;
+  }
+
+  .sub-category-list {
+    list-style-type: none;
+    margin-left: 20px;
+    padding: 0;
+    display: none;
+  }
+
+  .sub-category-list li {
+    margin-bottom: 5px;
+    cursor: pointer;
+  }
 </style>
 <!-- <script  type="text/javascript" src="./js/mayusculas.js"></script>
 -->
@@ -1543,14 +1623,24 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 	var idpaquete='<?php echo $idpaquete;?>';
 	var idpromocion='<?php echo $idpromocion;?>';
+	var idcategoriapaquete='<?php echo $idcategoriapaquete; ?>';
 
+ObtenerSelectorCategorias(idcategoriapaquete);
+
+
+
+// Llamar a la función para expandir todos los elementos li
+
+AlmacenarCategoria(idcategoriapaquete);
 	if (idpaquete>0) {
 
-		ObtenerPaquetesVinculados(idpaquete);
+	//	ObtenerPaquetesVinculados(idpaquete);
+
+			
 	}
 
-
-
+	
+		
     var today = new Date();
 
     var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
@@ -1574,7 +1664,14 @@ if(isset($_SESSION['permisos_acciones_erp'])){
     });*/
     //$(".form_datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
 
+    // Función recursiva para construir el selector de categorías y subcategorías // Función recursiva para construir el selector 
+  
+
+
+
+
 </script>
+
 
 
 </script>
@@ -1582,14 +1679,25 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 <?php 
 
 
-	if(isset($_GET['idproducto'])){
-		$idproducto=$_GET['idproducto'];
+	if(isset($_GET['idpaquete'])){
+		$idpaquete=$_GET['idpaquete'];
 	 ?>
 
 		<script type="text/javascript">
 
-			var idproducto='<?php echo $idproducto;?>'	
-			ObtenerProductoPaquete(idproducto);
+			var idpaquete='<?php echo $idpaquete;?>'
+			var servicio='<?php echo $servicio; ?>';
+
+		//	ObtenerProductoPaquete(idproducto);
+			if (servicio==1) {
+				Habilitarservicio();
+			}
+
+			var idsucursal='<?php echo $idsucursal; ?>';
+			$("#v_sucursal").val(idsucursal);
+				ObtenerEspecialistaPaquete();
+
+
 		</script>
 
 <?php

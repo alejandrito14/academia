@@ -226,7 +226,7 @@
                                   </label>
                         </div>
 
-                        <div class="row" style="margin-top: 1em;">
+              <div class="row" style="margin-top: 1em;">
                <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Asignar horarios</p>
 
               </div>
@@ -257,7 +257,7 @@
 
               
               </div>
-              <div class="row divrow" style="margin-top: 1em;">
+              <div class="row divrow divseleccionarhorarios" style="margin-top: 1em;display: none;">
 
                  <div class="item-title item-label">Seleccionar cancha</div>
 
@@ -275,7 +275,7 @@
                   </li>
               </div>
 
-               <div class="row" style="margin-top: 1em;">
+               <div class="row divseleccionarhorarios" style="margin-top: 1em;display: none;">
 
                  <div class="item-title item-label">Seleccionar horario</div>
 
@@ -308,7 +308,9 @@
                 </div>
               
               </div>
-              <div class="row" style="margin-bottom:1em;">
+
+              <div class="row" style="" id="listadofechas"></div>
+              <div class="row contadorhorarios" style="margin-bottom:1em;display:none;">
                 <div class="col">
                  <span style="font-weight: bold;">Horarios:</span> <span id="cantidadhorarios">0</span>
                </div>

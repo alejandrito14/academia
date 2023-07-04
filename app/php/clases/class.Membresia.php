@@ -412,7 +412,7 @@ class Membresia
 
 			$sql="INSERT INTO pagodescuentomembresia
 		(idpago, idmembresia, idservicio, descuento, monto,montoadescontar,idnotapago) VALUES ( '$this->idpago', '$this->idmembresia',0, '$this->descuento', '$this->monto','$this->montoadescontar','$this->idnotapago')";
-
+		
 		$resp=$this->db->consulta($sql);
 			
 		} catch (Exception $e) {

@@ -88,7 +88,7 @@ var app = new Framework7({
 
  var pictureSource;   // picture source
  var destinationType; 
- var produccion = 0;
+ var produccion = 1;
 
 var codigoservicio="0";
 $(document).ready(function() {
@@ -2276,7 +2276,8 @@ $$(document).on('page:init', '.page[data-name="nuevoservicio"]', function (e) {
   $("#v_categoria").attr('onchange','SeleccionarCategoria(0)');
    porcentajescoachs=[];
  // ObtenerCategoriaServicios();
-  $("#btnaplicar").attr('onclick','AplicarFechas()');
+
+  VerificarPermisoUsuario();
   $("#v_reembolso").attr('onchange','HabilitarcantidadReembolso()');
   ObtenerTodasEncuestas();
   CargarZonas();

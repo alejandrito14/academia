@@ -74,7 +74,7 @@ try
 
 		$obtenerperiodos=$servicios->ObtenerPeriodosPagos();
 
-		for ($k=0; $k <count($obtenerperiodos) ; $k++) { 
+		for ($k=0; $k <1 ; $k++) { 
 			# code...
 				$fechainicial=$obtenerperiodos[$k]->fechainicial;
 				$fechafinal=$obtenerperiodos[$k]->fechafinal;
@@ -120,7 +120,7 @@ try
 
 			$obtenerperiodos=$servicios->ObtenerPeriodosPagos();
 
-			$numeroperiodos=count($obtenerperiodos);
+			$numeroperiodos=1;
 			$montoapagar=$montoapagar/$numeroperiodos;
 
 
@@ -215,6 +215,7 @@ try
 			
 				$idpago=$obtenerpagostipotres[$i]->idpago;
 				$idusuarios=$obtenerpagostipotres[$i]->idusuarios;
+				$pagoinscripcion=$obtenerpagostipotres[$i]->pagoinscripcion;
 
 				 $usuarios->idusuarios=$idusuarios;
 	     		 $datosusuario=$usuarios->ObtenerUsuarioDatos();
@@ -231,12 +232,16 @@ try
 				$tipopago='';
 
 				if ($tipo==2) {
+					if ($pagoinscripcion==0) {
+						# code...
+					
 					$membresia->idmembresia=$idmembresia;
 					$membresia->idusuarios=$idusuarios;
 					$membresia->idpago=$idpago;
 					$buscarmembresiaasociada=$membresia->BuscarMembresiaAsociadaalapago();
 
 					$concepto=$concepto.'   Vigencia:'.date('d-m-Y',strtotime($buscarmembresiaasociada[0]->fechaexpiracion));
+				}
 
 				}
 			$objeto=array('idusuarios'=>$idusuarios,'idmembresia'=>$idmembresia,'idservicio'=>$idservicio,'tipo'=>$tipo,'monto'=>$montoapagar,'estatus'=>$estatus,'dividido'=>$dividido,'fechainicial'=>$fechainicial,'fechafinal'=>$fechafinal,'concepto'=>$concepto,'folio'=>$folio,'fechaformato'=>'','nombre'=>$datosusuario[0]->nombre,'paterno'=>$datosusuario[0]->paterno,'materno'=>$datosusuario[0]->materno,'idpago'=>$idpago,'aceptados'=>'','alumnos'=>'','completo'=>'',

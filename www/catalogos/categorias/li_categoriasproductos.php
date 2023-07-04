@@ -84,7 +84,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		<tr style="text-align: center">
 <!-- 			<th>ID</th> 
  -->			<th>NOMBRE</th> 
- 			    <th>IMÁGEN</th> 
+ 			    <th>DEPENDE DE</th>
  			     <th>AVANZADO</th> 
 
 				<th>ORDEN</th> 
@@ -113,12 +113,21 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($resultado_empresas_row['titulo']); ?></td>
 
 
-                  <td style="text-align: center;">
+                  <!-- <td style="text-align: center;">
                     <?php 
                      $img='./catalogos/categorias/imagenes/'.$_SESSION['codservicio'].'/'.$f->imprimir_cadena_utf8($resultado_empresas_row['foto']);
 
                      ?>
                      <img src="<?php echo $img; ?>" alt=""style="width: 400px;">
+                   </td> -->
+
+                   <td>
+                   	<?php 
+
+						$dependencia=$emp->obtenerDependenciaHaciaArriba($resultado_empresas_row['depende']);
+						
+						echo $emp->mostrarEstructuraDependencia($dependencia);
+                   	 ?>
                    </td>
 
                    <td style="text-align: center;"><?php 

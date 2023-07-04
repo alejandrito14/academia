@@ -55,7 +55,7 @@ if(!isset($_GET['idcategoriasservicio'])){
 	
 	$col = "col-md-12";
 	$ver = "display:none;";
-	$titulo='NUEVA CATEGORÍA';
+	$titulo='NUEVO INTERVALO DE HORARIOS';
 
 }else{
 	//El formulario funcionara para modificacion de un registro
@@ -79,7 +79,7 @@ if(!isset($_GET['idcategoriasservicio'])){
 
 	$col = "col-md-12";
 	$ver = "";
-		$titulo='EDITAR CATEGORÍA';
+		$titulo='EDITAR INTERVALO DE HORARIOS';
 
 }
 
@@ -204,7 +204,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						<div class="form-group m-t-20">
 							<label>ESTATUS:</label>
 							<select name="v_estatus" id="v_estatus" title="Estatus" class="form-control"  >
-								<option value="0" <?php if($estatus == 0) { echo "selected"; } ?> >DESACTIVO</option>
+								<option value="0" <?php if($estatus == 0) { echo "selected"; } ?> >DESACTIVADO</option>
 								<option value="1" <?php if($estatus == 1) { echo "selected"; } ?> >ACTIVO</option>
 							</select>
 						</div>

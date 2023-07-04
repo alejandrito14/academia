@@ -86,7 +86,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
 <div class="card">
 	<div class="card-body">
-		<h5 class="card-title" style="float: left;">LISTADO DE CATEGORÍAS</h5>
+		<h5 class="card-title" style="float: left;">LISTADO DE INTERVALOS DE HORARIOS</h5>
 		
 		<div style="float:right;">
 			<button type="button" onClick="abrir_filtro('modal-filtros');" class="btn btn-primary" style="float: right;display: none;"><i class="mdi mdi-account-search"></i>  BUSCAR</button>			

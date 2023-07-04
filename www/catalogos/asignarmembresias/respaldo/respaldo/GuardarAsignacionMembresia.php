@@ -91,6 +91,7 @@ try
 						$buscarfechasarray=$asignar->BuscarFechasArray($membresiaseleccionada,$idmembresias[$i]);
 
 						//var_dump($buscarfechasarray);
+						$asignar->idpago=$pagos->idpago;
 
 						if (count($buscarfechasarray)>0) {
 

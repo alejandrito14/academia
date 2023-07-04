@@ -90,6 +90,7 @@ $paquetes_num=$db->num_rows($paquetes);
 
 	if ($noencontrado==0) {
 		*/
+		//$paquete->EliminarDeSucursal();
 	$paquete->EliminarPaquetesProductos();
 	$paquete->EliminarComplementos();
 	$paquete->eliminarpreciopaquete();

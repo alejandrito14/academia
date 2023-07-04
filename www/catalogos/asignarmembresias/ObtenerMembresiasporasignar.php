@@ -88,18 +88,23 @@ try
 					for ($i=0; $i <count($obtenermembresias) ; $i++) { 
 						$membresia->idmembresia=$obtenermembresias[$i]->idmembresia;
 						$ObtenerSiTutoradosMembresia=$membresia->ObtenerSiTutoradosMembresia($idtutor);
-						//var_dump($ObtenerSiTutoradosMembresia);die();
-						//var_dump($obtenerMembresias[$i]->limite);die();
 
+
+						
+						//var_dump($obtenerMembresias[$i]->limite);die();
+						
 
 						if($obtenermembresias[$i]->limite <= count($ObtenerSiTutoradosMembresia)) {
+
+							
+							
 							unset($obtenermembresias[$i]);
 						}
 
 					}
-				//}
 				
-
+				
+				
 				}else{
 
 					if ($verificarsiestutorado[0]->sututor==1) {
@@ -112,7 +117,7 @@ try
 
 
 					$obtenermembresias=$membresia->ObtenerMembresiasDependen2(0,$inphijo,$inpnieto);
-
+					
 				}
 			
 			}else{
@@ -121,9 +126,10 @@ try
 					# code...
 				
 				$obtenermembresias=$membresia->ObtenerMembresiasDisponibles($idmembresias);
-
+				
 			}
 
+		$obtenermembresias = array_values($obtenermembresias);
 
 	$respuesta['respuesta']=1;
 	$respuesta['membresiasasignados']=$obtenermembresiasAsignados;

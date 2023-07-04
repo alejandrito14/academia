@@ -184,7 +184,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 			<table id="tbl_Servicios" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
 				<thead>
 					<tr>
-						 
+						 <th style="text-align: center;">ID</th>
 						<th style="text-align: center;">TÍTULO </th> 
 
 						<th style="text-align: center;">IMÁGEN </th> 
@@ -217,7 +217,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 							<tr>
 							
 						
-							
+							<td><?php echo $l_Servicios_row['idservicio'];?></td>
 							<td style="text-align: center;"><p><?php echo $f->imprimir_cadena_utf8($l_Servicios_row['titulo']);?></p>
 								<p>Periodo: <?php echo date('d/m/Y',strtotime($l_Servicios_row['fechamin'])).'-'.date('d/m/Y',strtotime($l_Servicios_row['fechamax'])); ?> </p>
 								

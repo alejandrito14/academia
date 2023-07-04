@@ -35,6 +35,7 @@ class Categorias
 	public $dia;
 	public $horainiciosemana;
 	public $horafinsemana;
+	public $v_depende;
 
 		public function obtenerTodas()
 	{
@@ -139,7 +140,7 @@ class Categorias
 		campopreciounitario,
 		campomontoporparticipante,
 		campomontoporgrupo,
-		habilitarmodalidadpago,avanzado,asignarcategoria,asignardias) VALUES ('$this->nombre','$this->orden','$this->estatus','$this->horarios','$this->zonas','$this->participantes','$this->cantidadparticipantes','$this->coachs','$this->numerodias','$this->habilitarcostos','$this->habilitarmodalidad','$this->habilitarcampototalclases','$this->habilitarcampopreciounitario','$this->habilitarcampomontoparticipante','$this->habilitarcampomontogrupo','$this->habilitarmodalidadpago','$this->habilitaravanzado','$this->activarcategoria','$this->activardias');";
+		habilitarmodalidadpago,avanzado,asignarcategoria,asignardias,depende) VALUES ('$this->nombre','$this->orden','$this->estatus','$this->horarios','$this->zonas','$this->participantes','$this->cantidadparticipantes','$this->coachs','$this->numerodias','$this->habilitarcostos','$this->habilitarmodalidad','$this->habilitarcampototalclases','$this->habilitarcampopreciounitario','$this->habilitarcampomontoparticipante','$this->habilitarcampomontogrupo','$this->habilitarmodalidadpago','$this->habilitaravanzado','$this->activarcategoria','$this->activardias','$this->depende');";
 		
 		
 		$resp = $this->db->consulta($sql);
@@ -167,7 +168,8 @@ class Categorias
 		habilitarmodalidadpago='$this->habilitarmodalidadpago',
 		avanzado='$this->habilitaravanzado',
 		asignarcategoria='$this->activarcategoria',
-		asignardias='$this->activardias'
+		asignardias='$this->activardias',
+		depende='$this->depende'
 		WHERE idcategorias = '$this->idcategoria'";
 
 
@@ -232,6 +234,16 @@ class Categorias
 		$resp=$this->db->consulta($query);
 		return $resp;
 	}
+
+	public function ObtenerCategoriasTodas()
+	{
+		
+		$sql="SELECT *FROM categorias ";
+
+		$resp=$this->db->consulta($sql);
+		return $resp;
+	}
+
 
 	public function ObtenerCategoriasEstatus($estatus)
 	{
@@ -346,6 +358,29 @@ class Categorias
 	$sql="SELECT *FROM categorias WHERE idcategorias ='$this->idcategoria'";
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+		public function obtenerTodasCategorias()
+	{
+		
+		$sql = "SELECT C.* FROM categorias C";
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
 
 		$array=array();
 		$contador=0;

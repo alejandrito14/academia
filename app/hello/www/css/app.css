@@ -779,3 +779,17 @@ input[type=date]:focus::-webkit-datetime-edit {
   pointer-events: none; /* Desactivar eventos de puntero */
   cursor: not-allowed; /* Cambiar el cursor a "no permitido" */
 }
+
+.fechas{
+      background: gray;
+    border-radius: 10px;
+    height: 50px;
+    padding-top: 3%;
+    margin-left: 1em;
+    margin-right: 1em;
+    margin-bottom: 10px;
+}
+.horaselecciona{
+
+  background: #007aff!important;
+}

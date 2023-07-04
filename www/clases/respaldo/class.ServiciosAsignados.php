@@ -1381,4 +1381,107 @@ class ServiciosAsignados
 	}
 
 
+	
+	public function VerificacionUsuarioServicios($idcategoria)
+	{
+		$sql="SELECT *FROM (SELECT usuarios_servicios.idusuarios,usuarios_servicios.idservicio,
+			(SELECT COUNT(*) FROM pagos INNER JOIN notapago_descripcion on pagos.idpago=notapago_descripcion.idpago
+		INNER JOIN notapago on notapago_descripcion.idnotapago =notapago.idnotapago
+		WHERE pagos.idservicio=servicios.idservicio and pagos.idusuarios='$this->idusuario' and notapago.estatus=1 ) AS numeropagos
+		FROM usuarios_servicios INNER JOIN 
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE usuarios_servicios.idusuarios='$this->idusuario' AND usuarios_servicios.cancelacion=0 and usuarios_servicios.aceptarterminos=1 AND servicios.idcategoriaservicio='$idcategoria')as tabla WHERE numeropagos=0";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+
+	}
+
+
+
+
+	public function obtenerUsuariosServiciosAlumnosAsignadosReporte($estatusaceptado,$estatuspagado)
+	{
+		$sql="SELECT*FROM (SELECT *,  CASE WHEN pagado > 0 THEN 1 ELSE 0 END AS pagado_flag
+		FROM (SELECT
+				usuarios_servicios.idservicio,
+				usuarios.nombre,
+				usuarios.paterno,
+				usuarios.telefono,
+				usuarios.materno,
+				usuarios.email,
+				usuarios.celular,
+				usuarios.usuario,
+				usuarios.idusuarios,
+				usuarios.foto,
+				usuarios.tipo,
+				tipousuario.nombretipo,
+				usuarios.alias,
+				usuarios_servicios.estatus,
+				usuarios_servicios.aceptarterminos,
+				(SELECT COUNT(*)  FROM horariosservicio WHERE horariosservicio.idservicio=usuarios_servicios.idservicio) as cantidadhorarios,
+				(SELECT COUNT(*) FROM usuariossecundarios WHERE usuariossecundarios.idusuariotutorado=usuarios.idusuarios AND usuariossecundarios.sututor=1) as tutor,
+				(SELECT COUNT(*) FROM  pagos 
+				INNER JOIN notapago_descripcion ON pagos.idpago=notapago_descripcion.idpago
+				INNER join notapago ON notapago.idnotapago=notapago_descripcion.idnotapago
+				WHERE pagos.idusuarios=usuarios_servicios.idusuarios and pagos.idservicio=usuarios_servicios.idservicio and notapago.estatus=1 ) as pagado
+
+				FROM
+				usuarios_servicios
+				JOIN usuarios
+				ON usuarios_servicios.idusuarios = usuarios.idusuarios
+				JOIN tipousuario
+				ON tipousuario.idtipousuario=usuarios.tipo
+				WHERE
+				usuarios_servicios.idservicio='$this->idservicio' AND usuarios.idusuarios NOT IN('$this->idusuario') AND usuarios.tipo=3";
+
+				if ($estatusaceptado!='') {
+					$sql.=" AND usuarios_servicios.aceptarterminos IN($estatusaceptado)";
+				}
+				
+
+				$sql.=" and usuarios_servicios.cancelacion=0 ORDER BY usuarios.tipo DESC )	 AS TABLA 
+				 ) AS T2 WHERE 1=1
+					
+		 ";
+
+		 if ($estatuspagado!='') {
+		 	
+		 	$sql.=" AND  pagado_flag IN(".$estatuspagado.")";
+		 }
+		 /*if ($this->idservicio==542) {
+		 	echo $sql;die();
+		 }*/
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
 }

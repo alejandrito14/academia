@@ -48,6 +48,7 @@ if(!isset($_GET['idmembresia'])){
 	$depende = "0";
 	$empresa="";
 	$estatus =1;
+	$costoinscripcion=0;
 	//$descripcion="";
 		$ruta="images/sinfoto.png";
 
@@ -85,6 +86,7 @@ if(!isset($_GET['idmembresia'])){
 	$orden = $f->imprimir_cadena_utf8($result_membresia_row['orden']);
 	$estatus = $f->imprimir_cadena_utf8($result_membresia_row['estatus']);
 	$costo=$result_membresia_row['costo'];
+	$costoinscripcion=$result_membresia_row['costoinscripcion'];
 	$duracion=$result_membresia_row['cantidaddias'];
 	$limite=$result_membresia_row['tiempodepago'];
 	$descripcion=$result_membresia_row['descripcion'];
@@ -243,6 +245,12 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<textarea name="v_descripcion" id="v_descripcion" cols="20" rows="4" class="form-control" title="DESCRIPCIÓN" placeholder='DESCRIPCIÓN'><?php echo $descripcion ?></textarea>
 							</div>
 
+								<div class="form-group m-t-20">
+								<label for="">*COSTO DE INSCRIPCIÓN $</label>
+								<input type="number" id="v_costoinscripcion" class="form-control" value="<?php echo $costoinscripcion; ?>" placeholder="COSTO DE INSCRIPCIÓN" title="COSTO DE INSCRIPCIÓN">
+
+							</div>
+
 
 							<div class="form-group m-t-20">
 								<label for="">*COSTO $</label>
@@ -250,35 +258,35 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 							</div>
 
-								<div class="form-group m-t-20">
+								<div class="form-group m-t-20" style="display: none;">
 								<label for="">*FECHA</label>
-								<input type="date" id="v_fecha" class="form-control" value="<?php echo $fecha; ?>" placeholder="COSTO" title="COSTO">
+								<input type="date" id="v_fecha" class="form-control" value="<?php echo $fecha; ?>" placeholder="COSTO" title="COSTO" >
 
 							</div>
 
 
 
 
-							<div class="form-group m-t-20">
+							<div class="form-group m-t-20" style="display: none;">
 								<label for="">*TIEMPO EN QUE APLICA (días)</label>
 								<input type="number" id="v_duracion" class="form-control" value="<?php echo $duracion; ?>" placeholder="TIEMPO EN QUE APLICA (días)" title="TIEMPO EN QUE APLICA (días)">
 
 							</div>
 
-								<div class="form-group m-t-20">
+									<div class="form-group m-t-20" style="display: none;">
 								<label for="">*CANTIDAD DE VECES A REPETIR </label>
 								<input type="text" id="v_repetir" class="form-control" value="<?php echo $repetir; ?>" placeholder="CANTIDAD DE VECES A REPETIR" title="CANTIDAD DE VECES A REPETIR">
 
 							</div>
 
 							
-							<div class="form-group m-t-20">
+							<div class="form-group m-t-20" style="display: none;">
 								<label for="">*LÍMITE DE PAGO DESPUES DE LA FECHA (días)</label>
 								<input type="number" id="v_limite" class="form-control" value="<?php echo $limite; ?>" placeholder="LÍMITE " title="LÍMITE ">
 
 							</div>
 
-							<div class="form-group m-t-20">
+							<div class="form-group m-t-20" >
 								<label for="">*COLOR</label>
 								<input type="color" id="v_color" class="form-control" name="v_color" value="<?php echo $color; ?>" placeholder="COLOR" title="COLOR"> 
 							</div>
@@ -301,6 +309,9 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							<option value="0"> Seleccionar membresía</option> 
 							</select>
 						</div>
+
+
+
 
 			<div class="divmembresia" style="display: none;">
 				
@@ -471,7 +482,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 							<div class="row">
-								<div class="col-md-12">
+								<div class="col-md-12" style="display: none;">
 									<div class="col-md-6">
 									<label>DESCUENTO:</label>
 										<div class="form-group mb-2" style="">

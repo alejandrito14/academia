@@ -209,7 +209,9 @@ class Pagos
 		
 
 		$sql="INSERT INTO pagos(idusuarios, idservicio, idmembresia, tipo, monto, estatus,fechainicial,fechafinal,pagado,concepto,folio,idtipopago,requiereaceptacion) VALUES ('$this->idusuarios','$this->idservicio','$this->idmembresia','$this->tipo','$this->monto', '$this->estatus','$this->fechainicial','$this->fechafinal',0,'$this->concepto','$this->folio','$this->idtipopago','$this->requiereaceptacion')";
-		
+
+
+	
 		
 		$resp=$this->db->consulta($sql);
 		$this->idpago=$this->db->id_ultimo();
@@ -533,7 +535,7 @@ class Pagos
 	}
 
 
-	public function ChecarPagosServicio()
+	public function ChecarPagosServicio($sqlfechapago)
 		{
 			$sql = "
 			SELECT
@@ -556,9 +558,19 @@ class Pagos
 			ON notapago.idnotapago = notapago_descripcion.idnotapago
 			WHERE
 			pagado=1 AND notapago.estatus=1 AND
-			  pagos.idservicio='$this->idservicio' AND pagos.idusuarios='$this->idusuarios'
-			  ORDER BY idpago ";
-			  
+			  pagos.idservicio='$this->idservicio' AND pagos.idusuarios='$this->idusuarios'";
+			  if ($sqlfechapago!='') {
+
+			  	$sql.=$sqlfechapago;
+
+			  }
+			  $sql.= " ORDER BY idpago ";
+
+			
+			 /* if ($this->idservicio==714) {
+			  	echo $sql;die();
+			  }
+			*/
 			$resp = $this->db->consulta($sql);
 			$cont = $this->db->num_rows($resp);
 
@@ -602,7 +614,9 @@ class Pagos
 			pagos.estatus=1 AND notapago.estatus=0 AND
 			  pagos.idservicio='$this->idservicio' AND pagos.idusuarios='$this->idusuarios'
 			  ORDER BY idpago ";
-			  
+
+			 
+			 
 			$resp = $this->db->consulta($sql);
 			$cont = $this->db->num_rows($resp);
 
@@ -791,6 +805,62 @@ class Pagos
 			}
 			return $array;		
 		}
+
+
+
+		public function ObtenerPagosTipoDosTres()
+		{
+			
+			$sql = "SELECT 
+					pagos.idpago,
+					pagos.idusuarios,
+					pagos.idservicio,
+					pagos.idmembresia,
+					pagos.tipo,
+					pagos.monto,
+					pagos.estatus,
+					pagos.fechapago,
+					pagos.tarjeta,
+					pagos.fechacreacion,
+					pagos.pagado,
+					pagos.validadoporusuario,
+					pagos.digitostarjeta,
+					pagos.tipopago,
+					pagos.fechaevento,
+					pagos.dividido,
+					pagos.fechainicial,
+					pagos.fechafinal,
+					pagos.concepto,
+					pagos.idtipopago,
+					pagos.tipodepago,
+					pagos.descuento,
+					pagos.folio,
+					usuarios.nombre,
+					usuarios.paterno,
+					usuarios.materno,
+					usuarios.email,
+					usuarios.celular
+			    FROM pagos
+				LEFT JOIN usuarios ON usuarios.idusuarios=pagos.idusuarios
+			    WHERE pagos.estatus=0 AND pagos.pagado=0 AND pagos.idusuarios  IN($this->idusuarios) AND pagos.tipo IN(2,3) GROUP BY idpago,idusuarios ORDER BY idpago ";
+			 
+			$resp = $this->db->consulta($sql);
+			$cont = $this->db->num_rows($resp);
+
+
+			$array=array();
+			$contador=0;
+			if ($cont>0) {
+
+				while ($objeto=$this->db->fetch_object($resp)) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
+		}
+
 
 
 }

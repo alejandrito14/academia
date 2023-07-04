@@ -176,12 +176,12 @@ $estatuspago = array('NO PAGADO','PAGADO');
 
 							?></td>
 
-								<td style="text-align: center;"><?php echo $l_pagos_row['tipopago'];?></td>
+								
 							
 
 							<td style="text-align: center;"><?php echo date('d-m-Y H:i:s',strtotime($l_pagos_row['fecha']));?></td>
 
-
+							<td style="text-align: center;"><?php echo $l_pagos_row['tipopago'];?></td>
 
 
 							<td style="text-align: center;">$<?php echo $l_pagos_row['total'];?></td>
@@ -351,7 +351,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 <script type="text/javascript">
 	 $('#tbl_pagos').DataTable( {		
 	 
- "order": [[ 2, "desc" ]],
+ "order": [[ 3, "desc" ]],
 		 	"pageLength": 100,
 			"oLanguage": {
 						"sLengthMenu": "Mostrar _MENU_ ",

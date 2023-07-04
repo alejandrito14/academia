@@ -1284,6 +1284,14 @@ $navegador = $f->navegador();
 <script src="js/fn_tipojuego.js?<?php echo time(); ?>"></script>
   <script src="https://js.stripe.com/v3/"></script>
 
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/TableExport/5.2.0/js/tableexport.min.js"></script>
+
+<script src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+
+
  <!--   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     -->
     <script type="text/javascript" src="js/mark-your-calendar.js"></script>

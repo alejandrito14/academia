@@ -18,6 +18,7 @@ function Guardarmembresia(form,regresar,donde,idmenumodulo)
 
 		var v_descripcion=$("#v_descripcion").val();
 		var v_costo=$("#v_costo").val();
+		var v_costoinscripcion=$("#v_costoinscripcion").val();
 		var v_duracion=$("#v_duracion").val();
 		var v_limite=$("#v_limite").val();
 		var v_limitemembresia=$("#v_limitemembresia").val();
@@ -153,6 +154,7 @@ function Guardarmembresia(form,regresar,donde,idmenumodulo)
 		datos.append('porcategoria',porcategoria);
 		datos.append('porservicio',porservicio);
 		datos.append('v_color',v_color);
+		datos.append('v_costoinscripcion',v_costoinscripcion);
 		datos.append('dependede',dependede);
 		datos.append('membresiadepende',membresiadepende);
 		datos.append('inppadre',inppadre);
