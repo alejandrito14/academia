@@ -45,7 +45,8 @@ class Membresia
 	public $porhorariodescuento;
 	public $porhorariomonto;
 	public $costoinscripcion;
-
+	public $idtipopago;
+	public $habilitarmonedero;
 	public function ObtenerTodosmembresia()
 	{
 		$query = "SELECT *
@@ -90,7 +91,7 @@ class Membresia
 
 	public function guardarmembresia($value='')
 	{
-		$query="INSERT INTO membresia (titulo,estatus,orden,descripcion,costo,cantidaddias,tiempodepago,porcategoria,porservicio,color,depende,idmembresiadepende,inppadre,inphijo,inpnieto,limite,fecha,repetir,porhorario,tipodescuentoporhorario,montoporhorario,costoinscripcion) VALUES ('$this->titulo','$this->estatus','$this->orden','$this->descripcion','$this->costo','$this->duracion','$this->limite','$this->porcategoria','$this->porservicio','$this->color','$this->depende','$this->membresiadepende','$this->inppadre','$this->inphijo','$this->inpnieto','$this->v_limitemembresia','$this->fecha','$this->repetir','$this->porhorario','$this->porhorariodescuento','$this->porhorariomonto','$this->costoinscripcion')";
+		$query="INSERT INTO membresia (titulo,estatus,orden,descripcion,costo,cantidaddias,tiempodepago,porcategoria,porservicio,color,depende,idmembresiadepende,inppadre,inphijo,inpnieto,limite,fecha,repetir,porhorario,tipodescuentoporhorario,montoporhorario,costoinscripcion,habilitarmonedero) VALUES ('$this->titulo','$this->estatus','$this->orden','$this->descripcion','$this->costo','$this->duracion','$this->limite','$this->porcategoria','$this->porservicio','$this->color','$this->depende','$this->membresiadepende','$this->inppadre','$this->inphijo','$this->inpnieto','$this->v_limitemembresia','$this->fecha','$this->repetir','$this->porhorario','$this->porhorariodescuento','$this->porhorariomonto','$this->costoinscripcion','$this->habilitarmonedero')";
 		
 		$resp=$this->db->consulta($query);
 		$this->idmembresia = $this->db->id_ultimo();
@@ -121,7 +122,8 @@ class Membresia
 			 fecha='$this->fecha',
 			 tipodescuentoporhorario='$this->porhorariodescuento',
 			 montoporhorario='$this->porhorariomonto',
-			 costoinscripcion='$this->costoinscripcion'
+			 costoinscripcion='$this->costoinscripcion',
+			 habilitarmonedero='$this->habilitarmonedero'
 		   	 WHERE idmembresia=$this->idmembresia";
 
 		$resp=$this->db->consulta($query);
@@ -976,6 +978,91 @@ class Membresia
 		return $array;
 	}
 
+
+	public function GuardarTiposPago()
+	{
+		$query="INSERT INTO tipopagomembresia (idmembresia,idtipodepago) VALUES ('$this->idmembresia','$this->idtipopago')";
+		$resp=$this->db->consulta($query);
+	}
+
+	public function EliminarTiposPago()
+	{
+		$query="DELETE FROM tipopagomembresia 
+		WHERE idmembresia='$this->idmembresia'";
+		
+		$resp=$this->db->consulta($query);
+	}
+
+	public function ObtenerTipopagoMembresia()
+	{
+		$sql="SELECT *
+		FROM tipopagomembresia WHERE idmembresia='$this->idmembresia'";
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function BuscarMembresiaAsociadaalapago()
+	{
+		$sql="SELECT *
+		FROM usuarios_membresia
+		LEFT JOIN membresia ON usuarios_membresia.idmembresia=membresia.idmembresia
+		 WHERE usuarios_membresia.idmembresia='$this->idmembresia' AND usuarios_membresia.idusuarios='$this->idusuarios' AND usuarios_membresia.idpago='$this->idpago'";
+	
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+		public function TipoPagoRelacionados()
+	{
+		$sql="SELECT  GROUP_CONCAT(idtipodepago) as tipopago FROM tipopagomembresia WHERE idmembresia='$this->idmembresia' ORDER BY idtipodepago";
+		
+	    $resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 
 
 }

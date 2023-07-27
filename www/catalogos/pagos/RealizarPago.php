@@ -45,7 +45,7 @@ $folio = "";
 $pagosconsiderados=json_decode($_POST['pagos']);
 $constripe=$_POST['constripe'];
 $sumatotalapagar=$_POST['sumatotalapagar'];
-$iduser=$_POST['id_user'];
+$iduser=$se->obtenerSesion('usuariopago');;
 $descuentosaplicados=json_decode($_POST['descuentosaplicados']);
 $descuentosmembresia=json_decode($_POST['descuentosmembresia']);
 $rutacomprobante=$_POST['rutacomprobante'];
@@ -124,8 +124,11 @@ try {
            
               $obtenertipopago=$tipopago->ObtenerTipodepago2();
 
-              $variable=','.$variable;
+               if ($variable!='') {
 
+                  $variable=','.$variable;
+                }
+ 
              // var_dump($obtenertipopago);die();
             }else{
               $variable=str_replace(',','',$variable);
@@ -143,7 +146,12 @@ try {
          $notapago->comisiontotal=$comisiontotal;
          $notapago->montomonedero=$montomonedero;
          $notapago->estatus=0;
-         $notapago->tipopago=$obtenertipopago[0]->tipo.$variable;
+
+          if($obtenertipopago[0]->tipo!=$variable) {
+           $variable=$obtenertipopago[0]->tipo.$variable;
+         }
+
+         $notapago->tipopago=$variable;
          $notapago->idtipopago=$idtipodepago;
          $notapago->confoto=$confoto;
          $notapago->datostarjeta=$datostarjeta;
@@ -208,14 +216,14 @@ try {
                 $obj->estatus = '';
                 $obj->fechaTransaccion = ''; 
                 $obj->comision=$comision;
-        $obj->comisiontotal=$comisiontotal;
-        $obj->comisionmonto=$comisionmonto;
-        $obj->impuestototal=$impuestototal;
-        $obj->subtotalsincomision = $subtotalsincomision;
-        $obj->impuesto=$impuesto;
-        $obj->total=$sumatotalapagar;
-        $obj->RegistrarIntentoPago2();
-        $db->commit();
+                $obj->comisiontotal=$comisiontotal;
+                $obj->comisionmonto=$comisionmonto;
+                $obj->impuestototal=$impuestototal;
+                $obj->subtotalsincomision = $subtotalsincomision;
+                $obj->impuesto=$impuesto;
+                $obj->total=$sumatotalapagar;
+                $obj->RegistrarIntentoPago2();
+                $db->commit();
 
                
 
@@ -336,9 +344,13 @@ try {
         }
 
 
-    
 
-          	   $db = new MySQL();
+          	   if ($constripe==1) {
+                 $db = new MySQL();
+
+                 $notapago->db=$db;
+               } 
+               
           	   $db->begin();
           	   $pagos=new Pagos();
         			 $pagos->db=$db;
@@ -351,7 +363,7 @@ try {
                $invitacion=new Invitacion();
                $invitacion->db=$db;
               
-               $notapago->db=$db;
+               
 
              /*  $notapago=new Notapago();
                $notapago->db=$db;
@@ -362,7 +374,7 @@ try {
                $servicios->db=$db;
 
            
-
+              
    
           	for ($i=0; $i < count($pagosconsiderados); $i++) { 
                $pagos->pagado=1;
@@ -681,7 +693,7 @@ try {
 
         }
 
-         $notapago->estatus=1;
+         $notapago->estatus=0;
          $notapago->ActualizarNotapago();
 
       
@@ -768,7 +780,6 @@ catch (\Stripe\Exception\CardException $err) {
                $servicios->db=$db;
 
 
-               var_dump($pagosconsiderados);die();
 
             for ($i=0; $i < count($pagosconsiderados); $i++) { 
                

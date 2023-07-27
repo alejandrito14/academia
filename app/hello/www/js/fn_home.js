@@ -289,10 +289,12 @@ function CargarDatosCoach() {
    
      //identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 5000);
      //botones
-     ObtenerCantidadNuevas();
+    ObtenerCantidadNuevas();
 	ExistenServiciosporvalidar();
 	MostrarBotonServiciosActivosCoach();
 	VerificarServiciosAsignadosCoach();
+	
+	VerificarPermisoUsuario();
 	//ObtenerServiciosAsignadosCoach();
 	//Obtenerpublicidad();
 	ObtenerConfiguracion();

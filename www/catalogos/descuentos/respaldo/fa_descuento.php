@@ -26,6 +26,8 @@ require_once("../../clases/class.Funciones.php");
 require_once("../../clases/class.Botones.php");
 require_once("../../clases/class.Categorias.php");
 require_once("../../clases/class.Servicios.php");
+require_once("../../clases/class.Usuarios.php");
+
 
 $idmenumodulo = $_GET['idmenumodulo'];
 
@@ -46,6 +48,13 @@ $emp->db = $db;
 
 $emp->tipo_usuario = $tipousaurio;
 $emp->lista_empresas = $lista_empresas;
+
+$cli = new Usuarios();
+$cli->db = $db;
+$r_clientes = $cli->lista_Usuarios(3);
+$a_cliente = $db->fetch_assoc($r_clientes);
+$r_clientes_num = $db->num_rows($r_clientes);
+
 
 //Validamos si cargar el formulario para nuevo registro o para modificacion
 if(!isset($_GET['iddescuento'])){
@@ -111,10 +120,16 @@ $porservicio=$result_descuento_row['porservicio'];
 $porparentesco=$result_descuento_row['porparentesco'];
 $porniveljerarquico=$result_descuento_row['porniveljerarquico'];
 $porclientenoasociado=$result_descuento_row['porclientenoasociado'];
+$porclientedirecto=$result_descuento_row['porclientedirecto'];
+$todoclientes=$result_descuento_row['todosclientes'];
 
 $innpadre=$result_descuento_row['innpadre'];
 $inphijo=$result_descuento_row['inphijo'];
 $inpnieto=$result_descuento_row['inpnieto'];
+
+$caracteristicasdelasociador=$result_descuento_row['caracteristicaasociador'];
+$caracteristicasporservicio=$result_descuento_row['caracteristicasporservicio'];
+$caracteristicaportiposervicio=$result_descuento_row['caracteristicaportiposervicio'];
 
  $col = "col-md-12";
  $ver = "";
@@ -157,7 +172,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
   <div class="card-body">
    <h4 class="card-title m-b-0" style="float: left;"><?php echo $titulo; ?></h4>
 
-   <div style="float: right;">
+   <div style="float: right;position:fixed!important;z-index:10;right:0;margin-right:2em;width: 20%;">
     
     <?php
    
@@ -173,9 +188,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
         bandera=0;
       }
 
-      if(v_descuento==''){
-        bandera=0;
-      }
+   
 
 
        if(bandera==1){ Guardardescuento('f_descuento','catalogos/descuentos/vi_descuento.php','main','$idmenumodulo');}
@@ -185,9 +198,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
            mensaje+='TITULO es requerido<br>';
           }
 
-          if(v_descuento==''){
-           mensaje+='DESCUENTO es requerido<br>';
-          }
+       
 
           AbrirNotificacion(mensaje,'mdi-close-circle');
        }";
@@ -239,8 +250,176 @@ if(isset($_SESSION['permisos_acciones_erp'])){
         <label>*TITULO:</label>
         <input type="text" class="form-control" id="v_titulo" name="v_titulo" value="<?php echo $titulodes; ?>" title="TITULO" placeholder='TITULO'>
        </div>
+     </div>
+   </div>
+ </div>
 
-       <div class="form-group m-t-20">
+
+<div class="card">
+<div class="card-header" style="margin-top: 1em;">
+      
+        </div>
+      
+
+
+<div class="col-md-12">
+
+      </div>
+  <div class="">
+
+    <div class="col-md-12" style="">
+
+
+   <div class="form-check">
+    <input type="checkbox" id="porparentesco" class="form-check-input " style="top: -0.3em;" onchange="HabilitarParentescos()">
+    <label for="" class="form-check-label">POR PARENTESCO</label>
+
+   </div>
+
+   <div class="form-group divparentescos" style="display: none;">
+
+    <button type="button" class="btn btn-primary" onclick="AgregarMultiplesParentesco()" style="margin-bottom: 1em;margin-top:1em;">AGREGAR OPCIONES</button>
+    <div id="multipleparentesco"></div>
+
+   </div>
+  </div>
+
+  <div class="col-md-6" style="">
+
+   <div class="form-check">
+    
+    <input type="checkbox" id="porniveljerarquico" class="form-check-input" style="top: -0.3em;" onchange="Habilitarniveljerarquico()" >
+    <label for="" class="form-check-label">POR NIVEL JERÁRQUICO</label>
+   </div>
+
+    <div class="form-group divniveljerarquico" style="display: none;">
+          <label for="">APLICAR A:</label>
+
+     <div class="form-check">
+     
+     <input type="checkbox" id="inppadre" class="form-check-input" style="top: -0.3em;" >
+     <label for="" class="form-check-label">NIVEL 1 (el que asocia)</label>
+
+
+    </div>
+
+    <div class="form-check">
+     
+     <input type="checkbox" id="inphijo" class="form-check-input" style="top: -0.3em;" >
+     <label for="" class="form-check-label">NIVEL 2 (los asociados)</label>
+
+
+    </div>
+
+   <div class="form-check">
+    
+    <input type="checkbox" id="inpnieto" class="form-check-input" style="top: -0.3em;" >
+    <label for="" class="form-check-label">NIVEL 3 (los tutorados)</label>
+
+
+   </div>
+
+</div>
+</div>
+
+<div class="col-md-6" style="">
+
+   <div class="form-check">
+    
+
+    <input type="checkbox" id="porclientenoasociado" class="form-check-input" style="top: -0.3em;" onchange="HabilitarClientenoasociado()" >
+    <label for="" class="form-check-label">POR CLIENTE NO ASOCIADO</label>
+   </div>
+
+  </div>
+  <div class="col-md-12" style="">
+
+   <div class="form-group divmultiplesdes" style="display: none;">
+
+    <button type="button" class="btn btn-primary" onclick="AgregarMultiplesPrecios()" style="margin-bottom: 1em;    margin-top: 1em;">AGREGAR OPCIONES</button>
+    <div id="multipleprecios"></div>
+
+   </div>
+
+  </div>
+
+  <div class="col-md-12">
+    <div class="form-check">
+    
+    <input type="checkbox" id="porclientedirecto" class="form-check-input" style="top: -0.3em;" onchange="Habilitarporclientedirecto()" >
+    <label for="" class="form-check-label">POR CLIENTE DIRECTO</label>
+   </div>
+    
+  </div>
+  <div class="col-md-12" style="">
+
+     <div class="">
+  
+    <div class="">
+      <div class="" style="">
+     
+
+                <div class="card-body" id="lclientesdiv" style="display: none; ">
+                <div class="col-md-6" style="padding: 0">
+                    <div class="form-group m-t-20">  
+            <input type="text" class="form-control" name="buscadorcli_?>" id="buscadorcli_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadorcli_','.cli_')">
+            </div>
+          </div>
+                   
+          <div class="col-md-6">
+                      <div class="form-check">
+                        <input type="checkbox" id="v_tclientes"  name="v_tclientes" onchange="HabilitarDeshabilitarCheck('#lclientesdiv')" class="form-check-input " title="" placeholder=''  >
+                        <label for="">SELECCIONAR TODOS</label>
+                      </div>
+              <div class="clientes "  style="overflow:scroll;height:100px;overflow-x: hidden" id="clientes_<?php echo $a_cliente['idusuarios'];?>"> 
+               <?php      
+              if ($r_clientes_num>0) {  
+                  do {
+            ?>
+                  <div class="form-check cli_"  id="cli_<?php echo $a_cliente['idusuarios'];?>_<?php echo $a_cliente['idcliente'];?>">
+                      <?php   
+                      $valor="";
+                     $nombre=mb_strtoupper($f->imprimir_cadena_utf8($a_cliente['nombre']." ".$a_cliente['paterno']." ".$a_cliente['materno']));
+                    ?>
+                    <input  type="checkbox" onchange="ValidaChecked('<?php echo $a_cliente['idusuarios'];?>')" value="" class="form-check-input chkcliente_<?php echo $idcupon;?>" id="inputcli_<?php echo $a_cliente['idusuarios']?>_<?php echo $idcupon;?>" <?php echo $valor; ?>>
+                    <label class="form-check-label" for="flexCheckDefault"><?php echo $nombre; ?></label>
+                </div>                    
+                  <?php
+                    } while ($a_cliente = $db->fetch_assoc($r_clientes));
+                     ?>
+                  <?php } ?>    
+            </div>
+          </div>
+      </div> <!-- lclientesdiv -->
+
+      </div>
+    </div>
+    </div><!--card-CLI-->
+
+       
+     
+
+      
+       
+      </div>
+      
+      
+     
+     </div>
+
+    </div>
+
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="col-md-12">
+  <div class="row">
+
+   <div class="col-md-6" style="">
+
+       <div class="form-group m-t-20" style="display: none;" id="divtipodescuentoglobal">
         <label>*TIPO DE DESCUENTO:</label>
         <select class="form-control" name="v_tipo" id="v_tipo">
 
@@ -253,13 +432,13 @@ if(isset($_SESSION['permisos_acciones_erp'])){
         </select>
        </div>
 
-       <div class="form-group m-t-20">
+       <div class="form-group m-t-20" id="divdescuentoglobal" style="display: none;">
         <label>*DESCUENTO:</label>
         <input type="number" class="form-control" id="v_descuento" name="v_descuento" value="<?php echo $descuento; ?>" title="descuento" placeholder='DESCUENTO'>
        </div>
 
 
-       <div class="form-group">
+       <div class="form-group" style="display: none;">
         <label for="">DIRIGIDO A</label>
         <select name="txtdirigido" id="txtdirigido" class="form-control">
          <option value="0">SERVICIO</option>
@@ -471,7 +650,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
                                 if (count($obtenercat)>0) {
                                  for ($i=0; $i <count($obtenercat) ; $i++) {  ?>
                                        
-                                        <div class="form-check tipo_"  id="tiposervicios_<?php echo $obtenercat[$i]->idcategorias;?>">
+                                        <div class="form-check pasucat_"  id="tiposervicios_<?php echo $obtenercat[$i]->idcategorias;?>">
                                         <?php 
                                      
                                         $valor="";
@@ -553,107 +732,121 @@ if(isset($_SESSION['permisos_acciones_erp'])){
    </div>
 
 
-
-
-<div class="card">
-
-<div class="col-md-12">
+   <div class="col-md-12">
 <div class="card-header" style="margin-top: 1em;">
-			
-				</div>
-			</div>
-	<div class="card-body">
-
-		<div class="col-md-12" style="">
-
-
-   <div class="form-check">
-    <input type="checkbox" id="porparentesco" class="form-check-input " style="top: -0.3em;" onchange="HabilitarParentescos()">
-    <label for="" class="form-check-label">POR PARENTESCO</label>
-
-   </div>
-
-   <div class="form-group divparentescos" style="display: none;">
-
-    <button type="button" class="btn btn-primary" onclick="AgregarMultiplesParentesco()" style="margin-bottom: 1em;margin-top:1em;">AGREGAR OPCIONES</button>
-    <div id="multipleparentesco"></div>
-
-   </div>
-  </div>
-
-  <div class="col-md-6" style="">
-
-   <div class="form-check">
-    
-    <input type="checkbox" id="porniveljerarquico" class="form-check-input" style="top: -0.3em;" onchange="Habilitarniveljerarquico()" >
-    <label for="" class="form-check-label">POR NIVEL JERÁRQUICO</label>
-   </div>
-
-    <div class="form-group divniveljerarquico" style="display: none;">
-    	    <label for="">APLICAR A:</label>
-
-     <div class="form-check">
-     
-     <input type="checkbox" id="inppadre" class="form-check-input" style="top: -0.3em;" >
-     <label for="" class="form-check-label">NIVEL 1 (el que asocia)</label>
-
-
-    </div>
-
-    <div class="form-check">
-     
-     <input type="checkbox" id="inphijo" class="form-check-input" style="top: -0.3em;" >
-     <label for="" class="form-check-label">NIVEL 2 (los asociados)</label>
-
-
-    </div>
-
-   <div class="form-check">
-    
-    <input type="checkbox" id="inpnieto" class="form-check-input" style="top: -0.3em;" >
-    <label for="" class="form-check-label">NIVEL 3 (los tutorados)</label>
-
-
-   </div>
-
-</div>
-</div>
-
-<div class="col-md-6" style="">
-
-   <div class="form-check">
-    
-
-    <input type="checkbox" id="porclientenoasociado" class="form-check-input" style="top: -0.3em;" onchange="HabilitarClientenoasociado()" >
-    <label for="" class="form-check-label">POR CLIENTE NO ASOCIADO</label>
-   </div>
-
-  </div>
-  <div class="col-md-12" style="">
-
-   <div class="form-group divmultiplesdes" style="display: none;">
-
-    <button type="button" class="btn btn-primary" onclick="AgregarMultiplesPrecios()" style="margin-bottom: 1em;    margin-top: 1em;">AGREGAR OPCIONES</button>
-    <div id="multipleprecios"></div>
-
-   </div>
-
-  </div>
-  <div class="col-md-6" style=" margin-left: 1.5em">
-
-
-       
-     
-
       
-       
+        </div>
       </div>
-      
-      
-     
-     </div>
+  <div class="card-body">
+  <div class="col-md-6">
 
+ <div class="form-check">
+    <input type="checkbox" id="caracteristicasdelasociador" class="form-check-input" style="" onchange="HabilitarAsociador()">    
+    <label for="" class="form-check-label" style="    padding-top: 0.3em;">CARACTERÍSTICAS DEL ASOCIADOR</label>
+
+
+   </div>
+ </div>
+
+ <div class="card-body caracteristicas" style="display: none;">
+   <div class="col-md-6" style="">
+    <div class="form-check" >
+     <input type="checkbox" id="portiposervicio2" class="form-check-input " style="top: -0.3em;" onchange="HabilitarPorTipoServicio2()">
+    <label class="form-check-label">  POR TIPO DE SERVICIO</label>
     </div>
+    <div class="divtiposervicio2" style="display: none;">
+      <div class="card-body "  style="padding-left: 0;">
+
+    <label for="">ELEGIR TIPO DE SERVICIOS</label>
+                 <div class="form-group m-t-20">  
+                        <input type="text" class="form-control" name="buscadortipo1_" id="buscadortipo1_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadortipo1_','.pasucat1_')">
+                    </div>
+                    <div class="tiposervicios1"  style="overflow:scroll;height:100px;" id="">
+                        <?php      
+                                
+                                if (count($obtenercat)>0) {
+                                 for ($i=0; $i <count($obtenercat) ; $i++) {  ?>
+                                       
+                                 <div class="form-check pasucat1_"  id="tiposervicios1_<?php echo $obtenercat[$i]->idcategorias;?>">
+                                        <?php 
+                                     
+                                        $valor="";
+                                      
+                                        ?>
+                                        <input  type="checkbox" value="" class="form-check-input chktiposervicio2_" id="inputtiposervicio1_<?php echo $obtenercat[$i]->idcategorias;?>" >
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                       <?php echo $obtenercat[$i]->titulo;?>
+                                      </label>
+                                    </div>                                  
+                                <?php
+                                    }
+
+                                   }
+                                 ?>
+                               
+                                  
+                    </div>
+                   
+                </div>
+              </div>
+                    
+              </div> <!--lpaquetesdiv-->
+           </div>
+
+
+   <div class="card-body caracteristicas" style="display: none;">
+            <div class="col-md-6">
+
+ <div class="form-check">
+    <input type="checkbox" id="porservicio2" class="form-check-input" style="" onchange="HabilitarPorservicio2()">    
+    <label for="" class="form-check-label" style="    padding-top: 0.3em;">POR SERVICIO</label>
+
+
+   </div>
+
+   <div class="card-body divservicio2" style="display: none;padding-left: 0;">
+    <label for="">ELEGIR SERVICIOS</label>
+
+
+                <div class="card-body" id="lpaquetesdiv" style="padding-left: 0;">
+                    <div class="form-group m-t-20">  
+                        <input type="text" class="form-control" name="buscadorpaq_" id="buscadorpaq_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadorpaq_','.pasuc2_')">
+                    </div>
+                    <div class="paquetessucursales"  style="overflow:scroll;height:100px;" id="">
+                        <?php      
+                                
+                                if (count($obtenerserv)>0) {
+                                 for ($i=0; $i <count($obtenerserv) ; $i++) {  ?>
+                                       
+                                        <div class="form-check "  id="pasuc_x_<?php echo $obtenerserv[$i]->idservicio;?>">
+                                        <?php 
+                                     
+                                        $valor="";
+                                      
+                                        ?>
+                                        <input type="checkbox" value="" class="form-check-input chkservicio2_" id="inputserv2_<?php echo $obtenerserv[$i]->idservicio?>" >
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                        <?php echo $obtenerserv[$i]->titulo; 
+                                        ?>
+                                      </label>
+                                    </div>                                  
+                                <?php
+                                    }
+
+                                   }
+                                 ?>
+                               
+                                  
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        </div>
+   </div>
+
+
+
     </div>
    </div>
   </div>
@@ -685,6 +878,12 @@ if(isset($_SESSION['permisos_acciones_erp'])){
   var porclientenoasociado='<?php echo $porclientenoasociado; ?>';
   var txtdiascaducidad='<?php echo $txtdiascaducidad; ?>';
  var modalidaddescuento='<?php echo $modalidaddescuento; ?>';
+ var porclientedirecto='<?php echo $porclientedirecto; ?>';
+var todoclientes='<?php echo $todoclientes; ?>';
+
+var caracteristicasdelasociador='<?php echo $caracteristicasdelasociador; ?>';
+var caracteristicaportiposervicio='<?php echo $caracteristicaportiposervicio; ?>';
+var caracteristicasporservicio='<?php echo $caracteristicasporservicio; ?>';
 
  if (iddescuento>0) {
 
@@ -774,6 +973,47 @@ if(isset($_SESSION['permisos_acciones_erp'])){
     HabilitarClientenoasociado();
     ObtenerClientesnoasociado(iddescuento);
   }
+
+  if(porclientedirecto==1){
+
+    $("#porclientedirecto").prop('checked',true);
+  if (todoclientes==1) {
+    $("#v_tclientes").prop('checked',true);
+
+    HabilitarDeshabilitarCheck();
+   
+  }else{
+
+    ObtenerClientesAsignados(iddescuento);
+  }
+   Habilitarporclientedirecto();
+
+}
+
+
+
+if(caracteristicasdelasociador==1){
+  $("#caracteristicasdelasociador").prop('checked',true);
+  HabilitarAsociador();
+
+  alert('a');
+  if (caracteristicaportiposervicio==1) {
+
+    $("#portiposervicio2").prop('checked',true);
+    HabilitarPorTipoServicio2();
+    ObtenerCaracteriscasTiposervicioAsociador(iddescuento);
+  }
+
+  if (caracteristicasporservicio==1) {
+     $("#porservicio2").prop('checked',true);
+     HabilitarPorservicio2();
+     ObtenerCaracteristicasServicioAsociador(iddescuento);
+   
+  }
+
+
+}
+
 
 
 

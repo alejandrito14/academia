@@ -187,6 +187,28 @@ class CodigoPostal
 		return $array;
 	}
 
+	public function ObtenerColonias2($codigo,$cestado,$cmunicipio,$asenta)
+	{
+		$sql = "SELECT  * from codigopostal WHERE codigo=".$codigo." AND  c_estado=".$cestado." AND c_municipio=".$cmunicipio." ORDER BY tipo_asenta,asenta";
+
+	
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+
 
 }
 ?>

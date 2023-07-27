@@ -48,6 +48,7 @@ if(!isset($_GET['idmembresia'])){
 	$depende = "0";
 	$empresa="";
 	$estatus =1;
+	$costoinscripcion=0;
 	//$descripcion="";
 		$ruta="images/sinfoto.png";
 
@@ -85,11 +86,13 @@ if(!isset($_GET['idmembresia'])){
 	$orden = $f->imprimir_cadena_utf8($result_membresia_row['orden']);
 	$estatus = $f->imprimir_cadena_utf8($result_membresia_row['estatus']);
 	$costo=$result_membresia_row['costo'];
+	$costoinscripcion=$result_membresia_row['costoinscripcion'];
 	$duracion=$result_membresia_row['cantidaddias'];
 	$limite=$result_membresia_row['tiempodepago'];
 	$descripcion=$result_membresia_row['descripcion'];
 	$porcategoria=$result_membresia_row['porcategoria'];
 	$porservicio=$result_membresia_row['porservicio'];
+	$porhorario=$result_membresia_row['porhorario'];
 	$color=$result_membresia_row['color'];
 	$depende=$result_membresia_row['depende'];
 	$membresiadepende=$result_membresia_row['idmembresiadepende'];
@@ -97,6 +100,11 @@ if(!isset($_GET['idmembresia'])){
 	$inphijo=$result_membresia_row['inphijo'];
 	$inpnieto=$result_membresia_row['inpnieto'];
 	$v_limitemembresia=$result_membresia_row['limite'];
+	$repetir=$result_membresia_row['repetir'];
+	$fecha=$result_membresia_row['fecha'];
+	$tipodescuentoporhorario=$result_membresia_row['tipodescuentoporhorario'];
+	$montoporhorario=$result_membresia_row['montoporhorario'];
+
 	
 	$ruta='';
 	if($foto==""){
@@ -237,6 +245,12 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<textarea name="v_descripcion" id="v_descripcion" cols="20" rows="4" class="form-control" title="DESCRIPCIÓN" placeholder='DESCRIPCIÓN'><?php echo $descripcion ?></textarea>
 							</div>
 
+								<div class="form-group m-t-20">
+								<label for="">*COSTO DE INSCRIPCIÓN $</label>
+								<input type="number" id="v_costoinscripcion" class="form-control" value="<?php echo $costoinscripcion; ?>" placeholder="COSTO DE INSCRIPCIÓN" title="COSTO DE INSCRIPCIÓN">
+
+							</div>
+
 
 							<div class="form-group m-t-20">
 								<label for="">*COSTO $</label>
@@ -244,21 +258,35 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 							</div>
 
+								<div class="form-group m-t-20" style="display: none;">
+								<label for="">*FECHA</label>
+								<input type="date" id="v_fecha" class="form-control" value="<?php echo $fecha; ?>" placeholder="COSTO" title="COSTO" >
 
-							<div class="form-group m-t-20">
+							</div>
+
+
+
+
+							<div class="form-group m-t-20" style="display: none;">
 								<label for="">*TIEMPO EN QUE APLICA (días)</label>
 								<input type="number" id="v_duracion" class="form-control" value="<?php echo $duracion; ?>" placeholder="TIEMPO EN QUE APLICA (días)" title="TIEMPO EN QUE APLICA (días)">
 
 							</div>
 
+									<div class="form-group m-t-20" style="display: none;">
+								<label for="">*CANTIDAD DE VECES A REPETIR </label>
+								<input type="text" id="v_repetir" class="form-control" value="<?php echo $repetir; ?>" placeholder="CANTIDAD DE VECES A REPETIR" title="CANTIDAD DE VECES A REPETIR">
+
+							</div>
+
 							
-							<div class="form-group m-t-20">
+							<div class="form-group m-t-20" style="display: none;">
 								<label for="">*LÍMITE DE PAGO DESPUES DE LA FECHA (días)</label>
 								<input type="number" id="v_limite" class="form-control" value="<?php echo $limite; ?>" placeholder="LÍMITE " title="LÍMITE ">
 
 							</div>
 
-							<div class="form-group m-t-20">
+							<div class="form-group m-t-20" >
 								<label for="">*COLOR</label>
 								<input type="color" id="v_color" class="form-control" name="v_color" value="<?php echo $color; ?>" placeholder="COLOR" title="COLOR"> 
 							</div>
@@ -281,6 +309,9 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							<option value="0"> Seleccionar membresía</option> 
 							</select>
 						</div>
+
+
+
 
 			<div class="divmembresia" style="display: none;">
 				
@@ -375,6 +406,70 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							</div>
 								
 							<div id="tiposervicios"></div>
+
+
+
+									<div class="card" style="" id="divhorarios">
+				<div class="" style="margin-top: 10px;" >
+
+				</div>
+				<div class="card-body">
+						<div style="margin-top: 3em">
+
+							<div class="row">
+								<div class="col-md-12">
+									<div class="form-check" style="margin-bottom: 1em;">
+                    
+					       <input type="checkbox" class="form-check-input " name="v_horarioseleccion" value="1" id="v_horarioseleccion" onclick="Desplegarhorarioselecciona()" style="top: -0.3em;" />
+					            <label class="form-check-label">POR HORARIO</label>
+					       </div>
+								
+									
+								</div>
+								<div class="col-md-3">
+										
+									</div>
+							</div>
+						<div class="divhorarios" style="display: none;">
+
+
+
+							<div class="row">
+								<div class="col-md-12" style="display: none;">
+									<div class="col-md-6">
+									<label>DESCUENTO:</label>
+										<div class="form-group mb-2" style="">
+											<select class=" form-control " id="v_porhorariodescuento" tabindex="">
+												<option value="0" >SELECCIONAR TIPO</option>
+												<option value="1" >MONTO</option>
+												<option value="2" >PORCENTAJE</option>
+											
+
+											</select>
+										</div>
+
+											<label>MONTO:</label>
+											<div class="form-group mb-2" style="">
+												<input type="text" id="v_porhorariomonto" class="form-control">
+											</div>
+
+										</div>
+								</div>
+								<div class="col-md-12">
+
+									<button class="btn btn-primary" type="button" style=" float: right;   margin-top: -1em;" onclick="AgregarHorarioNuevo()">NUEVO HORARIO</button>
+								</div>
+								
+							</div>
+								
+							<div id="horarios"></div>
+						</div>
+
+
+
+					</div>
+				</div>
+			</div>
 						</div>
 
 
@@ -424,6 +519,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				</div>
 			</div>
 
+
+				
+
+
 			</div>
 		</div>
 
@@ -437,16 +536,20 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 	var idmembresia='<?php echo $idmembresia; ?>';
 	var porcategoria='<?php echo $porcategoria; ?>';
 	var porservicio='<?php echo $porservicio; ?>';
+		var porhorario='<?php echo $porhorario; ?>';
 	var depende='<?php echo $depende; ?>';
 	var membresiadepende='<?php echo $membresiadepende; ?>';
 	var inppadre='<?php echo $inppadre; ?>';
 	var inphijo='<?php echo $inphijo; ?>';
 	var inpnieto='<?php echo $inpnieto; ?>';
+	var tipodescuentoporhorario='<?php echo $tipodescuentoporhorario;?>';
+	var montoporhorario='<?php echo $montoporhorario;?>';
 
 	if (idmembresia>0) {
 
 		ObtenerServiciosMembresia(idmembresia);
 		ObtenerCategoriasMembresia(idmembresia);
+		ObtenerHorariosMembresia(idmembresia);
 		if (porservicio==1) {
 			$("#v_servicio").attr('checked',true);
 			Desplegarporservicio();
@@ -454,6 +557,11 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		if (porcategoria==1) {
 			$("#v_tiposervicio").attr('checked',true);
 			Desplegartiposervicio();
+		}
+		if (porhorario==1) {
+		 $("#v_horarioseleccion").attr('checked',true);
+		 Desplegarhorarioselecciona();
+
 		}
 		if (depende==1) {
 			$("#dependede").prop('checked',true);
@@ -472,6 +580,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 		$("#inpnieto").prop('checked',true);
 		}
+
+		$("#v_porhorariodescuento").val(tipodescuentoporhorario);
+		$("#v_porhorariomonto").val(montoporhorario);
+
 		
 	}
 			 

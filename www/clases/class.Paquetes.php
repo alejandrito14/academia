@@ -43,6 +43,10 @@ class Paquetes
 	public $idcategoriapaquete;
 	public $idsucursal;
 	public $tiempoestimado;
+	public $sku;
+	public $inventario;
+	public $mostrarenapp;
+	public $preciosugerido;
 
 
 	public function obtenerFiltro()
@@ -56,8 +60,8 @@ class Paquetes
 			categoriapaquete.idcategoriapaquete,
 			categoriapaquete.nombre as titulo,
 			paquetes.promocion,
-			preciopaquete.precio AS precioventa,
-			precio.principal,
+			paquetes.preciosugerido AS precioventa,
+			
 			paquetes.orden,
 			paquetes.fechainicial,
 			paquetes.fechafinal,
@@ -81,11 +85,7 @@ class Paquetes
 			LEFT JOIN categoriapaquete
 			ON paquetes.idcategoriapaquete = categoriapaquete.idcategoriapaquete 
 			
-			JOIN preciopaquete
-			ON paquetes.idpaquete = preciopaquete.idpaquete 
-			JOIN precio
-			ON precio.idprecio = preciopaquete.idprecio
-			WHERE  precio.principal=1
+			
 
 
 			";
@@ -99,7 +99,7 @@ class Paquetes
 	{
 
 //$this->db->real_escape_string(
-		$query = "INSERT INTO paquetes (nombrepaquete,descripcion,estatus,idcategorias,promocion,definirfecha,fechainicial,fechafinal,cantidad,considerar,aplicardirecto,servicio,repetitivo,lunes,martes,miercoles,jueves,viernes,sabado,domingo,preciofijo,horainicialpromo,horafinalpromo,orden,activarcomentario,mensaje,siniva,iva,idcategoriapaquete,intervaloservicio) VALUES ('".$this->db->real_escape_string($this->nombre)."','".$this->db->real_escape_string($this->descripcion)."','$this->estatus','0','$this->conpromo','$this->confecha','$this->fechainicial','$this->fechafinal','$this->cantidadcobrar','$this->cantidadaconsiderar','$this->directo','$this->servicio',$this->repetitivo,$this->lunes,$this->martes,$this->miercoles,$this->jueves,$this->viernes,$this->sabado,$this->domingo,$this->preciofijo,'$this->horainicio','$this->horafin','$this->orden','$this->activarcomentario','$this->mensajev','$this->siniva','$this->iva','$this->idcategoriapaquete','$this->tiempoestimado')";
+		$query = "INSERT INTO paquetes (nombrepaquete,descripcion,estatus,idcategorias,promocion,definirfecha,fechainicial,fechafinal,cantidad,considerar,aplicardirecto,servicio,repetitivo,lunes,martes,miercoles,jueves,viernes,sabado,domingo,preciofijo,horainicialpromo,horafinalpromo,orden,activarcomentario,mensaje,siniva,iva,idcategoriapaquete,intervaloservicio,sku,inventario,mostrarenapp,preciosugerido) VALUES ('".$this->db->real_escape_string($this->nombre)."','".$this->db->real_escape_string($this->descripcion)."','$this->estatus','0','$this->conpromo','$this->confecha','$this->fechainicial','$this->fechafinal','$this->cantidadcobrar','$this->cantidadaconsiderar','$this->directo','$this->servicio',$this->repetitivo,$this->lunes,$this->martes,$this->miercoles,$this->jueves,$this->viernes,$this->sabado,$this->domingo,$this->preciofijo,'$this->horainicio','$this->horafin','$this->orden','$this->activarcomentario','$this->mensajev','$this->siniva','$this->iva','$this->idcategoriapaquete','$this->tiempoestimado','$this->sku','$this->inventario','$this->mostrarenapp','$this->preciosugerido')";
 
 		
 		$this->db->consulta($query);
@@ -139,7 +139,11 @@ class Paquetes
 			siniva='$this->siniva',
 			iva='$this->iva',
 			idcategoriapaquete='$this->idcategoriapaquete',
-			intervaloservicio='$this->tiempoestimado'
+			intervaloservicio='$this->tiempoestimado',
+			sku='$this->sku',
+			inventario='$this->inventario',
+			mostrarenapp='$this->mostrarenapp',
+			preciosugerido='$this->preciosugerido'
 			WHERE idpaquete = '$this->idpaquete' ";
 
 			
@@ -682,8 +686,7 @@ class Paquetes
 			categoriapaquete.idcategoriapaquete,
 			categoriapaquete.nombre as titulo,
 			paquetes.promocion,
-			preciopaquete.precio AS precioventa,
-			precio.principal,
+			paquetes.preciosugerido AS precioventa,
 			paquetes.orden,
 			paquetes.fechainicial,
 			paquetes.fechafinal,
@@ -707,14 +710,95 @@ class Paquetes
 			LEFT JOIN categoriapaquete
 			ON paquetes.idcategoriapaquete = categoriapaquete.idcategoriapaquete 
 			
-			JOIN preciopaquete
-			ON paquetes.idpaquete = preciopaquete.idpaquete 
-			JOIN precio
-			ON precio.idprecio = preciopaquete.idprecio
-			WHERE  precio.principal=1 and nombrepaquete like '%".$valor."%'
+			
+			
+			WHERE  1=1 and nombrepaquete like '%".$valor."%'
 
 
 			";
+		$resp = $this->db->consulta($query);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+
+
+
+	public function ObtenerDatosPaquete()
+	{
+	$query = "SELECT
+			paquetes.idpaquete,
+			paquetes.nombrepaquete,
+			paquetes.descripcion,
+			paquetes.foto,
+			paquetes.estatus,
+			categoriapaquete.idcategoriapaquete,
+			categoriapaquete.nombre as titulo,
+			paquetes.promocion,
+			paquetes.preciosugerido AS precioventa,
+			paquetes.orden,
+			paquetes.fechainicial,
+			paquetes.fechafinal,
+			paquetes.aplicardirecto,
+			paquetes.cantidad,
+			paquetes.considerar,
+			paquetes.definirfecha,
+			paquetes.lunes,
+			paquetes.martes,
+			paquetes.miercoles,
+			paquetes.jueves,
+			paquetes.viernes,
+			paquetes.sabado,
+			paquetes.domingo,
+			paquetes.repetitivo,
+			paquetes.preciofijo,
+			paquetes.horainicialpromo,
+			paquetes.horafinalpromo
+			FROM
+			paquetes
+			LEFT JOIN categoriapaquete
+			ON paquetes.idcategoriapaquete = categoriapaquete.idcategoriapaquete 
+			
+			
+			
+			WHERE idpaquete='$this->idpaquete'
+
+
+			";
+		$resp = $this->db->consulta($query);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+
+
+	public function ValidarSkupaquetes()
+	{
+		$query="SELECT * FROM paquetes 
+		WHERE 
+		paquetes.sku='$this->sku'";
 		
 		$resp = $this->db->consulta($query);
 		$cont = $this->db->num_rows($resp);
@@ -733,6 +817,30 @@ class Paquetes
 		return $array;
 	}
 
+	public function ValidarIdSkupaquetes()
+	{
+		$query="SELECT * FROM paquetes 
+		WHERE 
+		paquetes.sku='$this->sku' AND 
+		paquetes.idpaquete='$this->idpaquete'";
+
+
+		$resp = $this->db->consulta($query);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
 
 	
 }

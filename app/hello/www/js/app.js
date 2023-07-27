@@ -88,7 +88,7 @@ var app = new Framework7({
 
  var pictureSource;   // picture source
  var destinationType; 
- var produccion = 1;
+ var produccion = 0;
 
 var codigoservicio="0";
 $(document).ready(function() {
@@ -100,8 +100,6 @@ $(document).ready(function() {
       codigoservicio='109';
     }
 
-
-   
 
     window.isphone = false;
     if(document.URL.indexOf("http://") === -1 
@@ -138,7 +136,7 @@ $(document).ready(function() {
 
 var lhost = "localhost:8888";
 var rhost = "issoftware1.com.mx";
-var version='1.0.27';
+var version='1.0.30';
 
 localStorage.setItem('versionapp',version);
 var abrir=0;
@@ -168,8 +166,11 @@ var puertosockect=localStorage.getItem('puertosocket');
 function Cargar() {
 
 //  ObtenerServidor(codigoservicio);
- 
-    var datos="clave=issoftware"+"&codservicio="+codigoservicio;
+  var rutaserver="";
+var puertosockect="";
+var carpetaapp="";
+   
+   var datos="clave=issoftware"+"&codservicio="+codigoservicio;
   $.ajax({
     type: 'POST',
     dataType: 'json',
@@ -179,9 +180,7 @@ function Cargar() {
     data:datos,
     async:false,
     success: function(resp){
-var rutaserver="";
-var puertosockect="";
-var carpetaapp="";
+
       if (resp.vigente==1) {
         var servidor=resp.datosservidor.urlapp;
         var puertosocket=resp.datosservidor.puertosocket;
@@ -324,6 +323,112 @@ var carpetaapp="";
             if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
                 //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
           console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+
+          var servidor='issoftware1.com.mx';
+          var puertosocket='3000';
+
+          localStorage.setItem('servidor',servidor);
+          localStorage.setItem('puertosocket',puertosocket);
+
+          rutaserver='https://issoftware1.com.mx';
+          puertosockect='3000';
+          carpetaapp='appwoolis';
+
+
+          codigoserv=codigoservicio+"/";
+          urlphp = rutaserver+"/IS-ACADEMIA/app/"+carpetaapp+"/php/";
+          urlimagenes = rutaserver+"/IS-ACADEMIA/catalogos/"; 
+        
+          urlimagendefault=rutaserver+"/IS-ACADEMIA/images/sinfoto.png"
+          urlimagenlogo=rutaserver+"/IS-ACADEMIA/images/sinimagenlogo.png";
+          urlimagendefaultservicio=rutaserver+"/IS-ACADEMIA/images/sin-servicio.jpg"
+
+          imagenesbancos=rutaserver+"/IS-ACADEMIA/assets/images/";
+          globalsockect=rutaserver+":"+puertosockect+"/";
+
+
+           getConfiguracion();
+          localStorage.setItem("SO", "web");
+
+          localStorage.setItem('rutaine',0);
+          localStorage.setItem('validacion',0);
+
+          localStorage.setItem('confecha',0);
+          localStorage.setItem('condirecionentrega',0);
+          localStorage.setItem('idtipodepago',0);
+          localStorage.setItem('llevafoto',0);
+          localStorage.setItem('rutacomprobante','');
+          localStorage.setItem('idopcionespedido',0);
+          localStorage.setItem('iddireccion',0);
+          localStorage.setItem('factura',0);
+          localStorage.setItem('montocliente','');
+          localStorage.setItem('asenta','');
+          localStorage.setItem('datosbuscar6','');
+          localStorage.setItem('datosbuscar3','');
+          localStorage.setItem('nuevadireccion',1);
+          localStorage.setItem('comentarioimagenes','');
+          localStorage.setItem('habilitarsumaenvio',0);
+          localStorage.setItem('idfacturacion','');
+          localStorage.setItem('codigocupon','');
+          localStorage.setItem('idcupon',0);
+          localStorage.setItem('costoenvio',0);
+          localStorage.setItem('idclientes_envios','');
+          localStorage.setItem('observacionpedido','');
+          localStorage.setItem('idusuarios_envios','');
+
+          localStorage.setItem('montodescontado','');
+          localStorage.setItem('datostarjeta','');
+          localStorage.setItem('adelante',1);
+          localStorage.setItem('idtutorado','');
+          localStorage.setItem('cont',-1);
+          localStorage.setItem('valor','');
+          localStorage.setItem('avatar','');
+        if(localStorage.getItem('iduserrespaldo')!=undefined && localStorage.getItem('iduserrespaldo')!=null)
+          {
+            var iduserrespaldo=localStorage.getItem('iduserrespaldo');
+            localStorage.setItem('id_user',iduserrespaldo);
+            localStorage.removeItem('iduserrespaldo');
+
+          }
+
+         var uid='000';
+         localStorage.setItem("UUID",uid);
+        if (device1.ios) {
+          localStorage.setItem("SO", "ios");
+          var uid= device.uuid;
+
+      
+        localStorage.setItem("UUID",uid);
+        }
+    if (device1.android) {
+          localStorage.setItem("SO", "android");
+
+            var uid= device.uuid;
+          localStorage.setItem("UUID",uid);
+        }
+
+        if (device1.desktop) { 
+
+          localStorage.setItem("SO", "desktop");
+        }
+        
+         var p1 = new Promise(function(resolve, reject) {
+            resolve(getToken());
+           
+          });
+
+          p1.then(function(value) {
+                var tokenfirebase=localStorage.getItem('tokenfirebase');
+             
+           ObtenerConfiVersion();     
+           GuardarTokenBase(0); 
+
+          }, function(reason) {
+          console.log(reason); // Error!
+        });
+  
+
+
       }
 
     });
@@ -2076,20 +2181,27 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
   $$(".btncupon").attr('onclick','AbrirModalcupon()');
  
   var listado=JSON.parse(localStorage.getItem('pagos'));
-  console.log(listado);
+  
   var html="";
   var tipopago='';
+  var habilitarmonedero=1;
   for (var i = 0; i < listado.length; i++) {
       if (listado[i].tipopago!='' && listado[i].tipopago!=null) {
 
          tipopago=listado[i].tipopago;
+
+      }
+
+      if (listado[i].habilitarmonedero!=1) {
+
+        $(".btnmonedero").css('display','none');
       }
    
   }
  
  if (tipopago!='' && tipopago!=undefined) {
  
-  
+   
   CargartipopagoSeleccionado(tipopago).then(r => {
 
    // $("#tipopago").val(tipopago);

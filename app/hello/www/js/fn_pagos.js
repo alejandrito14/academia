@@ -73,10 +73,11 @@ function VerListadoPago() {
 
 
 function ObtenerTodosPagos() {
+
 	var pagina = "ObtenerTodosPagos.php";
 	var id_user=localStorage.getItem('id_user');
 	var datos="id_user="+id_user;
-	$.ajax({
+	$.ajax({ 
 		type: 'POST',
 		dataType: 'json',
 		url: urlphp+pagina,
@@ -102,6 +103,7 @@ function ObtenerTodosPagos() {
 }
 function Pintarpagos(pagos) {
 	
+ 
 	if (pagos.length>0) {
 		var html="";
 		html+=`
@@ -180,6 +182,7 @@ function Pintarpagos(pagos) {
                       html+=`
 
                         <input type="hidden" id="tipo_`+pagos[i].idpago+`" value="`+pagos[i].tipo+`"  />
+                        <input type="hidden" id="habilitarmonedero_`+pagos[i].idpago+`" value="`+pagos[i].habilitarmonedero+`"  />
 
                         <input type="hidden" id="servicio_`+pagos[i].idpago+`" value="`+pagos[i].idservicio+`"  />
                         <input type="hidden" id="fechainicial_`+pagos[i].idpago+`" value="`+pagos[i].fechainicial+`"  />
@@ -303,7 +306,7 @@ function HabilitarBotonPago() {
            }
 
           tipopago=$("#tipopago_"+dividir).val();
-         
+         var habilitarmonedero=$("#habilitarmonedero_"+dividir).val();
 		 	contar++;
       console.log(contar)
 		 	var objeto={
@@ -315,7 +318,8 @@ function HabilitarBotonPago() {
         fechainicial:fechainicial,
         fechafinal:fechafinal,
         usuario:usuario,
-        tipopago:tipopago
+        tipopago:tipopago,
+        habilitarmonedero:habilitarmonedero
 		 	};
 		 	pagosarealizar.push(objeto);
 
@@ -770,6 +774,18 @@ function CalcularTotales() {
    
         $(".divtipopago").css('display','none');
         $(".preguntafactura").css('display','none');
+
+    }
+      var restatotaldes=parseFloat(sumatotal)-parseFloat(descuentocupon)-parseFloat(totaldescuentos);
+
+    if (monedero==restatotaldes) {
+
+      localStorage.setItem('idtipodepago',0);
+
+    }
+    if (restatotaldes==0) {
+
+      localStorage.setItem('idtipodepago',100);
 
     }
 
@@ -1704,7 +1720,7 @@ function RealizarCargo() {
      var mensaje='';
      var pedido='';
      var informacion='';
-   var pagina = "RealizarPago5.php";
+   var pagina = "RealizarPago6.php";
    var iduser=localStorage.getItem('id_user');
    var constripe=localStorage.getItem('constripe');
    var idtipodepago=localStorage.getItem('idtipodepago');
@@ -2007,7 +2023,6 @@ var promesa= new Promise(function(resolve, reject) {
     
       var resultado=res.descuentos;
       descuentosaplicados=[];
-      localStorage.setItem('idtipodepago',100);
       PintarDescuentos(resultado);
        
       resolve(resultado);

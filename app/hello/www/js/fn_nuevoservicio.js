@@ -4675,6 +4675,7 @@ function QuitarFechaHoraZona(idzona) {
 
 
 function VerificarPermisoUsuario() {
+	
 var pagina = "Obtenerdatospersonales.php";
 	var id_user=localStorage.getItem('id_user');
 	var datos="id_user="+id_user;
@@ -4691,11 +4692,12 @@ var pagina = "Obtenerdatospersonales.php";
 			if (resp==1) {
   $("#btnaplicar").attr('onclick','AplicarFechas()');
   $(".contadorhorarios").css('display','block');
-
-			}else{
+  $(".divseleccionarhorarios").css('display','block');
+		 	}else{
 
   $("#btnaplicar").attr('onclick','AplicarSeleccion()');
   $(".contadorhorarios").css('display','none');
+  $(".divseleccionarhorarios").css('display','none');
 
 			}
 

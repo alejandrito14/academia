@@ -214,8 +214,11 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 
 		   	<th style="width: 20%;">DESCUENTO</th>
 		   	<th style="width: 20%;">TOTAL</th>
+		   <!-- 	<th style="width: 20%;">MONTO MONEDERO</th>
+
+		   	<th style="width: 20%;">MONTO TIPO DE PAGO</th> -->
 			<th style="width: 20%;">TIPO DE PAGO</th>
-		   	<th style="width: 20%;">CUENTA DE PAGO</th>
+		   	
 		   	<th style=""> FECHA DE VALIDACIÓN DE PAGO</th>
 
 
@@ -259,6 +262,11 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 						
 
 		 				$total=$obtenerdescripcionnota[$j]->monto-$descuento;
+
+		 				$monederot=$array[$k]->montomonedero!=0?$array[$k]->montomonedero:0;
+
+		 				$totaltipopago=$total-$monederot;
+
 		 				$objeto=array(
 		 					'folioticket'=>$array[$k]->folio,
 		 					'fechahora'=>$array[$k]->fecha,
@@ -274,6 +282,8 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 		 					'descuento'=>number_format($descuento,2, '.', ','),
 		 					'total'=>$total,
 		 					'tipopago'=>$array[$k]->tipopago,
+		 					'montomonedero'=>$array[$k]->montomonedero,
+		 					'totaltipopago'=>$totaltipopago,
 		 					'cuenta'=>''
 
 		 				);
@@ -302,8 +312,11 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 							
 							<td>$<?php echo $arraynotas[$n]['descuento']; ?></td>
 							<td>$<?php echo $arraynotas[$n]['total']; ?></td>
+
+							<!-- <td>$<?php echo $arraynotas[$n]['montomonedero']; ?></td>
+							<td>$<?php echo $arraynotas[$n]['totaltipopago']; ?></td> -->
 							<td><?php echo $arraynotas[$n]['tipopago']; ?></td>
-							<td><?php echo $arraynotas[$n]['cuenta']; ?></td>
+							
 							
 							<td><?php
 

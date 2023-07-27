@@ -25,7 +25,7 @@ class Grupos
 		$sql = "SELECT * FROM grupo WHERE estatus = 1 ";
 		$sql .= ($busqueda != '') ? " AND nombregrupo LIKE '%{$busqueda}%' ":" ";
 
-
+		
 		$resp = $this->db->consulta($sql);
 		return $resp;
 	}

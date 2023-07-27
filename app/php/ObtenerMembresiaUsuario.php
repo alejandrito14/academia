@@ -37,6 +37,7 @@ for ($i=0; $i <count($pagoselegidos) ; $i++) {
 		$idmembresia=$obtenermembresiausuario[0]->idmembresia;
 		$membresias->idmembresia=$idmembresia;
 		$obtenerdatosmembresia=$membresias->ObtenerMembresia();
+
 		$porcategoria=$obtenerdatosmembresia[0]->porcategoria;
 		$porservicio=$obtenerdatosmembresia[0]->porservicio;
 		$porhorario=$obtenerdatosmembresia[0]->porhorario;
@@ -98,9 +99,11 @@ for ($i=0; $i <count($pagoselegidos) ; $i++) {
 				$datosservicio=$servicios->ObtenerServicio();
 
 				$idcategoriatipo=$datosservicio[0]->idcategoriaservicio;
-
+				
 					if ($porcategoria==1) {
 						$descuentoporcategoria=array();
+						$categoriaencontrada="";
+						$catencontrada=0;
 
 						for ($j=0; $j < count($obtenercategoriamembresia); $j++) { 
 							
@@ -110,33 +113,15 @@ for ($i=0; $i <count($pagoselegidos) ; $i++) {
 								$obtenercategoriamembresia[$j]->idpago=$idpago;
 								$obtenercategoriamembresia[$j]->montopago=$montopago;
 									
-
-								array_push($descuentosmembresia,$obtenercategoriamembresia[$j]);
+									//	array_push($descuentosmembresia,$obtenercategoriamembresia[$j]);
+										$categoriaencontrada=$obtenercategoriamembresia[$j];
+							$catencontrada=1;
 								break;
 								}
 							}
-						
 
-						}
-
-						if ($porservicio==1) {
-
-							for ($k=0; $k <count($obtenerserviciomembresia) ; $k++) { 
-							
-						if ($obtenerserviciomembresia[$k]->idservicio==$idservicio) {
-								
-								$obtenerserviciomembresia[$k]->idpago=$idpago;
-								$obtenerserviciomembresia[$k]->montopago=$montopago;
-								
-								array_push($descuentosmembresia,$obtenerserviciomembresia[$k]);
-								break;
-								}
-
-							}
-							
-						}
-
-						if ($porhorario==1) {
+							if ($catencontrada==1) {
+									if ($porhorario==1) {
 
 							
 							$encontrado=0;
@@ -165,22 +150,49 @@ for ($i=0; $i <count($pagoselegidos) ; $i++) {
 
 							if ($encontrado>0) {
 
-								$objeto = (object) [
+							/*	$objeto = (object) [
 								    'idmembresia' => $idmembresia,
 								    'monto' => $montoporhorario,
 								    'descuento'=>$tipodescuentoporhorario,
 								    'idpago'=>$idpago,
 								    'montopago'=>$montopago
 								];
-
+*/
 
 			
-
-								array_push($descuentosmembresia,$objeto);
+										array_push($descuentosmembresia,$categoriaencontrada);
+							//	array_push($descuentosmembresia,$objeto);
 							}
 							
 
+								}else{
+
+											array_push($descuentosmembresia,$categoriaencontrada);
+								}
+							}
+									
+						
+
 						}
+
+						if ($porservicio==1) {
+
+							for ($k=0; $k <count($obtenerserviciomembresia) ; $k++) { 
+							
+						if ($obtenerserviciomembresia[$k]->idservicio==$idservicio) {
+								
+								$obtenerserviciomembresia[$k]->idpago=$idpago;
+								$obtenerserviciomembresia[$k]->montopago=$montopago;
+								
+								array_push($descuentosmembresia,$obtenerserviciomembresia[$k]);
+								break;
+								}
+
+							}
+							
+						}
+
+					
 
 
 				

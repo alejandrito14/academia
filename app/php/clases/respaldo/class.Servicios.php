@@ -1095,7 +1095,9 @@ public function Eliminardeencuestas()
 			categorias.descripcion AS descripcioncategoria,
 			servicios.numeroparticipantesmax
 		FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio WHERE 
-			categorias.avanzado IN(0,1) AND servicios.estatus IN (0) ";
+			  servicios.estatus=0 and categorias.avanzado IN(0,1) ";
+
+
 
 			if($serviciosasignados!=''){
 
@@ -1104,7 +1106,9 @@ public function Eliminardeencuestas()
 			}
 
 
+	$sql.=" GROUP BY servicios.idservicio";
 			$sql.=" ORDER BY servicios.fechacreacion asc";
+
 			
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -1117,9 +1121,14 @@ public function Eliminardeencuestas()
 			while ($objeto=$this->db->fetch_object($resp)) {
 
 				$fechaactual=date('Y-m-d');
+				$fechafiltro=date("Y-m-d",strtotime($fechaactual."- 15 days")); 
 
-
-				$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
+				$sql1="SELECT
+						* 
+					FROM
+						( SELECT MAX( fecha ) AS fechamax, MIN( fecha ) AS fechamin FROM horariosservicio where idservicio = $objeto->idservicio ) AS TABLA 
+					  where TABLA.fechamax>='$fechafiltro'";
+					
 				$resphorarios=$this->db->consulta($sql1);
 
 				$conta = $this->db->num_rows($resphorarios);

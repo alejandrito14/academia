@@ -1003,6 +1003,39 @@ class Usuarios
     }
 
 
+    public function ObtenerUsuarioDatosFiscal()
+	{
+		$sql="SELECT
+				usuarios_datosfiscales.*,
+				estados.nombre as nombreestado,
+				pais.pais as nombrepais,
+				municipios.nombre AS nombremunicipio
+				FROM
+				usuarios_datosfiscales
+				JOIN pais
+				ON usuarios_datosfiscales.pais = pais.idpais 
+				JOIN municipios
+				ON usuarios_datosfiscales.municipio = municipios.id 
+				JOIN estados
+				ON usuarios_datosfiscales.estado = estados.id
+		 WHERE usuarios_datosfiscales.idusuarios='$this->id_usuario'";
+        $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+	}
 
 }
 

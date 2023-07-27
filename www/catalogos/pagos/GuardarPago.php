@@ -29,7 +29,7 @@ require_once("../../clases/class.Funciones.php");
 	$pagos->db=$db;
 
 	$pagos->idpago=$_POST['idpago'];
-	$pagos->idusuarios=$_POST['idusuario'];
+	$pagos->idusuarios=$se->obtenerSesion('usuariopago');
 	$pagos->idservicio=$_POST['idservicio'];
 	$pagos->idmembresia=$_POST['idmembresia'];
 	$pagos->monto=$_POST['monto'];

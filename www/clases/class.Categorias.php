@@ -248,7 +248,7 @@ class Categorias
 	public function ObtenerCategoriasEstatus($estatus)
 	{
 		
-		$sql="SELECT *FROM categorias WHERE estatus=".$estatus."";
+		$sql="SELECT *FROM categorias WHERE estatus IN(".$estatus.")";
 
 	
 

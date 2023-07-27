@@ -217,6 +217,15 @@ input[type=number] { -moz-appearance:textfield; }
     font-size: 12px;
     color: white!important;
 }
+.notadeclinado{
+
+   background:#ee5d36;
+    border-radius: 10px;
+    padding: 3px;
+    font-size: 12px;
+    color: white!important;
+    
+}
 
 .campoborderequerido{
 
@@ -249,7 +258,20 @@ input[type=number] { -moz-appearance:textfield; }
       color: #e1e1e1;
   }
 
-  .tabs > button.active{background: blue!important;}
+  .tabs > button.active{
+        background: white!important;
+    border: 1px solid #d2d1db;
+    color: #4F5467;
+
+  }
+   .boton1 {
+    padding: 10px 20px;
+    background: #e5e5ea;
+    border: none;
+   
+    color: #9c9c9c;
+     cursor: pointer;
+  }
 
 
 .material-switch > input[type="checkbox"] {
@@ -306,4 +328,18 @@ input[type=number] { -moz-appearance:textfield; }
   background: inherit;
   left: 20px;
 }
-  
+.borde{
+      background: #7488d2;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+.valido{
+
+color:#65d844;
+}
+.novalido{
+color:red;
+
+
+}

@@ -46,22 +46,36 @@ try
 	$emp->costo=$_POST['v_costo'];
 	$emp->duracion=$_POST['v_duracion'];
 	$emp->limite=$_POST['v_limite'];
+	$emp->costoinscripcion=$_POST['v_costoinscripcion'];
 
 	$serviciosasignados=json_decode($_POST['serviciosasignados']);
 	$tiposerviciosasignados=json_decode($_POST['tiposerviciosasignados']);
+
+	$diasemanas=explode(',', $_POST['diasemana']);
+	$horainiciosemana=explode(',', $_POST['horainicio']);
+	$horafinsemana=explode(',', $_POST['horafin']);
 	$porcategoria=$_POST['porcategoria'];
 	$porservicio=$_POST['porservicio'];
+	$porhorario=$_POST['porhorario'];
+	$porhorariodescuento=$_POST['v_porhorariodescuento'];
+	$porhorariomonto=$_POST['v_porhorariomonto'];
+
 	$color=$_POST['v_color'];
 	$emp->porcategoria=$porcategoria;
 	$emp->porservicio=$porservicio;
 	$emp->color=$color;
 	$emp->depende=$_POST['dependede'];
 	$emp->membresiadepende=$_POST['membresiadepende'];
+	$emp->porhorario=$porhorario;
+	$emp->porhorariodescuento=$porhorariodescuento;
+	$emp->porhorariomonto=$porhorariomonto;
 
 	$emp->inppadre=$_POST['inppadre'];
 	$emp->inphijo=$_POST['inphijo'];
 	$emp->inpnieto=$_POST['inpnieto'];
 	$emp->v_limitemembresia=$_POST['v_limitemembresia'];
+	$emp->fecha=$_POST['v_fecha'];
+	$emp->repetir=$_POST['v_repetir']!=''?$_POST['v_repetir']:0;
 	
 	$ruta="imagenes/".$_SESSION['codservicio'].'/';
 
@@ -103,6 +117,23 @@ try
 
 			}
 		}
+
+		if ($porhorario==1) {
+			# code...
+		
+		if (count($diasemanas)>0 && $diasemanas[0]!='') {
+			# code...
+		
+		for ($i=0; $i < count($diasemanas); $i++) { 
+				$emp->dia=$diasemanas[$i];
+				$emp->horainiciosemana=$horainiciosemana[$i];
+				$emp->horafinsemana=$horafinsemana[$i];
+				$emp->GuardarHorarioMembresia();
+			}
+
+		}
+	}
+
 		$md->guardarMovimiento($f->guardar_cadena_utf8('membresia'),'membresia',$f->guardar_cadena_utf8('Nuevo membresia creado con el ID-'.$emp->idmembresia));
 
 	}else{
@@ -144,6 +175,25 @@ try
 
 			}
 		}
+
+
+
+		$emp->EliminarHorarioMembresia();
+		if ($porhorario==1) {
+			# code...
+		
+		if (count($diasemanas)>0 && $diasemanas[0]!='') {
+			# code...
+		
+		for ($i=0; $i < count($diasemanas); $i++) { 
+				$emp->dia=$diasemanas[$i];
+				$emp->horainiciosemana=$horainiciosemana[$i];
+				$emp->horafinsemana=$horafinsemana[$i];
+				$emp->GuardarHorarioMembresia();
+			}
+
+		}
+	}
 
 		$md->guardarMovimiento($f->guardar_cadena_utf8('membresia'),'membresia',$f->guardar_cadena_utf8('Modificación del membresia -'.$emp->idmembresia));
 	}

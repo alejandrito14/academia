@@ -131,8 +131,10 @@ $estatuspago = array('NO PAGADO','PAGADO');
 						 
 						<th style="text-align: center;">FOLIO </th> 
 						<th style="text-align: center;">ALUMNO</th>
+							<th style="text-align: center;">DESCRIPCIÓN</th>
 						<th style="text-align: center;">FECHA</th>
 						<th style="text-align: center;">MÉTODO DE PAGO</th>
+					
 						<th style="text-align: center;">MONTO</th>
 						<th style="text-align: center;">ESTATUS</th>
 
@@ -162,8 +164,25 @@ $estatuspago = array('NO PAGADO','PAGADO');
 
 							<td style="text-align: center;"><?php echo $l_pagos_row['nombre'].' '.$l_pagos_row['paterno'].' '.$l_pagos_row['materno'];?></td>
 
+									<td style="text-align: center;"><?php 
+								$notapago->idnotapago=$l_pagos_row['idnotapago'];
+								$obtenerdescripcion=$notapago->ObtenerdescripcionNota();
+							$concepto="";
+								for ($i=0; $i <count($obtenerdescripcion) ; $i++) { 
+								 $concepto.=$obtenerdescripcion[$i]->concepto.'<br>';
+								}
+
+								echo $concepto;
+
+							?></td>
+
+								<td style="text-align: center;"><?php echo $l_pagos_row['tipopago'];?></td>
+							
+
 							<td style="text-align: center;"><?php echo date('d-m-Y H:i:s',strtotime($l_pagos_row['fecha']));?></td>
-							<td style="text-align: center;"><?php echo $l_pagos_row['tipopago'];?></td>
+
+
+
 
 							<td style="text-align: center;">$<?php echo $l_pagos_row['total'];?></td>
 							<?php 

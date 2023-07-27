@@ -50,6 +50,8 @@ try
 
 	$serviciosasignados=json_decode($_POST['serviciosasignados']);
 	$tiposerviciosasignados=json_decode($_POST['tiposerviciosasignados']);
+	$tipospago=explode(',',$_POST['tipospago']);
+	$habilitarmonedero=$_POST['v_habilitarmonedero'];
 
 	$diasemanas=explode(',', $_POST['diasemana']);
 	$horainiciosemana=explode(',', $_POST['horainicio']);
@@ -76,6 +78,7 @@ try
 	$emp->v_limitemembresia=$_POST['v_limitemembresia'];
 	$emp->fecha=$_POST['v_fecha'];
 	$emp->repetir=$_POST['v_repetir']!=''?$_POST['v_repetir']:0;
+	$emp->habilitarmonedero=$habilitarmonedero;
 	
 	$ruta="imagenes/".$_SESSION['codservicio'].'/';
 
@@ -87,7 +90,7 @@ try
 		$emp->guardarmembresia();
 		
 
-		if ($serviciosasignados!='') {
+		if ($serviciosasignados!='' && count($serviciosasignados)>0) {
 			for ($i=0; $i <count($serviciosasignados) ; $i++) { 
 				
 				$idservicio=$serviciosasignados[$i]->{'servicio'};
@@ -134,12 +137,26 @@ try
 		}
 	}
 
+
+
+
+
+		if (count($tipospago)>0 && $tipospago[0]!='') {
+			for ($i=0; $i <count($tipospago) ; $i++) { 
+				
+				$idtipopago=$tipospago[$i];
+				$emp->idtipopago=$idtipopago;
+				$emp->GuardarTiposPago();
+
+			}
+		}
+
 		$md->guardarMovimiento($f->guardar_cadena_utf8('membresia'),'membresia',$f->guardar_cadena_utf8('Nuevo membresia creado con el ID-'.$emp->idmembresia));
 
 	}else{
 		$emp->modificarmembresia();	
 
-		if ($serviciosasignados!='') {
+		if ($serviciosasignados!='' && count($serviciosasignados)>0) {
 
 			$emp->EliminarAsignacion();
 			for ($i=0; $i <count($serviciosasignados) ; $i++) { 
@@ -194,6 +211,18 @@ try
 
 		}
 	}
+
+		$emp->EliminarTiposPago();
+		if (count($tipospago)>0 && $tipospago[0]!='') {
+			for ($i=0; $i <count($tipospago) ; $i++) { 
+				
+				$idtipopago=$tipospago[$i];
+				$emp->idtipopago=$idtipopago;
+				$emp->GuardarTiposPago();
+
+			}
+		}
+
 
 		$md->guardarMovimiento($f->guardar_cadena_utf8('membresia'),'membresia',$f->guardar_cadena_utf8('Modificación del membresia -'.$emp->idmembresia));
 	}

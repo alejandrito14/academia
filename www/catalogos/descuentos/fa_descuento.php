@@ -713,7 +713,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
                                         ?>
                                         <input  type="checkbox" value="" class="form-check-input chkservicio_" id="inputserv_<?php echo $obtenerserv[$i]->idservicio?>" >
                                         <label class="form-check-label" for="flexCheckDefault">
-                                        <?php echo $obtenerserv[$i]->titulo; 
+                                        <?php echo $obtenerserv[$i]->idservicio.'-'.$obtenerserv[$i]->titulo; 
                                         ?>
                                       </label>
                                     </div>                                  
@@ -826,7 +826,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
                                         ?>
                                         <input type="checkbox" value="" class="form-check-input chkservicio2_" id="inputserv2_<?php echo $obtenerserv[$i]->idservicio?>" >
                                         <label class="form-check-label" for="flexCheckDefault">
-                                        <?php echo $obtenerserv[$i]->titulo; 
+                                        <?php echo $obtenerserv[$i]->idservicio.'-'.$obtenerserv[$i]->titulo; 
                                         ?>
                                       </label>
                                     </div>                                  

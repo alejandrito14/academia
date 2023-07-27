@@ -1196,7 +1196,7 @@ $navegador = $f->navegador();
 <script src="js/fn_Funciones.js"></script>
 <script src="js/fn_Jquery.js" type="text/javascript" ></script>
 <script src="assets/libs/chosen_v1.8.7/chosen.jquery.js"></script>
-
+<script src="js/fn_categoriapaquete.js"></script>
 <script src="js/fn_usuarios.js" type="text/javascript" ></script>
 <script src="js/fn_Administrador.js" type="text/javascript"></script>
 <script src="js/fn_Configuracion.js"></script>

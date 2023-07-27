@@ -49,6 +49,7 @@ try
 	$emp->precioventa=trim($_POST['precioventa']);
 	$emp->idcategoria=$_POST['idcategoria'];
 	$emp->tiempoestimado=$_POST['v_tiempoestimado'];
+	$emp->preciosugerido=$_POST['v_preciosugerido']!=''?$_POST['v_preciosugerido']:0;
 
 	$emp->conpromo=$_POST['conpromo'];
 	$emp->confecha=$_POST['confecha'];
@@ -56,6 +57,9 @@ try
 	$emp->fechainicial=$_POST['fechainicial'];
 	$emp->fechafinal=$_POST['fechafinal'];
 	$emp->cantidadcobrar=$_POST['cantidadcobrar'];
+	$emp->sku=$_POST['v_sku'];
+	$emp->inventario=$_POST['v_inventario'];
+	$emp->mostrarenapp=$_POST['v_mostrarapp'];
 	$emp->cantidadaconsiderar=$_POST['cantidadaconsiderar'];
 	$emp->servicio=$_POST['servicio'];
 
@@ -191,7 +195,7 @@ try
 		}
 
 
-			for ($i=0; $i < count($preciospaquete); $i++) { 
+		/*	for ($i=0; $i < count($preciospaquete); $i++) { 
 					
 				$dividircadena=explode('_',$preciospaquete[$i]);	
 				$idprecio=$dividircadena[0];
@@ -199,7 +203,7 @@ try
 
 				$emp->GuardaPreciopaquete($idprecio,$precio);
 
-			}
+			}*/
 
 
 			if ($emp->conpromo==1) {
@@ -289,9 +293,9 @@ if ($complementos[0]!='') {
 		}
 
 
-				$emp->eliminarpreciopaquete();
+				//$emp->eliminarpreciopaquete();
 
-			for ($i=0; $i < count($preciospaquete); $i++) { 
+			/*for ($i=0; $i < count($preciospaquete); $i++) { 
 					
 				$dividircadena=explode('_',$preciospaquete[$i]);	
 				$idprecio=$dividircadena[0];
@@ -299,7 +303,7 @@ if ($complementos[0]!='') {
 
 				$emp->GuardaPreciopaquete($idprecio,$precio);
 
-			}
+			}*/
 			
 			//$emp->Eliminarpaquetevinculado();
 

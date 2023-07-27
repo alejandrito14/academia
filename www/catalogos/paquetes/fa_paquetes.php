@@ -63,6 +63,7 @@ $paquetes = new Paquetes();
 $paquetes->db=$db;
 $busqueda='';
 $obtenergrupos=$grupos->ObtGruposActivos($busqueda);
+
 $num_rows=$db->num_rows($obtenergrupos);
 $rowsgrupos=$db->fetch_assoc($obtenergrupos);
 $arrayopcion=array('NO','SI');
@@ -94,7 +95,7 @@ if(!isset($_GET['idpaquete'])){
 	$_SESSION['CarritoComplemento']=null;
 	$idcategorias=0;
 	$idtipopresentacion=0;
-	$titulo='NUEVO PAQUETE';
+	$titulo='NUEVO PRODUCTO';
 	$nuevo=0;
 	$numgrupopaquete=0;
 	$promocion=0;
@@ -145,13 +146,14 @@ if(!isset($_GET['idpaquete'])){
 	//Realizamos la consulta en tabla empresas
 	$result_presentacion = $paquetes->ObtenerPaquete();
 	$result_presentacion_row = $db->fetch_assoc($result_presentacion);
+
 	//Cargamos en las variables los datos de las empresas
 	
 	//DATOS GENERALES
 	$nombreproducto = $f->imprimir_cadena_utf8($result_presentacion_row['nombrepaquete']);
 	$descripcion = $f->imprimir_cadena_utf8($result_presentacion_row['descripcion']);
 	$descuento = "";
-	$titulo='EDITAR PAQUETE';
+	$titulo='EDITAR PRODUCTO';
 
 
 	
@@ -189,13 +191,17 @@ if(!isset($_GET['idpaquete'])){
 	$horafin=$result_presentacion_row['horafinalpromo'];
 	$mensajev=$result_presentacion_row['mensaje'];
 	$tiempoestimado=$result_presentacion_row['intervaloservicio'];
-
+	$sku=$result_presentacion_row['sku'];
+	$preciosugerido=$result_presentacion_row['preciosugerido'];
+	$mostrarenapp=$result_presentacion_row['mostrarenapp'];
+	$inventario=$result_presentacion_row['inventario'];
 	$siniva=$result_presentacion_row['siniva'];
 
 	$iva=$result_presentacion_row['iva'];
 	$paquetes->idpaquete=$idpaquete;
-	$paquetesucursal=$paquetes->ObtenerSucursalPaquete();
-	$idsucursal=$paquetesucursal[0]->idsucursal;
+
+	/*$paquetesucursal=$paquetes->ObtenerSucursalPaquete();
+	$idsucursal=$paquetesucursal[0]->idsucursal;*/
 
 	$checkediva="";
 	if ($siniva==1) {
@@ -428,10 +434,17 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				var nombre=$('#v_nombre').val();
 				var descripcion=$('#v_descripcion').val();
 				var categoria=$('#v_categoria').val();
-				var preciov=$('#precioventa').val();
+				var preciov=$('#v_preciosugerido').val();
+				var v_sku=$('#v_sku').val();
+
 
 				bandera=1;
 				var html='';
+				if(v_sku==''){
+					bandera=0;
+					html+='<p>sku es requerido</p>';
+
+				}
 
 				if(nombre==''){
 					bandera=0;
@@ -441,13 +454,16 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					bandera=0;
 					html+='<p>Descripcion es requerido</p>';
 				}
-				if(categoria==0){
-					bandera=0;
-					html+='<p>Categoria es requerido</p>';
-				}
+				
 				if(preciov==''){
 					bandera=0;
 					html+='<p>Precio es requerido</p>';
+				}
+				
+				
+				if (selectedCategory==0) {
+					bandera=0;
+					html+='<p>Categoria es requerido</p>';
 				}
 
 				if(bandera==0){
@@ -486,7 +502,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 						<!--<button type="button" onClick="var resp=MM_validateForm('v_empresa','','R','v_direccion','','R','v_tel','','R','v_email','',' isEmail R'); if(resp==1){ GuardarEmpresa('f_empresa','catalogos/empresas/fa_empresas.php','main');}" class="btn btn-success" style="float: right;"><i class="mdi mdi-content-save"></i>  GUARDAR</button>-->
 
-						<button type="button" onClick="aparecermodulos('catalogos/paquetes/vi_paquetes.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" style="float: right; margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i> LISTADO DE PAQUETES</button>
+						<button type="button" onClick="aparecermodulos('catalogos/paquetes/vi_paquetes.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" style="float: right; margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i> LISTADO DE PRODUCTOS</button>
 						<div style="clear: both;"></div>
 
 
@@ -550,13 +566,20 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 
-
+												<div class="form-group m-t-20">
+												<label>SKU:</label>
+												<input type="text" class="form-control" id="v_sku" name="v_sku" value="<?php echo $sku; ?>" title="SKU"  placeholder="SKU" onBlur="validarSKU()">
+												<div id="mensajeValidacion" style=""></div>
+											</div>
 
 
 											<div class="form-group m-t-20">
 												<label>NOMBRE:</label>
 												<input type="text" class="form-control" id="v_nombre" name="v_nombre" value="<?php echo $nombreproducto; ?>" title="NOMBRE"  placeholder="NOMBRE">
 											</div>
+
+										
+
 
 
 
@@ -568,14 +591,11 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 
-							<div class="form-group" >
-							 <div id="verprecio" style="display: none;"><label>PRECIO $:</label><span id="precioprincipal"></span> </div>
 
-								
-								<div data-toggle="modal" onclick="AbrirModalPrecios(<?php echo $idpaquete; ?>)"  class="btn btn-success" style="width: 100%">AGREGAR PRECIOS</div>
-
-								
-							</div>
+								<div class="form-group m-t-20">
+												<label>PRECIO:</label>
+												<input type="number" class="form-control" id="v_preciosugerido" name="v_preciosugerido" value="<?php echo $preciosugerido; ?>" title="PRECIO SUGERIDO"  placeholder="PRECIO SUGERIDO">
+											</div>
 
 								<div class="form-group m-t-20">
 								<label>CATEGORÍA:</label>
@@ -593,7 +613,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<input type="number" id="v_orden" name="v_orden" title="ORDEN" class="form-control" value="<?php echo $orden; ?>"/>
 							</div>
 
-							<div class="form-group">
+							<div class="form-group" style="display: none;">
 								<label>ACTIVAR INSTRUCCIONES ESPECIALES
 
 									<input type="checkbox" name="v_activarcomentario" onchange="Habilitarcomentario()" value="<?php echo $activarcomentario;?>" id="v_activarcomentario" <?php echo $che6;?> >
@@ -601,7 +621,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							</div>
 
 							<div class="form-group">
-								Aumentar I.V.A
+								I.V.A incluido
 								<input type="checkbox" id="checkediva" name="checkediva" value="<?php echo $siniva; ?>" onchange="ColocarIva()" <?php echo $checkediva; ?> >
 
 							</div>
@@ -612,6 +632,21 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<input type="text" placeholder="0.0" title="I.V.A." id="iva" value="<?php echo $iva; ?>" class="form-control">
 							</div>
 
+
+								<div class="form-group">
+								<label style="margin-top: 4px;">CONSIDERAR PARA INVENTARIO</label>
+								 <input  type="checkbox" class="form-check-input chkinventario" id="v_inventario" style="margin-left: 1em;" />
+								
+							</div>
+
+
+								<div class="form-group">
+								<label style="margin-top: 4px;">MOSTRAR EN LA APP</label>
+								 <input  type="checkbox" class="form-check-input chkmostrar" id="v_mostrarapp" style="margin-left: 1em;" />
+								
+							</div>
+
+					
 
 							<!-- <div class="form-group m-t-20" >
 								<label>PRECIO 1 $:</label>
@@ -966,7 +1001,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 
-<div class="col-md-12" style="" id="divproducto">
+<div class="col-md-12" id="divproducto" style="display: none;">
 	<div class="card">
 		<div class="card-header">
 
@@ -1572,11 +1607,20 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 	ObtenerTablaprecios();
 
 	var idpaquete=<?php echo $idpaquete; ?>;
+	var mostrarenapp='<?php echo $mostrarenapp; ?>';
+ var inventario='<?php echo $inventario; ?>';
 	if (idpaquete>0) {
 		ObtenerOpcionesdelPaquete(idpaquete);
 
 		ObtenerPreciosPaquete(idpaquete);
-		Precioprincipal(idpaquete);
+		//Precioprincipal(idpaquete);
+
+		if (mostrarenapp==1) {
+			$("#v_inventario").prop('checked',1);
+		}
+		if (inventario==1) {
+			$("#v_mostrarapp").prop('checked',1);
+		}
 	}
 
 

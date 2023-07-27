@@ -22,6 +22,7 @@ function Guardarmembresia(form,regresar,donde,idmenumodulo)
 		var v_duracion=$("#v_duracion").val();
 		var v_limite=$("#v_limite").val();
 		var v_limitemembresia=$("#v_limitemembresia").val();
+		var v_habilitarmonedero=$("#v_monedero").val();
 		var serviciosasignados=[];
 			$(".servicios").each(function(){
 				var valor=$(this).val();
@@ -128,6 +129,17 @@ function Guardarmembresia(form,regresar,donde,idmenumodulo)
 		var v_porhorariomonto=$("#v_porhorariomonto").val();
 		var v_porhorariodescuento=$("#v_porhorariodescuento").val();
 		var v_porhorariomonto=$("#v_porhorariomonto").val();
+		var tipospago=[];
+		$(".tipopago").each(function(){
+			if($(this).is(':checked')){
+				var valor=$(this).attr('id');
+				var id=valor.split('_')[1];
+				tipospago.push(id);
+
+			}
+
+		});
+
 		var id=$("#id").val();
 		var datos = new FormData();
 
@@ -140,7 +152,8 @@ function Guardarmembresia(form,regresar,donde,idmenumodulo)
 		for (i = 0; i < archivo.length; i++) {
 			datos.append('archivo'+i, archivo[i]);
 		}
-	
+
+		datos.append('v_habilitarmonedero',v_habilitarmonedero);
 		datos.append('v_titulo',nombre); 
 		datos.append('v_orden',orden); 
 		datos.append('id',id);
@@ -169,7 +182,7 @@ function Guardarmembresia(form,regresar,donde,idmenumodulo)
 		datos.append('diasemana',diasemana);
 		datos.append('horainicio',horainicio);
 		datos.append('horafin',horafin);
-
+		datos.append('tipospago',tipospago);
 
 
 
@@ -600,9 +613,12 @@ function Desplegartiposervicio() {
 	
 	if ($("#v_tiposervicio").is(':checked')) {
 	$(".divtiposervicio").css('display','block');	
+	$(".divhorariossele").css('display','block');
 	
 	}else{
-		$(".divtiposervicio").css('display','none');	
+
+	$(".divtiposervicio").css('display','none');	
+	$(".divhorariossele").css('display','none');
 
 	}
 }
@@ -944,5 +960,105 @@ function PintarHorariosmembresia(respuesta) {
 
 			
 
+}
+
+function Habilitarmonedero() {
+	if ($("#v_monedero").is(':checked')) {
+	
+		$("#v_monedero").val(1);	
+	
+	}else{
+
+	$("#v_monedero").val(0);	
+
+	}
+}
+
+
+function CargarTipoPagosMembresia() {
+	//return new Promise((resolve, reject) => {
+
+	$.ajax({
+		type:'POST',
+		url: 'catalogos/membresia/tipodepagos.php',
+		dataType:'json',
+		async:false,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+			alert(error);						  
+		 },
+		success : function (msj){
+		
+			PintarTipoPagosMembresia(msj.respuesta);   
+			}
+		}); 
+
+	//});
+}
+
+function PintarTipoPagosMembresia(respuesta) {
+	
+	var html="";
+	if (respuesta.length>0) {
+		for (var i = 0; i < respuesta.length; i++) {
+			html+=`
+			<div class="pasucat_" id="tipopago_`+respuesta[i].idtipodepago+`">
+			<div class="row">
+				<div class="col-md-12">
+									<div class="form-check" style="margin-bottom: 1em;">
+                    
+					<input type="checkbox" class="form-check-input tipopago"  id="vtipopago_`+respuesta[i].idtipodepago+`" onchange="" style="top: -0.3em;">
+					<label class="form-check-label">`+respuesta[i].tipo+`</label>
+			</div>
+								
+									
+								</div>
+					<div class="col-md-3">
+										
+									</div>
+							</div>
+
+			</div>
+			`;
+		}
+	}
+
+	console.log(html);
+
+	$("#todostipopagos").html(html);
+}
+
+function ObtenerTipoPagoMembresia(idmembresia) {
+	var datos="idmembresia="+idmembresia;
+	$.ajax({
+		type:'POST',
+		url: 'catalogos/membresia/ObtenerTipoPagoMembresia.php',
+		dataType:'json',
+		data:datos,
+		async:false,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+			alert(error);						  
+		 },
+		success : function (msj){
+			var respuesta=msj.respuesta;
+
+			if (respuesta.length>0) {
+				for (var i = 0; i <respuesta.length; i++) {
+						
+					$("#vtipopago_"+respuesta[i].idtipodepago).attr('checked',true);
+				
+					}
+				
+				}
+			   
+			}
+		}); 
 }
 

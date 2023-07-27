@@ -1,4 +1,4 @@
-
+var resultimagendatosfactura=[];
 function Guardarpagos(form,regresar,donde,idmenumodulo)
 {
 	if(confirm("\u00BFDesea realizar esta operaci\u00f3n?"))
@@ -41,14 +41,22 @@ function Guardarpagos(form,regresar,donde,idmenumodulo)
 
 function SeleccionarClientePagos(idcliente) {
 	LimpiarVariables();
+	clienteid=idcliente;
 	
 	var datos="idcliente="+idcliente;
+	$("#datoscliente").removeClass('borde');
+	$("#datoscliente").html('');
 
+	
 	 /* $(".cli_").removeClass('seleccionado');
 	  $("#cli_"+idcliente+"_").addClass('seleccionado');*/
 	  if($("#inputcli_"+idcliente+"_").is(':checked')){
 	  	idparticipante=idcliente;
-	  $(".chkcliente_").prop('checked',false);
+	  	
+	  	console.log('entro');
+	  	openTab('punto-venta');
+	  $(".divtabs").css('display','block');
+	  $("#modalclientes").modal('hide');
 	  $("#inputcli_"+idcliente+"_").prop('checked',true);
 	  $.ajax({
 					url:'catalogos/pagos/ObtenerTodosPagos.php', //Url a donde la enviaremos
@@ -65,11 +73,14 @@ function SeleccionarClientePagos(idcliente) {
 					  },
 					success:function(msj){
 						//CalcularTotales();
-
+						
 						var respuesta=msj.respuesta;
 						var monedero=msj.monedero;
+						EliminarCarritoCliente(idcliente);
+						ObtenerDatosCliente(idcliente);
 						//PintarpagosTabla(respuesta);
 						PintarPagosPorpagar(respuesta);
+						$("#tblpaquetesventa").html(" ");
 						$(".btnnuevopago").css('display','block');
 						$("#btnmonederodisponible").css('display','block');
 						if (monedero!=null) {
@@ -93,6 +104,232 @@ function SeleccionarClientePagos(idcliente) {
 	LimpiarVariables();
 	CalcularTotales();
 	}
+}
+
+function ObtenerClientePagos(idcliente) {
+	
+	clienteid=idcliente;
+	var datos="idcliente="+idcliente;
+	  $.ajax({
+					url:'catalogos/pagos/ObtenerTodosPagos.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos
+					data: datos, //Le pasamos el objeto que creamos con los archivos
+					dataType:'json',
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+					  },
+					success:function(msj){
+						//CalcularTotales();
+
+						var respuesta=msj.respuesta;
+						
+						PintarPagosPorpagar(respuesta);
+						
+								
+					  	}
+				  });
+
+	
+}
+
+function ObtenerDatosCliente(idcliente) {
+	var datos="idusuario="+idcliente;
+
+	 $.ajax({
+					url:'catalogos/pagos/ObtenerUsuario.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos
+					data: datos, //Le pasamos el objeto que creamos con los archivos
+					dataType:'json',
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+					  },
+					success:function(msj){
+						var usuario=msj.respuesta;
+
+						/*var html=`
+							<div class="col-md-12">
+								<div class="row" style="background:white;border-radius: 10px;">
+								  <div class="col-md-3">
+								    <div class="col-md-12" style="font-weight: bold;">NOMBRE</div> 
+								    <div class="col-md-12" style="font-weight: bold;">EMAIL</div> 
+								    <div class="col-md-12" style="font-weight: bold;">FECHA NAC.</div> 
+								    <div class="col-md-12" style="font-weight: bold;">MONEDERO</div> 
+
+								  </div>
+								   <div class="col-md-9">
+								  		<div class="col-md-12"> <p style="margin-top:0;padding:0;margin-bottom: 1px;">`+usuario.idusuarios+`-`+usuario.nombre+` `+usuario.paterno+` `+usuario.materno+`</p></div>
+								  		<div class="col-md-12"> <p style="margin-top:0;padding:0;margin-bottom: 1px;"> `+usuario.email+` </p></div>
+								  		<div class="col-md-12"> <p style="margin-top:0;padding:0;margin-bottom: 1px;">`+usuario.fechanacimiento+` </p></div>
+								   		<div class="col-md-12"> <p style="margin-top:0;padding:0;margin-bottom: 1px;">$`+usuario.monedero+` </p></div>
+								   </div>
+						
+								</div>
+							</div>
+						`;*/
+						$("#monederodispo").text('$'+usuario.monedero);
+						$(".nombreusuario").val(usuario.idusuarios+`-`+usuario.nombre+` `+usuario.paterno+` `+usuario.materno);
+						var html=`
+						<table style="background: #7488d2;width: 100%;    color: white;
+    					border-bottom-left-radius: 10px;
+ 						border-bottom-right-radius: 10px;
+    					border-top-left-radius: 10px;
+    					border-top-right-radius: 10px;">
+						  <tr>
+						    <th style="padding: 4px;    width: 20%;">NOMBRE</th>
+						    <td style="font-size: 19px;">`+usuario.idusuarios+`-`+usuario.nombre+` `+usuario.paterno+` `+usuario.materno+`
+							</td>
+						  </tr>
+						  <tr>
+						    <th style="padding: 4px;    width: 20%;">EMAIL</th>
+						    <td style="font-size: 19px;">`+usuario.email+`</td>
+						  </tr>
+						  <tr>
+						    <th style="padding: 4px;    width: 20%;">FECHA NAC.</th>
+						    <td style="font-size: 19px;">`+usuario.fechanacimiento+`</td>
+						  </tr>
+						  <tr>
+						    <th style="padding: 4px;    width: 20%;">MONEDERO</th>
+						    <td style="font-size: 19px;">$`+usuario.monedero+`</td>
+						  </tr>
+						</table>
+
+						`;
+
+						$("#datoscliente").html(html);
+						$("#datoscliente").addClass('borde');
+								
+					  	}
+				  });
+}
+
+function EliminarCarritoCliente(idcliente) {
+	var datos="idcliente="+idcliente;
+	 $.ajax({
+					url:'catalogos/pagos/EliminarCarritoCliente.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos
+					data: datos, //Le pasamos el objeto que creamos con los archivos
+					dataType:'json',
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+					  },
+					success:function(msj){
+						//CalcularTotales();
+
+						
+								
+					  	}
+				  });
+
+}
+
+
+//punto venta
+function PintarPagosPorpagar(pagos) {
+	var html="";
+	if (pagos.length>0) {
+		html+=`<ul class="list-group">
+		 		<li class="list-group-item  " style="">
+
+		       <div class="row">
+				   <div class="col-md-7">
+				   </div>
+				  <div class="col-md-5">
+
+					<span style="">
+					Seleccionar todos  
+					<input type="checkbox" id="checktodos" onchange="SeleccionarTodos()" style="width:30px;height: 20px;">
+					</span>
+			 	  </div>
+		 	  </div>
+		</li>
+
+		`;
+		for (var i = 0; i <pagos.length; i++) {
+			html+=`
+
+			  <li class="list-group-item  align-items-center">
+			   <div class="row">
+			   <div class="col-md-10">
+			   		<p id="concepto_`+pagos[i].idpago+`">Pago de `+pagos[i].concepto+`</p>`;
+			    	 if(pagos[i].fechaformato!=''){
+
+                             html+=`<p class="">Vencimiento `+pagos[i].fechaformato+`</p>`;
+                          }
+                        html+=`<p class=""> `+pagos[i].nombre+` `+pagos[i].paterno+` `+pagos[i].materno+`</p>
+   
+                          <p class="">$`+pagos[i].monto+`</p>
+                          <input type="hidden" value="`+pagos[i].monto+`" class="montopago" id="val_`+pagos[i].idpago+`">
+                          <input type="hidden" value="`+pagos[i].tipopago+`" class="tipopago" id="tipopago_`+pagos[i].idpago+`">
+
+                   </div>
+                   <div class="col-md-2">`;
+
+
+                        if (pagos[i].dividido==2) {
+
+
+                          if (pagos[i].alumnos==pagos[i].aceptados) {
+
+                             html+=` <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Seleccionarcheck(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />`;
+                               html+=` <input type="hidden" id="sepuede_`+pagos[i].idpago+`" class="" value="1" style="" />`;
+
+                          }else{
+
+                            html+=` <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Advertencia(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />`;
+                            html+=` <input type="hidden" id="sepuede_`+pagos[i].idpago+`" class="" value="0" style="" />`;
+
+                          }
+     
+                        }else{
+
+                         html+=` <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Seleccionarcheck(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />`;
+                         html+=` <input type="hidden" id="sepuede_`+pagos[i].idpago+`" class="" value="1" style="" />`;
+
+                        }
+
+					  html+=`  <span class="badge ">
+
+                        <input type="hidden" id="tipo_`+pagos[i].idpago+`" value="`+pagos[i].tipo+`"  />
+                        <input type="hidden" id="habilitarmonedero_`+pagos[i].idpago+`" value="`+pagos[i].habilitarmonedero+`"  />
+
+                        <input type="hidden" id="servicio_`+pagos[i].idpago+`" value="`+pagos[i].idservicio+`"  />
+                        <input type="hidden" id="fechainicial_`+pagos[i].idpago+`" value="`+pagos[i].fechainicial+`"  />
+                        <input type="hidden" id="fechafinal_`+pagos[i].idpago+`" value="`+pagos[i].fechafinal+`"  />
+                        <input type="hidden" id="usuario_`+pagos[i].idpago+`" value="`+pagos[i].idusuarios+`"  />
+
+
+					    </span>
+			   		 </div>
+			    
+			    </div>
+
+			  </li>
+  
+
+			`;
+		}
+
+		html+=`</ul>`;
+
+
+	}
+
+	$(".todospagos").html(html);
 }
 
 function PintarpagosTabla(respuesta) {
@@ -417,6 +654,32 @@ function ObtenerTipodepagos() {
 								
 					  	}
 				  });
+}
+
+function CargartipopagoFactura(tipodepagoseleccionado) {
+   var pagina = "obtenertipodepagos2.php";
+    var datos="tipo=1";
+    $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+    data:datos,
+    async:false,
+    success: function(datos){
+
+      var opciones=datos.respuesta;
+        
+            Pintartipodepagos(opciones,tipodepagoseleccionado);
+
+    },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+      var error;
+        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+    }
+
+  });
 }
 
 function PintarTipoPagos(respuesta) {
@@ -879,3 +1142,504 @@ function CerrarModalConfirm(idnotapago,estatus) {
 		}
 
 }
+
+
+
+function ObtenerListadoDatosFiscales() {
+	if (idparticipante>0) {
+  if ($("#requierefactura").is(':checked')) {
+  	  $(".divfiscal").css('display','block');
+
+      var pagina = "ObtenerListadoDatosFiscales.php";
+      $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: urlphp+pagina,
+      async:false,
+      success: function(resp){
+       var respuesta=resp.respuesta;
+       PintarListadoDatosFiscales(respuesta);
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                  //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                  console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+            }
+      });
+  	}else{
+  		idusuariosdatosfiscales=0;
+  		$(".divfiscal").css('display','none');
+  		}
+	}
+}
+function PintarListadoDatosFiscales(respuesta) {
+  	var html=`
+  	  <div class="list-group">
+  	`;
+
+  	html+=`<div class="">
+        <div class="" style="margin-bottom: 1em;">
+          <button type="button" onclick="AbrirModalDatoFiscal()"   class="btn btn-primary" style="width:100%;">
+            Agregar datos fiscales
+          </button>
+        </div>`;
+
+  if (respuesta.length>0) {
+
+  	for (var i = 0; i < respuesta.length; i++) {
+  		html+=`
+
+  			 <div class="list-group-item">
+		        <div class="form-check">
+		          <input class="form-check-input checkfiscal" type="checkbox"  id="check_`+respuesta[i].idusuariosdatosfiscales+`" onchange="SeleccionarChekboxDatos(`+respuesta[i].idusuariosdatosfiscales+`)">
+		          <label class="form-check-label" for="checkbox2">
+		            <p style="margin:0;padding:0">R.F.C: `+respuesta[i].rfc+`</p>
+		            <p style="margin:0;padding:0">RAZÓN SOCIAL: `+respuesta[i].razonsocial+`</p>
+		        	<p style="margin:0;padding:0">`+respuesta[i].direccion+` No.ext. `+respuesta[i].noexterior+` No.int. `+respuesta[i].nointerior+` </p>
+		        	<p style="margin:0;padding:0">`+respuesta[i].colonia+` Cod.postal `+respuesta[i].codigopostal+`</p>
+		        	<p style="margin:0;padding:0">`+respuesta[i].nombremunicipio+` `+respuesta[i].nombreestado+`,`+respuesta[i].nombrepais+`</p>
+
+		          </label>
+		        </div>
+		      </div>
+  		`;
+
+  	}
+  }
+  html+=`</div>`;
+
+  $(".divfiscal").html(html);
+}
+
+function SeleccionarChekboxDatos(idusudatosfiscal) {
+
+	if ($("#check_"+idusudatosfiscal).is(':checked')) {
+	 	$(".checkfiscal").prop('checked',false);
+		$("#check_"+idusudatosfiscal).prop('checked',true);
+		idusuariosdatosfiscales=idusudatosfiscal;
+	}else{
+		idusuariosdatosfiscales=0;
+		$("#check_"+idusudatosfiscal).prop('checked',false);
+	 	$(".checkfiscal").prop('checked',false);
+
+	}
+
+
+}
+
+function AbrirModalDatoFiscal() {
+	
+	$("#modaldatofiscal").modal();
+	ObtenermetodoPago();
+	ObtenerformaPago();
+	ObtenerUsoCfdi();
+	$(".btnguardardatofiscal").attr('onclick','GuardarDatoFiscal()');
+}
+
+function ObtenermetodoPago() {
+
+	  var pagina = "ObtenermetodoPago.php";
+      $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: urlphp+pagina,
+      async:false,
+      success: function(resp){
+       var respuesta=resp.respuesta;
+       var html="";
+       if (respuesta.length>0) {
+       	for (var i = 0; i < respuesta.length; i++) {
+       		html+=`<option value="`+respuesta[i].c_metodopago+`">`+respuesta[i].c_metodopago+' '+respuesta[i].descripcion+`</option>`;
+       	}
+       }
+
+       $("#metodopago").html(html);
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                  //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                  console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+            }
+      });
+  
+}
+
+
+function ObtenerformaPago() {
+
+	  var pagina = "ObtenerformaPago.php";
+      $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: urlphp+pagina,
+      async:false,
+      success: function(resp){
+       var respuesta=resp.respuesta;
+       var html="";
+       if (respuesta.length>0) {
+       	for (var i = 0; i < respuesta.length; i++) {
+       		html+=`<option value="`+respuesta[i].cformapago+`">`+respuesta[i].cformapago+' '+respuesta[i].descripcion+`</option>`;
+       	}
+       }
+       
+       $("#formapago").html(html);
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                  //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                  console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+            }
+      });
+  
+}
+
+
+function ObtenerUsoCfdi() {
+
+	  var pagina = "ObtenerUsoCfdi.php";
+      $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: urlphp+pagina,
+      async:false,
+      success: function(resp){
+       var respuesta=resp.respuesta;
+       var html="";
+       if (respuesta.length>0) {
+       	for (var i = 0; i < respuesta.length; i++) {
+       		html+=`<option value="`+respuesta[i].c_uso+`">`+respuesta[i].c_uso+' '+respuesta[i].descripcion+`</option>`;
+       	}
+       }
+       
+       $("#usocfdi").html(html);
+
+      },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+        var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                  //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                  console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+            }
+      });
+  
+}
+
+function GuardarDatoFiscal() {
+  
+  var razonsocial=$("#v_fis_razonsocial").val();
+  var rfc=$("#v_fis_rfc").val();
+  var email=$("#correofiscal").val();
+  var codigopostal=$("#v_fis_cp").val();
+  var formapago=$("#formapago").val();
+  var metodopago=$("#metodopago").val();
+  var v_pais=$("#v_fis_pais").val();
+  var v_estado=$("#v_fis_estado").val();
+  var v_municipio=$("#v_fis_municipio").val();
+  var v_colonia=$("#v_fis_colonia").val();
+  var v_calle=$("#v_fis_direccion").val();
+  var v_noexterior=$("#v_fis_no_ext").val();
+  var v_nointerior=$("#v_fis_no_int").val();
+  var textovpais= $('#v_fis_pais option:selected').text();
+  var textovestado= $('#v_fis_estado option:selected').text();
+  var textovmunicipio=$("#v_fis_municipio option:selected").text();
+  var id=$("#v_idfactura").val();
+  var v_usocfdi=$("#usocfdi").val();
+
+  var bandera=1;
+  var pagina="Guardardatosfiscales.php";
+   
+  
+    	var datos = new FormData();
+
+		var archivos = document.getElementById("image"); //Damos el valor del input tipo file
+		var archivo = archivos.files; //Obtenemos el valor del input (los arcchivos) en modo de arreglo
+
+		//Como no sabemos cuantos archivos subira el usuario, iteramos la variable y al
+		//objeto de FormData con el metodo "append" le pasamos calve/valor, usamos el indice "i" para
+		//que no se repita, si no lo usamos solo tendra el valor de la ultima iteracion
+		for (i = 0; i < archivo.length; i++) {
+			datos.append('archivo', archivo[i]);
+		}
+
+		datos.append('id', id);
+		datos.append('razonsocial', razonsocial);
+		datos.append('v_rfc', rfc);
+		datos.append('v_correo', email);
+		datos.append('v_codigopostal', codigopostal);
+		datos.append('formapago', formapago);
+		datos.append('metodopago', metodopago);
+		datos.append('v_pais', v_pais);
+		datos.append('v_estado', v_estado);
+		datos.append('v_municipio', v_municipio);
+		datos.append('v_colonia', v_colonia);
+		datos.append('v_calle', v_calle);
+		datos.append('v_noexterior', v_noexterior);
+		datos.append('v_nointerior', v_nointerior);
+		datos.append('v_usocfdi', v_usocfdi);
+		datos.append('textovpais', textovpais);
+		datos.append('textovestado', textovestado);
+		datos.append('textovmunicipio', textovmunicipio);
+
+
+
+
+    if (razonsocial=='') {
+
+      bandera=0;
+    }
+
+    if (rfc=='') {
+      bandera=0;
+    }
+
+    if (email=='') {
+      bandera=0;
+    }
+    if (codigopostal=='') {
+      bandera=0;
+    }
+
+     if (v_pais==null) {
+      bandera=0;
+    }
+
+    if(v_estado==null) {
+      bandera=0;
+    }
+    if (v_municipio==null) {
+      bandera=0;
+    }
+    if (v_colonia=='') {
+      bandera=0;
+    }
+    if (v_calle=='') {
+      bandera=0;
+    }
+    if (formapago==null) {
+       bandera=0;
+    }
+
+     if (metodopago==null) {
+       bandera=0;
+    }
+
+    if(v_usocfdi==null) {
+       bandera=0;
+    }
+
+    if (bandera==1) {
+  $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+    contentType: false, //Debe estar en false para que pase el objeto sin procesar
+	data: datos, //Le pasamos el objeto que creamos con los archivos
+	processData: false, //Debe estar en false para que JQuery no procese los datos a enviar
+	cache: false, //Para que
+    success: function(datos){
+    resultimagendatosfactura=[];
+    $("#modaldatofiscal").modal('hide');
+      ObtenerListadoDatosFiscales();
+     
+    
+    },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+      var error;
+        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+          }
+    });
+
+}else{
+
+  var msj="";
+
+      
+
+    if (razonsocial=='') {
+
+       $(".lirazonsocial").removeClass('is-valid');
+      $(".lirazonsocial").addClass('is-invalid');
+
+
+    }
+
+    if (rfc=='') {
+    $(".lirfc").removeClass('is-valid');
+      $(".lirfc").addClass('is-invalid');
+
+    }
+
+    if (email=='') {
+     $(".liemail").removeClass('is-valid');
+      $(".liemail").addClass('is-invalid');
+
+    }
+    if (codigopostal=='') {
+
+       $(".licodigopostal").removeClass('is-valid');
+      $(".licodigopostal").addClass('is-invalid');
+
+    }
+
+     if (v_pais==null) {
+
+       $(".lipais").removeClass('is-valid');
+      $(".lipais").addClass('is-invalid');
+
+    }
+
+
+    if(v_estado==null) {
+     
+       $(".liestado").removeClass('is-valid');
+      $(".liestado").addClass('is-invalid');
+
+    }
+    if (v_municipio==null) {
+      
+       $(".limunicipio").removeClass('is-valid');
+      $(".limunicipio").addClass('is-invalid');
+
+    }
+    if (v_colonia=='') {
+     $(".licolonia").removeClass('is-valid');
+      $(".licolonia").addClass('is-invalid');
+    }
+    if (v_calle=='') {
+     $(".licalle").removeClass('is-valid');
+     $(".licalle").addClass('is-invalid');
+    }
+
+
+     if (formapago==null) {
+        $(".liformapago").removeClass('is-valid');
+      $(".liformapago").addClass('is-invalid');
+
+    }
+
+     if (metodopago==null) {
+
+         $(".limetodopago").removeClass('is-valid');
+      $(".limetodopago").addClass('is-invalid');
+
+
+    }
+
+    if(v_usocfdi==null) {
+      
+       $(".liusocfdi").removeClass('is-valid');
+      $(".liusocfdi").addClass('is-invalid');
+
+
+    }
+    if (bandera==0) {
+
+      msj+="Te falta por agregar una opción obligatoria<br>";
+    }
+
+  /*  if (resultimagendatosfactura.length==0) {
+      msj+="Falta por agregar al menos una imagen<br>";
+    }*/
+    alert(msj);
+
+
+  }
+}
+
+
+function ObtenerClientesFiltro() {
+
+	$.ajax({
+		url:'catalogos/asignarmembresias/ObtenerAlumnos.php', //Url a donde la enviaremos
+	  type:'POST', //Metodo que usaremos
+	 dataType:'json',
+	  error:function(XMLHttpRequest, textStatus, errorThrown){
+			var error;
+			console.log(XMLHttpRequest);
+			if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+			if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+			$('#abc').html('<div class="alert_error">'+error+'</div>');	
+			//aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+		},
+	  success:function(msj){
+		  var resp = msj.usuarios;
+		 $("#modalclientes").modal();
+		 $("#buscadoralumnos_").val('');
+		  PintarUsuariosAlumnosPunto(resp);
+
+			 			
+			}
+	});
+	
+}
+
+function PintarUsuariosAlumnosPunto(respuesta) {
+	var html="";
+	if (respuesta.length>0) {
+
+		for (var i = 0; i <respuesta.length; i++) {
+			 var nombre=respuesta[i].nombre+" "+respuesta[i].paterno+" "+respuesta[i].materno+` - `+respuesta[i].usuario;
+
+			html+=`
+
+				<div class="form-check alumnos_"  id="alumnos_`+respuesta[i].idusuarios+`">		 
+		  		<input  type="checkbox"   value="`+respuesta[i].idusuarios+`" class="form-check-input chkalumno chkcliente_" id="inputcli_`+respuesta[i].idusuarios+`_`+`" onchange="SeleccionarCliente(`+respuesta[i].idusuarios+`,'`+nombre+`')">
+		  		<label class="form-check-label" for="flexCheckDefault" style="margin-top: 0.2em;">`+respuesta[i].idusuarios+'-'+nombre+`</label> 
+				</div>						    		
+
+			`;
+		}
+		$("#divusuarios").html(html);
+	}
+}
+
+function SeleccionarCliente(idcliente,nombre) {
+	// body...
+	 if($("#inputcli_"+idcliente+"_").is(':checked')){
+	  	  $(".chkcliente_").prop('checked',false);
+
+	 		$("#inputcli_"+idcliente+"_").prop('checked',true);
+	 		//CrearSesionUsuario(idcliente);
+	  	 
+	  	  }else{
+
+	  	  $(".chkcliente_").prop('checked',false);
+
+	  	  }
+
+	$(".btnseleccionarcliente").attr('onclick','CrearSesionUsuario('+idcliente+')');
+
+}
+
+function CrearSesionUsuario(idcliente) {
+	
+	var datos="idcliente="+idcliente;
+	$.ajax({
+		url:'catalogos/pagos/CrearSesionUsuario.php', //Url a donde la enviaremos
+	  type:'POST', //Metodo que usaremos
+	 dataType:'json',
+	 data:datos,
+	  error:function(XMLHttpRequest, textStatus, errorThrown){
+			var error;
+			console.log(XMLHttpRequest);
+			if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+			if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+			$('#abc').html('<div class="alert_error">'+error+'</div>');	
+			//aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+		},
+	  success:function(msj){
+		
+	  	SeleccionarClientePagos(idcliente);
+			 			
+			}
+	});
+}
+

@@ -40,15 +40,15 @@ try
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
 
-	$idusuarios=$_POST['idcliente'];
+	//$idusuarios=$_POST['idcliente'];
 	$pagosencontrados=array();
 
-	$se->crearSesion('usuariopago',$idusuarios);
+	$idusuarios=$se->obtenerSesion('usuariopago');
 	$lo->idusuarios=$idusuarios;
 	$usuarios->id_usuario=$idusuarios;
 
-	$datosusuario=$usuarios->ObtenerDatosUsuario();
-
+	$obtenerdatosusuario=$usuarios->ObtenerDatosUsuario();
+	
 	$tutorados=$usuarios->ObtenerTutoradosSincel();
 	
 	for ($i=0; $i <count($tutorados) ; $i++) { 
@@ -197,7 +197,8 @@ try
 					'fechamin'=>date('d-m-Y',strtotime($obtenerfechas[0]->fechamin)),
 					'fechamax'=>date('d-m-Y',strtotime($obtenerfechas[0]->fechamax)),
 					'tipopago'=>$tipopago,
-					'aceptacionpagoservicio'=>$aceptacionpagoservicio
+					'aceptacionpagoservicio'=>$aceptacionpagoservicio,
+					'habilitarmonedero'=>1
 			);
 				$total=$total+$montoapagar;
 				array_push($pagosencontrados,$objeto);
@@ -228,7 +229,7 @@ try
 			
 				$idpago=$obtenerpagostipotres[$i]->idpago;
 				$idusuarios=$obtenerpagostipotres[$i]->idusuarios;
-
+				$pagoinscripcion=$obtenerpagostipotres[$i]->pagoinscripcion;
 				 $usuarios->idusuarios=$idusuarios;
 	     		 $datosusuario=$usuarios->ObtenerUsuarioDatos();
 				$idmembresia=$obtenerpagostipotres[$i]->idmembresia;
@@ -242,20 +243,36 @@ try
 				$folio="";
 				$concepto=$obtenerpagostipotres[$i]->concepto;
 				$tipopago='';
+				$habilitarmonedero=1;
 
 				if ($tipo==2) {
+
+					if ($pagoinscripcion==0) {
+						# code...
+					
 					$membresia->idmembresia=$idmembresia;
 					$membresia->idusuarios=$idusuarios;
 					$membresia->idpago=$idpago;
 					$buscarmembresiaasociada=$membresia->BuscarMembresiaAsociadaalapago();
+					
+					$habilitarmonedero=$buscarmembresiaasociada[0]->habilitarmonedero;
 
-					$concepto=$concepto.'   Vigencia:'.date('d-m-Y',strtotime($buscarmembresiaasociada[0]->fechaexpiracion));
+					$concepto=$concepto.'   Vigencia: '.date('d-m-Y',strtotime($buscarmembresiaasociada[0]->fechaexpiracion));
+					}
+					
+					
+					$tipopagorelacionados=$membresia->TipoPagoRelacionados();
+					if (count($tipopagorelacionados)>0) {
 
+						
+						$tipopago=$tipopagorelacionados[0]->tipopago;
+					}
 				}
 			$objeto=array('idusuarios'=>$idusuarios,'idmembresia'=>$idmembresia,'idservicio'=>$idservicio,'tipo'=>$tipo,'monto'=>$montoapagar,'estatus'=>$estatus,'dividido'=>$dividido,'fechainicial'=>$fechainicial,'fechafinal'=>$fechafinal,'concepto'=>$concepto,'folio'=>$folio,'fechaformato'=>'','nombre'=>$datosusuario[0]->nombre,'paterno'=>$datosusuario[0]->paterno,'materno'=>$datosusuario[0]->materno,'idpago'=>$idpago,'aceptados'=>'','alumnos'=>'','completo'=>'',
 				'fechamin'=>'','fechamax'=>'',
 				'tipopago'=>$tipopago,
-				'aceptacionpagoservicio'=>$aceptacionpagoservicio
+				'aceptacionpagoservicio'=>$aceptacionpagoservicio,
+				'habilitarmonedero'=>$habilitarmonedero
 			);
 
 				$total=$total+$montoapagar;
@@ -347,6 +364,8 @@ try
 
 	$respuesta['respuesta']=$pagosencontrados;
 	$respuesta['total']=$total;
+	$respuesta['monedero']=$obtenerdatosusuario['monedero'];
+
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);
 	echo $myJSON;

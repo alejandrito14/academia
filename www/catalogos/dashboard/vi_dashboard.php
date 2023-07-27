@@ -153,17 +153,17 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
                             </div>
-                            <div class="col-xl-3 col-md-4">
-                                <div class="card bg-naranja text-white mb-4">
-                                    <div class="card-body">COACHES</div>
-                                    <div class="card-footer ">
-                                        <a class="small text-white stretched-link" onclick="ListadoCoaches()" style="width: 100%;cursor: pointer;">
-                                        	<h3>
-	                                        	<span class="mdi  mdi-account"></span></span>
-	                                        	<span id="coachregistros">0</span>
-	                                        	</h3>
-                                        </a>
-                                        <div class="small text-white">
+                <div class="col-xl-3 col-md-4">
+                   <div class="card bg-naranja text-white mb-4">
+                      <div class="card-body">COACHES</div>
+                     <div class="card-footer ">
+                         <a class="small text-white stretched-link" onclick="ListadoCoaches()" style="width: 100%;cursor: pointer;">
+                         <h3>
+	                        	<span class="mdi  mdi-account"></span></span>
+	                        	<span id="coachregistros">0</span>
+	                        </h3>
+                        </a>
+                        <div class="small text-white">
                  <div id="mostrarcoaches">
 
             <div id="" class="panel-actions">

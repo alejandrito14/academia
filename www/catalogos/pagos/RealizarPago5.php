@@ -4,7 +4,6 @@ header('Access-Control-Allow-Origin: *');
 
 //Inlcuimos las clases a utilizar
 require_once "clases/conexcion.php";
-
 require_once "clases/class.Funciones.php";
 /*require_once "clases/class.MovimientoBitacora.php";
 */require_once "clases/class.Usuarios.php";
@@ -88,7 +87,7 @@ try {
      $tipopago=new Tipodepagos();
      $tipopago->db=$db;
 
-      if ($montomonedero>0) {
+     if ($montomonedero>0) {
   
             if ($montomonedero==$sumatotalapagar) {
                $idtipodepago=0;
@@ -110,8 +109,13 @@ try {
                 $tipopago->idtipodepago=$idtipodepago;
            
               $obtenertipopago=$tipopago->ObtenerTipodepago2();
+
+                if ($variable!='') {
+
+                  $variable=','.$variable;
+                }
  
-              $variable=','.$variable;
+             
 
              // var_dump($obtenertipopago);die();
             }else{
@@ -130,7 +134,11 @@ try {
          $notapago->comisiontotal=$comisiontotal;
          $notapago->montomonedero=$montomonedero;
          $notapago->estatus=0;
-         $notapago->tipopago=$obtenertipopago[0]->tipo.$variable;
+        
+        if($obtenertipopago[0]->tipo!=$variable) {
+           $variable=$obtenertipopago[0]->tipo.$variable;
+         }
+         $notapago->tipopago=$variable;
          $notapago->idtipopago=$idtipodepago;
          $notapago->confoto=$confoto;
          $notapago->datostarjeta=$datostarjeta;

@@ -842,6 +842,7 @@ class Pagos
 					pagos.tipodepago,
 					pagos.descuento,
 					pagos.folio,
+					pagos.pagoinscripcion,
 					usuarios.nombre,
 					usuarios.paterno,
 					usuarios.materno,
@@ -899,6 +900,8 @@ class Pagos
 		
 		$resp=$this->db->consulta($sql);
 	}
+
+	
 
 
 }

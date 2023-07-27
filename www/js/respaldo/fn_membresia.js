@@ -1,7 +1,7 @@
 
 
 function Guardarmembresia(form,regresar,donde,idmenumodulo)
-{
+{ 
 	if(confirm("\u00BFDesea realizar esta operaci\u00f3n?"))
 	{			
 		//recibimos todos los datos..
@@ -13,9 +13,12 @@ function Guardarmembresia(form,regresar,donde,idmenumodulo)
 		var inppadre=$("#inppadre").is(':checked')?1:0;
 		var inphijo=$("#inphijo").is(':checked')?1:0;
 		var inpnieto=$("#inpnieto").is(':checked')?1:0;
+		var fecha=$("#v_fecha").val();
+		var repetir=$("#v_repetir").val();
 
 		var v_descripcion=$("#v_descripcion").val();
 		var v_costo=$("#v_costo").val();
+		var v_costoinscripcion=$("#v_costoinscripcion").val();
 		var v_duracion=$("#v_duracion").val();
 		var v_limite=$("#v_limite").val();
 		var v_limitemembresia=$("#v_limitemembresia").val();
@@ -32,7 +35,8 @@ function Guardarmembresia(form,regresar,donde,idmenumodulo)
 				var objeto={
 					servicio:idservicio,
 					selecttipo:selecttipo_,
-					inputcantidad:inputcantidad_
+					inputcantidad:inputcantidad_,
+					idelemento:dividir
 
 				};
 
@@ -53,17 +57,77 @@ function Guardarmembresia(form,regresar,donde,idmenumodulo)
 				var objeto={
 					tiposervicio:idtiposervicio,
 					selecttipo:selecttipo_,
-					inputcantidad:inputcantidad_
-
+					inputcantidad:inputcantidad_,
+					idelemento:dividir
 				};
 
 				tiposerviciosasignados.push(objeto);
 
 			});
+			var bandera=1;
 
-			var porcategoria=$("#v_tiposervicio").is(':checked')?1:0;
-			var porservicio=$("#v_servicio").is(':checked')?1:0;
-			var v_color=$("#v_color").val();
+			if (serviciosasignados.length>0) {
+				for (var i = 0; i < serviciosasignados.length; i++) {
+
+					if (serviciosasignados[i].inputcantidad=='') {
+						bandera=0;
+						$("#inputcantidad_"+serviciosasignados[i].idelemento).css('border-color','red');
+					}
+
+					if (serviciosasignados[i].selecttipo == 0) {
+						bandera=0;
+						$("#selecttipo_"+serviciosasignados[i].idelemento).css('border-color','red');
+
+					}
+				}
+			}
+
+			if (tiposerviciosasignados.length>0) {
+			for (var i = 0; i < tiposerviciosasignados.length;i++) {
+				if (tiposerviciosasignados[i].inputcantidad == '') {
+					bandera=0;
+					$("#inputcantidad2_"+tiposerviciosasignados[i].idelemento).css('border-color','red');
+
+				}
+
+				if (tiposerviciosasignados[i].selecttipo == 0) {
+					bandera=0;
+					$("#selecttipo2_"+tiposerviciosasignados[i].idelemento).css('border-color','red');
+
+				}
+			}
+		}
+
+				var diasemana=[];
+				var horainicio=[];
+				var horafin=[];
+		$(".diasemana").each(function(){
+					var valor=$(this).val();
+					diasemana.push(valor);
+				});
+
+
+		$(".horainiciodia").each(function(){
+			var valor=$(this).val();
+			horainicio.push(valor);
+
+		});
+
+
+		$(".horafindia").each(function(){
+			var valor=$(this).val();
+			horafin.push(valor);
+
+		});
+
+		var porcategoria=$("#v_tiposervicio").is(':checked')?1:0;
+		var porservicio=$("#v_servicio").is(':checked')?1:0;
+		var porhorario=$("#v_horarioseleccion").is(':checked')?1:0;
+		var v_color=$("#v_color").val();
+		var v_porhorariodescuento=$("#v_porhorariodescuento").val();
+		var v_porhorariomonto=$("#v_porhorariomonto").val();
+		var v_porhorariodescuento=$("#v_porhorariodescuento").val();
+		var v_porhorariomonto=$("#v_porhorariomonto").val();
 		var id=$("#id").val();
 		var datos = new FormData();
 
@@ -90,16 +154,28 @@ function Guardarmembresia(form,regresar,donde,idmenumodulo)
 		datos.append('porcategoria',porcategoria);
 		datos.append('porservicio',porservicio);
 		datos.append('v_color',v_color);
+		datos.append('v_costoinscripcion',v_costoinscripcion);
 		datos.append('dependede',dependede);
 		datos.append('membresiadepende',membresiadepende);
 		datos.append('inppadre',inppadre);
 		datos.append('inphijo',inphijo);
 		datos.append('inpnieto',inpnieto);
 		datos.append('v_limitemembresia',v_limitemembresia);
+		datos.append('v_fecha',fecha);
+		datos.append('v_repetir',repetir);
+		datos.append('porhorario',porhorario);
+		datos.append('v_porhorariodescuento',v_porhorariodescuento);
+		datos.append('v_porhorariomonto',v_porhorariomonto);
+		datos.append('diasemana',diasemana);
+		datos.append('horainicio',horainicio);
+		datos.append('horafin',horafin);
 
 
-		 $('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
-				
+
+
+		if (bandera==1) {
+		$('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
+
 		setTimeout(function(){
 				  $.ajax({
 					url:'catalogos/membresia/ga_membresia.php', //Url a donde la enviaremos
@@ -128,6 +204,15 @@ function Guardarmembresia(form,regresar,donde,idmenumodulo)
 					  	}
 				  });				  					  
 		},1000);
+
+		}else{
+
+
+			if (bandera==0) {
+
+			AbrirNotificacion('Datos incompletos',"mdi-close-circle");			
+			}
+		}
 	 }
 }
 
@@ -515,9 +600,12 @@ function Desplegartiposervicio() {
 	
 	if ($("#v_tiposervicio").is(':checked')) {
 	$(".divtiposervicio").css('display','block');	
+	$(".divhorariossele").css('display','block');
 	
 	}else{
-		$(".divtiposervicio").css('display','none');	
+
+	$(".divtiposervicio").css('display','none');	
+	$(".divhorariossele").css('display','none');
 
 	}
 }
@@ -532,6 +620,18 @@ function Desplegarporservicio() {
 	}
 }
 
+
+function Desplegarhorarioselecciona() {
+
+		if ($("#v_horarioseleccion").is(':checked')) {
+		
+		$(".divhorarios").css('display','block');	
+	
+	}else{
+		$(".divhorarios").css('display','none');	
+
+	}
+}
 
 
 function AgregarTipoNuevo(){
@@ -680,3 +780,172 @@ function CargarMembresias(valor) {
 					}
 				});
 }
+
+
+
+function AgregarHorarioNuevo(){
+			
+
+
+	contadorhorarioatencion=parseFloat($(".horariosatencion").length)+1;
+
+		tabindex=parseFloat(6)+parseFloat(contadorhorarioatencion);
+
+
+	var html=`
+					<div class="row horariosatencion" id="contador`+contadorhorarioatencion+`">
+										<div class="col-md-3">
+									<label>DIA</label>	
+
+									<select class="form-control diasemana" tabindex="`+tabindex+`">
+										<option value="t">SELECCIONAR DIA</option>
+										<option value="0">DOMINGO</option>
+										<option value="1">LUNES</option>
+										<option value="2">MARTES</option>
+										<option value="3">MIÉRCOLES</option>
+										<option value="4">JUEVES</option>
+										<option value="5">VIERNES</option>
+										<option value="6">SÁBADO</option>
+
+									</select>
+									</div>
+									<div class="col-md-4">
+									<label>HORA INICIO:</label>
+										<div class="form-group mb-2" style="">
+											<input type="time"  class="form-control horainiciodia" tabindex="`+(tabindex+1)+`"  >
+										</div>
+
+									</div>
+
+								
+									<div class="col-md-4">
+
+										<label>HORA FIN:</label>
+										<div class="form-group mb-2" style="">
+											<input type="time"  class="form-control horafindia" tabindex="`+(tabindex+1)+`" >
+										</div>
+									</div>
+									<div class="col-md-1">
+										<button type="button"  style="margin-top: 2em;" onclick="EliminarOpcionHorario(`+contadorhorarioatencion+`)" class="btn btn_rojo"><i class="mdi mdi-delete-empty"></i></button>
+									</div>
+								</div>
+
+	`;
+
+
+	$("#horarios").append(html)
+
+
+	
+	
+	
+	//CargarServicios();
+
+}
+
+function ObtenerHorariosMembresia(idmembresia) {
+
+		var datos="idmembresia="+idmembresia;
+
+
+		$.ajax({
+					url: 'catalogos/membresia/ObtenerHorariosMembresia.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					data:datos,
+					dataType:'json',
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+
+						var horarios=msj.respuesta;
+
+						if (horarios.length>0) {
+							$(".divhorarios").css('display','block');
+					
+							PintarHorariosmembresia(horarios);
+						}
+
+
+					}
+				});
+}
+
+function PintarHorariosmembresia(respuesta) {
+			var html="";
+	var htmls="";
+
+	
+
+				for (var i = 0; i <respuesta.length; i++) {
+
+						obtenerdiv=$("#horarios").html();
+						contadorhorarioatencion=parseFloat($(".horariosatencion").length)+1;
+						tabindex=parseFloat(6)+parseFloat(contadorhorarioatencion);
+	
+					var html=`
+					<div class="row horariosatencion" id="contador`+contadorhorarioatencion+`">
+										<div class="col-md-3">
+									<label>DIA</label>	
+
+									<select class="form-control diasemana" id="diaelegido_`+contadorhorarioatencion+`" tabindex="`+tabindex+`">
+										<option value="t">SELECCIONAR DIA</option>
+										<option value="0">DOMINGO</option>
+										<option value="1">LUNES</option>
+										<option value="2">MARTES</option>
+										<option value="3">MIÉRCOLES</option>
+										<option value="4">JUEVES</option>
+										<option value="5">VIERNES</option>
+										<option value="6">SÁBADO</option>
+
+									</select>
+									</div>
+									<div class="col-md-4">
+									<label>HORA INICIO:</label>
+										<div class="form-group mb-2" style="">
+											<input type="time"  class="form-control horainiciodia" id="horarioinicio_`+contadorhorarioatencion+`" tabindex="`+(tabindex+1)+`"  >
+										</div>
+
+									</div>
+
+								
+									<div class="col-md-4">
+
+										<label>HORA FIN:</label>
+										<div class="form-group mb-2" style="">
+											<input type="time"  class="form-control horafindia" id="horariofin_`+contadorhorarioatencion+`" tabindex="`+(tabindex+1)+`" >
+										</div>
+									</div>
+									<div class="col-md-1">
+										<button type="button"  style="margin-top: 2em;" onclick="EliminarOpcionHorario(`+contadorhorarioatencion+`)" class="btn btn_rojo"><i class="mdi mdi-delete-empty"></i></button>
+									</div>
+								</div>
+
+	`;
+
+
+	
+
+	 	colocarhtml=obtenerdiv+html;
+			var dia=respuesta[i].dia;
+			var horainicial=respuesta[i].horainicial;
+			var horafinal=respuesta[i].horafinal;
+
+
+			$("#horarios").append(html);
+			$("#diaelegido_"+contadorhorarioatencion).val(dia);
+			$("#horarioinicio_"+contadorhorarioatencion).val(horainicial);
+ 		$("#horariofin_"+contadorhorarioatencion).val(horafinal);
+	
+
+			
+	}
+
+			
+
+}
+

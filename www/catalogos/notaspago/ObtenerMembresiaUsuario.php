@@ -27,7 +27,7 @@ $servicios->db=$db;
 $pagos=new Pagos();
 $pagos->db=$db;
 
-$iduser=$_POST['id_user'];
+$iduser=$se->obtenerSesion('usuariopago');
 $pagoselegidos=json_decode($_POST['pagos']);
 $descuentosaplicados=json_decode($_POST['descuentosaplicados']);
 
@@ -173,7 +173,8 @@ $descuentosaplicados=json_decode($_POST['descuentosaplicados']);
 	
 	$respuesta['respuesta']=1;
 	$respuesta['descuentomembresia']=$descuentosmembresia;
-	
+	$respuesta['iduser']=$iduser;
+
 	//Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);
 	echo $myJSON;

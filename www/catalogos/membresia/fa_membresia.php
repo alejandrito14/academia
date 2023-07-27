@@ -49,6 +49,7 @@ if(!isset($_GET['idmembresia'])){
 	$empresa="";
 	$estatus =1;
 	$costoinscripcion=0;
+	$habilitarmonedero=0;
 	//$descripcion="";
 		$ruta="images/sinfoto.png";
 
@@ -75,6 +76,7 @@ if(!isset($_GET['idmembresia'])){
 	//Realizamos la consulta en tabla empresas
 	$result_membresia = $emp->buscarmembresia();
 	$result_membresia_row = $db->fetch_assoc($result_membresia);
+
 
 	//Cargamos en las variables los datos de las empresas
 
@@ -104,7 +106,7 @@ if(!isset($_GET['idmembresia'])){
 	$fecha=$result_membresia_row['fecha'];
 	$tipodescuentoporhorario=$result_membresia_row['tipodescuentoporhorario'];
 	$montoporhorario=$result_membresia_row['montoporhorario'];
-
+$habilitarmonedero=$result_membresia_row['habilitarmonedero'];
 	
 	$ruta='';
 	if($foto==""){
@@ -406,58 +408,11 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							</div>
 								
 							<div id="tiposervicios"></div>
-						</div>
 
 
 
-					</div>
-				</div>
-			</div>
-
-				<div class="card" style="" id="divhorarios">
-				<div class="card-header" style="">
-					
-				</div>
-				<div class="card-body">
-						<div style="margin-top: 3em">
-
-							<div class="row">
-								<div class="col-md-12">
-
-									<div class="form-check" style="margin-bottom: 1em;">
-                    
-					       <input type="checkbox" class="form-check-input " name="v_servicio" value="1" id="v_servicio" onclick="Desplegarporservicio()" style="top: -0.3em;">
-					            <label class="form-check-label">POR SERVICIO</label>
-					       </div>
-								
-								
-								</div>
-								<div class="col-md-3">
-										
-									</div>
-							</div>
-							<div class="divservicio" style="display: none;">
-							<div class="row">
-								<div class="col-md-12">
-									
-									<button class="btn btn-primary" type="button" style=" float: right;   margin-top: -1em;" onclick="AgregarServicioNuevo()">NUEVO SERVICIO</button>
-								</div>
-							</div>
-								
-								<div id="servicios"></div>
-
-							</div>
-
-
-
-
-					</div>
-				</div>
-			</div>
-
-
-					<div class="card" style="" id="divhorarios">
-				<div class="card-header" style="">
+									<div class="card" style="" id="divhorarios">
+				<div class="" style="margin-top: 10px;" >
 
 				</div>
 				<div class="card-body">
@@ -517,6 +472,87 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					</div>
 				</div>
 			</div>
+						</div>
+
+
+
+					</div>
+				</div>
+			</div>
+
+				<div class="card" style="" id="divhorarios">
+				<div class="card-header" style="">
+					
+				</div>
+				<div class="card-body">
+						<div style="margin-top: 3em">
+
+							<div class="row">
+								<div class="col-md-12">
+
+									<div class="form-check" style="margin-bottom: 1em;">
+                    
+					       <input type="checkbox" class="form-check-input " name="v_servicio" value="1" id="v_servicio" onclick="Desplegarporservicio()" style="top: -0.3em;">
+					            <label class="form-check-label">POR SERVICIO</label>
+					       </div>
+								
+								
+								</div>
+								<div class="col-md-3">
+										
+									</div>
+							</div>
+							<div class="divservicio" style="display: none;">
+							<div class="row">
+								<div class="col-md-12">
+									
+									<button class="btn btn-primary" type="button" style=" float: right;   margin-top: -1em;" onclick="AgregarServicioNuevo()">NUEVO SERVICIO</button>
+								</div>
+							</div>
+								
+								<div id="servicios"></div>
+
+							</div>
+
+
+
+
+					</div>
+				</div>
+			</div>
+
+				<div class="card" style="" id="divhorarios">
+				<div class="card-header" style="">
+					
+				</div>
+				<div class="card-body">
+						<div style="margin-top: 3em">
+
+							<div class="row">
+								<div class="col-md-12">
+
+									<label>TIPO DE PAGOS ADMITIDOS</label>
+
+									<div class="form-check" style="margin-bottom: 1em;">
+                    
+					       <input type="checkbox" class="form-check-input " name="v_monedero" value="0" id="v_monedero" onchange="Habilitarmonedero()" style="top: -0.3em;">
+					            <label class="form-check-label">Monedero</label>
+					       </div>
+
+					       <div id="todostipopagos"></div>
+
+
+
+
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				
 
 
 			</div>
@@ -540,6 +576,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 	var inpnieto='<?php echo $inpnieto; ?>';
 	var tipodescuentoporhorario='<?php echo $tipodescuentoporhorario;?>';
 	var montoporhorario='<?php echo $montoporhorario;?>';
+	var habilitarmonedero='<?php echo $habilitarmonedero; ?>';
+		CargarTipoPagosMembresia();
 
 	if (idmembresia>0) {
 
@@ -566,6 +604,12 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 			CargarMembresias(membresiadepende);
 		}
 
+		if (habilitarmonedero==1) {
+		 	$("#v_monedero").prop('checked',true);
+			 Habilitarmonedero();
+			
+		}
+
 		if (inppadre==1) {
 			$("#inppadre").prop('checked',true);
 		}
@@ -580,10 +624,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		$("#v_porhorariodescuento").val(tipodescuentoporhorario);
 		$("#v_porhorariomonto").val(montoporhorario);
 
-		
+				ObtenerTipoPagoMembresia(idmembresia);
+
 	}
 			 
-
 	/*$("#v_costo").on({
 		  "focus": function(event) {
 		    $(event.target).select();

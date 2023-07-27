@@ -276,7 +276,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 			"oLanguage": {
 						"sLengthMenu": "Mostrar _MENU_ ",
-						"sZeroRecords": "NO EXISTEN PAQUETES EN LA BASE DE DATOS.",
+						"sZeroRecords": "NO EXISTEN PRODUCTOS EN LA BASE DE DATOS.",
 						"sInfo": "Mostrar _START_ a _END_ de _TOTAL_ Registros",
 						"sInfoEmpty": "desde 0 a 0 de 0 records",
 						"sInfoFiltered": "(filtered desde _MAX_ total Registros)",

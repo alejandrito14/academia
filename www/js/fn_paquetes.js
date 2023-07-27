@@ -163,13 +163,25 @@ function Guardarpaquete(form, regresar, donde, idmenu) {
 		}
 
 
+		var v_sku=$("#v_sku").val();
+	
+		var v_inventario=$("#v_inventario").is(':checked')?1:0;
+		var v_mostrarapp=$("#v_mostrarapp").is(':checked')?1:0;
+
+	
+
+		var resultado=validarSKU();
+
+ 	    resultado.then(r => {
+
+ 		if (r==1) {
 
 		if (valido==1) {
 
 			if (confirm("\u00BFDesea realizar esta operaci\u00f3n?")) {
 
 
-
+				var v_preciosugerido=$("#v_preciosugerido").val();
 				var v_sucursal=$("#v_sucursal").val();
 				var v_nombre = $('#v_nombre').val();
 				var v_descripcion = $('#v_descripcion').val();
@@ -236,8 +248,13 @@ function Guardarpaquete(form, regresar, donde, idmenu) {
 		data.append('v_estatus', v_estatus);
 		data.append('VALIDACION', VALIDACION);
 		data.append('precioventa',precioventa);
+		
+		data.append('v_sku',v_sku);
 
+		data.append('v_inventario',v_inventario);
+		data.append('v_mostrarapp',v_mostrarapp);
 		data.append('id', id);
+		data.append('v_preciosugerido',v_preciosugerido);
 		data.append('idproductos',idproductos);
 		data.append('cantidades',cantidadinsumo);
 		data.append('insumomedidas',insumomedida);
@@ -305,9 +322,11 @@ function Guardarpaquete(form, regresar, donde, idmenu) {
 						selectedCategory=null;
 						console.log("El resultado de msj es: " + msj);
 						if (msj == 1) {
+							
+							var URL = regresar + "?idmenumodulo=" + idmenu + "&ac=1&msj=Operacion realizada con exito";
+							aparecermodulos(URL, donde);
 
-
-							if (id==0) {
+							/*if (id==0) {
 
 								if(confirm("¿Desea agregar otro producto?"))
 									{
@@ -327,7 +346,7 @@ function Guardarpaquete(form, regresar, donde, idmenu) {
 								var URL = regresar + "?idmenumodulo=" + idmenu + "&ac=1&msj=Operacion realizada con exito";
 										aparecermodulos(URL, donde);
 								
-							}
+							}*/
 
 							
 							} else {
@@ -355,6 +374,8 @@ function Guardarpaquete(form, regresar, donde, idmenu) {
 		AbrirNotificacion(mensaje,"mdi-checkbox-marked-circle");
 
 	}
+  }
+});
 
 }
 
@@ -1891,4 +1912,42 @@ function expandirTodos($elemento) {
       expandirTodos($(this)); // Llamada recursiva para expandir las sublistas internas
     }
   });
+}
+function validarSKU() {
+	
+	return new Promise((resolve, reject) => {
+
+	 var sku = $('#v_sku').val();
+	 var id = $('#id').val();
+
+    // Realiza la petición AJAX al servidor
+    $.ajax({
+      url: 'catalogos/paquetes/validar_sku.php', //Url a donde la enviaremos
+      type: 'POST',
+      data: { sku: sku,id:id },
+      dataType:'JSON',
+      success: function (response) {
+        // La respuesta del servidor debe ser un valor booleano que indique si el SKU es válido o no
+        if (response.respuesta == 0) {
+         $('#mensajeValidacion').text('SKU válido');
+         $('#mensajeValidacion').removeClass('novalido');
+         $('#mensajeValidacion').addClass('valido');
+
+        	} else {
+
+          $('#mensajeValidacion').text('SKU ya existe en la base de datos');
+          $('#mensajeValidacion').removeClass('valido');
+          $('#mensajeValidacion').addClass('novalido');
+
+        }
+        resolve(response.respuesta);
+
+		      },
+		      error: function (error) {
+		        // Manejo de errores si la petición no se pudo realizar
+		        console.error('Error al validar SKU:', error);
+		      }
+    	});
+
+	});
 }

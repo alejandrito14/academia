@@ -30,6 +30,7 @@ require_once("../../clases/class.Pagos.php");
 require_once("../../clases/class.Botones.php");
 require_once("../../clases/class.Funciones.php");
 require_once("../../clases/class.Usuarios.php");
+require_once("../../clases/class.Pais.php");
 
 //Declaración de objeto de clase conexión
 $db = new MySQL();
@@ -44,6 +45,9 @@ $r_clientes = $cli->lista_Usuarios(3);
 $a_cliente = $db->fetch_assoc($r_clientes);
 $r_clientes_num = $db->num_rows($r_clientes);
 
+$pais = new Paises();
+$pais->db=$db;
+
 
 //obtenemos todas las empreas que puede visualizar el usuario.
 
@@ -56,6 +60,9 @@ $l_pagos_row = $db->fetch_assoc($l_pagos);
 
 $l_pagos_num = $db->num_rows($l_pagos);
 
+$obtenerpais2=$pais->ObtenerPaices();
+$rows_pais2=$db->fetch_assoc($obtenerpais2);
+  
 /*======================= INICIA VALIDACIÓN DE RESPUESTA (alertas) =========================*/
 
 if(isset($_GET['ac']))
@@ -93,7 +100,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 
 <div class="card">
 	<div class="card-body">
-		<h5 class="card-title" style="float: left;">COBRAR</h5>
+		<h5 class="card-title" style="float: left;"></h5>
 		
 		<div style="float:right;">
 			<button type="button" onClick="abrir_filtro('modal-filtros');" class="btn btn-primary" style="float: right;display: none;"><i class="mdi mdi-account-search"></i>  BUSCAR</button>			
@@ -126,34 +133,16 @@ $estatuspago = array('NO PAGADO','PAGADO');
 		<div class="card">
 			<div class="card-body">
 
-					<label for="">SELECCIONAR CLIENTE:</label>
+					<label for="" style="padding-left: 10px;">SELECCIONAR CLIENTE:</label>
 
-				 <div class="col" style="padding: 0">
-                    <div class="form-group m-t-20">  
-            <input type="text" class="form-control" name="buscadorcli_?>" id="buscadorcli_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadorcli_','.cli_')">
-            </div>
-          </div>
                    
           <div class="col">
-                   
-              <div class="clientes "  style="overflow:scroll;height:100px;overflow-x: hidden" id="clientes_<?php echo $a_cliente['idusuarios'];?>"> 
-               <?php      
-              if ($r_clientes_num>0) {  
-                  do {
-            ?>
-                  <div  class="form-check cli_"  id="cli_<?php echo $a_cliente['idusuarios'];?>_<?php echo $a_cliente['idcliente'];?>">
-                      <?php   
-                      $valor="";
-                     $nombre=mb_strtoupper($f->imprimir_cadena_utf8($a_cliente['nombre']." ".$a_cliente['paterno']." ".$a_cliente['materno']));
-                    ?>
-                    <input  type="checkbox" style="" onchange="SeleccionarClientePagos('<?php echo $a_cliente['idusuarios'];?>')" value="" class="form-check-input chkcliente_<?php echo $idcupon;?>" id="inputcli_<?php echo $a_cliente['idusuarios']?>_<?php echo $idcupon;?>" <?php echo $valor; ?>>
-                    <label class="form-check-label" for="flexCheckDefault" ><?php echo $nombre; ?></label>
-                </div>                    
-                  <?php
-                    } while ($a_cliente = $db->fetch_assoc($r_clientes));
-                     ?>
-                  <?php } ?>    
-            </div>
+
+          	<form class="form-inline">
+								    <input class="form-control mr-sm-2 nombreusuario" type="text" aria-label="Search" style="width: 80%;" disabled="disabled">
+								    <button class="btn  my-2 my-sm-0" type="button" onclick="ObtenerClientesFiltro()"><span class="mdi mdi-magnify"></span></button>
+								  </form>
+             
           </div>
       </div> <!-- lclientesdiv -->
 
@@ -161,26 +150,35 @@ $estatuspago = array('NO PAGADO','PAGADO');
 		
 
 	</div>
+	<div class="col-md-6" >
+		<div class="row" style="    padding-right: 15px;border-radius: 10px;width: 100%;">
+			<div id="datoscliente" class="col-md-12" style="margin-top: 40px;margin-bottom: 1em;"></div>
+		</div>
+		<div class=""></div>
+	</div>
+</div> 
+<div class="row">
+	<div class="col-md-12" >
+<div class ="divtabs" style="display: none;">
+			<div class="tabs" style="width: 100%;    padding-left: 30px;    padding-right: 30px;">
+			  <button class="tab boton1" id="punto-venta-tab" style="width: 50%;" onclick="openTab('punto-venta')">Punto de Venta</button>	
+			  <button class="tab boton1" id="pagos-tab" style="width: 50%;" onclick="openTab('pagos')">Pagos</button>
+			</div>
+
 </div>
 
-<div class="tabs" style="width: 100%;">
-  <button class="tab boton1" id="punto-venta-tab" style="width: 50%;" onclick="openTab('punto-venta')">Punto de Venta</button>
-  <button class="tab boton1" id="pagos-tab" style="width: 50%;" onclick="openTab('pagos')">Pagos</button>
-</div>
-
-<div id="punto-venta" class="tab-content">
-  <!-- Contenido del punto de venta -->
-	  <div class="row" style="    background: gray;
-	    padding-top: 1em;margin-top: 1em;    margin-right: 0.2em;
-	    margin-left: 0.2em;">
-		    <div class="col-md-12">
+<div id="punto-venta" class="tab-content" style="padding-left: 30px;    padding-right: 30px;">
+ 
+	  <div class="row" style="    background: #a3b4f2;padding-top: 1em;margin-top: 1em;    margin-right: 0.2em;
+	    margin-left: 0.2em;border-radius: 8px;">
+		    <div class="col-md-12" style="    margin-top: 1em;">
 		    	<div class="row" style="    margin-left: 0.5em;">
 		    		 <div class="col-md-12">
 		    		 	 
 		    		 	 <div class="container">
-						  <input type="text" class="form-control" id="searchInput" placeholder="Buscar...">
-						  <ul id="searchResults" class="list-group"></ul>
-						</div>
+						 				 <input type="text" class="form-control" id="searchInput" placeholder="Buscar producto">
+						 				 <ul id="searchResults" class="list-group"></ul>
+											</div>
 					  
 		    		 </div>
 		    		
@@ -192,14 +190,15 @@ $estatuspago = array('NO PAGADO','PAGADO');
     margin-top: 1em;
     margin-right: 0.2em;">
 		    		<div class="col-md-12">
-		    		<table class="table table-striped table-bordered " style="background: white">
+		 <div class="tablapaquetediv" style="display: none;">
+		 <table class="table table-striped table-bordered " style="background: white;">
 		  <thead>
 		    <tr>
-		       <th scope="col">Cantidad</th>
+		      
 		       <th scope="col">Nombre</th>
+		        <th scope="col">Cantidad</th>
 		      <th scope="col">Precio</th>
 		      <th scope="col">Importe</th>
-		      <th scope="col">Acciones</th>
 		    </tr>
 		  </thead>
 		  <tbody id="tblpaquetes">
@@ -208,24 +207,77 @@ $estatuspago = array('NO PAGADO','PAGADO');
 		    <!-- Agrega más filas según tus necesidades -->
 		  </tbody>
 		</table>
+		</div>
+
+			<div class="row" style="    margin-bottom: 1em;">
+				<div class="col-md-10"></div>
+								<div class="col-md-2">
+									 <button id="btnAgregar" class="btn btn-primary" style="float: right;display: none;">Agregar producto</button>
+								</div>
+
+		 
+				</div>
+
+		</div>
+		
+
+		</div>
+
+	</div>
+</div>
+
+	<div id="tablaventa" style="display: none;margin-top: 1em;margin-bottom: 1em;">
+    <h4 for="" style="font-size:18px!important;text-align: center;">Productos agregados</h4>
+
+ <div class="row" style="    background: #a3b4f2;
+	    padding-top: 1em; margin-bottom: 1em;   margin-right: 0.2em;
+	    margin-left: 0.2em;border-radius: 8px;" >
+		    <div class="col-md-12">
+
+
+		<div class="row" style="    margin-left: 1.4em;
+    margin-top: 1em;
+    margin-right: 0.2em;margin-bottom: 1em;" >
+		    		<div class="col-md-12">
+		    		<table class="table table-striped table-bordered " style="background: white">
+		  <thead>
+		    <tr>
+		      
+		       <th scope="col">Nombre</th>
+		        <th scope="col">Cantidad</th>
+		      <th scope="col">Precio</th>
+		      <th scope="col">Importe</th>
+		      <th scope="col">Acciones</th>
+		    </tr>
+		  </thead>
+		  <tbody id="tblpaquetesventa">
+		   
+		    
+		    <!-- Agrega más filas según tus necesidades -->
+		  </tbody>
+		</table>
 
 		</div>
 		</div>
+
     	</div>
 
   		
   		</div>
 
 
+</div>
+</div>
+</div>
 
 </div>
 
-<div id="pagos" class="tab-content">
+<div id="pagos" class="tab-content" style="padding-left: 20px;    padding-right: 20px;">
   <!-- Contenido de los pagos -->
  
-  	<div class="row" style="    background: gray;
+  	<div class="row" style="background: #a3b4f2;
     padding-top: 1em;margin-top: 1em;    margin-right: 0.2em;
-    margin-left: 0.2em;">
+    margin-left: 0.2em;border-radius: 8px;">
   		
 
 	<div class="col-md-12" style="">
@@ -244,7 +296,9 @@ $estatuspago = array('NO PAGADO','PAGADO');
 					<button style="display: none;margin-bottom: 1em;" class="btn btnnuevopago btn_azul" onclick="AbrirModalNuevoPago()">NUEVO PAGO</button>
 			</div>
 				<div class="col-md-12">
-				<div class="todospagos" style="background: #a09f9a;height: 500px;overflow: scroll;"></div>
+				<div class="todospagos" style="background: #e5ecfe;overflow: scroll;"></div>
+
+				<div class="todosdescuentos" style="background: #e5ecfe;height: 500px;overflow: scroll;"></div>
 			</div>
 		</div>
 			<!-- <table id="tbl_pagos" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
@@ -297,18 +351,45 @@ $estatuspago = array('NO PAGADO','PAGADO');
 
 
 </div>
+<div class="card">
+<div style="display: none;" id="metodopagodiv">
+<div class="row" >
 
-<div class="row">
 	
 
-<div class="col-md-6"></div>
+		<div class="col-md-6"></div>
 
 		
-<div class="col-md-6">
-	<div class="row" style="margin-top: 40px;">
+		<div class="col-md-6">
+
+			<div class="row" style="margin-top: 20px;">
+				<div class="col-md-12">
+						<div class="form-group requierefacturadiv" style="margin-left: 10px;display: none;">
+							REQUIERE FACTURA
+							<input type="checkbox" 
+							id="requierefactura" onchange="ObtenerListadoDatosFiscales()" 
+										/>
+
+						</div>
+				</div>
+
+				<div class="col-md-12">
+						<div class="divfiscal" style="">
+							
+
+						</div>
+				</div>
+
+			</div>
+
+	<div class="row" style="margin-top: 10px;
+    padding-right: 30px;
+}">
 	
 	<div class="col-md-12">
-		<button type="button" class="btn  btn-success btn-lg btn-block"  style="display: none;" id="btnmonederodisponible" disabled>MONEDERO $<span id="monederodisponible">0.00</span></button>
+		<button type="button" class="btn  btn-success btn-lg btn-block"  style="display: none;
+    
+    " id="btnmonederodisponible" disabled>APLICAR MONEDERO $<span id="monederodisponible">0.00</span></button>
 	</div>
 </div>
 	<div class="row" style="">
@@ -319,15 +400,15 @@ $estatuspago = array('NO PAGADO','PAGADO');
 		<div class="">
 			<div class="col-md-12">
 				<div class="card">
-				<div class="card-body">
+				<div class="card-body" style="    padding: 1.25rem 0rem 1rem 1rem;">
 			<div class="row" style="
-			    /* margin-left: 1em; */
+			       
 			    ">
 			    	<div class="col-md-12" style="font-size: 16px;">SUBTOTAL: </div>
 			    	<div class="col-md-12" style="font-size: 16px;">MONEDERO: </div>
 			
 				<div class="col-md-12" style="font-size: 16px;">DESCUENTO: </div>
-				<div class="col-md-12" style="font-size: 16px;">DESCUENTO MEMBRESÍA: </div>
+				<div class="col-md-12" style="font-size: 16px;    padding: 0px 0 10px 10px;">DESCUENTO MEMBRESÍA: </div>
 					<div class="col-md-12 divcomision" style="font-size: 16px;display: none;">COMISIÓN: </div>
 
 				<div class="col-md-12" style="font-size: 20px;">TOTAL:</div>
@@ -340,11 +421,10 @@ $estatuspago = array('NO PAGADO','PAGADO');
 </div>
 	<div class="col-md-6" style="font-size: 16px;">
 
-		<div class="row">
+		<div class="row" style="width: 94%;">
 			<div class="col-md-12">
 				<div class="card">
-				<div class="card-body" style="    padding-left: 0;
-    padding-right: 1px;">
+				<div class="card-body" style="padding: 1.25rem 1rem 1rem 1rem;">
 			<div class="row" >
 				<div class="col-md-12" style="text-align: right;">$<span id="subtotal" class="lbltotal" style="
     font-size: 16px;
@@ -357,7 +437,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
     font-size: 16px;
 ">0.00</span>
 				</div>
-				<div class="col-md-12" style="text-align: right;padding-top: 24px;">$<span id="descuentomembresia" style="
+				<div class="col-md-12" style="text-align: right;">$<span id="descuentomembresia" style="
     font-size: 16px;
 ">0.00</span><br>
 				</div><br>
@@ -374,11 +454,11 @@ $estatuspago = array('NO PAGADO','PAGADO');
 	</div>
 		</div>
 	</div>
-	<div class="row">
+	<div class="row" style="padding-right: 30px;">
 		
 		<div class="col-md-12">
 			<div class="form-group">
-			<select name="" id="tipopago" class="form-control" onchange="CargarOpcionesTipopago()" style="width: 100%;">
+			<select name="" id="tipopago" class="form-control" onchange="CargarOpcionesTipopago()" style="padding-left: 30px;">
 				<option value="0">SELECCIONAR MÉTODO DE PAGO</option>
 			</select>
 		</div>
@@ -392,7 +472,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 		 <div class="divtransferencia" style="display: none;">
       <div  >
         <div class="list media-list" style="list-style: none;">
-           <div class="informacioncuenta"></div>
+           <div class="informacioncuenta" style="padding-right: 30px;"></div>
         </div>
         
 
@@ -403,11 +483,11 @@ $estatuspago = array('NO PAGADO','PAGADO');
       <span style="margin-top: .5em;margin-left: .5em;">¿Con cuanto pagas?</span>
     </div>
 
-    <div class="list media-list sortable">
-     <div  style="list-style: none;">
+    <div class="row" style="">
+     <div  style="" class="col-md-12">
       
 
-          <div>
+          <div style="padding-right:30px;">
             
             <div class="label-radio item-content">
               
@@ -415,7 +495,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
              
                 <div class="">
 
-                  <input type="number" name="montovisual" class="form-control" id="montovisual" style="font-size: 18px;float: left;" placeholder="$0.00"  />
+                  <input type="number" name="montovisual" class="form-control" id="montovisual" style="font-size: 18px;float: left;padding-right: 30px;" placeholder="$0.00"  />
                   <input type="number" name="montocliente" id="montocliente"  style="font-size: 18px;float: left;width: 60%;    margin-left: 1.2em;display: none;" placeholder="$0.00"   />
 
                  
@@ -453,10 +533,11 @@ $estatuspago = array('NO PAGADO','PAGADO');
 
       </div>
 
-      <div class="row">
-	<div class="col-md-12">
-		<label class="">Cambio $<span id="cambio">0.00</span></label>
-	</div>
+      <div class="row" style="margin-top: 5px;">
+					<div class="col-md-12">
+						<label class="">Cambio $<span id="cambio">0.00</span>
+						</label>
+					</div>
 	
 </div>
 </div> 
@@ -501,12 +582,12 @@ $estatuspago = array('NO PAGADO','PAGADO');
             </div>
           </div>
 
-          <div class="list simple-list li">
+          <div  style="padding-right: 30px;">
             <ul id="listadotarjetas">
               
             </ul>
             <div class="divisiones2 divnueva" style="display: none;">
-              <a class="btn btn-warning botonesredondeado botones btnnuevatarjeta"  style="color: black!important;background: #FFC830!important;margin-right: 1em; margin-top: 1em;margin-bottom: 10px; width: 100%;">Nueva Tarjeta</a>
+              <a class="btn btn-warning botonesredondeado botones btnnuevatarjeta"  style="color: black!important;background: #FFC830!important;margin-right: 1em; margin-top: 1em;margin-bottom: 10px;width: 100%;">Nueva Tarjeta</a>
             </div>    
           </div>
               
@@ -529,8 +610,8 @@ $estatuspago = array('NO PAGADO','PAGADO');
                 <div class="item-inner">
                 <div class="item-title item-label" >*Nombre en la tarjeta</div> 
 
-                <div class="item-input-wrap" style="font-size: 15px;">
-                  <input type="text" name="cardholder-name" placeholder="TITULAR DE LA TARJETA" class="mayusculas place form-control" id="v_cardholder-name" />
+                <div class="item-input-wrap" style="font-size: 15px;padding-right: 30px;">
+                  <input type="text" name="cardholder-name" placeholder="TITULAR DE LA TARJETA" class="mayusculas place form-control" id="v_cardholder-name" style="" />
                   <span class="input-clear-button"></span>
                 </div>
                   <label for="" id="lblnombre" class="lbl" style="color:red;"></label>
@@ -583,9 +664,8 @@ $estatuspago = array('NO PAGADO','PAGADO');
               </div>
           </div>
           <div class="sr-field-error " id="card-errors" role="alert" style="color:#E25950;"></div>
-          <div class=" ">
-            <a class="btn btn-warning" onclick="" id="submit-card" style="margin-bottom: 1em;width: 100%; color: white!important;
-    background: #FFC830!important;">Guardar Tarjeta</a>
+          <div class=" " style="padding-right: 30px;">
+            <a class="btn btn-warning" onclick="" id="submit-card" style="margin-bottom: 1em; color: white!important; background: #FFC830!important;width: 100%;">Guardar Tarjeta</a>
 
 
 
@@ -603,13 +683,17 @@ $estatuspago = array('NO PAGADO','PAGADO');
 	</div>
 </div>
 
-<div class="row">
-	
-	<div class="col-md-12">
-		<button type="button" class="btn  btn-success btn-lg btn-block" id="btnpagarresumen" disabled onclick="RealizarpagoCliente()">PAGAR</button>
-	</div>
+				<div class="row" style="padding-right: 30px;">
+					
+						<div class="col-md-12">
+							<button type="button" class="btn  btn-success btn-lg btn-block" id="btnpagarresumen" style="background: #007aff;border-color: #007aff;" disabled onclick="RealizarpagoCliente()" style="">PAGAR</button>
+						</div>
+				</div>
+
+		</div>
 </div>
 </div>
+
 </div>
 
 <div class="row">
@@ -657,6 +741,325 @@ $estatuspago = array('NO PAGADO','PAGADO');
       </div>
     </div>
   </div>
+</div>
+
+
+<div class="modal" id="modaldatofiscal" tabindex="-1" role="dialog">
+  <div class="modal-dialog " role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">NUEVO DATO FISCAL</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<div class="row">
+      		<div class="col-md-12">
+      		<form>
+      			<div class="row">
+          <div class="col-md-12">
+
+          		<form method="post" action="#" enctype="multipart/form-data">
+								    <div class="card" style="width: 18rem;margin: auto;margin-top: 3em;">
+								        <img class="card-img-top" src="">
+								        <div id="d_foto" style="text-align:center; ">
+											<img src="<?php echo $ruta; ?>" class="card-img-top" alt="" style="border: 1px #777 solid"/> 
+										</div>
+								        <div class="card-body">
+								            <h5 class="card-title"></h5>
+								           
+								            <div class="form-group">
+
+								            	
+								               
+								                <input type="file" class="form-control-file" name="image" id="image" onchange="SubirImagenFiscal()">
+								            </div>
+								          <!--   <input type="button" class="btn btn-primary upload" value="Subir"> -->
+								        </div>
+								    </div>
+								</form>
+          <div class="form-group">
+
+            <input type="hidden" id="v_idfactura" value="0">
+            <label>RAZON SOCIAL:</label>
+            <input name="v_fis_razonsocial" id="v_fis_razonsocial" title="Razon Social" type="text" class="form-control" placeholder="RAZON SOCIAL"  required value="<?php echo $v_fis_razonsocial; ?>" >
+            <label for="" id="lblrazon" style="color: red;"></label>
+          </div>
+          </div>
+
+          <div class="col-md-12">
+
+          <div class="form-group">
+            <label>RFC:</label>
+            <input name="v_fis_rfc" id="v_fis_rfc" title="RFC" type="text" class="form-control" placeholder="RFC" onkeyup="Validarrfc();" required value="<?php echo $v_fis_rfc; ?>" >
+            <label id="lblrfc" style="color: red;"></label>
+          </div>
+        </div>
+
+
+          <div class="col-md-12">
+              <div class="form-group ">
+                <label for="">CORREO FISCAL</label>
+                <input type="text" id="correofiscal" title="CORREO FISCAL" class="form-control" placeholder="CORREO FISCAL" value="<?php echo $correofiscal; ?>">
+
+               <label id="lblcorreofiscal" style="color: red;"></label>
+
+              </div>
+              
+            </div>
+
+       
+
+        </div>
+          <div class="row">
+            
+            <div class="col-md-12">
+            	 
+              <div class="form-group m-t-20">
+                <label>CP:</label>
+                <input name="v_fis_cp" id="v_fis_cp" title="CP" type="text" class="form-control" placeholder="CP" onkeyup="Buscarcodigo()" required value="<?php echo $v_fis_cp; ?>">
+                <label id="lblcp" style="color: red;"></label>
+
+              </div>
+            </div>
+            
+
+            <div class="col-md-12">
+
+                <div class="form-group m-t-20">
+                <label>PAIS:</label>
+               
+                <select name="v_fis_pais" id="v_fis_pais" class="form-control" onchange="ObtenerEstadosCatalogo2(0,$(this).val(),'v_fis_estado');">
+                  <option value="0">SELECCIONAR PAIS</option>
+
+                    <?php
+
+                  do { ?>
+
+                    <option  value="<?php echo $rows_pais2['idpais'] ?>" <?php if($rows_pais2['idpais']==$idpais) echo "selected"; ?>><?php echo mb_strtoupper($f->imprimir_cadena_utf8($rows_pais2['pais']));?></option>
+
+                  <?php } while($rows_pais2=$db->fetch_assoc($obtenerpais2));
+
+                  ?>
+                
+
+                </select>
+
+               <label id="lblpais" style="color: red;"></label>
+
+              </div>
+
+               
+
+
+          
+              
+            </div>
+
+            <div class="col-md-12">
+              
+             
+
+                  <div class="form-group m-t-20">
+                <label>ESTADO:</label>
+               
+                <select name="v_fis_estado" id="v_fis_estado" class="form-control" onchange="ObtenerMunicipiosCatalogo(0,$(this).val(),'v_fis_municipio')">
+                  <option value="0">SELECCIONAR ESTADO</option>
+                </select>
+                <label id="lblestado" style="color: red;"></label>
+
+              </div>   
+              
+            </div>  
+            
+            <div class="col-md-12">
+           
+
+                <div class="form-group m-t-20">
+                <label>MUNICIPIO:</label>
+                <select name="v_fis_municipio" id="v_fis_municipio" class="form-control" onchange="  ObtenerMuColonias();">
+                  <option value="0">SELECCIONAR MUNICIPIO</option>
+                </select>
+
+               <label id="lblmunicipio" style="color: red;"></label>
+
+              </div> 
+              
+            </div>  
+  
+              <div class="col-md-12">
+
+              <div class="form-group m-t-20">
+                <label>COLONIA:</label>
+            
+
+
+                <select name="v_fis_colonia" id="v_fis_colonia" class="form-control" onchange="">
+                  <option value="0">SELECCIONAR COLONIA</option>
+                </select>
+
+                <label id="lbllocalidad" style="color: red;"></label>
+
+
+              </div>
+            </div>
+          
+            
+            <div class="col-md-12">
+             
+
+              
+            </div>  
+          </div>
+
+            <div class="row">
+            
+
+             <div class="col-md-12">
+
+            <div class="form-group">
+              <label>CALLE/AV/BLVD:</label>
+              <textarea name="v_fis_direccion" required id="v_fis_direccion" class="form-control" placeholder="DIRECCION" title="DIRECCIÓN"><?php echo $v_fis_direccion; ?></textarea>
+
+              <label id="lblcalle" style="color: red;"></label>
+
+            </div>
+          </div>
+
+            <div class="col-md-12">
+              <div class="form-group m-t-20">
+                <label>NO. INT:</label>
+                <input name="v_fis_no_int" id="v_fis_no_int" title="NO.INT" type="text" class="form-control" placeholder="NO.INT"  required value="<?php echo $v_fis_no_int; ?>">
+
+                        <label id="lblnoint" style="color: red;"></label>
+
+              </div>  
+            </div>
+
+            <div class="col-md-12">
+              <div class="form-group m-t-20">
+                <label>NO. EXT:</label>
+                <input name="v_fis_no_ext" id="v_fis_no_ext" title="NO.EXT" type="text" class="form-control" placeholder="NO.EXT"  required value="<?php echo $v_fis_no_ext; ?>" >
+                <label id="lblnoext" style="color: red;"></label>
+
+              </div>
+            </div>
+
+          <!--   <div class="col-md-12">
+              <div class="form-group m-t-20">
+                <label>COLONIA:</label>
+                <input name="v_fis_col" id="v_fis_col" title="COLONIA" type="text" class="form-control" placeholder="COLONIA"  required value="<?php echo $v_fis_col; ?>" >
+              <label id="lblcolonia" style="color: red;"></label>
+
+
+              </div>  
+            </div> -->
+
+          
+
+                  
+          <div class="col-md-12">
+            <div class="form-group m-t-20">
+              
+              <label for="">USO CFDI:</label>
+
+              <select name="usocfdi" id="usocfdi" class="form-control">
+                
+                <option value="0">SELECCIONAR USO DEL CFDI</option>
+             
+              </select>
+              <label id="lbluso" style="color: red;"></label>
+
+            </div>
+          </div>
+
+
+          <div class="col-md-12">
+            <div class="form-group m-t-20">
+              
+              <label for="">MÉTODO DE PAGO:</label>
+
+              <select name="metodopago" id="metodopago" class="form-control">
+                
+                <option value="0" >SELECCIONAR MÉTODO DE PAGO</option>
+               
+              </select>
+              <label id="lblmetodo" style="color: red;"></label>
+
+            </div>
+          </div>
+
+
+          <div class="col-md-12">
+            <div class="form-group m-t-20">
+              
+              <label for="">FORMA DE PAGO:</label>
+
+              <select name="formapago" id="formapago" class="form-control">
+                
+                <option value="0" >SELECCIONAR FORMA DE PAGO</option>
+              
+              </select>
+              <label id="lblforma" style="color: red;"></label>
+
+            </div>
+          </div>
+            
+
+            
+          </div>
+
+			  
+			</form>
+      		</div>
+      	</div>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btnguardardatofiscal" >GUARDAR</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal modalclientes" id="modalclientes" tabindex="-1" role="dialog">
+	 <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+      	<div class="row">
+      		<div class="col-md-12">
+
+      			  <div class="form-group m-t-20">	 
+							<input type="text" class="form-control" name="buscadoralumnos_1" id="buscadoralumnos_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadoralumnos_','.alumnos_')">
+					    </div>
+
+      			  <div class="clientes"  style="overflow:scroll;height:100px;overflow-x: hidden" >
+      			<div class="" id="divusuarios"></div>
+      		</div>
+      		</div>
+      	</div>
+      </div>
+
+       <div class="modal-footer">
+        <button type="button" class="btn btn-success btnseleccionarcliente" onclick="">SELECCIONAR</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
+      </div>
+
+
+     </div>
+    </div>
+
+
+	
 </div>
 
 
@@ -710,7 +1113,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">MONEDERO DISPONIBLE</h5>
+        <h5 class="modal-title">MONEDERO DISPONIBLE <span id="monederodispo"></span></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -740,6 +1143,38 @@ $estatuspago = array('NO PAGADO','PAGADO');
   </div>
 </div>
 
+
+
+<div class="modal" id="modalmonedero" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<div class="row">
+      		<div class="col-md-12">
+      			<form>
+							  <div class="form-group">
+
+							  	<label for="">MONEDERO A USAR</label>
+							  	<input type="number" id="monederoausar" placeholder="$0.00" class="form-control">
+							  </div>
+								</form>
+      		</div>
+      		<div class="col-md-6"></div>
+      	</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" onclick=""></button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"></button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="modal" id="modalespera" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
@@ -878,10 +1313,18 @@ $estatuspago = array('NO PAGADO','PAGADO');
 </style>
 
 <script type="text/javascript">
-	ObtenerTipodepagos();
+	var clienteid=0;
 var arraypaquetes=[];
+var carrito=[];
+var arraycarrito=[];
+var NtabName=""
+	//openTab('punto-venta');
+
+
+	ObtenerTipodepagos();
 	function openTab(tabName) {
   // Ocultar todos los contenidos de las pestañas
+  NtabName=tabName;
   var tabContents = document.getElementsByClassName('tab-content');
   for (var i = 0; i < tabContents.length; i++) {
     tabContents[i].style.display = 'none';
@@ -899,17 +1342,28 @@ var arraypaquetes=[];
 
   if (tabName=='punto-venta') {
 
-  	pagosarealizar=[];
+  	//pagosarealizar=[];
+  	descuentosaplicados=[];
+	 	descuentosmembresia=[];
+  	ObtenerPaquetesCarrito();
 
   	$("#btnpagarresumen").attr('onclick','RealizarpagoClientePunto()');
   }
 
    if (tabName=='pagos') {
-
-  	arraypaquetes=[];
+   	$("#tblpaquetesventa").html('');
+  	//arraycarrito=[];
+  	pagosarealizar=[];
+  	descuentosaplicados=[];
+	 	descuentosmembresia=[];
+  	ObtenerClientePagos(clienteid);
+  	$(".todosdescuentos").html("");
 
   	$("#btnpagarresumen").attr('onclick','RealizarpagoCliente()');
   }
+
+
+  	CalcularTotales();
 
 
 }
@@ -928,6 +1382,14 @@ function filterResults(searchTerm) {
   // Implementa aquí la lógica para filtrar los resultados según el término de búsqueda
   	  var valor=searchTerm;
   	  var datos="valor="+valor;
+  	  filtrar=false;
+  	   $(".tablapaquetediv").css('display','none');
+				  $("#btnAgregar").css('display','none');
+  	  $("#tblpaquetes").html(" ");
+  	  if (valor!='') {
+  	  	filtrar=true;
+  	  }
+  	  if (filtrar==true) {
       $.ajax({
       type: 'POST',
       data:datos,
@@ -937,8 +1399,12 @@ function filterResults(searchTerm) {
       success: function(msj){
       	console.log(msj.respuesta);
       		  const data = msj.respuesta;
-
-			displayResults(data);
+						 arraypaquetes=data;
+		//	displayResults(data);
+						$("#btnAgregar").attr('onclick','AgregarCarrito()');
+				  $(".tablapaquetediv").css('display','block');
+				  $("#btnAgregar").css('display','block');
+	    	PintarBusquedaResultado(data);
 
       },error: function(XMLHttpRequest, textStatus, errorThrown){ 
         var error;
@@ -948,11 +1414,109 @@ function filterResults(searchTerm) {
             }
       });
 
-  
+  }
 
 
 
 
+}
+
+function AgregarCarrito() {
+	var paquetescarrito=[];
+	$(".paquetecan").each(function( index ) {
+			if ($(this).val()>0) {
+								var cantidad=$(this).val();
+					  	var elemento=$(this).attr('id');
+					  	var id=elemento.split('_')[1];
+
+					  	var objeto={
+					  		idpaquete:id,
+					  		cantidad:cantidad
+					  	};
+					  	paquetescarrito.push(objeto);
+			}
+
+	});
+		var datos="paquetes="+JSON.stringify(paquetescarrito);
+	 var pagina="Obtenerdatospaquetes.php";
+	 $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+				data: datos, 
+    success: function(datos){
+
+    	var carrito=datos.carrito;
+    	arraycarrito=carrito;
+    	$("#tablaventa").css('display','block');
+    	if (carrito.length>0) {
+    		
+    		PintarElementos(carrito);
+    		$("#searchInput").val('');
+
+    	}
+   $("#metodopagodiv").css('display','block');
+
+   $(".requierefacturadiv").css('display','block');
+   
+    },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+      var error;
+        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+          }
+    });
+
+
+
+
+}
+function PintarBusquedaResultado(arraypaquetes) {
+	var html="";
+		if (arraypaquetes.length>0) {
+		 for (var i = 0; i <arraypaquetes.length; i++) {
+		 	html+=`
+		 			<tr>
+     
+      <td style="width: 20%;">`+arraypaquetes[i].nombrepaquete+`</td>
+
+       <td style="width: 5%;">
+      	 <div class="container" style="    width: 150px;">
+				    <div class="row">
+				      <div class="col">
+				        <div class="input-group">
+				          <div class="input-group-prepend">
+				            <button class="btn btn-primary" onclick="decrement(`+arraypaquetes[i].idpaquete+`)">-</button>
+				          </div>
+				          <input type="text" id="quantity_`+arraypaquetes[i].idpaquete+`" class="form-control paquetecan" style="border: none;width:40px;text-align:center;" value="`+arraypaquetes[i].cantidad+`">
+				          <div class="input-group-append">
+				            <button class="btn btn-primary" onclick="increment(`+arraypaquetes[i].idpaquete+`)">+</button>
+				          </div>
+				        </div>
+				      </div>
+				    </div>
+				  </div>
+
+      </td>
+      <td style="width: 20%;">$`+arraypaquetes[i].precioventa+`</td>`;
+      var total=arraypaquetes[i].precioventa*arraypaquetes[i].cantidad;
+      arraypaquetes[i].importe=total;
+      html+=`<td style="width: 20%;">$`+total+`</td>
+      <td style="width: 20%;">
+
+   
+
+      </td>	
+    </tr>
+
+		 	`;
+			 }
+
+
+	}
+
+	$("#tblpaquetes").html(html);
 }
 
 function displayResults(results) {
@@ -1022,23 +1586,25 @@ function SeleccionarPaquete(idpaquete) {
 }
 
 
-function PintarElementos(arraypaquetes) {
+function PintarElementos(arraycarrito) {
 	var html="";
-	if (arraypaquetes.length>0) {
-		 for (var i = 0; i <arraypaquetes.length; i++) {
+	if (arraycarrito.length>0) {
+		 for (var i = 0; i <arraycarrito.length; i++) {
 		 	html+=`
 		 			<tr>
-      <td>
-      	 <div class="container">
+     
+      <td style="width: 20%;">`+arraycarrito[i].nombrepaquete+`</td>
+        <td style="width: 5%;">
+      	 <div class="container" style="    width: 150px;">
 				    <div class="row">
-				      <div class="col-6">
+				      <div class="col">
 				        <div class="input-group">
 				          <div class="input-group-prepend">
-				            <button class="btn btn-primary" onclick="decrement(`+arraypaquetes[i].idpaquete+`)">-</button>
+				            <button class="btn btn-primary" style=" " onclick="decrementpaquete(`+arraycarrito[i].idcarrito+`)">-</button>
 				          </div>
-				          <input type="text" id="quantity" class="form-control" style="border: none;width:40px;text-align:center;" value="`+arraypaquetes[i].cantidad+`">
+				          <input type="text" id="quantity" class="form-control" style="border: none;width:40px;text-align:center;background: none;" value="`+arraycarrito[i].cantidad+`" readonly/>
 				          <div class="input-group-append">
-				            <button class="btn btn-primary" onclick="increment(`+arraypaquetes[i].idpaquete+`)">+</button>
+				            <button class="btn btn-primary" style=""onclick="incrementpaquete(`+arraycarrito[i].idcarrito+`)">+</button>
 				          </div>
 				        </div>
 				      </div>
@@ -1046,14 +1612,12 @@ function PintarElementos(arraypaquetes) {
 				  </div>
 
       </td>
-      <td>`+arraypaquetes[i].nombrepaquete+`</td>
-      <td>$`+arraypaquetes[i].precioventa+`</td>`;
-      var total=arraypaquetes[i].precioventa*arraypaquetes[i].cantidad;
-      arraypaquetes[i].importe=total;
+      <td style="width: 20%;">$`+arraycarrito[i].costounitario+`</td>`;
+      var total=arraycarrito[i].costototal;
       html+=`<td>$`+total+`</td>
-      <td>
+      <td style="width: 20%;">
 
-      <button type="button" onclick="BorrarPaqueteArray(`+arraypaquetes[i].idpaquete+`)" class="btn btn_rojo" style="" title="BORRAR">
+      <button type="button" onclick="BorrarPaqueteArray(`+arraycarrito[i].idcarrito+`)" class="btn btn_rojo" style="" title="BORRAR">
 								<i class="mdi mdi-delete-empty"></i>
 						</button>
 
@@ -1066,7 +1630,7 @@ function PintarElementos(arraypaquetes) {
 
 	}
 
-	$("#tblpaquetes").html(html);
+	$("#tblpaquetesventa").html(html);
 
 	CalcularTotales();
 }
@@ -1086,16 +1650,16 @@ function decrement(idpaquete) {
 
 	 if (encontrado==1) {
 	 			var cantidad=arraypaquetes[posicion].cantidad;
-	 				var total=cantidad-1;
+	 				var total=parseFloat(cantidad)-1;
 
-	 				if (total>=1) {
+	 				if (total>=0) {
 	 						arraypaquetes[posicion].cantidad=total;
 
 	 				}
 
 	 }
 
-	  PintarElementos(arraypaquetes);
+	  PintarBusquedaResultado(arraypaquetes);
 }
 
 function increment(idpaquete) {
@@ -1113,7 +1677,7 @@ function increment(idpaquete) {
 
 	 if (encontrado==1) {
 	 			var cantidad=arraypaquetes[posicion].cantidad;
-	 				var total=cantidad+1;
+	 				var total=parseFloat(cantidad)+1;
 
 	 				if (total>=1) {
 	 						arraypaquetes[posicion].cantidad=total;
@@ -1123,28 +1687,153 @@ function increment(idpaquete) {
 	 }
 
 
-	 PintarElementos(arraypaquetes);
+	 PintarBusquedaResultado(arraypaquetes);
 }
 
 
-function BorrarPaqueteArray(idpaquete) {
-		var encontrado=0;
-	var posicion=-1;
-	for (var i = 0; i <arraypaquetes.length; i++) {
-	 	
-	 		if (arraypaquetes[i].idpaquete==idpaquete) {
-	 			encontrado=1;
-	 			posicion=i;
-	 			break;
-	 		}
+function BorrarPaqueteArray(idcarrito) {
 
-	 }
+		var datos="idcarrito="+idcarrito;
+		var respuesta = confirm("¿Estás seguro de eliminar este elemento?");
 
-	 if (encontrado==1) {
-	 			arraypaquetes.splice(posicion, 1); // Elimina el elemento en el índice 
-	 }
-	 PintarElementos(arraypaquetes);
+if (respuesta) {
+  // El usuario ha
+	 $.ajax({
+					url:'catalogos/pagos/BorrarPaqueteCarrito.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos
+					data: datos, //Le pasamos el objeto que creamos con los archivos
+					dataType:'json',
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+					  },
+					success:function(msj){
+							
+								ObtenerPaquetesCarrito();
+
+						
+								
+					  	}
+				  });
+	}
+
 }
+
+function ObtenerPaquetesCarrito() {
+	
+	 $.ajax({
+					url:'catalogos/pagos/ObtenerPaquetesCarrito.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos
+					dataType:'json',
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+					  },
+					success:function(msj){
+							
+							var carrito=msj.carrito;
+							arraycarrito=carrito;
+							PintarElementos(carrito);
+							CalcularTotales();
+						
+								
+					  	}
+				  });
+}
+
+
+
+	 function SubirImagenFiscal() {
+	 	// body...
+	 
+        var formData = new FormData();
+        var files = $('#image')[0].files[0];
+        formData.append('file',files);
+        $.ajax({
+            url: 'catalogos/pagos/uploadfiscal.php',
+            type: 'post',
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType:'json',
+             beforeSend: function() {
+					      $("#d_foto").css('display','block');
+					      $("#d_foto").html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Cargando...</div>');	
+
+		    },
+            success: function(response) {
+                if (response != 0) {
+                    $(".card-img-top").attr("src", response.respuesta);
+                    $("#d_foto").css('display','none');
+                } else {
+                    alert('Formato de imagen incorrecto.');
+                }
+            }
+        });
+        return false;
+    }
+
+
+   function decrementpaquete(idcarrito) {
+
+   	var datos="idcarrito="+idcarrito+"&accion=1";
+    	$.ajax({
+					url:'catalogos/pagos/actualizarcarrito.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos
+					data: datos, //Le pasamos el objeto que creamos con los archivos
+					dataType:'json',
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+					  },
+					success:function(msj){
+							
+								ObtenerPaquetesCarrito();
+
+						
+								
+					  	}
+				  });
+    
+    } 
+
+    function incrementpaquete(idcarrito) {
+    		var datos="idcarrito="+idcarrito+"&accion=2";
+    	$.ajax({
+					url:'catalogos/pagos/actualizarcarrito.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos
+					data: datos, //Le pasamos el objeto que creamos con los archivos
+					dataType:'json',
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+					  },
+					success:function(msj){
+							
+								ObtenerPaquetesCarrito();
+
+						
+								
+					  	}
+				  });
+   
+    }
 
 /*
 function CalcularTotalesPuntoVenta() {

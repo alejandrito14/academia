@@ -60,7 +60,7 @@ $config=new PagConfig();
 $config->db=$db;
 
 $obtenerconfi=$config->ObtenerInformacionConfiguracion();
-$estatus=array('PENDIENTE','ACEPTADO','CANCELADO');
+$estatus=array('PENDIENTE','ACEPTADO','CANCELADO','DECLINADO');
 $iva=0;
 if ($obtenerconfi['iva']!='' && $obtenerconfi['iva']>0) {
 	$iva=$obtenerconfi['iva'];
@@ -93,18 +93,18 @@ if ($obtenerconfi['iva']!='' && $obtenerconfi['iva']>0) {
 		if ($_GET['fechainicio']!='') {
 		
 		$fechainicio=$_GET['fechainicio'];
-		if (isset($_GET['horainicio'])) {
-			$fechainicio=$fechainicio.' '.$_GET['horainicio'];
-		}
+		
+		$fechainicio=$fechainicio.' 00:00:00 ';
+		
 		}
 	}
 
 	if (isset($_GET['fechafin'])) {
 		if ($_GET['fechafin']!='') {
 		$fechafin=$_GET['fechafin'];
-		if (isset($_GET['horafin'])) {
-			$fechafin=$fechafin.' '.$_GET['horafin'];
-			}
+		
+			$fechafin=$fechafin.' 23:59:59 ';
+			
 		}
 	}
 
@@ -147,23 +147,12 @@ if ($obtenerconfi['iva']!='' && $obtenerconfi['iva']>0) {
 			WHERE 1=1  $sqlconcan $sqlfecha
 
 		";
-
 		$l_pagos=$db->consulta($sql);
 		$l_pagos_num = $db->num_rows($l_pagos);
 
 		$l_pagos_row = $db->fetch_assoc($l_pagos);
 
-		/*$array=array();
-		$contador=0;
-		if ($cont>0) {
-
-			while ($objeto=$db->fetch_object($resp)) {
-
-				$array[$contador]=$objeto;
-				$contador++;
-			} 
-		}
-		*/
+		
 	
  
 if($pantalla==0) {
@@ -196,8 +185,11 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 						<th style="text-align: center;">FOLIO </th> 
 						<th style="text-align: center;">ALUMNO</th>
 						<th style="text-align: center;">FECHA</th>
-						<th style="text-align: center;">MÉTODO DE PAGO</th>
-						<th style="text-align: center;">MONTO</th>
+						<th style="text-align: center;">TIPO DE PAGO</th>
+						<th style="text-align: center;">TOTAL</th>
+						<th style="text-align: center;">MONTO MONEDERO</th>
+
+						<th style="text-align: center;">MONTO OTRO TIPO DE PAGO </th>
 						<th style="text-align: center;">ESTATUS</th>
 
 					</tr>
@@ -229,8 +221,36 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 
 							<td style="text-align: center;"><?php echo date('d-m-Y H:i:s',strtotime($l_pagos_row['fecha']));?></td>
 							<td style="text-align: center;"><?php echo $l_pagos_row['tipopago'];?></td>
+							<?php $total=$l_pagos_row['total'];
+								if ($total==0) {
+								$total=$l_pagos_row['montomonedero'];
+								}
 
-							<td style="text-align: center;">$<?php echo $l_pagos_row['total'];?></td>
+							 ?>
+							
+							<td style="text-align: center;">$<?php echo number_format($total,2,'.', ',');?></td>
+
+							<td style="text-align: center;">$<?php echo 
+
+							number_format($l_pagos_row['montomonedero'],2,'.', ',');?></td>
+
+
+							<?php 
+							$diferencia=$l_pagos_row['total'];
+							if ($l_pagos_row['total']>0) {
+								# code...
+							
+							$diferencia=$l_pagos_row['total']-$l_pagos_row['montomonedero'];
+
+						}
+
+							 ?>
+
+							 <td>
+							 	$<?php 
+							 echo number_format($diferencia,2,'.', ',');?>
+							 </td>
+
 							<?php 
 								$clase="";
 
@@ -246,12 +266,15 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 									$clase='notacancelado';
 								}
 
+								if ($l_pagos_row['estatus']==3) {
+									$clase='notadeclinado';
+								}
+
 							 ?>
 						
 							<td style="text-align: center;" class="<?php echo $clase; ?>"><span class=""><?php echo $estatus[$l_pagos_row['estatus']];?></span></td>
 
 						
-
 
 							</tr>
 							<?php

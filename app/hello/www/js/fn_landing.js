@@ -252,7 +252,7 @@ function getVistoAnuncio() {
 
 	var datos="id_user="+iduser;
 
-
+		if (iduser!=null) {
 		var pagina = "ObtenerVistoAnuncio.php";
 				$.ajax({
 				type: 'POST',
@@ -272,6 +272,17 @@ function getVistoAnuncio() {
 				}
 
 			});
+			}else{
+				var confi={
+					mostraranuncios:1
+				};
+
+				var obje={
+					configuracion:confi,
+				};
+				
+				resolve(obje);
+			}
 		});
 }
 

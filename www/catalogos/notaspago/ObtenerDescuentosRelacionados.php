@@ -36,7 +36,7 @@ $usuarios=new Usuarios();
 $usuarios->db=$db;
 
 $pagoselegidos=json_decode($_POST['pagos']);
-$iduser=$_POST['id_user'];
+$iduser=$se->obtenerSesion('usuariopago');
 
 $arrayservicio=array();
 $arraydescuentos=array();
@@ -484,6 +484,7 @@ $obtenertiposervicioasociador=$descuento->ObtenerTipoDescuentoAsociador();
 	}
 
 	$respuesta['descuentos']=$arraydescuentos;
+	$respuesta['iduser']=$iduser;
 //Retornamos en formato JSON 
 	$myJSON = json_encode($respuesta);
 	echo $myJSON;

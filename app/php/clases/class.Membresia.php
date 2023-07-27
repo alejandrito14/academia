@@ -660,8 +660,10 @@ class Membresia
 	public function BuscarMembresiaAsociadaalapago()
 	{
 		$sql="SELECT *
-		FROM usuarios_membresia WHERE idmembresia='$this->idmembresia' AND idusuarios='$this->idusuarios' AND idpago='$this->idpago'";
-		
+		FROM usuarios_membresia
+		LEFT JOIN membresia ON usuarios_membresia.idmembresia=membresia.idmembresia
+		 WHERE usuarios_membresia.idmembresia='$this->idmembresia' AND usuarios_membresia.idusuarios='$this->idusuarios' AND usuarios_membresia.idpago='$this->idpago'";
+	
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -729,5 +731,30 @@ class Membresia
 		
 		return $array;
 	}
+
+	public function TipoPagoRelacionados()
+	{
+		$sql="SELECT  GROUP_CONCAT(idtipodepago) as tipopago FROM tipopagomembresia WHERE idmembresia='$this->idmembresia' ORDER BY idtipodepago";
+		
+	    $resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	
+
 }
 ?>
