@@ -778,6 +778,7 @@ function CalcularTotales() {
     }
       var restatotaldes=parseFloat(sumatotal)-parseFloat(descuentocupon)-parseFloat(totaldescuentos);
 
+     
     if (monedero==restatotaldes) {
 
       localStorage.setItem('idtipodepago',0);

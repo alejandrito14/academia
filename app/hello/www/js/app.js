@@ -1357,20 +1357,21 @@ regresohome();
 $$(document).on('page:init', '.page[data-name="pagos"]', function (e) {
   /* swiper carousel projects */
  // $$('#btnverificartoken').attr('onclick','ValidarCelular()')
-regresohome();
+ regresohome();
+  localStorage.setItem('idtipodepago',0);
 
  ObtenerIdUsuarioPrincipal().then(function (result) {
     
-  ObtenerTotalPagos();
-  ProximopagoaVencer();
+  //ObtenerTotalPagos();
+  //ProximopagoaVencer();
+
   $$('#btnlistadopagos').attr('onclick','VerListadoPago()')
   $$('#btnlistadopagados').attr('onclick','VerListadoPagados()')
   ObtenerMonedero();
 
   });
 
-
- 
+  $$("#btnvermonedero").attr('onclick','VerMovimientosMonedero()');
 
 
 myStopFunction(identificadorDeTemporizador);
@@ -1398,6 +1399,7 @@ $$(document).on('page:init', '.page[data-name="listadopagos"]', function (e) {
 
       });*/ 
  // });
+  localStorage.setItem('idtipodepago',0);
 
   $("#checktodos").attr('checked',true);
   $("#btnpagar").prop('disabled',false);
@@ -2848,6 +2850,15 @@ $$(document).on('page:init', '.page[data-name="politicas3"]', function (e) {
 
   
   $$('.regreso').attr('onclick',"GoToPage('datosdesalud')");
+
+});
+
+$$(document).on('page:init', '.page[data-name="monedero"]', function (e) {
+  
+ ObtenerMovimientosMonedero();
+
+  
+  $$('.regreso').attr('onclick',"GoToPage('pagos')");
 
 });
 /*$$(document).on('page:init', '.page[data-name="messages"]', function (e) {

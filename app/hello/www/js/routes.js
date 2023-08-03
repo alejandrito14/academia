@@ -480,6 +480,12 @@ var routes = [
     path:'/pagos/',
     componentUrl: './pages/pagos.html',
   },
+
+  {
+    path:'/monedero/',
+    componentUrl: './pages/monedero.html',
+  },
+
   {
     path:'/listadopagos/',
     componentUrl: './pages/listadopagos.html',
