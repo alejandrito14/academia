@@ -133,7 +133,7 @@ try
  	    	}
 
  	    	$pagosdescuentomembresia=$pagos->Obtenerdescuentosmembresia();
-
+ 
 
  	    	$pagos->descuentosmembresia=array();
 

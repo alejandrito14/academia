@@ -44,7 +44,7 @@ function PintarMovimientos(respuesta) {
 			}	
 			if (tipoarray==1) {
 				colocar='-';
-				color="black";
+				color="red";
 
 			}
 
@@ -69,14 +69,18 @@ function PintarMovimientos(respuesta) {
 								<div class="col-70">
 								<div class="">
 									<div class="">
-									<p style="margin:0;margin-left: 5px;">`+respuesta[i].concepto+`</p>`;
+								<p style="margin:0;margin-left: 5px;">Saldo anterior: <span style="color:#4497f4;font-weight:bold;">$`+formato_numero(respuesta[i].saldo_ant,2,'.',',')+`</span></p>`;
+									html+=`<p style="margin:0;margin-left: 5px;">`+tipo[respuesta[i].tipo]+`</p>`;
+
+									html+=`<p style="margin:0;margin-left: 5px;">Concepto: `+respuesta[i].concepto+`</p>`;
 									if (respuesta[i].folio!=null) {
 									html+=`<p style="margin:0;margin-left: 5px;">#`+respuesta[i].folio+`</p>`;
 										}
-									html+=`<p style="margin:0;margin-left: 5px;font-weight: 600;"> <span style="color:`+color+`">`+colocar+` $`+respuesta[i].monto+`</span></p>
+									html+=`<p style="margin:0;margin-left: 5px;font-weight: 600;"> 
+									<span style="color:`+color+`">`+colocar+` $`+formato_numero(respuesta[i].monto,2,'.',',')+`</span></p>
 									<p style="margin:0;margin-left: 5px;">`+respuesta[i].fecha+`</p>
 
-                					<p style="margin:0;margin-left: 5px;"></p>
+                					<p style="margin:0;margin-left: 5px;">Saldo actual: <span style="color:#4fab2a;font-weight:bold;">$`+formato_numero(respuesta[i].saldo_act,2,'.',',')+`</span></p>
 
 									</div>
 									</div>

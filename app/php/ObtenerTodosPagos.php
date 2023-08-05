@@ -37,6 +37,13 @@ try
 	$contador=1;
 	$idusuarios=$_POST['id_user'];
 	$asignacion->idusuarios=$idusuarios;
+	$usuarios->idusuarios=$idusuarios;
+	$obtenerusuario=$usuarios->ObtenerUsuario();
+	$monedero=$obtenerusuario[0]->monedero;
+	
+	if ($monedero>0) {
+		$habilitarmonedero=1;
+	}
 	
 	$pagosencontrados=array();
 	$total=0;
@@ -186,7 +193,9 @@ try
 					'fechamax'=>date('d-m-Y',strtotime($obtenerfechas[0]->fechamax)),
 					'tipopago'=>$tipopago,
 					'aceptacionpagoservicio'=>$aceptacionpagoservicio,
-					'habilitarmonedero'=>1
+					'habilitarmonedero'=>$habilitarmonedero,
+					'monederousado'=>0,
+					
 			);
 				$total=$total+$montoapagar;
 				array_push($pagosencontrados,$objeto);
@@ -239,7 +248,12 @@ try
 					$membresia->idusuarios=$idusuarios;
 					$membresia->idpago=$idpago;
 					$buscarmembresiaasociada=$membresia->BuscarMembresiaAsociadaalapago();
-					$habilitarmonedero=$buscarmembresiaasociada[0]->habilitarmonedero;
+					$habilitarmonederom=$buscarmembresiaasociada[0]->habilitarmonedero;
+
+					$habilitarmonedero=0;
+					if ($habilitarmonederom==1 && $habilitarmonedero==1) {
+						$habilitarmonedero=1;
+					}
 					
 					if ($pagoinscripcion==0) {
 						# code...
@@ -265,7 +279,8 @@ try
 				'fechamin'=>'','fechamax'=>'',
 				'tipopago'=>$tipopago,
 				'aceptacionpagoservicio'=>$aceptacionpagoservicio,
-				'habilitarmonedero'=>$habilitarmonedero
+				'habilitarmonedero'=>$habilitarmonedero,
+				'monederousado'=>0
 			);
 
 				$total=$total+$montoapagar;

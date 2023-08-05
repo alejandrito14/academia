@@ -363,6 +363,8 @@ try {
                */
         
           	for ($i=0; $i < count($pagosconsiderados); $i++) { 
+
+              $monederousado=$pagosconsiderados[$i]->monederousado;
                $pagos->pagado=1;
           		  if ($confoto==1) {
                   $pagos->pagado=0;
@@ -570,7 +572,12 @@ try {
               $notapago->cantidad=1;
               $notapago->monto=$buscarpago[0]->monto;
               $notapago->idpago=$buscarpago[0]->idpago;
+              $notapago->monederousado=$monederousado;
                $notapago->Creardescripcionpago();
+
+
+               $pagosconsiderados[$i]->idnotapagodescripcion=$notapago->idnotapagodescripcion;
+
  
                ///creacion pago a coach
              if ($estatusdeproceso==1) {
@@ -642,9 +649,39 @@ try {
 
 
 
-               if ($estatusdeproceso==1) {
+  if ($estatusdeproceso==1) {
+       $usuarios=new Usuarios();
+        $usuarios->db=$db;
+    if ($montomonedero!='' && $montomonedero!=0) {
 
-  if ($montomonedero!='' && $montomonedero!=0) {
+      for ($j=0; $j < count($pagosconsiderados); $j++) { 
+
+              $monederousado=$pagosconsiderados[$j]->monederousado;
+              $idnotapagodescripcion=$pagosconsiderados[$j]->idnotapagodescripcion;
+  
+          $usuarios->idusuarios = $iduser;
+          $row_cliente = $usuarios->ObtenerUsuario();
+          $saldo_anterior = $row_cliente[0]->monedero;
+    
+    //Calculamos nuevo saldo
+    $nuevo_saldo = $saldo_anterior - $monederousado;
+    $sql = "UPDATE usuarios SET monedero = '$nuevo_saldo' WHERE idusuarios = '$iduser'";
+    
+    $db->consulta($sql);
+    //Guardamos el movimiento en tabla cliente_monedero
+    $tipo=1;
+    $concepto="Cargo de ".$pagosconsiderados[$j]->concepto;
+    $sql_movimiento = "INSERT INTO monedero (idusuarios,monto,modalidad,tipo,saldo_ant,saldo_act,concepto,idnota,idnotadescripcion) VALUES ('$iduser','$monederousado','2','$tipo','$saldo_anterior','$nuevo_saldo','$concepto','$notapago->idnotapago','$idnotapagodescripcion');";
+
+     $db->consulta($sql_movimiento);
+
+
+
+
+            }
+          }
+
+ /* if ($montomonedero!='' && $montomonedero!=0) {
             $usuarios=new Usuarios();
             $usuarios->db=$db;
               
@@ -666,7 +703,9 @@ try {
 
 
 
-   }
+   }*/
+
+
 
  }
 

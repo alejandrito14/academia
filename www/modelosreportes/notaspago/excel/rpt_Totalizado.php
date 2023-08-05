@@ -273,7 +273,7 @@ JOIN (
 		$sql.=$sqlfecha;
 		$sql.=$sqlfechapago;
 
-
+		echo $sql;die();
 		
 
 		$resp=$db->consulta($sql);

@@ -147,7 +147,7 @@ function Pintarpagos(pagos) {
  
                         }
 
-                         html+=` <p class="text-muted small">$`+pagos[i].monto+`</p>
+                         html+=` <p class="text-muted small" style="font-size:20px;color:red;">$`+formato_numero(pagos[i].monto,2,'.',',')+`</p>
 
                           <input type="hidden" value="`+pagos[i].monto+`" class="montopago" id="val_`+pagos[i].idpago+`">
                          <input type="hidden" value="`+pagos[i].tipopago+`" class="tipopago" id="tipopago_`+pagos[i].idpago+`">
@@ -183,6 +183,7 @@ function Pintarpagos(pagos) {
 
                         <input type="hidden" id="tipo_`+pagos[i].idpago+`" value="`+pagos[i].tipo+`"  />
                         <input type="hidden" id="habilitarmonedero_`+pagos[i].idpago+`" value="`+pagos[i].habilitarmonedero+`"  />
+                        <input type="hidden" id="monederousado_`+pagos[i].idpago+`" value="`+pagos[i].monederousado+`"  />
 
                         <input type="hidden" id="servicio_`+pagos[i].idpago+`" value="`+pagos[i].idservicio+`"  />
                         <input type="hidden" id="fechainicial_`+pagos[i].idpago+`" value="`+pagos[i].fechainicial+`"  />
@@ -307,8 +308,9 @@ function HabilitarBotonPago() {
 
           tipopago=$("#tipopago_"+dividir).val();
          var habilitarmonedero=$("#habilitarmonedero_"+dividir).val();
+         var monederousado=$("#monederousado_"+dividir).val();
 		 	contar++;
-      console.log(contar)
+      console.log('mon'+monederousado)
 		 	var objeto={
 		 		id:dividir,
 		 		concepto:concepto.trim(),
@@ -319,7 +321,8 @@ function HabilitarBotonPago() {
         fechafinal:fechafinal,
         usuario:usuario,
         tipopago:tipopago,
-        habilitarmonedero:habilitarmonedero
+        habilitarmonedero:habilitarmonedero,
+        monederousado:monederousado
 		 	};
 		 	pagosarealizar.push(objeto);
 
@@ -522,30 +525,78 @@ function CargarPagosElegidos() {
 
 	var listado=JSON.parse(localStorage.getItem('pagos'));
 	console.log(listado);
+  alert('a');
 	var html="";
 	for (var i = 0; i <listado.length; i++) {
    var color='';
       if (listado[i].monto<0) {
         color='red';
       }
+
 			html+=`
 				<li class="list-item" style="color:`+color+`">
                     <div class="row">
                         <div class="col-80" style="padding:0;">
                             <p class="text-muted small" style="font-size:18px;" id="concepto_`+listado[i].id+`">
                               `+listado[i].concepto+`
-                            </p>
-                            <p class="text-muted " style="font-size:30px;text-align:right;">$`+formato_numero(listado[i].monto,2,'.',',')+`</p>
+                            </p>`;
+                            var estilo="";
 
-                          <input type="hidden" value="`+listado[i].monto+`" class="montopago" id="val_`+listado[i].id+`">
+                            if (listado[i].monederousado>0) {
+
+                             estilo="text-decoration:line-through;";
+
+                            }
+                           html+=` <p class="text-muted " style="font-size:30px;text-align:right;`+estilo+`">
+
+                            $`+formato_numero(listado[i].monto,2,'.',',')+`
+                            </p>`;
+
+                            if (listado[i].monederousado>0) {
+                              html+=`<p style="color:#d77a34;text-align: right;">Monedero aplicado $`+formato_numero(listado[i].monederousado,2,'.',',')+`<p>`;
+                              var t=listado[i].monto-listado[i].monederousado;
+                              html+=`<p style="text-align: right;"> <span style="font-size:30px;">$`+formato_numero(t,2,'.',',')+`</span></p>`;
+                            }
+
+                        html+=` <input type="hidden" value="`+listado[i].monto+`" class="montopago" id="val_`+listado[i].id+`">
                         </div>
-                        <div class="col-20">
+                        <div class="col-20">`;
+                     
 
-                        </div>
-                    </div>
-                 </li>
+                        html+=`</div>
+                        <div class="row" >
+                        <div class="col-80" style="padding:0;text-align: end;">
 
-			`;
+                        `;
+
+
+                           if (listado[i].monederousado==0) {
+                        html+=`  <span class="chip  btnmonedero" 
+                          id="" style=" height: 30px;width:150px;background:#007aff;color:white;margin-right: 10px;text-align:center;justify-content: center;" 
+                          onclick="AbrirModalmonedero('`+listado[i].id+`')">
+                                
+                                Aplicar monedero
+                                </span>`;
+
+                              }else{
+
+                         html+=`  <span class="chip  btnmonedero" 
+                          id="" style=" height: 30px;width:150px;background:#007aff;color:white;margin-right: 10px;text-align:center;justify-content: center;" 
+                          onclick="RevertirMonedero('`+listado[i].id+`')">
+                                
+                                Revertir
+                                </span>`;
+
+
+                              }
+
+                           html+=`
+                               </div>
+                              <div class="col-20"></div>
+                            </div>
+
+                           </div>
+                         </li>`;
 		}
 
 		$(".listadopagoselegidos").html(html);
@@ -794,20 +845,43 @@ function CalcularTotales() {
 }
 
 
-function AbrirModalmonedero() {
-	
-	
+var monederousuario=0;
+
+
+function AbrirModalmonedero(idpago) {
+
+
+	  var listado=localStorage.getItem('pagos');
+	  var id_user=localStorage.getItem('id_user');
+    var pagina = "VerificarPagosMonedero.php";
+    var datos="id_user="+id_user+"&pagos="+listado+"&idpago="+idpago;
+    $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+    data:datos,
+    async:false,
+    success: function(resp){
+      var respuesta=resp.monedero;
+      var montopago=resp.montopago;
+
+      var valor=montopago;
+      if (montopago>=respuesta) {
+
+      var valor=respuesta;
+
+      }
        var html=`
          
-              <div class="block">
+              <div class="">
                <div class="row" style="">
                 	<p style="font-size:26px;padding:1px;"  >$<span id="monedero">0.00</span></p>
 
                 </div>
 
-                <div class="row" style="padding-top:1em;">
+                <div class="row" style="padding-top:1em;justify-content: center;">
                 	<label style="font-size:16px;padding:1px;">Cantidad a utilizar:</label>
-                	<input type="number" name="txtcantidad" id="txtcantidad" onkeyup="ValidarNumero()";  />
+                	<input type="number" name="txtcantidad" id="txtcantidad" onkeyup="ValidarNumero()"; value="`+valor+`" style="width: 100px;font-size: 26px;"/>
                 </div>
                 <p id="txtadvertencia" style="color:red;"></p>
               </div>
@@ -815,7 +889,7 @@ function AbrirModalmonedero() {
          
         `;
        app.dialog.create({
-          title: 'Monedero',
+          title: 'Tienes en monedero',
 
           //text: 'Dialog with vertical buttons',
           content:html,
@@ -834,7 +908,7 @@ function AbrirModalmonedero() {
                 CerrarDialog();
           }
           else if(index === 1){
-                AplicarMonedero();
+                AplicarMonedero(idpago);
               
             }
            },
@@ -842,8 +916,23 @@ function AbrirModalmonedero() {
           verticalButtons: false,
            close:false,
         }).open();
+
+
+       $("#monedero").text(formato_numero(respuesta,2,'.',','));
+       $(".monederotxt").text(formato_numero(respuesta,2,'.',','));
+       monederousuario=respuesta;
+       alert(monederousuario);
+       },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+      var error;
+        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+    }
+
+  });
 		
-		ObtenerMonedero();
+		//ObtenerMonedero();
 
 }
 
@@ -858,10 +947,84 @@ function ValidarNumero() {
     $("#txtcantidad").val(numero);*/
 }
 
-function AplicarMonedero() {
+function AplicarMonedero(idpago) {
 
-  $("#txtadvertencia").text('');
-	var monederousuario=parseFloat($("#monedero").text());
+    $("#txtadvertencia").text('');
+    var txtcantidad=parseFloat($("#txtcantidad").val());
+    var sumatotalapagar=localStorage.getItem('sumatotalapagar');
+    if (monederousuario>0) {
+  if (txtcantidad!='' &&txtcantidad!=0) {
+      if (txtcantidad>monederousuario) {
+         $("#txtadvertencia").text('La cantidad supera el monedero acumulado');
+         alerta('','La cantidad supera el monedero acumulado');
+
+      }else{
+
+
+
+        if (txtcantidad>parseFloat(sumatotalapagar)) {
+          console.log('1');
+          $("#txtadvertencia").text('La cantidad ingresada es mayor al total');
+              alerta('','La cantidad ingresada es mayor al total');
+
+        }else{
+            if (txtcantidad>0) {
+              
+
+               var listado=localStorage.getItem('pagos');
+                var id_user=localStorage.getItem('id_user');
+                var pagina = "AplicarMonederoPago.php";
+                var datos="id_user="+id_user+"&pagos="+listado+"&idpago="+idpago+"&txtcantidad="+txtcantidad;
+                $.ajax({
+                type: 'POST',
+                dataType: 'json',
+                url: urlphp+pagina,
+                data:datos,
+                async:false,
+                success: function(resp){
+                  var respuesta=resp.pagos;
+                  console.log(respuesta);
+                  localStorage.setItem('pagos',JSON.stringify(respuesta));
+                 
+                  var monederousado=resp.monederousado;
+                  localStorage.setItem('monedero',monederousado);
+                  CargarPagosElegidos();
+                   CalcularTotales();
+                   },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+                  var error;
+                    if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+                    if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                            //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                            console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+                }
+                });
+
+            }
+
+             app.dialog.close();
+
+        }
+      
+      }
+
+    }else{
+                    app.dialog.close();
+                              console.lo('3');
+
+        alerta('','Ingrese una cantidad válida')
+      }
+
+  }else{
+
+              app.dialog.close();
+          console.log('4');
+
+    alerta('','No cuenta con monedero acumulado');
+  }
+
+
+   
+	/*var monederousuario=parseFloat($("#monedero").text());
 	var txtcantidad=parseFloat($("#txtcantidad").val());
   var sumatotalapagar=localStorage.getItem('sumatotalapagar');
 	if (monederousuario>0) {
@@ -912,16 +1075,44 @@ function AplicarMonedero() {
           console.log('4');
 
 		alerta('','No cuenta con monedero acumulado');
-	}
+	}*/
 	
 }
 
-function RevertirMonedero() {
-        $(".monedero").text(formato_numero(0,2,'.',','));
-        localStorage.setItem('monedero',0);
-        CalcularTotales();
-        $(".btnmonedero .chip-label").text('Aplicar');
+function RevertirMonedero(idpago) {
+
+    var listado=localStorage.getItem('pagos');
+    var id_user=localStorage.getItem('id_user');
+    var pagina = "RevertirPagosMonedero.php";
+    var datos="id_user="+id_user+"&pagos="+listado+"&idpago="+idpago;
+    $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+    data:datos,
+    async:false,
+    success: function(resp){
+
+      var respuesta=resp.pagos;
+      console.log(respuesta);
+      localStorage.setItem('pagos',JSON.stringify(respuesta));
+     
+      var monederousado=resp.monederousado;
+      localStorage.setItem('monedero',monederousado);
+      CargarPagosElegidos();
+      CalcularTotales();
+        /*$(".btnmonedero .chip-label").text('Aplicar');
         $(".btnmonedero").attr('onclick','AbrirModalmonedero()');
+*/
+         },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+      var error;
+        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+    }
+
+  });
 
 }
 
@@ -1721,7 +1912,7 @@ function RealizarCargo() {
      var mensaje='';
      var pedido='';
      var informacion='';
-   var pagina = "RealizarPago6.php";
+   var pagina = "RealizarPago7.php";
    var iduser=localStorage.getItem('id_user');
    var constripe=localStorage.getItem('constripe');
    var idtipodepago=localStorage.getItem('idtipodepago');

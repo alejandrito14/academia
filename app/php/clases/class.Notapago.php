@@ -54,6 +54,8 @@ class Notapago
 	public $imagenconstancia;
 	public $idusuariodatofiscal;
 	public $fechareporte;
+	public $idnotapagodescripcion;
+	public $monederousado;
 	public function CrearNotapago()
 	{
 		$sql="INSERT INTO notapago( idusuario, subtotal, iva, total, comisiontotal, montomonedero, estatus, idtipopago, tipopago, confoto, datostarjeta,datostarjeta2,idpagostripe,folio,comisionpornota,comisionnota,tipocomisionpornota,requierefactura,razonsocial,rfc,direccion,nointerior,noexterior,colonia,municipio,estado,codigopostal,correo,pais,asentamiento,calle,formapago,metodopago,usocfdi,imagenconstancia,idusuariodatofiscal) VALUES ('$this->idusuario', '$this->subtotal','$this->iva', '$this->total', '$this->comisiontotal','$this->montomonedero','$this->estatus','$this->idtipopago','$this->tipopago','$this->confoto','$this->datostarjeta','$this->datostarjeta2','$this->idpagostripe','$this->folio','$this->comisionpornota','$this->comisionnota','$this->tipocomisionpornota',
@@ -115,10 +117,10 @@ class Notapago
 
 	public function Creardescripcionpago()
 	{
-		$sql="INSERT INTO notapago_descripcion( idnotapago, descripcion, cantidad, monto, idpago) VALUES ( '$this->idnotapago', '$this->descripcion', '$this->cantidad','$this->monto', '$this->idpago')";
-
+		$sql="INSERT INTO notapago_descripcion( idnotapago, descripcion, cantidad, monto, idpago,monederousado) VALUES ( '$this->idnotapago', '$this->descripcion', '$this->cantidad','$this->monto', '$this->idpago','$this->monederousado')";
+		
 		$resp=$this->db->consulta($sql);
-
+		$this->idnotapagodescripcion=$this->db->id_ultimo();
 	}
 	
 

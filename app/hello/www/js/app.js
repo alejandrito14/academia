@@ -2179,7 +2179,7 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
   $("#btnpagarresumen").attr('disabled',true);
   $$("#btnatras").attr('onclick','Atras()');
   $$("#btnatras").css('display','none');
-  $$(".btnmonedero").attr('onclick','AbrirModalmonedero()');
+  //$$(".btnmonedero").attr('onclick','AbrirModalmonedero()');
   $$(".btncupon").attr('onclick','AbrirModalcupon()');
  
   var listado=JSON.parse(localStorage.getItem('pagos'));

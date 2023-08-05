@@ -1371,6 +1371,30 @@ public function validarUsuarioClienteTokenCel()
     }
   
 
+  public function ObtenerMonedero()
+  {
+     $sql="SELECT monedero.*,notapago.folio from monedero
+        LEFT JOIN notapago ON monedero.idnota=notapago.idnotapago
+      WHERE idusuarios=$this->idusuarios ORDER by idmonedero asc";
+
+       $resp=$this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+
+        $array=array();
+        $contador=0;
+        if ($cont>0) {
+
+            while ($objeto=$this->db->fetch_object($resp)) {
+
+                $array[$contador]=$objeto;
+                $contador++;
+            } 
+        }
+        
+        return $array;
+  }
+
 
 }
 
