@@ -123,10 +123,20 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
                    <td>
                    	<?php 
-
+                   		if ($resultado_empresas_row['depende']!=0 && $resultado_empresas_row['depende']!='') {
+                   			# code...
+                   		
 						$dependencia=$emp->obtenerDependenciaHaciaArriba($resultado_empresas_row['depende']);
+						//echo '1';
+						if (!empty($dependencia)) {
+							# code...
+						
 						
 						echo $emp->mostrarEstructuraDependencia($dependencia);
+
+					}
+
+				}
                    	 ?>
                    </td>
 

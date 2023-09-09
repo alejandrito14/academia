@@ -174,7 +174,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 	    <div class="row" style="margin-right: 1em;margin-left: 1em;">
 				<div class="col-md-8"></div>
 				<div class="col-md-4">
-					<input type="text" placeholder="Buscar" id="buscadorservicio"  class="form-control" onkeyup="FiltrarServicios('<?php echo $idmenumodulo; ?>')" style="width: 70%;float: right;margin-right: 1em;">
+					<input type="text" placeholder="Buscar" id="buscadorservicio"  class="form-control" onkeyup="handleKeyPress(event, '<?php echo $idmenumodulo; ?>')" style="width: 70%;float: right;margin-right: 1em;">
 				</div>
 	    </div>
 		</div>

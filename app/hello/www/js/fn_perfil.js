@@ -251,7 +251,7 @@ function GuardarDatosacceso(argument) {
 	var v_contra2=$("#v_contra2").val();
 	var v_usuario=$("#v_usuario").val();
 	//var datos="iduser="+iduser+"&v_nombre="+v_nombre+"&v_paterno="+v_paterno+"&v_materno="+v_materno+"&v_sexo="+v_sexo+"&v_telefono="+v_telefono+"&v_email="+v_email;
-	
+	var iduser=localStorage.getItem('id_user');
 	var datos="iduser="+iduser+"&v_email="+v_email+"&v_contra1="+v_contra1+"&v_usuario="+v_usuario;
 	var pagina = "Actualizarclienteacceso.php";
 

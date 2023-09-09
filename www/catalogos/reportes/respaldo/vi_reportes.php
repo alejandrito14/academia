@@ -132,8 +132,20 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				  <div class="col-md-6" id="tiposervicios" style="display: none;">
 
 				  	<div class="form-group m-t-20">
-				  	<label>TIPO DE SERVICIOS</label>
+				  	<label>CATEGORÍAS</label>
 				  	<select id="v_tiposervicios" class="form-control" multiple="multiple" style="width: 100%;">
+				  		
+				  	</select>
+				   	</div>
+				  </div>
+				</div>
+
+				<div class="row" >
+				  <div class="col-md-6" id="tiposervicios2" style="display: none;">
+
+				  	<div class="form-group m-t-20">
+				  	<label>CATEGORÍAS DEPENDIENTES</label>
+				  	<select id="v_tiposervicios2" class="form-control" multiple="multiple" style="width: 100%;">
 				  		
 				  	</select>
 				   	</div>
@@ -155,7 +167,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				  	<div class="form-group m-t-20">
 				  	<label>ESTATUS ACEPTADO</label>
 				  	<select id="v_estatusaceptado" class="form-control" multiple="multiple" style="width: 100%;">
-				  		
+				  	
+
 				  		<option value="1">ACEPTADO</option>
 				  		<option value="0">NO ACEPTADO</option>
 				  	</select>
@@ -172,6 +185,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				  	<div class="form-group m-t-20">
 				  	<label>ESTATUS PAGADO</label>
 				  	<select id="v_estatuspagado" class="form-control" multiple="multiple" style="width: 100%;">
+			
+
 				  		<option value="1">PAGADO</option>
 				  		<option value="0">NO PAGADO</option>
 				  	</select>
@@ -221,7 +236,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
  	 <div class="row" id="fechainicio">
 				  <div class="col-md-6" id="">
 				  	<div class="form-group">
-				  		<label>FECHA INICIO:</label>
+				  		<label>FECHA INICIO DEL SERVICIO:</label>
 
 			            <div class='input-group date' id='datetimepicker1'>
 			               <input type='date' class="form-control" id="fechainicio1" />
@@ -256,7 +271,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 				   <div class="col-md-6" >
 				   	<div class="form-group">
-				  		 <label>FECHA FIN:</label>
+				  		 <label>FECHA FIN DEL SERVICIO:</label>
 
 			            <div class='input-group date' id='datetimepicker2'>
 			               <input type='date' class="form-control" id="fechafin" />
@@ -284,24 +299,40 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				</div>
 			</div>
 
+			 <div class="row" id="fechainiciopago">
+				  <div class="col-md-6" id="">
+				  	<div class="form-group">
+				  		<label>FECHA INICIO DE PAGO:</label>
+
+			            <div class='input-group date' id='datetimepickerpago1'>
+			               <input type='date' class="form-control" id="fechainiciopago1" />
+			               <span class="input-group-addon">
+			               <span class="glyphicon glyphicon-calendar"></span>
+			               </span>
+			            </div>
+				  </div>
+				</div>
+			</div>
+
+			 <div class="row" id="fechafinpago">
+				  <div class="col-md-6" id="">
+				  	<div class="form-group">
+				  		<label>FECHA FIN DE PAGO:</label>
+
+			            <div class='input-group date' id='datetimepickerpago2'>
+			               <input type='date' class="form-control" id="fechafinpago2" />
+			               <span class="input-group-addon">
+			               <span class="glyphicon glyphicon-calendar"></span>
+			               </span>
+			            </div>
+				  </div>
+				</div>
+			</div>
+
+
 				<div class="row">
 					<div class="col-md-6" id="">
-					<!-- <div class="col-md-2" style="
-					    float: left;
-					">
-						
 					
-
-					</div> -->
-					<!-- <div class="col-md-2" style="
-					    float: right;
-					">
-						
-					
-					</div> -->
-					<!-- <div class="col-md-2" style="
-					    float: right;
-					"> -->
 						
 						<button style="display: none;    float: right;" id="btngenerar" class="btn btn-primary" onclick="">GENERAR REPORTE</button>
 
@@ -353,15 +384,43 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 	$("#alumnos").css('display','none');
 	$("#horainicio").css('display','none');
 	$("#horafin").css('display','none');
+	$("#fechainiciopago").css('display','none');
+	$("#fechafinpago").css('display','none');
 
 		$('#v_tiposervicios').SumoSelect({ 
-			    placeholder: 'Seleccionar tipo de servicio',
+			    placeholder: 'Seleccionar categoria',
 				     selectAll : true,
 	   				 selectAllPartialCheck : true,
 	                 locale :  ['Aceptar', 'Cancelar', 'Seleccionar todos'],
 					closeAfterClearAll: true, 
 				    });
-		
+		$('#v_tiposervicios2').SumoSelect({ 
+			     placeholder: 'Seleccionar categoria',
+				     selectAll : true,
+	   				 selectAllPartialCheck : true,
+	                 locale :  ['Aceptar', 'Cancelar', 'Seleccionar todos'],
+					closeAfterClearAll: true, 
+				    });
+
+		$('#v_estatuspagado').SumoSelect({ 
+			  placeholder: 'Seleccionar estatus',
+				     selectAll : true,selectAllPartialCheck : true,
+	                 locale :  ['Aceptar', 'Cancelar', 'Seleccionar todos'],
+				 });
+		$('#v_estatusaceptado').SumoSelect({ 
+				placeholder: 'Seleccionar estatus',
+
+				     selectAll : true,selectAllPartialCheck : true,
+	                 locale :  ['Aceptar', 'Cancelar', 'Seleccionar todos'],
+				 });
+
+			$('#v_coaches').SumoSelect({ 
+				 placeholder: 'Seleccionar coach',
+
+				     selectAll : true,selectAllPartialCheck : true,
+	                 locale :  ['Aceptar', 'Cancelar', 'Seleccionar todos'],
+				 });
+
 	//CargarSucursales();
 //	CargarCategorias();
 	

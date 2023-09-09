@@ -29,6 +29,7 @@ try
 	$contarpagos=0;
 
 	$totalmontousado=0;
+	$sumadescuento=0;
 	for ($j=0; $j <count($pagoselegidos); $j++) { 
 		$idpago=$pagoselegidos[$j]->{'id'};
 		$lo->idpago=$idpago;
@@ -39,16 +40,31 @@ try
 		
 		$totalmontousado=$totalmontousado+$montousado;
 
+			$descuentos=$pagoselegidos[$j]->{'descuentos'};
+			if ($idpagoelegido==$idpago) {
+				# code...
+			
+			if (count($descuentos)) {
+				
+				for ($k=0; $k < count($descuentos); $k++) { 
+					
+					$sumadescuento=$sumadescuento+$descuentos[$k]->{'montoadescontar'};
+				}
+
+			}
+		}
+
 
 
 		}
+
 	
 	$monedero=$monedero-$totalmontousado;
 
 	$lo->idpago=$idpagoelegido;
 	$buscar=$lo->ObtenerPago();
 
-	$montopago=$buscar[0]->monto;
+	$montopago=$buscar[0]->monto-$sumadescuento;
 	$alcanza=0;
 	if ($monedero>=$montopago) {
 		$alcanza=1;

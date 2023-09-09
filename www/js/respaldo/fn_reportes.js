@@ -77,17 +77,20 @@ function CargarFiltrosreportes(idreporte) {
 			var funcionpantalla=respuesta.funcionpantalla;
 			var fechactual=msj.fechactual;
 			var habilitartiposervicios=respuesta.habilitartiposervicios;
-
-
 			var estatusaceptado=respuesta.habilitarestatusaceptado;
 			var estatuspagado=respuesta.habilitarestatuspagado;
 			var coaches=respuesta.habilitarcoaches;
-
-			Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafin,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios,estatusaceptado,estatuspagado,coaches);
+			var habilitarfechainiciopago=respuesta.habilitarfechainiciopago;
+			var habilitarfechafinpago=respuesta.habilitarfechafinpago;
+			var habilitartiposervicionodepende=respuesta.habilitartiposervicionodepende;
+			Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafin,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios,estatusaceptado,estatuspagado,coaches,habilitarfechainiciopago,habilitarfechafinpago,habilitartiposervicionodepende);
 			
 
-			$("#fechainicio1").val(fechactual);
-			$("#fechafin").val(fechactual);
+			/*$("#fechainicio1").val(fechactual);
+			$("#fechafin").val(fechactual);*/
+
+			//$("#fechainiciopago1").val(fechactual);
+			//$("#fechafinpago2").val(fechactual);
 
 			}
 		}); 
@@ -103,7 +106,7 @@ function CargarFiltrosreportes(idreporte) {
 	}
 }
 
-function Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafinal,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios,estatusaceptado,estatuspagado,coaches) {
+function Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafinal,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios,estatusaceptado,estatuspagado,coaches,habilitarfechainiciopago,habilitarfechafinpago,habilitartiposervicionodepende) {
 	$("#tiposervicios").css('display','none');
 	$("#servicios").css('display','none');
 	$("#fechainicio").css('display','none');
@@ -117,9 +120,14 @@ function Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafi
 	$("#estatusaceptado").css('display','none');
 	$("#estatuspagado").css('display','none');
 	$("#coaches").css('display','none');
+	$("#fechainiciopago").css('display','none');
+	$("#fechafinpago").css('display','none');
+	$("#tiposervicios2").css('display','none');
 
 	//$("#btnpantalla").css('display','block');
 	$("#btnpantalla").attr('onclick',funcion);
+
+
 
 	if (habilitarservicio==1) {
 
@@ -155,9 +163,23 @@ function Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafi
 		$("#horafin").css('display','block');
 	}
 
+	if (habilitarfechainiciopago==1) {
+		$("#fechainiciopago").css('display','block');
+	}
+
+	if (habilitarfechafinpago==1) {
+		$("#fechafinpago").css('display','block');
+
+	}
+
 	if (habilitartiposervicios==1) {
 		$("#tiposervicios").css('display','block');
 		CargarTipoServiciosRe();
+	}
+
+	if (habilitartiposervicionodepende==1) {
+		$("#tiposervicios2").css('display','block');
+		CargarTipoServiciosRe2();
 	}
 	
 
@@ -204,6 +226,31 @@ function CargarTipoServiciosRe() {
 	
 }
 
+
+function CargarTipoServiciosRe2() {
+
+	 $.ajax({
+					url:'catalogos/reportes/ObtenerTipoServiciosPrincipal.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos
+					dataType:'json',
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+					  },
+					success:function(msj){
+						
+						var respuesta=msj.respuesta;
+						PintarTipoServiciosRe2(respuesta);
+
+					  	}
+				  });
+	
+}
+
 function PintarTipoServiciosRe(respuesta) {
 	var html="";
 	if (respuesta.length>0) {
@@ -218,6 +265,20 @@ function PintarTipoServiciosRe(respuesta) {
 	
 
 	$('#v_tiposervicios').SumoSelect().sumo.reload();
+
+}
+
+function PintarTipoServiciosRe2(respuesta) {
+	var html="";
+	if (respuesta.length>0) {
+
+		for (var i = 0; i <respuesta.length; i++) {
+			html+=`<option value="`+respuesta[i].idcategorias+`">`+respuesta[i].titulo+`</option>`;
+		}
+	}
+
+	$("#v_tiposervicios2").html(html);
+	$('#v_tiposervicios2').SumoSelect().sumo.reload();
 
 }
 function CargarCategorias() {
@@ -1013,7 +1074,10 @@ function GenerarReportePantallaTotalizado() {
 	var fechainicio1=fechainicio.split(' ')[0];
 	var fechafin1=fechafin.split(' ')[0];
 	var v_tiposervicios=$("#v_tiposervicios").val();
-	var datos="idservicio="+idservicio+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&v_tiposervicios="+v_tiposervicios+"&estatusaceptado="+estatusaceptado+"&estatuspagado="+estatuspagado+"&v_coaches="+v_coaches+"&pantalla=1";
+	var v_tiposervicios2=$("#v_tiposervicios2").val();
+	var fechainiciopago=$("#fechainiciopago1").val();
+	var fechafinpago=$("#fechafinpago2").val();
+	var datos="idservicio="+idservicio+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&v_tiposervicios="+v_tiposervicios+"&estatusaceptado="+estatusaceptado+"&estatuspagado="+estatuspagado+"&v_coaches="+v_coaches+"&pantalla=1"+"&fechainiciopago="+fechainiciopago+"&fechafinpago="+fechafinpago+"&v_tiposervicios2="+v_tiposervicios2;
 
 	var url='modelosreportes/notaspago/excel/rpt_Totalizado.php'; 
 
@@ -1055,7 +1119,10 @@ function GenerarReporteTotalizado() {
 	var fechainicio1=fechainicio.split(' ')[0];
 	var fechafin1=fechafin.split(' ')[0];
 	var v_tiposervicios=$("#v_tiposervicios").val();
-	var datos="idservicio="+idservicio+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&v_tiposervicios="+v_tiposervicios+"&estatusaceptado="+estatusaceptado+"&estatuspagado="+estatuspagado+"&v_coaches="+v_coaches+"&pantalla=0";
+	var v_tiposervicios2=$("#v_tiposervicios2").val();
+	var fechainiciopago=$("#fechainiciopago1").val();
+	var fechafinpago=$("#fechafinpago2").val();
+	var datos="idservicio="+idservicio+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin+"&v_tiposervicios="+v_tiposervicios+"&estatusaceptado="+estatusaceptado+"&estatuspagado="+estatuspagado+"&v_coaches="+v_coaches+"&v_tiposervicios2="+v_tiposervicios2+"&fechainiciopago="+fechainiciopago+"&fechafinpago="+fechafinpago+"&pantalla=0";
 
 	var url='modelosreportes/notaspago/excel/rpt_Totalizado.php?'+datos; 
 

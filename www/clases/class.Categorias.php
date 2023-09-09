@@ -36,6 +36,7 @@ class Categorias
 	public $horainiciosemana;
 	public $horafinsemana;
 	public $v_depende;
+	public $tiposervicioconfiguracion;
 
 		public function obtenerTodas()
 	{
@@ -140,7 +141,7 @@ class Categorias
 		campopreciounitario,
 		campomontoporparticipante,
 		campomontoporgrupo,
-		habilitarmodalidadpago,avanzado,asignarcategoria,asignardias,depende) VALUES ('$this->nombre','$this->orden','$this->estatus','$this->horarios','$this->zonas','$this->participantes','$this->cantidadparticipantes','$this->coachs','$this->numerodias','$this->habilitarcostos','$this->habilitarmodalidad','$this->habilitarcampototalclases','$this->habilitarcampopreciounitario','$this->habilitarcampomontoparticipante','$this->habilitarcampomontogrupo','$this->habilitarmodalidadpago','$this->habilitaravanzado','$this->activarcategoria','$this->activardias','$this->depende');";
+		habilitarmodalidadpago,avanzado,asignarcategoria,asignardias,depende,idtiposervicioconfiguracion) VALUES ('$this->nombre','$this->orden','$this->estatus','$this->horarios','$this->zonas','$this->participantes','$this->cantidadparticipantes','$this->coachs','$this->numerodias','$this->habilitarcostos','$this->habilitarmodalidad','$this->habilitarcampototalclases','$this->habilitarcampopreciounitario','$this->habilitarcampomontoparticipante','$this->habilitarcampomontogrupo','$this->habilitarmodalidadpago','$this->habilitaravanzado','$this->activarcategoria','$this->activardias','$this->depende','$this->tiposervicioconfiguracion');";
 		
 		
 		$resp = $this->db->consulta($sql);
@@ -169,7 +170,8 @@ class Categorias
 		avanzado='$this->habilitaravanzado',
 		asignarcategoria='$this->activarcategoria',
 		asignardias='$this->activardias',
-		depende='$this->depende'
+		depende='$this->depende',
+		idtiposervicioconfiguracion='$this->tiposervicioconfiguracion'
 		WHERE idcategorias = '$this->idcategoria'";
 
 
@@ -464,7 +466,11 @@ class Categorias
 }
 
 	public function obtenerDependenciaHaciaArriba($subcategoriaId) {
+		$resultado=[];
 
+		if ($subcategoriaId!=0 ) {
+			# code...
+		
     $consulta = "SELECT idcategorias, titulo, depende FROM categorias WHERE idcategorias = '$subcategoriaId'";
 
 
@@ -472,7 +478,11 @@ class Categorias
     	
     	$subcategoria=$this->db->fetch_assoc($resultado1);
 
+    	$numsubcategoria=$this->db->num_rows($resultado1);
+
     	//var_dump($subcategoria);die();
+   if ($numsubcategoria>0) {
+   	# code...
    
     $resultado = array(
         'id' => $subcategoria['idcategorias'],
@@ -480,11 +490,17 @@ class Categorias
     );
     
     $idDependencia = $subcategoria['depende'];
+
+
    
     if ($idDependencia != null && $idDependencia!='' && $idDependencia!=0) {
+    	
         $dependenciaPadre = $this->obtenerDependenciaHaciaArriba($idDependencia, $conexion);
         $resultado['dependencia_padre'] = $dependenciaPadre;
-    }
+    	}
+
+	}
+}
     
     return $resultado;
 }
@@ -495,6 +511,28 @@ public function ObtenerCategoriasEstatusDepende2($depende)
 		$sql="SELECT *FROM categorias WHERE depende IN ($depende) AND estatus=1";
 
 
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerCategoriasTipoServicioConfi()
+	{
+		$sql ="SELECT * FROM 
+			categorias  WHERE idtiposervicioconfiguracion='$this->tiposervicioconfiguracion'";
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 

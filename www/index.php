@@ -1287,7 +1287,7 @@ $navegador = $f->navegador();
 <script src="js/fn_tipojuego.js?<?php echo time(); ?>"></script>
   <script src="https://js.stripe.com/v3/"></script>
 
-
+<script src="js/fn_tiposervicioconfiguracion.js?<?php echo time(); ?>"></script>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/TableExport/5.2.0/js/tableexport.min.js"></script>

@@ -934,6 +934,13 @@ catch (\Stripe\Exception\CardException $err) {
            
                 //$pagos->ActualizarEstatus();
 
+              if ($pagosconsiderados[$i]->tipo==1) {
+                
+                $pagos->estatus=6;
+                $pagos->ActualizarEstatus();
+
+               }
+
 
               }
 

@@ -1517,6 +1517,7 @@ public function obtenerServiciosAsignadosPendientes()
 		servicios ON usuarios_servicios.idservicio=servicios.idservicio    WHERE usuarios_servicios.idusuarios IN($this->idusuario) AND usuarios_servicios.estatus IN(0)
 			AND usuarios_servicios.cancelacion=0 and servicios.aceptarserviciopago=1
 		 ";
+
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -1790,6 +1791,31 @@ public function obtenerServiciosAsignadosPendientes()
 		 ";
 
 
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerPagoServicio()
+	{
+		$sql = "SELECT * FROM pagos INNER JOIN notapago_descripcion ON pagos.idpago=notapago_descripcion.idpago
+		INNER JOIN notapago ON notapago.idnotapago=notapago_descripcion.idnotapago WHERE 
+			  idservicio='$this->idservicio' AND idusuarios='$this->idusuario' AND   notapago.estatus IN(0,1)";
+			 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 

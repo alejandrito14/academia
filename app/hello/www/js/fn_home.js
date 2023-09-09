@@ -52,7 +52,10 @@ function CargarDatos() {
 	$$(".tipousuario").text(tipousuario);
 	$$(".btnmisservicios").attr('onclick','MisServiciosAlumno()');
     $$(".btnserviciosactivos").attr('onclick','ServiciosActivos()');
+        $$(".btnmisserviciosabiertos").attr('onclick','ServiciosActivos()');
+
 	$$(".btnmisserviciospendientes").attr('onclick','MisServiciosPendientesAlumno()');
+	$$(".btnpagos").attr('onclick','GoToPage("listadopagos")');
 	$$(".inicioenlace").attr('onclick','GoToPage("home")');
  	classtipo='tipoalumno';
  	 $$(".tipousuario").removeClass('tipoadmin');
@@ -78,7 +81,7 @@ function CargarDatos() {
 	VerificarServiciosAsignadospendientes();
 	VerificarServiciosAsignados();
 	MostrarBotonServiciosActivos();
-	
+	ExistenServiciosporpagar();
       var activarpopupmembresia=localStorage.getItem('activarpopupmembresia');
 
       if (activarpopupmembresia==1) {
@@ -88,6 +91,13 @@ function CargarDatos() {
       		
       }
 
+ var swiper10 = new Swiper(".cardbotones", {
+		     slidesPerView: "auto",
+    		 spaceBetween: 0,
+    		 pagination: false,	
+        slidesOffsetAfter: 0, // Ajustar este valor para comenzar desde la derecha
+
+		  });
 
 	var iduser=localStorage.getItem('id_user');
 	socket=io.connect(globalsockect, { transports : ["websocket"],rejectUnauthorized: false });
@@ -213,6 +223,7 @@ function VerificarServiciosAsignados() {
 				$(".numeroservicios").html(respuesta.length);
 
 				$(".divbtnservicios").css('display','block');
+				$(".divmisservicios").css('display','block');
 			}
 
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -827,10 +838,11 @@ function VerificarServiciosAsignadospendientes() {
 				$(".serviciospendientes").css('display','block');
 				$("#numeropendientes").html(respuesta.length);
 				$(".numeropendientes").html(respuesta.length);
-
+				$(".divserviciospendientes").css('display','block');
 			}else{
 				$(".serviciospendientes").css('display','none');
-	
+					$(".divserviciospendientes").css('display','none');
+
 			}
 			
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -3573,11 +3585,12 @@ function MostrarBotonServiciosActivos() {
 				$(".divserviciosactivos").css('display','block');
 				$("#numeroabiertos").html(respuesta.length);
 				$(".numeroabiertos").html(respuesta.length);
-
+				$(".divmisserviciosabiertos").css('display','block');
+				$(".numeroserviciosabiertos").html(respuesta.length);
 			}else{
 			
 				$(".divserviciosactivos").css('display','none');
-
+				$(".divmisserviciosabiertos").css('display','none');
 
 			}
 
@@ -5706,4 +5719,36 @@ function ChecarSiFaltaPago() {
 
 function ChecarSiExisteServicioPendiente(argument) {
 	// body...
+}
+
+
+function ExistenServiciosporpagar() {
+	var pagina = "ExistenServiciosporpagar.php";
+	var id_user=localStorage.getItem('id_user');
+	var datos="id_user="+id_user;
+
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		crossDomain: true,
+		cache: false,
+		data:datos,
+		success: function(res){
+			$(".divpagos").css('display','none');
+			var respuesta=res.respuesta;
+			if (respuesta>0) {
+				$(".divpagos").css('display','block');
+				$(".numeropagos").text(respuesta);
+			}
+
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
 }

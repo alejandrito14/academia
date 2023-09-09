@@ -41,6 +41,7 @@ try
 	$emp->empresa = trim($f->guardar_cadena_utf8($_POST['v_empresa']));
 	$emp->orden = trim($f->guardar_cadena_utf8($_POST['v_orden']));
 	$emp->estatus = trim($f->guardar_cadena_utf8($_POST['v_estatus']));
+	$emp->tiposervicioconfiguracion=$_POST['v_tiposervicioconfiguracion'];
 
 		$emp->habilitarcostos=0;
 		$emp->habilitarmodalidad=0;

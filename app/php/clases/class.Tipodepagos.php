@@ -208,6 +208,30 @@ class Tipodepagos
 		return $array;
 	}
 
+	public function ObttipodepagoActivosFiltrarIdtipo2($tipodepagos,$factura)
+	{	
+
+		if ($tipodepagos!='' && $tipodepagos!=0) {
+			$consulta=" AND idtipodepago IN ($tipodepagos)";
+		}
+		$sql = "SELECT * FROM tipodepago WHERE 1=1 $consulta AND estatus=1 AND factura='$factura'";
+		
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
 
 	
 

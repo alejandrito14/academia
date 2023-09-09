@@ -29,7 +29,7 @@ $se = new Sesion();
 			$servicio =  $con2->query($consulta); 
 		
 			$servicio_row =  mysqli_fetch_assoc($servicio);  
-
+ 
 			$servicio_num=mysqli_num_rows($servicio);
 
 

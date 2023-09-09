@@ -6,7 +6,6 @@ require_once("../../clases/class.Sesion.php");
 //creamos nuestra sesion.
 $se = new Sesion();
 
-
 if(!isset($_SESSION['se_SAS']))
 {
 	/*header("Location: ../../login.php"); */ echo "login";
@@ -24,6 +23,7 @@ require_once("../../clases/conexcion.php");
 require_once("../../clases/class.Categorias.php");
 require_once("../../clases/class.Funciones.php");
 require_once("../../clases/class.Botones.php");
+require_once("../../clases/class.TiposervicioConfiguracion.php");
 
 $idmenumodulo = $_GET['idmenumodulo'];
 
@@ -32,9 +32,10 @@ $db = new MySQL();
 $emp = new Categorias();
 $f = new Funciones();
 $bt = new Botones_permisos();
+$tiposervicioconfiguracion=new TiposervicioConfiguracion();
 
 $emp->db = $db;
-
+$tiposervicioconfiguracion->db=$db;
 $emp->tipo_usuario = $tipousaurio;
 $emp->lista_empresas = $lista_empresas;
 
@@ -106,6 +107,7 @@ if(!isset($_GET['idcategoria'])){
 
 		$asignarcategoria=$result_presentacion_row['asignarcategoria'];
 		$asignardias=$result_presentacion_row['asignardias'];
+		$idtiposervicioconfiguracion=$result_presentacion_row['idtiposervicioconfiguracion'];
 
 	$ruta='';
 	if($foto==""){
@@ -464,7 +466,33 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 										} while($categorias_row=$db->fetch_assoc($categorias));
 									?>
 								</select>
-							</div>     
+							</div>  
+
+							     <div class="form-group m-t-20" style="">
+								<label>TIPO DE SERVICIO CONFIGURACION:</label>
+
+									<?php 
+									$tipoconfiguracionlista= $tiposervicioconfiguracion->ObtenerTipoServicionConfiguracion();
+									
+									$tipoconfiguracion_num=$db->num_rows($tipoconfiguracionlista);
+									$tipoconfiguracion_row=$db->fetch_assoc($tipoconfiguracionlista);
+								
+								?>
+								<select  class="form-control" id="v_tiposervicioconfiguracion" name="v_tiposervicioconfiguracion" >
+									<option value="0" <?php if($depende==0){ echo ("selected");}?>>NINGUNO</option>
+									<?php
+									do{
+									?>
+									<option value="<?php echo ($tipoconfiguracion_row['idtiposervicioconfiguracion']);?>" <?php if($tipoconfiguracion_row['idtiposervicioconfiguracion']==$idtiposervicioconfiguracion){ echo ("selected");}?>><?php echo ($tipoconfiguracion_row['nombre']);?></option>
+									
+									<?php 
+										} while($tipoconfiguracion_row=$db->fetch_assoc($tipoconfiguracionlista));
+									?>
+								</select>
+
+
+
+							</div>
 
 
 							<div class="form-group m-t-20">

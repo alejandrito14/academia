@@ -5,6 +5,8 @@ var resultimagendatosfactura=[];
 var dynamicSheet4="";
 var dynamicSheet5="";
 var dynamicSheet1="";
+var dynamicSheet2="";
+ var swiper1 ="";
 function ObtenerTotalPagos() {
 	var pagina = "ObtenerTodosPagos.php";
 	var id_user=localStorage.getItem('id_user');
@@ -107,21 +109,30 @@ function Pintarpagos(pagos) {
 	if (pagos.length>0) {
 		var html="";
 		html+=`
-		<li class="list-item">
-                    <div class="row">
+		<li class="list-item lipagos" style="    padding-top: 10px;">
+                    <div class="row" >
                         <div class="col-80">
                         <p>Seleccionar todos</p>
                         </div>
-                        <div class="col-20">
-                        <input type="checkbox" id="checktodos" onchange="SeleccionarTodos()" style="    width: 30px;height: 20px;" />
-                        </div>
+                        <div class="col-20">`;
+                        //<input type="checkbox" id="checktodos" onchange="SeleccionarTodos()" style="    width: 30px;height: 20px;" />
+                             html+=`
+                              <div class="toggle">
+                                  <label>
+                                    <input type="checkbox" id="checktodos"  onchange="SeleccionarTodos()" />
+                                    <span class="toggle-icon"></span>
+                                  </label>
+                                </div>
+
+                            `;
+                       html+=` </div>
                     </div>
                  </li>
 
 		`;
 		for (var i = 0; i <pagos.length; i++) {
 			html+=`
-				<li class="list-item">
+				<li class="list-item lipagos">
                     <div class="row">
                         <div class="col-80">
                             <p class="text-muted " id="concepto_`+pagos[i].idpago+`">
@@ -160,19 +171,48 @@ function Pintarpagos(pagos) {
 
                           if (pagos[i].alumnos==pagos[i].aceptados) {
 
-                             html+=` <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Seleccionarcheck(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />`;
+                            html+=`
+                              <div class="toggle">
+                                  <label>
+                                    <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Seleccionarcheck(`+pagos[i].idpago+`)" />
+                                    <span class="toggle-icon"></span>
+                                  </label>
+                                </div>
+
+                            `;
+                            // html+=` <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Seleccionarcheck(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />`;
                                html+=` <input type="hidden" id="sepuede_`+pagos[i].idpago+`" class="" value="1" style="" />`;
 
                           }else{
 
-                            html+=` <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Advertencia(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />`;
+                            html+=`
+                              <div class="toggle">
+                                  <label>
+                                    <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Advertencia(`+pagos[i].idpago+`)" />
+                                    <span class="toggle-icon"></span>
+                                  </label>
+                                </div>
+
+                            `;
+
+                           // html+=` <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Advertencia(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />`;
                                html+=` <input type="hidden" id="sepuede_`+pagos[i].idpago+`" class="" value="0" style="" />`;
 
                           }
      
                         }else{
 
-                         html+=` <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Seleccionarcheck(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />`;
+                              html+=`
+                              <div class="toggle">
+                                  <label>
+                                    <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Seleccionarcheck(`+pagos[i].idpago+`)" />
+                                    <span class="toggle-icon"></span>
+                                  </label>
+                                </div>
+
+                            `;
+
+                        // html+=` <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Seleccionarcheck(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />`;
                          html+=` <input type="hidden" id="sepuede_`+pagos[i].idpago+`" class="" value="1" style="" />`;
 
                         }
@@ -525,17 +565,17 @@ function CargarPagosElegidos() {
 
 	var listado=JSON.parse(localStorage.getItem('pagos'));
 	console.log(listado);
-  alert('a');
+ 
 	var html="";
 	for (var i = 0; i <listado.length; i++) {
    var color='';
       if (listado[i].monto<0) {
         color='red';
       }
-
+      var todosdescuento=0;
 			html+=`
 				<li class="list-item" style="color:`+color+`">
-                    <div class="row">
+                    <div class="row" style="padding-right: 1em;padding-left: 1em;">
                         <div class="col-80" style="padding:0;">
                             <p class="text-muted small" style="font-size:18px;" id="concepto_`+listado[i].id+`">
                               `+listado[i].concepto+`
@@ -547,16 +587,12 @@ function CargarPagosElegidos() {
                              estilo="text-decoration:line-through;";
 
                             }
-                           html+=` <p class="text-muted " style="font-size:30px;text-align:right;`+estilo+`">
+                           html+=` <p class="text-muted " id="montopago_`+listado[i].id+`" style="font-size:30px;text-align:right;`+estilo+`">
 
                             $`+formato_numero(listado[i].monto,2,'.',',')+`
                             </p>`;
 
-                            if (listado[i].monederousado>0) {
-                              html+=`<p style="color:#d77a34;text-align: right;">Monedero aplicado $`+formato_numero(listado[i].monederousado,2,'.',',')+`<p>`;
-                              var t=listado[i].monto-listado[i].monederousado;
-                              html+=`<p style="text-align: right;"> <span style="font-size:30px;">$`+formato_numero(t,2,'.',',')+`</span></p>`;
-                            }
+                           
 
                         html+=` <input type="hidden" value="`+listado[i].monto+`" class="montopago" id="val_`+listado[i].id+`">
                         </div>
@@ -564,12 +600,41 @@ function CargarPagosElegidos() {
                      
 
                         html+=`</div>
-                        <div class="row" >
-                        <div class="col-80" style="padding:0;text-align: end;">
+
+                        </div>
+
+                        <div id="descuentospagos_`+listado[i].id+`"></div>
+                       `;
+                          
+                          
+                              
+
+                       html+=`
+
+
+
+                        </div>`;
+
+                         if (listado[i].monederousado>0) {
+                              html+=`
+
+                              <div class="row" style="padding-left: 1em; padding-right: 1em;">
+                              <div class="col-80" style="padding: 0;" >
+                              <p style="color:#d77a34;text-align: left;margin-top: 10px;">Monedero aplicado </p>
+                              </div>
+                              <div class="col-80" style="color:#d77a34;font-size:30px;text-align: right;margin: 0;padding: 0;" >
+                                <p> -$`+formato_numero(listado[i].monederousado,2,'.',',')+`</p> 
+                              </div>
+                              </div>
+                              `;
+       
+                            }
+                       html+=` <div class="row" >
+                        <div class="col-90" style="padding:0;text-align: end;margin-top: 1em;">
 
                         `;
 
-
+                        if (listado[i].habilitarmonedero==1) {
                            if (listado[i].monederousado==0) {
                         html+=`  <span class="chip  btnmonedero" 
                           id="" style=" height: 30px;width:150px;background:#007aff;color:white;margin-right: 10px;text-align:center;justify-content: center;" 
@@ -589,17 +654,114 @@ function CargarPagosElegidos() {
 
 
                               }
+                            }
 
                            html+=`
                                </div>
                               <div class="col-20"></div>
                             </div>
 
+                            <div id="subtotal_`+listado[i].id+`"></div>
+                            
+                           </div>
                            </div>
                          </li>`;
 		}
 
+
+
 		$(".listadopagoselegidos").html(html);
+
+
+    var html2="";
+      for (var i = 0; i <listado.length; i++) {
+
+                 if (descuentosaplicados.length>0) {
+                                       
+                                listado[i].descuentos=[];
+                                for (var k = 0; k <descuentosaplicados.length; k++) {
+
+                                  if (descuentosaplicados[k].idpago == listado[i].id) {
+                                   html2=`
+                                    <div class="row desc" style="    padding-right: 1em;padding-left: 1em;">
+
+                                   <div class="col-80" style="    margin-top: 10px;padding:0;">
+
+                                      <p class="text-muted" style="text-align: left;">Descuento `+descuentosaplicados[i].titulo+`</p> 
+
+                                         </div>
+                                   <div class="col-80" style="margin: 0;padding: 0;">
+                                      <p style="text-align: right;font-size:30px;"> -$`+formato_numero(descuentosaplicados[i].montoadescontar,2,'.',',')+`</p> 
+                                   </div>
+
+                                   </div>
+                                   `;
+                                   todosdescuento=todosdescuento+descuentosaplicados[i].montoadescontar;
+                                   listado[i].descuentos.push(descuentosaplicados[k]);
+                                    
+                                      $("#montopago_"+listado[i].id).css('text-decoration','line-through');
+                                   
+                                     $("#descuentospagos_"+listado[i].id).append(html2);
+
+                                    }
+                                }
+                              }
+
+
+                                   if (descuentosmembresia.length>0) {
+                                       
+                                  listado[i].descuentosmembresia=[];
+                                for (var k = 0; k <descuentosmembresia.length; k++) {
+
+                                  if (descuentosmembresia[k].idpago == listado[i].id) {
+                                   html2=`
+                                   <div class="row desc" style="padding-right: 1em; padding-left: 1em;">
+                                   <div class="col-80" style="    margin-top: 10px;padding:0;">
+
+                                           <p class="text-muted" style="text-align: left;">Descuento `+descuentosmembresia[i].titulo+`</p> 
+
+                                         </div>
+                                   <div class="col-80" style="margin: 0;padding: 0;">
+                                      <p style="text-align: right;font-size:30px;"> -$`+formato_numero(descuentosmembresia[i].montoadescontar,2,'.',',')+`</p> 
+                                   </div>
+
+                                     </div>
+                                   `;
+                                  todosdescuento=todosdescuento+descuentosaplicados[i].montoadescontar;
+
+                                   listado[i].descuentosmembresia.push(descuentosmembresia[k]);
+                                  $("#descuentospagos_"+listado[i].id).append(html2);
+
+
+                                    }
+                                }
+
+                                $("#montopago_"+listado[i].id).css('text-decoration','line-through');
+
+                              }
+
+
+                            html2=` <div class="row" style="padding-right: 1em;padding-left: 1em;">
+                              <div class="col-80" style="text-align: end;    margin: 0;padding: 0; ">
+
+                            `;
+                              var t=listado[i].monto-todosdescuento-listado[i].monederousado;
+                              html2+=`<p class="text-muted small" style="text-align: left;font-size:18px;"> 
+                              Subtotal </p>
+
+                              `;
+                           html2+=` </div>
+                                 <div class="col-80" style="font-size:30px;margin: 0;padding: 0;" >
+                                   <p class="text-muted " style="text-align: right;"> $`+formato_numero(t,2,'.',',')+`</p> 
+                               </div>`;
+
+                         $("#subtotal_"+listado[i].id).append(html2);
+
+
+                        }
+
+            localStorage.setItem('pagos',JSON.stringify(listado));
+
 }
 
 
@@ -634,8 +796,9 @@ function Cargartipopago(tipodepagoseleccionado) {
 function CargartipopagoSeleccionado(tipodepagoseleccionado) {
      return new Promise(function(resolve, reject) {
 
-   var pagina = "obtenertipodepagos4.php";
-    var datos="tipodepagoseleccionado="+tipodepagoseleccionado;
+    var pagina = "obtenertipodepagos5.php";
+    var factura=0;
+    var datos="tipodepagoseleccionado="+tipodepagoseleccionado+"&factura="+factura;
     $.ajax({
     type: 'POST',
     dataType: 'json',
@@ -661,10 +824,40 @@ function CargartipopagoSeleccionado(tipodepagoseleccionado) {
 }
 
 
+function CargartipopagoSeleccionado2(tipodepagoseleccionado) {
+     return new Promise(function(resolve, reject) {
+
+    var pagina = "obtenertipodepagos5.php";
+    var factura=0;
+    var datos="tipodepagoseleccionado="+tipodepagoseleccionado+"&factura="+factura;
+    $.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+    data:datos,
+    async:false,
+    success: function(datos){
+
+      var opciones=datos.respuesta;
+  
+      Pintartipodepagos(opciones,tipodepagoseleccionado);
+      resolve(1);
+    },error: function(XMLHttpRequest, textStatus, errorThrown){ 
+      var error;
+        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+    }
+
+  });
+  });
+}
+
 
 function CargartipopagoFactura(tipodepagoseleccionado) {
-   var pagina = "obtenertipodepagos2.php";
-    var datos="tipo=1";
+   var pagina = "obtenertipodepagos5.php";
+    var datos="tipodepagoseleccionado="+tipodepagoseleccionado+"&factura=1";
     $.ajax({
     type: 'POST',
     dataType: 'json',
@@ -689,7 +882,7 @@ function CargartipopagoFactura(tipodepagoseleccionado) {
 }
 
 
-function Pintartipodepagos(opciones,tipodepagoseleccionado) {
+/*function Pintartipodepagos(opciones,tipodepagoseleccionado) {
    var html='';
 
   if (opciones.length>0) {
@@ -707,7 +900,72 @@ function Pintartipodepagos(opciones,tipodepagoseleccionado) {
   $("#tipopago").html(html);
 
 
+  }*/
+
+  function Pintartipodepagos(opciones, tipodepagoseleccionado) {
+ 
+
+ var html="";
+
+      var classe="swiper-slide-active";
+
+    if (opciones.length>0) {
+
+      html+=` <div class="swiper-wrapper" style="margin-left: 1em;">`;
+    for (var i = 0; i < opciones.length; i++) {
+      var checked="";
+     
+        html+=`
+<div class="swiper-slide swiper-slide-active" role="group"  style="margin-right: 20px;width:auto;">
+        <div class="card cardtipopago" id="cardtipopago_`+opciones[i].idtipodepago+`" style="height: 35px!important;padding: 10px;" onclick="CargarOpcionesTipopago(`+opciones[i].idtipodepago+`)">
+        <div class="card-content card-content-padding  featured-card">
+           
+            <div class="card-info">
+              <h5 class="title" >
+                <a >`+opciones[i].tipo+`
+                </a>
+              </h5>
+              <p class="location">
+              </p>
+              <h6 class="text-primary vacancy">
+              </h6>
+            </div>
+          </div>
+        </div>
+        </div>
+
+        `;
+        classe="";
+    }
+
+    html+=`</div>`;
+   
+    $$(".divtablerotipo").html(html);
+
+    if (swiper1 && swiper1.destroy) {
+      // Destruir el Swiper existente si está presente
+      swiper1.destroy(true, true); // Los parámetros true limpian los eventos y la estructura del DOM
+    }
+
+      swiper1 = new Swiper(".divtablerotipo", {
+         slidesPerView: "auto",
+        spaceBetween: 20,
+        pagination: false,
+
+      });
+      $(".divtablerotipo").css('display','block');
+
+
+
+      swiper1.update();
+  }else{
+
+    $(".divtablerotipo").css('display','none');
+
   }
+
+}
+
 
 
 function CalcularTotales() {
@@ -818,10 +1076,12 @@ function CalcularTotales() {
 	  $(".lblresumen").text(formato_numero(resta,2,'.',','));
     $(".lbltotal").text(formato_numero(sumaconcomision,2,'.',','));
     var suma=localStorage.getItem('sumatotalapagar');
-    
+    $(".lbltotalapagar").text(formato_numero(suma,2,'.',','));
+
     if (suma==0 ) {
-    
-        $("#btnpagarresumen").attr('disabled',false);
+        $$("#btnpagarnota").css('display','block');
+
+        $("#btnpagarnota").attr('disabled',false);
    
         $(".divtipopago").css('display','none');
         $(".preguntafactura").css('display','none');
@@ -921,7 +1181,7 @@ function AbrirModalmonedero(idpago) {
        $("#monedero").text(formato_numero(respuesta,2,'.',','));
        $(".monederotxt").text(formato_numero(respuesta,2,'.',','));
        monederousuario=respuesta;
-       alert(monederousuario);
+       
        },error: function(XMLHttpRequest, textStatus, errorThrown){ 
       var error;
         if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
@@ -1129,8 +1389,8 @@ function ObtenerMonedero() {
     success: function(datos){
 
     var respuesta=datos.respuesta;
-    $("#monedero").text(respuesta);
-    $(".monederotxt").text(respuesta);
+    $("#monedero").text(formato_numero(respuesta,2,'.',','));
+    $(".monederotxt").text(formato_numero(respuesta,2,'.',','));
     var sumatotalapagar=localStorage.getItem('sumatotalapagar');
 
 
@@ -1263,6 +1523,11 @@ function HabilitarOpcionespago(idtipodepago,foto,stripe,habilitarcampo,habilitar
      // $("#datosdecuenta").html(cuenta);
       $("#habilitarfoto").css('display','block');
 
+      $$("#btnpagarnota").prop('disabled',true);
+
+      $$("#btnpagarnota").css('display','none');
+      
+
       }else{
 
       $(".cuentas").css('display','none');
@@ -1271,7 +1536,7 @@ function HabilitarOpcionespago(idtipodepago,foto,stripe,habilitarcampo,habilitar
 
       $("#habilitarfoto").css('display','none');
      // $("#datosdecuenta").css('display','none');
-
+     
     }
 
     if (stripe==1) {
@@ -1296,7 +1561,12 @@ function HabilitarOpcionespago(idtipodepago,foto,stripe,habilitarcampo,habilitar
        localStorage.setItem('datostarjeta','');
 
         $(".botoneditar").attr('onclick','EditarMontoCliente()');
-        $("#btnpagarresumen").attr('disabled',false);
+        //$("#btnpagarresumen").attr('disabled',false);
+
+         $$("#btnpagarnota").prop('disabled',false);
+
+         $$("#btnpagarnota").css('display','block');
+      
 
     }else{
         $("#campomonto").css('display','none');
@@ -1332,7 +1602,7 @@ function HabilitarOpcionespago(idtipodepago,foto,stripe,habilitarcampo,habilitar
 
 
 }
-function CargarOpcionesTipopago() {
+function CargarOpcionesTipopago(idtipopago) {
 
   if($(".opccard")){
       $(".opccard").each(function(){
@@ -1340,15 +1610,16 @@ function CargarOpcionesTipopago() {
 
       });
   }
-  
 
-	var idtipopago=$("#tipopago").val();
+  $(".cardtipopago").removeClass('seleccionadotipo');
+  $("#cardtipopago_"+idtipopago).addClass('seleccionadotipo');
+
+	//var idtipopago=$("#tipopago").val();
 	var datos="idtipopago="+idtipopago;
 	var pagina="Cargartipopago.php";
     $(".divtransferencia").css('display','none');
     $("#divagregartarjeta").css('display','none');
     $("#divlistadotarjetas").css('display','none');
-    $$("#btnpagarresumen").prop('disabled',true);
     $("#aparecerimagen").css('display','none');
     $("#campomonto").css('display','none');
       localStorage.setItem('comisionmonto',0);
@@ -1361,6 +1632,9 @@ function CargarOpcionesTipopago() {
       localStorage.setItem('tipocomisionpornota',0);
       localStorage.setItem('cambio',0);
       localStorage.setItem('idtipodepago',0);
+   //CrearModalEsperaDialogDos();
+ 
+
   if (idtipopago>0) {
   
       $.ajax({
@@ -1369,6 +1643,11 @@ function CargarOpcionesTipopago() {
       url: urlphp+pagina,
       data:datos,
       async:false,
+       beforeSend: function() {
+        // Mostrar el spinner
+        
+
+    },
       success: function(respuesta){
       var resultado=respuesta.respuesta;
 
@@ -1404,7 +1683,7 @@ function CargarOpcionesTipopago() {
 
             html+=`
             	<div id="habilitarfoto" style="display: block;">
-      <div class="subdivisiones" style="margin-top: 1.5em" ><span style="margin-top: .5em;margin-left: .5em;">Comprobante</span></div>
+      <div class="subdivisiones" style="margin-top: 1.5em" ><span style="margin-top: .5em;margin-left: .5em;"></span></div>
 
            <div class=""  >
                   <div>
@@ -1438,6 +1717,8 @@ function CargarOpcionesTipopago() {
 
 
         if (resultado.habilitarcampo==1) {
+
+        
 
          
 
@@ -1475,7 +1756,11 @@ function CargarOpcionesTipopago() {
           if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
                   //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
                   console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
-      }
+      },
+        complete: function() {
+        // Ocultar el spinner
+        //app.dialog.close();
+        }
 
     });
   }else{
@@ -2048,8 +2333,8 @@ function RealizarCargo() {
                                         $(".mensajeexito").css('display','none');
                                         $(".butonok").css('display','none');
                                         $(".butoerror").css('display','block');
-                                        $$("#btnpagarresumen").removeClass('disabled-button');
-                                        $$("#btnpagarresumen").attr('onclick','RealizarCargo()');
+                                        $$("#btnpagarnota").removeClass('disabled-button');
+                                        $$("#btnpagarnota").attr('onclick','RealizarCargo()');
 
                     // PagoNorealizado(mensaje,output.paymentIntent,notapago);
                          // alerta('',mensaje);
@@ -2066,8 +2351,8 @@ function RealizarCargo() {
                                         $(".mensajeexito").css('display','none');
                                         $(".butonok").css('display','none');
                                         $(".butoerror").css('display','block');
-                                        $$("#btnpagarresumen").removeClass('disabled-button');
-                                        $$("#btnpagarresumen").attr('onclick','RealizarCargo()');
+                                        $$("#btnpagarnota").removeClass('disabled-button');
+                                        $$("#btnpagarnota").attr('onclick','RealizarCargo()');
 
                     }
                      else if (output.error) {
@@ -2080,8 +2365,8 @@ function RealizarCargo() {
                                         $(".mensajeexito").css('display','none');
                                         $(".butonok").css('display','none');
                                         $(".butoerror").css('display','block');
-                                        $$("#btnpagarresumen").removeClass('disabled-button');
-                                        $$("#btnpagarresumen").attr('onclick','RealizarCargo()');
+                                        $$("#btnpagarnota").removeClass('disabled-button');
+                                        $$("#btnpagarnota").attr('onclick','RealizarCargo()');
 
                     
                      } else if (output.succeeded) {
@@ -2215,7 +2500,14 @@ var promesa= new Promise(function(resolve, reject) {
     
       var resultado=res.descuentos;
       descuentosaplicados=[];
-      PintarDescuentos(resultado);
+
+      if (resultado.length>0) {
+
+
+            descuentosaplicados=resultado;
+
+      }
+     // PintarDescuentos(resultado);
        
       resolve(resultado);
       },error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -2231,9 +2523,12 @@ var promesa= new Promise(function(resolve, reject) {
 
           }); 
  }).then(function(value) { 
- console.log('1'); 
+    console.log('1'); 
    ObtenerDescuentoMembresia();
 
+ }).then(function (value) {
+
+    CargarPagosElegidos();
  });
 
 
@@ -2246,7 +2541,6 @@ function PintarDescuentos(respuesta) {
   $("#visualizardescuentos").css('display','none');
 
  if (respuesta.length>0) {
-    descuentosaplicados=respuesta;
     $("#visualizardescuentos").css('display','block');
 
   for (var i = 0; i <respuesta.length; i++) {
@@ -2275,7 +2569,7 @@ function PintarDescuentos(respuesta) {
   }
  }
 
- $("#uldescuentos").append(html);
+ //$("#uldescuentos").append(html);
 
 }
 
@@ -2372,9 +2666,11 @@ function HabilitarBotonPagar() {
         seleccion=1; 
         }
       });
-      $$("#btnpagarresumen").prop('disabled',true);
+      $$("#btnpagarnota").prop('disabled',true);
       if (seleccion==1) {
-          $$("#btnpagarresumen").prop('disabled',false);
+          $$("#btnpagarnota").css('display','block');
+
+          $$("#btnpagarnota").prop('disabled',false);
       }
 }
 
@@ -2471,11 +2767,13 @@ function ObtenerDescuentoMembresia() {
     data:datos,
     success: function(respuesta){
 
-      var descuentomembresia=respuesta.descuentomembresia;
+      var descuentomem=respuesta.descuentomembresia;
         descuentosmembresia=[];
 
-      if (descuentomembresia.length>0) {
-        PintarDescuentosMembresia(descuentomembresia);
+      if (descuentomem.length>0) {
+            descuentosmembresia=descuentomem;
+
+       // PintarDescuentosMembresia(descuentomembresia);
       }
        CalcularTotales();
 
@@ -2527,7 +2825,7 @@ function PintarDescuentosMembresia(respuesta) {
  }
 
 
- $("#uldescuentos").append(html);
+ //$("#uldescuentos").append(html);
 
 }
 
@@ -2550,8 +2848,10 @@ function Detallepago(idnotapago) {
 
      
       if (comprobante1.length) {
-        $$("#btnpagarresumen").prop('disabled',false);
 
+        $$("#btnpagarnota").css('display','block');
+        $("#btnpagarnota").attr('disabled',false);
+   
          $(".check-list").css('display','block')
         for (var i = 0; i < comprobante1.length; i++) {
         ruta=urlphp+`upload/comprobante/`+comprobante1[i];
@@ -3131,8 +3431,8 @@ function RequiereFactura() {
     HabilitarOpcionespago(0,0,0,0,0);
     CalcularTotales();
 }
-function RequiereFactura2() {
-    AbrirModalDatos2();
+function RequiereFactura2(tipodepagoselegidos) {
+    AbrirModalDatos2(tipodepagoselegidos);
 
 
 }
@@ -3425,11 +3725,13 @@ function AbrirModalDatos() {
               ObtenerPais(0);
               ObtenerUsoCfdi();
               $(".lipais").addClass('item-input-focused');
+              $(".btnaceptarfiscal").attr("onclick","Aceptardatofiscal()");
 
 
           },
           opened: function (sheet) {
             console.log('Sheet opened');
+
           },
 
            close:function (sheet) {
@@ -3466,7 +3768,7 @@ function AbrirModalDatos() {
 
 }
 
-function AbrirModalDatos2() {
+function AbrirModalDatos2(tipodepagoselegidos) {
   var html="";
 
   html+=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: none;">
@@ -3759,6 +4061,9 @@ function AbrirModalDatos2() {
           },
           opened: function (sheet) {
             console.log('Sheet opened');
+
+          $(".btnaceptarfiscal").attr("onclick","Aceptardatofiscal()");
+
           },
 
            close:function (sheet) {
@@ -3769,10 +4074,25 @@ function AbrirModalDatos2() {
            },
 
            closed:function (sheet) {
-             if (localStorage.getItem('idusuariosdatosfiscales')==undefined) {
+                if (localStorage.getItem('idusuariosdatosfiscales')==undefined) {
                 
                  $("#requierefactura").prop('checked', false);
              }
+
+              if ($("#requierefactura").is(':checked')) {
+
+                    CargartipopagoFactura(0);
+
+                  }else{
+                  
+                    CargartipopagoSeleccionado(tipodepagoselegidos);
+                    $(".lidatosfacturaelegido").html('');
+                    if(localStorage.getItem('idusuariosdatosfiscales')!=undefined) {
+                      localStorage.removeItem('idusuariosdatosfiscales');
+                    }
+
+                    CargarOpcionesTipopago(0);
+                  }
 
              
 
@@ -4107,6 +4427,7 @@ function GuardarDatosfactura(valor) {
     resultimagendatosfactura=[];
       ObtenerDatosfiscales();
      RegresarFormfactura();
+
     
     },error: function(XMLHttpRequest, textStatus, errorThrown){ 
       var error;
@@ -4299,8 +4620,8 @@ function PintarDatosfiscales(respuesta) {
 
 
                           <div class="row">
-                          <a id="btnaceptarfiscal" onclick="Aceptardatofiscal()" style="border-radius: 10px;
-                            height: 60px;color: white;display:none;margin-right:1em;margin-left:1em;" class="button button-fill button-large button-raised margin-bottom color-theme">
+                          <a  style="border-radius: 10px;
+                            height: 60px;color: white;display:none;margin-right:1em;margin-left:1em;" class="button button-fill button-large button-raised margin-bottom color-theme btnaceptarfiscal">
                               <div class="fab-text">ACEPTAR</div>
                             </a>
                          </div>
@@ -4321,11 +4642,11 @@ function SeleccionarDatofiscal(idusuariosdatosfiscales) {
   if ($("#datosfactura_"+idusuariosdatosfiscales).is(':checked')) {
   
        $("#datosfactura_"+idusuariosdatosfiscales).attr('checked',false);
-       $("#btnaceptarfiscal").css('display','block');
+       $(".btnaceptarfiscal").css('display','block');
 
       }else{
 
-      $("#btnaceptarfiscal").css('display','none');
+      $(".btnaceptarfiscal").css('display','none');
       $("#datosfactura_"+idusuariosdatosfiscales).attr('checked',true);
 
   }
@@ -4352,7 +4673,15 @@ function Aceptardatofiscal() {
 
     localStorage.removeItem('idusuariosdatosfiscales');
   }
-  dynamicSheet2.close();
+
+  if (dynamicSheet5!='') {
+    dynamicSheet5.close();
+  }
+
+  if (dynamicSheet4!='') {
+    dynamicSheet4.close();
+  }
+  
 }
 
 function Editardatosfactura(idusuariosdatosfiscales) {
@@ -5246,4 +5575,8 @@ function GuardarAceptarTerminosPago(idpago) {
                   console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
             }
       });
+}
+
+function ContinuarMetodoPago() {
+  GoToPage('metodopago');
 }

@@ -56,8 +56,8 @@ function PintarMovimientos(respuesta) {
 
 								<div class="col-30">
 									<div class="" style="display: flex;
-    justify-content: center;
-    margin: 10%;">
+								    justify-content: center;
+								    margin: 10%;">
                                     <a class="iconomonedero">
 
 									<i class="bi-wallet2"></i>

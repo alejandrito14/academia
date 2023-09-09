@@ -73,7 +73,7 @@ class Servicios
 	public $horafinal;
 	public $v_politicaaceptacionseleccion;
 	public $aceptarserviciopago;
-
+	public $idtiposervicioconfiguracion;
 	public function ObtenerServicios()
 	{
 		$sql="SELECT servicios.*,categorias.titulo as nombrecategoria,categorias.avanzado,
@@ -167,9 +167,9 @@ class Servicios
 		tiporeembolso,
 		validaradmin,
 		idpoliticaaceptacion,
-		aceptarserviciopago
-
-		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes','$this->politicasaceptacion','$this->controlasistencia','$this->idusuarios','$this->tiporeembolso','$this->validaradmin','$this->v_politicaaceptacionseleccion','$this->aceptarserviciopago')";
+		aceptarserviciopago,
+		idtiposervicioconfiguracion
+		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes','$this->politicasaceptacion','$this->controlasistencia','$this->idusuarios','$this->tiporeembolso','$this->validaradmin','$this->v_politicaaceptacionseleccion','$this->aceptarserviciopago','$this->idtiposervicioconfiguracion')";
 		
 		
 		$resp=$this->db->consulta($query);

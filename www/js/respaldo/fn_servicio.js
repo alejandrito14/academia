@@ -1469,13 +1469,16 @@ Resumenfechas();
 								 			var horainicial=respuesta[i].horasposibles[j][k].horainicial;
 								 			var horafinal=respuesta[i].horasposibles[j][k].horafinal;
 
-								 			var disponible=respuesta[i].horasposibles[j][k].disponible==0?'':color;
 								 			
+								 			if (respuesta[i].horasposibles[j][k].disponible==1) {
+								 			var disponible=respuesta[i].horasposibles[j][k].disponible==0?'':color;
+
 								 			if (horainicial!=null && horafinal!=null) {
 								 				var id=fecha+'-'+horainicial.slice(0,5)+'-'+horafinal.slice(0,5)+'-'+idzona;
 								 					console.log('id'+id);
 								 					 CargaAutomatica(id);
 								 				}
+								 			 }
 								 			}
 
 								 		
@@ -4594,9 +4597,12 @@ function HabilitarSeleccion(argument) {
 }
 
 function ValidarCheckmodalidad(valor) {
+			$("#v_aceptarserviciopago").attr('checked',false);		
+
 	if (valor==1) {
 		//habilitaropcionpago
 		$("#divaceptarserviciopago").css('display','block');
+
 			} else {
 
 		$("#divaceptarserviciopago").css('display','none');

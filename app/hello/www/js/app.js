@@ -88,7 +88,7 @@ var app = new Framework7({
 
  var pictureSource;   // picture source
  var destinationType; 
- var produccion = 0;
+ var produccion = 1;
 
 var codigoservicio="0";
 $(document).ready(function() {
@@ -97,7 +97,7 @@ $(document).ready(function() {
       codigoservicio='106';
 
     }else{
-      codigoservicio='109';
+      codigoservicio='124';
     }
 
 
@@ -2163,7 +2163,113 @@ $$(document).on('page:init', '.page[data-name="messages"]', function (e) {
 $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
   
  $$(".regreso").attr('onclick','GoToPage("listadopagos")');
- CargarPagosElegidos(); 
+ localStorage.setItem('comisionmonto',0);
+ localStorage.setItem('comisionporcentaje',0);
+ localStorage.setItem('comision',0);
+ localStorage.setItem('impuestotal',0);
+ localStorage.setItem('subtotalsincomision',0);
+ localStorage.setItem('comisionnota',0);
+ localStorage.setItem('comisionpornota',0);
+ localStorage.setItem('tipocomisionpornota',0);
+ localStorage.setItem('campomonto',0);
+ localStorage.setItem('constripe',0);
+ localStorage.setItem('comisiontotal',0);
+
+ var demo1 = new Promise((resolve, reject) => {
+     
+     resolve(ObtenerDescuentosRelacionados());
+
+    }).then(()=>{
+       
+        
+
+       
+    });
+
+ 
+
+  //$("#btnpagarresumen").attr('disabled',true);
+  $$("#btnatras").attr('onclick','Atras()');
+  $$("#btnatras").css('display','none');
+  //$$(".btnmonedero").attr('onclick','AbrirModalmonedero()');
+  $$(".btncupon").attr('onclick','AbrirModalcupon()');
+ 
+  var listado=JSON.parse(localStorage.getItem('pagos'));
+  
+  var html="";
+  var tipopago='';
+  var habilitarmonedero=1;
+  for (var i = 0; i < listado.length; i++) {
+      if (listado[i].tipopago!='' && listado[i].tipopago!=null) {
+
+         tipopago=listado[i].tipopago;
+
+      }
+
+      if (listado[i].habilitarmonedero!=1) {
+
+        $(".btnmonedero").css('display','none');
+      }
+   
+  }
+
+   /*if (tipopago!='' && tipopago!=undefined) {
+ 
+   
+  CargartipopagoSeleccionado(tipopago).then(r => {
+
+   // $("#tipopago").val(tipopago);
+    CargarOpcionesTipopago();
+ 
+
+  });
+
+  //$("#tipopago").val(tipopago);
+  $$("#requierefactura").attr('onchange','RequiereFactura2()');
+  
+ }else{
+
+    Cargartipopago(0);
+    
+    $$("#requierefactura").attr('onchange','RequiereFactura()');
+ 
+ }*/
+
+ 
+           
+      ValidacionAceptar().then(r => {
+
+      if (r.pagoparaaceptar.length>0) {
+          var contapagos=r.pagoparaaceptar.length;
+          var pagosparaaceptar=r.pagoparaaceptar;
+          
+           AbrirModalPagosParaAceptar(pagosparaaceptar,0);
+
+
+         }
+
+        });
+    
+
+ 
+ 
+  
+ 
+
+ //manda a llamar calcular totales al finalizar los descuentos
+  
+//PintarlistaImagen();
+  $$("#tipopago").attr('onchange','CargarOpcionesTipopago()');
+  $(".divtransferencia").css('display','none');
+  $("#divagregartarjeta").css('display','none');
+  $("#divlistadotarjetas").css('display','none');
+
+  $$("#btnpagarresumen").attr('onclick','ContinuarMetodoPago()')
+});
+
+
+$$(document).on('page:init', '.page[data-name="metodopago"]', function (e) {
+  
 
  localStorage.setItem('comisionmonto',0);
  localStorage.setItem('comisionporcentaje',0);
@@ -2176,8 +2282,8 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
  localStorage.setItem('campomonto',0);
  localStorage.setItem('constripe',0);
  localStorage.setItem('comisiontotal',0);
-  $("#btnpagarresumen").attr('disabled',true);
-  $$("#btnatras").attr('onclick','Atras()');
+  //$("#btnpagarresumen").attr('disabled',true);
+  //$$("#btnatras").attr('onclick','Atras()');
   $$("#btnatras").css('display','none');
   //$$(".btnmonedero").attr('onclick','AbrirModalmonedero()');
   $$(".btncupon").attr('onclick','AbrirModalcupon()');
@@ -2213,46 +2319,29 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
   });
 
   //$("#tipopago").val(tipopago);
-  $$("#requierefactura").attr('onchange','RequiereFactura2()');
+  $$("#requierefactura").attr("onchange","RequiereFactura2(\""+tipopago+"\")");
   
  }else{
 
     Cargartipopago(0);
-    ObtenerDescuentosRelacionados();
+    //ObtenerDescuentosRelacionados();
     $$("#requierefactura").attr('onchange','RequiereFactura()');
  
  }
 
  
-           
-      ValidacionAceptar().then(r => {
-
-      if (r.pagoparaaceptar.length>0) {
-          var contapagos=r.pagoparaaceptar.length;
-          var pagosparaaceptar=r.pagoparaaceptar;
-          
-           AbrirModalPagosParaAceptar(pagosparaaceptar,0);
-
-
-         }
-
-        });
-    
-
- 
- 
   
- 
+ $$(".regreso").attr('onclick','GoToPage("resumenpago")');
 
- //manda a llamar calcular totales al finalizar los descuentos
-  
-//PintarlistaImagen();
-  $$("#tipopago").attr('onchange','CargarOpcionesTipopago()');
+   $$("#tipopago").attr('onchange','CargarOpcionesTipopago()');
   $(".divtransferencia").css('display','none');
   $("#divagregartarjeta").css('display','none');
   $("#divlistadotarjetas").css('display','none');
+  $("#btnpagarnota").attr('disabled',true);
 
-  $$("#btnpagarresumen").attr('onclick','RealizarCargo()')
+  $$("#btnpagarnota").attr('onclick','RealizarCargo()');
+  $$("#btnpagarnota").css('display','none');
+  CalcularTotales();
 });
 
 
@@ -2861,6 +2950,9 @@ $$(document).on('page:init', '.page[data-name="monedero"]', function (e) {
   $$('.regreso').attr('onclick',"GoToPage('pagos')");
 
 });
+
+
+
 /*$$(document).on('page:init', '.page[data-name="messages"]', function (e) {
 
 });*/

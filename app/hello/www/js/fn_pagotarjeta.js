@@ -1,5 +1,5 @@
 var lastcard=0;
-
+var dynamicSheet1="";
 function PagoTarjeta() {
     app.router.navigate("/continuarstripe/");
 }
@@ -57,10 +57,193 @@ function ObtenerTarjetasStripe(setlastcard=false) {
 }
 
 function NuevaTarjetaStripe(){ 
-  HideDiv("btnnextpage");
-  SetLastCard(null);
 
-  LoadSetupIntent();
+  var htmlformulario=`
+    <div class="" id="divagregartarjeta">
+
+      <div class="divisiones2" style="    margin-bottom: 1em;
+    margin-top: 1em;font-weight: bold;"><span style="margin-top: .5em;margin-left: .5em;"></span></div>
+      <div class="block h-100 no-margin">
+
+            <div class="row" style="">
+
+      <div class="col-85 margin-left-auto margin-right-auto align-self-center  padding-vertical" style="">
+
+         <div class="">
+         <div class="list form-list no-margin margin-bottom" id="my-form" style="">
+           <ul>
+            
+              <li class="item-content item-input is-valid linombree">
+                <div class="item-inner">
+                <div class="item-title item-label" >*Nombre en la tarjeta</div> 
+
+                <div class="item-input-wrap" style="height: 56px;font-size: 15px;">
+                  <input type="text" name="cardholder-name" placeholder="TITULAR DE LA TARJETA" class="mayusculas place input-with-value" id="v_cardholder-name" />
+                  <span class="input-clear-button"></span>
+                </div>
+                  <label for="" id="lblnombre" class="lbl" style="color:red;"></label>
+              
+                </div>
+              </li>
+              <li class="item-content item-input is-valid linombree">
+                <div class="item-inner">
+                <div class="item-title item-label">*Número de tarjeta</div>
+                <div class="item-input-wrap" style="height: 56px;font-size: 15px;">
+                  <div class="sr-input sr-element sr-card-element" id="v_card-number" style="margin-top: .5em;" >
+                    <!-- A Stripe card Element will be inserted here. -->
+                  </div>
+                  <span class="input-clear-button"></span>
+                </div>
+                <label for="" id="lblntarjeta" class="lbl" style="color:red;"></label>
+                
+                </div>
+              </li> 
+              <li class="item-content item-input is-valid linombree">
+                <div class="item-inner">
+                <div class="item-title item-label">*Fecha de vencimiento</div>
+                <div class="item-input-wrap" style="height: 56px;font-size: 15px;">
+                  <div class="sr-input sr-element sr-card-element" id="v_card-expiry" style="margin-top: .5em;">
+                    <!-- A Stripe card Element will be inserted here. -->
+                  </div>
+                  <span class="input-clear-button"></span>
+                </div>
+                <label for="" id="lblntarjeta" class="lbl" style="color:red;"></label>
+                </div>
+               
+
+              </li> 
+
+              <li class="item-content item-input is-valid linombree">
+                <div class="item-inner">
+                <div class="item-title item-label">*CVC</div>
+                <div class="item-input-wrap" style="height: 56px;font-size: 15px;">
+                  <div class="sr-input sr-element sr-card-element" id="v_card-cvc" style="margin-top: .5em;">
+                    <!-- A Stripe card Element will be inserted here. -->
+                  </div>
+                  <span class="input-clear-button"></span>
+                </div>
+                <label for="" id="lblcvc" class="lbl" style="color:red;"></label>
+               
+                </div>
+              </li>
+          </ul>
+          <div class="sr-field-error " id="card-errors" role="alert" style="color:#E25950;margin-left: 1em;"></div>
+          <div class=" ">
+          
+          </div>
+
+
+        </div>
+
+        <a class="button button-fill botonesredondeado botones" onclick="" id="submit-card" style="height: 60px;
+    line-height: 40px;
+    /* width: 100%; */
+    color: white!important;
+    background: #FFC830!important;
+    
+    margin-top: 1em;">Guardar Tarjeta</a>
+
+
+
+     <a class="button button-fill botonesredondeado botones" onclick="" id="btnatras" style="height: 60px;
+    line-height: 40px;
+    color: white!important;
+    background: red!important;
+  
+    margin-top: 1em;">Cancelar</a>  
+         </div> 
+      </div>
+    </div> 
+     </div>
+    </div>   
+
+  `;
+
+
+      // Aquí puedes realizar acciones cuando el modal se ha abierto
+      
+
+var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%;background: white;">
+            <div class="toolbar" style="background: white;">
+              <div class="toolbar-inner">
+                <div class="left"></div>
+                <div class="right">
+                  <a class="link sheet-close"></a>
+                </div>
+              </div>
+            </div>
+            <div class="sheet-modal-inner" style="background: white;border-top-left-radius: 20px;border-top-right-radius:20px;    margin-top: 1em; ">
+               <div class="iconocerrar link sheet-close" style="z-index:10;">
+                    <span class="bi bi-x-circle-fill"></span>
+                       </div>
+              <div class="page-content" style="height: 100%;">
+                <div style="background: white; height: 100%;width: 100%;border-radius: 20px;">
+                   <div class="row">
+                     <div class="col-20">
+                        
+                    </div>
+
+                     <div class="col-60">
+                     <p class="titulomodal" style="    text-align: center;
+    font-size: 18px;
+    font-weight: bold;">Nueva tarjeta</p>
+                     </div>
+                     <div class="col-20">
+                     <span class="limpiarfiltros"></span>
+                     </div>
+                 </div>
+                 <div class="" style="position: absolute;top:1em;width: 100%;">
+                  
+                         `+htmlformulario+`
+                          </div>
+
+                    </div>
+
+                 </div>
+
+          </div>
+                
+              </div>
+            </div>
+          </div>`;
+          
+    dynamicSheet1 = app.sheet.create({
+        content: html,
+
+      swipeToClose: true,
+        backdrop: true,
+        // Events
+        on: {
+          open: function (sheet) {
+           
+      
+
+          },
+          opened: function (sheet) {
+             //HideDiv("btnnextpage");
+              //SetLastCard(null);
+              var displayError = document.getElementById("card-errors");
+              displayError.textContent = "";
+              LoadSetupIntent();
+
+            $$("#btnatras").attr('onclick','CancelarNuevaTarjeta()');
+          },
+          close:function (sheet) {
+            // BorrarIntervalo();
+          
+          },
+        }
+      });
+
+       dynamicSheet1.open();
+  
+ 
+}
+
+function CancelarNuevaTarjeta() {
+  dynamicSheet1.close();
+  //setupComplete(stripe, setupIntent.client_secret);
+  //ObtenerTarjetasStripe(true);
 }
 
 function PintarTarjetas(tarjetas,setlastcard=false) {
@@ -83,21 +266,36 @@ function PintarTarjetas(tarjetas,setlastcard=false) {
               checked = "checked";
             }
             var json=JSON.stringify(tarjetas[i].card);
-            html += `<li class="simple-list" id="scard`+ i +`">`+ 
-            `<label class="label-radio item-content">`+
-            `<input type="checkbox" name="tarjetatopay" class="`+checkclass+`" id="`+ checkclass + i +`"  onchange="CheckCardSelection(this,'`+ checkclass +`','`+ tarjetas[i].id +`');" `+checked+`>` +
+            html += `<div class="row" id="scard`+ i +`" style="margin-top: 1em;
+    margin-bottom: 1em;">`+ 
+            `<div class="col-20">`;
+           // `<input type="checkbox" name="tarjetatopay" class="`+checkclass+`" id="`+ checkclass + i +`"  onchange="CheckCardSelection(this,'`+ checkclass +`','`+ tarjetas[i].id +`');" `+checked+`>` +
 
-            `&nbsp
-            <div  class="item-inner">
+           html+= `
+
+              <div class="toggle" style="margin-right: 10px;">
+              <label>
+                <input type="checkbox" name="tarjetatopay" class="`+checkclass+`" id="`+ checkclass + i +`"  onchange="CheckCardSelection(this,'`+ checkclass +`','`+ tarjetas[i].id +`');" `+checked+` />
+                <span class="toggle-icon"></span>
+                </label>
+               </div>
+             </div>
+
+            <div  class="col-60">
             <div id="datostarjeta_`+ checkclass + i +`" style="line-height: 2em;">
             <img src="`+imagenesbancos + tarjetas[i].card.brand + `.png" alt="card" style="float:left;" width="36" height="32">`+
-            `<span id="datostarjetaspan_`+ checkclass + i +`" >&nbsp&nbsp****` + tarjetas[i].card.last4 + `&nbsp&nbsp`+
+            `<span id="datostarjetaspan_`+ checkclass + i +`"  >&nbsp&nbsp****` + tarjetas[i].card.last4 + `&nbsp&nbsp`+
             
              ("0" + tarjetas[i].card.exp_month).slice(-2) + "/" + ("0" + tarjetas[i].card.exp_year).slice(-2) +`</span><div>
               </div>
             </div>
 
-                <div class="item-after">
+            
+
+            </div>
+
+                <div class="col-20" style="margin: 0;
+    padding: 0;">
                 ` +
                     `<a class="botoneliminar" style="line-height:0;margin-top: 0;margin-left:1em;" onclick="eliminarTarjeta('`+tarjetas[i].id +`','scard`+i+`');" style="float:left" >
                        <i style="color:red;font-size:22px;" class="bi bi-trash-fill"></i>`+
@@ -106,9 +304,7 @@ function PintarTarjetas(tarjetas,setlastcard=false) {
                     </a>
 
                 </div>
-
-            </li>
-        </label>
+        </div>
             `;
             checked = "";
 
@@ -117,12 +313,12 @@ function PintarTarjetas(tarjetas,setlastcard=false) {
         ShowDiv("btnnextpage");
     }
     else {
-        html += `<li class="simple-list">No tienes tarjetas guardas</li>`;
-        HideDiv("btnnextpage");
+        html += `<div class="simple-list">No tienes tarjetas guardas</div>`;
+        //HideDiv("btnnextpage");
         SetLastCard(null);
-        LoadSetupIntent();       
+        //LoadSetupIntent();       
     }
-
+ 
 
     $("#listadotarjetas").html(html);
 }
@@ -137,10 +333,10 @@ function LoadSetupIntent(){
     }
     app.dialog.preloader();
 
-    var displayError = document.getElementById("card-errors");
-    displayError.textContent = "";
-    HideDiv("divlistadotarjetas");
-    ShowDiv("divagregartarjeta")
+    //var displayError = document.getElementById("card-errors");
+    //displayError.textContent = "";
+   // HideDiv("divlistadotarjetas");
+    //ShowDiv("divagregartarjeta")
     $("#abackpage").attr("onclick","BackToList()");
     
           var clavepublica=localStorage.getItem('clavepublica');
@@ -270,6 +466,8 @@ function LoadSetupIntent(){
                       displayError.textContent = result.error.message;
                     }
                   } else {
+
+                    dynamicSheet1.close();
                     // The PaymentMethod was successfully set up
                     setupComplete(stripe, setupIntent.client_secret);
                     ObtenerTarjetasStripe(true);
@@ -360,7 +558,8 @@ function SetLastCard(cardid) {
       async: false,
       success: function (datos) {
 
-        $("#btnpagarresumen").attr('disabled',false);
+        $("#btnpagarnota").attr('disabled',false);
+        $("#btnpagarnota").css('display','block');
 
       }, error: function (XMLHttpRequest, textStatus, errorThrown) {
           var error;
@@ -371,7 +570,7 @@ function SetLastCard(cardid) {
   });
   }else{
 
-            $("#btnpagarresumen").attr('disabled',true);
+            $("#btnpagarnota").attr('disabled',true);
 
   }
 }
@@ -390,6 +589,7 @@ function GetLastCard() {
       data: datos,
       async: false,
       success: function (datos) {
+        
         lastcard = datos;
       }, error: function (XMLHttpRequest, textStatus, errorThrown) {
           var error;

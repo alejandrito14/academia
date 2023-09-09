@@ -969,9 +969,13 @@ catch (\Stripe\Exception\CardException $err) {
               $notapago->monto=$buscarpago[0]->monto;
               $notapago->idpago=$buscarpago[0]->idpago;
                $notapago->Creardescripcionpago();
- 
-           
-                //$pagos->ActualizarEstatus();
+              
+               if ($pagosconsiderados[$i]->tipo==1) {
+                
+                $pagos->estatus=6;
+                $pagos->ActualizarEstatus();
+
+               }
 
 
               }

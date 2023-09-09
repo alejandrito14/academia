@@ -645,7 +645,7 @@ position:absolute; /*El div será ubicado con relación a la pantalla*/
 left:0px; /*A la derecha deje un espacio de 0px*/
 right:0px; /*A la izquierda deje un espacio de 0px*/
 bottom:0px; /*Abajo deje un espacio de 0px*/
-height:150px; /*alto del div*/
+height:160px; /*alto del div*/
 z-index:0;
  }
 
@@ -811,3 +811,48 @@ input[type=date]:focus::-webkit-datetime-edit {
     text-align: center;
     font-size: 20px;
 }
+.desc{
+  background: #46b2e2;
+}
+
+#inferior {
+  /* Otros estilos aquí */
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: white;
+  padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+.listadopagos {
+  max-height: calc(100vh - 200px); /* Ajusta este valor según tus necesidades */
+  overflow-y: scroll;
+}
+.lipagos{
+      margin-bottom: 1em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid #dedede;
+}
+.seleccionadotipo{
+  background:#007aff!important;
+  color: white!important;
+}
+
+.seleccionadotipo a{
+  color: white!important;
+}
+
+#loading-modal {
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.no-hairlines li {
+  border: none;
+  padding: 10px 0; /* Puedes ajustar el espaciado según tus preferencias */
+}
+

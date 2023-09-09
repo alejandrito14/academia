@@ -334,7 +334,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					<div class="col-md-6" id="">
 					
 						
-						<button style="display: none;    float: right;" id="btngenerar" class="btn btn-primary" onclick="">GENERAR REPORTE</button>
+						<button style="display: none;    float: right;" id="btngenerar" class="btn btn-primary btngenerarreporte" onclick="">GENERAR REPORTE</button>
 
 					</div>
 
@@ -355,7 +355,16 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		 </div>
 
 		 	
-
+<div class="modal" id="modalCargando" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <!-- Contenido del modal aquí -->
+      <div class="modal-body">
+        <div id="mainc"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 		 <style type="text/css">
@@ -369,6 +378,14 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 				.SumoSelect .select-all{
 					height: 40px!important;
+				}
+
+
+				.vertabla{
+					  overflow: scroll;
+					  width: 100%;
+					  max-width: 1000px;
+					  overflow-x: auto;
 				}
 		 </style>
 

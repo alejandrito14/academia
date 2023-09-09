@@ -431,7 +431,7 @@ class Notapago
 		$sql="SELECT notapago.idnotapago,descripcion as concepto,monto,idpago,notapago.fecha,notapago.fechaaceptacion,cantidad,notapago.estatus,notapago.tipopago,notapago.folio,notapago.fechareporte  	FROM notapago_descripcion 
 		INNER JOIN notapago ON notapago.idnotapago=notapago_descripcion.idnotapago
 		 WHERE idpago='$this->idpago'";
-
+		 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 

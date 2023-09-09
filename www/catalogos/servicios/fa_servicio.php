@@ -18,7 +18,6 @@ if(!isset($_SESSION['se_SAS']))
 $tipousaurio = $_SESSION['se_sas_Tipo'];  //variables de sesion
 $lista_empresas = $_SESSION['se_liempresas']; //variables de sesion
 /*======================= TERMINA VALIDACIÓN DE SESIÓN =========================*/
-
 //Importamos nuestras clases
 require_once("../../clases/conexcion.php");
 require_once("../../clases/class.Servicios.php");
@@ -44,7 +43,7 @@ $cate=new Categorias();
 $cate->db=$db;
 $descuentos=new Descuentos();
 $descuentos->db=$db;
-
+$emp->db=$db;
 $obtenercat=$cate->ObtenerCategoriasEstatus(1);
 
 $cateservicios=new CategoriasServicios();
@@ -54,6 +53,8 @@ $obtenercateservicios=$cateservicios->ObtcategoriasservicioActivos();
 $politicasaceptacion=new PoliticasAceptacion();
 $politicasaceptacion->db=$db;
 $obtenerpoliticasaceptacion=$politicasaceptacion->ObtenerPoliticasActivas();
+
+
 
 $cli = new Usuarios();
 $cli->db = $db;
@@ -97,11 +98,6 @@ $r_encuesta_num = $db->num_rows($r_encuesta);
 
 
 
-$emp->db = $db;
-
-$emp->tipo_usuario = $tipousaurio;
-$emp->lista_empresas = $lista_empresas;
-
 //Validamos si cargar el formulario para nuevo registro o para modificacion
 if(!isset($_GET['idservicio'])){
 	//El formulario es de nuevo registro
@@ -113,8 +109,9 @@ if(!isset($_GET['idservicio'])){
 	 $anio='';
 	 $hora='';
 	 $estatus=1;
+	 $idtiposervicioconfiguracion=0;
 	$ruta="images/sinfoto.png";
-
+	$idcategoria=0;
 	$col = "col-md-12";
 	$ver = "display:none;";
 	$titulo='NUEVO SERVICIO';
@@ -190,6 +187,7 @@ if(!isset($_GET['idservicio'])){
 
 $idpoliticaaceptacion=$f->imprimir_cadena_utf8($result_SERVICIO_row['idpoliticaaceptacion']);
 $aceptarserviciopago=$result_SERVICIO_row['aceptarserviciopago'];
+$idtiposervicioconfiguracion=$result_SERVICIO_row['idtiposervicioconfiguracion'];
 
 	$col = "col-md-12";
 	$ver = "";
@@ -208,26 +206,6 @@ $ruta='';
 
 }
 
-/*======================= INICIA VALIDACIÓN DE RESPUESTA (alertas) =========================*/
-
-if(isset($_GET['ac']))
-{
-	if($_GET['ac']==1)
-	{
-		echo '<script type="text/javascript">AbrirNotificacion("'.$_GET['msj'].'","mdi-checkbox-marked-circle");</script>'; 
-	}
-	else
-	{
-		echo '<script type="text/javascript">AbrirNotificacion("'.$_GET['msj'].'","mdi-close-circle");</script>';
-	}
-	
-	echo '<script type="text/javascript">OcultarNotificacion()</script>';
-}
-
-/*======================= TERMINA VALIDACIÓN DE RESPUESTA (alertas) =========================*/
-
-//*================== INICIA RECIBIMOS PARAMETRO DE PERMISOS =======================*/
-
 if(isset($_SESSION['permisos_acciones_erp'])){
 						//Nombre de sesion | pag-idmodulos_menu
 	$permisos = $_SESSION['permisos_acciones_erp']['pag-'.$idmenumodulo];	
@@ -239,10 +217,27 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 ?>
 <div id="idmenumodulo" style="display: none;"><?php echo $idmenumodulo; ?></div>
 
-<form id="f_servicio" name="f_servicio" method="post" action="">
-	<div class="card">
-		<div class="card-body">
-		<h4 class="card-title m-b-0" style="float: left;"><?php echo $titulo; ?></h4>
+<div class="card" id="tiposervicioconfi"  >
+				<div class="card-header" style="margin-top: 1em;">
+					<h5></h5>
+				</div>
+				<div class="card-body">
+					<div class="col-md-12">
+						
+					<div class="row tiposervicioconfiguracion"></div>
+						
+
+					</div>
+				</div>
+			</div>
+
+
+			<div class="card" id="nuevoservicio" style="display: none;">
+							
+				<form id="f_servicio" name="f_servicio" method="post" action="">
+			<div class="card">
+				<div class="card-body">
+						<h4 class="card-title m-b-0" style="float: left;"><?php echo $titulo; ?> <span id="tipoconfiguracion" style="color: #35ad18;font-size: 20px;"></span></h4>
 
 		<div style="float: right;position:fixed!important;z-index:10;right:0;margin-right:2em;width: 20%;">
 				
@@ -251,7 +246,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					//SCRIPT PARA CONSTRUIR UN BOTON
 					$bt->titulo = "GUARDAR";
 					$bt->icon = "mdi mdi-content-save";
-					$bt->funcion = " Guardarservicio('f_servicio','catalogos/servicios/vi_servicios.php','main','$idmenumodulo');";
+					$bt->funcion = " Guardarservicio3('f_servicio','catalogos/servicios/vi_servicios.php','main','$idmenumodulo');";
 					$bt->estilos = "float:right;";
 					$bt->permiso = $permisos;
 					$bt->class='btn btn-success btnguardarservicio';
@@ -264,7 +259,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						$bt->tipo = 2;
 					}
 			
-					$bt->armar_boton();
+					echo $bt->armar_boton();
 				?>
 				
 			
@@ -285,26 +280,25 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 	<ul class="nav nav-tabs" id="myTab" role="tablist">
   <li class="nav-item" role="presentation">
-    <button onclick="ActivarTab(this,'home')" class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true" onclick=""> GENERAL</button>
+    <a onclick="ActivarTab(this,'home')" class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true" onclick="">DATOS GENERALES</a>
   </li>
   <li class="nav-item" role="presentation">
-    <button type="button"  class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">DISPONIBILIDAD</button>
+    <a type="button" onclick="ActivarTab(this,'profile')"  class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">DATOS AVANZADOS</a>
 
-<!--     onclick="ActivarTab(this,'profile')"
- -->  </li>
+
+   </li>
+  </ul>
  
-
+<!-- 
    <li class="nav-item" role="presentation">
     <button  type="button" class="nav-link" id="costos-tab" data-bs-toggle="tab" data-bs-target="#costos" type="button" role="tab" aria-controls="costos" aria-selected="false">COSTOS</button>
 
-<!--     onclick="ActivarTab(this,'costos')"
- -->  </li>
+ </li>
 
   <li class="nav-item" role="presentation">
     <button  type="button" onclick="ActivarTab(this,'aceptacion')" class="nav-link" id="aceptacion-tab" data-bs-toggle="tab" data-bs-target="#aceptacion" type="button" role="tab" aria-controls="aceptacion" aria-selected="false">POLÍTICAS Y MENSAJES</button>
 
-<!--     onclick="ActivarTab(this,'costos')"
- -->  </li>
+</li>
 
   
 
@@ -325,91 +319,129 @@ if(isset($_SESSION['permisos_acciones_erp'])){
   </li>
 
   
-</ul>
+</ul> -->
+
+	
 <div class="tab-content" id="myTabContent">
   <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-  		<div class="">
+  		
 			<div class="card">
+
+				<div class="row">
+									<h4 style="margin-left: 20px;    margin-top: 20px;">DATOS GENERALES</h4>
+								</div>
 				<div class="card-header" style="padding-bottom: 0; padding-right: 0; padding-left: 0; padding-top: 0;">
 					<!--<h5>DATOS</h5>-->
 
 				</div>
 
+			
+
+
+						 	<div class="card" style="" id="divcoachs">
+				<div class="card-header" style="margin-top: 1em;">
+					<h5>ASIGNAR COACHES</h5>
+
+				</div>
 				<div class="card-body">
+					<div class="row">
+					  <div class="col-md-12">
+					<div class="card-body" id="lclientesdiv" style="display: block; padding: 0;">
+						<button class="btn btn-primary" type="button" style="margin-bottom: 1em;" onclick="AgregarNuevoCoach()" id="btncoach">AGREGAR COACH</button>
+
+						<div id="listadocoaches"></div>
+                
+             
+                </div> 
+								</div>
+							</div>
+					</div>
+			</div>
+
+
+				<div class="card-header" style="margin-top: 1em;">
+					<h5>ASIGNAR COSTO</h5>
+
+				</div>
+				<div class="card-body">
+
+				
+				     
+
+
+				   <div class="">
+				   <div class="col-md-6">
+							<div class="form-group m-t-20" id="preciounitariodiv" style="padding-top: 1em;">
+								<label for="" id="lblcostounitario">* COSTO UNITARIO $:</label>
+								<input type="text" id="v_costo" class="form-control" value="<?php echo $costo; ?>" placeholder="COSTO UNITARIO" title="COSTO UNITARIO"  onkeyup="/^\d+(?:\.\d{1,2})?$/.test(this.value)?'inherit':this.value=''" onblur="CambiarNumeros()">
+
+							</div>
+
+							
+							</div>
+						
+					</div>
+				</div>
 					
 
-						<div class="col-md-6" >
-
-									<form method="post" action="#" enctype="multipart/form-data">
-								    <div class="card" style="width: 18rem;margin: auto;margin-top: 3em;">
-								        <img class="card-img-top" src="">
-								        <div id="d_foto" style="text-align:center; ">
-											<img src="<?php echo $ruta; ?>" class="card-img-top" alt="" style="border: 1px #777 solid"/> 
-										</div>
-								        <div class="card-body">
-								            <h5 class="card-title"></h5>
-								           
-								            <div class="form-group">
-
-								            	
-								               
-								                <input type="file" class="form-control-file" name="image" id="image" onchange="SubirImagenservicio()">
-								            </div>
-								          <!--   <input type="button" class="btn btn-primary upload" value="Subir"> -->
-								        </div>
-								    </div>
-								</form>
-
-									<p style="text-align: center;">Dimensiones de la imagen Ancho:640px Alto:360px</p>
-								</div>
-
+					
+	<div class="card-body">
 							<div class="col-md-6">
 							<div class="form-group m-t-20">
 								<label id="lbltitulo">* TÍTULO:</label>
 								<!-- <input type="text" class="form-control" id="v_titulo" name="v_titulo" title="TÍTULO" placeholder='TÍTULO' value="<?php echo trim($titulo1); ?>" > -->
 
-								<textarea name="v_titulo" id="v_titulo" placeholder="DESCRIPCIÓN" class="form-control" onblur="Colocardescripcion()"><?php echo $titulo1; ?>
+								<textarea name="v_titulo" id="v_titulo" placeholder="DESCRIPCIÓN" class="form-control" onblur="Colocardescripcion()" onfocus="ColocarCursorAlPrincipio(this)" onclick ="ColocarCursorAlPrincipio(this)"><?php echo $titulo1; ?>
 								</textarea>
 							</div>
 
 							<div class="form-group m-t-20">
 								<label id="lbldescripcion">* DESCRIPCIÓN:</label>
-								<textarea name="v_descripcion" id="v_descripcion" placeholder="DESCRIPCIÓN" class="form-control"><?php echo $descripcion; ?></textarea>
+								<textarea name="v_descripcion" id="v_descripcion" placeholder="DESCRIPCIÓN" onfocus="ColocarCursorAlPrincipio(this)" onclick ="ColocarCursorAlPrincipio(this)" class="form-control"><?php echo $descripcion; ?></textarea>
 							</div>
 							
 						
 
 							<div class="form-group m-t-20">
-								<label for="" id="lbltiposervicio">* TIPO DE SERVICIO:</label>
-								<select name="v_categoria" id="v_categoria" onchange="SeleccionarCategoria(0)" class="form-control">
-									<option value="0" >SELECCIONAR TIPO DE SERVICIO</option>
-
+					 	<label for="" id="lbltiposervicio">* CATEGORÍA:</label><br>
+									<!--	<select name="v_categoria" id="v_categoria" onchange="SeleccionarCategoria(0)" class="form-control">
+									<option value="0" >SELECCIONAR CATEGORÍA</option> -->
+  <div class=" btn-group-toggle licategoriasservicio" data-toggle="buttons">
 									<?php if (count($obtenercat)){
 
 										for ($i=0; $i <count($obtenercat) ; $i++) {  ?>
-											<option value="<?php echo $obtenercat[$i]->idcategorias;?>"><?php echo $obtenercat[$i]->titulo; ?></option>
+
+											 <label class="btn btn_colorgray2 btncategorias " id="catebtn_<?php echo $obtenercat[$i]->idcategorias;?>">
+								    <input type="checkbox" id="cate_<?php echo $obtenercat[$i]->idcategorias;?>" class="catecheck"  onchange="SeleccionarCategoria('<?php echo $obtenercat[$i]->idcategorias;?>')"   value="0"> <?php echo $obtenercat[$i]->titulo; ?>
+								  </label>
+											<!-- <option value="<?php echo $obtenercat[$i]->idcategorias;?>"><?php echo $obtenercat[$i]->titulo; ?></option> -->
 										
 										
 									<?php 
 									}
 								} ?>
 									
-								</select>
+								<!-- </select> -->
 							</div>
 
+</div>
 
 						
 						<div class="form-group m-t-20 divcategoria" style="display: none;">
-							<label for="" id="lblcategoria">* CATEGORÍA:</label>
-								<select name="v_categoriaservicio" id="v_categoriaservicio" class="form-control">
-									<option value="0" >SELECCIONAR CATEGORÍA</option>
-
+							<label for="" id="lblcategoria">* NIVEL:</label>
+							<!-- 	<select name="v_categoriaservicio" id="v_categoriaservicio" class="form-control"> -->
+								<!-- 	<option value="0" >SELECCIONAR INTÉRVALO</option> -->
+<div class=" btn-group-toggle  " data-toggle="buttons">
 									<?php
 
 									 if (count($obtenercateservicios)){
 
 										for ($i=0; $i <count($obtenercateservicios) ; $i++) {  ?>
-											<option value="<?php echo $obtenercateservicios[$i]->idcategoriasservicio;?>"><?php echo $obtenercateservicios[$i]->nombrecategoria; ?></option>
+										<!-- 	<option value="<?php echo $obtenercateservicios[$i]->idcategoriasservicio;?>"><?php echo $obtenercateservicios[$i]->nombrecategoria; ?></option> -->
+
+										 <label class="btn btn_colorgray2 btncategointervalo " id="catintervalo_<?php echo $obtenercateservicios[$i]->idcategoriasservicio;?>">
+								    <input type="checkbox" id="catein_<?php echo $obtenercateservicios[$i]->idcategoriasservicio;?>" class="catecheck"  onchange="SeleccionarCategoriaServicio('<?php echo $obtenercateservicios[$i]->idcategoriasservicio;?>')"   value="0"> <?php echo $obtenercateservicios[$i]->nombrecategoria; ?>
+								  </label>
 										
 								
 										
@@ -417,11 +449,11 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 									}
 								} ?>
 									
-								</select>
+								<!-- </select> -->
 							</div>
-						
+							</div>
 
-							<div class="form-group m-t-20">
+							<div class="form-group m-t-20" style="display: none;">
 								<label id="lblorden">* ORDEN:</label>
 								<input type="number" class="form-control" id="v_orden" name="v_orden" value="<?php echo $orden; ?>" title="ORDEN" placeholder='ORDEN'>
 							</div>
@@ -434,11 +466,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							</select>
 						</div>
 
-						<div class="form-group">
-							
-							<!-- <button type="button" class="btn btn-success btncontinuar"  id="btncontinuar" style="float: right;">Continuar</button> -->
-
-						</div>
+					
 
 						</div>
 							
@@ -446,11 +474,9 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						
 			
 			</div>
-		</div>
-
-  </div>
-  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-  		<div class="card" id="divdias"  >
+		
+  
+  		<div class="card" id="divdias" style="display: none;" >
 				<div class="card-header" style="margin-top: 1em;">
 					<h5>DÍAS</h5>
 				</div>
@@ -458,40 +484,40 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					<div class="col-md-6">
 						
 						<div class="form-group m-t-20">
-								<label for="" id="lbldias">* SELECCIONAR DÍAS:</label>
+								<label for="" >* SELECCIONAR DÍAS:</label>
 
 								<div id="leyenda" style="margin-bottom: 1em;"></div>
 								 <div class="form-group m-t-20">
 								 	    <div class="btn-group btn-group-toggle d-flex flex-column flex-md-row" data-toggle="buttons">
 
 								 	 <label class="btn btn_colorgray2 lbldomingo lbldias">
-								    <input type="checkbox" id="Domingo" class="diasckeckbox" value="0"> Domingo
+								    <input type="checkbox" id="Domingo" class="diasckeckbox" value="0" onchange="SeleccionDia()"> Domingo
 								  </label>
 
 
 								 	 <label class="btn btn_colorgray2 lbllunes lbldias">
-								   <input type="checkbox" id="Lunes" class="diasckeckbox" value="1"> Lunes
+								   <input type="checkbox" id="Lunes" class="diasckeckbox" value="1" onchange="SeleccionDia()"> Lunes
 								  </label>
 
 
 								   <label class="btn btn_colorgray2 lblmartes lbldias">
-								  <input type="checkbox" id="Martes" class="diasckeckbox" value="2"> Martes
+								  <input type="checkbox" id="Martes" class="diasckeckbox" value="2" onchange="SeleccionDia()"> Martes
 								  </label>
 
 								   <label class="btn btn_colorgray2 lblmiercoles lbldias">
-								 <input type="checkbox" id="Miercoles" class="diasckeckbox" value="3"> Miércoles
+								 <input type="checkbox" id="Miercoles" class="diasckeckbox" value="3" onchange="SeleccionDia()"> Miércoles
 								  </label>
 
 								   <label class="btn btn_colorgray2 lbljueves lbldias">
-								 <input type="checkbox" id="Jueves" class="diasckeckbox" value="4"> Jueves
+								 <input type="checkbox" id="Jueves" class="diasckeckbox" value="4" onchange="SeleccionDia()"> Jueves
 								  </label>
 
 								   <label class="btn btn_colorgray2 lblviernes lbldias">
-								<input type="checkbox" id="Viernes" class="diasckeckbox" value="5"> Viernes
+								<input type="checkbox" id="Viernes" class="diasckeckbox" value="5" onchange="SeleccionDia()"> Viernes
 								  </label>
 
 								   <label class="btn btn_colorgray2 lblsabado lbldias">
-								<input type="checkbox" id="Sabado" class="diasckeckbox" value="6"> Sábado
+								<input type="checkbox" id="Sabado" class="diasckeckbox" value="6" onchange="SeleccionDia()"> Sábado
 								  </label>
 
 
@@ -529,7 +555,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 				</div>
 
-				<div class="card" style="" id="divhorarios">
+				<div class="card" style="display: none;" id="divhorarios" >
 				<div class="card-header" style="margin-top: 1em;">
 					<h5 id="lblhorarios">ASIGNAR HORARIOS</h5>
 
@@ -558,32 +584,33 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 					</div>
 
-					<div class="row">
-						<div class="col-md-3">
+					<!-- <div class="row"> -->
+						<!-- <div class="col-md-3"> -->
 							
-							<div class="form-group m-t-20">
+						<!-- 	<div class="form-group m-t-20">
 								<label>CANCHA:</label>
 								<select name="" class="form-control" id="v_zonas" multiple="multiple"></select>
 							</div>
 						</div>
+ -->
 
-
-						<div class="col-md-3">
+					<!-- 	<div class="col-md-3"> -->
 							
-							<div class="form-group m-t-20">
+							<!-- <div class="form-group m-t-20">
 								<label>HORARIOS:</label>
 								<select  id="v_horarios" class="form-control" multiple="multiple" >
 									<option value="0">Seleccionar horario</option>
 								</select>
-							</div>
-						</div>
+							</div> -->
+						<!-- </div> -->
 
-						</div>
+					<!-- 	</div> -->
 
-						<div class="row">
-							<div class="form-check" style="margin-left: 1em;">
-	    <input type="checkbox" id="habilitarseleccion" class="form-check-input " value="0" style="top: -0.3em;" onchange="HabilitarSeleccion()">
-	    <label for="" class="form-check-label">Selección automática</label>
+						<div class="row" style="display: none;">
+							<div class="form-check " style="margin-left: 1em;justify-content: center;
+    display: flex;">
+	    <input type="checkbox" id="habilitarseleccion" class="form-check-input checkcambia" value="0" style="top: -0.3em;" onchange="HabilitarSeleccion()">
+	    <label for="" class="form-check-label" style="margin-left: 10px;">Selección automática</label>
 
 	   </div>
 						</div>
@@ -593,16 +620,16 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 														<button type="button" style="    width: 100%;" onclick="Aplicar()" class="btn btn-primary">APLICAR</button>
 													</div>
 
-							</div>
-							<div class="row">
+						<!-- 	</div> -->
+							<div class="">
 								<div class="btnfechas" style="    width: 100%;display: none;margin-bottom: 1em;">
-											<div class="col-md-3" style="float:left;">
+											<div class="" style="">
 												<button type="button" style="    width: 100%;" class="btn btn-primary" onclick="AbrirModalResumen();">
 												  Resumen de fechas
 												</button>
 								   </div>
 
-								   <div class="col-md-3" style="    margin-top: 40px;">
+								   <div class="" style="    margin-top: 40px;">
 								   	<h4 id="titulototalhorarios" style="font-size: 18px!important;">Total de horarios: <span id="totalhorarios">0</span></h4>
 								   </div>
 
@@ -616,7 +643,6 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						</div>
 					</div> -->
 
-					</div>
 
 				
 						<div style="margin-top: 3em;display: none;" id="calendario" >
@@ -624,7 +650,14 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 							 <div id="picker"></div>
 
+							</div>
 
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 						 <div class="modal fade" id="exampleModalhorarios" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					  <div class="modal-dialog" role="document">
@@ -666,39 +699,157 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 			</div>
+		</div>
+
 
 
 		
+<div class="modal fade" id="modalaplicar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					  <div class="modal-dialog" role="document">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <h5 class="modal-title" id="exampleModalLabel"></h5>
+					        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					          <span aria-hidden="true">&times;</span>
+					        </button>
+					      </div>
+					      <div class="modal-body">
+					        <div class="row" style="">
+					        	<div class=" col-md-12 seleccionfiltro">
+					        		 	<div class="">
+										        <h3 style="text-align: center;">¿Deseas filtrar el espacio y los horarios?</h3>
+										       	
+										        </div>
 
-  </div>
-  
+										        <div class="col-md-12">
+										        	<div class="row" style="justify-content: center;">
+										        		<div style="">
+										        			 <button type="button" class="btn btn-secondary" onclick="HabilitarFilltros()">Si</button>
+
+										        			  <button type="button" class="btn btn-secondary"  onclick="PasarAseleccion()">No</button>
+
+										        		</div>
+
+										        	</div>
+
+										        </div>
+					        	</div>
+										   
+										    </div>
 
 
-   <div class="tab-pane fade" id="costos" role="tabpanel" aria-labelledby="profile-tab">
-   			 <div class="card"  id="divmodalidadcobro" style="">
-				<div class="card-header" style="margin-top: 1em;">
-					<h5>ASIGNAR COSTO</h5>
+										     <div class="row" >
+										    	<div class="habilitarfiltros" style="display: none;">
 
-				</div>
-				<div class="card-body">
+										    		<div class="col-md-12">
+										      
+										       	
+										        </div>
+										    		 <div class="col-md-12">
+										        	<div class="row" style="    margin-left: 1em;">
+										        		 <h4>Elige una cancha</h4>
+										        		<select name="" class="form-control " id="v_zonas" multiple="multiple" tabindex="-1" onchange="ObtenerHorariosCategoria()"></select>
 
-				
-				     
+										        		
 
+										        	</div>
+										        	<div class="row" style=" margin-left: 1em;margin-top: 1em;">
+										        		<h4>Elige un horario</h4>
+										        		<select id="v_horarios" class="form-control " multiple="multiple" tabindex="-1">
+																					<option value="0">Seleccionar horario</option>
+																				</select>
+										        	</div>
 
-				          <div class="row">
-				          	<div class="col-md-6">
-							<div class="form-group m-t-20" id="preciounitariodiv" style="padding-top: 1em;">
-								<label for="" id="lblcostounitario">* COSTO UNITARIO $:</label>
-								<input type="text" id="v_costo" class="form-control" value="<?php echo $costo; ?>" placeholder="COSTO UNITARIO" title="COSTO UNITARIO"  onkeyup="/^\d+(?:\.\d{1,2})?$/.test(this.value)?'inherit':this.value=''" onblur="CambiarNumeros()">
+										        	<div class="row"
+										        	 style="justify-content: center;margin-top: 1em;">
+										        		<div style="" class="col-md-12">
+										        			 <button type="button" class="btn btn-secondary" style="    margin-left: 1em;width:100%;" onclick="AceptarHorarioCancha()" >Aceptar</button>
+										        			</div>
 
-							</div>
+										        	</div>
 
-							
-							</div>
-						
+										        </div>
+										    		
+
+										    	</div>
+
+										    </div>
+
+										    <div class="row" >
+										    	<div class="seleccionautomatica col-md-12" style="display: none;">
+
+										    		<div class="col-md-12">
+										        <h3 style="text-align: center;">¿Deseas que lo seleccione automáticamente?</h3>
+										       	
+										        </div>
+										    		 <div class="col-md-12">
+										        	<div class="row" style="justify-content: center;">
+										        		<div style="">
+										        			 <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="SeleccionAutomatica(1)">Si</button>
+
+										        			  <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="SeleccionAutomatica(0)">No</button>
+
+										        		</div>
+
+										        	</div>
+
+										        </div>
+										    		
+
+										    	</div>
+
+										    </div>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
+					        <!--  <button type="button" class="btn btn-success" onclick="GuardarHorariostem()">Guardar</button> -->
+					       
+					      </div>
+					    </div>
+					  </div>
 					</div>
+
+					   
+ <div class="tab-pane fade " id="profile" role="tabpanel" aria-labelledby="profile-tab">
+  <div class="card"  id="divmodalidadcobro" style="">
+   			 	<div class="row">
+									<h4 style="margin-left: 20px;">DATOS AVANZADOS</h4>
+								</div>
+
+				<div class="card-header" style="margin-top: 1em;">
+					<h5>IMAGEN</h5>
+
 				</div>
+
+					<div class="col-md-6" >
+
+									<form method="post" action="#" enctype="multipart/form-data">
+								    <div class="card" style="width: 18rem;margin: auto;margin-top: 3em;">
+								        <img class="card-img-top" src="">
+								        <div id="d_foto" style="text-align:center; ">
+											<img src="<?php echo $ruta; ?>" class="card-img-top" alt="" style="border: 1px #777 solid"/> 
+										</div>
+								        <div class="card-body">
+								            <h5 class="card-title"></h5>
+								           
+								            <div class="form-group">
+
+								            	
+								               
+								                <input type="file" class="form-control-file" name="image" id="image" onchange="SubirImagenservicio()">
+								            </div>
+								          <!--   <input type="button" class="btn btn-primary upload" value="Subir"> -->
+								        </div>
+								    </div>
+								</form>
+
+									<p style="text-align: center;">Dimensiones de la imagen Ancho:640px Alto:360px</p>
+								</div>
+
+			
+
+
 
 				<div class="card">
 					<div class="card-header">
@@ -721,7 +872,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 				              <div class="col-md-6" style="float: left;width: 30%;">
-								 	<div class="form-check">
+								 						 	<div class="form-check">
 					                 <input type="radio" class="form-check-input " name="v_grupo" value="2" id="v_grupal" style="" onclick="ValidarCheckmodalidad(2)">
 					                   <label class="form-check-label" style=" padding-top: 0.3em;">
 										MONTO DIVIDIDO
@@ -736,7 +887,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				              	<div class="col-md-6">
 
 																			   		 <div class="" style="    margin-left: 10px;margin-top: 10px;">
-																			   		 		<input type="checkbox" id="v_aceptarserviciopago" value="0" onchange="HabilitarOpcionaceptarserviciopago()">
+																			   		 		<input type="checkbox" id="v_aceptarserviciopago" class="checkcambia" value="0" onchange="HabilitarOpcionaceptarserviciopago()">
 																			   		 		
 																							<label for="" style="margin-left: 3px;">ACEPTAR SERVICIO EN EL PAGO</label>
 
@@ -750,7 +901,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				      </div>
 						
 			
-				</div>
+			
 
 				<div class="card">
 
@@ -792,7 +943,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 							<div class="card-body">
 							<label for="" id="lblperiodos" style="margin-top:1em;margin-bottom: 1em;">* PERIODOS DE COBRO:</label>
-				              		 <button class="btn btn-primary" id="btnperiodo" type="button" style=" margin-top: -1em;margin-bottom: 1em;" onclick="AgregarPeriodo()">NUEVO PERIODO</button>
+				    <button class="btn btn-primary" id="btnperiodo" type="button" style=" margin-top: -1em;margin-bottom: 1em;" onclick="AgregarPeriodo()">NUEVO PERIODO</button>
 				              </div>
 
 				              <div class="row" style="float: left;width: 50%;">
@@ -816,63 +967,25 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						</div>
 
 						
-					</div>
+			
 
 
-					 <div class="tab-pane fade" id="coaches" role="tabpanel" aria-labelledby="coach-tab">
+					 
 
 
-					 	<div class="card" style="" id="divcoachs">
-				<div class="card-header" style="margin-top: 1em;">
-					<h5>ASIGNAR COACHES</h5>
-
-				</div>
-				<div class="card-body">
-					<div class="row">
-					  <div class="col-md-12">
-					<div class="card-body" id="lclientesdiv" style="display: block; padding: 0;">
-						<button class="btn btn-primary" type="button" style="margin-bottom: 1em;" onclick="AgregarNuevoCoach()" id="btncoach">AGREGAR COACH</button>
-
-						<div id="listadocoaches"></div>
-                
-                   <!--  <div class="form-group m-t-20">	 
-						<input type="text" class="form-control" name="buscadorcoachs_1" id="buscadorcoachs_" placeholder="Buscar" onkeyup="BuscarEnLista('#buscadorcoachs_','.coachs_')">
-				    </div>
-                    <div class="clientes"  style="overflow:scroll;height:100px;overflow-x: hidden" id="clientes_<?php echo $a_cliente['idcliente'];?>">
-					    <?php     	
-							if ($r_coach_num>0) {	
-						    	do {
-						?>
-						    	<div class="form-check coachs_"  id="cli_<?php echo $a_coach['idusuarios'];?>_<?php echo $a_coach['idcliente'];?>">
-						    	    <?php 	
-						    			$valor="";
-                                        $nombre=mb_strtoupper($f->imprimir_cadena_utf8($a_coach['nombre']." ".$a_coach['paterno']." ".$a_coach['materno']));
-						    		?>
-									  <input  type="checkbox" onchange="CoachSeleccionado()"  value="<?php echo $a_coach['idusuarios']?>" class="form-check-input chkcoach" id="inputcoach_<?php echo $a_coach['idusuarios']?>" <?php echo $valor; ?>>
-									  <label class="form-check-label" for="flexCheckDefault" style="margin-top: 0.2em;"><?php echo $nombre; ?></label>
-								</div>						    		
-						    	<?php
-						    		} while ($a_coach = $db->fetch_assoc($r_coach));
-     					    	 ?>
-						    	<?php } ?>    
-				    </div> -->
-                </div> 
-								</div>
-							</div>
-					</div>
-			</div>
+					
 
 			<div class="card">
 							<div class="card-body">
-								<!-- <button type="button" class="btn btn-success btncontinuar"  id="btncontinuar" style="float: right;">Continuar</button> -->
+									
 								
 							</div>
 							
 
 						</div>
-					 </div>
+			
 
-			<div class="tab-pane fade" id="multi" role="tabpanel" aria-labelledby="multi-tab">
+		
 
 
 				<div class="card" style="" id="divasistencia">
@@ -888,14 +1001,14 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 									<label for="">ASISTENCIA</label>
 
 									<span style="width: 20px;margin-left: 0.5em;"></span>
-										<input type="checkbox" id="v_asistencia" >
+										<input type="checkbox" class="checkcambia" id="v_asistencia" >
 
 									</div>
 								</div>
 
 					</div>
 				</div>
-			</div>
+
 
 				  	<div class="card" style="" id="divpoliticas">
 				<div class="card-header" style="margin-top: 1em;">
@@ -912,7 +1025,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 									<label for="">REEMBOLSO</label>
 
 									<span style="width: 20px;margin-left: 0.5em;"></span>
-										<input type="checkbox" id="v_reembolso" onchange="HabilitarcantidadReembolso()">
+										<input type="checkbox" id="v_reembolso" class="checkcambia" onchange="HabilitarcantidadReembolso()">
 
 									</div>
 
@@ -943,19 +1056,19 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<div class="form-group m-t-20">
 									<label for="">CANCELADO POR CLIENTE</label>
 									<span style="width: 20px;margin-left: 0.5em;"></span>
-									<input type="checkbox" id="v_asignadocliente" >
+									<input type="checkbox" class="checkcambia" id="v_asignadocliente" >
 								</div>
 
 								<div class="form-group m-t-20">
 									<label for="">CANCELADO POR COACH</label>
 									<span style="width: 20px;margin-left: 0.5em;"></span>
-									<input type="checkbox" id="v_asignadocoach" >
+									<input type="checkbox" class="checkcambia" id="v_asignadocoach" >
 								</div>
 
 									<div class="form-group m-t-20">
 									<label for="">CANCELADO POR ADMIN</label>
 									<span style="width: 20px;margin-left: 0.5em;"></span>
-									<input type="checkbox" id="v_asignadoadmin">
+									<input type="checkbox" class="checkcambia" id="v_asignadoadmin">
 								</div>
 
 					  </div>
@@ -973,17 +1086,17 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<div class="col-md-6">
 									 <div class="form-group m-t-20">
 										<label for="">PERMITIR ASIGNAR AL CLIENTE</label>
-										<span style="width: 20px;margin-left: 0.5em;"></span><input type="checkbox" id="v_abiertocliente">
+										<span style="width: 20px;margin-left: 0.5em;"></span><input type="checkbox" class="checkcambia" id="v_abiertocliente">
 									</div>
 
  								<div class="form-group m-t-20">
 										<label for="">PERMITIR ASIGNAR AL COACH</label>
-									<span style="width: 20px;margin-left: 0.5em;"></span><input type="checkbox" id="v_abiertocoach">
+									<span style="width: 20px;margin-left: 0.5em;"></span><input type="checkbox" class="checkcambia" id="v_abiertocoach">
 								</div>
 
  								<div class="form-group m-t-20">
 								<label for="">PERMITIR ASIGNAR AL ADMIN</label>
-								<span style="width: 20px;margin-left: 0.5em;"></span><input type="checkbox" id="v_abiertoadmin">
+								<span style="width: 20px;margin-left: 0.5em;"></span><input type="checkbox" class="checkcambia" id="v_abiertoadmin">
 								</div>
 
 							
@@ -1006,7 +1119,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				<div class="card-body">
 						<div class="form-group m-t-20">
 									<label for="">PERMITIR LIGAR CLIENTES</label>
-									<span style="width: 20px;margin-left: 0.5em;"></span><input type="checkbox" id="v_ligarclientes" onchange="Permitirligar()">
+									<span style="width: 20px;margin-left: 0.5em;"></span><input type="checkbox" class="checkcambia" id="v_ligarclientes" onchange="Permitirligar()">
 								</div>
 
 								<div class="form-group m-t-20" id="cantidadligar" style="display: none;">
@@ -1075,7 +1188,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						    	<div class="form-check membresia_"  id="cli_<?php echo $a_membresia['idmembresia'];?>">
 						    	    <?php 	
 						    			$valor="";
-                                        $nombre=mb_strtoupper($f->imprimir_cadena_utf8($a_membresia['titulo']));
+           $nombre=mb_strtoupper($f->imprimir_cadena_utf8($a_membresia['titulo']));
 						    		?>
 									  <input  type="checkbox" onchange="DescuentoSeleccionado()"  value="<?php echo $a_membresia['idmembresia']?>" class="form-check-input chkmembresia" id="inputmembresia_<?php echo $a_membresia['idmembresia']?>" <?php echo $valor; ?>>
 									  <label class="form-check-label" for="flexCheckDefault" style="margin-top: 0.2em;"><?php echo $nombre; ?></label>
@@ -1105,13 +1218,14 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							if ($r_encuesta_num>0) {	
 						    	do {
 						?>
-						    	<div class="form-check encuesta_"  id="cli_<?php echo $a_encuesta['idencuesta'];?>">
+						    	<div class="form-check encuesta_" style="    margin-top: 1em;
+    margin-bottom: 1em;display: flex;"  id="cli_<?php echo $a_encuesta['idencuesta'];?>">
 						    	    <?php 	
 						    			$valor="";
-                                        $nombre=mb_strtoupper($f->imprimir_cadena_utf8($a_encuesta['titulo']));
+             $nombre=mb_strtoupper($f->imprimir_cadena_utf8($a_encuesta['titulo']));
 						    		?>
-									  <input  type="checkbox" onchange=""  value="<?php echo $a_encuesta['idencuesta']?>" class="form-check-input chkencuesta" id="inputencuesta_<?php echo $a_encuesta['idencuesta']?>" <?php echo $valor; ?>>
-									  <label class="form-check-label" for="flexCheckDefault" style="margin-top: 0.2em;"><?php echo $nombre; ?></label>
+									  <input  type="checkbox" onchange=""  style="float: left;"  value="<?php echo $a_encuesta['idencuesta']?>" class="form-check-input checkcambia chkencuesta" id="inputencuesta_<?php echo $a_encuesta['idencuesta']?>" <?php echo $valor; ?>>
+									  <label class="form-check-label" for="flexCheckDefault" style="margin-top: 0.2em;    margin-left: 10px;"><?php echo $nombre; ?></label>
 								</div>						    		
 						    	<?php
 						    		} while ($a_encuesta = $db->fetch_assoc($r_encuesta));
@@ -1135,7 +1249,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					</div>
 
 
-				<div class="tab-pane fade" id="aceptacion" role="tabpanel" aria-labelledby="aceptacion-tab">
+			
 				 <div class="card" style="" id="">
 						<div class="card-header" style="margin-top: 1em;">
 							<h5>POLÍTICAS DE ACEPTACIÓN</h5>
@@ -1199,7 +1313,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								</div>
 
 							</div>
-					</div>
+
+
+						
+			
 		
 
 					<div class="tab-pane fade" id="otros" role="tabpanel" aria-labelledby="otros-tab">
@@ -1229,42 +1346,158 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 		</div>
-
+	</div>
 
 	</div>
 </form>
+		</div>
+<style>
 
-<script>
-		CargarCalendario();
-	$("#profile-tab").css('display','none');
-	$("#contact-tab").css('display','none');
-	$("#costos-tab").css('display','none');
-	$("#coach-tab").css('display','none');
-	$("#multi-tab").css('display','none');
-	$("#politicas-tab").css('display','none');
-	$("#aceptacion-tab").css('display','none');
-	$("#otros-tab").css('display','none');
+.material-switch > input[type="checkbox"] {
+    display: none;
+}
 
-	
-	var idservicio='<?php echo $idservicio?>';
-	var fecha='<?php echo date('Y-m-d'); ?>';
+.material-switch > label {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    width: 40px;
+}
 
-	$("#v_fechainicial").val(fecha);
-	$("#v_fechafinal").val(fecha);
-	var arraydiaselegidos=[];
-	var arraydiaseleccionados=[];
-	if (idservicio>0) {
-		var idcategoriaservicio='<?php echo $idcategoriaservicio; ?>';
-var aceptarserviciopago='<?php echo $aceptarserviciopago; ?>';
-		var idcategoria='<?php echo $idcategoria; ?>';
-		$("#v_categoria").val(idcategoriaservicio);
+.material-switch > label::before {
+    background: rgb(0, 0, 0);
+    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    content: '';
+    height: 16px;
+    margin-top: -8px;
+    position: absolute;
+    opacity: 0.3;
+    transition: all 0.4s ease-in-out;
+    width: 40px;
+}
+
+.material-switch > label::after {
+    background: rgb(255, 255, 255);
+    border-radius: 16px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    content: '';
+    height: 24px;
+    left: -4px;
+    margin-top: -8px;
+    position: absolute;
+    top: -4px;
+    transition: all 0.3s ease-in-out;
+    width: 24px;
+}
+
+.material-switch > input[type="checkbox"]:checked + label::before {
+    background: inherit;
+    opacity: 0.5;
+}
+
+.material-switch > input[type="checkbox"]:checked + label::after {
+    background: #4caf50; /* Cambio de color cuando está marcado */
+    left: 16px; /* Cambio de posición del círculo */
+}
+
+
+</style>
+			<script>
+
+
+	// Obtén todos los elementos <input type="checkbox">
+//var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+var checkboxes = document.querySelectorAll('.checkcambia');
+
+// Recorre cada elemento y reemplázalo con la estructura de div personalizada
+checkboxes.forEach(function(checkbox) {
+  var div = document.createElement('div');
+  div.className = 'material-switch pull-right';
+
+  var newCheckbox = document.createElement('input');
+  newCheckbox.id = checkbox.id;
+  newCheckbox.type = 'checkbox';
+  newCheckbox.value = checkbox.value;
+  newCheckbox.onchange = checkbox.onchange; // Copia la función onchange del checkbox original
+  newCheckbox.className=checkbox.className;
+
+  var label = document.createElement('label');
+  label.setAttribute('for', checkbox.id);
+  label.className = 'label-success';
+
+  div.appendChild(newCheckbox);
+  div.appendChild(label);
+
+  // Agregar nuevo div al DOM reemplazando el checkbox original
+  checkbox.parentNode.replaceChild(div, checkbox);
+
+  // Agregar evento onchange al nuevo div
+  div.addEventListener('change', function() {
+    // Propagar el evento onchange al input interno
+    checkbox.checked = div.querySelector('input').checked;
+
+    // Ejecutar la función onchange copiada, si existe
+    if (typeof newCheckbox.onchange === 'function') {
+      newCheckbox.onchange();
+    }
+
+    // Tu lógica adicional aquí
+    if ($("#" + checkbox.id).is(':checked')) {
+      $("#" + checkbox.id).attr('checked', true);
+    } else {
+      $("#" + checkbox.id).attr('checked', false);
+    }
+  });
+});
+				
+				ObtenerTipoServicioConfiguracion();
+				CargarCalendario();
+
+			var idservicio='<?php echo $idservicio?>';
+			var fecha='<?php echo date('Y-m-d'); ?>';
+			var idtiposervicioconfiguracion='<?php echo $idtiposervicioconfiguracion ?>';
+ var idcategoria='<?php echo $idcategoria; ?>';
+			$("#v_fechainicial").val(fecha);
+			$("#v_fechafinal").val(fecha);
+			var arraydiaselegidos=[];
+			var arraydiaseleccionados=[];
+
+			alert('tipo'+idtiposervicioconfiguracion);
+
+
+
+			if (idtiposervicioconfiguracion>0) {
+				ElegirTipoConfiguracion(idtiposervicioconfiguracion,idcategoria);
+			}
+			if (idservicio>0) {
+
+				$("#tiposervicioconfi").css('display','none');
+				$("#nuevoservicio").css('display','block');
+
+				var idcategoriaservicio='<?php echo $idcategoriaservicio; ?>';
+		  var aceptarserviciopago='<?php echo $aceptarserviciopago; ?>';
+		 
+	  	$("#v_categoria").val(idcategoriaservicio);
+
+	  	$("#catebtn_"+idcategoriaservicio).addClass('active');
+categoriaidelegida=idcategoriaservicio;
+
+
+idcategoriaservicioelegida=idcategoria;
+
 
 		$("#v_categoriaservicio").val(idcategoria);
-		var idpoliticaaceptacion='<?php echo $idpoliticaaceptacion; ?>';
+
+		$("#catintervalo_"+idcategoria).addClass('active');
+
+		  var idpoliticaaceptacion='<?php echo $idpoliticaaceptacion; ?>';
 
 		$("#v_politicasaceptacionid").val(idpoliticaaceptacion);
 
-		 SeleccionarCategoria(idservicio);
+		 SeleccionarCategoria(idcategoria);
 		// Obtenerparticipantes(3,idservicio);
 		 ObtenerZonas(idservicio);
 		// ObtenerCoachs(5,idservicio);
@@ -1443,6 +1676,8 @@ var aceptarserviciopago='<?php echo $aceptarserviciopago; ?>';
 		arraydiaseleccionados=[];
 		horarioscomparacion=[];
 		AgregarPeriodo();
+
+
 	}
 	CambioPeriodo();
 
@@ -1479,49 +1714,9 @@ var aceptarserviciopago='<?php echo $aceptarserviciopago; ?>';
         });
         return false;
     }
-</script>
-
-<script>
-
-
-
-  function cargarinputperiodos() {
-    	// body...
-  
-    var dateFormat = "mm/dd/yy",
-      from = $( ".from" )
-        .datepicker({
-          defaultDate: "+1w",
-          changeMonth: true,
-          numberOfMonths: 3
-        })
-        .on( "change", function() {
-          to.datepicker( "option", "minDate", getDate( this ) );
-        }),
-      to = $( ".to" ).datepicker({
-        defaultDate: "+1w",
-        changeMonth: true,
-        numberOfMonths: 3
-      })
-      .on( "change", function() {
-        from.datepicker( "option", "maxDate", getDate( this ) );
-      });
- 
-    function getDate( element ) {
-      var date;
-      try {
-        date = $.datepicker.parseDate( dateFormat, element.value );
-      } catch( error ) {
-        date = null;
-      }
- 
-      return date;
-    }
-  } 
-  </script>
-
-   <script type="text/javascript">
-  $('#v_horarios').SumoSelect({placeholder: 'Seleccionar horarios',
+			</script>
+			 <script type="text/javascript">
+  /*$('#v_horarios').SumoSelect({placeholder: 'Seleccionar horarios',
 			     selectAll : true,
    				 selectAllPartialCheck : true,
        locale :  ['Aceptar', 'Cancelar', 'Seleccionar todos'],
@@ -1532,7 +1727,7 @@ var aceptarserviciopago='<?php echo $aceptarserviciopago; ?>';
    				selectAllPartialCheck : true,
        locale :  ['Aceptar', 'Cancelar', 'Seleccionar todos'],
 				closeAfterClearAll: true
-  	 });
+  	 });*/
 
 
 

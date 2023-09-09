@@ -130,6 +130,10 @@ try
  	    		$pagos->descuentos=$pagosdescuentos;
  	    	 	    	array_push($descuentos,$pagosdescuentos);
 
+                for ($k=0; $k <count($pagosdescuentos) ; $k++) { 
+                  array_push($descuentos,$pagosdescuentos[$k]);
+                }
+
  	    	}
 
  	    	$pagosdescuentomembresia=$pagos->Obtenerdescuentosmembresia();
@@ -139,7 +143,12 @@ try
 
    	      if (count($pagosdescuentomembresia)>0) {
    	      		$pagos->descuentosmembresia=$pagosdescuentomembresia;
-   	    	array_push($descuentosmembresia, $pagosdescuentomembresia);
+   	    
+
+             for ($k=0; $k <count($pagosdescuentomembresia) ; $k++) { 
+                array_push($descuentosmembresia, $pagosdescuentomembresia[$k]);
+
+             }
 
    	    	}
  	    	

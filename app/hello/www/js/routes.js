@@ -501,6 +501,12 @@ var routes = [
   
   },
 
+
+   {
+    path:'/metodopago/',
+    componentUrl: './pages/metodopago.html',
+  },
+
    {
     path:'/listadopagospagados/',
     componentUrl: './pages/listadopagospagados.html',

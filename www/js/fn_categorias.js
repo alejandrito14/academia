@@ -48,6 +48,7 @@ function GuardarCategorias(form,regresar,donde,idmenumodulo)
 		var v_cantidadparticipantes=$("#v_cantidadparticipantes").val();
 		var v_numerodias=$("#v_numerodias").val();
 		var v_depende=$("#v_depende").val();
+		var v_tiposervicioconfiguracion=$("#v_tiposervicioconfiguracion").val();
 		v_activarhorarios=0;
 		v_zonas=0;
 		v_participantes=0;
@@ -143,7 +144,7 @@ function GuardarCategorias(form,regresar,donde,idmenumodulo)
 		data.append('horafindia',horafin);
 		data.append('v_activardias',v_activardias);
 		data.append('v_depende',v_depende);
-		
+		data.append('v_tiposervicioconfiguracion',v_tiposervicioconfiguracion);
 		 $('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Subiendo Archivos...</div>')
 				
 		setTimeout(function(){

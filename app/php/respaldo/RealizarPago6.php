@@ -784,7 +784,7 @@ catch (\Stripe\Exception\CardException $err) {
                
                
 
-                $pagos->estatus=6;
+                $pagos->estatus=0;
 
                 $pagos->fechapago='';
                 $pagos->idpagostripe=$obj->idintento;
@@ -911,7 +911,7 @@ catch (\Stripe\Exception\CardException $err) {
               if ($estatusdeproceso==1) {
 
  
-                  $membresia->ActualizarEstatusMembresiaUsuarioPagado2();
+                 // $membresia->ActualizarEstatusMembresiaUsuarioPagado2();
 
                 }
 
@@ -932,7 +932,7 @@ catch (\Stripe\Exception\CardException $err) {
                $notapago->Creardescripcionpago();
  
            
-                $pagos->ActualizarEstatus();
+                //$pagos->ActualizarEstatus();
 
 
               }

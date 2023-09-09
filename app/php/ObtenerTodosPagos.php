@@ -40,7 +40,7 @@ try
 	$usuarios->idusuarios=$idusuarios;
 	$obtenerusuario=$usuarios->ObtenerUsuario();
 	$monedero=$obtenerusuario[0]->monedero;
-	
+	$habilitarmonedero=0;
 	if ($monedero>0) {
 		$habilitarmonedero=1;
 	}

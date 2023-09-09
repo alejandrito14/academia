@@ -176,8 +176,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						<div class="form-group m-t-20">
 							<label>ESTATUS:</label>
 							<select name="v_estatus" id="v_estatus" title="Estatus" class="form-control"  >
-								<option value="0" <?php if($estatus == 0) { echo "selected"; } ?> >DESACTIVO</option>
-								<option value="1" <?php if($estatus == 1) { echo "selected"; } ?> >ACTIVO</option>
+								<option value="0" <?php if($estatus == 0) { echo "selected"; } ?> >DESACTIVADO</option>
+								<option value="1" <?php if($estatus == 1) { echo "selected"; } ?> >ACTIVADO</option>
 							</select>
 						</div>
 

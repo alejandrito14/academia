@@ -35,7 +35,7 @@ require_once("../../../clases/class.Usuarios.php");
 require_once("../../../clases/class.Servicios.php");
 require_once("../../../clases/class.Fechas.php");
 require_once("../../../clases/class.Notapago.php");
-
+require_once("../../../clases/class.Categorias.php");
 //Se crean los objetos de clase
 $db = new MySQL();
 $reporte = new Reportes();
@@ -53,17 +53,24 @@ $servicios=new Servicios();
 $servicios->db=$db;
 $fechas=new Fechas();
 $nota=new Notapago();
+
+$categorias =new Categorias();
+$categorias->db=$db;
 $nota->db=$db;
 $estatuspago=array('pendiente','proceso','aceptado','rechazado','reembolso','sin reembolso');
 $estatusaceptado=array('NO ACEPTADO','ACEPTADO');
 $estatusapagado=array('NO PAGADO','PAGADO');
 //Recibo parametros del filtro
 	$idservicio=$_GET['idservicio'];
-$pantalla=$_GET['pantalla'];
-$v_tiposervicios=$_GET['v_tiposervicios'];
+	$pantalla=$_GET['pantalla'];
+	$v_tiposervicios=$_GET['v_tiposervicios'];
+	$v_tiposervicios2=$_GET['v_tiposervicios2'];
+
 	$fechafin=$_GET['fechafin'];
 	$horainicio=$_GET['horainicio'];
 	$horafin=$_GET['horafin'];
+	$fechainiciopago=$_GET['fechainiciopago'];
+	$fechafinpago=$_GET['fechafinpago'];
 	$sqlconcan="";
 	$sqalumnoconcan="";
 	$sqlcategorias="";
@@ -80,7 +87,7 @@ $v_tiposervicios=$_GET['v_tiposervicios'];
 	$sumatoriadescuento=0;
 	$sumatoriacobrado=0;
 	$sumatoriapendiente=0;
-
+	$sqlfechapago="";
 	$total_gral=0;
 	if ($idservicio>0){
 		$sqlconcan=" AND servicios.idservicio=".$idservicio."";
@@ -113,8 +120,26 @@ $v_tiposervicios=$_GET['v_tiposervicios'];
 		$sqlfecha=" AND  fechamin>= '$fechainicio' AND fechamin <='$fechafin'";
 	}
 
+	if ($fechainiciopago!='' && $fechafinpago!='') {
+		$sqlfechapago=" AND  fechareporte>= '$fechainiciopago' AND fechareporte <='$fechafinpago'";
+	}
+
 	if ($v_tiposervicios!='' && $v_tiposervicios>0) {
-		$sqlcategorias=" AND servicios.idcategoriaservicio IN($v_tiposervicios)";
+		$sqlcategorias=" AND idcategoriaservicio IN($v_tiposervicios)";
+	}
+
+
+
+	if ($v_tiposervicios2!='' && $v_tiposervicios2>0) {
+
+
+		$obtenercategoriasdepende=$categorias->ObtenerCategoriasGroupEstatusDepende($v_tiposervicios2);
+
+
+		$categoriasid=$obtenercategoriasdepende[0]->categoriasid;
+
+		
+		$sqlcategorias=" AND idcategoriaservicio IN($categoriasid)";
 	}
 
 	/*if (!='') {
@@ -134,32 +159,122 @@ $v_tiposervicios=$_GET['v_tiposervicios'];
 
 
 	$array=array();
+
 	$sql="
-			SELECT *FROM (SELECT servicios.titulo,servicios.idservicio,servicios.precio,servicios.modalidad,
-	(SELECT COUNT(*)  FROM horariosservicio WHERE horariosservicio.idservicio=servicios.idservicio) as cantidadhorarios,
+			SELECT *FROM (SELECT
+    usuarios_servicios.*,
+		servicios.titulo,
+		servicios.modalidad,
+		servicios.precio,
+				usuarios.nombre,
+				usuarios.paterno,
+				usuarios.telefono,
+				usuarios.materno,
+				usuarios.email,
+				usuarios.celular,
+						usuarios.tipo,
+(SELECT COUNT(*) FROM usuariossecundarios WHERE usuariossecundarios.idusuariotutorado=usuarios.idusuarios AND usuariossecundarios.sututor=1) as tutor,
+		
+		
+		  (
+            SELECT COUNT(*)
+            FROM notapago_descripcion
+            JOIN pagos ON notapago_descripcion.idpago = pagos.idpago
+            JOIN notapago ON notapago.idnotapago = notapago_descripcion.idnotapago
+            WHERE pagado = 1
+                AND notapago.estatus = 1
+                AND pagos.idservicio = usuarios_servicios.idservicio
+                AND pagos.idusuarios = usuarios_servicios.idusuarios
+        ) AS pagado,
+				
+				  (
+            SELECT MAX(notapago.fechareporte)
+            FROM notapago_descripcion
+            JOIN pagos ON notapago_descripcion.idpago = pagos.idpago
+            JOIN notapago ON notapago.idnotapago = notapago_descripcion.idnotapago
+            WHERE pagado = 1
+                AND notapago.estatus = 1
+                AND pagos.idservicio = usuarios_servicios.idservicio
+                AND pagos.idusuarios = usuarios_servicios.idusuarios
+        ) AS fechareporte,
 
-			 (SELECT MIN(fecha) from horariosservicio WHERE horariosservicio.idservicio=servicios.idservicio) as fechamin,
-(SELECT MAX(fecha) from horariosservicio WHERE horariosservicio.idservicio=servicios.idservicio) as fechamax,
+         (
+            SELECT MAX(notapago.folio)
+            FROM notapago_descripcion
+            JOIN pagos ON notapago_descripcion.idpago = pagos.idpago
+            JOIN notapago ON notapago.idnotapago = notapago_descripcion.idnotapago
+            WHERE pagado = 1
+                AND notapago.estatus = 1
+                AND pagos.idservicio = usuarios_servicios.idservicio
+                AND pagos.idusuarios = usuarios_servicios.idusuarios
+        ) AS folio,
+				
+				(	SELECT
+			count( usuarios_servicios.idusuarios ) AS coaches 
+		FROM
+			usuarios_servicios
+			INNER JOIN usuarios ON usuarios.idusuarios = usuarios_servicios.idusuarios 
+		WHERE
+			usuarios.tipo = 3
+			AND usuarios_servicios.idservicio = servicios.idservicio AND aceptarterminos=1 AND cancelacion=0
+		) AS cantidadalumnos,
+		
+		(
+		SELECT
+			GROUP_CONCAT( usuarios_servicios.idusuarios ) AS coaches 
+		FROM
+			usuarios_servicios
+			INNER JOIN usuarios ON usuarios.idusuarios = usuarios_servicios.idusuarios 
+		WHERE
+			usuarios.tipo = 5 
+			AND usuarios_servicios.idservicio = servicios.idservicio 
+		) AS coaches ,
+		( SELECT MIN( fecha ) FROM horariosservicio WHERE horariosservicio.idservicio = servicios.idservicio ) AS fechamin,
+		( SELECT MAX( fecha ) FROM horariosservicio WHERE horariosservicio.idservicio = servicios.idservicio ) AS fechamax,
+		( SELECT COUNT(*) FROM horariosservicio WHERE horariosservicio.idservicio = servicios.idservicio ) AS cantidadhorarios,
+			(SELECT idcategoriaservicio FROM servicios WHERE idservicio=usuarios_servicios.idservicio) as idcategoriaservicio
+
+FROM
+    usuarios_servicios
+JOIN (
+    SELECT
+        idservicio,
+        idusuarios,
+        MAX(fechacreacion) AS ultima_fechacreacion
+    FROM
+        usuarios_servicios
+    GROUP BY
+        idservicio,
+        idusuarios
+) AS ultima_fecha ON usuarios_servicios.idservicio = ultima_fecha.idservicio
+    AND usuarios_servicios.idusuarios = ultima_fecha.idusuarios
+    AND usuarios_servicios.fechacreacion = ultima_fecha.ultima_fechacreacion
+		inner join servicios on usuarios_servicios.idservicio=servicios.idservicio
+		inner join usuarios ON  usuarios_servicios.idusuarios=usuarios.idusuarios
+				WHERE usuarios.tipo=3 
+
+		) as tabla where 1=1
+	";
+
+		$sql.=$sqlconcan. $sqalumnoconcan. $sqlcategorias;
 
 
-(SELECT GROUP_CONCAT(usuarios_servicios.idusuarios)as coaches FROM usuarios_servicios 
-	inner join usuarios on usuarios.idusuarios=usuarios_servicios.idusuarios
-WHERE usuarios.tipo=5 and  usuarios_servicios.idservicio=servicios.idservicio ) as coaches
+		if ($estatusaceptado!='') {
+			$sql.=" AND aceptarterminos IN($estatusaceptado)";	
+		}
+		if ($estatuspagado!='') {
+			$sql.=" AND pagado IN($estatuspagado)";	
+		}
 
-			 from servicios
+		if ($v_coaches!='') {
+			$sql.=" AND coaches IN($v_coaches)";
+		}
 
-LEFT JOIN categorias on categorias.idcategorias=servicios.idcategoriaservicio
+		$sql.=$sqlfecha;
+		$sql.=$sqlfechapago;
 
-WHERE   servicios.estatus IN(0,1) and categorias.avanzado=1
-$sqlconcan $sqalumnoconcan $sqlcategorias
-	GROUP BY servicios.idservicio )AS TABLA WHERE 1=1  	";
-
-	if ($v_coaches!='') {
-		$sql.=" AND coaches IN($v_coaches)";
-	}
-
-$sql.=" $sqlfecha 	ORDER BY fechamin,fechamax";
-
+		//echo $sql;die();
+		
 
 		$resp=$db->consulta($sql);
 		$cont = $db->num_rows($resp);
@@ -175,7 +290,41 @@ $sql.=" $sqlfecha 	ORDER BY fechamin,fechamax";
 				$contador++;
 			} 
 		}
-		
+
+
+
+	/*$grupos = array();
+	foreach ($array as $fila) {
+	    $idservicio = $fila['idservicio'];
+	    if (!isset($grupos[$idservicio])) {
+	        $grupos[$idservicio] = array();
+	    }
+	    $grupos[$idservicio][] = $fila;
+	}*/
+	
+
+	$uniqueValues = [];
+foreach ($array as $item) {
+    $key = $item->idservicio . '|' . $item->titulo;
+    if (!isset($uniqueValues[$key])) {
+        $uniqueValues[$key] = [
+            'idservicio' => $item->idservicio,
+            'titulo' => $item->titulo,
+             'fechainicial'=>$item->fechamin,
+             'fechafinal'=>$item->fechamax,
+             'cantidadalumnos'=>$item->cantidadalumnos,
+             'modalidad'=>$item->modalidad,
+             'precio'=>$item->precio,
+             'cantidadhorarios'=>$item->cantidadhorarios
+
+        ];
+    }
+}
+
+// Resultado
+$uniqueValues = array_values($uniqueValues);
+
+//var_dump($uniqueValues);die();
  
 if($pantalla==0) {
 	# code...
@@ -202,38 +351,20 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
  <?php
 	if($pantalla==0) { 
 
+				for ($i=0; $i <count($uniqueValues) ; $i++) { 
 
-		for ($i=0; $i < count($array); $i++) { 
-			$idservicio=$array[$i]->idservicio;
-			$servicios->idservicio=$idservicio;
-			$cantidadhorarios=$array[$i]->cantidadhorarios;
-
-			$peridohorario=$servicios->ObtenerFechaHoras();
-			$asignacion->idservicio=$idservicio;
-			$alumnos=$asignacion->obtenerUsuariosServiciosAlumnosAsignadosReporte($estatusaceptado,$estatuspagado);
+										 $idservicio=$uniqueValues[$i]['idservicio'];
+										 $cantidadhorarios=$uniqueValues[$i]['cantidadhorarios'];
 
 
-			$obtenerservicios=$asignacion->obtenerServiciosAsignadosCoach3($sqlcategorias);
-					$pagosservicios=array();
+											$asignacion->idservicio=$idservicio;
+											$obtenerservicios=$asignacion->obtenerServiciosAsignadosCoach3($sqlcategorias);
 
-				
+				foreach ($array as $alumnos) {
 
-	$textoestatus=array('Pendiente','Aceptado','Cancelado');
-	$arraycoachcomision=array();
- $totalgenerado=array();
-$totalpagado=0;
-	# code...
+    if ($alumnos->idservicio == $idservicio) {
 
-$montopagoalumno=array();
-$montodescuentoalumno=array();
-$montodescuentomembresiaalumno=array();
-$fechafolio=array();
-
-for ($w=0; $w <count($alumnos) ; $w++) { 
-
-$idusuariosalumno=$alumnos[$w]->idusuarios;
-
-
+    			 $idusuariosalumno=$alumnos->idusuarios;
 	for ($k=0; $k <count($obtenerservicios); $k++) {
 
 
@@ -274,12 +405,13 @@ $idusuariosalumno=$alumnos[$w]->idusuarios;
 
 			$pagos->idusuarios=$idusuariosalumno;
 
-		 	$obtenerpago=$pagos->ChecarPagosServicio();
+		 	$obtenerpago=$pagos->ChecarPagosServicio($sqlfechapago);
+
 		/* if ($idservicio==246) {
 		 			var_dump($obtenerpago);die();
 		 		}*/
 		 	$pagado=0;
-		 	$descuentomembresia="";
+		 	$tdescuentomembresia=0;
 		 	$fechapago="";
 		 	$metodopago="";
 		 	$montopago="";
@@ -295,8 +427,8 @@ $idusuariosalumno=$alumnos[$w]->idusuarios;
 		 	$fechainicial="";
 		 	$fechafinal="";
 		 	$montoapagar=0;
-		 				 	$modalidad=$array[$i]->modalidad;
-									$costo=$array[$i]->precio;
+		 				 	$modalidad=$uniqueValues[$i]['modalidad'];
+									$costo=$uniqueValues[$i]['precio'];
 								
 									if ($modalidad==1) {
 										
@@ -309,13 +441,17 @@ $idusuariosalumno=$alumnos[$w]->idusuarios;
 								$obtenerparticipantes=$servicios->ObtenerParticipantes(3);
 								
 								$cantidadparticipantes=count($obtenerparticipantes);
-								$costo=$array[$i]->precio;
+								$costo=$uniqueValues[$i]['precio'];
 
 								$obtenerhorarios=$servicios->ObtenerHorariosSemana();
 
 								$monto=$costo*count($obtenerhorarios);
 
-								$montoapagar=$monto/$cantidadparticipantes;
+									if ($cantidadparticipantes>0) {
+
+													$montoapagar=$monto/$cantidadparticipantes;
+
+									}
 
 
 
@@ -324,22 +460,21 @@ $idusuariosalumno=$alumnos[$w]->idusuarios;
 							
 						if ($costo>=0) {
 
-							$obtenerperiodos=$servicios->ObtenerPeriodosPagos();
+							//$obtenerperiodos=$servicios->ObtenerPeriodosPagos();
 
-							$numeroperiodos=count($obtenerperiodos);
-							$montoapagar=$montoapagar/$numeroperiodos;
+							//$numeroperiodos=count($obtenerperiodos);
+							$montoapagar=$montoapagar/1;
+							
+						$totalgenerado=$totalgenerado+$montoapagar;
 
-						//	$totalgenerado=$totalgenerado+$montoapagar;
-
-							array_push($totalgenerado, $montoapagar);
+							//array_push($totalgenerado, $montoapagar);
 							}else{
-										array_push($totalgenerado, 0);
+									//	array_push($totalgenerado, 0);
 
-
+						$totalgenerado=$totalgenerado+0;
 							}
 					
-$alumnos[$w]->fechareporte="";
-$alumnos[$w]->folio="";
+
 		 	if (count($obtenerpago)>0) {
 
 		 		$nota->idpago=$obtenerpago[0]->idpago;
@@ -347,30 +482,31 @@ $alumnos[$w]->folio="";
 
 
 		 		$obtenernotapago=$nota->ObtenerNotaPagoporPago();
-		 
+		
 		 		if(count($obtenernotapago)>0) {
 
-		 
+		 			 	
+
 		 			$fechapago=date('d-m-Y H:i:s',strtotime($obtenernotapago[0]->fecha));
 		 			$fechareporte=date('d-m-Y H:i:s',strtotime($obtenernotapago[0]->fechareporte));
-		 			$alumnos[$w]->fechareporte=$fechareporte;
 		 			$metodopago=$obtenernotapago[0]->tipopago;
 		 			$folio=$obtenernotapago[0]->folio;
-		 			$alumnos[$w]->folio=$folio;
-			 		
+		 			
 			 		if ($obtenernotapago[0]->estatus==1) {
 			 			
 			 			$pagado=1;
-			 			
+			 		
 			 			$idpago=$obtenerpago[0]->idpago;
 			 			$fechainicial=$obtenerpago[0]->fechainicial;
 				  	$fechafinal=$obtenerpago[0]->fechafinal;
 			 			$montopago=$obtenerpago[0]->monto;
 			 			$totalpagado=$totalpagado+$montopago;
 			 			$pagos->idnotapago=$obtenernotapago[0]->idnotapago;
-			 			$descuento=$pagos->ObtenerPagoDescuento2();
-			 			$descuentomembresia=$pagos->ObtenerPagoDescuentoMembresia();
 
+			 			$descuento=$pagos->ObtenerPagoDescuento2();
+	
+			 			$descuentomembresia=$pagos->ObtenerPagoDescuentoMembresia();
+			 			$tdescuentomembresia=$descuentomembresia[0]->montodescontar;
 			 			$nombremembresia=$descuentomembresia[0]->nombremembresia;
 
 			 			$nombredescuento=$descuento[0]->nombredescuento;
@@ -378,17 +514,14 @@ $alumnos[$w]->folio="";
 			 				
 			 				$montoadescontarpago=$descuento[0]->montodescontar;
 
-			 					array_push($montodescuentoalumno, 	$montoadescontarpago);
-
+			 				/*	array_push($montodescuentoalumno, 	$montoadescontarpago);
+*/
 			 		
 			 			
-			 						
-			 					$montocomision=$asignacion->CalcularMontoPago2($tipomontopago[0]->tipopago,$tipomontopago[0]->monto,$montopagocondescuento,$cantidadhorarios);
+			 					
+			 				//	$montocomision=$asignacion->CalcularMontoPago2($tipomontopago[0]->tipopago,$tipomontopago[0]->monto,$montopagocondescuento,$cantidadhorarios);
 
-			 					$montopagocondescuento=$montopagocondescuento-$descuentomembresia[0]->montodescontar;
-
-			 					array_push($montopagoalumno,$montopagocondescuento);
-			 					array_push($montodescuentomembresiaalumno, $descuentomembresia[0]->montodescontar);	
+			 					
 			 			 // 
 
 			 		}
@@ -397,124 +530,69 @@ $alumnos[$w]->folio="";
 		 		}
 		 		
 		 	}else{
-		 				array_push($montopagoalumno, 0);
+		 			/*	array_push($montopagoalumno, 0);
 		 				array_push($montodescuentoalumno, 0);
 		 				array_push($montodescuentomembresiaalumno, 0);
-
+*/
 					
 
 		 	}
 
 		 
-		 	$verificadopago=0;
+		 /*	$verificadopago=0;
 		 	$montopagadocoach=0;
 		 	if ($idpago!=0) {
 		 		 	$lo->idusuarios=$idcoach;
 		 				$lo->fechainicial=$fechainicial;
 		 				$lo->fechafinal=$fechafinal;
 		 			$verificarpagocoach=	$lo->ObtenerPagoCoachVeri($idpago,$idservicio);
+
+
 		 				if (count($verificarpagocoach)>0) {
 		 						$verificadopago=1;
 		 						$montopagadocoach=$verificarpagocoach[0]->monto;
 		 				}
 
 		 	}
+*/
 
-			$objeto=array('idusuariocoach'=>$idcoach,'coach'=>$nombrecoach,'tipocomision'=>$tipomontopago[0]->tipopago,'monto'=>$tipomontopago[0]->monto,'montocomision'=>$montocomision,'montopagocoach'=>$montopagocoach,'idpago'=>$idpago,'idservicio'=>$idservicio,'pagado'=>$verificadopago,'montopagadocoach'=>$montopagadocoach);
 
-			array_push($arraycoachcomision,$objeto);
+		//	$objeto=array('idusuariocoach'=>$idcoach,'coach'=>$nombrecoach,'tipocomision'=>$tipomontopago[0]->tipopago,'monto'=>$tipomontopago[0]->monto,'montocomision'=>$montocomision,'montopagocoach'=>$montopagocoach,'idpago'=>$idpago,'idservicio'=>$idservicio,'pagado'=>$verificadopago,'montopagadocoach'=>$montopagadocoach);
+
+			//array_push($arraycoachcomision,$objeto);
 
 		}
-		
-
-	}
-		
-		 
-
-		
-
-						
-
-							$totalpagado=0;
-					
-
-						 
-		
 
 
-		
-					
-					$totalgenerado2=0;
-						if (count($totalgenerado)>0) {
-							for ($p=0; $p < count($totalgenerado); $p++) { 
-						
-									
-$totalgenerado2=$totalgenerado2+ $totalgenerado[$p];
-								 
+							
+					          	$sumatoriagenerado=$sumatoriagenerado+$montoapagar;
+					         
 
-								
-					
-			
-								}
-						}
+					          $sumatoriadescuentomembresia=$sumatoriadescuentomembresia+$tdescuentomembresia;
 
 
+					          	$sumatoriadescuento=$sumatoriadescuento+$descuento[0]->montodescontar;
 
-						$sumatoriagenerado=$sumatoriagenerado+$totalgenerado2;
+					            $total=$montopago-$descuento[0]->montodescontar;
+
+					            $sumatoriacobrado=$sumatoriacobrado+$total;
+					    
+					        				$montopago=$montopago-$descuento[0]->montodescontar-$tdescuentomembresia;
+
+					          		$resultado=$montoapagar-$montopago-$descuento[0]->montodescontar-$tdescuentomembresia;
+
+					          	$sumatoriapendiente=$sumatoriapendiente+$resultado;
 
 		
 
 
 
-			
-				$totaldescuentomembresia=0;
-			 for ($q=0; $q <count($montodescuentomembresiaalumno) ; $q++) { 
-
-				$totaldescuentomembresia=$totaldescuentomembresia+$montodescuentomembresiaalumno[$q];
-				# code...
-			} 
-
-
-
-				$sumatoriadescuentomembresia=$sumatoriadescuentomembresia+$totaldescuentomembresia;
-			
-
-	
-
-						
-				$totaldescuento=0;
-			 for ($q=0; $q <count($montodescuentoalumno) ; $q++) { 
-
-				$totaldescuento=$totaldescuento+$montodescuentoalumno[$q];
-				# code...
-			} 
-			
-
-					$sumatoriadescuento=$sumatoriadescuento+$totaldescuento;
-			
 				
-		
-
-					for ($j=0; $j < count($alumnos); $j++) {
-				 $totalpagado=$totalpagado+$montopagoalumno[$j];
-
-				}
-		
-		
-			 $sumatoriacobrado+=$totalpagado;
-
-			 
+					   			 }
+											}
+									}
 
 
-			
-			$totalpendiente2=$totalgenerado2-$totalpagado-$totaldescuento-$totaldescuentomembresia;
-	
-
-			$sumatoriapendiente+=$totalpendiente2;
-
-
-
-	} 
 
 
 					 ?>
@@ -556,58 +634,82 @@ $totalgenerado2=$totalgenerado2+ $totalgenerado[$p];
 		<th>Id</th>
 		<th>Nombre del servicio</th>
 		<th>Número de alumnos</th>
-		<th>Alumnos</th>
+		<th>
+			
+			<table>
+        <tr>
+            <th style="width: 100px;">Número</th>
+            <th style="width: 100px;">Nombre cliente</th>
+            <th style="width: 100px;">Horarios alumnos</th>
+            <th style="width: 100px;">Tutor</th>
+            <th style="width: 100px;">Aceptado</th>
+            <th style="width: 100px;">Monto generado</th>
+            <th style="width: 100px;">Monto descuento membresía</th>
+            <th style="width: 100px;">Monto descuento otros</th>
+            <th style="width: 100px;">Monto cobrado</th>
+            <th style="width: 100px;">Monto pendiente</th>
+            <th style="width: 100px;">Folio</th>
+            <th style="width: 100px;">Fecha</th>
+        </tr>
+    </table>
+		</th>
 	
-		<th>Horarios</th>
-		<th>Monto generado totalizado</th>
-		<th>Monto descuento membresía totalizado</th>
-		<th>Monto descuento otros totalizado</th>
+						<th>Horarios</th>
+						<th>Monto generado totalizado</th>
+						<th>Monto descuento membresía totalizado</th>
+						<th>Monto descuento otros totalizado</th>
 
-		<th>Monto cobrado totalizado</th>
-		<th>Monto pendiente totalizado</th>
+						<th>Monto cobrado totalizado</th>
+						<th>Monto pendiente totalizado</th>
 
-		<th>Coach</th>
-		<th>Comisión del servicio totalizado</th>
+						<th>Coach</th>
+						<th>Comisión del servicio totalizado</th>
 
-		<!-- <th>Comisión generada coach</th>
-		<th>Comisión pagada coach</th>
-		<th>Comisión pendiente coach</th>
- -->
-	</tr>
-	</thead>
-	<tbody>
+		
+						</tr>
+						</thead>
+						<tbody>
+								<?php 
+									for ($i=0; $i <count($uniqueValues) ; $i++) { 
 
-		<?php for ($i=0; $i < count($array); $i++) { 
-			$idservicio=$array[$i]->idservicio;
-			$servicios->idservicio=$idservicio;
-			$cantidadhorarios=$array[$i]->cantidadhorarios;
+										 $idservicio=$uniqueValues[$i]['idservicio'];
+										 $cantidadhorarios=$uniqueValues[$i]['cantidadhorarios'];
 
-			$peridohorario=$servicios->ObtenerFechaHoras();
-			$asignacion->idservicio=$idservicio;
-			$alumnos=$asignacion->obtenerUsuariosServiciosAlumnosAsignadosReporte($estatusaceptado,$estatuspagado);
+											$asignacion->idservicio=$idservicio;
+											$obtenerservicios=$asignacion->obtenerServiciosAsignadosCoach3($sqlcategorias);
 
+										?>
+									<tr>
+										
+											<td><?php echo $uniqueValues[$i]['fechainicial']; ?></td>
+											<td><?php echo $uniqueValues[$i]['fechafinal']; ?></td>
+											<td><?php echo $uniqueValues[$i]['idservicio']; ?></td>
+											<td><?php echo $uniqueValues[$i]['titulo']; ?></td>
+											<td><?php echo $uniqueValues[$i]['cantidadalumnos']; ?></td>
 
-			$obtenerservicios=$asignacion->obtenerServiciosAsignadosCoach3($sqlcategorias);
-					$pagosservicios=array();
+											<td>
+															
+															<table id="tabla2">
+						<thead>
+							<tr>
+					          
+					        </tr>
+						</thead>
+						<tbody>
+						<?php 
+							$totalpagado=0;
+							$totalpendiente=0;
+							$arraycoachcomision=array();
+									$contador=0;
+							$totalgenerado=0;
+							$totaldescuentomembresia=0;
+							$totaldescuentootros=0;
+							$totalcobrado=0;
+					foreach ($array as $alumnos) {
 
-				
+    if ($alumnos->idservicio == $idservicio) {
 
-	$textoestatus=array('Pendiente','Aceptado','Cancelado');
-	$arraycoachcomision=array();
- $totalgenerado=array();
-$totalpagado=0;
-	# code...
-
-$montopagoalumno=array();
-$montodescuentoalumno=array();
-$montodescuentomembresiaalumno=array();
-$fechafolio=array();
-
-for ($w=0; $w <count($alumnos) ; $w++) { 
-
-$idusuariosalumno=$alumnos[$w]->idusuarios;
-
-
+    			 $idusuariosalumno=$alumnos->idusuarios;
 	for ($k=0; $k <count($obtenerservicios); $k++) {
 
 
@@ -648,12 +750,14 @@ $idusuariosalumno=$alumnos[$w]->idusuarios;
 
 			$pagos->idusuarios=$idusuariosalumno;
 
-		 	$obtenerpago=$pagos->ChecarPagosServicio();
+		 	$obtenerpago=$pagos->ChecarPagosServicio($sqlfechapago);
+
+
 		/* if ($idservicio==246) {
 		 			var_dump($obtenerpago);die();
 		 		}*/
 		 	$pagado=0;
-		 	$descuentomembresia="";
+		 	$tdescuentomembresia=0;
 		 	$fechapago="";
 		 	$metodopago="";
 		 	$montopago="";
@@ -669,8 +773,8 @@ $idusuariosalumno=$alumnos[$w]->idusuarios;
 		 	$fechainicial="";
 		 	$fechafinal="";
 		 	$montoapagar=0;
-		 				 	$modalidad=$array[$i]->modalidad;
-									$costo=$array[$i]->precio;
+		 				 	$modalidad=$uniqueValues[$i]['modalidad'];
+									$costo=$uniqueValues[$i]['precio'];
 								
 									if ($modalidad==1) {
 										
@@ -683,13 +787,17 @@ $idusuariosalumno=$alumnos[$w]->idusuarios;
 								$obtenerparticipantes=$servicios->ObtenerParticipantes(3);
 								
 								$cantidadparticipantes=count($obtenerparticipantes);
-								$costo=$array[$i]->precio;
+								$costo=$uniqueValues[$i]['precio'];
 
 								$obtenerhorarios=$servicios->ObtenerHorariosSemana();
 
 								$monto=$costo*count($obtenerhorarios);
 
-								$montoapagar=$monto/$cantidadparticipantes;
+									if ($cantidadparticipantes>0) {
+
+													$montoapagar=$monto/$cantidadparticipantes;
+
+									}
 
 
 
@@ -698,24 +806,21 @@ $idusuariosalumno=$alumnos[$w]->idusuarios;
 							
 						if ($costo>=0) {
 
-							$obtenerperiodos=$servicios->ObtenerPeriodosPagos();
+							//$obtenerperiodos=$servicios->ObtenerPeriodosPagos();
 
-							$numeroperiodos=count($obtenerperiodos);
-							$montoapagar=$montoapagar/$numeroperiodos;
+							//$numeroperiodos=count($obtenerperiodos);
+							$montoapagar=$montoapagar/1;
+							
+						$totalgenerado=$totalgenerado+$montoapagar;
 
-						//	$totalgenerado=$totalgenerado+$montoapagar;
-
-							array_push($totalgenerado, $montoapagar);
+							//array_push($totalgenerado, $montoapagar);
 							}else{
-										array_push($totalgenerado, 0);
+									//	array_push($totalgenerado, 0);
 
-
+						$totalgenerado=$totalgenerado+0;
 							}
-						/*	if ($idservicio==246) {
-								echo $montoapagar;
-							}*/
-$alumnos[$w]->fechareporte="";
-$alumnos[$w]->folio="";
+					
+
 		 	if (count($obtenerpago)>0) {
 
 		 		$nota->idpago=$obtenerpago[0]->idpago;
@@ -723,32 +828,31 @@ $alumnos[$w]->folio="";
 
 
 		 		$obtenernotapago=$nota->ObtenerNotaPagoporPago();
-		 	/*	if ($idservicio==347 && $idusuariosalumno==363) {
-		 			var_dump($obtenernotapago);die();
-		 		}*/
+		
 		 		if(count($obtenernotapago)>0) {
 
-		 
+		 			 	
+
 		 			$fechapago=date('d-m-Y H:i:s',strtotime($obtenernotapago[0]->fecha));
 		 			$fechareporte=date('d-m-Y H:i:s',strtotime($obtenernotapago[0]->fechareporte));
-		 			$alumnos[$w]->fechareporte=$fechareporte;
 		 			$metodopago=$obtenernotapago[0]->tipopago;
 		 			$folio=$obtenernotapago[0]->folio;
-		 			$alumnos[$w]->folio=$folio;
-			 		
+		 			
 			 		if ($obtenernotapago[0]->estatus==1) {
 			 			
 			 			$pagado=1;
-			 			
+			 		
 			 			$idpago=$obtenerpago[0]->idpago;
 			 			$fechainicial=$obtenerpago[0]->fechainicial;
 				  	$fechafinal=$obtenerpago[0]->fechafinal;
 			 			$montopago=$obtenerpago[0]->monto;
 			 			$totalpagado=$totalpagado+$montopago;
 			 			$pagos->idnotapago=$obtenernotapago[0]->idnotapago;
-			 			$descuento=$pagos->ObtenerPagoDescuento2();
-			 			$descuentomembresia=$pagos->ObtenerPagoDescuentoMembresia();
 
+			 			$descuento=$pagos->ObtenerPagoDescuento2();
+	
+			 			$descuentomembresia=$pagos->ObtenerPagoDescuentoMembresia();
+			 			$tdescuentomembresia=$descuentomembresia[0]->montodescontar;
 			 			$nombremembresia=$descuentomembresia[0]->nombremembresia;
 
 			 			$nombredescuento=$descuento[0]->nombredescuento;
@@ -756,27 +860,15 @@ $alumnos[$w]->folio="";
 			 				
 			 				$montoadescontarpago=$descuento[0]->montodescontar;
 
-			 					array_push($montodescuentoalumno, 	$montoadescontarpago);
-
-			 					/*	if ($idservicio==347 && $idusuariosalumno==363) {
-										echo $montopago.'<br>';
-
-								echo $descuento[0]->montodescontar;
-								echo $montopagocondescuento.'<br>';
-		 				echo $montocomision;die();
-		 		}*/
-
+			 				/*	array_push($montodescuentoalumno, 	$montoadescontarpago);
+*/
+			 		
 			 			
-			 						
+			 					
 			 					$montocomision=$asignacion->CalcularMontoPago2($tipomontopago[0]->tipopago,$tipomontopago[0]->monto,$montopagocondescuento,$cantidadhorarios);
 
-			 					$montopagocondescuento=$montopagocondescuento-$descuentomembresia[0]->montodescontar;
-
-			 					array_push($montopagoalumno,$montopagocondescuento);
-			 					array_push($montodescuentomembresiaalumno, $descuentomembresia[0]->montodescontar);	
+			 					
 			 			 // 
-
-			 			 // $totalpagado=$montopagocondescuento-$descuentomembresia[0]->montodescontar;
 
 			 		}
 		 	
@@ -784,83 +876,11 @@ $alumnos[$w]->folio="";
 		 		}
 		 		
 		 	}else{
-		 				array_push($montopagoalumno, 0);
+		 			/*	array_push($montopagoalumno, 0);
 		 				array_push($montodescuentoalumno, 0);
 		 				array_push($montodescuentomembresiaalumno, 0);
-
-						 /*			$obtenerperiodos=$servicios->ObtenerPeriodosPagos();
-
-						 	$montoapagar=0;
-						 	for ($l=0; $l <count($obtenerperiodos) ; $l++) { 
-						
-								$fechainicial=$obtenerperiodos[$l]->fechainicial;
-								$fechafinal=$obtenerperiodos[$l]->fechafinal;
-								$lo->idusuarios=$idusuariosalumno;
-								$lo->idservicio=$idservicio;
-								$lo->fechainicial=$fechainicial;
-								$lo->fechafinal=$fechafinal;
-
-									$modalidad=$array[$i]->modalidad;
-									$costo=$array[$i]->precio;
-								
-									if ($modalidad==1) {
-										
-										$montoapagar=$costo;
-
-									}
-
-							if ($modalidad==2) {
-								//grupo
-								$obtenerparticipantes=$servicios->ObtenerParticipantes(3);
-								
-								$cantidadparticipantes=count($obtenerparticipantes);
-								$costo=$array[$k]->precio;
-
-								$obtenerhorarios=$servicios->ObtenerHorariosSemana();
-
-								$monto=$costo*count($obtenerhorarios);
-
-								$montoapagar=$monto/$cantidadparticipantes;
-
-
-
-							}
-
-							
-						if ($costo>=0) {
-
-							$obtenerperiodos=$servicios->ObtenerPeriodosPagos();
-
-							$numeroperiodos=count($obtenerperiodos);
-							$montoapagar=$montoapagar/$numeroperiodos;
-
-
-							
-
-								$idusuarios=$idusuariosalumno;
-								$idmembresia=0;
-								$idservicio=$idservicio;
-								$tipo=1;
-								$estatus=0;
-								$dividido=$modalidad;
-								$fechainicial=$obtenerperiodos[$l]->fechainicial;
-								$fechafinal=$obtenerperiodos[$l]->fechafinal;
-								$concepto=$array[$k]->titulo;
-								//$contador=$lo->ActualizarConsecutivo();
-					   		    $fecha = explode('-', date('d-m-Y'));
-							    $anio = substr($fecha[2], 2, 4);
-					   			$folio = $fecha[0].$fecha[1].$anio.$contador;
-					   			
-								$folio="";
-
-								$fecha=$obtenerperiodos[$l]->fechafinal;
-								$obtener[$i]->fechaformato='';
-					
-						}
-
-
-						 	}
 */
+					
 
 		 	}
 
@@ -872,6 +892,8 @@ $alumnos[$w]->folio="";
 		 				$lo->fechainicial=$fechainicial;
 		 				$lo->fechafinal=$fechafinal;
 		 			$verificarpagocoach=	$lo->ObtenerPagoCoachVeri($idpago,$idservicio);
+
+
 		 				if (count($verificarpagocoach)>0) {
 		 						$verificadopago=1;
 		 						$montopagadocoach=$verificarpagocoach[0]->monto;
@@ -879,58 +901,26 @@ $alumnos[$w]->folio="";
 
 		 	}
 
+
+
 			$objeto=array('idusuariocoach'=>$idcoach,'coach'=>$nombrecoach,'tipocomision'=>$tipomontopago[0]->tipopago,'monto'=>$tipomontopago[0]->monto,'montocomision'=>$montocomision,'montopagocoach'=>$montopagocoach,'idpago'=>$idpago,'idservicio'=>$idservicio,'pagado'=>$verificadopago,'montopagadocoach'=>$montopagadocoach);
 
 			array_push($arraycoachcomision,$objeto);
 
 		}
+
+
+        $resultados[] = $alumnos;
 		
-
-	}
-		
-		 ?>
-		<tr>
-			<td><?php echo date('d-m-Y',strtotime($array[$i]->fechamin)); ?></td>
-			<td><?php echo date('d-m-Y',strtotime($array[$i]->fechamax)); ?></td>
-				
-				<td><?php echo $array[$i]->idservicio; ?></td>
-			<td><?php echo $array[$i]->titulo; ?></td>
-			<td><?php echo count($alumnos); ?></td>
-			<td>
-					<table id="tabla2">
-						<thead>
-							<tr>
-					          <th>Número</th>
-					          <th>Nombre cliente</th>
-					          <th>Horarios alumnos</th>
-					          <th>Tutor</th>
-					          <th>Aceptado</th>
-					          <th>Monto generado</th>
-					          <th>Monto descuento membresía</th>
-
-					          <th>Monto descuento otros</th>
-
-					          <th>Monto cobrado</th>
-					          <th>Monto pendiente</th>
-					          <th>Folio</th>
-					          <th>Fecha</th>
-					        </tr>
-						</thead>
-						<tbody>
-						<?php 
-
-							$totalpagado=0;
-						for ($j=0; $j < count($alumnos); $j++) {
-						
 							?>
 						<tr>
-							<td><?php echo ($j+1); ?></td>
-					          <td><?php echo $alumnos[$j]->nombre.' '.$alumnos[$j]->paterno.' '.$alumnos[$j]->materno; ?>
+							<td style="width: 100px;"><?php echo ($contador+1); ?></td>
+					          <td style="width: 100px;"><?php echo $alumnos->nombre.' '.$alumnos->paterno.' '.$alumnos->materno; ?>
 					          	
 					          </td>
-					          <td><?php echo $alumnos[$j]->cantidadhorarios; ?></td>
-					          <td>
-					          	<?php  $tutor=$alumnos[$j]->tutor; 
+					          <td style="width: 100px;"><?php echo $alumnos->cantidadhorarios; ?></td>
+					          <td style="width: 100px;">
+					          	<?php  $tutor=$alumnos->tutor; 
 					          		if ($tutor>0) {
 					          			echo "SI";
 					          		}else{
@@ -940,9 +930,9 @@ $alumnos[$w]->folio="";
 					          	?>
 
 					          </td>
-					          <td>
+					          <td style="width: 100px;">
 					          	
-					          		<?php  $aceptarterminos=$alumnos[$j]->aceptarterminos; 
+					          		<?php  $aceptarterminos=$alumnos->aceptarterminos; 
 					          		if ($aceptarterminos>0) {
 					          			echo "SI";
 					          		}else{
@@ -951,156 +941,113 @@ $alumnos[$w]->folio="";
 
 					          	?>
 					          </td>
-					          <td>
+					          <td style="width: 100px;">
 					          	
-					          	<?php echo '$'.number_format($totalgenerado[$j], 2,'.',',');
+					          	<?php echo '$'.number_format($montoapagar, 2,'.',',');
 
 					          
 
 					          	 ?>
 					          </td>
 
-					          <td>
-					          	<?php echo '$'.number_format($montodescuentomembresiaalumno[$j], 2,'.',','); 
+					          <td style="width: 100px;">
 
-					          	
+
+					          	<?php 
+					         	if ($tdescuentomembresia>=0) {
+					           	echo '$'.number_format($tdescuentomembresia, 2,'.',','); 
+					          						}else{
+					          								echo '$'.number_format(0, 2,'.',','); 
+
+					          						}
+
+					         
+
+					          	$totaldescuentomembresia=$totaldescuentomembresia+$tdescuentomembresia;
 
 					          	?>
 
 					          </td>
 
-					          <td>
-					          	<?php echo '$'.number_format($montodescuentoalumno[$j], 2,'.',','); 
-
+					          <td style="width: 100px;">
+					          	<?php echo '$'.number_format($descuento[0]->montodescontar, 2,'.',','); 
+					          	$totaldescuentootros=$totaldescuentootros+$descuento[0]->montodescontar;
 					          
 					          	?>
 
 					          </td>
 
 
-					          <td>
+					          <td style="width: 100px;">
 					           <?php
 
-					           $totalpagado=$totalpagado+$montopagoalumno[$j];
-					            echo '$'.number_format($montopagoalumno[$j], 2,'.',','); 
+					          // $totalpagado=$totalpagado+$montopagoalumno[$j];
+					            echo '$'.number_format($montopago-$descuento[0]->montodescontar-$descuentomembresia[0]->montodescontar, 2,'.',','); 
+					            $total=$montopago-$descuento[0]->montodescontar-$descuentomembresia[0]->montodescontar;
 
-					           
+					            $totalcobrado=$totalcobrado+$total;
+					          // echo 'aqui';die();
 					            ?>
 
 					          </td>
 					          
 
-					          <td>
+					          <td style="width: 100px;">
 					          	
 					          	<?php 
-					          		$resultado=$totalgenerado[$j]-$montopagoalumno[$j]-$montodescuentoalumno[$j]-$montodescuentomembresiaalumno[$j];
 
+					        				$montopago=$montopago-$descuento[0]->montodescontar-$tdescuentomembresia;
 
+					          		$resultado=$montoapagar-$montopago-$descuento[0]->montodescontar-$tdescuentomembresia;
+
+					          		$totalpendiente=$totalpendiente+$resultado;
 
 					          		echo '$'.number_format($resultado, 2,'.',',');
 					          	 ?>
 					          </td>
-					          <td><?php echo $alumnos[$j]->folio; ?></td>
-					           <td><?php echo $alumnos[$j]->fechareporte; ?></td>
+					          <td style="width: 100px;"><?php echo $alumnos->folio; ?></td>
+					           <td style="width: 100px;"><?php echo $alumnos->fechareporte; ?></td>
 					         </tr> 
 					         
 
-					<?php	}
+					<?php	
+
+					$contador++;
+
+
+				
+					    }
+}
+				
 
 						 ?>
+
 							
 							
-						</tbody>
+												</tbody>
 				        
 				     </table>
-			</td>
-			
-			<td>
-				<?php 
-
-				echo $array[$i]->cantidadhorarios;
-				 ?>
-
-
-			</td>
-			<td>
-
-				
-		
-					<?php 
-					$totalgenerado2=0;
-						if (count($totalgenerado)>0) {
-							for ($p=0; $p < count($totalgenerado); $p++) { ?>
-						
-									<?php 
-$totalgenerado2=$totalgenerado2+ $totalgenerado[$p];
-								 ?>
-
-								
-					
-					<?php		
-								}
-						}
-
-					echo	'$'.number_format($totalgenerado2, 2,'.',',');
-
-						$sumatoriagenerado=$sumatoriagenerado+$totalgenerado2;
-
-		?>
 
 
 
-			</td>
-			<td>
-			<?php
-				$totaldescuentomembresia=0;
-			 for ($q=0; $q <count($montodescuentomembresiaalumno) ; $q++) { 
+				</td>
 
-				$totaldescuentomembresia=$totaldescuentomembresia+$montodescuentomembresiaalumno[$q];
-				# code...
-			} 
-				echo '$'.number_format($totaldescuentomembresia,2,'.',',');
+ 								<td> <?php echo $uniqueValues[$i]['cantidadhorarios']; ?> </td>
+
+ 								<td><?php echo $totalgenerado; ?></td>
 
 
-				$sumatoriadescuentomembresia=$sumatoriadescuentomembresia+$totaldescuentomembresia;
-			?>
+ 								<td><?php echo $totaldescuentomembresia; ?></td>
 
-		</td>
-			<td>
+ 									<td><?php echo $totaldescuentootros; ?></td>
 
-						<?php
-				$totaldescuento=0;
-			 for ($q=0; $q <count($montodescuentoalumno) ; $q++) { 
-
-				$totaldescuento=$totaldescuento+$montodescuentoalumno[$q];
-				# code...
-			} 
-				echo '$'.number_format($totaldescuento,2,'.',',');
-
-					$sumatoriadescuento=$sumatoriadescuento+$totaldescuento;
-			?>
-				
-			</td>
+ 									<td><?php echo $totalcobrado; ?></td>
+ 									<td><?php echo $totalpendiente; ?></td>
 
 
-		
-			<td><?php echo '$'.number_format($totalpagado, 2,'.',',');
-			 $sumatoriacobrado+=$totalpagado;
-
-			 ?></td>
 
 
-			<td><?php 
-			$totalpendiente2=$totalgenerado2-$totalpagado-$totaldescuento-$totaldescuentomembresia;
-			echo '$'.number_format($totalpendiente2,2,'.',','); 
-
-			$sumatoriapendiente+=$totalpendiente2;
-
-			?></td>
-
-
-		
-			<td>
+ 										<td>
 
 
 				<table id="tabla3">
@@ -1119,11 +1066,13 @@ $totalgenerado2=$totalgenerado2+ $totalgenerado[$p];
 						<tbody>
 							<?php 
 
-								for ($l=0; $l <count($arraycoachcomision) ; $l++) {  ?>
+								for ($l=0; $l <count($arraycoachcomision); $l++) {  
+
+									?>
 									<tr>
 										
 										<td><?php echo $arraycoachcomision[$l]['coach']; ?> </td>
-										<td><?php echo $alumnos[0]->cantidadhorarios; ?></td>
+										<td><?php echo $uniqueValues[$i]['cantidadhorarios']; ?></td>
 										
 											<td><?php echo '$'.number_format($arraycoachcomision[$l]['montocomision'],2,'.',','); ?></td>
 											 <td>
@@ -1173,39 +1122,28 @@ $totalgenerado2=$totalgenerado2+ $totalgenerado[$p];
 
 
 
-			 echo '$'.number_format($comisiondelservio,2,'.',','); ?></td>
-			<!-- <td></td>
-			<td></td>
-			<td></td> -->
-		</tr>
+			 echo '$'.number_format($comisiondelservio,2,'.',','); ?> 
+			 	
+			 </td>
+		 
 
-	<?php } ?>
-	</tbody>
+									</tr>	
+
+
+
+					<?php
+
+										}
+
+
+								 ?>
+
+
+							
+						</tbody>
 
 
 </table>
 
 
 
-<!-- <script>
-
-	// A $( document ).ready() block.
-$(document ).ready(function() {
-   var sumatoriagenerado='<?php echo $sumatoriagenerado; ?>';
-   var sumatoriadescuento='<?php echo $sumatoriadescuento; ?>';
-   var sumatoriadescuentomembresia='<?php echo $sumatoriadescuentomembresia; ?>';
-   var sumatoriacobrado='<?php echo $sumatoriacobrado; ?>';
-   var sumatoriapendiente='<?php echo $sumatoriapendiente; ?>';
-
-	//Colocar(sumatoriagenerado,sumatoriadescuento,sumatoriadescuentomembresia,sumatoriacobrado,sumatoriapendiente);
-});
-function Colocar(sumatoriagenerado,sumatoriadescuento,sumatoriadescuentomembresia,sumatoriacobrado,sumatoriapendiente) {
-		alert('a');
-		$("#sumatoriagenerado").text(sumatoriagenerado);
-		$("#sumatoriadescuento").text(sumatoriadescuento);
-		$("#sumatoriadescuentomembresia").text(sumatoriadescuentomembresia);
-		$("#sumatoriacobrado").text(sumatoriacobrado);
-		$("#sumatoriapendiente").text(sumatoriapendiente);
-	}
-	
-</script> -->
