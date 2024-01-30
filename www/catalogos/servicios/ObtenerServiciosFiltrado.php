@@ -65,155 +65,66 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 			
 			
 		 ?>
-			<tr>
-							
-				<td style="text-align: center;">
-					<?php echo $f->imprimir_cadena_utf8($obtener[$i]->idservicio);?>
-				</td>		
-							
-				<td style="text-align: center;">
-					<p><?php echo $f->imprimir_cadena_utf8($obtener[$i]->titulo);?></p>
-				
-				<?php if ($obtener[$i]->fechamin!='' && $obtener[$i]->fechamin!=null) { ?>
 
-					<p>Periodo: <?php echo date('d/m/Y',strtotime($obtener[$i]->fechamin)).'-'.date('d/m/Y',strtotime($obtener[$i]->fechamax)); ?> </p>	
+				<?php
+				$obtener[$i]->periodo="";
+				 if ($obtener[$i]->fechamin!='' && $obtener[$i]->fechamin!=null) { 
+
+				 $obtener[$i]->periodo= date('d/m/Y',strtotime($obtener[$i]->fechamin)).'-'.date('d/m/Y',strtotime($obtener[$i]->fechamax)); 
 					
-			<?php	} ?>
+	} ?>
 				
 
 				<?php 
 					$coaches=explode(',',$obtener[$i]->coachesfiltro2);
-					if ($coaches[0]!='' ) {
-						for ($j=0; $j <count($coaches) ; $j++) { 
-							
-							?>
-							 <p style="margin: 0;"><?php echo $coaches[$j]; ?></p> 
-
-							<?php
-						}
-					}
+			
+					$obtener[$i]->coachesfiltro3=$coaches;
+				
 				 ?>	
 
-
-				</td>
-
-						 <td style="text-align: center;">
-		                    <?php 
+       <?php 
 		                     $img='./catalogos/servicios/imagenes/'.$_SESSION['codservicio'].'/'.$f->imprimir_cadena_utf8($obtener[$i]->imagen);
 
-		                     ?>
-		                     <img src="<?php echo $img; ?>" alt=""style="width: 400px;">
-		                   </td>
+		                     $obtener[$i]->imagen=$img;
 
-							<td style="text-align: center;"><?php echo $obtener[$i]->nombrecategoria;?></td>
-							<td style="text-align: center;"><?php echo date('d-m-Y H:i:s',strtotime($obtener[$i]->fechacreacion));?></td>
-							
+		                   ?>
+		        <?php 
 
-							<td style="text-align: center;"><?php echo $obtener[$i]->orden;?></td>
-							
+				$obtener[$i]->fechacreacion=		date('d-m-Y H:i:s',strtotime($obtener[$i]->fechacreacion));
 
-							<td style="text-align: center;"><?php echo $estatus[$obtener[$i]->estatus];?></td>
-
-							<td style="text-align: center; font-size: 15px;">
-
-									<?php
-								//SCRIPT PARA CONSTRUIR UN BOTON
-									$bt->titulo = "";
-									$bt->icon = "mdi-table-edit";
-									$bt->funcion = "GuardarFiltro();aparecermodulos('catalogos/servicios/fa_servicio.php?idmenumodulo=$idmenumodulo&idservicio=".$obtener[$i]->idservicio."','main')";
-									$bt->estilos = "";
-									$bt->permiso = $permisos;
-									$bt->tipo = 2;
-									$bt->title="EDITAR";
-									$bt->class='btn btn_colorgray';
-									$bt->armar_boton();
-
-
-
-									?>
-
-					<?php
+				?>
 
 					
-						# code...
-					
-						//SCRIPT PARA CONSTRUIR UN BOTON
-						$bt->titulo = "";
-						$bt->icon = "mdi-delete-empty";
-						$bt->funcion = "BorrarServicio('".$obtener[$i]->idservicio."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo')";
+								<?php 
 
-						$bt->estilos = "";
-						$bt->permiso = $permisos;
-						$bt->tipo = 3;
-						$bt->title="BORAR";
+								$obtener[$i]->estatus= $estatus[$obtener[$i]->estatus];
 
-						$bt->armar_boton();
-					?>
-
-					<?php
-					if ($avanzado==1) {
-						//SCRIPT PARA CONSTRUIR UN clonar
-						$bt->titulo = "";
-						$bt->icon = "mdi-book-multiple";
-						$bt->funcion = "AbrirModalClonarServicio('".$obtener[$i]->idservicio."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$l_Servicios_row['titulo']."')";
-
-						/*$bt->permiso = $permisos;*/
-						$bt->tipo = 4;
-						$bt->title="CLONAR";
-
-						$bt->armar_boton();
-					?>
-
-					<?php
-						//SCRIPT PARA CONSTRUIR UN clonar
-						$bt->titulo = "";
-						$bt->icon = "mdi-account-check";
-						$bt->funcion = "AbrirModalUsuarios('".$obtener[$i]->idservicio."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".htmlentities(addslashes($obtener[$i]->titulo))."')";
-
-						/*$bt->permiso = $permisos;*/
-						$bt->tipo = 4;
-						$bt->title="ALUMNOS INSCRITOS";
-
-						$bt->armar_boton();
-					?>
-
-							<?php
-						//SCRIPT PARA CONSTRUIR UN clonar
-						$bt->titulo = "";
-						$bt->icon = "mdi-account-multiple";
-						$bt->funcion = "AbrirModalAsignacion('".$obtener[$i]->idservicio."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".htmlentities(addslashes($obtener[$i]->titulo))."')";
-
-						/*$bt->permiso = $permisos;*/
-						$bt->tipo = 4;
-						$bt->title="ASIGNACIÓN DE ALUMNOS";
-
-						$bt->armar_boton();
-					?>
+								$obtener[$i]->permiso = $permisos;
+								$obtener[$i]->funcioneditar="GuardarFiltro();aparecermodulos('catalogos/servicios/fa_servicio.php?idmenumodulo=$idmenumodulo&idservicio=".$obtener[$i]->idservicio."','main')";
 
 
-					<?php
-						//SCRIPT PARA CONSTRUIR UN clonar
-						$bt->titulo = "";
-						$bt->icon = "mdi-cloud-upload";
-						$bt->funcion = "AbrirModalImagenes('".$obtener[$i]->idservicio."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".htmlentities(addslashes($obtener[$i]->titulo))."')";
+								$obtener[$i]->funcionborrar="BorrarServicio('".$obtener[$i]->idservicio."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo')";
 
-						/*$bt->permiso = $permisos;*/
-						$bt->tipo = 4;
-						$bt->title="IMÁGENES INFORMATIVAS";
+								$obtener[$i]->funcionclonar="AbrirModalClonarServicio('".$obtener[$i]->idservicio."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".$obtener[$i]->titulo."')";
 
-						$bt->armar_boton();
+								$obtener[$i]->funcioninscritos="AbrirModalUsuarios('".$obtener[$i]->idservicio."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".htmlentities(addslashes($obtener[$i]->titulo))."')";
 
-					}
-					?>
+								$obtener[$i]->funcionmodalasignacion="AbrirModalAsignacion('".$obtener[$i]->idservicio."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".htmlentities(addslashes($obtener[$i]->titulo))."')";
 
 
-								</td>
+								$obtener[$i]->funcionimagenes="AbrirModalImagenes('".$obtener[$i]->idservicio."','servicios','servicios','n','catalogos/servicios/vi_servicios.php','main','$idmenumodulo','".htmlentities(addslashes($obtener[$i]->titulo))."')";
 
 
-							</tr>
+
+								?> 
 	<?php				
 		}
 	}
+
+
+		$respuesta['respuesta']=$obtener;
+
+		echo json_encode($respuesta);
 
 
 }catch(Exception $e){

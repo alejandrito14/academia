@@ -306,6 +306,7 @@ try {
               $notapago->imagenconstancia=$imagenesfac;
               $notapago->idusuariodatofiscal=$idusuariosdatosfiscales;
          }
+         
          $notapago->CrearNotapago();
 
 
@@ -513,6 +514,8 @@ try {
               $notapago->cantidad=1;
               $notapago->monto=$buscarpago[0]->monto;
               $notapago->idpago=$buscarpago[0]->idpago;
+
+              
                $notapago->Creardescripcionpago();
 
                ///creacion pago a coach

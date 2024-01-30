@@ -1,4 +1,5 @@
 var lastcard=0;
+var idtipodepago=0;
 var urlphp="catalogos/pagos/";
 var imagenesbancos="https://issoftware1.com.mx/IS-ACADEMIA/assets/images/";
 function PagoTarjeta() {
@@ -27,8 +28,9 @@ function ShowDiv(divid){
   $("#"+divid).css('display','block');
 }
 
-function ObtenerTarjetasStripe(setlastcard=false) {
-    var idtipodepago=$("#tipopago").val();
+
+function ObtenerTarjetasStripe(setlastcard=false,tipopago) {
+     idtipodepago=tipopago;
     var fname = "getCardList";
     var pagina = "ObtenerDatosStripe.php";
     var idcliente = localStorage.getItem('id_user');
@@ -37,7 +39,7 @@ function ObtenerTarjetasStripe(setlastcard=false) {
 
     HideDiv("divagregartarjeta");
     ShowDiv("divlistadotarjetas");
-
+ 
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -238,7 +240,7 @@ function LoadSetupIntent(){
     var fname = "setupIntent";
     var pagina = "ObtenerDatosStripe.php";
     var idcliente = localStorage.getItem('id_user');
-    var idtipodepago=$("#tipopago").val();
+    //var idtipodepago=$("#tipopago").val();
 
     var datos = "idcliente=" + idcliente + "&fname="+fname+"&idtipodepago="+idtipodepago;
     $.ajax({
@@ -249,7 +251,10 @@ function LoadSetupIntent(){
         async: false,
         success: function (datos) {
             var setupIntent = datos;
-            //console.log(setupIntent);
+
+           /* console.log('impresion set');
+
+            console.log(setupIntent);*/
             var button = document.getElementById("submit-card");
              EstablecerNombreCliente();
 
@@ -317,7 +322,7 @@ function setupComplete(stripe, clientSecret) {
 };
 
 function eliminarTarjeta(icard,idtag){
-  var idtipodepago=$("#tipopago").val();
+  //var idtipodepago=$("#tipopago").val();
 
    var result = confirm("¿Está seguro  de eliminar la imagen?");
     if (result == true) {
@@ -356,7 +361,7 @@ function CheckCardSelection(obj,objclass,cardid)
 }
 
 function SetLastCard(cardid) {
-  var idtipodepago=$("#tipopago").val();
+  //var idtipodepago=$("#tipopago").val();
        
 
   var fname = "setLastCard";
@@ -384,7 +389,7 @@ function SetLastCard(cardid) {
 }
 
 function GetLastCard() {
-  var idtipodepago=$("#tipopago").val();
+ // var idtipodepago=$("#tipopago").val();
 
   var fname = "getLastCard";
   var pagina = "ObtenerDatosStripe.php";
@@ -410,7 +415,7 @@ function GetLastCard() {
 
 function EstablecerNombreCliente(){
 
-  var idtipodepago=$("#tipopago").val();
+  //var idtipodepago=$("#tipopago").val();
 
   var fname = "getClientName";
   var pagina = "ObtenerDatosStripe.php";
@@ -451,7 +456,7 @@ function RealizarPago(idpedido) {
 
 function CreatePaymentIntent(idpedido) {
   //alert(idpedido);
-  var idtipodepago=$("#tipopago").val();
+  //var idtipodepago=$("#tipopago").val();
   var fname = "paymentIntent";
   var pagina = "ObtenerDatosStripe.php";
   var idcliente = localStorage.getItem('id_user');
@@ -524,7 +529,7 @@ function paymentIntentSucceeded(stripe,clientSecret, viewSelector) {
 
 function ObtenerLlavePublica() {
 
-   var idtipodepago=$("#tipopago").val();
+  // var idtipodepago=$("#tipopago").val();
   var fname = "llavepublica";
   var pagina = "ObtenerDatosStripe.php";
   var idcliente = localStorage.getItem('id_user');

@@ -61,7 +61,7 @@ class Paquetes
 			categoriapaquete.nombre as titulo,
 			paquetes.promocion,
 			paquetes.preciosugerido AS precioventa,
-			
+			paquetes.sku,
 			paquetes.orden,
 			paquetes.fechainicial,
 			paquetes.fechafinal,

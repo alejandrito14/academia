@@ -126,6 +126,8 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 					
 						<th style="text-align: center;">ESTATUS</th>
 
+							<th style="text-align: center;">HABILITAR TPV</th>
+
 						<th style="text-align: center;">ACCI&Oacute;N</th>
 					</tr>
 				</thead>
@@ -152,6 +154,25 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
 						
 							<td style="text-align: center;"><?php echo $estatus[$l_tipodepago_row['estatus']];?></td>
+
+								<td style="text-align: center;"><?php 
+							
+									if ($l_tipodepago_row['habilitartpv']==1) { ?>
+											
+											<span class="mdi mdi-checkbox-marked-circle" style="font-size: 20px;"></span>
+
+						<?php
+
+									}else{ ?>
+													<?php
+
+									}
+
+
+								?>
+									
+
+								</td>
 
 							<td style="text-align: center; font-size: 15px;">
 

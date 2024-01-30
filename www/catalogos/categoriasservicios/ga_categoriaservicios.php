@@ -45,6 +45,7 @@ try
 	$categoriasservicio->estatus=trim($f->guardar_cadena_utf8($_POST['v_estatus']));
 	$categoriasservicio->idclasificacion=$_POST['v_tipo'];
 	$categoriasservicio->intervalo=$_POST['v_intervalo'];
+	$categoriasservicio->idcategorias=$_POST['v_categoriasid'];
 	
 	//Validamos si hacermos un insert o un update
 	if($categoriasservicio->idcategoriasservicio == 0)

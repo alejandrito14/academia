@@ -52,6 +52,17 @@ try
 	$tipodepagos->habilitarparafactura=$_POST['chkparafactura'];
 	$tipodepagos->habilitartipodeservicio=$_POST['v_tiposervicio'];
 
+	$tipodepagos->habilitartpv=$_POST['chkparatpv'];
+	$habilitartpv=$_POST['chkparatpv'];
+	$tipodepagos->habilitarsinrevision=$_POST['chksinrevision'];
+	$tipodepagos->chkcatalogobanco=$_POST['chkcatalogobancos'];
+	$tipodepagos->chkdigitos=$_POST['chkcampodigitos'];
+	$tipodepagos->chkopcionestarjeta=$_POST['chkopciontarjeta'];
+	$tipodepagos->habilitarpagar=$_POST['chkbotonpagardirecto'];
+	$tipodepagos->habilitarapp=$_POST['chkapp'];
+
+	
+
 $idtiposervicio="";
 	if ($_POST['idtiposervicio']!='') {
 		# code...
@@ -60,6 +71,11 @@ $idtiposervicio="";
 }
 	$v_tiposervicio=$_POST['v_tiposervicio'];
 
+$idusuarios="";
+if ($_POST['usuariostpv']!='') {
+	$idusuarios=explode(',', $_POST['usuariostpv']);
+
+}
 	
 	//Validamos si hacermos un insert o un update
 	if($tipodepagos->idtipodepago == 0)
@@ -71,6 +87,7 @@ $idtiposervicio="";
 		$tipodepagos->Modificartipodepagos();	
 		$md->guardarMovimiento($f->guardar_cadena_utf8('tipodepagos'),'tipodepagos',$f->guardar_cadena_utf8('Modificación de tipodepagos -'.$tipodepagos->idtipopartido));
 	}
+
 
 
 
@@ -99,9 +116,64 @@ $idtiposervicio="";
 		}
 		
 	}
+		
+
+
+
+	if ($habilitartpv==1) {
+		if($tipodepagos->idtipodepago > 0)
+		{
+			$tipodepagos->EliminarRelacionUsuarios();
+		}
+		
+		if ($idusuarios!='' && count($idusuarios)>0) {
+			# code...
+		for ($i=0; $i < count($idusuarios); $i++) { 
+
+			$tipodepagos->idusuarios=$idusuarios[$i];
+			$tipodepagos->GuardarRelacionUsuarios();
+
+		}
+	}
+
+	}else{
+
+		$existe=$tipodepagos->ObtenerRelacionUsuarios();
+		if (count($existe)>0) {
+			$tipodepagos->EliminarRelacionUsuarios();
+		}
+		
+	}
+
+
+	/*if ($v_tiposervicio==1) {
+		if($tipodepagos->idtipodepago > 0)
+		{
+			$tipodepagos->EliminarRelacionCategoria();
+		}
+		
+		if ($idtiposervicio!='' && count($idtiposervicio)>0) {
+			# code...
+		
+		for ($i=0; $i < count($idtiposervicio); $i++) { 
+
+			$tipodepagos->tipodeservicio=$idtiposervicio[$i];
+			$tipodepagos->GuardarRelacionCategoria();
+
+		}
+	}
+
+	}else{
+
+		$existe=$tipodepagos->ObtenerCategoriasTipopago();
+		if (count($existe)>0) {
+			$tipodepagos->EliminarRelacionCategoria();
+		}
+		
+	}*/
 				
 	$db->commit();
-	echo "1|".$tipodepagos->idtipodepagos;
+	echo "1|".$tipodepagos->idtipodepago;
 	
 }catch(Exception $e)
 {

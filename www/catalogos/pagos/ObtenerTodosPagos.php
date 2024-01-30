@@ -48,6 +48,13 @@ try
 	$usuarios->id_usuario=$idusuarios;
 
 	$obtenerdatosusuario=$usuarios->ObtenerDatosUsuario();
+
+		$monedero=$obtenerdatosusuario['monedero'];
+		
+	$habilitarmonedero=0;
+	if ($monedero>0) {
+		$habilitarmonedero=1;
+	}
 	
 	$tutorados=$usuarios->ObtenerTutoradosSincel();
 	
@@ -198,7 +205,8 @@ try
 					'fechamax'=>date('d-m-Y',strtotime($obtenerfechas[0]->fechamax)),
 					'tipopago'=>$tipopago,
 					'aceptacionpagoservicio'=>$aceptacionpagoservicio,
-					'habilitarmonedero'=>1
+						'habilitarmonedero'=>$habilitarmonedero,
+					'monederousado'=>0,
 			);
 				$total=$total+$montoapagar;
 				array_push($pagosencontrados,$objeto);
@@ -247,16 +255,19 @@ try
 
 				if ($tipo==2) {
 
-					if ($pagoinscripcion==0) {
-						# code...
-					
 					$membresia->idmembresia=$idmembresia;
 					$membresia->idusuarios=$idusuarios;
 					$membresia->idpago=$idpago;
 					$buscarmembresiaasociada=$membresia->BuscarMembresiaAsociadaalapago();
-					
-					$habilitarmonedero=$buscarmembresiaasociada[0]->habilitarmonedero;
 
+						$habilitarmonederom=$buscarmembresiaasociada[0]->habilitarmonedero;
+				
+
+					$habilitarmonedero=0;
+					if ($habilitarmonederom==1 && $habilitarmonedero==1) {
+						$habilitarmonedero=1;
+					}
+					if ($pagoinscripcion==0) {
 					$concepto=$concepto.'   Vigencia: '.date('d-m-Y',strtotime($buscarmembresiaasociada[0]->fechaexpiracion));
 					}
 					
@@ -272,7 +283,8 @@ try
 				'fechamin'=>'','fechamax'=>'',
 				'tipopago'=>$tipopago,
 				'aceptacionpagoservicio'=>$aceptacionpagoservicio,
-				'habilitarmonedero'=>$habilitarmonedero
+				'habilitarmonedero'=>$habilitarmonedero,
+				'monederousado'=>0
 			);
 
 				$total=$total+$montoapagar;

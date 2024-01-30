@@ -174,17 +174,17 @@ try
                  $lo->concepto=$concepto;
                  $lo->idmembresia=0;
                  $lo->folio="";
-                 $lo->CrearRegistroPago();
+           $lo->CrearRegistroPago();
 
-                 $servicios->idservicio=$idservicio;
-                 $obtenerfechas=$servicios->ObtenerFechaHoras();
+            $servicios->idservicio=$idservicio;
+           $obtenerfechas=$servicios->ObtenerFechaHoras();
                 
-                 $ObtenerTodosParticipantes=$servicios->ObtenerTodosParticipantes(3);
+           $ObtenerTodosParticipantes=$servicios->ObtenerTodosParticipantes(3);
 
-                 $obtenerparticipantesaceptados=$servicios->ObtenerParticipantesAceptados(3);
+           $obtenerparticipantesaceptados=$servicios->ObtenerParticipantesAceptados(3);
 
-               $completo=0;
-                if (count($ObtenerTodosParticipantes)==count($obtenerparticipantesaceptados)) {
+           $completo=0;
+          if (count($ObtenerTodosParticipantes)==count($obtenerparticipantesaceptados)) {
                 	$completo=1;
                 }
 

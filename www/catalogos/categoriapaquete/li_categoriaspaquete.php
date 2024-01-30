@@ -97,7 +97,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 			?>
 			<tr> 
 				<td colspan="7" style="text-align: center">
-					<h5 class="alert_warning">NO EXISTEN PRESENTACIONES EN LA BASE DE DATOS.</h5>
+					<h5 class="alert_warning">NO EXISTEN CATEGORIAS DE PRODUCTO EN LA BASE DE DATOS.</h5>
 				</td>
 			</tr>
 			<?php
@@ -136,7 +136,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 						//SCRIPT PARA CONSTRUIR UN BOTON
 						$bt->titulo = "";
 						$bt->icon = "mdi-delete-empty";
-						$bt->funcion = "BorrarCategoria('".$resultado_empresas_row['idcategoriapaquete']."','idcategorias','categorias','n','catalogos/categoriasproducto/vi_categoriasproductos.php','main','$idmenumodulo')";
+						$bt->funcion = "BorrarCategoriaPaquete('".$resultado_empresas_row['idcategoriapaquete']."','idcategoriapaquete','categoriapaquete','n','catalogos/categoriapaquete/vi_categoriaspaquete.php','main','$idmenumodulo')";
 
 						$bt->estilos = "";
 						$bt->permiso = $permisos;

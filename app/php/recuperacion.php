@@ -12,6 +12,8 @@ require_once("clases/class.Funciones.php");
 require_once("clases/class.AltiriaSMS.php");
 require_once("clases/class.phpmailer.php");
 require_once("clases/emails/class.Emails.php");
+require_once "clases/class.WhatsapMensaje.php";
+
 
 try
 {
@@ -22,15 +24,18 @@ try
 	$f=new Funciones();
 	$token=new Token();
 	$token->db=$db;
-
+	 $mensaje=new WhatsapMensaje();
+    $mensaje->db=$db;
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
 
 
 	
 	$email = $f->guardar_cadena_utf8($_POST['v_email']);
-	
-
+    $eleccionusuario==1;
+	if(isset($_POST['eleccionusuario'])) {
+        $eleccionusuario=$_POST['eleccionusuario'];
+        }
 
 	$lo->celular=$email;
 	
@@ -63,23 +68,26 @@ try
 		$enviar_mail = new Emails();	
 		$enviar_mail->mailer = $mail;
 
+	if($eleccionusuario==1) {
+
 		$sMessage=utf8_decode($f->nombreapp." informa. ".trim($lo->nombre).", se ha solicitado reestablecer tu clave de acceso. El token es: ").$obtenertoken;
-
-	//enviamos la conexión a las clases que lo requieren
-
-		//$sms->EnviarSMS("52".$lo->telefono,$sMessage,false);*/
-
-
 		$sms->setLogin('jozama@hotmail.com');
 		$sms->setPassword('jozama78');
-
-		//$sms->setDebug(true);
-		//$sDestination = '52xxxxxxxxx';
 		$sDestination = '52'.$lo->celular;
-		//$sDestination = array('52xxxxxxxxx','52yyyyyyyyy');
-		//$sms->setEncoding('unicode');
-
 		$response = $sms->sendSMS($sDestination, $sMessage);
+
+	}
+
+	if ($eleccionusuario==2) {
+
+		$mensaje->Version='v17.0';
+    	$mensaje->phoneid='162367660284534';
+    	$mensaje->tophone='52'.$lo->celular;
+  
+    	$mensaje->accestoken='EAAPR4S8LbikBO5OooXf3Uz8fFxvpf9r4zSKZBz5otYZAgNtYBwt4flObUw5YT0ZCXKDXO3BmUV3NfOWFZBsCErVHEor4ZBeoRDv5HcC0lMDujBFGYj9DXLmoYw1OzcbfUaMDjhXUt4p05I6ZArul74mHTNpXeDhg67YoCORxTlXjbLcPBP9ZCYs34cYZA7Jd';
+    	$mensaje->texto=$obtenertoken;
+    	$resp=$mensaje->EnviarMensaje();
+	}
 
 							 							
 		  $sql="SELECT *FROM pagina_configuracion";

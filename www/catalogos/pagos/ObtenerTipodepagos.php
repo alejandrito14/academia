@@ -31,9 +31,10 @@ try
 	
 	//enviamos la conexión a las clases que lo requieren
 	$tipopagos->db=$db;
+	$idusuario=$se->obtenerSesion('se_sas_Usuario');
 	$md->db = $db;	
-
-	$obtener=$tipopagos->ObttipodepagoActivosWeb();
+	$tipopagos->idusuarios=$idusuario;
+	$obtener=$tipopagos->ObttipodepagoActivosTPV();
 
 
 	$respuesta['respuesta']=$obtener;

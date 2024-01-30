@@ -53,7 +53,7 @@ class Empresas
 		
 		
 		
-		 $sql = "SELECT * FROM empresas WHERE 1=1 $SQLidempresas";
+		 $sql = "SELECT * FROM empresa WHERE 1=1 $SQLidempresas";
 
 		//echo $sql;
 		$resp = $this->db->consulta($sql);

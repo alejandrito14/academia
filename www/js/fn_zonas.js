@@ -3,18 +3,41 @@ function Guardarzona(form,regresar,donde,idmenumodulo)
 	if(confirm("\u00BFDesea realizar esta operaci\u00f3n?"))
 	{			
 		//recibimos todos los datos..
-		var datos = ObtenerDatosFormulario(form);
+		//var datos = ObtenerDatosFormulario(form);
 
 		var color=$("#v_color").val();
+		var nombre =$("#v_zona").val();
+		var estatus=$("#v_estatus").val();
 
-		var datos=datos+"&v_color="+color;
+		var id=$("#id").val();
+		var datos = new FormData();
+
+		var archivos = document.getElementById("image"); //Damos el valor del input tipo file
+		var archivo = archivos.files; //Obtenemos el valor del input (los arcchivos) en modo de arreglo
+
+		//Como no sabemos cuantos archivos subira el usuario, iteramos la variable y al
+		//objeto de FormData con el metodo "append" le pasamos calve/valor, usamos el indice "i" para
+		//que no se repita, si no lo usamos solo tendra el valor de la ultima iteracion
+		for (i = 0; i < archivo.length; i++) {
+			datos.append('archivo'+i, archivo[i]);
+		}
+	
+		datos.append('v_zona',nombre); 
+		datos.append('id',id);
+		datos.append('v_estatus',estatus);
+		datos.append('v_color',color);
+ 
+		//var datos=datos+"&v_color="+color;
 		 $('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
 				
 		setTimeout(function(){
 				  $.ajax({
 					url:'catalogos/zonas/ga_zonas.php', //Url a donde la enviaremos
 					type:'POST', //Metodo que usaremos
+					contentType: false, //Debe estar en false para que pase el objeto sin procesar
 					data: datos, //Le pasamos el objeto que creamos con los archivos
+					processData: false, //Debe estar en false para que JQuery no procese los datos a enviar
+					cache: false, //Para que˘
 					error:function(XMLHttpRequest, textStatus, errorThrown){
 						  var error;
 						  console.log(XMLHttpRequest);

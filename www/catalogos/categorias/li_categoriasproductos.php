@@ -84,6 +84,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		<tr style="text-align: center">
 <!-- 			<th>ID</th> 
  -->			<th>NOMBRE</th> 
+ 				<th>CATEGORÍA</th>
  			    <th>DEPENDE DE</th>
  			     <th>AVANZADO</th> 
 
@@ -112,7 +113,12 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 			   <!--  <td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($resultado_empresas_row['idcategorias']); ?></td> -->
 				<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($resultado_empresas_row['titulo']); ?></td>
 
+				<td>
+                   	<?php 
+                   	echo $resultado_empresas_row['tiponegocio'];
+                   	 ?>
 
+                   </td>
                   <!-- <td style="text-align: center;">
                     <?php 
                      $img='./catalogos/categorias/imagenes/'.$_SESSION['codservicio'].'/'.$f->imprimir_cadena_utf8($resultado_empresas_row['foto']);
@@ -123,6 +129,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
                    <td>
                    	<?php 
+
+                  
                    		if ($resultado_empresas_row['depende']!=0 && $resultado_empresas_row['depende']!='') {
                    			# code...
                    		
@@ -139,6 +147,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				}
                    	 ?>
                    </td>
+                   
 
                    <td style="text-align: center;"><?php 
 

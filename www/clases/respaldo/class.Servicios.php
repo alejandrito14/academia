@@ -73,7 +73,8 @@ class Servicios
 	public $horafinal;
 	public $v_politicaaceptacionseleccion;
 	public $aceptarserviciopago;
-
+	public $idtiposervicioconfiguracion;
+	public $bloqueocanchas;
 	public function ObtenerServicios()
 	{
 		$sql="SELECT servicios.*,categorias.titulo as nombrecategoria,categorias.avanzado,
@@ -167,9 +168,10 @@ class Servicios
 		tiporeembolso,
 		validaradmin,
 		idpoliticaaceptacion,
-		aceptarserviciopago
-
-		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes','$this->politicasaceptacion','$this->controlasistencia','$this->idusuarios','$this->tiporeembolso','$this->validaradmin','$this->v_politicaaceptacionseleccion','$this->aceptarserviciopago')";
+		aceptarserviciopago,
+		idtiposervicioconfiguracion,
+		bloqueocanchas
+		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes','$this->politicasaceptacion','$this->controlasistencia','$this->idusuarios','$this->tiporeembolso','$this->validaradmin','$this->v_politicaaceptacionseleccion','$this->aceptarserviciopago','$this->idtiposervicioconfiguracion','$this->bloqueocanchas')";
 		
 		
 		$resp=$this->db->consulta($query);
@@ -230,9 +232,10 @@ class Servicios
 		tiporeembolso='$this->tiporeembolso',
 		validaradmin='$this->validaradmin',
 		idpoliticaaceptacion='$this->v_politicaaceptacionseleccion',
-		aceptarserviciopago='$this->aceptarserviciopago'
+		aceptarserviciopago='$this->aceptarserviciopago',
+		bloqueocanchas='$this->bloqueocanchas'
 		WHERE idservicio=$this->idservicio";
-
+		
 		
 		$resp=$this->db->consulta($query);
 	}
@@ -412,7 +415,7 @@ class Servicios
 	public function ObtenerHorariosSemana()
 	{
 		$sql="SELECT idhorarioservicio,dia,horainicial,
-		horafinal,fecha,zonas.idzona,zonas.color,zonas.nombre  FROM horariosservicio INNER JOIN zonas ON zonas.idzona=horariosservicio.idzona WHERE idservicio=".$this->idservicio."";
+		horafinal,fecha,zonas.idzona,zonas.color,zonas.nombre  FROM horariosservicio LEFT JOIN zonas ON zonas.idzona=horariosservicio.idzona WHERE idservicio=".$this->idservicio."";
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -802,7 +805,7 @@ class Servicios
 
 	public function ObtenerServiciosFiltrado($tiposervicio,$coach,$mes,$anio,$v_buscar)
 	{
-		$sql="SELECT *FROM (SELECT servicios.idservicio,servicios.titulo,servicios.imagen,categorias.titulo as nombrecategoria,categorias.idcategorias,servicios.orden,servicios.estatus,
+		$sql="SELECT *FROM (SELECT servicios.idservicio,servicios.titulo,servicios.imagen,categorias.titulo as nombrecategoria,categorias.idcategorias,servicios.orden,servicios.estatus,servicios.fechacreacion,
 			MONTH((SELECT MIN(fecha) from horariosservicio WHERE horariosservicio.idservicio =servicios.idservicio))AS MES,
 	YEAR((SELECT MIN(fecha) from horariosservicio WHERE horariosservicio.idservicio =servicios.idservicio)) as ANIO,
 	(SELECT MIN(fecha) from horariosservicio WHERE horariosservicio.idservicio =servicios.idservicio) as fechamin,
@@ -1039,6 +1042,118 @@ if ($tiposervicio>0 || $coach>-1) {
 		return $array;
 	}
 
+	public function ObtenerRelacionadaTipopago()
+	{
+		$sql="SELECT  GROUP_CONCAT(idtipodepago) as tipopago FROM categorias_tipodepago WHERE idcategorias='$this->idcategoria' ORDER BY idtipodepago";
+		
+	    $resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function checarcategoriaRelacionadaTipopago()
+	{
+		$sql="SELECT * FROM categorias_tipodepago WHERE idcategorias='$this->idcategoria'";
+		
+	    $resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+
+	
+	public function ObtenerTodosParticipantes($idtipo)
+	{
+		$sql="SELECT *FROM usuarios INNER JOIN usuarios_servicios ON usuarios.idusuarios=usuarios_servicios.idusuarios WHERE idservicio='$this->idservicio' AND usuarios.tipo='$idtipo' AND usuarios_servicios.cancelacion=0  ";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerPrecios($idcategoriaserv)
+	{
+		$sql="SELECT precio  FROM servicios  WHERE  FIND_IN_SET(servicios.idcategoria,'$idcategoriaserv') GROUP BY precio";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+	public function ObtenerFormaPago()
+	{
+		$sql="SELECT formapago, formapago.descripcion from notapago
+				LEFT JOIN formapago ON notapago.formapago = formapago.cformapago
+				where formapago is not null and formapago<>''
+				GROUP BY formapago";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
 
 
 }

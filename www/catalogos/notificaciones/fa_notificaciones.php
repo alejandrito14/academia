@@ -238,7 +238,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 							<div class="form-group m-t-20">
 								<label>*MENSAJE:</label>
-								<textarea name="mensaje" class="form-control" placeholder="MENSAJE" id="mensaje" cols="30" rows="10" maxlength="100"><?php echo $mensaje; ?></textarea>
+								<textarea name="mensaje" class="form-control" placeholder="MENSAJE" id="mensaje" cols="30" rows="10" maxlength="110"><?php echo $mensaje; ?></textarea>
 							</div>
 
 							

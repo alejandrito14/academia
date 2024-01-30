@@ -30,8 +30,8 @@ try
 	$login=$_POST['login'];
 
 	//Enviamos los parametros a la clase
-	$lo->usuario = utf8_decode($usuario);
-	$lo->password = utf8_decode($password);
+	$lo->usuario = $usuario;
+	$lo->password = $password;
 
 	if ($login=='btnusuario') {
 		$resultado = $lo->validar_credenciales_cliente();

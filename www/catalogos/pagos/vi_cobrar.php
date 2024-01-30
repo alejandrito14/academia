@@ -1,6 +1,6 @@
 <?php
 /*======================= INICIA VALIDACIÓN DE SESIÓN =========================*/
-
+ 
 require_once("../../clases/class.Sesion.php");
 //creamos nuestra sesion.
 $se = new Sesion();
@@ -10,7 +10,7 @@ if(!isset($_SESSION['se_SAS']))
 	/*header("Location: ../../login.php"); */ echo "login";
 
 	exit;
-}
+} 
 
 $idmenumodulo = $_GET['idmenumodulo'];
 
@@ -127,8 +127,30 @@ $estatuspago = array('NO PAGADO','PAGADO');
 		<div style="clear: both;"></div>
 	</div>
 
+	<div class="row">
+		
+<div class="col-md-6" id="divapertura">
+       
+       </div>
+	</div>
+<div class="col-md-6">
+	<div class="card">
+		<div class="card-body" id="divfechahoraapertura" style="margin: 0;
+    padding-bottom: 0;">
+			<p style=" ">FECHA Y HORA DE APERTURA:</p>
+				<p style="font-size: 20px;"><span id="fechahoraapertura"></span></p>
 
-<div class="row">
+				<form style="margin-top: 1em;
+    margin-right: 85px;" class="form-inline" >
+          	<button type="button" class="btn  btn-success btn-lg btn-block" style="background: red;border: 1px solid red; width: 200px;" id="btncerrar" onclick="AbrirModalCerrarCaja()">Cerrar caja</button>
+          </form>
+		</div>
+	</div>
+</div>
+
+ 
+
+<div class="row" id="divseleccionar" style="display: none;">
 	<div class="col-md-6" style="">
 		<div class="card">
 			<div class="card-body">
@@ -143,6 +165,10 @@ $estatuspago = array('NO PAGADO','PAGADO');
 								    <button class="btn  my-2 my-sm-0" type="button" onclick="ObtenerClientesFiltro()"><span class="mdi mdi-magnify"></span></button>
 								  </form>
              
+          </div>
+
+          <div class="col">
+          	
           </div>
       </div> <!-- lclientesdiv -->
 
@@ -162,21 +188,26 @@ $estatuspago = array('NO PAGADO','PAGADO');
 <div class ="divtabs" style="display: none;">
 			<div class="tabs" style="width: 100%;    padding-left: 30px;    padding-right: 30px;">
 			  <button class="tab boton1" id="punto-venta-tab" style="width: 50%;" onclick="openTab('punto-venta')">Punto de Venta</button>	
-			  <button class="tab boton1" id="pagos-tab" style="width: 50%;" onclick="openTab('pagos')">Pagos</button>
+			  <button class="tab boton1" id="pagos-tab" style="width: 50%;" onclick="openTab('pagos')">Servicios</button>
 			</div>
 
 </div>
 
 <div id="punto-venta" class="tab-content" style="padding-left: 30px;    padding-right: 30px;">
  
-	  <div class="row" style="    background: #a3b4f2;padding-top: 1em;margin-top: 1em;    margin-right: 0.2em;
-	    margin-left: 0.2em;border-radius: 8px;">
+	  <div class="row" style="    background: #7488d2;
+    padding-top: 1em;
+    margin-top: 1em;
+    margin-right: 0.2em;
+    margin-left: 0.2em;
+    padding-right: 1em;
+    border-radius: 8px;">
 		    <div class="col-md-12" style="    margin-top: 1em;">
 		    	<div class="row" style="    margin-left: 0.5em;">
 		    		 <div class="col-md-12">
 		    		 	 
-		    		 	 <div class="container">
-						 				 <input type="text" class="form-control" id="searchInput" placeholder="Buscar producto">
+		    		 	 <div class="" style="    padding-left: 1em;padding-right: 1em;">
+						 				 <input type="text" class="form-control" id="searchInput" placeholder="Buscar producto (Presionar la tecla enter para hacer la búsqueda) " onkeypress="handleKeyPress(event)">
 						 				 <ul id="searchResults" class="list-group"></ul>
 											</div>
 					  
@@ -195,10 +226,10 @@ $estatuspago = array('NO PAGADO','PAGADO');
 		  <thead>
 		    <tr>
 		      
-		       <th scope="col">Nombre</th>
-		        <th scope="col">Cantidad</th>
-		      <th scope="col">Precio</th>
-		      <th scope="col">Importe</th>
+		       <th style="width: 20%" scope="col">Nombre</th>
+		        <th style="width: 20%" scope="col">Cantidad</th>
+		      <th style="width: 20%" scope="col">Precio</th>
+		      <th style="width: 20%" scope="col">Importe</th>
 		    </tr>
 		  </thead>
 		  <tbody id="tblpaquetes">
@@ -229,13 +260,17 @@ $estatuspago = array('NO PAGADO','PAGADO');
 	<div id="tablaventa" style="display: none;margin-top: 1em;margin-bottom: 1em;">
     <h4 for="" style="font-size:18px!important;text-align: center;">Productos agregados</h4>
 
- <div class="row" style="    background: #a3b4f2;
-	    padding-top: 1em; margin-bottom: 1em;   margin-right: 0.2em;
-	    margin-left: 0.2em;border-radius: 8px;" >
+ <div class="row" style="    background: black;
+    padding-top: 1em;
+    margin-bottom: 1em;
+    margin-right: 0.2em;
+    margin-left: 0.2em;
+    border-radius: 8px;
+    padding-right: 1em;" >
 		    <div class="col-md-12">
 
 
-		<div class="row" style="    margin-left: 1.4em;
+		<div class="row" style="margin-left: 1.4em;
     margin-top: 1em;
     margin-right: 0.2em;margin-bottom: 1em;" >
 		    		<div class="col-md-12">
@@ -243,11 +278,11 @@ $estatuspago = array('NO PAGADO','PAGADO');
 		  <thead>
 		    <tr>
 		      
-		       <th scope="col">Nombre</th>
-		        <th scope="col">Cantidad</th>
-		      <th scope="col">Precio</th>
-		      <th scope="col">Importe</th>
-		      <th scope="col">Acciones</th>
+		       <th style="width: 20%" scope="col">Nombre</th>
+		        <th style="width: 20%" scope="col">Cantidad</th>
+		      <th style="width: 20%" scope="col">Precio</th>
+		      <th style="width: 20%" scope="col">Importe</th>
+		      <th style="width: 20%" scope="col">Acciones</th>
 		    </tr>
 		  </thead>
 		  <tbody id="tblpaquetesventa">
@@ -275,15 +310,20 @@ $estatuspago = array('NO PAGADO','PAGADO');
 <div id="pagos" class="tab-content" style="padding-left: 20px;    padding-right: 20px;">
   <!-- Contenido de los pagos -->
  
-  	<div class="row" style="background: #a3b4f2;
-    padding-top: 1em;margin-top: 1em;    margin-right: 0.2em;
-    margin-left: 0.2em;border-radius: 8px;">
+  	<div class="row" style="    background: #7488d2;
+    padding-top: 1em;
+    margin-top: 1em;
+    margin-right: 1em;
+    margin-left: 1em;
+    border-radius: 8px;">
   		
 
 	<div class="col-md-12" style="">
 		
 
-		<div class="card">
+		<div class="card" style="        margin-right: 2em;
+    margin-left: 2em;
+    margin-top: 1em;">
 	<div class="card-body">
 	
 				<div class="col-md-6" style="float: left;">
@@ -352,8 +392,17 @@ $estatuspago = array('NO PAGADO','PAGADO');
 
 </div>
 <div class="card">
-<div style="display: none;" id="metodopagodiv">
-<div class="row" >
+<div style="display: none;        padding-left: 30px;
+    background: black;
+    padding-right: 30px;
+    margin-right: 2.8em;
+    margin-left: 2.8em;
+    border-radius: 10px;" id="metodopagodiv">
+<div class="row" style="    background: white;
+    margin-left: 0.5em;
+    margin-top: 2em;
+    margin-right: 0.5em;
+    margin-bottom: 2em;">
 
 	
 
@@ -362,7 +411,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 		
 		<div class="col-md-6">
 
-			<div class="row" style="margin-top: 20px;">
+			<div class="row" style="margin-top: 10px;">
 				<div class="col-md-12">
 						<div class="form-group requierefacturadiv" style="margin-left: 10px;display: none;">
 							REQUIERE FACTURA
@@ -383,8 +432,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 			</div>
 
 	<div class="row" style="margin-top: 10px;
-    padding-right: 30px;
-}">
+    padding-right: 30px;">
 	
 	<div class="col-md-12">
 		<button type="button" class="btn  btn-success btn-lg btn-block"  style="display: none;
@@ -392,7 +440,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
     " id="btnmonederodisponible" disabled>APLICAR MONEDERO $<span id="monederodisponible">0.00</span></button>
 	</div>
 </div>
-	<div class="row" style="">
+	<div class="row detallepago" style="">
 	<div class="col-md-6" style="
     margin: 0;
     padding: 0;
@@ -408,7 +456,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 			    	<div class="col-md-12" style="font-size: 16px;">MONEDERO: </div>
 			
 				<div class="col-md-12" style="font-size: 16px;">DESCUENTO: </div>
-				<div class="col-md-12" style="font-size: 16px;    padding: 0px 0 10px 10px;">DESCUENTO MEMBRESÍA: </div>
+				<div class="col-md-12" style="font-size: 16px;">DESCUENTO MEMB.: </div>
 					<div class="col-md-12 divcomision" style="font-size: 16px;display: none;">COMISIÓN: </div>
 
 				<div class="col-md-12" style="font-size: 20px;">TOTAL:</div>
@@ -420,7 +468,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 	</div>
 </div>
 	<div class="col-md-6" style="font-size: 16px;">
-
+ 
 		<div class="row" style="width: 94%;">
 			<div class="col-md-12">
 				<div class="card">
@@ -458,9 +506,57 @@ $estatuspago = array('NO PAGADO','PAGADO');
 		
 		<div class="col-md-12">
 			<div class="form-group">
-			<select name="" id="tipopago" class="form-control" onchange="CargarOpcionesTipopago()" style="padding-left: 30px;">
+			<!-- <select name="" id="tipopago" class="form-control" onchange="CargarOpcionesTipopago()" style="padding-left: 30px;">
 				<option value="0">SELECCIONAR MÉTODO DE PAGO</option>
-			</select>
+			</select> -->
+			<p>SELECCIONAR MÉTODO DE PAGO</p>
+			<div class="divtipopago  btn-group-toggle litipodepago"></div>
+		</div>
+		</div>
+		
+	</div>
+
+
+	<div class="row" style="padding-right: 30px;">
+		
+		<div class="col-md-12 divbancos" style="display: none;" >
+			<div class="form-group">
+			<!-- <select name="" id="tipopago" class="form-control" onchange="CargarOpcionesTipopago()" style="padding-left: 30px;">
+				<option value="0">SELECCIONAR MÉTODO DE PAGO</option>
+			</select> -->
+			<p>SELECCIONAR BANCO</p>
+			<div class="divbancos  btn-group-toggle libancos"></div>
+		</div>
+		</div>
+
+
+		<div class="col-md-12 divdigitos" style="display: none;" >
+			<div class="form-group">
+				<label for="">DÍGITOS DE LA TARJETA</label>
+
+				<input type="text" class="form-control" id="txtdigitostarjeta" onkeyup="VerficarFormulariocompleto()">
+		</div>
+		</div>
+
+
+			<div class="col-md-12 divopcionestarjeta"  style="display: none;">
+			<div class="form-group">
+				<label for="">OPCIONES DE TARJETA</label>
+
+					<div class="btn-group-toggle ">
+								<label class="btn btn_colorgray2 btntipo" id="catetipo_1">
+			<input type="checkbox" id="catetipo_1" class="catechecktipo1" onchange="SeleccionarOpciontarjeta(1)" value="0"> 
+				DÉBITO</label>
+
+					<label class="btn btn_colorgray2 btntipo" id="catetipo_2">
+			<input type="checkbox" id="catetipo_2" class="catechecktipo1" onchange="SeleccionarOpciontarjeta(2)" value="0"> 
+				CRÉDITO</label>
+
+					</div>
+
+
+			
+				
 		</div>
 		</div>
 		
@@ -555,7 +651,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
                  <div class="block "> 
                      <div class="list media-list sortable" id="" style="">           
 
-                    <ul id="lista-imagenescomprobante">
+                    <ul id="lista-imagenescomprobante" class="list-group" style="margin-bottom: 1em;">
                         
                     </ul>
                 </div> 
@@ -683,7 +779,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 	</div>
 </div>
 
-				<div class="row" style="padding-right: 30px;">
+				<div class="row" style="padding-right: 30px;margin-bottom: 1em;">
 					
 						<div class="col-md-12">
 							<button type="button" class="btn  btn-success btn-lg btn-block" id="btnpagarresumen" style="background: #007aff;border-color: #007aff;" disabled onclick="RealizarpagoCliente()" style="">PAGAR</button>
@@ -691,6 +787,9 @@ $estatuspago = array('NO PAGADO','PAGADO');
 				</div>
 
 		</div>
+
+				<div class="col-md-2"></div>
+
 </div>
 </div>
 
@@ -1063,7 +1162,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 </div>
 
 
-<div class="modal" id="modalimagencomprobante" tabindex="-1" role="dialog">
+<div class="modal" id="modalimagencomprobante1" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -1079,7 +1178,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 			  <div class="form-group">
 			   <div class="card" style="width: 18rem;margin: auto;margin-top: 3em;">
 								        <img class="card-img-top" src="">
-								        <div id="d_foto" style="text-align:center; ">
+								        <div id="d_foto" class="d_foto" style="text-align:center; ">
 											<img src="images/sinfoto.png" class="card-img-top" alt="" style="border: 1px #777 solid"> 
 										</div>
 								        <div class="card-body">
@@ -1087,7 +1186,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 								           
 								            <div class="form-group">
 								               
-								                <input type="file" class="form-control-file" name="image" id="image" onchange="SubirImagenComprobante()">
+								                <input type="file" class="form-control-file" name="image2" id="image2" onchange="SubirImagenComprobante()">
 								            </div>
 								          <!--   <input type="button" class="btn btn-primary upload" value="Subir"> -->
 								        </div>
@@ -1113,12 +1212,21 @@ $estatuspago = array('NO PAGADO','PAGADO');
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">MONEDERO DISPONIBLE <span id="monederodispo"></span></h5>
+        <h5 class="modal-title" style="text-align: center;">
+        </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
+
+      	<div class="row">
+      		<div class="col-md-12">
+      			<h5 style="text-align: center;    font-size: 20px!important;">Monedero disponible</h5>
+      				<h4  style="text-align: center;    font-size: 20px!important;color: #4fab2a;">$<span id="monederodispo"></span></h4>
+
+      		</div>
+      	</div>
       	<div class="row">
       		<div class="col-md-12">
       			<form>
@@ -1127,16 +1235,34 @@ $estatuspago = array('NO PAGADO','PAGADO');
 			  	<span id="monederodisponible"></span> -->
 
 			  	<label for="">MONEDERO A USAR</label>
-			  	<input type="number" id="monederoausar" placeholder="$0.00" class="form-control">
+			  	<input type="number" id="monederoausar" placeholder="$0.00" class="form-control" style="display: none;">
+
+
+			  	<table id="" class="table">
+
+			  		<thead>
+			  			<tr>
+			  				<th>CONCEPTO</th>
+			  				<th>COSTO UNITARIO</th>
+			  				<th>COSTO TOTAL</th>
+			  				<th>MONTO A USAR</th>
+
+			  			</tr>
+			  		</thead>
+			  		<tbody id="tbllistarseleccionado"></tbody>
+			  		
+			  	</table>
 			  </div>
 			</form>
       		</div>
-      		<div class="col-md-6"></div>
+      		<div class="col-md-12">
+      			<p id="mensajerespuesta" style="color: red;text-align: right;"></p>
+      		</div>
       	</div>
        
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-success" onclick="GuardarMonedero()">GUARDAR</button>
+        <button type="button" class="btn btn-success btnguardarmonedero" onclick="GuardarMonedero()">GUARDAR</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
       </div>
     </div>
@@ -1145,7 +1271,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 
 
 
-<div class="modal" id="modalmonedero" tabindex="-1" role="dialog">
+<!-- <div class="modal" id="modalmonedero" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -1174,7 +1300,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 <div class="modal" id="modalespera" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
@@ -1189,6 +1315,144 @@ $estatuspago = array('NO PAGADO','PAGADO');
       </div>
       <div class="modal-footer">
 
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal" id="modalcomentario" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">  </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<div class="row">
+      		<div class="col-md-12">
+      			<form>
+			  <div class="form-group">
+			 
+			  	<label for="">COMENTARIO</label>
+			  	<textarea id="comentariocomprobante" class="form-control"></textarea> 
+			  </div>
+			</form>
+      		</div>
+      		<div class="col-md-6"></div>
+      	</div>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success btncomentario" onclick="GuardarComentario()">GUARDAR</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal" id="modalcierrecaja" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">CERRAR CAJA</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<div class="row">
+      		<div class="col-md-12">
+      			<form>
+							  <div class="form-group">
+							 
+							  	<!-- <label for="">Saldo final</label>
+							  	 <input type="number" class="form-control" id="saldofinal" name="saldofinal" step="0.01" required> -->
+							  	 	<p style="text-align: center;"><label for="">¿ESTÁ SEGURO DE CERRAR LA CAJA?</label></p>
+							  	 	<div class="" style="display: flex;justify-content: center;">
+							  	 		 <button type="button" class="btn btn-success " style="margin-right: 1em;" onclick="CerrarCaja()">SI</button>
+       					 <button type="button" class="btn btn-secondary" data-dismiss="modal">NO</button>
+							  	 	</div>
+							  	  
+
+							  </div>
+							</form>
+      		</div>
+      		<div class="col-md-6"></div>
+      	</div>
+       
+      </div>
+      <div class="modal-footer">
+      <!--   <button type="button" class="btn btn-success " onclick="CerrarCaja()">GUARDAR</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal" id="modalabrircaja" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">ABRIR CAJA</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<div class="row">
+      		<div class="col-md-12">
+      			<form>
+							  <div class="form-group">
+							 
+							  	<!-- <label for="">Saldo final</label>
+							  	 <input type="number" class="form-control" id="saldofinal" name="saldofinal" step="0.01" required> -->
+							  	 	<p style="text-align: center;"><label for="">¿ESTÁ SEGURO DE ABRIR LA CAJA CON SALDO INICIAL <span id="txtsaldoinicial"></span> ?</label></p>
+							  	 	<div class="" style="display: flex;justify-content: center;">
+							  	 		 <button type="button" class="btn btn-success btnabrircaja" style="margin-right: 1em;" onclick="AbriCajasi()">SI</button>
+       					 <button type="button" class="btn btn-secondary" data-dismiss="modal">NO</button>
+							  	 	</div>
+							  	  
+
+							  </div>
+							</form>
+      		</div>
+      		<div class="col-md-6"></div>
+      	</div>
+       
+      </div>
+      <div class="modal-footer">
+      <!--   <button type="button" class="btn btn-success " onclick="CerrarCaja()">GUARDAR</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal" id="modalreportecaja" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">REPORTE DE CIERRE DE CAJA</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<div id="divreportecaja"></div>
+       
+      </div>
+      <div class="modal-footer">
+        <a type="button" class="btn btn-success btnimprimirreporte" >IMPRIMIR</a>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
       </div>
     </div>
   </div>
@@ -1216,7 +1480,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 			  	<input type="number" id="txtmonto" class="form-control">
 			  </div>
 
-			  <div class="form-check">
+			 <!--  <div class="form-check">
 			    <input type="checkbox" id="opcion_1" class="opciones form-check-input " style="top: -0.3em;" onchange="HabilitarOpcion(1)">
 			    <label for="" class="form-check-label">SERVICIO</label>
 
@@ -1226,10 +1490,10 @@ $estatuspago = array('NO PAGADO','PAGADO');
 			    <input type="checkbox" id="opcion_2" class="opciones form-check-input " style="top: -0.3em;" onchange="HabilitarOpcion(2)">
 			    <label for="" class="form-check-label">MEMBRESÍA</label>
 
-			   </div>
+			   </div> -->
 
 
-			    <div class="form-check">
+			    <div class="form-check" style="display: none;">
 			    <input type="checkbox" id="opcion_3" class="opciones form-check-input " style="top: -0.3em;"onchange="HabilitarOpcion(3)">
 			    <label for="" class="form-check-label">OTROS</label>
 
@@ -1259,6 +1523,73 @@ $estatuspago = array('NO PAGADO','PAGADO');
       </div>
       <div class="modal-footer">
       	 <button type="button" class="btn btn-success" onclick="GuardarPago()">GUARDAR</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal" id="modaldetalleope" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document" style="max-width: 900px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" style="text-align: center;">
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+      	<div class="row">
+      		<div class="col-md-12">
+      			<h4 style="text-align: center;">RESUMEN DE COMPRA</h4>
+      		</div>
+      	</div>
+      	<div class="row">
+      		<div class="col-md-12">
+      			<form>
+							  <div class="form-group">
+							 
+
+								  	<table id="" class="table table-striped ">
+								  		<thead>
+								  			<tr>
+								  				<th style="text-align: center;">CANTIDAD</th>
+								  				<th style="text-align: center;">CONCEPTO</th>
+								  				<th style="text-align: center;">COSTO UNI.</th>
+
+								  				<th style="text-align: center;">SUBTOTAL</th>
+								  				<th style="text-align: center;">MONEDERO </th>
+								  				
+								  				<th style="text-align: center;">DESCUENTO</th>
+								  				<th style="text-align: center;">DESCUENTO MEMB.</th>
+								  				<th style="text-align: center;">TOTAL</th>
+								  			</tr>
+								  		</thead>
+								  		<tbody id="tbllistardetalle"></tbody>
+								  	</table>
+							  </div>
+								</form>
+      		</div>
+      		
+      	</div>
+      	<div class="row">
+      		  <div class="col-md-5" id="" >
+															</div>
+      		<div class="col-md-7" id="" >
+      			<div id="totales" class="row">
+      				
+      					
+
+      			</div>
+      		</div>
+      	</div>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success btnbotonpago" onclick="Pagar()">PAGAR</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">CERRAR</button>
       </div>
     </div>
@@ -1312,16 +1643,97 @@ $estatuspago = array('NO PAGADO','PAGADO');
 
 </style>
 
+<style>
+
+.material-switch > input[type="checkbox"] {
+    display: none;
+}
+
+.material-switch > label {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    width: 40px;
+}
+
+.material-switch > label::before {
+    background: rgb(0, 0, 0);
+    box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    content: '';
+    height: 16px;
+    margin-top: -8px;
+    position: absolute;
+    opacity: 0.3;
+    transition: all 0.4s ease-in-out;
+    width: 40px;
+}
+
+.material-switch > label::after {
+    background: rgb(255, 255, 255);
+    border-radius: 16px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+    content: '';
+    height: 24px;
+    left: -4px;
+    margin-top: -8px;
+    position: absolute;
+    top: -4px;
+    transition: all 0.3s ease-in-out;
+    width: 24px;
+}
+
+.material-switch > input[type="checkbox"]:checked + label::before {
+    background: inherit;
+    opacity: 0.5;
+}
+
+.material-switch > input[type="checkbox"]:checked + label::after {
+    background: #4caf50; /* Cambio de color cuando está marcado */
+    left: 16px; /* Cambio de posición del círculo */
+}
+
+
+</style>
+
 <script type="text/javascript">
 	var clienteid=0;
 var arraypaquetes=[];
 var carrito=[];
 var arraycarrito=[];
 var NtabName=""
+var elementoscarrito=[];
+var elementospagos=[];
+var arraypagoscheck=[];
+var arraypagos=[];
+var cargadoscarrito=[];
 	//openTab('punto-venta');
+var monederousuario=0;
+VerificarCajaAbierta();
+ObtenerTipodepagos();
+		/* ObtenerTipodepagos();
+	  ObtenerMonedero();
+
+  	descuentosaplicados=[];
+	 	descuentosmembresia=[];
+	 	
+  	ObtenerPaquetesCarrito();
+
+   	$("#tblpaquetesventa").html('');
+  	//arraycarrito=[];
+  	pagosarealizar=[];
+  	descuentosaplicados=[];
+	 	descuentosmembresia=[];
+	 	//	ObtenerMonedero();
+  	ObtenerClientePagos(clienteid);
+  	$(".todosdescuentos").html("");
+
+  	CalcularTotales();*/
 
 
-	ObtenerTipodepagos();
+
+
 	function openTab(tabName) {
   // Ocultar todos los contenidos de las pestañas
   NtabName=tabName;
@@ -1339,44 +1751,31 @@ var NtabName=""
     tabs[i].classList.remove('active');
   }
   document.getElementById(tabName + '-tab').classList.add('active');
+$("#btnpagarresumen").attr('onclick','AbrirModalDetalleOperacion()');
 
-  if (tabName=='punto-venta') {
-
-  	//pagosarealizar=[];
-  	descuentosaplicados=[];
-	 	descuentosmembresia=[];
-  	ObtenerPaquetesCarrito();
-
-  	$("#btnpagarresumen").attr('onclick','RealizarpagoClientePunto()');
-  }
-
-   if (tabName=='pagos') {
-   	$("#tblpaquetesventa").html('');
-  	//arraycarrito=[];
-  	pagosarealizar=[];
-  	descuentosaplicados=[];
-	 	descuentosmembresia=[];
-  	ObtenerClientePagos(clienteid);
-  	$(".todosdescuentos").html("");
-
-  	$("#btnpagarresumen").attr('onclick','RealizarpagoCliente()');
-  }
-
-
-  	CalcularTotales();
-
+  
 
 }
 
 var searchInput = document.getElementById('searchInput');
 var searchResults = document.getElementById('searchResults');
 
-searchInput.addEventListener('input', function() {
+/*searchInput.addEventListener('input', function() {
   const searchTerm = this.value.toLowerCase();
   const results = filterResults(searchTerm);
 
   
-});
+});*/
+
+function handleKeyPress(event) {
+	var searchInput = document.getElementById('searchInput');
+	 const searchTerm = searchInput.value.toLowerCase();
+ /* const results = filterResults(searchTerm);*/
+        if (event.keyCode === 13) { // 13 es el código de tecla para "Enter"
+            // Llamar a tu función aquí
+            filterResults(searchTerm); // Cambia "realizarBusqueda" al nombre de tu función
+        }
+    }
 
 function filterResults(searchTerm) {
   // Implementa aquí la lógica para filtrar los resultados según el término de búsqueda
@@ -1448,6 +1847,7 @@ function AgregarCarrito() {
 
     	var carrito=datos.carrito;
     	arraycarrito=carrito;
+    	elementoscarrito=arraycarrito;
     	$("#tablaventa").css('display','block');
     	if (carrito.length>0) {
     		
@@ -1614,7 +2014,7 @@ function PintarElementos(arraycarrito) {
       </td>
       <td style="width: 20%;">$`+arraycarrito[i].costounitario+`</td>`;
       var total=arraycarrito[i].costototal;
-      html+=`<td>$`+total+`</td>
+      html+=`<td style="width: 20%;">$`+total+`</td>
       <td style="width: 20%;">
 
       <button type="button" onclick="BorrarPaqueteArray(`+arraycarrito[i].idcarrito+`)" class="btn btn_rojo" style="" title="BORRAR">
@@ -1628,6 +2028,9 @@ function PintarElementos(arraycarrito) {
 			 }
 
 
+	}else{
+
+		$("#tablaventa").css('display','none');
 	}
 
 	$("#tblpaquetesventa").html(html);
@@ -1741,6 +2144,11 @@ function ObtenerPaquetesCarrito() {
 							
 							var carrito=msj.carrito;
 							arraycarrito=carrito;
+						$("#metodopagodiv").css('display','none');
+							if (carrito.length>0) {
+								$("#tablaventa").css('display','block');
+								$("#metodopagodiv").css('display','block');
+							}
 							PintarElementos(carrito);
 							CalcularTotales();
 						

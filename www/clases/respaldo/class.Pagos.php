@@ -26,6 +26,7 @@ class Pagos
 
 	public $idtipopago;
 	public $requiereaceptacion;
+	public $pagoinscripcion;
 	//Funcion para obtener todos
 	public function ObtPagosActivos()
 	{
@@ -218,7 +219,13 @@ class Pagos
 
 	}
 
+	public function CrerPagoInscripcion()
+	{
+		$sql="INSERT INTO pagos(idusuarios, idservicio, idmembresia, tipo, monto, estatus,fechainicial,fechafinal,pagado,concepto,folio,idtipopago,requiereaceptacion,pagoinscripcion) VALUES ('$this->idusuarios','$this->idservicio','$this->idmembresia','$this->tipo','$this->monto', '$this->estatus','$this->fechainicial','$this->fechafinal',0,'$this->concepto','$this->folio','$this->idtipopago','$this->requiereaceptacion','$this->pagoinscripcion')";
 
+		$resp=$this->db->consulta($sql);
+		$this->idpago=$this->db->id_ultimo();
+	}
 	
 	public function ActualizarEstatus()
 	{
@@ -559,11 +566,11 @@ class Pagos
 			WHERE
 			pagado=1 AND notapago.estatus=1 AND
 			  pagos.idservicio='$this->idservicio' AND pagos.idusuarios='$this->idusuarios'";
-			  if ($sqlfechapago!='') {
+			  /*if ($sqlfechapago!='') {
 
 			  	$sql.=$sqlfechapago;
 
-			  }
+			  }*/
 			  $sql.= " ORDER BY idpago ";
 
 			
@@ -861,6 +868,37 @@ class Pagos
 			return $array;
 		}
 
+	public function BuscarPagoInscripcion()
+	{
+		
+		$sql="SELECT *FROM pagos WHERE idmembresia='$this->idmembresia' AND idusuarios='$this->idusuarios' AND pagoinscripcion=1 AND estatus=1";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function GuardarPagoInscripcion($idusuarios_membresia)
+	{
+		
+		$sql="INSERT INTO pagoinscripcionmembresia(idusuarios_membresia, idpago ) VALUES ('$idusuarios_membresia','$this->idpago')";
+		
+		$resp=$this->db->consulta($sql);
+	}
 
 
 }

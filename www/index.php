@@ -1207,7 +1207,7 @@ $navegador = $f->navegador();
  <script src="js/fn_categorias.js"></script>
 <script src="js/fn_notificacion.js"></script>
 <script src="js/fn_politicasaceptacion.js"></script>
-
+<script src="js/fn_caja.js"></script>
 <script src="js/modal.js"></script>
 <script src="js/fn_matrices.js?<?php echo time(); ?>"></script>
 

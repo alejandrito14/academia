@@ -675,6 +675,7 @@ try {
 
      $db->consulta($sql_movimiento);
 
+//3ote entre 16 y 17 sur 10:00 
 
 
 

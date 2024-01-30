@@ -184,7 +184,9 @@ class Pagos
 	
 	public function ObtenerPago()
 	{
-		$sql="SELECT *FROM pagos WHERE idpago='$this->idpago'";
+		$sql="SELECT p.*,COALESCE(pagomonedero.monederoaplicado, 0) AS monederoaplicado FROM pagos as p
+			left join pagomonedero on p.idpago=pagomonedero.idpago
+		 WHERE p.idpago='$this->idpago'";
 	
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -899,6 +901,48 @@ class Pagos
 		$sql="INSERT INTO pagoinscripcionmembresia(idusuarios_membresia, idpago ) VALUES ('$idusuarios_membresia','$this->idpago')";
 		
 		$resp=$this->db->consulta($sql);
+	}
+
+
+	
+	public function BuscarMonederoPago(){
+		
+		$sql = "SELECT * FROM pagomonedero WHERE idpago='$this->idpago'";
+		
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+					$contador++;
+				} 
+			}
+			return $array;
+
+	}
+	public function ActualizarMonederoUsado(){
+
+		$sql = "UPDATE pagomonedero SET idpago = '$this->idpago', monederoaplicado = '$this->montousado' WHERE idpagomonedero='$this->idpagomonedero'";
+
+		$resp = $this->db->consulta($sql);
+
+	}
+	
+	public function GuardarMonederoUsado(){
+		$sql = "INSERT INTO pagomonedero( idpago, monederoaplicado) VALUES ('$this->idpago','$this->montousado')";
+		$resp = $this->db->consulta($sql);
+
+	}
+
+	public function EliminarMonederoPago()
+	{
+		$sql = "DELETE FROM pagomonedero  WHERE idpagomonedero='$this->idpagomonedero'";
+
+		$resp = $this->db->consulta($sql);
 	}
 
 	

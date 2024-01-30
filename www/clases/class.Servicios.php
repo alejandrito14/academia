@@ -74,6 +74,7 @@ class Servicios
 	public $v_politicaaceptacionseleccion;
 	public $aceptarserviciopago;
 	public $idtiposervicioconfiguracion;
+	public $bloqueocanchas;
 	public function ObtenerServicios()
 	{
 		$sql="SELECT servicios.*,categorias.titulo as nombrecategoria,categorias.avanzado,
@@ -87,6 +88,32 @@ class Servicios
 	
 		$resp=$this->db->consulta($sql);
 		return $resp;
+	}
+
+
+	public function ObtenerServicios2()
+	{
+		$sql="SELECT servicios.*,categorias.titulo as nombrecategoria,categorias.avanzado,
+		(SELECT MIN(fecha) from horariosservicio WHERE horariosservicio.idservicio =servicios.idservicio) as fechamin,
+	(SELECT MAX(fecha) from horariosservicio WHERE horariosservicio.idservicio =servicios.idservicio) as fechamax,
+	(SELECT GROUP_CONCAT(CONCAT(usuarios.nombre,' ',usuarios.paterno,' ',usuarios.materno)) FROM usuarios_servicios INNER JOIN usuarios ON usuarios_servicios.idusuarios=usuarios.idusuarios
+		where usuarios.tipo=5 and usuarios_servicios.idservicio=servicios.idservicio) AS coachesfiltro
+		 FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio ORDER BY orden asc";
+
+
+	
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
 	}
 
 	public function ObtenerServicio($value='')
@@ -168,8 +195,9 @@ class Servicios
 		validaradmin,
 		idpoliticaaceptacion,
 		aceptarserviciopago,
-		idtiposervicioconfiguracion
-		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes','$this->politicasaceptacion','$this->controlasistencia','$this->idusuarios','$this->tiporeembolso','$this->validaradmin','$this->v_politicaaceptacionseleccion','$this->aceptarserviciopago','$this->idtiposervicioconfiguracion')";
+		idtiposervicioconfiguracion,
+		bloqueocanchas
+		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes','$this->politicasaceptacion','$this->controlasistencia','$this->idusuarios','$this->tiporeembolso','$this->validaradmin','$this->v_politicaaceptacionseleccion','$this->aceptarserviciopago','$this->idtiposervicioconfiguracion','$this->bloqueocanchas')";
 		
 		
 		$resp=$this->db->consulta($query);
@@ -230,9 +258,10 @@ class Servicios
 		tiporeembolso='$this->tiporeembolso',
 		validaradmin='$this->validaradmin',
 		idpoliticaaceptacion='$this->v_politicaaceptacionseleccion',
-		aceptarserviciopago='$this->aceptarserviciopago'
+		aceptarserviciopago='$this->aceptarserviciopago',
+		bloqueocanchas='$this->bloqueocanchas'
 		WHERE idservicio=$this->idservicio";
-
+		
 		
 		$resp=$this->db->consulta($query);
 	}
@@ -412,7 +441,7 @@ class Servicios
 	public function ObtenerHorariosSemana()
 	{
 		$sql="SELECT idhorarioservicio,dia,horainicial,
-		horafinal,fecha,zonas.idzona,zonas.color,zonas.nombre  FROM horariosservicio INNER JOIN zonas ON zonas.idzona=horariosservicio.idzona WHERE idservicio=".$this->idservicio."";
+		horafinal,fecha,zonas.idzona,zonas.color,zonas.nombre  FROM horariosservicio LEFT JOIN zonas ON zonas.idzona=horariosservicio.idzona WHERE idservicio=".$this->idservicio."";
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -800,7 +829,7 @@ class Servicios
 		return $resp;
 	}
 
-	public function ObtenerServiciosFiltrado($tiposervicio,$coach,$mes,$anio,$v_buscar)
+	/*public function ObtenerServiciosFiltrado($tiposervicio,$coach,$mes,$anio,$v_buscar)
 	{
 		$sql="SELECT *FROM (SELECT servicios.idservicio,servicios.titulo,servicios.imagen,categorias.titulo as nombrecategoria,categorias.idcategorias,servicios.orden,servicios.estatus,servicios.fechacreacion,
 			MONTH((SELECT MIN(fecha) from horariosservicio WHERE horariosservicio.idservicio =servicios.idservicio))AS MES,
@@ -827,7 +856,7 @@ class Servicios
 
 
 
-		/*if ($coach>0 && $coach!='t') {
+		if ($coach>0 && $coach!='t') {
 		$sql.=" LEFT JOIN usuarios_servicios ON usuarios_servicios.idservicio = servicios.idservicio
 		LEFT JOIN usuarios ON usuarios.idusuarios=usuarios_servicios.idusuarios ";
 
@@ -839,7 +868,7 @@ class Servicios
 			$filtro.=" AND usuarios.idusuarios='$coach'";
 
 			}
-		}*/
+		}
 
 
 		if ($filtro!='') {
@@ -854,7 +883,7 @@ class Servicios
 		if ($coach>0) {
 
 			$sql.=" AND FIND_IN_SET('$coach',TABLA.coachesfiltro)";
-			/*$sql.=" AND TABLA.coachesfiltro IN($v_coach)";*/
+			
 		}
 
 if ($tiposervicio>0 || $coach>-1) {
@@ -894,7 +923,65 @@ if ($tiposervicio>0 || $coach>-1) {
 		}
 		
 		return $array;
-	}
+	}*/
+
+	public function ObtenerServiciosFiltrado($tiposervicio, $coach, $mes, $anio, $v_buscar)
+{
+    $sql = "
+        SELECT
+            s.idservicio, s.titulo, s.imagen, c.titulo AS nombrecategoria, c.idcategorias, s.orden, s.estatus, s.fechacreacion,
+            MIN(hs.fecha) AS fechamin,
+            MAX(hs.fecha) AS fechamax,
+            GROUP_CONCAT(us.idusuarios) AS coachesfiltro,
+            GROUP_CONCAT(CONCAT(u.nombre, ' ', u.paterno, ' ', u.materno)) AS coachesfiltro2
+        FROM
+            servicios AS s
+            INNER JOIN categorias AS c ON c.idcategorias = s.idcategoriaservicio
+            LEFT JOIN horariosservicio AS hs ON hs.idservicio = s.idservicio
+            LEFT JOIN usuarios_servicios AS us ON us.idservicio = s.idservicio
+            LEFT JOIN usuarios AS u ON u.idusuarios = us.idusuarios AND u.tipo=5
+        WHERE
+            1=1";
+
+    if ($tiposervicio > 0) {
+        $sql .= " AND c.idcategorias = '$tiposervicio'";
+    }
+
+    if ($coach > 0) {
+       // $sql .= " AND FIND_IN_SET('$coach', coachesfiltro) > 0";
+
+        $sql .= " AND '$coach' IN (SELECT idusuarios FROM usuarios_servicios WHERE idservicio = s.idservicio)";
+
+    }
+
+    if ($mes > 0) {
+        $sql .= " AND MONTH(hs.fecha) = '$mes'";
+    }
+
+    if ($anio) {
+        $sql .= " AND YEAR(hs.fecha) = '$anio'";
+    }
+
+    if ($v_buscar != '') {
+        $sql .= " AND s.titulo LIKE '%" . $v_buscar . "%'";
+    }
+
+    $sql .= "
+        GROUP BY
+            s.idservicio";
+
+           
+
+    $resp = $this->db->consulta($sql);
+    $array = [];
+
+    while ($objeto = $this->db->fetch_object($resp)) {
+        $array[] = $objeto;
+    }
+
+    return $array;
+}
+
 
 	public function ObtenerSiHayPago()
 	{
@@ -1095,6 +1182,49 @@ if ($tiposervicio>0 || $coach>-1) {
 		$cont = $this->db->num_rows($resp);
 
 
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerPrecios($idcategoriaserv)
+	{
+		$sql="SELECT precio  FROM servicios  WHERE  FIND_IN_SET(servicios.idcategoria,'$idcategoriaserv') GROUP BY precio";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+	public function ObtenerFormaPago()
+	{
+		$sql="SELECT formapago, formapago.descripcion from notapago
+				LEFT JOIN formapago ON notapago.formapago = formapago.cformapago
+				where formapago is not null and formapago<>''
+				GROUP BY formapago";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
 		$array=array();
 		$contador=0;
 		if ($cont>0) {

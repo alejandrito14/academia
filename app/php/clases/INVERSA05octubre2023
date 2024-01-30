@@ -1,0 +1,23 @@
+INVERSA
+
+Modulo de promociones
+en cupones 
+si es en ceros se puede pagar 
+modulo de pay pal y mercado pago
+En el back reservar, cancelacion de una cita
+En el tipo de pago que se seccione lo de la app y lo del back 
+
+Modulo de notificaciones	
+
+
+    border: 1px solid #C7AA6A;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+    
+    border: 1px solid #9c9c9c;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+
+    

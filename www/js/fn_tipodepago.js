@@ -30,9 +30,10 @@ function Habilitarfoto() {
 function Habilitarparafactura() {
 	if($("#chkparafactura").is(':checked')){
 		$("#chkparafactura").val(1);
-
+$("#chkparafactura").attr('checked',true);
 	}else{
 		$("#chkparafactura").val(0);
+$("#chkparafactura").attr('checked',false);
 
 	}
 }
@@ -46,6 +47,7 @@ function Guardartipopago(form,regresar,donde,idmenumodulo)
 		var datos = ObtenerDatosFormulario(form);
 
 		var tiposervicio=[];
+		var usuariostpv=[];
 		$(".tiposervicios").each(function( index ) {
 			if ($(this).is(':checked')) {
 			var idtiposervicio=$(this).attr('id');
@@ -58,7 +60,20 @@ function Guardartipopago(form,regresar,donde,idmenumodulo)
 
 		});
 
-		datos+='&idtiposervicio='+tiposervicio;
+		$(".ckusuarios").each(function( index ) {
+			if ($(this).is(':checked')) {
+			var idusuario=$(this).attr('id');
+			var dividir=idusuario.split('_')[1];
+			usuariostpv.push(dividir);
+
+			}
+			
+
+		});
+
+		
+
+		datos+='&idtiposervicio='+tiposervicio+"&usuariostpv="+usuariostpv;
 
 		 $('#main').html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Procesando...</div>')
 				
@@ -95,8 +110,10 @@ function habilitarmonto() {
 	if($("#habilitarcampomonto").is(':checked')){
 
 		$("#habilitarcampomonto").val(1);
+		$("#habilitarcampomonto").attr('checked',true);
 
 	}else{
+		$("#habilitarcampomonto").attr('checked',false);
 
 		$("#habilitarcampomonto").val(0);
 	}
@@ -283,3 +300,225 @@ function PintarTipoServicios2(respuesta) {
 
 	$("#todostiposervicios").html(html);
 }
+function Habilitarparatpv(argument) {
+	if($("#chkparatpv").is(':checked')){
+
+		$("#chkparatpv").val(1);
+		$(".divusuarios").css('display','block');
+	}else{
+		$("#chkparatpv").val(0);
+		$(".divusuarios").css('display','none');
+
+	}
+}
+
+
+function CargarUsuariosSistema() {
+	//return new Promise((resolve, reject) => {
+
+	$.ajax({
+		type:'POST',
+		url: 'catalogos/tipodepagos/usuariossistema.php',
+		cache:false,
+		dataType:'json',
+		async:false,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+			alert(error);						  
+		 },
+		success : function (msj){
+		
+			PintarUsuariosSistema(msj.respuesta);   
+			}
+		}); 
+
+	//});
+}
+function PintarUsuariosSistema(respuesta) {
+		var html="";
+	if (respuesta.length>0) {
+		for (var i = 0; i < respuesta.length; i++) {
+			html+=`
+			<div class="pasusuario_" id="usuario_`+respuesta[i].idusuarios+`">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="form-check" style="margin-bottom: 1em;">
+                    	<input type="checkbox" class="form-check-input ckusuarios"  id="vusuarios_`+respuesta[i].idusuarios+`" onchange="" style="top: -0.3em;">
+						<label class="form-check-label">`+respuesta[i].nombre+` `+respuesta[i].paterno+` `+respuesta[i].materno+`</label>
+					</div>
+								
+									
+								</div>
+					<div class="col-md-3">
+										
+									</div>
+							</div>
+
+			</div>
+			`;
+		}
+	}
+	$("#todosusuariossistema").html(html);
+}
+
+function ObtenerUsuariosRelacion(idtipodepago) {
+	var datos="idtipodepago="+idtipodepago;
+	$.ajax({
+		type:'POST',
+		url: 'catalogos/tipodepagos/ObtenerUsuariosRelacion.php',
+		cache:false,
+		dataType:'json',
+		data:datos,
+		async:false,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+			alert(error);						  
+		 },
+		success : function (msj){
+			var resp=msj.respuesta;
+				if (resp.length>0) {
+					$(".divusuarios").css('display','block');
+					for (var i = 0; i < resp.length; i++) {
+						
+						$("#vusuarios_"+resp[i].idusuario).attr('checked',true);
+					}
+				}
+			}
+		}); 
+
+}
+
+function Habilitarparatv() {
+	if($("#chktpv").is(':checked')){
+		$("#chktpv").val(1);
+
+	}else{
+		$("#chktpv").val(0);
+
+	}
+}
+
+function Habilitarpararevision() {
+	if($("#chkpararevision").is(':checked')){
+		$("#chkpararevision").attr('checked',true);
+
+		$("#chkpararevision").val(1);
+	}else{
+		$("#chkpararevision").val(0);
+		$("#chkpararevision").attr('checked',false);
+
+	}
+}
+
+function Habilitarcatalogobancos(argument) {
+	if($("#chkcatalogobanco").is(':checked')){
+
+		$("#chkcatalogobanco").attr('checked',true);
+		$("#chkcatalogobanco").val(1);
+
+	}else{
+		$("#chkcatalogobanco").val(0);
+		$("#chkcatalogobanco").attr('checked',false);
+
+	}
+
+}
+function Habilitardigitos(argument) {
+	if($("#chkdigitos").is(':checked')){
+		$("#chkdigitos").attr('checked',true);
+		$("#chkdigitos").val(1);
+
+	}else{
+
+		$("#chkdigitos").attr('checked',false);
+		$("#chkdigitos").val(0);
+	
+	}
+
+}
+
+function Habilitaropcionestarjeta(argument) {
+	if($("#chkopcionestarjeta").is(':checked')){
+		$("#chkopcionestarjeta").attr('checked',true);
+		$("#chkopcionestarjeta").val(1);
+
+	}else{
+		$("#chkopcionestarjeta").attr('checked',false);
+		$("#chkopcionestarjeta").val(0);
+
+	}
+
+
+}
+
+
+
+function Habilitarsinrevision() {
+	if($("#chksinrevision").is(':checked')){
+		$("#chksinrevision").val(1);
+
+	}else{
+		$("#chksinrevision").val(0);
+
+	}
+}
+
+function Habilitarcatalogobancos() {
+	if($("#chkcatalogobancos").is(':checked')){
+		$("#chkcatalogobancos").val(1);
+
+	}else{
+		$("#chkcatalogobancos").val(0);
+
+	}
+}
+
+function Habilitarcampodigitos() {
+	if($("#chkcampodigitos").is(':checked')){
+		$("#chkcampodigitos").val(1);
+
+	}else{
+		$("#chkcampodigitos").val(0);
+
+	}
+}
+
+
+function Habilitaropciontarjeta() {
+	if($("#chkopciontarjeta").is(':checked')){
+		$("#chkopciontarjeta").val(1);
+
+	}else{
+		$("#chkopciontarjeta").val(0);
+
+	}
+}
+
+
+function Habilitarbotonpagardirecto() {
+	if($("#chkbotonpagardirecto").is(':checked')){
+		$("#chkbotonpagardirecto").val(1);
+
+	}else{
+		$("#chkbotonpagardirecto").val(0);
+
+	}
+}
+
+
+function Habilitarparaapp() {
+	if($("#chkapp").is(':checked')){
+		$("#chkapp").val(1);
+
+	}else{
+		$("#chkapp").val(0);
+
+	}
+}
+

@@ -15,6 +15,7 @@ class Tipocoach
 	public $costo;
 
 	public $estatus;
+	public $idcoach;
 	
 	
 	//Funcion para obtener todos los tipocoaches activos
@@ -111,6 +112,42 @@ class Tipocoach
 	public function Obtenertipocoach()
 	{
 		$query="SELECT * FROM tipocoach WHERE idtipocoach=".$this->idtipocoach;
+
+		
+		$resp = $this->db->consulta($query);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+
+	public function ObtenerTipoMontoCoach()
+	{
+		$query="SELECT
+			usuarios.idusuarios,
+			usuarios.nombre,
+			usuarios.paterno,
+			usuarios.materno,
+			tipocoach.idtipocoach,
+			tipocoach.tipocomision as tipopago,
+			tipocoach.monto,
+			tipocoach.costo
+			FROM
+			usuarios
+			LEFT JOIN tipocoach
+			ON usuarios.idtipocoach = tipocoach.idtipocoach
+			WHERE
+			idusuarios=".$this->idcoach."";
 
 		
 		$resp = $this->db->consulta($query);

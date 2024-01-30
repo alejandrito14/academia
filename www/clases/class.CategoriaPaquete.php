@@ -43,6 +43,7 @@ LEFT JOIN categoriapaquete c2 ON c1.iddepende = c2.idcategoriapaquete  ";
 	}
 
 
+	
 
 
 	

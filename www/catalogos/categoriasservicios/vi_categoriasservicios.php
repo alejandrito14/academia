@@ -86,7 +86,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 
 <div class="card">
 	<div class="card-body">
-		<h5 class="card-title" style="float: left;">LISTADO DE INTERVALOS DE HORARIOS</h5>
+		<h5 class="card-title" style="float: left;">LISTADO DE TIPO DE NIVELES</h5>
 		
 		<div style="float:right;">
 			<button type="button" onClick="abrir_filtro('modal-filtros');" class="btn btn-primary" style="float: right;display: none;"><i class="mdi mdi-account-search"></i>  BUSCAR</button>			
@@ -122,8 +122,10 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 					<tr>
 						 
 						<th style="text-align: center;">NOMBRE </th> 
+
+						<th style="text-align: center;">SUBCATEGORÍA </th>
 						<th style="text-align: center;">CLASIFICACIÓN </th>
-						<th style="text-align: center;">INTERVALO (MINUTOS) </th> 
+						<!-- <th style="text-align: center;">INTERVALO (MINUTOS) </th>  -->
 					
 						<th style="text-align: center;">ESTATUS</th>
 
@@ -151,9 +153,13 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 							
 							<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($l_categoriasservicio_row['nombrecategoria']);?></td>
 
+
+							<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($l_categoriasservicio_row['nombreca']);?></td>
+
+
 							<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($l_categoriasservicio_row['nombre']);?></td>
 
-							<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($l_categoriasservicio_row['intervalo']);?></td>
+							<!-- <td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($l_categoriasservicio_row['intervalo']);?></td -->
 						
 							<td style="text-align: center;"><?php echo $estatus[$l_categoriasservicio_row['estatus']];?></td>
 

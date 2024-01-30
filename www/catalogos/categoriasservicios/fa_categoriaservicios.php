@@ -25,7 +25,7 @@ require_once("../../clases/class.CategoriasServicios.php");
 require_once("../../clases/class.Funciones.php");
 require_once("../../clases/class.Botones.php");
 require_once("../../clases/class.Clasificacion.php");
-
+require_once("../../clases/class.Categorias.php");
 $idmenumodulo = $_GET['idmenumodulo'];
 
 //Se crean los objetos de clase
@@ -36,6 +36,8 @@ $bt = new Botones_permisos();
 $clasificacion=new Clasificacion();
 $clasificacion->db=$db;
 $emp->db = $db;
+$categorias=new Categorias();
+$categorias->db=$db;
 
 $emp->tipo_usuario = $tipousaurio;
 $emp->lista_empresas = $lista_empresas;
@@ -55,8 +57,8 @@ if(!isset($_GET['idcategoriasservicio'])){
 	
 	$col = "col-md-12";
 	$ver = "display:none;";
-	$titulo='NUEVO INTERVALO DE HORARIOS';
-
+	$titulo='TIPO DE NIVEL';
+	$idcategorias=0;
 }else{
 	//El formulario funcionara para modificacion de un registro
 
@@ -76,10 +78,11 @@ if(!isset($_GET['idcategoriasservicio'])){
 	$idclasificacion=$result_categoriasservicio_row['idclasificacion'];
 	$estatus = $f->imprimir_cadena_utf8($result_categoriasservicio_row['estatus']);
 	$intervalo=$result_categoriasservicio_row['intervalo'];
+	$idcategorias=$result_categoriasservicio_row['idcategorias'];
 
 	$col = "col-md-12";
 	$ver = "";
-		$titulo='EDITAR INTERVALO DE HORARIOS';
+		$titulo='TIPO DE NIVEL';
 
 }
 
@@ -173,6 +176,35 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<label>*NOMBRE:</label>
 								<input type="text" class="form-control" id="v_categoriasservicio" name="v_categoriasservicio" value="<?php echo $categoriasservicio; ?>" title="NOMBRE" placeholder='NOMBRE'>
 							</div>
+
+							   <div class="form-group m-t-20" style="">
+								<label>SUB CATEGORÍA:</label>
+
+							
+								<select  class="form-control" id="v_categoriasid" name="v_categoriasid" >
+
+									<option value="0" <?php if ($idcategorias==0){ echo ('selected');
+								} {
+										# code...
+									} ?>>NINGUNO</option>
+											<?php 
+									$categoriaslista= $categorias->ObtenerCategoriasListado();
+
+									
+								for ($i=0; $i < count($categoriaslista); $i++) { 
+										?>
+										<option   value="<?php echo $categoriaslista[$i]->idcategorias; ?>"  <?php if($categoriaslista[$i]->idcategorias==$idcategorias){ echo ("selected");}?>><?php echo $categoriaslista[$i]->titulo;?></option>
+									
+									<?php }
+								
+								?>
+								</select>
+
+
+
+							</div>
+
+
 
 							<div class="form-group m-t-20">
 								<label>*CLASIFICACIÓN:</label>

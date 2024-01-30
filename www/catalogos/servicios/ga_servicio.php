@@ -112,6 +112,9 @@ try
 	$arrayhorarios=explode(',', $_POST['v_arraydiaselegidos']);
 
 	$porcentajescoachs=json_decode($_POST['porcentajescoachs']);
+	$v_bloqueocanchas=$_POST['v_bloqueocanchas'];
+	
+	$emp->bloqueocanchas=$v_bloqueocanchas;
 	$emp->lunes=$lunes;
 	$emp->martes=$martes;
 	$emp->miercoles=$miercoles;
@@ -128,7 +131,7 @@ try
 	$emp->idcategoria=$categoriaservicio;
 	$emp->fechainicial=$_POST['v_fechainicial'];
 	$emp->fechafinal=$_POST['v_fechafinal'];
-	$emp->aceptarserviciopago=$_POST['aceptarserviciopago'];
+	$emp->aceptarserviciopago=$_POST['v_aceptarserviciopago'];
 	$emp->modalidadpago=$_POST['v_modalidadpago']!='undefined'?$_POST['v_modalidadpago']:0;
 	$emp->periodo=$_POST['v_perido']!='undefined'? $_POST['v_perido']:0;
 	$emp->numparticipantes=$_POST['v_numparticipantes'];
@@ -214,7 +217,10 @@ try
 				for ($i=0; $i < count($zonas); $i++) { 
 
 						$emp->idzona=$zonas[$i];
-					$emp->GuardarZona();
+						if ($emp->idzona!=0) {
+							$emp->GuardarZona();
+						}
+					
 					}
 
 				}
@@ -406,7 +412,10 @@ try
 				for ($i=0; $i < count($zonas); $i++) { 
 
 					$emp->idzona=$zonas[$i];
-					$emp->GuardarZona();
+					if ($emp->idzona!=0) {
+						$emp->GuardarZona();
+					}
+					
 					}
 
 				}

@@ -33,7 +33,7 @@ $cli->tipo_usuario= $tipousaurio;
 $cli->lista_empresas = $lista_empresas;
 	 
 
-	 $sql_cliente = $cli->lista_Usuarios('3,5');
+	 $sql_cliente = $cli->lista_Usuarios('1,3,5');
 
 
 	 $result_row = $db->fetch_assoc($sql_cliente);
@@ -145,6 +145,8 @@ var oTable = $('#zero_config').dataTable( {
 					<!--	<th>NIVEL</th> -->
 						<!--<th>NO TARJETA</th>-->
 						<th width="88">CELULAR</th>
+										<th width="88">TOKEN</th>
+
 						<th>CORREO</th>
 						<th>ASOCIADOS</th>
 						<th>ASOCIADO DE</th>
@@ -206,6 +208,8 @@ var oTable = $('#zero_config').dataTable( {
 						  			
 						  		</a>
 						  	</td>
+
+						  	<td width="30"><?php echo utf8_encode($result_row['token']); ?></td>
 						  		<td width="30"><?php echo utf8_encode($result_row['email']); ?></td>
 
 						  		<td>

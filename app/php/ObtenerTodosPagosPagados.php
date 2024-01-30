@@ -52,7 +52,7 @@ try
 
 
 			if ($obtener[$i]->monto==0 && $obtener[$i]->montomonedero!=0){
-				$obtener[$i]->monto=$obtener[$i]->montomonedero
+				$obtener[$i]->monto=$obtener[$i]->montomonedero;
 			}
 
 

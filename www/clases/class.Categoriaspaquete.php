@@ -132,7 +132,7 @@ class Categoriaspaquete
 
 	public function VerificarRelacionCategoria()
 	{
-		$sql="SELECT *FROM sucursal WHERE idcategorias='$this->idcategoria'";
+		$sql="SELECT *FROM paquetes WHERE idcategoriapaquete='$this->idcategoria'";
 
 
 		$resp = $this->db->consulta($sql);

@@ -97,7 +97,9 @@ $(document).ready(function() {
       codigoservicio='106';
 
     }else{
-      codigoservicio='124';
+           // codigoservicioreal='109';
+
+      codigoservicio='109';
     }
 
 
@@ -217,9 +219,9 @@ var carpetaapp="";
   
     urlimagendefault=rutaserver+"/IS-ACADEMIA/images/sinfoto.png"
     urlimagenlogo=rutaserver+"/IS-ACADEMIA/images/sinimagenlogo.png";
-    urlimagendefaultservicio=rutaserver+"/IS-ACADEMIA/images/sin-servicio.jpg"
+    urlimagendefaultservicio=rutaserver+"/images/sin-servicio.jpg"
 
-    imagenesbancos=rutaserver+"/IS-ACADEMIA/assets/images/";
+    imagenesbancos=rutaserver+"/assets/images/";
     globalsockect=rutaserver+":"+puertosockect+"/";
    // var urlimagenvacia="https://issoftware1.com.mx/IS-ACADEMIA/images/sinimagenlogo.png";
 
@@ -1021,6 +1023,7 @@ $("#v_tipousuario").attr('onblur','Cambiar2(this);');
 $$(document).on('page:init', '.page[data-name="datospersonales"]', function (e) {
 
 Cargardatospersonales();
+//$(".btnguardardatos").attr('onclick','Guardardatospersonales()');
 
 });
 

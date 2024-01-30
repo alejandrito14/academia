@@ -2979,7 +2979,7 @@ function DetalleServicioAsignado(idusuarios_servicios) {
 			var enproceso=datos.enproceso;
 			if (respuesta==0) {
 				
-
+				
 				GoToPage('aceptacionservicio');
  
 			}else{

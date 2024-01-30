@@ -1,6 +1,6 @@
 var resultimagendatosfactura=[];
 function Guardarpagos(form,regresar,donde,idmenumodulo)
-{
+{ 
 	if(confirm("\u00BFDesea realizar esta operaci\u00f3n?"))
 	{			
 		//recibimos todos los datos..
@@ -47,13 +47,12 @@ function SeleccionarClientePagos(idcliente) {
 	$("#datoscliente").removeClass('borde');
 	$("#datoscliente").html('');
 
-	
+	 
 	 /* $(".cli_").removeClass('seleccionado');
 	  $("#cli_"+idcliente+"_").addClass('seleccionado');*/
 	  if($("#inputcli_"+idcliente+"_").is(':checked')){
 	  	idparticipante=idcliente;
-	  	
-	  	console.log('entro');
+	  
 	  	openTab('punto-venta');
 	  $(".divtabs").css('display','block');
 	  $("#modalclientes").modal('hide');
@@ -75,17 +74,21 @@ function SeleccionarClientePagos(idcliente) {
 						//CalcularTotales();
 						
 						var respuesta=msj.respuesta;
-						var monedero=msj.monedero;
-						EliminarCarritoCliente(idcliente);
+						monederousuario=msj.monedero;
+						arraypagos=respuesta;
+						//EliminarCarritoCliente(idcliente);
 						ObtenerDatosCliente(idcliente);
-						//PintarpagosTabla(respuesta);
+						ObtenerPaquetesCarrito();
+						$(".requierefacturadiv").css('display','block');
+												//PintarpagosTabla(respuesta);
 						PintarPagosPorpagar(respuesta);
-						$("#tblpaquetesventa").html(" ");
+						//$("#tblpaquetesventa").html(" ");
 						$(".btnnuevopago").css('display','block');
 						$("#btnmonederodisponible").css('display','block');
-						if (monedero!=null) {
+						if (monederousuario!=null || monederousuario==0) {
+
 							$("#btnmonederodisponible").attr('disabled',false);
-							$("#monederodisponible").text(monedero);
+							$("#monederodisponible").text(monederousuario);
 							$("#btnmonederodisponible").attr('onclick','AbrirModalMonedero()');
 						  }
 								
@@ -127,7 +130,7 @@ function ObtenerClientePagos(idcliente) {
 						//CalcularTotales();
 
 						var respuesta=msj.respuesta;
-						
+						arraypagos=respuesta;
 						PintarPagosPorpagar(respuesta);
 						
 								
@@ -176,7 +179,7 @@ function ObtenerDatosCliente(idcliente) {
 								</div>
 							</div>
 						`;*/
-						$("#monederodispo").text('$'+usuario.monedero);
+						$("#monederodispo").text(usuario.monedero);
 						$(".nombreusuario").val(usuario.idusuarios+`-`+usuario.nombre+` `+usuario.paterno+` `+usuario.materno);
 						var html=`
 						<table style="background: #7488d2;width: 100%;    color: white;
@@ -192,11 +195,15 @@ function ObtenerDatosCliente(idcliente) {
 						  <tr>
 						    <th style="padding: 4px;    width: 20%;">EMAIL</th>
 						    <td style="font-size: 19px;">`+usuario.email+`</td>
-						  </tr>
-						  <tr>
-						    <th style="padding: 4px;    width: 20%;">FECHA NAC.</th>
-						    <td style="font-size: 19px;">`+usuario.fechanacimiento+`</td>
-						  </tr>
+						  </tr>`;
+						  if (usuario.celular!='') {
+							 html+=`<tr>
+						    	<th style="padding: 4px;width: 20%;">CELULAR</th>
+						    	<td style="font-size: 19px;">`+usuario.celular+`</td>
+						 	 	</tr>`;
+							}
+
+						 html+=`
 						  <tr>
 						    <th style="padding: 4px;    width: 20%;">MONEDERO</th>
 						    <td style="font-size: 19px;">$`+usuario.monedero+`</td>
@@ -209,6 +216,33 @@ function ObtenerDatosCliente(idcliente) {
 						$("#datoscliente").addClass('borde');
 								
 					  	}
+				  });
+}
+
+
+
+function ObtenerMonedero(idcliente) {
+	var datos="idusuario="+idcliente;
+
+	 $.ajax({
+					url:'catalogos/pagos/ObtenerUsuario.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos
+					data: datos, //Le pasamos el objeto que creamos con los archivos
+					dataType:'json',
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+					  },
+					success:function(msj){
+						var usuario=msj.respuesta;
+						monedero=0;
+
+						$("#monederodispo").text(msj.monedero);
+						}
 				  });
 }
 
@@ -246,13 +280,15 @@ function PintarPagosPorpagar(pagos) {
 		 		<li class="list-group-item  " style="">
 
 		       <div class="row">
-				   <div class="col-md-7">
+				   <div class="col-md-10">
+
+				   <span>Seleccionar todos</span> 
 				   </div>
-				  <div class="col-md-5">
+				  <div class="col-md-2">
 
 					<span style="">
-					Seleccionar todos  
-					<input type="checkbox" id="checktodos" onchange="SeleccionarTodos()" style="width:30px;height: 20px;">
+					
+					<input type="checkbox" class="checkcambia" id="checktodos" onchange="SeleccionarTodos()" style="width:30px;height: 20px;">
 					</span>
 			 	  </div>
 		 	  </div>
@@ -285,19 +321,19 @@ function PintarPagosPorpagar(pagos) {
 
                           if (pagos[i].alumnos==pagos[i].aceptados) {
 
-                             html+=` <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Seleccionarcheck(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />`;
+                             html+=` <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar checkcambia" onchange="Seleccionarcheck(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />`;
                                html+=` <input type="hidden" id="sepuede_`+pagos[i].idpago+`" class="" value="1" style="" />`;
 
                           }else{
 
-                            html+=` <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Advertencia(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />`;
+                            html+=` <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar checkcambia" onchange="Advertencia(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />`;
                             html+=` <input type="hidden" id="sepuede_`+pagos[i].idpago+`" class="" value="0" style="" />`;
 
                           }
      
                         }else{
 
-                         html+=` <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar" onchange="Seleccionarcheck(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />`;
+                         html+=` <input type="checkbox" id="check_`+pagos[i].idpago+`" class="seleccionar checkcambia" onchange="Seleccionarcheck(`+pagos[i].idpago+`)" style="width: 30px;height: 20px;" />`;
                          html+=` <input type="hidden" id="sepuede_`+pagos[i].idpago+`" class="" value="1" style="" />`;
 
                         }
@@ -313,8 +349,33 @@ function PintarPagosPorpagar(pagos) {
                         <input type="hidden" id="usuario_`+pagos[i].idpago+`" value="`+pagos[i].idusuarios+`"  />
 
 
-					    </span>
-			   		 </div>
+					    </span>`;
+
+/*
+					    if (pagos[i].habilitarmonedero==1) {
+                           if (pagos[i].monederousado==0) {
+                        html+=`  <span class="chip  btnmonedero" 
+                          id="" style=" height: 30px;width:150px;background:#007aff;color:white;margin-right: 10px;text-align:center;justify-content: center;" 
+                          onclick="AbrirModalmonedero('`+pagos[i].idpago+`')">
+                                
+                                Aplicar monedero
+                                </span>`;
+
+                              }else{
+
+                         html+=`  <span class="chip  btnmonedero" 
+                          id="" style=" height: 30px;width:150px;background:#007aff;color:white;margin-right: 10px;text-align:center;justify-content: center;" 
+                          onclick="RevertirMonedero('`+pagos[i].idpago+`')">
+                                
+                                Revertir
+                                </span>`;
+
+
+                              }
+                            }*/
+
+
+			   		html+=` </div>
 			    
 			    </div>
 
@@ -330,8 +391,45 @@ function PintarPagosPorpagar(pagos) {
 	}
 
 	$(".todospagos").html(html);
+
+	CambiarChek();
+}
+function Advertencia(idpago) {
+  $("#check_"+idpago).prop('checked',false);
+
+  alert('','Para pagar, todos los participantes deben aceptar');
+
 }
 
+function CambiarChek(argument) {
+	  	var checkboxes = document.querySelectorAll('.checkcambia');
+
+// Recorre cada elemento y reemplázalo con la estructura de div personalizada
+checkboxes.forEach(function(checkbox) {
+  var div = document.createElement('div');
+  div.className = 'material-switch pull-right';
+
+  var newCheckbox = document.createElement('input');
+  newCheckbox.id = checkbox.id;
+  newCheckbox.type = 'checkbox';
+  newCheckbox.value = checkbox.value;
+  newCheckbox.onchange = checkbox.onchange; // Copia la función onchange del checkbox original
+  newCheckbox.className=checkbox.className;
+
+  var label = document.createElement('label');
+  label.setAttribute('for', checkbox.id);
+  label.className = 'label-success';
+
+  div.appendChild(newCheckbox);
+  div.appendChild(label);
+
+  // Agregar nuevo div al DOM reemplazando el checkbox original
+  checkbox.parentNode.replaceChild(div, checkbox);
+
+  // Agregar evento onchange al nuevo div
+  
+});
+}
 function PintarpagosTabla(respuesta) {
 	var html="";
 	if (respuesta.length>0) {
@@ -684,13 +782,29 @@ function CargartipopagoFactura(tipodepagoseleccionado) {
 
 function PintarTipoPagos(respuesta) {
 	var html="";
-	if (respuesta.length>0) {
+	/*if (respuesta.length>0) {
 		html+=`<option value="0">SELECCIONAR TIPO DE PAGO</option>`;
 		for (var i = 0; i <respuesta.length; i++) {
 			html+=`<option value="`+respuesta[i].idtipodepago+`">`+respuesta[i].tipo+`</option>`;
 		}
+	}*/
+
+
+	if (respuesta.length>0) {
+			for (var i = 0; i <respuesta.length; i++) {
+
+			html+=`
+			<label class="btn btn_colorgray2 btntipodepago " id="catebtntipodepago_`+respuesta[i].idtipodepago+`">
+			<input type="checkbox" id="cate_13" class="catechecktipo" onchange="SeleccionarTipodePago(`+respuesta[i].idtipodepago+`)" value="0"> 
+				`+respuesta[i].tipo+`</label>
+			`;
+
+		}
 	}
-	$("#tipopago").html(html);
+	$(".divtipopago").html(html);
+}
+function SeleccionarTipodePago(idtipodepago) {
+	CargarOpcionesTipopago(idtipodepago);
 }
 
 
@@ -699,7 +813,7 @@ function ValidacionMonto() {
 	var valor= $("#montovisual").val();
 	
 	if (valor>=total) {
-
+ 
 	$("#btnpagarresumen").attr('disabled',false);
 	var cambio=parseFloat(total)-parseFloat(valor);
 	$("#cambio").text(formato_numero(Math.abs(cambio),2,'.',','));
@@ -1181,7 +1295,7 @@ function PintarListadoDatosFiscales(respuesta) {
 
   	html+=`<div class="">
         <div class="" style="margin-bottom: 1em;">
-          <button type="button" onclick="AbrirModalDatoFiscal()"   class="btn btn-primary" style="width:100%;">
+          <button type="button" onclick="AbrirModalDatoFiscal()"   class="btn btn-primary" style="width:94%;">
             Agregar datos fiscales
           </button>
         </div>`;
@@ -1191,7 +1305,7 @@ function PintarListadoDatosFiscales(respuesta) {
   	for (var i = 0; i < respuesta.length; i++) {
   		html+=`
 
-  			 <div class="list-group-item">
+  			 <div class="list-group-item" style="margin-right: 2.5em;    margin-left: 0.1em;">
 		        <div class="form-check">
 		          <input class="form-check-input checkfiscal" type="checkbox"  id="check_`+respuesta[i].idusuariosdatosfiscales+`" onchange="SeleccionarChekboxDatos(`+respuesta[i].idusuariosdatosfiscales+`)">
 		          <label class="form-check-label" for="checkbox2">
@@ -1631,7 +1745,7 @@ function CrearSesionUsuario(idcliente) {
 			var error;
 			console.log(XMLHttpRequest);
 			if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
-			if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+		 	if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
 			$('#abc').html('<div class="alert_error">'+error+'</div>');	
 			//aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
 		},
@@ -1643,3 +1757,245 @@ function CrearSesionUsuario(idcliente) {
 	});
 }
 
+function AbrirModalDetalleOperacion() {
+	// body...
+	//var detalle=$(".detallepago").html();
+	var lblsubtotal=$("#subtotal").text();
+	var lblmonedero=$("#monedero").text();
+	var lbldescuento=$("#descuento").text();
+	var lbldescuentomem=$("#descuentomembresia").text();
+	var lblcomision=$(".lblcomision").text();
+	var lbltotal=$("#total").text();
+
+	$("#modaldetalleope").modal();
+
+	//if (NtabName=='punto-venta') {
+		$("#tbllistardetalle").html('');
+		CargarProductosSeleccionados2('tbllistardetalle');
+	//}
+
+	//if (NtabName=='pagos') {
+
+		CargarPagosElegidosSeleccionados2('tbllistardetalle');
+
+	//}
+
+	
+	var detalletotal=`
+		<div class="row detallepago" style="">
+	<div class="col-md-6" style="
+    margin: 0;
+    padding: 0;">
+		<div class="">
+			<div class="col-md-12">
+				<div class="card">
+				<div class="card-body" style="    padding: 1.25rem 0rem 1rem 1rem;">
+			<div class="row" style="
+			       
+			    ">
+			    	<div class="col-md-12" style="font-size: 16px;">SUBTOTAL: </div>
+			    	<div class="col-md-12" style="font-size: 16px;">MONEDERO: </div>
+			
+				<div class="col-md-12" style="font-size: 16px;">DESCUENTO: </div>
+				<div class="col-md-12" style="font-size: 16px;    padding: 0px 0 10px 10px;">DESCUENTO MEMBRESÍA: </div>
+					<div class="col-md-12 divcomision" style="font-size: 16px;display: none;">COMISIÓN: </div>
+
+				<div class="col-md-12" style="font-size: 20px;">TOTAL:</div>
+
+			</div>
+		</div>
+	</div>
+	</div>
+	</div>
+</div>
+	<div class="col-md-6" style="font-size: 16px;">
+
+		<div class="row" >
+			<div class="col-md-12">
+				<div class="card">
+				<div class="card-body" style="padding: 1.25rem 1rem 1rem 1rem;">
+			<div class="row">
+				<div class="col-md-12" style="text-align: right;">$<span id="subtotal" class="" style="font-size: 16px;">`+lblsubtotal+`</span></div>
+						<div class="col-md-12" style="text-align: right;">$<span id="" style="font-size: 16px;">`+lblmonedero+`</span></div>
+				
+				<div class="col-md-12" style="text-align: right;">$<span id="" style="font-size: 16px;">`+lbldescuento+`</span>
+				</div>
+				<div class="col-md-12" style="text-align: right;">$<span id="" style="font-size: 16px;">`+lbldescuentomem+`</span><br>
+				</div><br>`;
+		if (parseFloat(lblcomision)>0) {
+			detalletotal+=`<div class="col-md-12 divcomision" style="text-align: right;display: none;">
+			$<span id="comision" class="" style="font-size: 16px;">0.00</span>
+			</div>`;
+		}
+
+
+			detalletotal+=`
+			<div class="col-md-12" style="text-align: right;font-size: 20px;/* padding-top: 6px; */">$<span id="">`+lbltotal+`</span>
+			</div>
+			</div>
+
+			</div>
+		</div>
+	</div>
+	</div>
+		</div>
+	</div>
+
+	`;
+
+	$("#totales").html(detalletotal);
+
+}
+
+function CargarProductosSeleccionados2(tbllistarseleccionado) {
+	
+	var pagina="ObtenerCarrito.php";
+	$.ajax({
+    type: 'POST',
+    dataType: 'json',
+    url: urlphp+pagina,
+    success: function(datos){
+
+    	var carrito=datos.carrito;
+    	monederousuario=datos.monedero;
+    	elementoscarrito=carrito;
+    
+	if (elementoscarrito.length>0) {
+	var html="";
+	if (elementoscarrito.length>0) {
+		for (var i = 0; i <elementoscarrito.length; i++) {
+
+		html+=`
+		<tr>
+	      <td style="text-align:center;">`+elementoscarrito[i].cantidad+`</td>
+	      <td style="width: 20%;text-align:center;">`+elementoscarrito[i].nombrepaquete+`</td>
+	       
+	      <td style="width: 20%;text-align:center;">$`+formato_numero(elementoscarrito[i].costounitario,2,'.',',')+`</td>`;
+	      var total=elementoscarrito[i].costototal;
+	      html+=`<td style="text-align:center;">$`+formato_numero(total,2,'.',',')+`</td>
+		      <td style="width: 20%;text-align:center;">
+
+		      $`+elementoscarrito[i].monederousado+`
+										
+
+		      </td>	`;
+		      var resta=parseFloat(elementoscarrito[i].costototal)-parseFloat(elementoscarrito[i].monederousado);
+		    
+		     html+= `
+		     <td style="text-align:center;">$0</td>
+		   	 <td style="text-align:center;">$0</td>
+
+		   <td style="text-align:center;">$`+formato_numero(resta,2,'.',',')+`</td>
+		    </tr>
+
+			 	`;
+
+			 
+		 }
+
+
+	}
+
+	$("#"+tbllistarseleccionado).append(html);
+
+	}
+
+
+	},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+      var error;
+        if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+        if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+                //alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+                console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+          }
+    });
+}
+
+function CargarPagosElegidosSeleccionados2(tbllistarseleccionado) {
+	var html=``;
+
+	if (arraypagoscheck.length>0) {
+		
+		for (var i = 0; i < arraypagoscheck.length; i++) {
+				var totaldescuentos=0;
+				var totaldescuentosm=0;
+
+			var objetoEncontrado = arraypagos.find(function(objeto) {
+					  return objeto.idpago == arraypagoscheck[i];
+					});
+
+			var monederoobjeto=0;
+
+			if (pagosguardados.length>0) {
+				var objetoEncontrado2 = pagosguardados.find(function(objeto) {
+					  return objeto.idpago == arraypagoscheck[i];
+					});
+				if (objetoEncontrado2!=null) {
+
+					monederoobjeto=objetoEncontrado2.valormonedero;
+
+				}
+
+			}
+		
+				if (objetoEncontrado!=null) {
+
+
+					var objetoEncontrado3 = descuentosaplicados.filter(function(objeto) {
+					  return objeto.idpago == arraypagoscheck[i];
+					});
+
+					var objetoEncontrado4 = descuentosmembresia.filter(function(objeto) {
+					  return objeto.idpago == arraypagoscheck[i];
+					});
+
+
+
+
+					if (objetoEncontrado3.length>0) {
+						for (var k = 0; k < objetoEncontrado3.length; k++) {
+							totaldescuentos=totaldescuentos+objetoEncontrado3[k].montoadescontar;
+						}
+					}
+
+					if (objetoEncontrado4.length>0) {
+						for (var l = 0; l < objetoEncontrado4.length; l++) {
+							totaldescuentosm=totaldescuentosm+objetoEncontrado4[k].montoadescontar;
+						}
+					}
+
+						
+
+					html+=`
+		 			<tr>
+     			    <td style="width: 20%;text-align:center;">1</td>
+
+			      	<td style="width: 20%;text-align:center;">`+objetoEncontrado.concepto+`</td>
+			       
+			      	<td style="width: 20%;text-align:center;">$`+formato_numero(objetoEncontrado.monto,2,'.',',')+`</td>`;
+			      	var total=objetoEncontrado.monto;
+			      	html+=`<td style="width: 20%;text-align:center;">$`+formato_numero(total,2,'.',',')+`</td>
+
+
+				      <td style="width: 20%;text-align:center;">
+				      $`+formato_numero(monederoobjeto,2,'.',',')+`
+												
+				      </td>	`;
+				      var resta=parseFloat(total)-parseFloat(totaldescuentos)-parseFloat(totaldescuentosm)-parseFloat(monederoobjeto);
+
+				        html+=`<td style="width: 20%;text-align:center;">$`+totaldescuentos+`</td>`;
+
+				     	html+=`<td style="width: 20%;text-align:center;">$`+totaldescuentosm+`</td>`;
+
+				     	html+=`<td style="width: 20%;text-align:center;">$`+formato_numero(resta,2,'.',',')+`</td>
+				    </tr>
+
+		 				`;
+
+				}
+		}
+
+		$("#"+tbllistarseleccionado).append(html);
+
+	}
+}

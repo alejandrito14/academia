@@ -99,11 +99,12 @@ function GuardarCategoriaspaquete(form,regresar,donde,idmenumodulo)
 	 }
 }
 
-function BorrarCategoria(idcategoria,campo,tabla,valor,regresar,donde,idmenumodulo) {
-	
-var datos='idcategoria='+idcategoria;
+function BorrarCategoriaPaquete(idcategoria,campo,tabla,valor,regresar,donde,idmenumodulo) {
+	if(confirm("\u00BFEstas seguro de querer realizar esta operaci\u00f3n?"))
+	{
+var datos='idcategoriapaquete='+idcategoria;
 	$.ajax({
-		url:'catalogos/categoriaspaquete/borrarCategoria.php', //Url a donde la enviaremos
+		url:'catalogos/categoriapaquete/BorrarCategoriaPaquete.php', //Url a donde la enviaremos
 	  type:'POST', //Metodo que usaremos
 	  data: datos, //Le pasamos el objeto que creamos con los archivos
 	  error:function(XMLHttpRequest, textStatus, errorThrown){
@@ -125,6 +126,7 @@ var datos='idcategoria='+idcategoria;
 				}			
 			}
 	});
+	}
 }
 
 

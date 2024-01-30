@@ -55,7 +55,7 @@ $existe=0;
 		# code...
 
 		$validar=$paquetes->ValidarSkupaquetes();
-
+		
 		if (count($validar)>0) {
 		    $existe=1;
 		}

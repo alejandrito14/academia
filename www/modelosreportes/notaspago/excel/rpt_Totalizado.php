@@ -1,7 +1,7 @@
 <?php
 
 /*======================= INICIA VALIDACIÓN DE SESIÓN =========================*/
-
+ 
 require_once("../../../clases/class.Sesion.php");
 //creamos nuestra sesion.
 $se = new Sesion();
@@ -36,6 +36,7 @@ require_once("../../../clases/class.Servicios.php");
 require_once("../../../clases/class.Fechas.php");
 require_once("../../../clases/class.Notapago.php");
 require_once("../../../clases/class.Categorias.php");
+require_once("../../../clases/class.Tipocoach.php");
 //Se crean los objetos de clase
 $db = new MySQL();
 $reporte = new Reportes();
@@ -53,7 +54,8 @@ $servicios=new Servicios();
 $servicios->db=$db;
 $fechas=new Fechas();
 $nota=new Notapago();
-
+$tipocoach=new Tipocoach();
+$tipocoach->db=$db;
 $categorias =new Categorias();
 $categorias->db=$db;
 $nota->db=$db;
@@ -750,8 +752,13 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 
 			$idusuarios_servicios=$obtenerservicios[$k]->idusuarios_servicios;
 			$asignacion->idusuarios_servicios=$idusuarios_servicios;
-			$tipomontopago=$asignacion->ObtenertipoMontopago();
+			//
+			
 
+			$tipocoach->idcoach=$idcoach;
+
+		//	$tipomontopago=$asignacion->ObtenertipoMontopago();
+			$tipomontopago=$tipocoach->ObtenerTipoMontoCoach();
 			
 			$pagos->idservicio=$idservicio;
 			$servicios->idservicio=$idservicio;

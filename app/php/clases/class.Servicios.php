@@ -78,6 +78,7 @@ class Servicios
 	public $fechacancelacion;
 	public $usuariocancela;
 	public $aceptarserviciopago;
+	public $bloqueocanchas;
 
 
 	public function ObtenerServicios()
@@ -621,9 +622,10 @@ class Servicios
 		validaradmin,
 		tiporeembolso,
 		idpoliticaaceptacion,
-		aceptarserviciopago
+		aceptarserviciopago,
+		bloqueocanchas
 
-		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes','$this->politicasaceptacion','$this->controlasistencia','$this->idusuarios','$this->validaradmin','$this->tiporeembolso','$this->v_politicaaceptacionseleccion','$this->aceptarserviciopago')";
+		) VALUES ('$this->titulo','$this->descripcion','$this->idcategoriaservicio','$this->estatus','$this->orden','$this->totalclase','$this->modalidad','$this->montopagarparticipante','$this->montopagargrupo','$this->costo','$this->idcategoria','$this->fechainicial','$this->fechafinal','$this->modalidadpago','$this->periodo','$this->lunes','$this->martes','$this->miercoles','$this->jueves','$this->viernes','$this->sabado','$this->domingo','$this->numparticipantes','$this->numparticipantesmax','$this->abiertocliente','$this->abiertocoach','$this->abiertoadmin','$this->ligarclientes','$this->tiempoaviso','$this->tituloaviso','$this->descripcionaviso','$this->politicascancelacion','$this->reembolso','$this->cantidadreembolso','$this->asignadocliente','$this->asignadocoach','$this->asignadoadmin','$this->numligarclientes','$this->politicasaceptacion','$this->controlasistencia','$this->idusuarios','$this->validaradmin','$this->tiporeembolso','$this->v_politicaaceptacionseleccion','$this->aceptarserviciopago','$this->bloqueocanchas')";
 			
 		$resp=$this->db->consulta($query);
 		$this->idservicio = $this->db->id_ultimo();
@@ -677,7 +679,8 @@ class Servicios
 		validaradmin='$this->validaradmin',
 		tiporeembolso='$this->tiporeembolso',
 		idpoliticaaceptacion='$this->v_politicaaceptacionseleccion',
-		aceptarserviciopago='$this->aceptarserviciopago'
+		aceptarserviciopago='$this->aceptarserviciopago',
+		bloqueocanchas=1
 		WHERE idservicio=$this->idservicio";
 
 		

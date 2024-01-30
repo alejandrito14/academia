@@ -745,7 +745,7 @@ function CargarPagosElegidos() {
                               <div class="col-80" style="text-align: end;    margin: 0;padding: 0; ">
 
                             `;
-                              var t=listado[i].monto-todosdescuento-listado[i].monederousado;
+                              var t=parseFloat(listado[i].monto)-parseFloat(todosdescuento)-parseFloat(listado[i].monederousado);
                               html2+=`<p class="text-muted small" style="text-align: left;font-size:18px;"> 
                               Subtotal </p>
 

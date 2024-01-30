@@ -29,7 +29,7 @@ $se = new Sesion();
 			$servicio =  $con2->query($consulta); 
 		
 			$servicio_row =  mysqli_fetch_assoc($servicio);  
- 
+ 			
 			$servicio_num=mysqli_num_rows($servicio);
 
 
@@ -99,8 +99,8 @@ if($vigente == 1)
 	$tabla = "usuarios";
 
 	$query= "SELECT * FROM ".$tabla." WHERE usuario LIKE BINARY'".$usuario."' AND clave LIKE BINARY '".$contrasena."'";
-
-
+	
+	
 			$resp=$conexcion->consulta($query);
 			
 			$rows=$conexcion->fetch_assoc($resp);
@@ -122,7 +122,7 @@ if($vigente == 1)
 					$se->crearSesion('se_sas_Usuario',$rows['idusuarios']);
 					$se->crearSesion('se_sas_Tipo',$rows['tipo']);
 
-					$queryempresas = "SELECT GROUP_CONCAT(idsucursales) as idempresase FROM acceso_sucursal_empleado WHERE idusuarios=".$rows['idusuarios'];
+					$queryempresas = "SELECT GROUP_CONCAT(idempresa) as idempresase FROM acceso_empresa_empleado WHERE idusuarios=".$rows['idusuarios'];
 				
 					$resp2=$conexcion->consulta($queryempresas);
 					$rows2=$conexcion->fetch_assoc($resp2);
@@ -161,7 +161,7 @@ if($vigente == 1)
 
 
 
-					$ruta=array('catalogos/categorias/imagenes','catalogos/configuracion/imagenes','catalogos/anuncios/imagenes','catalogos/anuncios/publicidad','catalogos/entradas/imagenes','catalogos/entradas/videos','catalogos/servicios/imagenes','catalogos/tableroanuncios/imagenes','catalogos/membresia/imagenes','catalogos/servicios/imagenesinformativas','catalogos/tableroanuncios/imagenestablero');
+					$ruta=array('catalogos/categorias/imagenes','catalogos/configuracion/imagenes','catalogos/anuncios/imagenes','catalogos/anuncios/publicidad','catalogos/entradas/imagenes','catalogos/entradas/videos','catalogos/servicios/imagenes','catalogos/tableroanuncios/imagenes','catalogos/membresia/imagenes','catalogos/servicios/imagenesinformativas','catalogos/tableroanuncios/imagenestablero','catalogos/zonas/imagenes');
 
 
 					for ($i=0; $i < count($ruta); $i++) { 

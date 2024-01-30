@@ -16,7 +16,7 @@ class MySQL
         $this->servidor = 'localhost';
         $this->usuario  = 'root';
         $this->contrase = 'root';
-        $this->db       = 'baseprueba';
+        $this->db       = 'base109pruebalocal';
 
         if (!isset($this->conexion)) {
 

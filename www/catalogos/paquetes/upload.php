@@ -3,6 +3,7 @@ require_once("../../clases/class.Sesion.php");
 
 $se = new Sesion();
     $ruta='imagenespaquete/'.$_SESSION['codservicio'].'/';
+    
 
 if (($_FILES["file"]["type"] == "image/jpg")
     || ($_FILES["file"]["type"] == "image/jpeg")

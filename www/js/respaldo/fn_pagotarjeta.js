@@ -27,6 +27,7 @@ function ShowDiv(divid){
   $("#"+divid).css('display','block');
 }
 
+
 function ObtenerTarjetasStripe(setlastcard=false) {
     var idtipodepago=$("#tipopago").val();
     var fname = "getCardList";
@@ -37,7 +38,7 @@ function ObtenerTarjetasStripe(setlastcard=false) {
 
     HideDiv("divagregartarjeta");
     ShowDiv("divlistadotarjetas");
-
+ 
     $.ajax({
         type: 'POST',
         dataType: 'json',
@@ -97,7 +98,7 @@ function PintarTarjetas(tarjetas,setlastcard=false) {
               </div>
             </div>
 
-                <div class="" style="float: right;line-height: 3;">
+                <div class="" style="float: right;line-height: 3;margin-left: 10px;">
                 ` +
                     `<a class="btn btn_rojo botoneliminar" style="" onclick="eliminarTarjeta('`+tarjetas[i].id +`','scard`+i+`');" style="float:left" >
                        <i style="color:white;" class="mdi mdi-delete-empty"></i>`+
@@ -143,8 +144,13 @@ function LoadSetupIntent(){
     HideDiv("divlistadotarjetas");
     ShowDiv("divagregartarjeta")
     $("#abackpage").attr("onclick","BackToList()");
-    
-          var clavepublica=localStorage.getItem('clavepublica');
+  var clavepublica="";
+  ObtenerLlavePublica()
+  .then((data) => {
+    console.log(data)
+     clavepublica=data.llavepublica;
+
+         
 
   //  var pkey = "pk_test_51JNNdFJrU4M0Qnc879SI1I0o7BIpTnoMgioMaKYGDbOjTLCcfl8Rx8TLTlqPbBEifMXrRGqREEOBjCXY6RQo83Uw00M5z8GOPe"
     var pkey = clavepublica;
@@ -244,7 +250,10 @@ function LoadSetupIntent(){
         async: false,
         success: function (datos) {
             var setupIntent = datos;
-            //console.log(setupIntent);
+
+           /* console.log('impresion set');
+
+            console.log(setupIntent);*/
             var button = document.getElementById("submit-card");
              EstablecerNombreCliente();
 
@@ -287,6 +296,12 @@ function LoadSetupIntent(){
             console.log("Error leyendo fichero jsonP " + d_json + pagina + " " + error, "ERROR");
         }
     });
+
+      })
+  .catch((error) => {
+    console.log(error)
+  })
+
 }
 
 function setupComplete(stripe, clientSecret) {
@@ -510,3 +525,31 @@ function paymentIntentSucceeded(stripe,clientSecret, viewSelector) {
     //document.querySelector(".code-preview").classList.add("expand");
   });
 };
+
+function ObtenerLlavePublica() {
+
+   var idtipodepago=$("#tipopago").val();
+  var fname = "llavepublica";
+  var pagina = "ObtenerDatosStripe.php";
+  var idcliente = localStorage.getItem('id_user');
+  var datos = "idcliente=" + idcliente + "&fname="+fname+"&idtipodepago="+idtipodepago;
+   return new Promise(function(resolve, reject) {
+  $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: urlphp + pagina,
+      data: datos,
+      success: function (resp) {
+
+       resolve(resp);
+
+      }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+          var error;
+          if (XMLHttpRequest.status === 404) error = "Pagina no existe " + pagina + " " + XMLHttpRequest.status;// display some page not found error 
+          if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+          console.log("Error leyendo fichero jsonP " + d_json + pagina + " " + error, "ERROR");
+      }
+  });
+});
+
+}

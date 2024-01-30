@@ -279,6 +279,17 @@ var oTable = $('#zero_config').dataTable( {
 													$bt->title="EDITAR";
 													$bt->class='btn btn_colorgray';
 													$bt->armar_boton();
+
+
+													$bt->titulo = "";
+													$bt->icon = "mdi-account";
+													$bt->funcion = "detalleAlumno(".$result_row['idusuarios'].")";
+													$bt->estilos = ""; 
+													$bt->permiso = $permisos;
+													$bt->tipo = 2;
+													$bt->title="DETALLE";
+													$bt->class='btn btn_colorgray';
+													$bt->armar_boton();
 											
 
 
@@ -340,6 +351,174 @@ var oTable = $('#zero_config').dataTable( {
 			</table>
 		</div>
   	</div>
+</div>
+
+
+<div class="modal fade" id="modaldetallealumno" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog  modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	<div class="row">
+      		<div class="col-md-12"><h2 style="text-align: center;"></h2></div>
+      	</div>
+        <div class="row">
+        	<div class="col-md-4">
+        		<div class="row" style="margin-left: 1em;">
+        			<img src="" alt="" class="imgperfil" style="height: 250px;width: 250px;border-radius: 10px;">
+        		</div>
+
+
+        		<div class="row" style="margin-top: 1em;margin-left: 1em;">
+							  <div class="" style="width: 100%;">
+							    <!-- Tab navs -->
+							    <div
+							      class="nav flex-column nav-pills text-center"
+							      id="v-pills-tab"
+							      role="tablist"
+							      aria-orientation="vertical"
+							    >
+							      <a
+							        class="nav-link tabskardex active"
+							        id="v_tab_1"	 style="cursor:pointer;" onclick="CambioTab(1)"						       
+
+							        >Datos generales</a>
+							     
+							      <a
+							        class="nav-link tabskardex"
+							        id="v_tab_2" style="cursor:pointer;" onclick="CambioTab(2)"
+							       
+							        >Servicios</a
+							      >
+
+							      <a
+							        class="nav-link tabskardex"
+							        id="v_tab_3" style="cursor:pointer;" onclick="CambioTab(3)"
+							       
+							        >Membresias</a
+							      >
+
+							       <a
+							        class="nav-link tabskardex"
+							        id="v_tab_4" style="cursor:pointer;" onclick="CambioTab(4)"
+							       
+							        >Asociados</a
+							      >
+							      <a
+							        class="nav-link tabskardex"
+							        id="v_tab_5" style="cursor:pointer;" onclick="CambioTab(5)"
+							        
+							        >Tutorados</a
+							      >
+							    </div>
+							    <!-- Tab navs -->
+							  </div>
+
+ 
+</div>
+
+        	</div>
+        	<div class="col-md-8">
+        		<div class="">
+        				 <div class="col-md-12">
+    <!-- Tab content -->
+							    <div class="tab-content" id="v-pills-tabContent">
+							      <div
+							        class="tab-pane tabsk fade show active"
+							        id="v-pills-link1"
+							        role="tabpanel"
+							        aria-labelledby="v-pills-link1-tab"
+							      >
+
+							        <table class="table table-user-information">
+                    <tbody>
+                      <tr>
+                      	<td style="    font-weight: bold;">Alias:</td>
+                        <td><p class="divalias" style="color: gray;"></p></td>
+
+                       </tr>
+                       <tr>
+                        <td style="    font-weight: bold;">Nombre:</td>
+                        <td><p class="divnombre" style="color: gray;"></p></td>
+                      </tr>
+                      <tr>
+                        <td style="    font-weight: bold;">Fecha Nac.:</td>
+                        <td> <p class="divfechanacimiento" style="color: gray;"></p></td>
+                      </tr>
+                      <tr>
+                        <td style="    font-weight: bold;">Correo:</td>
+                        <td><p class="divcorreo" style="color: gray;"></p></td>
+                      </tr>
+                  
+                       <tr>
+                        <td style="    font-weight: bold;">Sexo:</td>
+                        <td><p class="divsexo" style="color: gray;"></p></td>
+                      </tr>
+                      <tr>
+                      			  <td style="    font-weight: bold;">Celular:</td>
+                       			 <td><p class="divcelular" style="color: gray;"></p>
+                        		</td>
+                      </tr>
+                     
+                      
+                        <tr>
+                      			  <td style="    font-weight: bold;">Tipo de usuario:</td>
+                       			 <td><p class="divtipousuario" style="color: gray;"></p>
+                        		</td>
+                      </tr>    
+                    
+                     
+                    </tbody>
+                  </table>
+							       
+							       
+							      </div>
+							      <div
+							        class="tab-pane tabsk fade"
+							        id="v-pills-link2"
+							        role="tabpanel"
+							        aria-labelledby="v-pills-link2-tab">
+							       	<div class="divservicios"></div>
+							       
+							      </div>
+							      <div
+							        class="tab-pane tabsk fade"
+							        id="v-pills-link3"
+							        >
+							        <div class="divmembresias"></div>
+							      </div>
+							      <div
+							        class="tab-pane tabsk fade"
+							        id="v-pills-link4"
+							       >
+							       <div class="divasociados"></div>
+							      </div>
+
+							        <div
+							        class="tab-pane tabsk fade"
+							        id="v-pills-link5"
+							       >
+							       <div class="divtutorados"></div>
+							      </div>
+							    </div>
+    <!-- Tab content -->
+  </div>
+        	
+        		</div>
+        	</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <!-- <button type="button" class="btn btn-primary"></button> -->
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>

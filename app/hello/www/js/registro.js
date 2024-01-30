@@ -2131,7 +2131,7 @@ function ValidarCelular() {
 		var uuid=localStorage.getItem('UUID');
 		var datos="telefono="+telefono+"&sistema="+sistema+"&uuid="+uuid+"&inputleido="+inputleido;
 
-		var pagina = "validaciontelefono.php";
+		var pagina = "validaciontelefono2.php";
 
 		$.ajax({
 		type: 'POST',
@@ -5380,4 +5380,43 @@ function ObtenerIdUsuarioPrincipal() {
   		resolve();
 	
     })
+}
+
+function Guardardatospersonales() {
+
+	var v_nombre=$("#v_nombre").val();
+	var v_paterno=$("#v_paterno").val();
+	var v_materno=$("#v_materno").val();
+	var v_fecha=$("#v_fecha").val();
+	var v_sexo=$("#v_sexo").val();
+
+	var iduser=localStorage.getItem('id_user');
+
+	var datos="id_user="+iduser+"&v_nombre="+v_nombre;
+		datos+="&v_paterno="+v_nombre+"&v_materno="+v_materno;
+		datos+="&v_materno="+v_materno+"&v_fecha="+v_fecha;
+		datos+="&v_sexo="+v_sexo;
+
+		var pagina="Guardardatospersonales.php";
+
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: urlphp+pagina,
+			data: datos,
+			async:false,
+			success: function(datos){
+				var respuesta=datos.respuesta;
+				alerta('','Se guardaron los datos');
+		
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+					var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+					//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+				}
+		});
+
 }

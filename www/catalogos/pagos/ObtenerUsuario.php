@@ -32,7 +32,7 @@ try
 	//Enviamos la conexion a la clase
 	$lo->db = $db;
 
-	$idusuarios=$_POST['idusuario'];
+	$idusuarios=$se->obtenerSesion('usuariopago');
 	$lo->idusuarios=$idusuarios;
 	$usuarios->id_usuario=$idusuarios;
 

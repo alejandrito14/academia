@@ -26,7 +26,7 @@ try
 	$idestado=$_POST['idestado'];
 	$idmunicipio=$_POST['idmunicipio'];
 	$codigopostal=$_POST['codigopostal'];
-
+	
 
 	$co->idestado=$idestado;
 	$co->idmunicipio=$idmunicipio;

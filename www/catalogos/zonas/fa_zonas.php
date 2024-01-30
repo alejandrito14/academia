@@ -53,6 +53,7 @@ if(!isset($_GET['idzona'])){
 	$col = "col-md-12";
 	$ver = "display:none;";
 	$titulo='NUEVO ESPACIO';
+		$ruta="images/sinfoto.png";
 
 }else{
 	//El formulario funcionara para modificacion de un registro
@@ -73,12 +74,21 @@ if(!isset($_GET['idzona'])){
 	
 	$estatus = $f->imprimir_cadena_utf8($result_zona_row['estatus']);
 	$color=$result_zona_row['color'];
-	
+	$foto=$result_zona_row['imagen'];
+
+
 
 	$col = "col-md-12";
 	$ver = "";
 		$titulo='EDITAR ESPACIO';
 
+		$ruta='';
+	if($foto==""){
+		$ruta="images/sinfoto.png";
+	}
+	else{
+		$ruta="catalogos/zonas/imagenes/".$_SESSION['codservicio']."/$foto";
+	}
 }
 
 /*======================= INICIA VALIDACIÓN DE RESPUESTA (alertas) =========================*/
@@ -165,7 +175,30 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					<div class="tab-content tabcontent-border">
 						<div class="tab-pane active show" id="generales" role="tabpanel">
 
-					
+					<div class="col-md-6" >
+
+									<form method="post" action="#" enctype="multipart/form-data">
+								    <div class="card" style="width: 18rem;margin: auto;margin-top: 3em;">
+								        <img class="card-img-top" src="">
+								        <div id="d_foto" style="text-align:center; ">
+											<img src="<?php echo $ruta; ?>" class="card-img-top" alt="" style="border: 1px #777 solid"/> 
+										</div>
+								        <div class="card-body">
+								            <h5 class="card-title"></h5>
+								           
+								            <div class="form-group">
+
+								            	
+								               
+								                <input type="file" class="form-control-file" name="image" id="image" onchange="SubirImagenzona()">
+								            </div>
+								          <!--   <input type="button" class="btn btn-primary upload" value="Subir"> -->
+								        </div>
+								    </div>
+								</form>
+
+									<p style="text-align: center;">Dimensiones de la imagen Ancho:640px Alto:640px</p>
+								</div>
 							
 							<div class="form-group m-t-20">
 								<label>*NOMBRE:</label>
@@ -238,7 +271,45 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 	}
 </script>
+<script>
+	var ruta='<?php echo $ruta;?>';
+			 
 
+	
+	    function SubirImagenzona() {
+	 	// body...
+	 
+        var formData = new FormData();
+        var files = $('#image')[0].files[0];
+        formData.append('file',files);
+        $.ajax({
+            url: 'catalogos/zonas/upload.php',
+            type: 'post',
+            data: formData,
+            contentType: false,
+            processData: false,
+             beforeSend: function() {
+         $("#d_foto").css('display','block');
+     	 $("#d_foto").html('<div align="center" class="mostrar"><img src="images/loader.gif" alt="" /><br />Cargando...</div>');	
+
+		    },
+            success: function(response) {
+               	var ruta='<?php echo $ruta; ?>';
+	
+                if (response != 0) {
+                    $(".card-img-top").attr("src", response);
+                    $("#d_foto").css('display','none');
+                } else {
+
+                	 $("#d_foto").html('<img src="'+ruta+'" class="card-img-top" alt="" style="border: 1px #777 solid"/> ');
+                    alert('Formato de imagen incorrecto.');
+                }
+            }
+        });
+        return false;
+    }
+
+</script>
 
 
 <?php

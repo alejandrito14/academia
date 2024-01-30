@@ -258,6 +258,7 @@ class Usuarios
 				usuarios.foto,
 				usuarios.telefono,
 				usuarios.celular,
+				usuarios.token,
 				tipousuario.nombretipo,
 				tipousuario.mostrarenapp,
 				usuarios.estatus,
@@ -330,6 +331,8 @@ class Usuarios
 		}
 		return $array;
 	}
+
+	
 
 
 	public function ObtenerUsuario()
@@ -1036,6 +1039,54 @@ class Usuarios
         
         return $array;
 	}
+
+	public function ObtenerEdades($idcategoriaserv)
+	{
+		$sql = "SELECT fechanacimiento,TIMESTAMPDIFF(YEAR,fechanacimiento,CURDATE()) AS edad 
+			 from usuarios_servicios
+			LEFT JOIN usuarios ON usuarios_servicios.idusuarios =usuarios.idusuarios
+			LEFT JOIN servicios ON usuarios_servicios.idservicio = servicios.idservicio
+			 where fechanacimiento is not null and FIND_IN_SET(servicios.idcategoria,'$idcategoriaserv') GROUP BY TIMESTAMPDIFF(YEAR,fechanacimiento,CURDATE())  ";
+		
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+
+	public function ObtenerUsuariosSistema()
+	{
+		$sql="SELECT *FROM usuarios WHERE tipo IN (0) AND estatus=1 ";
+
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+
+
 
 }
 

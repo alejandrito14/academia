@@ -874,7 +874,7 @@ function PintarFechaSeleccionada(fecha) {
 
 }
 
-
+ 
 function ColocarIntervalo() {
 		var intervalo=$("#v_intervalo").val();
 		var datos="intervalo="+intervalo;

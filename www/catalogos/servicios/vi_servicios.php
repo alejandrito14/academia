@@ -45,12 +45,12 @@ $Servicios->db = $db;
 $Servicios->tipo_usuario = $tipousaurio;
 $Servicios->lista_empresas = $lista_empresas;
 
-$l_Servicios = $Servicios->ObtenerServicios();
+/*$l_Servicios = $Servicios->ObtenerServicios();
 $l_Servicios_row = $db->fetch_assoc($l_Servicios);
 
 
 $l_Servicios_num = $db->num_rows($l_Servicios);
-
+*/
 /*======================= INICIA VALIDACIÓN DE RESPUESTA (alertas) =========================*/
 
 if(isset($_GET['ac']))
@@ -174,14 +174,14 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 	    <div class="row" style="margin-right: 1em;margin-left: 1em;">
 				<div class="col-md-8"></div>
 				<div class="col-md-4">
-					<input type="text" placeholder="Buscar" id="buscadorservicio"  class="form-control" onkeyup="handleKeyPress(event, '<?php echo $idmenumodulo; ?>')" style="width: 70%;float: right;margin-right: 1em;">
+					<input type="text" placeholder="Buscar" id="buscadorservicio"  class="form-control" onkeyup="handleKeyPress2(event, '<?php echo $idmenumodulo; ?>')" style="width: 70%;float: right;margin-right: 1em;">
 				</div>
 	    </div>
 		</div>
 	</div>
 	<div class="card-body">
 		<div class="table-responsive" id="contenedor_Servicios">
-			<table id="tbl_Servicios" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
+			 <table id="tbl_Servicios" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
 				<thead>
 					<tr>
 						 <th style="text-align: center;">ID</th>
@@ -198,7 +198,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 				</thead>
 				<tbody id="tblservicios">
 					
-					<?php
+					<!--<?php
 					if($l_Servicios_num== 0){
 						?>
 						<tr> 
@@ -351,9 +351,9 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 							<?php
 						}while($l_Servicios_row = $db->fetch_assoc($l_Servicios));
 					}
-					?>
-				</tbody>
-			</table>
+					?> -->
+				 </tbody>
+			</table> 
 		</div>
 	</div>
 </div>

@@ -26,6 +26,7 @@ require_once("../../clases/class.Funciones.php");
 require_once("../../clases/class.Botones.php");
 require_once("../../clases/class.Clientes.php");
 require_once("../../clases/class.Usuarios.php");
+require_once("../../clases/class.Tipodeusuarios.php");
 
 $idmenumodulo = $_GET['idmenumodulo'];
 
@@ -35,12 +36,12 @@ $emp = new Notificaciones();
 $f = new Funciones();
 $bt = new Botones_permisos();
 
-$cli = new Clientes();
+/*$cli = new Clientes();
 $cli->db = $db;
 $r_clientes = $cli->lista_clientes();
 $a_cliente = $db->fetch_assoc($r_clientes);
 $r_clientes_num = $db->num_rows($r_clientes);
-
+*/
 $usu=new Usuarios();
 $usu->db=$db;
 $r_usuarios=$usu->ObtUsuariosActivos();
@@ -51,6 +52,11 @@ $emp->db = $db;
 
 $emp->tipo_usuario = $tipousaurio;
 $emp->lista_empresas = $lista_empresas;
+
+$tipousaurio=new Tipodeusuarios();
+$tipousaurio->db=$db;
+
+$obtenertipos=$tipousaurio->ObttipodeusuariosActivos();
 
 //Validamos si cargar el formulario para nuevo registro o para modificacion
 if(!isset($_GET['idnotificacion'])){
@@ -80,7 +86,6 @@ if(!isset($_GET['idnotificacion'])){
 	$idnotificacion = $_GET['idnotificacion'];
 	$emp->idnotificacion = $idnotificacion;
 
-	
 
 	//Realizamos la consulta en tabla Pagos
 	$result_NOTIFICACION = $emp->buscarnotificacion();
@@ -171,7 +176,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		<div class="card-body">
 			<h4 class="card-title m-b-0" style="float: left;"><?php echo $titulo; ?></h4>
 
-			<div style="float: right;">
+			<div style="float: right;position:fixed!important;z-index:10;right:0;margin-right:2em;width: 20%;">
 				
 				<?php
 			
@@ -196,7 +201,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				
 				<!--<button type="button" onClick="var resp=MM_validateForm('v_empresa','','R','v_direccion','','R','v_tel','','R','v_email','',' isEmail R'); if(resp==1){ GuardarEmpresa('f_empresa','catalogos/empresas/fa_empresas.php','main');}" class="btn btn-success" style="float: right;"><i class="mdi mdi-content-save"></i>  GUARDAR</button>-->
 				
-				<button type="button" onClick="aparecermodulos('catalogos/notificaciones/vi_notificaciones.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" style="float: right; margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i> LISTADO DE NOTIFICACION</button>
+				<button type="button" onClick="aparecermodulos('catalogos/notificaciones/vi_notificaciones.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" style="float: right; margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
 				<div style="clear: both;"></div>
 				
 				<input type="hidden" id="id" name="id" value="<?php echo $idnotificacion; ?>" />
@@ -243,7 +248,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<select class="form-control" name="programado" id="programado" onchange="programar();">
 									<option  value="0">SELECCIONAR OPCIÓN</option>
 									<option value="1">AHORA</option>
-									<option value="2">PROGRAMADO</option>
+									
 								</select>
 							</div>
 
@@ -261,11 +266,17 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							<div class="form-group m-t-20">
 								<label>*DIRIGIDO A:</label>
 								<select class="form-control" name="dirigido" id="dirigido" onchange="dirigira()">
-									<option value="0">SELECCIONAR OPCIÓN</option>
-									<option value="1">CLIENTES</option>
-									<option value="2">USUARIOS</option>
-									<option value="3">CLIENTES Y USUARIOS</option>
-									<option value="4">TELÉFONOS REGISTRADOS</option>
+										<option value="-1">TODOS</option>
+									<?php 
+										if (count($obtenertipos)>0) {
+											for ($i=0; $i <count($obtenertipos) ; $i++) {  ?>
+											
+											<option value="<?php echo $obtenertipos[$i]->idtipousuario ?>"><?php echo $obtenertipos[$i]->nombretipo; ?></option>
+									<?php		}
+											# code...
+										}
+									 ?>
+									
 								</select>
 							</div>
 
@@ -292,7 +303,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				</div>
 			</div>
 
-			 <div class="card clienteslistado" style="display: none;">
+			 <!-- <div class="card clienteslistado" style="display: none;">
 		<div class="card-header">
 				<label style="font-size: 16px;">*CLIENTE(S):</label>
 			</div>
@@ -324,10 +335,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
      					    	 ?>
 						    	<?php } ?>    
 				    </div>
-                </div> <!-- lclientesdiv -->
+                </div> 
 			</div>
 		</div>
-    </div><!--card-CLI-->
+    </div> --><!--card-CLI-->
 
 
      <div class="card usuarioslista" style="display: none;">
@@ -336,7 +347,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 			</div>
 		<div class="card-body col-md-12">
 			<div class="col-md-6" style="float: left;">
-				<div class="card-header" style="padding-left: 0.45rem;"> TODOS LOS USUARIOS
+				<div class="card-header" style="padding-left: 0.45rem;"> SELECCIONAR TODOS
 				 <input type="checkbox" id="v_tusuarios"  name="v_tusuarios" onchange="HabilitarDeshabilitarCheck3('#lusuariosdiv')" value="<?php echo $habilitadoadmin;?>" title="PROMOCIÓN" placeholder='PROMOCIÓN' >
 				</div>
                 <div class="card-body" id="lusuariosdiv" style="display: block; padding: 0;">
@@ -346,24 +357,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				    </div>
 
 			
-                    <div class="usuarios"  style="overflow:scroll;height:100px;overflow-x: hidden" id="usuarios_<?php echo $a_cliente['idusuarios'];?>">
-					    <?php     	
-							if ($r_usuarios_num>0) {	
-						    	do {
-						?>
-						    	<div class="form-check usu_"  id="usu_<?php echo $a_usuarios['idusuarios'];?>_<?php echo $a_usuarios['idusuarios'];?>">
-						    	    <?php 	
-						    			$valor="";
-                                        $nombre=mb_strtoupper($f->imprimir_cadena_utf8($a_usuarios['nombre']." ".$a_usuarios['paterno']." ".$a_usuarios['materno']));
-						    		?>
-									  <input  type="checkbox"  onchange="UsuarioSeleccionado()" value="<?php echo $a_usuarios['idusuarios']?>" class="form-check-input chkusuario" id="inputcli_<?php echo $a_usuarios['idusuarios']?>" <?php echo $valor; ?>>
-									  <label class="form-check-label" for="flexCheckDefault"><?php echo $nombre; ?></label>
-								</div>						    		
-						    	<?php
-						    		} while ($a_usuarios = $db->fetch_assoc($r_usuarios));
-     					    	 ?>
-						    	<?php } ?>    
-				    </div>
+                    <div class="usuarios"  style="overflow:scroll;height:100px;overflow-x: hidden" id="">
+					    
                 </div> <!-- lclientesdiv -->
 			</div>
 		</div>
@@ -380,17 +375,19 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 <script>
 
-	var programado=<?php echo $programado;?>;
+	var programado='<?php echo $programado;?>';
 	$("#programado").val(programado);
+	var idnotificacion='<?php echo $emp->idnotificacion; ?>';
 
-	var dirigido=<?php echo $seleccionar; ?>;
+	
+	var dirigido='<?php echo $seleccionar; ?>';
 	$("#dirigido").val(dirigido);
 	programar();
-	dirigira();
+	dirigira(idnotificacion);
 
-	var idnotificacion=<?php echo $emp->idnotificacion; ?>;
-	var todosclientes=<?php echo $todosclientes;?>;
-	var todosadmin=<?php echo $todosadmin;?>;
+	
+	var todosclientes='<?php echo $todosclientes;?>';
+	var todosadmin='<?php echo $todosadmin;?>';
 
 	if (idnotificacion>0) {
 
@@ -419,6 +416,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 	}
+
+
 	//programado(programado);
 
 

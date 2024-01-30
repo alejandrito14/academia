@@ -36,19 +36,20 @@ require_once("../../clases/class.Notapago.php");
 require_once("../../clases/class.Servicios.php");
 require_once("../../clases/class.Datosfiscales.php");
 require_once("../../clases/class.Invitacion.php");
-
-
+require_once("../../clases/class.Carrito.php");
+require_once("../../clases/class.Caja.php");
 require_once("stripe-php-7.93.0/init.php");
 $folio = "";
  $f = new Funciones();
 
 $pagosconsiderados=json_decode($_POST['pagos']);
+$arraypaquetes=json_decode($_POST['arraypaquetes']);
 $constripe=$_POST['constripe'];
 $sumatotalapagar=$_POST['sumatotalapagar'];
 $iduser=$se->obtenerSesion('usuariopago');;
 $descuentosaplicados=json_decode($_POST['descuentosaplicados']);
 $descuentosmembresia=json_decode($_POST['descuentosmembresia']);
-$rutacomprobante=$_POST['rutacomprobante'];
+$rutacomprobante=json_decode($_POST['rutacomprobante']);
 $comentariosimagenes=$_POST['comentariosimagenes'];
 $comision=$_POST['comision'];
 $comisionmonto=$_POST['comisionmonto'];
@@ -75,6 +76,9 @@ $comisionnota=$_POST['comisionnota'];
 $tipocomisionpornota=$_POST['tipocomisionpornota'];
 $idtipodepago=$_POST['idtipodepago'];
 $variable="";
+$idbancoseleccionado=$_POST['idbancoseleccionado'];
+$idopciontarjetaseleccionado=$_POST['idopciontarjetaseleccionado'];
+$digitostarjeta=$_POST['digitostarjeta'];
 
 try {
 	 $db = new MySQL();
@@ -100,7 +104,7 @@ try {
     $tipopago=new Tipodepagos();
      $tipopago->db=$db;
 
-
+    $sinrevisionpago=0;
       if ($montomonedero>0) {
   
             if ($montomonedero==$sumatotalapagar) {
@@ -124,6 +128,7 @@ try {
            
               $obtenertipopago=$tipopago->ObtenerTipodepago2();
 
+              $sinrevisionpago= $obtenertipopago[0]->habilitarsinrevision;
                if ($variable!='') {
 
                   $variable=','.$variable;
@@ -196,6 +201,9 @@ try {
               $notapago->idusuariodatofiscal=$idusuariosdatosfiscales;
          }
 
+         $notapago->idbancoseleccionado=$idbancoseleccionado;
+         $notapago->idopciontarjetaseleccionado=$idopciontarjetaseleccionado;
+         $notapago->digitostarjeta=$digitostarjeta;
          $notapago->CrearNotapago();
 
 
@@ -362,7 +370,8 @@ try {
                $membresia->db=$db;
                $invitacion=new Invitacion();
                $invitacion->db=$db;
-              
+               $caja=new Caja();
+               $caja->db=$db;
                
 
              /*  $notapago=new Notapago();
@@ -374,6 +383,48 @@ try {
                $servicios->db=$db;
 
            
+            $carrito=new Carrito();
+            $carrito->db=$db;
+            for ($i=0; $i < count($arraypaquetes); $i++) { 
+
+
+              $notapago->descripcion=$arraypaquetes[$i]->nombrepaquete;
+              $notapago->cantidad=$arraypaquetes[$i]->cantidad;
+              $notapago->monto=$arraypaquetes[$i]->costototal;
+              $notapago->costounitario=$arraypaquetes[$i]->costounitario;
+              $notapago->idpaquete=$arraypaquetes[$i]->idpaquete;
+              $notapago->monederousado=0;
+
+              $carrito->idcarrito=$arraypaquetes[$i]->idcarrito;
+             $obtener= $carrito->ObtenerDelCarrito();
+
+             if (count($obtener)>0) {
+              
+              $notapago->monederousado=$obtener[0]->monederousado;
+             }
+
+             $arraypaquetes[$i]->monederousado=$obtener[0]->monederousado;
+               $notapago->CreardescripcionpagoPaquete();
+            
+              $arraypaquetes[$i]->idnotapagodescripcion=$notapago->idnotapagodescripcion;
+               if ($constripe==1) {
+              
+                
+
+                 }
+
+
+              }
+
+
+              $carrito->idusuarios=$iduser;
+            if (count($arraypaquetes)>0) {
+
+                $carrito->EliminarCarrito();
+              }
+             
+
+
               
    
           	for ($i=0; $i < count($pagosconsiderados); $i++) { 
@@ -582,7 +633,12 @@ try {
               $notapago->cantidad=1;
               $notapago->monto=$buscarpago[0]->monto;
               $notapago->idpago=$buscarpago[0]->idpago;
+              $notapago->monederousado=$buscarpago[0]->monederoaplicado;
+              $pagosconsiderados[$i]->monederousado=$buscarpago[0]->monederoaplicado;
+
                $notapago->Creardescripcionpago();
+            
+               $pagosconsiderados[$i]->idnotapagodescripcion=$notapago->idnotapagodescripcion;
           	
           if ($estatusdeproceso==1) {
 
@@ -648,14 +704,73 @@ try {
               $notapago->ActualizarNotapago();
             }
 
-        if ($estatusdeproceso==1) {
+  if ($estatusdeproceso==1) {
+       $usuarios=new Usuarios();
+       $usuarios->db=$db;
+    if ($montomonedero!='' && $montomonedero!=0) {
+
+      for ($j=0; $j < count($pagosconsiderados); $j++) { 
+
+        $monederousado=$pagosconsiderados[$j]->monederousado;
+        $idnotapagodescripcion=$pagosconsiderados[$j]->idnotapagodescripcion;
+  
+        $usuarios->id_usuario = $iduser;
+        $row_cliente = $usuarios->ObtenerUsuario();
+        $saldo_anterior = $row_cliente[0]->monedero;
+    
+    //Calculamos nuevo saldo
+    $nuevo_saldo = $saldo_anterior - $monederousado;
+    $sql = "UPDATE usuarios SET monedero = '$nuevo_saldo' WHERE idusuarios = '$iduser'";
+    
+    $db->consulta($sql);
+    //Guardamos el movimiento en tabla cliente_monedero
+    $tipo=1;
+    $concepto="Cargo de ".$pagosconsiderados[$j]->concepto;
+    $sql_movimiento = "INSERT INTO monedero (idusuarios,monto,modalidad,tipo,saldo_ant,saldo_act,concepto,idnota,idnotadescripcion) VALUES ('$iduser','$monederousado','2','$tipo','$saldo_anterior','$nuevo_saldo','$concepto','$notapago->idnotapago','$idnotapagodescripcion');";
+
+     $db->consulta($sql_movimiento);
 
 
-  if ($montomonedero!='' && $montomonedero!=0) {
+
+
+            }
+
+
+
+      for ($j=0; $j < count($arraypaquetes); $j++) { 
+
+          $monederousado=$arraypaquetes[$j]->monederousado;
+          $idnotapagodescripcion=$arraypaquetes[$j]->idnotapagodescripcion;
+          if ($monederousado>0) {
+            # code...
+          
+          $usuarios->id_usuario = $iduser;
+          $row_cliente = $usuarios->ObtenerUsuario();
+          $saldo_anterior = $row_cliente[0]->monedero;
+    
+    //Calculamos nuevo saldo
+    $nuevo_saldo = $saldo_anterior - $monederousado;
+    $sql = "UPDATE usuarios SET monedero = '$nuevo_saldo' WHERE idusuarios = '$iduser'";
+    
+    $db->consulta($sql);
+    //Guardamos el movimiento en tabla cliente_monedero
+    $tipo=1;
+    $concepto="Cargo de ".$arraypaquetes[$j]->concepto;
+    $sql_movimiento = "INSERT INTO monedero (idusuarios,monto,modalidad,tipo,saldo_ant,saldo_act,concepto,idnota,idnotadescripcion) VALUES ('$iduser','$monederousado','2','$tipo','$saldo_anterior','$nuevo_saldo','$concepto','$notapago->idnotapago','$idnotapagodescripcion');";
+
+     $db->consulta($sql_movimiento);
+
+
+              }
+
+            }
+          }
+
+ /* if ($montomonedero!='' && $montomonedero!=0) {
             $usuarios=new Usuarios();
             $usuarios->db=$db;
               
-    $usuarios->id_usuario = $iduser;
+    $usuarios->idusuarios = $iduser;
     $row_cliente = $usuarios->ObtenerUsuario();
     $saldo_anterior = $row_cliente[0]->monedero;
     
@@ -669,23 +784,25 @@ try {
     $concepto="Cargo";
     $sql_movimiento = "INSERT INTO monedero (idusuarios,monto,modalidad,tipo,saldo_ant,saldo_act,concepto,idnota) VALUES ('$iduser','$montomonedero','2','$tipo','$saldo_anterior','$nuevo_saldo','$concepto','$notapago->idnotapago');";
 
-
      $db->consulta($sql_movimiento);
 
 
 
-   }
+   }*/
 
-}
+
+
+ }
+
     if ($confoto == 1) {
 
-        $nombreimagenes = explode(',', $rutacomprobante);
+        $nombreimagenes =$rutacomprobante;
         $comentariosimagenes = explode(',', $comentariosimagenes);
 
         for ($i = 0; $i < count($nombreimagenes); $i++) {
 
-            $imagen      = $nombreimagenes[$i];
-            $comentario  = $comentariosimagenes[$i];
+            $imagen      = $nombreimagenes[$i]->imagencomprobante;
+            $comentario  = $nombreimagenes[$i]->comentario;
             $sqlimagenes = "INSERT INTO notapago_comprobante(rutacomprobante,idnotapago,comentario,estatus) VALUES('$imagen',$notapago->idnotapago,'$comentario','0') ";
           
             $db->consulta($sqlimagenes);
@@ -699,14 +816,36 @@ try {
       
         }
 
-          if ($campomonto==1) {
-              $notapago->estatus=1;
-              $notapago->ActualizarNotapago();
+          if ($campomonto==1 ) {
+
+             /* if ($sinrevisionpago==1) {
+                 $notapago->estatus=1;
+                $notapago->ActualizarNotapago();
+              }*/
+             
               $notapago->cambio=abs($cambio);
               $notapago->montovisual=$montovisual;
               $notapago->ActualizarMonto();
             
           }
+
+       
+           if ($estatusdeproceso==1 && $sinrevisionpago==1) {
+                 $notapago->estatus=1;
+                $notapago->ActualizarNotapago();
+              }else{
+
+                if ($estatusdeproceso==1 && $sinrevisionpago==0) {
+                  $notapago->estatus=0;
+                  $notapago->ActualizarNotapago();
+                }
+              
+
+              }
+
+          $caja->idnotapago=$notapago->idnotapago;
+          $caja->idmanejocaja=$se->obtenerSesion('idManejoCaja');
+          $caja->GuardarNotaCaja();
           $db->commit();
 
           	   if ($constripe==0) {
@@ -778,7 +917,35 @@ catch (\Stripe\Exception\CardException $err) {
                $pagocoach->db=$db;
                $servicios=new Servicios();
                $servicios->db=$db;
+                $carrito=new Carrito();
+                $carrito->db=$db;
 
+                for ($i=0; $i < count($arraypaquetes); $i++) { 
+
+
+              $notapago->descripcion=$arraypaquetes[$i]->nombrepaquete;
+              $notapago->cantidad=$arraypaquetes[$i]->cantidad;
+              $notapago->monto=$arraypaquetes[$i]->costototal;
+              $notapago->costounitario=$arraypaquetes[$i]->costounitario;
+              $notapago->idpaquete=$arraypaquetes[$i]->idpaquete;
+              $notapago->monederousado=0;
+
+              $carrito->idcarrito=$arraypaquetes[$i]->idcarrito;
+             $obtener= $carrito->ObtenerDelCarrito();
+
+             if (count($obtener)>0) {
+              
+              $notapago->monederousado=$obtener[0]->monederousado;
+             }
+
+             $arraypaquetes[$i]->monederousado=$obtener[0]->monederousado;
+               $notapago->CreardescripcionpagoPaquete();
+            
+              $arraypaquetes[$i]->idnotapagodescripcion=$notapago->idnotapagodescripcion;
+               
+
+
+              }
 
 
             for ($i=0; $i < count($pagosconsiderados); $i++) { 
@@ -933,9 +1100,13 @@ catch (\Stripe\Exception\CardException $err) {
               $notapago->cantidad=1;
               $notapago->monto=$buscarpago[0]->monto;
               $notapago->idpago=$buscarpago[0]->idpago;
+              
+              $notapago->monederousado=$buscarpago[0]->montoaplicado;
                $notapago->Creardescripcionpago();
  
-           
+                $pagosconsiderados[$j]->monederousado=$buscarpago[0]->montoaplicado;
+                $pagosconsiderados[$j]->idnotapagodescripcion=$notapago->idnotapagodescripcion;
+
                 $pagos->ActualizarEstatus();
 
 

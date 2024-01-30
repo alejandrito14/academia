@@ -97,7 +97,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 			?>
 			<tr> 
 				<td colspan="7" style="text-align: center">
-					<h5 class="alert_warning">NO EXISTEN PRESENTACIONES EN LA BASE DE DATOS.</h5>
+					<h5 class="alert_warning">NO EXISTEN CATEGORIAS DE PRODUCTO EN LA BASE DE DATOS.</h5>
 				</td>
 			</tr>
 			<?php

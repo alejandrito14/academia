@@ -469,7 +469,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							</div>  
 
 							     <div class="form-group m-t-20" style="">
-								<label>TIPO DE SERVICIO CONFIGURACION:</label>
+								<label>CATEGORÍA:</label>
 
 									<?php 
 									$tipoconfiguracionlista= $tiposervicioconfiguracion->ObtenerTipoServicionConfiguracion();

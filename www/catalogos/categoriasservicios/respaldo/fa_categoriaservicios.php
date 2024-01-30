@@ -55,7 +55,7 @@ if(!isset($_GET['idcategoriasservicio'])){
 	
 	$col = "col-md-12";
 	$ver = "display:none;";
-	$titulo='NUEVA CATEGORÍA';
+	$titulo='NUEVO INTERVALO DE HORARIOS';
 
 }else{
 	//El formulario funcionara para modificacion de un registro
@@ -79,7 +79,7 @@ if(!isset($_GET['idcategoriasservicio'])){
 
 	$col = "col-md-12";
 	$ver = "";
-		$titulo='EDITAR CATEGORÍA';
+		$titulo='EDITAR INTERVALO DE HORARIOS';
 
 }
 

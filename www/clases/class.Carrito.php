@@ -19,7 +19,7 @@ class Carrito
 	public $estatus;
 	public $titulosgrupos;
 	public $preciooriginal;
-
+	public $monederousado;
 	public function AgregarCarrito()
 	{
 		$sql="INSERT INTO carrito(idusuarios, idpaquete, cantidad, costounitario, costototal, nombrepaquete, estatus) VALUES ('$this->idusuarios', '$this->idpaquete',$this->cantidad,'$this->costounitario','$this->costototal', '$this->nombrepaquete', 1)";
@@ -40,7 +40,8 @@ class Carrito
 			carrito.costounitario,
 			carrito.costototal,
 			carrito.idusuarios,
-			carrito.idpaquete			
+			carrito.idpaquete,
+			carrito.monederousado			
 			FROM
 			carrito
 			JOIN paquetes
@@ -88,7 +89,8 @@ class Carrito
 			carrito.costounitario,
 			carrito.costototal,
 			carrito.idusuarios,
-			carrito.idpaquete			
+			carrito.idpaquete,
+			carrito.monederousado			
 			FROM
 			carrito
 			JOIN paquetes
@@ -178,7 +180,8 @@ class Carrito
 			carrito.costounitario,
 			carrito.costototal,
 			carrito.idusuarios,
-			carrito.idpaquete			
+			carrito.idpaquete,
+			carrito.monederousado			
 			FROM
 			carrito
 			JOIN paquetes
@@ -209,6 +212,15 @@ class Carrito
 	{
 
 		$sql="DELETE FROM carrito WHERE idusuarios='$this->idusuarios'";
+		
+		$resp=$this->db->consulta($sql);
+	}
+
+	public function ActualizarMonederoUsadoCarrito()
+	{
+			$sql="UPDATE carrito 
+		SET monederousado='$this->monederousado'
+		WHERE idcarrito='$this->idcarrito'";
 		
 		$resp=$this->db->consulta($sql);
 	}

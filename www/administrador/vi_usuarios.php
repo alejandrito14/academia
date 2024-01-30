@@ -149,6 +149,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								<td><?php echo $fu->imprimir_cadena_utf8($rows['usuario']); ?></td> 
 								
 								<td><?php echo $fu->imprimir_cadena_utf8($rows['celular']); ?></td>
+
+								
 								
 								<td><?php echo $fu->imprimir_cadena_utf8($rows['email']); ?></td>
                     			<td><?php echo $fu->imprimir_cadena_utf8($rows['est']); ?></td> 

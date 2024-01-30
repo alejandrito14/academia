@@ -101,24 +101,48 @@ $estatusapagado=array('NO PAGADO','PAGADO');
 		if ($_GET['fechainicio']!='') {
 		
 		$fechainicio=$_GET['fechainicio'];
-		if (isset($_GET['horainicio'])) {
-			$fechainicio=$fechainicio.' 00:00:00';
-		}
+
+		
 		}
 	}
 
 	if (isset($_GET['fechafin'])) {
 		if ($_GET['fechafin']!='') {
+
 		$fechafin=$_GET['fechafin'];
-		if (isset($_GET['horafin'])) {
-			$fechafin=$fechafin.' 23:59:59';
-			}
+	
+			
 		}
 	}
 
 	if ($fechainicio!='' && $fechafin!='') {
 		$sqlfecha=" AND  fechamin>= '$fechainicio' AND fechamin <='$fechafin'";
 	}
+
+
+		if (isset($_GET['fechainiciopago'])) {
+
+		if ($_GET['fechainiciopago']!='') {
+		
+		$fechainiciopago=$_GET['fechainiciopago'];
+	
+			$fechainiciopago=$fechainiciopago.' 00:00:00';
+		
+		}
+	}
+
+
+		if (isset($_GET['fechafinpago'])) {
+
+		if ($_GET['fechafinpago']!='') {
+		
+		$fechafinpago=$_GET['fechafinpago'];
+	
+			$fechafinpago=$fechafinpago.' 23:59:59';
+		
+		}
+	}
+
 
 	if ($fechainiciopago!='' && $fechafinpago!='') {
 		$sqlfechapago=" AND  fechareporte>= '$fechainiciopago' AND fechareporte <='$fechafinpago'";
@@ -1034,15 +1058,18 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 
  								<td> <?php echo $uniqueValues[$i]['cantidadhorarios']; ?> </td>
 
- 								<td><?php echo $totalgenerado; ?></td>
+ 								<td><?php echo '$'.number_format($totalgenerado,2,'.',','); ?>
+ 									
+
+ 								</td>
 
 
- 								<td><?php echo $totaldescuentomembresia; ?></td>
+ 								<td><?php echo '$'.number_format($totaldescuentomembresia,2,'.',','); ?></td>
 
- 									<td><?php echo $totaldescuentootros; ?></td>
+ 									<td><?php echo '$'.number_format($totaldescuentootros,2,'.',','); ?></td>
 
- 									<td><?php echo $totalcobrado; ?></td>
- 									<td><?php echo $totalpendiente; ?></td>
+ 									<td><?php echo '$'.number_format($totalcobrado,2,'.',','); ?></td>
+ 									<td><?php echo '$'. number_format($totalpendiente,2,'.',','); ?></td>
 
 
 

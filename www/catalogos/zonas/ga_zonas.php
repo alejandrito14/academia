@@ -19,7 +19,7 @@ require_once("../../clases/conexcion.php");
 require_once("../../clases/class.Zonas.php");
 require_once("../../clases/class.Funciones.php");
 require_once('../../clases/class.MovimientoBitacora.php');
-
+$ruta="imagenes/".$_SESSION['codservicio'].'/';
 try
 {
 	//declaramos los objetos de clase
@@ -81,6 +81,37 @@ try
 		}*/
 
 		$md->guardarMovimiento($f->guardar_cadena_utf8('zona'),'zona',$f->guardar_cadena_utf8('Modificación de zona -'.$zona->idzona));
+	}
+
+
+
+		foreach ($_FILES as $key) 
+		{
+		if($key['error'] == UPLOAD_ERR_OK ){//Verificamos si se subio correctamente
+
+			$nombre = str_replace(' ','_',date('Y-m-d H:i:s').'-'.$emp->idzona.".jpg");//Obtenemos el nombre del archivo
+			
+			$temporal = $key['tmp_name']; //Obtenemos el nombre del archivo temporal
+			$tamano= ($key['size'] / 1000)."Kb"; //Obtenemos el tamaño en KB
+
+			//obtenemos el nombre del archivo anterior para ser eliminado si existe
+
+			$sql = "SELECT imagen FROM zonas WHERE idzona='".$zona->idzona."'";
+
+			$result_borrar = $db->consulta($sql);
+			$result_borrar_row = $db->fetch_assoc($result_borrar);
+			$nombreborrar = $result_borrar_row['imagen'];		  
+			if($nombreborrar != "")
+			{
+				unlink($ruta.$nombreborrar); 
+			}
+
+
+			move_uploaded_file($temporal, $ruta.$nombre); //Movemos el archivo temporal a la ruta especificada
+
+			$sql = "UPDATE zonas SET imagen = '$nombre' WHERE idzona='".$zona->idzona."'";   
+			$db->consulta($sql);	 
+		}
 	}
 				
 	$db->commit();

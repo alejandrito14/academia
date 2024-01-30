@@ -82,6 +82,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 <table class="table table-striped table-bordered" id="Paquetes" cellpadding="0" cellspacing="0" style="overflow: auto">
 	<thead>
 		<tr style="text-align: center">
+				<th width="50">SKU</th> 
+
 			<th width="50">NOMBRE</th> 
 			<th  width="70">DESCRIPCION</th>
 			<th width="45">PRECIO</th>
@@ -105,7 +107,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 			?>
 			<tr> 
 				<td colspan="10" style="text-align: center">
-					<h5 class="alert_warning">NO EXISTEN PAQUETES EN LA BASE DE DATOS.</h5>
+					<h5 class="alert_warning">NO EXISTEN PRODUCTOS EN LA BASE DE DATOS.</h5>
 				</td>
 			</tr>
 			<?php
@@ -114,6 +116,8 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				{
 			?>
 			<tr>
+
+				<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($resultado_empresas_row['sku']); ?></td>
 			  
 				<td style="text-align: center;"><?php echo $f->imprimir_cadena_utf8($resultado_empresas_row['nombrepaquete']); ?></td>
 				

@@ -1224,6 +1224,7 @@ $navegador = $f->navegador();
 <script src="js/fn_subirarchivospaquetes.js?<?php echo time(); ?>"></script>
 <script src="js/fn_productos.js"></script>
 <script src="js/fn_categoriaproducto.js"></script>
+<script src="js/fn_paquetes.js"></script>
 
 <!-- js nuevos de mike -->
 <!-- <script src="js/fn_banner.js"></script>
@@ -1262,6 +1263,7 @@ $navegador = $f->navegador();
 <script src="js/fn_membresia.js"></script>
 <script src="js/fn_categoriasservicios.js"></script>
 <script src="js/fn_asignarusuarioservicio.js"></script>
+<script src="js/fn_verasignacionesmembresia.js?<?php echo time(); ?>"></script>
 
 <script src="js/fn_tutor.js"></script>
 <script src="js/fn_clasificacion.js"></script>
@@ -1280,6 +1282,7 @@ $navegador = $f->navegador();
 <script src="js/fn_tipopartido.js?<?php echo time(); ?>"></script>
 <script src="js/fn_partidos.js?<?php echo time(); ?>"></script>
 <script src="js/fn_juego.js?<?php echo time(); ?>"></script>
+
 <script src="js/fn_notaspago.js?<?php echo time(); ?>"></script>
 <script src="js/fn_tipojuego.js?<?php echo time(); ?>"></script>
   <script src="https://js.stripe.com/v3/"></script>

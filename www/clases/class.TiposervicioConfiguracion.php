@@ -83,7 +83,7 @@ class TiposervicioConfiguracion
 	public function ObttiposervicioConfiguracionActivos()
 	{
 		$sql = "SELECT * FROM tiposervicioconfiguracion WHERE estatus = 1";
-	
+		
 		$resp = $this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 

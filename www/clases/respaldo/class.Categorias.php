@@ -248,9 +248,57 @@ class Categorias
 	public function ObtenerCategoriasEstatus($estatus)
 	{
 		
-		$sql="SELECT *FROM categorias WHERE estatus=".$estatus."";
+		$sql="SELECT *FROM categorias WHERE estatus IN(".$estatus.")";
 
 	
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerCategoriasEstatusDepende($depende)
+	{
+		
+		$sql="SELECT *FROM categorias WHERE depende IN ($depende)";
+
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerCategoriasGroupEstatusDepende($depende)
+	{
+		
+		$sql="SELECT GROUP_CONCAT(idcategorias) AS categoriasid FROM categorias WHERE depende IN ($depende)";
 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -395,6 +443,90 @@ class Categorias
 		
 		return $array;
 	}
+
+
+	 public function mostrarEstructuraDependencia($dependencia) {
+ 	
+ 	    $estructura = $dependencia['nombre'];
+    $dependenciaPadre = $dependencia['dependencia_padre'];
+
+    while ($dependenciaPadre) {
+        $estructura = $dependenciaPadre['nombre'] . '/' . $estructura;
+        $dependenciaPadre = $dependenciaPadre['dependencia_padre'];
+
+
+    }
+
+    
+
+    return $estructura;
+
+}
+
+	public function obtenerDependenciaHaciaArriba($subcategoriaId) {
+		$resultado=[];
+
+		if ($subcategoriaId!=0 ) {
+			# code...
+		
+    $consulta = "SELECT idcategorias, titulo, depende FROM categorias WHERE idcategorias = '$subcategoriaId'";
+
+
+		$resultado1=$this->db->consulta($consulta);
+    	
+    	$subcategoria=$this->db->fetch_assoc($resultado1);
+
+    	$numsubcategoria=$this->db->num_rows($resultado1);
+
+    	//var_dump($subcategoria);die();
+   if ($numsubcategoria>0) {
+   	# code...
+   
+    $resultado = array(
+        'id' => $subcategoria['idcategorias'],
+        'nombre' => $subcategoria['titulo']
+    );
+    
+    $idDependencia = $subcategoria['depende'];
+
+
+   
+    if ($idDependencia != null && $idDependencia!='' && $idDependencia!=0) {
+    	
+        $dependenciaPadre = $this->obtenerDependenciaHaciaArriba($idDependencia, $conexion);
+        $resultado['dependencia_padre'] = $dependenciaPadre;
+    	}
+
+	}
+}
+    
+    return $resultado;
+}
+
+public function ObtenerCategoriasEstatusDepende2($depende)
+	{
+		
+		$sql="SELECT *FROM categorias WHERE depende IN ($depende) AND estatus=1";
+
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
 
 }
 ?>

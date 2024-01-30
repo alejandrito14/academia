@@ -168,13 +168,13 @@ function Guardarpaquete(form, regresar, donde, idmenu) {
 		var v_inventario=$("#v_inventario").is(':checked')?1:0;
 		var v_mostrarapp=$("#v_mostrarapp").is(':checked')?1:0;
 
-	
+		console.log('valido '+valido);
 
 		var resultado=validarSKU();
 
  	    resultado.then(r => {
 
- 		if (r==1) {
+ 		if (r==0) {
 
 		if (valido==1) {
 

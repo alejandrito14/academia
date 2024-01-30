@@ -7,6 +7,7 @@ require_once("../../../clases/class.PagosCoach.php");
 require_once("../../../clases/class.Pagos.php");
 
 require_once("../../../clases/class.Notapago.php");
+require_once("../../../clases/class.Tipocoach.php");
 
 
 
@@ -18,13 +19,13 @@ class ReporteCoachComision
 	public $lo;
 	public $pagos;
 	public $nota;
-
+	public $tipocoach;
 	  function __construct() {
 
       $this->lo= new PagosCoach();
       $this->pagos=new Pagos();
 						$this->nota=new Notapago();
-						
+						$this->tipocoach=new Tipocoach();
 		
 
    }
@@ -35,6 +36,8 @@ class ReporteCoachComision
 		$this->lo->db=$this->db;
 		$this->pagos->db=$this->db;
 		$this->nota->db=$this->db;
+		$this->tipocoach->db=$this->db;
+
 		$arraycoachcomision=array();
 		$totalconmonedero=0;
 		$totalconotropago=0;
@@ -90,7 +93,7 @@ class ReporteCoachComision
 		if ($cont>0) {
 
 			while ($objeto=$this->db->fetch_object($resp)) {
-
+				$idcoach=$this->idusuario;
 				$idservicio=$objeto->idservicio;
 
 				$totalcantidadalumnos=$totalcantidadalumnos+$objeto->cantidadalumnos;
@@ -110,7 +113,9 @@ class ReporteCoachComision
 				//	var_dump($obtenerpago);die();
 
 			$this->idusuarios_servicios=$idusuarios_servicios;
-			$tipomontopago=$this->ObtenertipoMontopago();
+			$this->tipocoach->idcoach=$idcoach;
+		$tipomontopago=	$this->tipocoach->ObtenerTipoMontoCoach();
+		//	$tipomontopago=$this->ObtenertipoMontopago();
 
 			
 
