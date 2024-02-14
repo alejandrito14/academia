@@ -29,7 +29,7 @@ $rpt->db = $db;
 
 
 // Consultas
-$l_reportes = $rpt->Lista_reportes();
+$l_reportes = $rpt->Lista_reportesante();
 $l_reportes_row = $db->fetch_assoc($l_reportes);
 $l_reportes_num = $db->num_rows($l_reportes);
 
@@ -390,6 +390,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		 </style>
 
 
+<script src="js/fn_reportesanteriores.js"></script>
 
 <!--  Funcion para llenar el list de sucursales dependiendo el id de empresa  -->
 <script type="text/javascript">

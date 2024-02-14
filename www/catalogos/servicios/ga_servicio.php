@@ -175,6 +175,7 @@ try
 	$emp->validaradmin=$validaradmin;
 	$emp->idtiposervicioconfiguracion=$_POST['v_idtiposervicioconfiguracion'];
 	//Validamos si hacermos un insert o un update
+
 	if($emp->idservicio == 0)
 	{
 		$titulonotificacion="Solicitud de nuevo servicio ".$nombrequienagrega;

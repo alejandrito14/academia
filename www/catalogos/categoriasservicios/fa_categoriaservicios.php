@@ -227,7 +227,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 								</select>
 							</div>
 
-							<div class="form-group m-t-20">
+							<div class="form-group m-t-20" style="">
 								<label>*INTERVALO DE TIEMPO(minutos):</label>
 								<input type="number" class="form-control" id="v_intervalo" name="v_intervalo" value="<?php echo $intervalo; ?>" title="INTERVALO" placeholder='INTERVALO'>
 							</div>

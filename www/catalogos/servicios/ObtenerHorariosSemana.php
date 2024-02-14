@@ -39,7 +39,7 @@ try
 	$servicio->idservicio = trim($_POST['idservicio']);
 
 	$obtener=$servicio->ObtenerHorariosSemana($servicio->idservicioes);
-
+	
 	$obtenerservicio=$servicio->ObtenerServicio();
 
 

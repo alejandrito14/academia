@@ -4,7 +4,7 @@ function CargarSucursales()
 	
 	$.ajax({
 		type:'GET',
-		url: 'catalogos/reportes/li_sucursales.php',
+		url: 'catalogos/reportesanteriores/li_sucursales.php',
 		cache:false,
 		async:false,
 		error:function(XMLHttpRequest, textStatus, errorThrown){
@@ -27,7 +27,7 @@ function CargarCoaches()
 	
 	$.ajax({
 		type:'POST',
-		url: 'catalogos/reportes/li_coaches.php',
+		url: 'catalogos/reportesanteriores/li_coaches.php',
 		cache:false,
 		async:false,
 		error:function(XMLHttpRequest, textStatus, errorThrown){
@@ -53,7 +53,7 @@ function CargarFiltrosreportes(idreporte) {
 
 	$.ajax({
 		type:'POST',
-		url: 'catalogos/reportes/Obtenerfiltrosreporte.php',
+		url: 'catalogos/reportesanteriores/Obtenerfiltrosreporte.php',
 		data:datos,
 		dataType:'json',
 		cache:false,
@@ -86,7 +86,7 @@ function CargarFiltrosreportes(idreporte) {
 			var habilitartiposervicionodepende=respuesta.habilitartiposervicionodepende;
 				
 
-			Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafin,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios,estatusaceptado,estatuspagado,coaches,habilitarfechainiciopago,habilitarfechafinpago,habilitartiposervicionodepende);
+			Filtrosreportesanteriores(habilitarservicio,habilitarfechainicio,habilitarfechafin,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios,estatusaceptado,estatuspagado,coaches,habilitarfechainiciopago,habilitarfechafinpago,habilitartiposervicionodepende);
 			
 
 			/*$("#fechainicio1").val(fechactual);
@@ -109,7 +109,7 @@ function CargarFiltrosreportes(idreporte) {
 	}
 }
 
-function Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafinal,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios,estatusaceptado,estatuspagado,coaches,habilitarfechainiciopago,habilitarfechafinpago,habilitartiposervicionodepende) {
+function Filtrosreportesanteriores(habilitarservicio,habilitarfechainicio,habilitarfechafinal,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios,estatusaceptado,estatuspagado,coaches,habilitarfechainiciopago,habilitarfechafinpago,habilitartiposervicionodepende) {
 	$("#tiposervicios").css('display','none');
 	$("#servicios").css('display','none');
 	$("#fechainicio").css('display','none');
@@ -119,7 +119,7 @@ function Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafi
 
 	$("#horainicio").css('display','none');
 	$("#horafin").css('display','none');
-	$("#contenedor_reportes").html('');
+	$("#contenedor_reportesanteriores").html('');
 	$("#btnpantalla").css('display','none');
 	$("#estatusaceptado").css('display','none');
 	$("#estatuspagado").css('display','none');
@@ -211,7 +211,7 @@ function Filtrosreportes(habilitarservicio,habilitarfechainicio,habilitarfechafi
 function CargarTipoServiciosRe() {
 
 	 $.ajax({
-					url:'catalogos/reportes/ObtenerTipoServicios.php', //Url a donde la enviaremos
+					url:'catalogos/reportesanteriores/ObtenerTipoServicios.php', //Url a donde la enviaremos
 					type:'POST', //Metodo que usaremos
 					dataType:'json',
 					error:function(XMLHttpRequest, textStatus, errorThrown){
@@ -236,7 +236,7 @@ function CargarTipoServiciosRe() {
 function CargarTipoServiciosRe2() {
 
 	 $.ajax({
-					url:'catalogos/reportes/ObtenerTipoServiciosPrincipal.php', //Url a donde la enviaremos
+					url:'catalogos/reportesanteriores/ObtenerTipoServiciosPrincipal.php', //Url a donde la enviaremos
 					type:'POST', //Metodo que usaremos
 					dataType:'json',
 					error:function(XMLHttpRequest, textStatus, errorThrown){
@@ -291,7 +291,7 @@ function CargarCategorias() {
 
 	$.ajax({
 		type:'GET',
-		url: 'catalogos/reportes/li_categorias.php',
+		url: 'catalogos/reportesanteriores/li_categorias.php',
 		cache:false,
 		async:false,
 		error:function(XMLHttpRequest, textStatus, errorThrown){
@@ -344,7 +344,7 @@ function GenerarPantallaReporteVentas(){
 
 	var datos="idservicio="+idservicio+"&alumno="+v_alumnos+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&horainicio="+horainicio+"&horafin="+horafin;
 
-	aparecermodulos('catalogos/reportes/GenerarPantallaReporteVentas.php?'+datos,'contenedor_reportes'); 
+	aparecermodulos('catalogos/reportesanteriores/GenerarPantallaReporteVentas.php?'+datos,'contenedor_reportesanteriores'); 
 }
 
 function GenerarReportePantallaTipoServicios() {
@@ -428,7 +428,7 @@ function CargarServiciosReporte() {
 
 	$.ajax({
 		type:'GET',
-		url: 'catalogos/reportes/li_servicios.php',
+		url: 'catalogos/reportesanteriores/li_servicios.php',
 		cache:false,
 		async:false,
 		error:function(XMLHttpRequest, textStatus, errorThrown){
@@ -449,7 +449,7 @@ function CargarAlumnosReporte() {
 
 	$.ajax({
 		type:'GET',
-		url: 'catalogos/reportes/li_alumnos.php',
+		url: 'catalogos/reportesanteriores/li_alumnos.php',
 		cache:false,
 		async:false,
 		error:function(XMLHttpRequest, textStatus, errorThrown){
@@ -473,7 +473,7 @@ function CargarAlumnos() {
 	var datos="idservicio="+idservicio;
 	$.ajax({
 		type:'GET',
-		url: 'catalogos/reportes/li_alumnos.php',
+		url: 'catalogos/reportesanteriores/li_alumnos.php',
 		cache:false,
 		data:datos,
 		async:false,
@@ -873,7 +873,7 @@ function CargarTipoServicios() {
 
 	$.ajax({
 		type:'GET',
-		url: 'catalogos/reportes/li_tiposervicios.php',
+		url: 'catalogos/reportesanteriores/li_tiposervicios.php',
 		cache:false,
 		async:false,
 		error:function(XMLHttpRequest, textStatus, errorThrown){

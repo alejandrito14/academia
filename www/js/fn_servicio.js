@@ -6139,6 +6139,9 @@ function ObtenerHorariosBloqueoCancha(idservicio) {
 						if (horarios.length>0) {
 							PintarHorariosServicioBloqueo(horarios,servicio);
 						}
+					console.log('horarios');
+
+						console.log(horarios);
 
 
 					}

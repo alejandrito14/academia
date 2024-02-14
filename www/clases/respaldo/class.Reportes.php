@@ -9,15 +9,7 @@ class Reportes
 	//Funcion que sirve para buscar una reporte
 		public function Lista_reportes()
 	{
-		$sql = "SELECT * FROM reportes WHERE estatus=1 AND anterior=0";
-
-		$result = $this->db->consulta($sql);
-		return $result;
-	}
-
-		public function Lista_reportesante()
-	{
-		$sql = "SELECT * FROM reportes WHERE estatus=1 AND anterior=1";
+		$sql = "SELECT * FROM reportes WHERE estatus=1";
 
 		$result = $this->db->consulta($sql);
 		return $result;

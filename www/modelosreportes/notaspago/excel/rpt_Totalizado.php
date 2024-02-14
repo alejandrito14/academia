@@ -804,8 +804,8 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 		 	$fechainicial="";
 		 	$fechafinal="";
 		 	$montoapagar=0;
-		 				 	$modalidad=$uniqueValues[$i]['modalidad'];
-									$costo=$uniqueValues[$i]['precio'];
+		 	$modalidad=$uniqueValues[$i]['modalidad'];
+				$costo=$uniqueValues[$i]['precio'];
 								
 									if ($modalidad==1) {
 										
@@ -886,7 +886,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 			 			$tdescuentomembresia=$descuentomembresia[0]->montodescontar;
 			 			$nombremembresia=$descuentomembresia[0]->nombremembresia;
 
-			 			$nombredescuento=$descuento[0]->nombredescuento;
+			 			 $nombredescuento=$descuento[0]->nombredescuento;
 			 				$montopagocondescuento=$montopago-$descuento[0]->montodescontar;
 			 				
 			 				$montoadescontarpago=$descuento[0]->montodescontar;

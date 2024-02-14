@@ -1541,7 +1541,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 </style>
 			<script>
-
+	
 
 	// Obtén todos los elementos <input type="checkbox">
 //var checkboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -1615,7 +1615,7 @@ checkboxes.forEach(function(checkbox) {
 			$("#habilitarbloqueocanchas").val(1);
 
 			if (idservicio>0) {
-
+var bloqueocanchas='<?php echo $bloqueocanchas; ?>'
 				$("#tiposervicioconfi").css('display','none');
 				$("#nuevoservicio").css('display','block');
 
@@ -1649,10 +1649,13 @@ idcategoriaservicioelegida=idcategoria;
 
 		 if (bloqueocanchas==1) {
 		 	$("#habilitarbloqueocanchas").attr('checked',true);
+
+		 	HabilitarBloqueoCanchas();
+		 
 		 }else{
 		 		$("#habilitarbloqueocanchas").attr('checked',false);
 		 }
-		 HabilitarBloqueoCanchas();
+		 
 		// Obtenerparticipantes(3,idservicio);
 		 ObtenerZonas(idservicio);
 		// ObtenerCoachs(5,idservicio);
@@ -1755,7 +1758,7 @@ idcategoriaservicioelegida=idcategoria;
 
 		var fechainicial='<?php echo $fechainicial; ?>';
 		var fechafinal='<?php echo $fechafinal; ?>';
-		var bloqueocanchas='<?php echo $bloqueocanchas; ?>'
+	
 		
 		$("#v_fechainicial").val(fechainicial);
 		$("#v_fechafinal").val(fechafinal);
@@ -1791,19 +1794,32 @@ idcategoriaservicioelegida=idcategoria;
 
 		if (abiertocliente==1) {
 			$("#v_abiertocliente").attr('checked',true);
+		}else{
+					$("#v_abiertocliente").attr('checked',false);
+	
 		}
 
 		if (abiertocoach==1) {
 			$("#v_abiertocoach").attr('checked',true);
+		}else{
+			$("#v_abiertocoach").attr('checked',false);
+
+
 		}
 		if (abiertoadmin==1) {
 
 			$("#v_abiertoadmin").attr('checked',true);
+		}else{
+					$("#v_abiertoadmin").attr('checked',false);
+	
 		}
 
 		if (ligarcliente==1) {
 			
 			$("#v_ligarclientes").attr('checked',true);
+		}else{
+						$("#v_ligarclientes").attr('checked',false);
+
 		}
 
 		if (reembolso==1) {
@@ -1812,25 +1828,42 @@ idcategoriaservicioelegida=idcategoria;
 			$("#v_tipodescuentoreembolso").val(tiporeembolso);
 		
 			HabilitarcantidadReembolso();
+		}else{
+
+			$("#v_reembolso").attr('checked',false);
+			$("#v_tipodescuentoreembolso").val(tiporeembolso);
 		}
 
 		if (asignadocliente==1) {
 			
 			$("#v_asignadocliente").attr('checked',true);
+		}else{
+						$("#v_asignadocliente").attr('checked',false);
+
 		}
 
 		if (asignadoadmin==1) {
 			
 			$("#v_asignadoadmin").attr('checked',true);
+		}else{
+						$("#v_asignadoadmin").attr('checked',false);
+
 		}
 		if (asignadocoach==1) {
 			
 			$("#v_asignadocoach").attr('checked',true);
+		}else{
+
+			$("#v_asignadocoach").attr('checked',false);
+
 		}
 
 		if (asistencia==1) {
 		$("#v_asistencia").attr('checked',true);
 	
+		}else{
+		$("#v_asistencia").attr('checked',false);
+
 		}
 
 	Permitirligar();

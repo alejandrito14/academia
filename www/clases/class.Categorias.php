@@ -621,7 +621,7 @@ public function ObtenerCategoriasEstatusDepende2($depende)
 
 	public function ObtenerCategoriasListado()
 	{
-		$sql="SELECT *FROM categorias WHERE estatus=1 AND depende>0 ORDER by titulo asc";
+		$sql="SELECT *FROM categorias WHERE estatus=1 AND depende=0 ORDER by titulo asc";
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
