@@ -88,7 +88,7 @@ var app = new Framework7({
 
  var pictureSource;   // picture source
  var destinationType; 
- var produccion = 0;
+ var produccion = 1;
 
 var codigoservicio="0";
 $(document).ready(function() {
@@ -99,7 +99,7 @@ $(document).ready(function() {
     }else{
            // codigoservicioreal='109';
 
-      codigoservicio='109';
+      codigoservicio='124';
     }
 
 
@@ -138,7 +138,7 @@ $(document).ready(function() {
 
 var lhost = "localhost:8888";
 var rhost = "issoftware1.com.mx";
-var version='1.0.30';
+var version='1.0.31';
 
 localStorage.setItem('versionapp',version);
 var abrir=0;
@@ -219,7 +219,7 @@ var carpetaapp="";
   
     urlimagendefault=rutaserver+"/IS-ACADEMIA/images/sinfoto.png"
     urlimagenlogo=rutaserver+"/IS-ACADEMIA/images/sinimagenlogo.png";
-    urlimagendefaultservicio=rutaserver+"/images/sin-servicio.jpg"
+    urlimagendefaultservicio=rutaserver+"/IS-ACADEMIA/images/sin-servicio.jpg"
 
     imagenesbancos=rutaserver+"/assets/images/";
     globalsockect=rutaserver+":"+puertosockect+"/";
@@ -2951,6 +2951,18 @@ $$(document).on('page:init', '.page[data-name="monedero"]', function (e) {
 
   
   $$('.regreso').attr('onclick',"GoToPage('pagos')");
+
+});
+
+$$(document).on('page:init', '.page[data-name="mercadopagotarjeta"]', function (e) {
+
+$(".divformulario").html('');
+    let cardForm="";
+
+CargarNuevaTarjetaMercadopago();
+
+
+  $$('.regreso').attr('onclick',"RegresarAmetodo()");
 
 });
 

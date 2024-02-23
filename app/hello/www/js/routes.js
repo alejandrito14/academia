@@ -486,6 +486,13 @@ var routes = [
     componentUrl: './pages/monedero.html',
   },
 
+   {
+    path:'/mercadopagotarjeta/',
+    componentUrl: './pages/mercadopagotarjeta.html',
+  },
+
+  
+
   {
     path:'/listadopagos/',
     componentUrl: './pages/listadopagos.html',

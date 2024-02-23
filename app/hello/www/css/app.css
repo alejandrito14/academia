@@ -856,3 +856,17 @@ input[type=date]:focus::-webkit-datetime-edit {
   padding: 10px 0; /* Puedes ajustar el espaciado según tus preferencias */
 }
 
+.my-input-style::placeholder {
+  color: red!important;
+  
+}
+
+.li-email #form-checkout__cardNumber iframe #cardNumber::placeholder{
+ color: red!important;
+  
+}
+
+ /*#form-checkout__cardNumber::placeholder {
+  color: red;
+  
+}*/

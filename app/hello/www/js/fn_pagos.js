@@ -1487,7 +1487,7 @@ function AplicarCupon() {
 
 }
 
-function HabilitarOpcionespago(idtipodepago,foto,stripe,habilitarcampo,habilitarcampomontofactura) {
+function HabilitarOpcionespago(idtipodepago,foto,stripe,habilitarcampo,habilitarcampomontofactura,habilitarmercadopago) {
 
 
  
@@ -1654,7 +1654,7 @@ function CargarOpcionesTipopago(idtipopago) {
       localStorage.setItem('comisionpornota',resultado.comisionpornota);
       localStorage.setItem('tipocomisionpornota',resultado.tipocomisionpornota);
      
-     	HabilitarOpcionespago(resultado.idtipodepago,resultado.habilitarfoto,resultado.constripe,resultado.habilitarcampomonto,resultado.habilitarcampomontofactura);
+     	HabilitarOpcionespago(resultado.idtipodepago,resultado.habilitarfoto,resultado.constripe,resultado.habilitarcampomonto,resultado.habilitarcampomontofactura,resultado.habilitarmercadopago);
     if (resultado.habilitarfoto==1) {
      		$(".divtransferencia").css('display','block');
      		var html="";
@@ -1748,6 +1748,37 @@ function CargarOpcionesTipopago(idtipopago) {
             HabilitarBotonPagar();
            
         }
+
+
+        if (resultado.habilitarmercadopago==1) {
+
+          
+          if (resultado.comisionporcentaje=='') {
+            resultado.comisionporcentaje=0;
+          }
+          if (resultado.comisionmonto=='') {
+            resultado.comisionmonto=0;
+          }
+          if (resultado.impuesto=='') {
+            resultado.impuesto=0;
+          }
+        
+          localStorage.setItem('comisionporcentaje',resultado.comisionporcentaje);
+          localStorage.setItem('comisionmonto',resultado.comisionmonto);
+          localStorage.setItem('impuesto',resultado.impuesto);
+          localStorage.setItem('clavepublica',resultado.keypublicamercado);
+          localStorage.setItem('claveprivada',resultado.keyprivadamercado);
+          ObtenerTarjetasMercadopago();
+          $(".btnnuevatarjeta").css('display','block');
+          $(".btnnuevatarjeta").text('Ingresa datos de tarjeta');
+
+          $(".btnnuevatarjeta").attr('onclick','NuevaTarjetaMercadopago()');
+
+            HabilitarBotonPagar();
+
+         }
+
+         
          CalcularTotales();
 
       },error: function(XMLHttpRequest, textStatus, errorThrown){ 
@@ -5566,7 +5597,7 @@ function GuardarAceptarTerminosPago(idpago) {
       async:false,
       success: function(resp){
        
-        
+
       },error: function(XMLHttpRequest, textStatus, errorThrown){ 
         var error;
           if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
