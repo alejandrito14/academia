@@ -1,0 +1,124 @@
+<template>
+	<div class="page account-area" data-name="login2">
+		<div class="page-content bottom-sp40" style="margin-top:2em;">
+			<div class="container">
+				<div class="title-head">
+					<h2 class="title"></h2>
+					<p> </p>
+				</div>
+				<div class="row" style="margin-bottom: 2em;">
+				<!-- 	<div class="col-50">
+						<a  class="button button-raised button-fill btninvitado" style="text-transform: capitalize;">Invitado</a></div> -->
+						<div class="col-100">
+						<a href="/signup/" class="button-large button button-fill " style="text-transform: capitalize;background: #C7AA6A;">Regístrate</a>
+					</div>
+				</div>
+				<div class="tabs">
+					<div class="tab tab-active form-elements tabs">
+						<form class="tab tab-active" id="tabA1">
+							<div class="list">
+								<ul class="row">
+									<li class="item-content item-input col-100">
+										<div class="item-inner">
+											<div class="item-input-wrap">
+												<input type="email" placeholder="Correo electrónico" value="" id="v_usuario" class="form-control"/>
+											</div>
+										</div>
+									</li>
+									<li class="item-content col-100 item-input">
+										<div class="item-inner">
+											<div class="item-input-wrap">
+												<input type="password" placeholder="Contraseña" id="v_clave" class="form-control"/>
+												<div class="show-pass">
+													<span class="show">Mostrar</span>
+													<span class="hide">Ocultar</span>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+							<div class="clearfix">
+								<a id="btnlogin" class="button-large button button-fill" style="text-transform: capitalize;">Ingresar</a>
+<!-- 
+										<a  class="button-large button button-fill btninvitado" style="text-transform: capitalize;    margin-top: 1em;">Ingresar como invitado</a>
+ -->
+
+									<a id="btnregresar" class="button-large button button-fill" style="text-transform: capitalize;    margin-top: 1em;">Cancelar</a>
+
+							<a href="/forgotpassword/">	<p class="form-text" style="text-align: center;">Recupera tu contraseña </p></a>
+							</div>
+
+						
+				
+							<div class="text-align-center account-footer" style="display: none;">
+								<p class="mt-0">O inicia tu sesión con:</p>
+								<a href="#" class="button-large button button-social button-fill facebook"><img src="img/social/facebook.png" alt=""/> <span>Facebook</span></a>
+								<a href="#" class="button-large button button-social button-outline google mt-15"><img src="img/social/google-mail.png" alt=""/> <span>Google</span></a>
+							</div>
+
+
+							<div class="block m-0" style="" >
+
+                          <div class="col-100 " style="">
+
+
+                             <p style="text-align: center;font-size: 12px;color: #000000;">Versión 
+                                <span class="versionapp" 
+                                style="margin-left: 2px;"></span></p> 
+                             
+                              <p style="text-align: center;font-size: 12px;color: #a6a6a6; ">Innovative Software Services</p> 
+                              <p style="text-align: center;font-size: 12px;color: #a6a6a6">2023 Copyright © todos los derechos reservados.</p>
+
+
+                         </div>
+                       </div>
+
+						</form>
+						
+						<form class="tab" id="tabA2">
+							<div class="list">
+								<ul>
+									<li class="item-content col-100 item-input">
+										<div class="item-inner">
+											<div class="item-input-wrap">
+												<input type="password" placeholder="Password" class="form-control"/>
+												<div class="show-pass">
+													<span class="show">SHOW</span>
+													<span class="hide">HIDE</span>
+												</div>
+											</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+							<div class="clearfix">
+								<a href="/home/" class="button-large button button-fill">SUBMIT</a>
+								<p class="form-text">Sign in to your registered account <a href="#tabA1"  data-route-tab-id="tabA1" class="tab-link">Login here</a></p>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	
+</template>
+<script>
+export default (props, {$on}) => {
+	$on('pageInit', () => {	
+		$('.show-pass').on('click',function(){
+			$(this).toggleClass('active');
+			var passInput = $(this).parent().find('input');
+			var inputType = passInput.attr('type');
+			if( inputType == 'password'){
+				passInput.attr('type','text');
+			}else if(inputType == 'text'){
+				passInput.attr('type','password');
+			}
+		});
+	});
+	return $render;
+}
+</script>

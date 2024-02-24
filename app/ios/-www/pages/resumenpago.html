@@ -1,0 +1,559 @@
+<template>
+<div class="page " data-name="resumenpago">
+ <div class="navbar navbar-style-1 navbar-transparent">
+    <div class="navbar-bg"></div>
+    <div class="navbar-inner sliding">
+      <div class="left">
+        <a  class="link back">
+       
+         <svg width="11" height="16" viewBox="0 0 11 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.3419 8L10.2222 2.22222L8 2.73828e-07L1.22201e-06 8L8 16L10.2222 13.7778L4.3419 8Z" fill="#122261"/>
+          </svg>
+        </a>
+      </div>
+      <div class="title"></div>
+    </div>
+  </div>
+
+  <!-- <div class="fab fab-left-bottom  " style="bottom: 4em; ">
+    <a class="btnregreso regreso"  style="">
+     <i class="bi bi-arrow-left" style=""></i>
+    </a>
+  </div> -->
+  <!-- main page content -->
+  <div class="page-content pt-80" style="overflow: scroll;">
+    <!-- banner -->
+  <div class="row">
+            <div class="col-100">
+
+      <div class="titlecatalogo title2 cambiarfuente" style="    font-size: 20px;
+    text-align: center;
+    font-weight: 600;
+   ">Resumen de pago</div>
+    </div>
+    </div>
+
+   
+   
+    <div class="row" style="margin-right: 2em;
+    margin-left: 2em;">
+      
+
+      <div class="list " style="background: black;">
+           <ul class="listadocarrito2 cambiarfuente" style="list-style: none;background: black;">
+      
+              </ul>
+           </div>
+           <div >
+           
+             
+          </div>
+      </div>
+
+
+<div class="list  no-margin cambiarfuente" style="background: black;display: none;">
+  <ul class="cupon" style="list-style: none;">
+    <li class="list-item">
+      <div  class="row">
+      <div class="col-70" style="/* padding: 0; */">
+        <p class="text-muted small" style="font-size:18px;    margin-left: 1em;" id="">Monedero</p>
+        <p class="text-muted " style="font-size:30px;text-align:right;    margin: 0px 0px 10px;">$<span class="monedero">0.00</span></p>
+        </div>
+        <div class="col-30">
+          <span class="chip color-green btnmonedero" id="" style="
+                            height: 30px;
+    top: 4em;
+    justify-content: center;
+    display: flex;
+    width: 80%;" onclick="AbrirModalmonedero()"><span class="chip-label">Aplicar</span></span>
+                             </div>
+                           </div>
+                             </li>
+                           </ul>
+                         </div>
+
+
+       <div class="divcupones row" style="display: none;">
+        <div class="list no-margin" style="background: black;">
+            <ul class="cupon" style="list-style: none;">
+             <li class="list-item">
+                    <div class="row">
+                        <div class="col-70" style="padding: 0;">
+                            <p class="text-muted small" style="font-size:18px;" id="">
+                             Cupón
+                            </p>
+                             <p class="text-muted " style="font-size:30px;text-align:right;    margin: 0px 0px 10px;">$<span class="cupondescuento">0.00</span></p>
+
+                        </div>
+                        <div class="col-30">
+                          <span class="chip color-green btncupon" style="
+                                height: 30px;
+                                justify-content: center;
+                                display: flex;
+                                margin-right: 2em;
+                                margin-left: 1em;top: 3em;"><span class="chip-label">Aplicar</span></span>
+                        </div>
+                    </div>
+                 </li>
+                  
+
+            </ul>
+           </div>
+           <div >
+          </div>
+      </div>
+
+
+      <!--   <div class="row" style="background: white;height: 60px;">
+        <div class="list media-list no-margin" style="background: white;">
+            <div class="cupon" style="list-style: none;">
+              <li>
+                    <div class="row" style="margin-top: .5em;">
+                        <div class="col-50" style="padding: 0">
+                             <input type="text" placeholder="Código cupón" name="couponcode" class="" style="width: 70%;float: left;" />
+                        </div>
+                        <div class="col-50"><span class="chip color-green" style="
+                                height: 40px;
+                                justify-content: center;
+                                display: flex;
+                                margin-right: 1em;
+                                margin-left: 1em;"><span class="chip-label">Aplicar</span></span></div>
+                    </div>
+                 </li>
+             </div>
+           </div>
+         
+          </div> -->
+     
+      <div id="visualizardescuentos" style="display: none;">
+       <div class="divdescuentos row">
+        <div class="list media-list no-margin" style="background: #46b2e2;">
+            <ul class="descuentos" style="list-style: none;" id="uldescuentos">
+            </ul>
+          </div>
+        </div>
+      </div>
+        
+
+   <div class="cambiarfuente">
+    <div class="list no-margin" style="">
+      <div class="cupon" style="list-style: none;margin-right: 2em;margin-left: 1em;">
+        <div class="list-item">
+        <div class="row">
+          <div class="col-100" style="padding: 0;"><p class="text-muted small" style="font-size:18px;    margin-left: 1em;" id="">Subtotal</p>
+          <p class="text-muted " style="font-size:30px;text-align:right;    margin: 0px 0px 10px;">$<span class="lblresumen totalcarrito">0.00</span></p>
+        </div>
+        <div class="col-30">
+          
+        </div>
+      </div>
+      </div>
+      </div>
+    </div>
+    </div>
+
+     <div class="divcomision cambiarfuente" >
+      <div class="">
+        <div class="list media-list no-margin" style="">
+          <div class="cupon" style="list-style: none;margin-right: 2em;margin-left: 1em;">
+            <div class="list-item">
+              <div class="row">
+                <div class="col-100" style="padding: 0;"><p class="text-muted small" style="font-size:18px;    margin-left: 1em;" id="">Comisión</p><p class="text-muted " style="font-size:30px;text-align:right;    margin: 0px 0px 10px;">$<span class="lblcomision">0.00</span></p></div><div class="col-70"></div>
+              </div>
+          </div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <div class="">
+        <div class="list media-list no-margin cambiarfuente" style="">
+            <div class="" style="list-style: none;margin-right: 2em;margin-left: 1em;">
+             <div class="list-item">
+                    <div class="row">
+                        <div class="col-100" style="padding: 0;">
+                            <p class="text-muted small" style="font-size:18px; margin-left: 1em;" id="">
+                             Total
+                            </p>
+                             <p class="text-muted " style="font-size:30px;text-align:right;    margin: 0px 0px 10px;">$<span class="  lbltotal">0.00</span></p>
+
+                        </div>
+                        <div class="col-30">
+                        
+                        </div>
+                    </div>
+                 </div>
+                  
+            </div>
+           </div>
+          
+      </div>
+      <!-- <div class="row" style="margin-top: 1em;">
+        <div class="col-100 preguntafactura" style="display: none;" id="">
+           <p class="text-muted" style="opacity: 0.6;margin-bottom: 1em;">¿Desea facturar?<input type="checkbox" name="" style="width: 30px;height: 20px;position: absolute;"  id="requierefactura" / ></p>
+        </div>
+        <div class="datosfactura">
+            <div class="list media-list no-margin">
+               <div style="list-style: none;" class="lidatosfacturaelegido">
+                
+               </div>
+            </div>
+
+        </div>
+      </div> -->
+      <div class="divtipopago cambiarfuente">
+        <div class="row" style="margin-top: 1em;">
+          <div class="col-100">
+            <p class="" style="color:black;margin-left: 2.5em;">Método de pago</p>
+          </div>
+        </div>
+      </div>
+      <div class="divtipopago">
+      <div class="" style="background: black;">
+        
+        <div class="list  no-margin">
+          <div style="list-style: none;margin-right: 2em;margin-left:1.2em;margin-bottom: 1em;">
+              <div class="item-content">
+         
+            <select name="tipopago" id="tipopago">
+              
+            </select>
+           
+         
+             </div>
+       
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="divtransferencia cambiarfuente" style="display: none;    margin-right: 1em;margin-left: 0.9em;">
+      <div class="row "  >
+        <div class="col-100" style="list-style: none;">
+           <div class="informacioncuenta" style="    margin-right: 1em;
+    margin-left: 1em;"></div>
+        </div>
+        
+
+       </div>
+     </div>
+       <div id="campomonto cambiarfuente" style="display: none;margin-right: 2em;margin-left: 0.9em;">
+    <div class="subdivisiones" style="margin-top: 1.5em;width: 12em!important;" >
+      <span style="margin-top: .5em;margin-left: 1em;">¿Con cuanto pagas?</span>
+    </div>
+
+    <div class="list media-list sortable">
+     <ul  style="list-style: none;">
+      
+
+          <li>
+            
+            <label class="label-radio item-content">
+              
+              <div class="item-inner">
+             
+                <div class="">
+
+                  <input type="text" name="montovisual" id="montovisual" style="font-size: 18px;float: left;width: 60%;margin-left: 1.2em;" placeholder="$0.00" readonly />
+                  <input type="number" name="montocliente" id="montocliente"  style="font-size: 18px;float: left;width: 60%;    margin-left: 1.2em;display: none;" placeholder="$0.00"   />
+
+                 
+                </div>
+
+                </div>
+
+
+                <div class="item-after" style="float: right;">
+                 
+
+
+                   <span class="botoneditar" style="margin-right:.10em;" >
+                  
+                  <i class="bi bi-pencil "></i>
+                  <span class="if-not-md"></span>
+
+                  </span>
+
+
+                     <span class="botoneditar" onclick="" style="visibility: collapse;">
+                  
+                      <i class="bi bi-pencil"></i>
+
+                  </span>
+                 
+                </div>
+
+              
+            </label>
+            </li>
+        </ul>
+
+      </div>
+</div> 
+
+
+<!--  <div id="habilitarfoto" style="display: none;">
+    <div class="subdivisiones" style="margin-top: 1.5em" ><span style="margin-top: .5em;margin-left: .5em;">Comprobante</span></div>
+
+         <div class="list" >
+                <ul>
+                    <button  class="button button-fill botonesaccion botonesredondeado estiloboton" style="margin-top: 1em;"> Sube tu comprobante</button>
+                         <div class="check-list" style="    display: none;margin-right: 10em;top: -.2em;position: absolute;right: -6em;"><span></span></div>
+                </ul>
+
+                    <div class="block m-0"> 
+                     <div class="list media-list sortable" id="" style="">           
+
+                    <ul id="lista-imagenescomprobante">
+                        
+                    </ul>
+                </div> 
+
+                </div>   
+                
+              </div>
+
+            </div> 
+ -->
+
+ 
+    <div class=" row cambiarfuente">
+              <div style="background-color:#dfdfdf;border-radius:10px;padding-top: .5px;padding-bottom: .5px;display: none;" id="aparecerimagen">
+              <div class="">
+                  <div class="row no-gap" style="text-align: center;"> 
+                   <img src="" id="imagencomprobante" width="60" />
+                  </div>
+                </div>
+
+                 <div class="block "> 
+                     <div class="list media-list sortable" id="" style="">           
+
+                    <ul id="lista-imagenescomprobante">
+                        
+                    </ul>
+                </div> 
+              </div>
+
+
+        </div>
+
+      </div>
+       
+       
+
+        <div class=" divtarjetas cambiarfuente" >
+          <div class="" id="divlistadotarjetas">
+
+      <div class="divisiones2" style="display: none;"><span style="margin-top: .5em;margin-left: .5em;">Seleccionar tarjeta</span></div>
+      <div class="col">
+        <div class="">
+          
+          <div style="text-align: center;" id="categorianombre" class="categorianombre"></div>
+          <div class="swiper-container  demo-swiper">
+            <div class="swiper-wrapper" id="slidecategoria">
+
+            </div>
+          </div>
+
+          <div class="list simple-list li">
+            <div id="listadotarjetas cambiarfuente">
+              
+            </div>
+            <div class="  ">
+              <a class="button button-fill botonesredondeado botones btnnuevatarjeta cambiarfuente"  style="height: 60px;line-height: 40px;
+    /* width: 100%; */
+    color: black!important;
+    background: #FFC830!important;
+    margin-left: 2.5em;
+    margin-right: 2.5em;
+    margin-top: 1em;">Nueva Tarjeta</a>
+            </div>    
+          </div>
+              
+        </div>
+      </div>
+    </div>
+    <div class="" id="divagregartarjeta">
+
+      <div class="divisiones2 cambiarfuente" style="    margin-bottom: 1em;
+    margin-top: 1em;font-weight: bold;"><span style="margin-top: .5em;margin-left: 2em;">Introduce la información de la tarjeta</span></div>
+
+      <div class="col">
+
+         <div class="">
+         <div class="list form-list  margin-bottom cambiarfuente" style="margin-right: 1em; margin-left: 1em;" id="my-form">
+           <ul>
+            
+              <li>
+                <div class="item-content item-input">
+                <div class="item-inner">
+                <div class="item-title item-label" >*Nombre en la tarjeta</div> 
+
+                <div class="item-input-wrap" style="height: 56px;font-size: 15px;">
+                  <input type="text" name="cardholder-name" placeholder="TITULAR DE LA TARJETA" class="mayusculas place input-with-value" id="v_cardholder-name" />
+                  <span class="input-clear-button"></span>
+                </div>
+                  <label for="" id="lblnombre" class="lbl" style="color:red;"></label>
+                </div>
+                </div>
+              </li>
+              <li>
+                <div class="item-content item-input">
+                <div class="item-inner">
+                <div class="item-title item-label">*Número de tarjeta</div>
+                <div class="item-input-wrap" style="height: 56px;font-size: 15px;">
+                  <div class="sr-input sr-element sr-card-element" id="v_card-number" style="margin-top: .5em;" >
+                    <!-- A Stripe card Element will be inserted here. -->
+                  </div>
+                  <span class="input-clear-button"></span>
+                </div>
+                <label for="" id="lblntarjeta" class="lbl" style="color:red;"></label>
+                </div>
+                </div>
+              </li> 
+              <li>
+                <div class="item-content item-input">
+                <div class="item-inner">
+                <div class="item-title item-label">*Fecha de vencimiento</div>
+                <div class="item-input-wrap" style="height: 56px;font-size: 15px;">
+                  <div class="sr-input sr-element sr-card-element" id="v_card-expiry" style="margin-top: .5em;">
+                    <!-- A Stripe card Element will be inserted here. -->
+                  </div>
+                  <span class="input-clear-button"></span>
+                </div>
+                <label for="" id="lblntarjeta" class="lbl" style="color:red;"></label>
+                </div>
+                </div>
+
+              </li> 
+
+              <li>
+                <div class="item-content item-input">
+                <div class="item-inner">
+                <div class="item-title item-label">*CVC</div>
+                <div class="item-input-wrap" style="height: 56px;font-size: 15px;">
+                  <div class="sr-input sr-element sr-card-element" id="v_card-cvc" style="margin-top: .5em;">
+                    <!-- A Stripe card Element will be inserted here. -->
+                  </div>
+                  <span class="input-clear-button"></span>
+                </div>
+                <label for="" id="lblcvc" class="lbl" style="color:red;"></label>
+                </div>
+                </div>
+              </li>
+          </ul>
+          <div class="sr-field-error " id="card-errors" role="alert" style="color:#E25950;"></div>
+          <div class=" ">
+            <a class="button button-fill botonesredondeado botones cambiarfuente" onclick="" id="submit-card" style="height: 60px;
+    line-height: 40px;
+    /* width: 100%; */
+    color: white!important;
+    background: #FFC830!important;
+   margin-left: 1.5em;
+    margin-right: 1.5em;
+    margin-top: 1em;">Guardar Tarjeta</a>
+
+
+
+     <a class="button button-fill botonesredondeado botones cambiarfuente" onclick="" id="btnatras" style="height: 60px;
+    line-height: 55px;
+    color: white!important;
+    background: red!important;
+    margin-left: 1.5em;
+        margin-right: 1.5em;
+
+    margin-top: 1em;">Cancelar</a>
+          </div>  
+        </div>
+         </div> 
+      </div>
+    </div>  
+
+       </div>
+
+        <div class="row divefectivo" >
+         
+
+       </div>
+
+       <div class="row" style="    margin-left: 2.5em;margin-right: 2.5em;">
+             <div class="col-100">
+          <button type="button" class="button button-fill color-theme button-large button-raised cambiarfuente" id="btnpagarresumen"  style="background: #c7aa6a;color: white;">Pagar</button>
+        </div>
+      </div>
+       <div class="row" style="margin-top: 1em;height: 200px;">
+             <div class="col-100">
+         
+        </div>
+      </div>
+
+      <!--  <div class="row">
+        <div class="list media-list no-margin" style="background: white;">
+            <ul class="cupon" style="list-style: none;">
+              
+            </ul>
+           </div>
+           <div >
+          </div>
+      </div> -->
+   
+      <!-- <div id="inferior">
+        <div class="block">
+           <div class="row" style="margin-bottom: 1em;">
+         <div class="col-50"> <span style="font-size: 16px;margin-left: .3em;">Total a pagar</span></div>
+        <div class="col-45">
+          <span style="text-align: right;font-size: 16px;font-weight: bold;float: right;">$<span id="cantidad">0</span></span></div>
+
+       </div>
+          <div class="row">
+             <div class="col-100">
+          <button type="button" class="button button-fill color-theme button-large button-raised" id="btnpagar" >Pagar</button>
+        </div>
+           </div>
+        </div>
+      
+
+      </div> -->
+
+    <!-- offers banner -->
+    <!-- <div class="row margin-bottom">
+      <div class="col-100">
+        <div class="card bg-color-green text-color-white text-align-center">
+          <div class="card-content card-content-padding ">
+            <div class="row">
+              <div class="col align-self-center">
+                <h1>12% OFF</h1>
+                <p class="size-12 text-muted">
+                  On every bill pay, launch offer get 5% Extra
+                </p>
+                <div class="tag border-dashed border-opac">
+                  BILLPAY12OFF
+                </div>
+              </div>
+              <div class="col-50 align-self-center no-padding-left">
+                <img src="img/offergraphics-green.png" alt="" class="max-width-100" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+
+  </div>
+
+
+
+
+
+</div>
+
+</template>
+
+<style>
+  button:disabled,
+button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+}
+</style>

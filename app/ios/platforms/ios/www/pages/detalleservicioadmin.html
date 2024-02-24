@@ -1,0 +1,324 @@
+<template>
+	<div class="page page-" data-name="detalleservicioadmin">
+    <div class="navbar">
+        <div class="navbar-bg"></div>
+        <div class="navbar-inner">
+            <div class="left">
+               <!--  <a href="" class="button button-fill text-color-theme bg-color-white button-44 regreso">
+                    <i class="bi bi-arrow-left"></i>
+                </a> -->
+            </div>
+            <div class="title">
+                <h5></h5>
+            </div>
+            <div class="right">
+               <!--  <a href="/notification/" class="button button-fill text-color-theme bg-color-white button-44">
+                    <i class="bi bi-bell"></i>
+                </a> -->
+            </div>
+        </div>
+    </div>
+      <div class="fab fab-left-bottom  " style="bottom: 4em; ">
+    <a class="btnregreso regreso" style="">
+     <i class="bi bi-arrow-left" style=""></i>
+    </a>
+  </div>
+
+    <!-- main page content -->
+    <div class="page-content">
+
+      <div class="row">
+           <div class="col-100">
+        <img src="" alt="" class="imgservicioasignado" style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;border-radius: 10px;" />
+    </div>
+      </div>
+      <div class="row ">
+         <div class="col-100" style="    margin-bottom: 0.5em;">
+        <h2 style="text-align: center;font-size: 18px;" id="tituloservicio" class="tituloservicio"> </h2>
+            <h3 class="fechasservicio" style=" text-align: center;font-weight: bold;color: #919191;font-size: 16px;"></h3>
+            <h4 style="text-align: center;font-size: 18px;" class="numeroparticipantes">Alumnos: <span class="cantidadalumnos"></span> de <span class="cantidadtotal"></span></h4>
+            <h4 style="text-align: center;font-size: 18px;" class="numeroparticipantes">Numero de horarios: <span class="cantidadhorarios"></span></h4>
+        </div>
+ 
+ 
+      </div>
+        <div class="row padding-vertical" >
+
+            
+          <div class="col-100 ">
+                <div class="card  margin-bottom">
+                    <div class="card-content card-content-padding">
+                        <div class="row">
+                           <!--  <div class="col-auto">
+                                <div class="avatar avatar-40 alert-success text-color-green rounded-circle">
+                                    <i class="bi bi-controller size-20"></i>
+                                </div>
+                            </div> -->
+                            <div class="col-70 align-self-center ">
+                                <div class="" style="margin-right: 1em;text-align: center;">
+                                       <p class="no-margin-bottom" style="text-align: center;font-weight: bold;">Próximo horario</p>
+                                <div class="colocarhorarios" style="    margin-left: 1em;text-align: center;">
+                                    
+
+                                </div>
+
+                                <a id="btncalendario" style="display: none;">Ver calendario</a>
+                                </div>
+                             
+                              
+                               
+                            </div>
+
+                            <div class="col" id="Abrirchat">
+                               
+                                <span style="font-size: 35px;" class="  text-color-blue "><i class=" bi bi-chat-left-quote-fill"></i></span>
+                                 <p>Chat</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+
+            </div>   
+
+
+            <div class="row margin-bottom text-align-center padding-vertical ">
+
+
+               
+          
+            <div class="col-50 medium-100 large-100">
+                <div class="card margin-bottom" style="height: 80px;"><div class="card-content  " style="padding-top: 1em">
+                    <a href="/comentariosservicio/">
+                    <div class="row">
+                    <div class="col-100">
+                       
+                                    <div class="avatar avatar-40 alert-primary text-color-blue rounded-circle divopiniones"><i class="bi bi-chat-square-dots"></i>
+                                    </div>
+                              
+                            </div>
+                            <div class="col-100 " style="">
+                                <span class="small  " style="opacity: 0.6;color: black;text-align: left;display: flex;justify-content: center; ">
+                                  Opiniones
+                                </span>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+              <div class="col-50 medium-100 large-100">
+                <div class="card margin-bottom" style="height: 80px;"><div class="card-content  " style="padding-top: 1em">
+                    <a href="/calificacionesadmin/">
+                    <div class="row">
+                    <div class="col-100">
+                       
+                                    <div class="avatar avatar-40 alert-primary text-color-blue rounded-circle divcalificaciones"><i class="bi bi-chat-square-dots"></i>
+                                    </div>
+                              
+                            </div>
+                            <div class="col-100 " style="">
+                                <span class="small  " style="opacity: 0.6;color: black;text-align: left;display: flex;justify-content: center; ">
+                                  Calificaciones
+                                </span>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+             
+
+         <!--    <div class="col-50 medium-33 large-25">
+                <div class="card margin-bottom" style="height: 80px;"><div class="card-content  " style="padding-top: 1em">
+                    <a id="abrirpantallacali" >
+                    <div class="row">
+                    <div class="col-100">
+                       
+                                    <div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi  bi-star"></i>
+                                    </div>
+                              
+                            </div>
+                            <div class="col-100 " style="">
+                                <span class="small  " style="opacity: 0.6;color: black;text-align: left;display: flex;justify-content: center; ">
+                                  Califica el servicio
+                                </span>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+            </div> -->
+
+             <div class="col-100 medium-100 large-100 divevaluaciones" style="display: none;">
+                <div class="card margin-bottom " style="height: 80px;"><div class="card-content  " style="padding-top: 1em">
+                    <a href="/evaluacionesservicio/">
+                    <div class="row">
+                    <div class="col-100">
+                       
+                                    <div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi-check-circle"></i>
+                                    </div>
+                              
+                            </div>
+                            <div class="col-100 " style="">
+                                <span class="small  " style="opacity: 0.6;color: black;text-align: left;display: flex;justify-content: center; ">
+                                  Evaluaciones
+                                </span>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-100 medium-100 large-100 divasistencia" style="display: none;">
+                <div class="card margin-bottom  " style=" height: 80px;">
+                  <div class="card-content  " style="padding-top: 1em">
+                    <a class="btnasistencia">
+                    <div class="row">
+                    <div class="col-100">
+                       
+                       <div class="avatar avatar-40 alert-primary text-color-blue rounded-circle"><i class="bi bi bi-watch"></i>
+                                    </div>
+                              
+                            </div>
+                            <div class="col-100 " style="">
+                                <span class="small  " style="opacity: 0.6;color: black;text-align: left;display: flex;justify-content: center; ">
+                                  Asistencia
+                                </span>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+           <!--  <div class="col">
+                <h5 class="no-margin-bottom"></h5>
+               <i style="font-size: 25px" class="bi bi-chat-square-dots"></i>
+                <p class="text-muted small"><a href="/datospersonales/">Comentarios</a></p>
+            </div> -->
+            <!-- <div class="col">
+                <h5 class="no-margin-bottom"></h5>
+                <i style="font-size: 25px" class="bi bi-check-circle"></i>
+                <p class="text-muted small"><a href="/datosemergencia/">Evaluaciones</a></p>
+            </div> -->
+            <!-- <div class="col">
+                <h5 class="no-margin-bottom"></h5>
+              <i style="font-size: 25px" class="bi bi-star"></i>
+                <p class="text-muted small"><a href="/datosdesalud/">Califica el servicio</a></p>
+            </div> -->
+        </div> 
+
+
+           <!--  <div class="row margin-bottom text-align-center padding-vertical divasistencia" style="display: none;">
+              <div class="col-100">
+                  
+              </div> -->
+            
+           <!--  </div> -->
+        <div class="row margin-bottom  padding-vertical permisoasignaralumno" id="permisoasignaralumno" style="display: none;">
+       
+         <div class="col">
+           <button class="button button-fill button-large color-theme button-raised margin-bottom-half " id="btnpermisoasignaralumno">
+              <i style="margin-right: .3em;" class="bi bi-file-person"></i> Asignar alumnos
+            </button>
+            
+            </div>
+
+        </div> 
+         <div class="row listadoalumnos" style="display: none;">
+          <div class="col-100" style="margin-bottom: 0.5em;">
+            <h5 class="title">Alumnos
+              
+          </h5>
+        </div>
+         </div>
+        <div class="listadoalumnos" style="display: none;">
+           <div class="row " >
+            <div class="list media-list no-margin">
+               <div class="" style="list-style: none;height: 15em; overflow: scroll;" id="divparticipantesalumnos">
+                   
+               </div>
+               </div>
+           </div> 
+         </div>
+
+            <div class="galeriagrupal" style="margin-top: 1em;display: none;">
+         <div class="row margin-bottom  padding-vertical " >
+           <div class="col">
+          <h5 class="title">Galeria grupal<br /><small class="font-weight-normal text-muted"></small>
+          </h5>
+              </div>
+        </div> 
+
+        <div class="row " style="">
+          <ul class="listadoimagenes" style="height: 15em;overflow: scroll;list-style: none;"></ul>
+        </div>
+      </div>
+
+
+        <div class="row divcancelar" style="margin-top: 1em; display: none;" >
+          <div class="col"><button style="background: red;" class="button button-fill button-large color-theme button-raised margin-bottom-half btncancelarservicio " ><i style="margin-right: .3em;" class="bi bi-file-person"></i> Cancelar</button></div>
+
+        </div>
+
+        <!--  <div class="row margin-bottom  padding-vertical ">
+           <div class="col-50">
+              <h5 class="title">Galeria grupal<br /><small class="font-weight-normal text-muted"></small>
+              </h5>
+            </div>
+            <div class="col-30">
+             <a style="text-align: left;font-size: 24px;display: none;" href="/nuevovideogrupal/"><i class="bi-plus-square"></i></a>
+
+            </div>
+            <div class="col-20">
+               <a style="text-align: left;font-size: 24px;" href="/nuevaimagengrupal/"><i class="bi-plus-square"></i></a>
+            </div>
+        </div>  -->
+
+
+
+       
+
+       
+<!-- 
+        <div class="row">
+          <div class="list media-list no-margin">
+          <div class="listadoimagenes" style="list-style: none;height: 500px;overflow: scroll;" ></div>
+            </div>
+        </div> -->
+
+        <!-- <div class="">
+                      <div class="block" style="margin-right:1em;margin-left:1em;">
+                      
+                          <figure class="overflow-hidden rounded-15 text-center">
+                                    <img src="http://localhost:8888/is-academia/www/catalogos/entradas/imagenes/106/3.jpg" alt="" class="width-100 margin-left-auto margin-right-auto" />
+                                </figure><h5 class="margin-bottom" style="font-size:24px;">La importancia del ejercicio</h5> <p class="text-muted">Hacer ejercicio 30minutos al día es necesario para mantener nuestro cuerpo y mente saludable</p> </div>
+                    </div>
+ -->
+
+
+         <!-- <div class="row margin-bottom  padding-vertical ">
+           <div class="col-50">
+          <h5 class="title">Galeria individual<br /><small class="font-weight-normal text-muted"></small>
+          </h5>
+              </div>
+         <div class="col-50">Nueva imagen</div>
+
+        </div> --> 
+
+        <!-- <div class="">
+                      <div class="block" style="margin-right:1em;margin-left:1em;">
+                      
+                          <figure class="overflow-hidden rounded-15 text-center">
+                                    <img src="http://localhost:8888/is-academia/www/catalogos/entradas/imagenes/106/3.jpg" alt="" class="width-100 margin-left-auto margin-right-auto"/>
+                                </figure><h5 class="margin-bottom" style="font-size:24px;">La importancia del ejercicio</h5> <p class="text-muted">Hacer ejercicio 30minutos al día es necesario para mantener nuestro cuerpo y mente saludable</p> </div>
+                    </div> -->
+                            <div style="height: 5em;"></div>
+
+
+    </div>
+</div>
+</template>

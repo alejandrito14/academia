@@ -1,0 +1,56 @@
+/* button loader */
+.loader-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 9999;
+    background-color: var(--f7-theme-color);	
+}
+
+// Loading Area
+#loading-area {
+	position: relative;
+	margin: auto;
+	width: 94px;
+	height: 94px;
+	background-color: #fff;
+	border-radius: $border-radius;
+	
+	.arrow{
+		height: 94px;
+		position: absolute;
+		top: 0;
+		svg,
+		[fill],
+		path{
+			stroke: var(--f7-theme-color); 
+		}
+			
+		&:first-child{
+			left: 22px;
+			svg,
+			[fill],
+			path{
+				fill: var(--f7-theme-color);
+			}
+			animation: movex 2s infinite;
+		}
+		&:nth-child(2) {
+			left: 37px;
+			animation: movey 2s infinite;
+		}
+	}
+}
+// Loading Animated
+@keyframes movex {
+	50%{
+		left: 37px;
+	}
+}
+@keyframes movey {
+	50%{
+		left: 22px;
+	}
+}

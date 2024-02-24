@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<!-- Meta -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="theme-color" content="#309f5f">
+	<meta http-equiv="Content-Security-Policy" content="default-src * 'self' 'unsafe-inline' 'unsafe-eval' data: gap:">
+	
+	<meta name="description" content="Karier - Job Portal Mobile App ( Framework 7 + PWA )" />
+	<meta property="og:title" content="Karier - Job Portal Mobile App ( Framework 7 + PWA )" />
+	<meta property="og:description" content="Karier - Job Portal Mobile App ( Framework 7 + PWA )" />
+	<meta property="og:image" content="https://karier.dexignzone.com/xhtml/social-image.png"/>
+	<meta name="format-detection" content="telephone=no">
+	
+	<!-- Title -->
+	<title>IS-BARBER APP</title>
+	
+	<!-- Framework7 css -->
+	<link rel="stylesheet" href="css/framework7-bundle.css">
+	<link rel="stylesheet" href="css/app.css">
+	
+	<!-- Fonts -->
+	<link rel="stylesheet" href="css/font-awesome/css/all.min.css">
+	<link rel="stylesheet" href="css/line-awesome/css/line-awesome.min.css">
+		<link rel="stylesheet" href="css/menu.css">
+
+	<!-- Style css -->
+	<link rel="stylesheet" href="css/style.css">
+	
+	<!-- Favicon -->
+	<link rel="apple-touch-icon" href="img/f7-icon-square.png">
+	<link rel="icon" href="img/f7-icon.png">
+  
+	<!-- Google Fonts -->
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+	
+</head>
+<body>
+<div id="app">
+    
+	
+  <div class="menu menuelemento" id="menu" >
+
+  	<div class="logo menuelemento" > 
+  		<img class="imagenempresa" style="height: 150px;display: flex;/* width: 150px; */justify-content: center;margin: 0px auto;margin-left: 120px;" src="" alt="">	
+
+  	</div>
+    <ul style="margin-left: 100px;" class="">
+      <li class="linegocios">
+      	<a class="limenu" data-menu="negocios" >Negocios</a>
+      </li>
+      <li class="licitas" style="display: none;">
+      	<a class="limenu" data-menu="citas" >Mis citas</a>
+      </li>
+      <li class="limiscompras" style="display: none;"><a class="limenu" data-menu="miscompras" >
+      Mis compras</a>
+  	  </li>
+      <li class="liperfil" style="display: none;"><a class="limenu" data-menu="miperfil" >Mi perfil</a></li>
+
+       <li class="limonedero " style="display: none;">
+      	<a class="limenu" data-menu="monedero" >Mi monedero</a>
+      </li>
+
+      <li class="lilogin " >
+      	<a class="limenu " data-menu="login" >Login</a>
+      </li>
+
+       <li class="lisalir">
+      	<a class="limenu " data-menu="salir" >Salir</a>
+      </li>
+    </ul>
+    <div class="menuelemento">
+    	<p class="menuelemento" style="border-bottom: 0.4px solid black;text-align: center;/* margin-left: 100px; */width: 320px;"></p>
+    </div>
+
+    <p style="text-align: center;font-size: 14px; margin-left: 100px;color:black;" class="menuelemento">Nuestras redes</p>
+
+
+    <div class="menuelemento" style="width: 100%;justify-content: center;display: flex;margin-left: 100px;">
+    	<div class="menuelemento divfacebook" style="width: 20%;float: right;">
+    		<img class="menuelemento" src="img/facebook.png" alt="" style="width: 30px;margin-left: 20px;">
+    	</div>
+    	<div class="menuelemento divinstagram" style="width: 50%;">
+    		<img class="menuelemento" src="img/instagram.png" alt="" style="width: 30px;">
+
+    	</div>
+    </div>
+
+
+	      <p style="text-align: center;font-size: 14px; margin-left: 100px;color:black;"><span class="">©
+				Grupo inversa</span></p>
+
+  </div>
+
+	<div class="view view-main view-init safe-areas" data-master-detail-breakpoint="800" data-url="/">
+		<div class="row no-gutters vh-100 loader-screen">
+			<div class="col align-self-center text-white text-align-center">
+<!-- 				<div id="loading-area">
+ -->					<!-- <svg class="arrow" width="37" height="47" viewBox="0 0 37 47" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M3.08061 27.2713L3.08059 27.2713L3.08445 27.2777L13.8321 45.0356L14.6876 44.5178L13.8321 45.0356C14.1945 45.6342 14.8434 46 15.5432 46H26.7616C28.3731 46 29.3229 44.1917 28.4083 42.8649L15.1486 23.6287L34.9265 4.43526C36.2156 3.18427 35.3299 1 33.5336 1H22.5949C22.0434 1 21.5163 1.22779 21.1383 1.6295L4.34585 19.4772L4.34581 19.4772L4.33862 19.485L1.76949 22.2742C1.17021 22.9248 1.06951 23.8918 1.52186 24.652L3.08061 27.2713Z" fill="#122261" stroke="#122261" stroke-width="2"/>
+					</svg> -->
+					<!-- <svg class="arrow" width="37" height="47" viewBox="0 0 37 47" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M3.08055 27.2713L3.08052 27.2713L3.08438 27.2777L13.8321 45.0356L14.6876 44.5178L13.8321 45.0356C14.1944 45.6342 14.8433 46 15.5431 46H26.7616C28.3731 46 29.3228 44.1917 28.4083 42.8649L15.1485 23.6287L34.9264 4.43526C36.2155 3.18427 35.3299 1 33.5336 1H22.5949C22.0433 1 21.5162 1.22779 21.1383 1.6295L4.34578 19.4772L4.34574 19.4772L4.33856 19.485L1.76943 22.2742C1.17015 22.9248 1.06944 23.8918 1.5218 24.652L3.08055 27.2713Z" stroke="#122261" stroke-width="2"/>
+					</svg> -->
+<!-- 				</div>
+ -->			</div>
+		</div>
+		<div class="page page-onboading" data-name="homeindex">
+
+			<div class="imagenprincipal dark-bg "></div>
+
+			<div class="page-content" style="padding: 0!important;margin: 0!important;">
+				
+				<div class="started-swiper-box landing" style="" >
+				 <div  class="swiper-container introswiper swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events swiper-anuncios" id="swiper-anuncios1" style="height: 100%;">
+       <div class="swiper-pagination ">
+        </div>
+
+   
+          <div class="swiper-wrapper" id="swiper-wrapper-anuncios"  aria-live="off" style="height: 100%;transform: translate3d(-750px, 0px, 0px); transition-duration: 0ms;">
+
+         
+         </div>
+        
+
+        </div>
+				</div>
+			</div>
+			<div class="toolbar toolbar-bottom container footer-button landing" style="z-index: 1000;">
+				<a  class="button-large button button-fill btnempezar" style="text-transform: capitalize;    background: #c7aa6a;">Empecemos</a>
+			</div>
+		</div>
+	</div>
+</div>
+<style>
+	
+	.swiper-pagination-fraction, .swiper-pagination-custom, .swiper-container-horizontal > .swiper-pagination-bullets
+	{
+
+		bottom: 100px!important;
+	}
+</style>
+<!-- script -->
+
+<script src="cordova.js"></script>
+
+<!-- <script src="js/jquery-3.6.0.min.js"></script> -->
+<script src="js/jquery-3.6.0.min.js"></script>
+  <script src="js/stacktrace.min.js"></script>
+<!--   <script src="js/index.js"></script>
+ --><!-- 
+ -->
+  <script src="js/cordova-app.js"></script>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons"
+      rel="stylesheet">
+<!-- https://material.io/resources/icons/?style=outline -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons+Outlined"
+      rel="stylesheet">
+<!-- https://material.io/resources/icons/?style=round -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons+Round"
+      rel="stylesheet">
+<!-- https://material.io/resources/icons/?style=sharp -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons+Sharp"
+      rel="stylesheet">
+<!-- https://material.io/resources/icons/?style=twotone -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Icons+Two+Tone"
+      rel="stylesheet">
+
+<script src="js/coreutil.js"></script>
+<script src="js/fn_funciones.js"></script>
+<script src="js/fn_landing.js"></script>
+
+<script src="js/fn_confi.js"></script>
+<script src="js/fn_configuracion.js"></script>
+
+<script src="js/fn_registro.js"></script>
+<script src="js/login.js"></script>
+<script src="js/fn_sucursal.js"></script>
+<script src="js/fn_detallepaquete.js"></script>
+<script src="js/fn_detalleservicio.js"></script>
+<script src="js/fn_disponibilidad.js"></script>
+<script src="js/fn_seleccionarfecha.js"></script>
+<script src="js/fn_home.js"></script>
+<script src="js/fn_homeespecialista.js"></script>
+<script src="js/fn_lectorqr.js"></script>
+<!-- subir foto y perfil
+ -->
+<!--  <script src="js/detalleproductoservicios.js"></script> -->
+
+<script src="js/productosservicios.js"></script>
+
+ <script src="js/fn_perfil.js"></script>
+<script src="js/fotoperfil.js"></script>
+<script src="js/validacion.js"></script>
+<script src="js/fn_categoriaproducto.js"></script>
+<script src="js/fn_productos.js"></script>
+<script src="js/fn_empresa.js"></script>
+<script src="js/fn_pagotarjeta.js"></script>
+<script src="js/fn_pagos.js"></script>
+
+<!-- <script src="js/fn_pagotarjetamercadopago.js"></script>
+ -->
+<script src="js/fn_carrito.js"></script>
+<script src="js/fn_detallepago.js"></script>
+<script src="js/fn_homeadmin.js"></script>
+<script src="js/fn_imagencita.js"></script>
+<script src="js/fn_especialista.js"></script>
+<script src="js/fn_menu.js"></script>
+
+<script src="js/fn_disponibilidadfechasucursal.js"></script>
+<script src="js/cronometro.js"></script>
+<script src="js/framework7-bundle.min.js"></script>
+
+<script src="js/recuperar.js"></script>
+<script src="js/mapa.js"></script>
+<script src="https://js.stripe.com/v3/"></script>
+<!--  <script src="https://sdk.mercadopago.com/js/v2"></script> -->
+
+<script src="js/routes.js"></script>
+<script src="js/store.js"></script>
+<script src="js/app.js"></script>
+
+<script>
+
+	var abierto=0;
+
+	$(document).ready(function() {
+
+	  var menu = $("#menu");
+	  var menuIcon = $(".menu-icon");
+	  menuIcon.click(function(event) {
+	   
+	    toggleMenu();
+	  });
+
+
+
+	app.on('click', function(event) {
+/*
+		console.log(event);*/
+	  if (event.target.className !== "menuelemento") {
+	  	if (abierto==1) {
+			$(".menu").animate({left:'-400px',
+				
+		},1000,function(){
+
+			 //$(".menu").removeClass('zimenu');
+		});
+	     
+	      abierto=0;
+	     // menu.style.left = "0";
+	 }
+
+	  	}
+	  	
+	  
+	});
+
+
+
+
+	$(".btnempezar").attr('onclick','Empezar()');
+
+
+	//$(".limenu").attr('onclick','SeleccionMenu(this)');
+
+  
+});
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+// Searchbar
+.searchbar input[type=search],
+.searchbar input[type=text]{
+	font-size: 16px;
+}
+.page-content{
+	.searchbar{
+		&.search-box{
+			height: 50px;
+			box-shadow: unset;
+			margin: 0 0 20px;
+			border-radius: $border-radius;
+			width: 100%;
+			
+			.searchbar-input-wrap{
+				input{
+					border: 1px solid #e9e9e9;
+					height: 50px;
+					background-color: var(--f7-theme-color-white);
+					font-size: 14px;
+					padding: 12px 50px 12px 20px;
+					border-radius: $border-radius;
+					font-weight: 400;
+					color: #585858;
+				}
+				.searchbar-icon{
+					right: 20px;
+					margin: 0;
+					top: 16px;
+					left: auto;
+					&:after{
+						content: none;
+					}
+				}
+			}
+		}
+	}
+}

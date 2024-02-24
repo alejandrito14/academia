@@ -1,0 +1,108 @@
+<template>
+	<div class="page account-area" data-name="celular">
+
+	<div class="navbar navbar-style-1">
+    <div class="navbar-bg"></div>
+    <div class="navbar-inner sliding">
+      <div class="left" style="    margin-top: 1em;">
+        <a href="#" class="link back">
+       
+         <svg width="11" height="16" viewBox="0 0 11 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.3419 8L10.2222 2.22222L8 2.73828e-07L1.22201e-06 8L8 16L10.2222 13.7778L4.3419 8Z" fill="#122261"/>
+          </svg>
+        </a>
+      </div>
+      <div class="title" style="font-size: 20px;"></div>
+    </div>
+  </div>
+
+		<div class="page-content bottom-sp40" style="margin-top:2em;">
+			<div class="container" style="    padding-top: 2em;">
+				<div class="title-head">
+					<h4 style="text-align: center;margin-bottom: 2em;">Para comenzar tu registro, ingresa tu número de celular</h4>
+				</div>
+				<!-- <div class="toolbar tabbar tabbar-swiper tab-style-1">
+					<div class="toolbar-inner">
+						<a href="/signin/" class="tab-link">SIGN IN</a>
+						<a href="/signup/" class="tab-link tab-link-active">REGISTER</a>
+					</div>
+				</div> -->
+				<div class="form-elements" style="margin-top: 1em;">
+					<form>
+						<div class="list">
+							<ul class="row">
+								<li class="item-content col-100 item-input item-input-with-value">
+									<div class="item-inner">
+										<div class="item-input-wrap">
+											<input type="text" placeholder="Celular" value="" id="telefono" class="form-control"/>
+										</div>
+									</div>
+								</li>
+								<div class="item-content lipoliticas">
+                <div class="item-inner">
+                  <div class="row">
+                   <div class="col-100" style="text-align: center;"><input type="checkbox" id="inputleido" style="width: 30px;height: 20px;/* margin-left: 1.5em; */margin-top: 1em;" /><span class="leidoacepto">He leído y acepto los</span><a class="" style="color: #007aff!important;" href="/politicas/"> Términos y Condiciones</a>, así como el <a class="" style="color: #007aff!important;" href="/politicas/">Aviso de Privacidad</a></div>
+                  </div>
+                 
+                </div>
+              </div>
+								<!-- <li class="item-content col-50 item-input item-input-with-value">
+									<div class="item-inner">
+										<div class="item-input-wrap">
+											<input type="text" placeholder="Last Name" value="Smith" class="form-control"/>
+										</div>
+									</div>
+								</li>
+								<li class="item-content col-100 item-input">
+									<div class="item-inner">
+										<div class="item-input-wrap">
+											<input type="email" placeholder="Email Address" value="info@example.com" class="form-control"/>
+										</div>
+									</div>
+								</li>
+								<li class="item-content col-100 item-input">
+									<div class="item-inner">
+										<div class="item-input-wrap">
+											<input type="password" placeholder="Password" id="dz-password" class="form-control"/>
+											<div class="show-pass">
+												<span class="show">SHOW</span>
+												<span class="hide">HIDE</span>
+											</div>
+										</div>
+									</div>
+								</li> -->
+							</ul>
+						</div>
+						<div class="clearfix">
+							<a  class="button-large button button-fill" id="btnvalidarcelular" style="text-transform: capitalize;">Continuar</a>
+						</div>
+						<div class="text-align-center account-footer">
+							<!-- <p class="mt-0 form-text">By tapping "Sign Up" you accept our <a href="#">terms</a> and <a href="#">condition</a></p>
+							<a href="/home/" class="button-large button mt-20 button-outline">Continue as guest</a> -->
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+<script>
+	export default (props, {$on}) => {
+		
+		$on('pageInit', () => {
+			
+			$('.show-pass').on('click',function(){
+				$(this).toggleClass('active');
+				var inputType = $('#dz-password').attr('type');
+				if( inputType == 'password'){
+					$('#dz-password').attr('type','text');
+				}else if(inputType == 'text'){
+					$('#dz-password').attr('type','password');
+				}
+			});
+			
+		});
+		
+		return $render;
+	}  
+</script>

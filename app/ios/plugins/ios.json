@@ -1,0 +1,96 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "com.lampa.startapp": {
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-plugin-barcodescanner": {
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-plugin-call-number": {
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-plugin-firebasex": {
+      "FIREBASE_ANALYTICS_COLLECTION_ENABLED": "true",
+      "FIREBASE_PERFORMANCE_COLLECTION_ENABLED": "true",
+      "FIREBASE_CRASHLYTICS_COLLECTION_ENABLED": "true",
+      "FIREBASE_FCM_AUTOINIT_ENABLED": "true",
+      "IOS_USE_PRECOMPILED_FIRESTORE_POD": "false",
+      "IOS_FCM_ENABLED": "true",
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-support-android-plugin": {
+      "PACKAGE_NAME": "com.woolis.app"
+    }
+  },
+  "dependent_plugins": {
+    "cordova-plugin-androidx-adapter": {
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-plugin-compat": {
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-plugin-camera": {
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-plugin-customfcmreceiver": {
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-plugin-dialogs": {
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-plugin-enable-multidex": {
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-plugin-file-transfer": {
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-plugin-geolocation": {
+      "GPS_REQUIRED": "true",
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-plugin-ios-camera-permissions": {
+      "CAMERA_USAGE_DESCRIPTION": "This app needs camera access",
+      "MICROPHONE_USAGE_DESCRIPTION": "This app needs microphone access",
+      "PHOTOLIBRARY_ADD_USAGE_DESCRIPTION": "This app needs write-access to photo library",
+      "PHOTOLIBRARY_USAGE_DESCRIPTION": "This app needs read/write-access photo library access",
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-plugin-media": {
+      "KEEP_AVAUDIOSESSION_ALWAYS_ACTIVE": "NO",
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-plugin-network-information": {
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-plugin-wkwebview-file-xhr": {
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "es6-promise-plugin": {
+      "PACKAGE_NAME": "com.woolis.app"
+    },
+    "cordova-plugin-x-socialsharing": {
+      "PHOTO_LIBRARY_ADD_USAGE_DESCRIPTION": "This app requires photo library access to function properly.",
+      "PHOTO_LIBRARY_USAGE_DESCRIPTION": "This app requires photo library access to function properly.",
+      "PACKAGE_NAME": "com.woolis.app"
+    }
+  }
+}

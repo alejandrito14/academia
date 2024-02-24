@@ -1,0 +1,144 @@
+// Navbar
+.navbar{
+	background: var(--f7-theme-color-white);
+	height: 70px;
+	
+	a.link {
+		padding: 0 10px!important;
+		justify-content: center;
+		color: $headings-color;
+		i{
+			font-size: 32px;
+		}
+		[fill],
+		path{
+			fill: var(--f7-theme-color);
+		}
+	}
+	.right{
+		i{
+			font-size: 32px;
+		}
+	}
+	.title-large-text{
+		padding-left:30px;
+		padding-right:30px;
+		box-sizing:border-box;
+	}
+	
+	.navbar-inner{
+		max-width: 1024px;
+		left: 50%;
+		transform: translateX(-50%);
+		padding: 0 30px;
+		.left{
+			width: 50px;
+			justify-content: center;
+		}
+		.title{
+			color: $headings-color;
+			font-weight: 600;
+			width: 100%;
+			margin-left: 5px;
+			margin-right: 5px;
+		}
+		.right {
+			justify-content: center;
+		}
+	}
+	
+	.navbar-bg{
+		background:#fff!important;
+		&:after,
+		&:before{
+			content:none;
+		}
+	}
+		
+	// Navbar Transparent
+	&.navbar-transparent{
+		background-color: transparent;
+		border-color: transparent;
+		
+		a.link {
+			[fill],
+			path{
+				fill: #fff;
+			}
+			.title,
+			a,
+			i{
+				color: #fff;
+			}
+		}
+		
+		&.navbar-transparent-visible{
+			background: var(--f7-theme-color-white);
+			border-color: 1px solid #F4F4F4;
+			
+			a.link {
+				.title,
+				a,
+				i{
+					color: var(--f7-theme-color);
+				}
+				[fill],
+				path{
+					fill: var(--f7-theme-color);
+				}
+			}
+		}
+	}
+	
+	// Navbar Style 1
+	&.navbar-style-1{
+		.navbar-inner{
+			.title{
+				text-align: center;
+				opacity: 1;
+				font-size: 24px;
+			}
+		}
+		a.link{
+			height: 42px;
+			width: 42px;
+			min-width: 42px;
+			border-radius: $border-radius;
+			border: 1px solid #e8e8e8;
+			padding: 0!important;
+			
+			&:before{
+				content: none;
+			}
+		}	
+		&.navbar-transparent{
+			.title{
+				opacity: 1!important;
+			}
+		}
+		.left,
+		.right{
+			width: auto;
+			overflow: hidden;
+		}
+	}
+}
+
+// Navbar List
+.navbar-list-1{
+	ul{
+		padding: 0;
+		li{
+			display: block;
+			margin-bottom: 15px;
+			a{
+				display: flex;
+				justify-content: start;
+				.icons{
+					width: 24px;
+					margin-right: 15px;
+				}
+			}
+		}
+	}
+}

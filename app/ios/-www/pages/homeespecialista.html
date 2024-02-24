@@ -1,0 +1,392 @@
+<template>
+<div class="page page-home light" data-name="homeespecialista">
+	
+	<!-- <div class="navbar">
+    <div class="navbar-bg"></div>
+    <div class="navbar-inner sliding">
+    <div class="left" style="
+    width: 70px;margin-left: -10px;">
+	
+	<a class="link iconocitas " href="/citas/" style="margin: 0!important;height: 20px;min-width: 15px;padding: 0!important;display: none;">
+		<span style="font-size: 30px" class="material-icons-outlined">calendar_month</span>
+		<span class="badge2 numerocitas">0</span>
+	</a>
+
+</div>
+
+
+
+      <div class="title"></div>
+      <div class="right">
+      	<div class="lblusuario">
+      <a style="" class="link "><span class="nombreusuario" style="
+		color: white;
+		"></span><span class="material-icons-outlined" style="
+		font-size: 28px;
+		">person</span></a>
+
+		</div>
+      </div>
+    </div>
+  </div>
+ -->
+
+	<!-- Page Content -->
+	<div class="page-content content-area pt-40" style="margin-top: 4em;">
+		
+		<div class="searchbar-backdrop"></div>
+		
+		<div class="container">
+			<div class="row" style="margin-bottom: 1em;">
+				<div class="col-20">
+					<a href="#" class="link panelizquierdo " onclick="toggleMenu()" style="margin-right: 10px;">
+						<span style="font-size: 30px;    margin-left: 10px;" class="material-icons-outlined">menu</span>
+					</a>
+				</div>
+				<div class="col-50">
+						<span style="font-weight: bold;color: black;font-size: 18px;" class="title"><span class="nombreusuario" style="color: #C7AA6A;">Invitado</span></span>
+				</div>
+				<div class="col-30">
+					
+					<div class="right" style="    float: right;">
+                <!-- <a href="#" class="link panel-open" data-panel="left">
+				<span style="font-size: 30px;" class="material-icons-outlined">menu</span>
+				</a> -->
+
+				<a  class="btnscan2" style=" margin-left: 10px;" >
+					
+				<span class="material-icons-outlined" style="font-size: 28px;">
+							qr_code
+				</span>
+
+				</a>
+
+			
+				<!-- <a  class="btniracarrito" style=" margin-left: 10px;" >
+					<span class="badge color-red bcantidadcarrito" style="position: absolute;right: 2.8em;top: 3em;">0</span>
+				<span class="material-icons-outlined" style="font-size: 30px;">
+					shopping_cart
+					
+					</span>
+				</a> -->
+            </div>
+				</div>
+			</div>
+			
+			
+			
+			<!-- Search -->
+			<!-- <form data-search-container=".search-list" data-search-in=".item-title" class="searchbar searchbar-init search-box list-search-bx">
+				<div class="searchbar-inner">
+					<div class="searchbar-input-wrap">
+						<input type="search"  placeholder="Search job here..."/>
+						<i class="searchbar-icon">
+							<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M17.5605 15.4395L13.7528 11.6318C14.5395 10.446 15 9.02625 15 7.5C15 3.3645 11.6355 0 7.5 0C3.3645 0 0 3.3645 0 7.5C0 11.6355 3.3645 15 7.5 15C9.02625 15 10.446 14.5395 11.6318 13.7528L15.4395 17.5605C16.0245 18.1462 16.9755 18.1462 17.5605 17.5605C18.1462 16.9748 18.1462 16.0252 17.5605 15.4395ZM2.25 7.5C2.25 4.605 4.605 2.25 7.5 2.25C10.395 2.25 12.75 4.605 12.75 7.5C12.75 10.395 10.395 12.75 7.5 12.75C4.605 12.75 2.25 10.395 2.25 7.5Z" fill="#B9B9B9"/>
+							</svg>
+						</i>
+					</div>
+				</div>
+			</form> -->
+			<div class="list simple-list searchbar-not-found">
+				<ul>
+					<li>Nothing found</li>
+				</ul>
+			</div>
+			
+			<!-- Featured Swiper -->
+			  <!-- <div class="divtableroauncios">
+		      <div class="row margin-bottom ">
+		        <div class="col">
+		          
+		        </div>
+		        <div class="col-auto align-self-center">
+		          <a href="/transactions/" class="small"></a>
+		        </div>
+		      </div>
+		      <div class="row margin-bottom ">
+		        <div class="col-100 no-padding-horizontal">
+		          <div class="swiper-container cardswiper" data-space-between="20" data-slides-per-view="auto" data-centered-slides="false">
+		            <div class="swiper-wrapper">
+		            
+		            
+		              
+		            </div>
+		          </div>
+		        </div>
+		      </div>
+		</div>  -->
+   
+			
+			<!-- Categories -->
+			<!-- <div class="" style="
+			    text-align: center;
+			"><h4 class="dz-title" style="
+			    text-align: center;
+			    display: flex;
+			    margin: 1em;
+			    justify-content: center;
+			">Categorías</h4>
+			</div> -->
+			<!-- <div data-space-between="12" data-slides-per-view="auto" data-centered-slides="false" class="swiper-container swiper-init main-swiper cardswipercategorias">
+				
+			</div> -->
+			<!-- <h4 for="" style="text-align: center;">Elige tu negocio favorito</h4> -->
+
+<!-- <form data-search-container=".search-list" data-search-in=".item-title" class="searchbar searchbar-init search-box list-search-bx">
+				<div class="searchbar-inner">
+					<div class="searchbar-input-wrap">
+						
+						<input type="search"  placeholder="Buscar "/>
+						<i class="searchbar-icon">
+							<svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M17.5605 15.4395L13.7528 11.6318C14.5395 10.446 15 9.02625 15 7.5C15 3.3645 11.6355 0 7.5 0C3.3645 0 0 3.3645 0 7.5C0 11.6355 3.3645 15 7.5 15C9.02625 15 10.446 14.5395 11.6318 13.7528L15.4395 17.5605C16.0245 18.1462 16.9755 18.1462 17.5605 17.5605C18.1462 16.9748 18.1462 16.0252 17.5605 15.4395ZM2.25 7.5C2.25 4.605 4.605 2.25 7.5 2.25C10.395 2.25 12.75 4.605 12.75 7.5C12.75 10.395 10.395 12.75 7.5 12.75C4.605 12.75 2.25 10.395 2.25 7.5Z" fill="#B9B9B9"/>
+							</svg>
+						</i>
+					</div>
+				</div>
+			</form>
+ -->
+			
+			<!-- Featured Companies -->
+			<!-- <div data-space-between="20" data-slides-per-view="auto" data-centered-slides="false" class="swiper-container swiper-init mb-20 main-swiper cardswipersucursal">
+				
+			</div> -->
+			
+			<!-- Latest Vacancies -->
+			<!-- <div class="">
+				<h4 class="dz-title titulocitas" style="text-align: center;">Agenda de citas</h4>
+				
+			</div> -->
+			<!-- <div class="list search-list searchbar-found dz-list mt-0 mb-30">
+				<ul class="row tablerocitas">
+					
+					
+					
+				</ul>
+			</div> -->
+
+		
+
+			<div class="divcitas">
+				
+						
+
+				<div class="row" style="display: none;">
+					<div class="col-70">
+							
+					</div>
+
+					<div class="col-10 divhoy" >
+						<span class="" style="line-height: 4.5;color: #C7AA6A">
+						Hoy
+						</span>
+					</div>
+
+					<div class="col-10 divcalendario" >
+
+						<span class="material-icons-outlined" style="line-height: 2.5;    display: flex;justify-content: end;font-size: 28px;">
+						calendar_month
+						</span>
+					</div>
+
+					 <ul style="display: none;">
+         		 <li>
+            <div class="item-content item-input">
+              <div class="item-inner">
+                <div class="item-input-wrap">
+                  <input type="text" placeholder="Select date" readonly="readonly" id="demo-calendar-modal" />
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+     
+
+				</div>
+
+				<div class="row">
+					<div class="col-100">
+					<h3 class="fechaactual" style="margin-top: 0;text-align: center;"></h3>
+					</div>
+
+					<h4 class="col-100" style="text-align: center;display: none;">Agendas de citas del día</h4>
+				</div>
+				
+			
+
+
+			</div>
+<div class="row">
+
+
+			<div class="card card-bx card-chart color-theme-red btnserviciosagendados" id="btnservicios" style="width:100%;background: #375d97;margin-bottom: 1em;">
+			<div class="dz-head">
+			<h3 style="
+		    color:white;
+		    font-size: 30px;
+		    margin: 0;
+		    text-align: left;
+		    " id="totalservicios">0</h3>
+		    <div class="row">
+		    	
+		    	<div class="col-80" style="margin-right: 16px;">
+		    			<h2 class="title" style="
+		    font-size: 14px;
+		">Servicios agendados</h2>
+		    	</div>
+
+
+		    	<div class="col-20" style="    display: flex;
+    justify-content: end;">
+		    		 <span class="material-icons-outlined" style="
+		">calendar_month</span>
+		    	</div>
+
+		    </div>
+		
+			</div>
+					<div class="dz-info">
+						<div class="chart-label">
+							</div>
+					</div>
+				</div>
+
+
+
+
+</div>
+
+
+
+
+			 <div class="list search-list searchbar-found dz-list mt-0 mb-30">
+				<ul class="row tablerocitas">
+					
+					
+					
+				</ul>
+			</div> 
+
+
+				<!-- <div class="divpublicidad">
+				<h4 class="dz-title" style="text-align: center;">Promociones exclusivas</h4>
+				
+			</div>
+			  <div class="row margin-bottom ">
+		        <div class="col-100 no-padding-horizontal">
+
+					<div data-space-between="20" data-slides-per-view="auto" data-centered-slides="false" class="swiper-container swiper-init mb-20  cardpublicidad">
+						
+					</div>
+
+
+				</div>	
+			</div>
+ -->
+
+
+			<div class="row">
+				<div class="block" style="height: 30px;"></div>
+			</div>
+
+			
+		</div>
+
+		<!-- <footer class="footer"><div class="container">
+			<ul class="nav nav-pills nav-justified">
+				<li class="nav-item">
+				<a class="nav-link active iniciotab ">
+
+					<span><i class="nav-icon material-icons-outlined">
+						home
+					</i>
+
+					<span class="nav-text">Inicio</span>
+
+					</span>
+			</a>
+
+
+			</li>
+
+			
+
+		
+
+			<li class="nav-item menuoculto">
+				<a class="nav-link    " href="">
+
+					<span><i class="nav-icon material-icons-outlined">
+						notifications
+					</i>
+					<span class="nav-text">Notificaciones</span>
+
+					</span>
+				</a>
+			</li>
+
+			<li class="nav-item menuoculto">
+				<a class="nav-link " href="/profile/">
+
+					<span><i class="nav-icon material-icons-outlined">
+						perm_identity
+					</i>
+					<span class="nav-text">Perfil</span>
+
+					</span>
+				</a>
+			</li>
+
+
+
+</ul>
+</div>
+
+</footer> -->
+	</div>
+
+	<!-- <div class="toolbar toolbar-bottom tabbar tabbar-labels" style="height: 60px;"><div class="toolbar-inner">
+		<a class="tab-link tab-link-active" style="font-size: 12px;">
+			
+			<span class="material-icons-outlined">
+		home
+		</span>
+
+		<span class="tabbar-label" style="font-size: 13px!important;">Inicio</span>
+
+		</a>
+		<a class="tab-link" href="/listadocompras/" style="font-size: 12px;">
+			
+			<span class="material-icons-outlined">
+				payments
+				</span>
+				<span class="tabbar-label" style="font-size: 13px!important;"> Mis compras</span>
+		</a>
+			<a class="tab-link" style="font-size: 12px;"><span class="material-icons-outlined">
+notifications
+</span>
+<span class="tabbar-label" style="font-size: 13px!important;"> 
+Notificaciones</span>
+</a>
+				<a class="tab-link" href="/profile/" style="font-size: 12px;">
+					
+					<span class="material-icons-outlined">
+perm_identity
+</span>
+<span class="tabbar-label" style="font-size: 13px!important;">Perfil</span>
+				</a>
+	</div>
+</div> -->
+
+		
+</div>
+
+
+
+</template>
+<style>
+	.content-area::-webkit-scrollbar {
+ display: none;
+}
+</style>

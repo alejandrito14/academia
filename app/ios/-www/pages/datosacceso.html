@@ -1,0 +1,217 @@
+<template>
+  <div class="page " data-name="datosacceso">
+    <div class="navbar navbar-style-1">
+    <div class="navbar-inner">
+      <div class="left" style="    margin-top: 1em;">
+        <a href="#" class="link back">
+          <svg width="11" height="16" viewBox="0 0 11 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.3419 8L10.2222 2.22222L8 2.73828e-07L1.22201e-06 8L8 16L10.2222 13.7778L4.3419 8Z" fill="#122261"></path>
+          </svg>
+        </a>
+            </div>
+      <div class="title"></div>
+            <div class="right">
+                
+            </div>
+        </div>
+  </div>
+
+ 
+    <div class="page-content">
+      <div class="block h-100 no-margin">
+        <div class="row ">
+       
+
+         <div class="margin-left-auto margin-right-auto align-self-center  padding-vertical">
+            <h2 style="    margin-left: 0.5em;"> Datos de <span style="color: #C7AA6A;">acceso</span></h2>
+
+         </div>
+
+          <div
+            class=" col-100 form-elements">
+            <form  >
+              <div class="list  no-margin margin-bottom">
+                <ul class="row">
+            
+                
+               <!--  <li class="item-content item-input item-input-with-value is-valid licorreo">
+
+                  <div class="item-inner">
+                  <div class="item-title item-floating-label">Email</div>
+                  <div class="item-input-wrap">
+                  <input type="text" name="v_correo" id="v_correo" class="input-with-value" />
+                  <span class="input-clear-button datocorreo"></span>
+                </div>
+              </div>
+              </li>  -->
+
+              <li class="item-content item-input col-100 item-input-with-value licorreo"><div class="item-inner"><div class="item-input-wrap"><input type="email" placeholder="Email" id="v_correo" class="form-control input-with-value"/></div></div></li>
+
+                <li class="item-content item-input item-input-with-value is-valid liusuario" style="display: none;">
+
+                  <div class="item-inner">
+                  <div class="item-title item-floating-label">Usuario</div>
+                  <div class="item-input-wrap">
+                  <input type="text" name="v_usuario" id="v_usuario" class="input-with-value" />
+                  <span class="input-clear-button datosregistro"></span>
+                </div>
+              </div>
+              </li>
+
+               <!-- <li class="item-content item-input item-input-with-value is-valid licontra1">
+
+                  <div class="item-inner">
+                  <div class="item-title item-floating-label"> Contraseña</div>
+                  <div class="item-input-wrap">
+                  <div class="cambiarinput"></div>
+
+                  <input type="password" name="v_contra1" id="v_contra1" class="input-with-value"  style="float: left;width: 80%;" />
+
+                    <span id="span1" style="color: rgb(146, 145, 141);
+                    float: left;
+                    width: 10%;
+                    height: 34px;
+                    margin-top: 0.9em;
+                    margin-left: -0.5em;
+                    display: none;
+                    font-size: 20px;" 
+                    class="ojitoicono icon ">
+                                <i class="bi bi-eye-fill"></i></span>           
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+              </li> -->
+
+
+                <li class="item-content item-input col-100">
+                    <div class="item-inner">
+                     <div class="item-input-wrap"><input type="password" placeholder="Contraseña" id="v_contra1" name="v_contra1" class="form-control input-with-value" /><div class="show-pass"><span class="show">Mostrar</span><span class="hide">Ocultar</span></div></div>
+              </div>
+              </li>
+
+              <!--  <li class="item-content item-input item-input-with-value is-valid licontra2">
+
+                  <div class="item-inner">
+                  <div class="item-title item-floating-label"> Confirmar contraseña</div>
+                  <div class="item-input-wrap">
+                     <div class="cambiarinput2"></div>
+                  <input type="password" name="v_contra2" id="v_contra2" class="input-with-value"  style="float: left;width: 80%;"/>
+
+                   <span id="span2" style="color: rgb(146, 145, 141);
+                    float: left;
+                    width: 10%;
+                    height: 34px;
+                    margin-top: 0.9em;
+                    margin-left: -0.5em;
+                    display: none;
+                    font-size: 20px;" 
+                                class="ojitoicono2 icon ">
+                                <i class="bi bi-eye-fill"></i></span>  
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+              </li> -->
+
+               <li class="item-content item-input col-100 item-input-with-value licontra2">
+
+                  <div class="item-inner">
+                
+                 <div class="item-input-wrap">
+                  <input type="password" placeholder="Contraseña" name="v_contra2" id="v_contra2" class="form-control input-with-value" />
+                  <div class="show-pass"><span class="show">Mostrar</span><span class="hide">Ocultar</span></div></div>
+              </div>
+              </li>
+              <div class="">
+
+                <div id="respuesta" ></div> 
+              </div>
+             
+
+
+               <li class="item-content item-input item-input-with-value is-valid litipousuario" style="display: none;">
+
+                  <div class="item-inner">
+                  <div class="item-title item-floating-label">Tipo de usuario:</div>
+                  <div class="item-input-wrap">
+                  <select name="gender" id="v_tipousuario" class="colorletra" >
+                          <option value="0" class="special">Seleccionar tipo de usuario</option>
+                          <option class="black" value="3" >Cliente</option>
+                          <option class="black" value="5">Barbero</option>
+                          <option class="black" value="0">Administrador</option>
+
+                        </select>
+                </div>
+              </div>
+              </li>
+              </ul>
+
+
+
+
+            </div>
+          
+              <p class="margin-bottom"> </p>
+
+              
+              <div class="">
+         
+                <div class="col-100">
+                  
+                  <button type="button"  class="button button-fill button-large button-raised margin-bottom color-theme" id="btnguardar">
+                   Guardar
+                  </button>
+                </div>
+              </div>
+
+
+             
+            </form>  
+            <div class="row" style="margin-bottom: 1em;">
+               <button type="button"  class="button button-fill button-large bg-color-white text-color-theme button-raised" id="btnmembresia" style="    margin: 1em;display: none;">
+               Solicitar membresía
+              </button>
+
+            </div>
+              <div class="row" id="alumnossecundarios" style="display: none;">
+                
+        <!--  <div class="list media-list no-margin">
+            <div>
+                <a href="/messages/" class="item-content color-inherit">
+                    <div class="item-media">
+                        <figure class="avatar avatar-40 rounded-10">
+                            <img src="img/user1.jpg" alt="">
+                        </figure>
+                    </div>
+                    <div class="item-inner">
+                        <div class="row">
+                            <div class="col">
+                                <p>Ajinkya McMohan<br><small class="text-muted">
+                                        <i class="bi bi-check-all text-color-blue"></i>Hello!</small>
+                                </p>
+                            </div>
+                            <div class="col-auto text-align-right">
+                                <p class="text-muted small">Just now</p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+               
+              
+               
+               
+              
+            </div>
+        </div> -->
+
+
+               <button type="button"  class="button button-fill button-large bg-color-white text-color-theme button-raised" id="btnregistraralumnos" style="margin: 1em;">
+               Registrar tus alumnos secundarios
+              </button>        
+              </div>
+          </div>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

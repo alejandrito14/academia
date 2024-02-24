@@ -1,0 +1,251 @@
+<template>
+<div class="page" data-name="carrito">
+     <div class="navbar navbar-style-1 navbar-transparent">
+    <div class="navbar-bg"></div>
+    <div class="navbar-inner sliding navbar-transparent">
+      <div class="left">
+        <a  class="link btnregresocarrito" >
+       
+         <svg width="11" height="16" viewBox="0 0 11 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.3419 8L10.2222 2.22222L8 2.73828e-07L1.22201e-06 8L8 16L10.2222 13.7778L4.3419 8Z" fill="#122261"/>
+          </svg>
+        </a>
+      </div>
+      <div class="title"></div>
+    </div>
+  </div>
+  
+    <!-- <div class="fab fab-left-bottom  " style="bottom: 4em; ">
+    <a class="btnregreso regreso" style="">
+     <i class="bi bi-arrow-left" style=""></i>
+    </a>
+  </div> -->
+  <!-- main page content -->
+  <div class="page-content pt-80" style=" ">
+    <!-- banner -->
+      <div class="row">
+            <div class="col-100">
+
+      <div class="titlecatalogo title2 cambiarfuente" style="    font-size: 20px;
+    text-align: center;
+    font-weight: 600;color:#c7aa6a;
+   ">Resumen de compra</div>
+    </div>
+
+    <div class="col-100">
+       <p class="cambiarfuente" style="text-align: center;    margin: 0;    margin-bottom: 1em;color:#c7aa6a;">Productos agregados: <span id="cantidadagregados"></span></p>
+    </div>
+    </div>
+
+  
+      <!-- <div class="row">
+        <div class="col-100">
+          <h3 style="text-align: center;    margin-bottom: 2px;" class="cambiarfuente">Resumen de compra</h3>
+           <p class="cambiarfuente" style="text-align: center;    margin: 0;    margin-bottom: 1em;">Productos agregados: <span id="cantidadagregados"></span></p>
+        </div>
+        <div class="col-100">
+         
+        </div>
+      </div> -->
+
+       <div class="row">
+        
+      </div>
+   
+    <div class="">
+
+      <div class="list  no-margin" style="background: black;overflow:scroll;height: 320px;">
+           <ul class="listadocarrito cambiarfuente" style="list-style: none;background: black;">
+      
+              </ul>
+           
+           </div>
+           <div >
+           
+           
+          </div>
+      </div>
+
+      
+
+    <div class="row" style="margin-right: 2.5em; margin-left: 2.5em;margin-bottom: 1em;">
+      <div class="col-100">
+        <h5 class="cambiarfuente" style="
+            text-align: center;font-size: 25px;    margin: 10px;
+        ">Total</h5>
+      <h3 style="color: #C7AA6A;font-size: 35px;text-align: center;margin: 0;
+    line-height: 1em;">$<span class="cambiarfuente totalcarrito">0.00</span></h3>
+  </div>
+
+
+   <div class="col-100" id="divdescuentoaplicado" style="display: none;">
+        <h5 class="cambiarfuente" style="
+            text-align: center;font-size: 25px;    margin: 10px;
+        ">Cupon aplicado</h5>
+
+            <div class="cuponaplicado cambiarfuente" style="display: none;text-align: center;"></div>
+         
+      <h3 style="color: #C7AA6A;font-size: 35px;text-align: center;margin: 0;
+    line-height: 1em;">$<span class="lbldescuentocupon  cambiarfuente">0.00</span>
+  </h3>
+  </div>
+
+  <div class="col-100" style="margin-top: 1em;">
+
+  <button type="button" class="button button-fill button-large cambiarfuente botonesredondeado botones btncupon " style="background: rgb(199, 170, 106);  color: white !important; margin-top: 1em;" >Agregar cupón</button>
+
+</div>
+
+  <div class="col-100">
+    <button style="    margin-top: 1em;
+    margin-right: 2em;color: white;background: #C7AA6A;
+   " type="button" class="button button-fill color-theme button-large button-raised btnpagar cambiarfuente" id="btnpagar" >Pagar</button>
+  </div>
+</div>
+
+      <div class="row" style="margin-left: 2em;margin-right: 2em;display: none;">
+         <div class="col-60" style="text-align: left;margin-left: 0.5em;">
+          <input type="checkbox" id="requierefactura"  style=" width: 30px;height: 20px;" />
+        <span class=" " style="position: absolute;margin-top: 0.2em;">¿Requiere factura? </span>
+                    </div>
+                    <div class="col-40" style="text-align: left;   margin-right: 1em; ">
+                       
+                        
+                    </div>
+      </div>
+
+      <div class="row" style="margin-right: 2.5em;
+    margin-left: 2.5em;display: none;">
+        <div class="col-100">
+          <h4 style="text-align: center;">Cupones</h4>
+           <button style="" type="button" class="button button-fill color-theme button-large button-raised " id="">Agregar código de cupón</button>
+
+        </div>
+      </div>
+
+      <div class="row" style="height: 100px;"></div>
+
+
+      <!--  <div class="row" style="margin: 1em;">
+        <div class="col-100">
+         
+           <button style="" type="button" class="button button-fill color-theme button-large button-raised btnpagar" id="btnpagar">Continuar</button>
+
+        </div>
+      </div> -->
+   
+     <!--  <div id="inferior" style="z-index: 10;">
+        <div class="block">
+           <div class="row" style="margin-bottom: 1em;">
+         <div class="col-50"> <span style="font-size: 16px;margin-left: .3em;">Total a pagar</span></div>
+        <div class="col-45">
+          <span style="text-align: right;font-size: 16px;font-weight: bold;float: right;">$<span class="cantidad" id="cantidad">0</span></span></div>
+
+       </div>
+          <div class="row">
+             <div class="col-100">
+         
+        </div>
+           </div>
+        </div>
+      
+
+      </div> -->
+
+    <!-- offers banner -->
+    <!-- <div class="row margin-bottom">
+      <div class="col-100">
+        <div class="card bg-color-green text-color-white text-align-center">
+          <div class="card-content card-content-padding ">
+            <div class="row">
+              <div class="col align-self-center">
+                <h1>12% OFF</h1>
+                <p class="size-12 text-muted">
+                  On every bill pay, launch offer get 5% Extra
+                </p>
+                <div class="tag border-dashed border-opac">
+                  BILLPAY12OFF
+                </div>
+              </div>
+              <div class="col-50 align-self-center no-padding-left">
+                <img src="img/offergraphics-green.png" alt="" class="max-width-100" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+
+  </div>
+
+
+
+  <!-- Footer -->
+ <!--  <footer class="footer">
+    <div class="container">
+      <ul class="nav nav-pills nav-justified">
+        <li class="nav-item">
+          <a class="nav-link" href="/home/">
+            <span>
+              <i class="nav-icon bi bi-house"></i>
+              <span class="nav-text">Home</span>
+            </span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/stats/">
+            <span>
+              <i class="nav-icon bi bi-laptop"></i>
+              <span class="nav-text">Statistics</span>
+            </span>
+          </a>
+        </li>
+        <li class="nav-item centerbutton">
+          <div class="nav-link">
+            <span class="theme-radial-gradient">
+              <i class="close bi bi-x"></i>
+              <img src="img/centerbutton.svg" class="nav-icon" alt="" />
+            </span>
+            <div class="nav-menu-popover justify-content-between">
+              <a href="/pay/" class="">
+                <i class="bi bi-credit-card size-32"></i><span>Pay</span>
+              </a>
+
+              <a href="/sendmoney/" class="">
+                <i class="bi bi-arrow-up-right-circle size-32"></i><span>Send</span>
+              </a>
+
+              <a href="/bills/" class="">
+                <i class="bi bi-receipt size-32"></i><span>Bills</span>
+              </a>
+
+              <a href="/receivemoney/" class="">
+                <i class="bi bi-arrow-down-left-circle size-32"></i><span>Receive</span>
+              </a>
+            </div>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/rewards/">
+            <span>
+              <i class="nav-icon bi bi-gift"></i>
+              <span class="nav-text">Rewards</span>
+            </span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/wallet/">
+            <span>
+              <i class="nav-icon bi bi-wallet2"></i>
+              <span class="nav-text">Wallet</span>
+            </span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </footer> -->
+  <!-- Footer ends-->
+ 
+</div>
+</template>

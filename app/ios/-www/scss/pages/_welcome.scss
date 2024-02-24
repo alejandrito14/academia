@@ -1,0 +1,54 @@
+// Main Logo
+.main-logo{
+	position: relative;
+    display: flex;
+    align-items: center;
+    text-align: left;
+	
+	.logo-icon{
+		background: var(--f7-theme-color);
+		height: 70px;
+		width: 70px;
+		border-radius: 8px;
+		text-align: center;
+		line-height: 70px;
+		svg{
+			height: 70px;			
+		}
+	}
+	.logo-text{
+		margin-left: 16px;
+		.text{
+			font-size: 40px;
+			margin: 0 0 5px;
+			line-height: 40px;
+		}
+		p{
+			margin: 0;
+		}
+	}
+}
+.welcome-screen{
+	.main-logo{
+		justify-content: center;
+		margin-bottom: 100px;
+	}
+}
+
+// Welcome Swiper
+.welcome-swiper{
+	.swiper-slide{
+		max-width: 210px;
+		margin-top: 15px;
+		margin-bottom: 15px;
+		
+		&.swiper-slide-active{
+			.check{
+				opacity: 1;
+			}
+		}
+		.card-featured{
+			box-shadow: 0 0 20px rgba(0,0,0,0.1);
+		}
+	}	
+}

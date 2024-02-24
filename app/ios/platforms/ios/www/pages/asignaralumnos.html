@@ -1,0 +1,182 @@
+<template>
+<div class="page " data-name="asignaralumnos">
+  <div class="navbar">
+    <div class="navbar-bg" style="border: none;border-radius: 0px;"></div>
+    <div class="navbar-inner">
+      <div class="left">
+        <!--  <a href="#" class="button button-fill text-color-theme bg-color-white button-44 regreso" >
+          <i class="bi bi-arrow-left"></i>
+        </a> -->
+      </div>
+      <div class="title">
+        <div class="logo-small">
+         
+          <h5>Asignar alumnos</h5>
+        </div>
+      </div>
+      <div class="right">
+       <!--  <a href="/profile/" class="button button-fill text-color-theme bg-color-white button-44">
+          <i class="bi bi-bell"></i>
+        </a> -->
+      </div>
+
+     <!--  <div class="subnavbar" style="backdrop-filter: none;background: whitesmoke!important;">
+        <form class="searchbar" style="margin:.5em;">
+          <div class="searchbar-inner">
+            <div class="searchbar-input-wrap">
+              <input type="search" id="buscadorusuario" placeholder="Buscar" />
+              <i class="searchbar-icon">
+              </i>
+              <span class="input-clear-button" id="limpiarfiltro"></span>
+            </div><span class="searchbar-disable-button if-not-aurora">Cancel</span></div>
+          </form>
+          </div>
+ -->
+
+    </div>
+
+
+  </div>
+
+   <div class="fab fab-left-bottom  " style="bottom: 4em; ">
+    <a class="btnregreso regreso" style="">
+     <i class="bi bi-arrow-left" style=""></i>
+    </a>
+  </div>
+
+<div class="fab fab-right-bottom divflotanteasignacion" style="display: none;bottom: 4em;">
+   
+ <a id="btnguardarasignacion" style="" class=" color-theme">
+   <i class="bi-check-circle-fill"></i>
+       
+</a>
+
+   
+  </div>
+  <!-- main page content -->
+  <div class="page-content">
+   
+
+
+    <!-- <div class="row">
+        <div class="">
+            <button type="button" class="button button-fill button-large button-raised margin-bottom color-theme" style="display: none;"  >GUARDAR</button>
+        </div>
+       
+      </div> -->
+    
+
+
+
+ <div class="row">
+      <span style="    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 1em;">Usuarios no asignados</span>
+    </div>
+
+    <!-- banner -->
+ <!--  <div class="row">
+    <input type="search" id="buscadorusuario" placeholder="Buscar" style="    margin-left: 1em;
+    margin-right: 1em;" />
+  </div> -->
+ 
+
+  <form class="searchbar" style="    margin-left: 1em;margin-right: 1em;
+    background: white;border-radius: 10px;"><div class="searchbar-inner" style="    background: white;
+    border-radius: 10px;">
+      <div class="searchbar-input-wrap">
+      <input type="search" placeholder="" id="buscadorusuario" class="buscadorusuario" style="background: white;" />
+      <i class="searchbar-icon">
+      </i>
+      <span class="input-clear-button limpiarfiltro" >
+        
+      </span></div>
+      <span class="searchbar-disable-button if-not-aurora ">Cancel
+      </span></div>
+    </form>
+
+   
+    <div class="row" style="margin-top: 2em;">
+      
+
+      <div class="list media-list no-margin" style="    overflow: scroll;
+    max-height: 30em;">
+           <div id="divalumnos" style="list-style: none;">
+      
+              </div>
+           </div>
+           <div >
+           
+           
+          </div>
+      </div>
+
+
+       <div class="row" style="display: none;">
+        <div class="">
+            <button type="button" class="button button-fill button-large button-raised margin-bottom color-theme" style="display: none;" style="background: #59c158;" id="btnpasar2" >Agregar elementos </button>
+        </div>
+       
+      </div>
+
+      
+    <div class="row" >
+      <span style="    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 1em;display: none;">Usuarios asignados</span>
+    </div>
+    <div class="row" >
+    <input type="search" id="buscadorusuarioasignado" placeholder="Buscar" style="    margin-left: 1em;
+    margin-right: 1em;display: none;" />
+  </div>
+
+    <div class="row" style="margin-top: 2em;display: none;">
+      
+
+      <div class="list media-list no-margin" style="    overflow: scroll;
+    max-height: 20em;">
+           <div id="divparticipantesalumnosasig" style="list-style: none;">
+      
+              </div>
+           </div>
+           <div >
+           
+          </div>
+      </div>
+
+        <div class="row">
+        <div class="" style="display: none;">
+            <button type="button" class="button button-fill button-large button-raised margin-bottom color-theme" style="display: none;" style="background: red;" id="btnpasar" >Quitar elementos </button>
+        </div>
+       
+      </div>
+
+      <div class="row">
+        
+       <!--  <div class="divflotanteasignacion" style="width: 92%;display: none">
+                   <a id="btnguardarasignacion" style="    border-radius: 10px;
+            height: 60px;" class="button button-fill button-large button-raised margin-bottom color-theme">
+              <div class="fab-text">Asignar</div>
+            </a>
+
+           <a  class="link button" style="border-radius: 10px;height: 60px;background: white;color: #007aff;"  id="btncancelarasi">
+                <div class="">Cancelar</div>
+              </a>
+
+
+        </div> -->
+      </div>
+
+      <div class="block" style="height: 8em;">
+        
+      </div>
+
+  </div>
+
+
+
+
+</div>
+</template>

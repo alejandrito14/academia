@@ -1,0 +1,206 @@
+ <template>
+
+  <div class="page" data-name="calendarioespecialista">
+   <div class="navbar navbar-transparent">
+      <div class="navbar-bg"></div>
+      <div class="navbar-inner sliding">
+        <div class="left">
+          <a  class="link regresar">
+            <svg width="11" height="16" viewBox="0 0 11 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M4.3419 8L10.2222 2.22222L8 2.73828e-07L1.22201e-06 8L8 16L10.2222 13.7778L4.3419 8Z" fill="#122261"/>
+         </svg>
+            <span class="if-not-md">Back</span>
+          </a>
+        </div>
+        <div class="title"></div>
+      </div>
+    </div>
+    <div class="page-content">
+
+      <div class="row">
+        <div class="col">
+            <h3 style="text-align: center;color: #c7aa6a;">Calendario de servicios</h3>
+        </div>
+      
+      </div>
+     <div class="block">
+       <div class="">
+           
+
+            <div id="demo-calendar" style="margin-left: 1em;margin-right: 1em;    background: white;"></div>
+
+
+       </div>
+       <div class="row">
+         <div class="col-100">
+           <p style="text-align: center; margin-top:30px;font-size: 18px;color: white;" class="divfechaactual"></p>
+         </div>
+       </div>
+       <div class="row" >
+         <div class="col-100">
+          <div data-space-between="12" data-slides-per-view="auto" data-centered-slides="false" class="swiper-container swiper-init divtablerocortesia">
+          <div class="swiper-wrapper" style="margin-left: 1em;">
+          <div class="swiper-slide swiper-slide-active" role="group"  style="margin-right: 20px;width: 40%;">
+       
+              <div class="card card-bx card-chart color-theme-red btnservicios btnserviciosagendados" id="btnservicios" style="background: #375d97;margin-bottom: 1em;"><div class="dz-head"><h3 style="
+              color:white;
+              font-size: 30px;
+              margin: 0;
+              text-align: left;
+              " id="totalservicios2">0</h3><div class="row"><div class="col-80" style="margin-right: 16px;"><h2 class="title" style="
+              font-size: 14px;
+          ">Servicios agendados</h2></div><div class="col-20" style="    display: flex;
+          justify-content: end;"><span class="material-icons-outlined" style="
+          ">calendar_month</span></div></div></div><div class="dz-info"><div class="chart-label">
+            
+          </div>
+        </div>
+      </div>
+
+
+       
+        </div>
+
+         <div class="swiper-slide " role="group"  style="margin-right: 20px;width: 40%;">
+
+            <div class="card card-bx card-chart color-theme-red btnservicios btnserviciosproceso" id="btnserviciosproceso" style="width:100%;background:#38a2f7;margin-bottom: 1em;" onclick=""><div class="dz-head"><h3 style="
+        color:white;
+        font-size: 30px;
+        margin: 0;
+        text-align: left;
+        " id="totalserviciosproceso2">0</h3>
+        <div class="row"><div class="col-80" style="margin-right: 16px;"><h2 class="title" style="
+        font-size: 14px;
+    ">Servicios proceso</h2></div><div class="col-20" style="    display: flex;
+    justify-content: end;"><span class="material-icons-outlined" style="
+    ">calendar_month</span></div></div></div><div class="dz-info"><div class="chart-label">
+      
+    </div>
+  </div>
+  </div>
+
+         </div>
+
+
+       
+
+         <div class="swiper-slide " role="group"  style="margin-right: 20px;width: 40%;">
+
+              <div class="card card-bx card-chart color-theme-red btnservicios btnserviciospendientes" id="btnserviciospendientes" style="background:#f7bb44;margin-bottom: 1em;" ><div class="dz-head"><h3 style="color:white;font-size: 30px;margin: 0;text-align: left;" id="totalserviciospendientes2">0</h3><div class="row"><div class="col-80" style="margin-right: 16px;"><h2 class="title" style="
+            font-size: 14px;
+        ">Servicios pendientes
+        </h2></div>
+        <div class="col-20" style="    display: flex;
+        justify-content: end;"><span class="material-icons-outlined" style="
+        ">calendar_month</span></div></div></div>
+        <div class="dz-info"><div class="chart-label">
+          
+        </div>
+      </div>
+
+      </div>
+
+         </div>
+
+           <div class="swiper-slide " role="group"  style="margin-right: 20px;width: 40%;">
+            <div class="card card-bx card-chart color-theme-red btnserviciosrealizados btnservicios" id="btnservicios " style="background: #2b952a;margin-bottom: 1em;" onclick="">
+                <div class="dz-head"><h3 style="color:white;font-size: 30px;margin: 0; text-align: left;
+            " id="totalserviciosrealizados2">0</h3>
+            <div class="row"><div class="col-80" style="margin-right: 14px;"><h2 class="title" style="
+            font-size: 14px;">Servicios realizados</h2></div><div class="col-20" style="    display: flex;justify-content: end;">
+            <span class="material-icons-outlined" style=" ">event_available</span>
+      </div>
+    </div>
+       </div>
+        <div class="dz-info">
+          <div class="chart-label"></div></div>
+      </div>
+
+        </div>
+
+
+          <div class="swiper-slide " role="group"  style="margin-right: 20px;width: 40%;">
+
+            <div class="card card-bx card-chart color-theme-red btnserviciosnorealizados" id="btnservicios" style="background: #7a7a7a;margin-bottom: 1em;"><div class="dz-head"><h3 style="color:white;font-size: 30px;
+        margin: 0; text-align: left;
+        " id="totalserviciosnorealizados2">0</h3>
+        <div class="row">
+          <div class="col-80" style="margin-right: 16px;">
+            <h2 class="title" style="
+        font-size: 14px;">Servicios caducados</h2>
+      </div>
+        <div class="col-20" style="    display: flex;justify-content: end;"><span class="material-icons-outlined" style="">calendar_month</span>
+      </div>
+    </div>
+    </div>
+          <div class="dz-info">
+            <div class="chart-label">
+            
+          </div>
+          </div>
+        </div>
+
+         </div>
+
+
+         
+
+          <div class="swiper-slide " role="group"  style="margin-right: 20px;width: 40%;">
+
+
+            <div class="card card-bx card-chart color-theme-red btnservicios btnservicioscancelados" id="btnservicioscancelados" style="width:100%;background:red;margin-bottom: 1em;" onclick=""><div class="dz-head"><h3 style="
+        color:white;
+        font-size: 30px;
+        margin: 0;
+        text-align: left;
+        " id="totalservicioscancelados2">0</h3><div class="row"><div class="col-80" style="margin-right: 16px;"><h2 class="title" style="
+        font-size: 14px;
+    ">Servicios cancelados</h2></div><div class="col-20" style="    display: flex;
+    justify-content: end;"><span class="material-icons-outlined" style="
+    ">calendar_month</span></div></div></div><div class="dz-info"><div class="chart-label"></div></div></div>
+
+         </div>
+
+
+
+
+         </div>
+
+       </div>
+       </div>
+     </div>
+
+
+
+       <div class="list search-list searchbar-found dz-list mt-0 mb-30" style="    margin-top: 1em;">
+        <ul class="row tablerocitas">
+          
+          
+          
+        </ul>
+      </div>
+     
+
+
+     
+
+       <div class="row">
+         <div class="col-100">
+           
+            <div class="list inline-labels no-hairlines-md">
+      
+            </div>
+         </div>
+       </div>
+
+
+     
+    
+     </div>
+
+      
+     
+     
+    </div>
+  </div>
+</template>

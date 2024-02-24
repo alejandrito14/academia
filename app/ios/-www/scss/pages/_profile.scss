@@ -1,0 +1,134 @@
+// author-bx
+.author-bx{
+	display: flex;
+    align-items: center;
+	.dz-media{
+		height: 100px;
+		width: 100px;
+		min-width: 100px;
+		position: relative;
+		box-sizing: border-box;
+		border-radius: 20px;
+		overflow: hidden;
+		margin-right: 20px;
+		img{
+			height: 100%;
+			width: 100%;
+			object-fit: cover;
+		}
+	}
+	.name{
+		margin: 0 0 5px;
+	}
+	p{
+		margin: 0;
+	}
+}
+.social-list{
+	padding: 0;
+    margin: 10px -5px 0;
+    display: flex;
+	li{
+		display: inline-block;
+		padding: 0 5px;
+	}
+}
+
+// download-cv
+.download-cv {
+    display: flex;
+    align-items: center;
+    padding: 15px 25px;
+    justify-content: space-between;
+	margin: 0 0 30px;
+	box-shadow: unset;
+	.info{
+		color: #fff;
+		
+		.item-title {
+			margin: 0 0 5px;
+			color: #fff;
+		}
+	}
+}
+
+// skill-bar
+.skill-bar{
+	text-align: center;
+	.title{
+		margin: 15px 0 0;
+	}
+	.gauge-value-text{
+		font-weight: 700;
+	}
+	.gauge-front-circle{
+		stroke: var(--f7-theme-color);
+	}
+	text[fill],
+	text{
+		fill: var(--f7-theme-color);
+	}
+}
+
+// dz-timeline
+.dz-timeline{
+	padding: 0;
+    margin: 0;
+	.timeline-item{
+		padding-bottom: 30px;
+		.timeline-item-divider{
+			width: 16px;
+			height: 16px;
+			border: 2px solid;
+			border-color: var(--f7-theme-color);
+			background: var(--f7-theme-color-white);
+			margin-left: 0;
+			margin-right: 25px;
+	
+			&:after, 
+			&:before {
+				left: 8px;
+				transform: unset;
+				background: var(--f7-theme-color);
+			}
+		}
+		.timeline-item-content{
+			margin: 0;
+		}
+		.item-date{
+			font-weight: 500;
+		}
+		.title{
+			margin: 10px 0 0;
+		}
+		p{
+			margin: 15px 0 0;
+		}
+		&:first-child{
+			.timeline-item-divider{
+				background: var(--f7-theme-color);
+			}
+		}
+	}
+}
+
+// skill-swiper
+.skill-swiper{
+    padding-bottom: 25px;
+
+	.swiper-slide{
+		width: 100px;
+	}
+	.swiper-pagination-bullets{
+		bottom: 0;
+	}
+	.swiper-pagination-bullet {
+		width: 16px;
+		height: 5px;
+		border-radius: 10px;
+		@include transitionMedium;
+		&.swiper-pagination-bullet-active{
+			width: 30px;
+		}
+	}
+}

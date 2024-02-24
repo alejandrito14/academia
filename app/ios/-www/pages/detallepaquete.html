@@ -1,0 +1,290 @@
+ <div class="page inner-details detallepaquete" data-name="detallepaquete">
+  
+  <div class="navbar navbar-style-1 navbar-transparent">
+    <div class="navbar-inner">
+      <div class="left" style="    margin-top: 1em;">
+        <a  class="link back" style="">
+          <svg width="11" height="16" viewBox="0 0 11 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.3419 8L10.2222 2.22222L8 2.73828e-07L1.22201e-06 8L8 16L10.2222 13.7778L4.3419 8Z" fill="#122261"/>
+          </svg>
+        </a>
+            </div>
+      <div class="right">
+                
+            </div>
+        </div>
+  </div>
+      
+    <div class="page-content ptr-content ">
+       
+         
+          <div class="row" style="margin-bottom: 1em;    margin-right: 2em;
+    margin-left: 2em;           margin-top: 4em;">
+            <div class="col-100">
+
+      <div class="title" style="    font-size: 20px;
+    text-align: center;
+    font-weight: 600;
+    color: black;"> 
+        <div id="nombrepaquete" class="fuente" style=" color: black;"></div>
+      </div>
+    </div>
+    </div>
+
+
+                <ul class="no-bg" style="display: none;">
+
+                    <li>
+                <div class="item-content user-column">
+        <div style="margin-top: 1em;">
+    <div class="imagenpaquetediv">
+                                    <div>
+    <img style="    border-radius: 10px;
+    width: 100%;margin-top: 1em;" id="imagenpaquete" alt="">
+
+      <div class="textoababoderecha precioriginal cambiarfuente" id="precioriginal"></div>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                    </li>
+
+                </ul>
+
+
+                <div id="imagenespaquete"></div>
+           
+            <br>
+     
+
+     <!--    <div class="row">
+            <div class="col-33 text-center">
+                <h2 class="mb-0">2548</h2>
+                <p class="mt-0 color-gray">Friends</p>
+            </div>
+            <div class="col-33 text-align-center">
+                <h2 class="mb-0">584</h2>
+                <p class="mt-0 color-gray">Follower</p>
+            </div>
+            <div class="col-33 text-center">
+                <h2 class="mb-0">555</h2>
+                <p class="mt-0 color-gray">Reviews</p>
+            </div>
+        </div> -->
+        <!-- <div class="block">
+            <div class="row">
+                <div class="col">
+                    <a href="" class="col button gradient md-elevation-6">Add Friend</a>
+                </div>
+                <div class="col">
+                    <a href="" class="col button button-outline color-grey button-round-0">Follow</a>
+                </div>
+            </div>
+        </div> -->
+       <p class="block-title color-dark" style="font-weight: bold;font-size: 15px;margin:0px;margin-left: 2em;">Descripción</p>
+
+        <div class="block color-dark cambiarfuente" id="descripcion" style="text-align: justify;    margin-left: 1em;color: white;"></div>
+
+        <div id="precio" style="display: none;"></div>
+        <div id="precioventa" style="display: none;"></div>
+        <div id="preciouni" style="display: none;"></div>
+
+        <div id="grupos" class="block" ></div>
+
+
+        <div class="block" id="verinstrucciones" style="display: none;">
+      <div class="content-block-title " style="font-weight: bold;
+          color: black;"><div class="ribbon"></div>
+          <p>Instrucciones especiales </p>
+          <div class="list">
+          <ul>
+          <li>
+            <label class="item-content" style="margin-left: 1.5em;">
+                        <!-- Checked by default -->
+                        <div class="item-inner ">
+
+                          <div class="item-text" style="-webkit-line-clamp:20" id="instrucciones"> </div></div>
+                      </label>
+          </li>
+        </ul>
+      </div>
+   </div>
+  </div>
+
+        <div class="block">
+        <div id="activarcomentario" style="display: none;">
+         <a class="button botonesredondeado regresar " id="instruc">Instrucciones Especiales</a>
+        </div>
+      </div>
+
+
+       <div class="sheet-modal  sheet-modal-top my-sheet-top modalpaquete">
+            <div class="toolbar">
+              <div class="toolbar-inner estilostoolbar" >
+                <div class="left"></div>
+                <div class="right">
+<!--                   <a class="link sheet-close" id="cerrar">x</a>
+ -->                </div>
+              </div>
+            </div>
+            <div class="sheet-modal-inner">
+              <div class="block">
+            <label style="font-weight: bold;font-size: 15px;margin-left: 1.5em;">Instrucciones especiales</label>
+            <div class="item-input-wrap">
+            <!--  <textarea id="comentariopaquete" style="height: 4em;width: 100%;"></textarea> -->
+           </div>
+
+           <div class="row">
+             <div class="col">
+                <a class="link sheet-close button gradient signinbuttn md-elevation-6 botonesredondeado botones"  style="margin: auto;
+    width: 90%;" id="cerrar" onclick="CerrarModal()">Cerrar</a>
+             </div>
+             <div class="col">
+               <button type="button" class="button gradient signinbuttn md-elevation-6 botonesredondeado botones" style="margin: auto;
+    width: 90%;" onclick="GuardarInstrucciones()">Guardar</button>
+             </div>
+           </div>
+          
+        
+         
+
+        <div>
+
+        </div>
+              </div>
+            </div>
+          </div>
+        
+
+      <div class="block-footer" style="margin-top: 4em;">
+           <div class="block" style="margin:auto;">
+          <div class="" style="text-align: center;">
+            <div class="stepper stepper-large stepper-fill ">
+             <!--  <div class="stepper-button-minus" style="background: black;" ></div> -->
+              <div class="stepper-input-wrap">
+                <input type="text" value="1" id="cantidad" style="font-size: 20px;font-weight: bold;display: none;" min="1" max="100" step="1" readonly />
+              </div>
+<!--               <div class="stepper-button-plus" style="background: black;" ></div>
+ -->            </div>
+          </div>
+      </div>
+           <div class="col"><button type="button" class="button button-fill fill-form-from-data botonesredondeado botones" style="    width: 14em;
+    margin-top: 1em;
+    margin-right: auto;
+    margin-left: auto;display: none;" id="agregaracesta"><span style="font-size: 18px;">AGREGAR</span></button></div>
+      </div>
+
+
+    
+
+        
+       
+    </div>
+
+  <!--   <div class="fab fab-left-bottom "  style="bottom: 15px;color: #fff!important;  background: #ca0d0d!important;    border-radius: 50%;color: #fff!important;">
+      <div class="stepper-button-minus " onclick="HacerResta()" style="    height: 48px;
+    width: 48px;    border-radius: 50%;" ></div>
+  </div>
+ -->
+
+
+
+     <div class="fab fab-extended fab-center-bottom color-red" style="bottom: 0px;color: #fff; width: 100%; height:8%;margin-bottom: 1em;">
+      <div  class="divpaquetedetalle cambiarfuente" style=" " id="agregaracesta2"><span style="font-size: 18px;">Agregar</span> <span id="preciox" style="
+        font-weight: bold;margin-left: 1em;color: #fff;"></span>
+      </div>
+       <div  class="divpaquetedetalle2 cambiarfuente" style="float: right;">
+           <div class="divpaquetemenos" onclick="HacerResta()">
+            <span class="material-icons material-icons-outlined">
+              remove
+              </span>
+            
+          </div>
+          <div class="cantidadpaquete">
+            <span id="cantidadx" style="    
+            font-weight: bold;    position: absolute;    color: white;
+    top: 1em;"></span>
+          </div>
+       
+
+          <div class="divpaquetemas" onclick="HacerSuma()">
+            <span class="material-icons material-icons-outlined">
+              add
+              </span>
+          </div>
+
+       </div>
+  </div>
+
+
+    <!-- <div class="fab fab-right-bottom " style="    bottom: 15px;
+    border-radius: 50%!important;height: 48px;
+    width: 48px;
+   
+    color: #fff!important;">
+                <div class="stepper-button-plus botones" onclick="HacerSuma()" style="border-radius: 50%;
+    padding: 1.6em;
+    background:#ca0d0d!important;color: #fff!important;" ></div>
+
+  
+  </div> -->
+
+
+    <div class="fab fab-left-bottom " style="    padding-bottom: 5em;display: none;">
+      <a  class="link regresar"  >
+       <span class="preciopaquete">0</span>
+      </a>
+  </div>
+
+   <!-- <div class="fab fab-right-bottom iconopedido" style="padding-bottom: 10em;display: none;" >
+    <a  class="link pedidospendientes" style="background: #ed6a41" href="/estatuspedidos/">
+      P
+     <span class="badge2">0</span>
+    </a>
+   
+  </div> -->
+
+
+
+    <!--   <div class="fab fab-right-bottom iconocarrito" style="bottom: 5em;">
+    <a  class="link" style="background: #ed6a41" href="/carrito/">
+      <i class="icon material-icons if-not-md">shopping_cart</i>
+      <i class="icon material-icons md-only">shopping_cart</i>
+     <span class="badge1">0</span>
+
+    </a>
+  </div> -->
+
+      <!-- <div class="fab fab-right-top " >
+    <a  class="link back regresar" >
+           <span class="material-icons material-icons-outlined">
+arrow_back
+</span>
+
+    </a>
+   
+  </div> -->
+
+</div>
+
+<style>
+
+</style>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+
+  $("#instruc").attr('onclick','AbrirlModal()');
+    $("#id").attr("onclick","new_function_name()");
+
+});
+
+
+
+
+</script>
+ 
+
+
