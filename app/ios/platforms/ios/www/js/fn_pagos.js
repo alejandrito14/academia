@@ -4652,7 +4652,7 @@ function PintarDatosfiscales(respuesta) {
 
                           <div class="row">
                           <a  style="border-radius: 10px;
-                            height: 60px;color: white;display:none;margin-right:1em;margin-left:1em;" class="button button-fill button-large button-raised margin-bottom color-theme btnaceptarfiscal">
+                            height: 60px;color: white;display:none;margin-right:1em;margin-left:1em;" class="button button-fill button-large button-raised margin-bottom color-theme btnaceptarfiscal" onclick="Aceptardatofiscal()">
                               <div class="fab-text">ACEPTAR</div>
                             </a>
                          </div>
