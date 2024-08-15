@@ -69,8 +69,14 @@ if(!isset($_GET['idtipocoach'])){
 	//Cargamos en las variables los datos 
 
 	//DATOS GENERALES
-	$nivel=$f->imprimir_cadena_utf8($result_nivel_row['nivel']);
+	$nombre=$f->imprimir_cadena_utf8($result_nivel_row['nombre']);
 	
+	$tipocomision=$f->imprimir_cadena_utf8($result_nivel_row['tipocomision']);
+
+	$monto=$f->imprimir_cadena_utf8($result_nivel_row['monto']);
+
+	$costo=$f->imprimir_cadena_utf8($result_nivel_row['costo']);
+
 	$estatus = $f->imprimir_cadena_utf8($result_nivel_row['estatus']);
 	
 
@@ -140,10 +146,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				
 				<!--<button type="button" onClick="var resp=MM_validateForm('v_empresa','','R','v_direccion','','R','v_tel','','R','v_email','',' isEmail R'); if(resp==1){ GuardarEmpresa('f_empresa','catalogos/empresas/fa_empresas.php','main');}" class="btn btn-success" style="float: right;"><i class="mdi mdi-content-save"></i>  GUARDAR</button>-->
 				
-				<button type="button" onClick="aparecermodulos('catalogos/niveles/vi_nivel.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" style="float: right; margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
+				<button type="button" onClick="aparecermodulos('catalogos/tipocoach/vi_tipocoach.php?idmenumodulo=<?php echo $idmenumodulo;?>','main');" class="btn btn-primary" style="float: right; margin-right: 10px;"><i class="mdi mdi-arrow-left-box"></i>VER LISTADO</button>
 				<div style="clear: both;"></div>
 				
-				<input type="hidden" id="id" name="id" value="<?php echo $idpagos; ?>" />
+				<input type="hidden" id="id" name="id" value="<?php echo $idtipocoach; ?>" />
 			</div>
 			<div style="clear: both;"></div>
 		</div>
@@ -169,15 +175,15 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 							
 							<div class="form-group m-t-20">
 								<label>*NOMBRE:</label>
-								<input type="text" class="form-control" id="v_nombre" name="v_nombre" value="<?php echo $nivel; ?>" title="NOMBRE" placeholder='NOMBRE'>
+								<input type="text" class="form-control" id="v_nombre" name="v_nombre" value="<?php echo $nombre; ?>" title="NOMBRE" placeholder='NOMBRE'>
 							</div>
 
 									
 							<div class="form-group m-t-20">
 								<label>*TIPO COMISIÓN:</label>
-								<select name="v_tipocomision" id="v_tipocomision" class="form-control">
-									<option value="0">Porcentaje</option>
-									<option value="1">Monto</option>
+								<select name="v_tipocomision" id="v_tipocomision" class="form-control"> 
+									<option value="0"  <?php if($comision == 0) { echo "selected"; } ?>  >Porcentaje</option>
+									<option value="1" <?php if($comision == 1) { echo "selected"; } ?> >Monto</option>
 								</select>
 							</div>
 
@@ -189,7 +195,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 							<div class="form-group m-t-20">
 								<label>*COSTO</label>
-									<input type="text" class="form-control" id="v_costo" name="v_costo" value="<?php echo $costo; ?>" title="MONTO" placeholder='MONTO'>
+									<input type="text" class="form-control" id="v_costo" name="v_costo" value="<?php echo $costo; ?>" title="COSTO" placeholder='COSTO'>
 							</div>
 
 

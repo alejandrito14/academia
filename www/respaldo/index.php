@@ -1196,7 +1196,7 @@ $navegador = $f->navegador();
 <script src="js/fn_Funciones.js"></script>
 <script src="js/fn_Jquery.js" type="text/javascript" ></script>
 <script src="assets/libs/chosen_v1.8.7/chosen.jquery.js"></script>
-
+<script src="js/fn_categoriapaquete.js"></script>
 <script src="js/fn_usuarios.js" type="text/javascript" ></script>
 <script src="js/fn_Administrador.js" type="text/javascript"></script>
 <script src="js/fn_Configuracion.js"></script>
@@ -1207,7 +1207,7 @@ $navegador = $f->navegador();
  <script src="js/fn_categorias.js"></script>
 <script src="js/fn_notificacion.js"></script>
 <script src="js/fn_politicasaceptacion.js"></script>
-
+<script src="js/fn_caja.js"></script>
 <script src="js/modal.js"></script>
 <script src="js/fn_matrices.js?<?php echo time(); ?>"></script>
 
@@ -1225,6 +1225,7 @@ $navegador = $f->navegador();
 <script src="js/fn_productos.js"></script>
 <script src="js/fn_categoriaproducto.js"></script>
 <script src="js/fn_paquetes.js"></script>
+  <script src="js/fn_tipocoach.js"></script>
 
 <!-- js nuevos de mike -->
 <!-- <script src="js/fn_banner.js"></script>
@@ -1287,7 +1288,7 @@ $navegador = $f->navegador();
 <script src="js/fn_tipojuego.js?<?php echo time(); ?>"></script>
   <script src="https://js.stripe.com/v3/"></script>
 
-
+<script src="js/fn_tiposervicioconfiguracion.js?<?php echo time(); ?>"></script>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/TableExport/5.2.0/js/tableexport.min.js"></script>

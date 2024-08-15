@@ -59,30 +59,45 @@ try
 	}
 	if (isset($_POST['v_mes'])) {
 		$v_mes=$_POST['v_mes'];
+
+		if ($v_mes==0) {
+			
+			$v_mes=date('n');
+					
+		}
+	}else{
+
+		$v_mes=date('n');
 	}
 
 	if (isset($_POST['v_anio'])) {
-		$v_anio=$_POST['v_anio'];
-	}
+				$v_anio=$_POST['v_anio'];
 
-	
-	$obtenerservicios=$lo->ObtenerServiciosAdmin2($idcategorias,$v_coach,$v_mes,$v_anio);
+				if ($v_anio==0) {
+					$v_anio=date('Y');
+					
+				}
+	}else{
+		$v_anio=date('Y');
+	}	
+
+	$obtenerservicios=$lo->ObtenerServiciosAdmin3($idcategorias,$v_coach,$v_mes,$v_anio);
  
-
+	
 	for ($i=0; $i <count($obtenerservicios) ; $i++) { 
 		
 		$asignados->idservicio=$obtenerservicios[$i]->idservicio;
 		
-		$participantes=$asignados->obtenerUsuariosServiciosAlumnosAsignados();
+		/*$participantes=$asignados->obtenerUsuariosServiciosAlumnosAsignados();
 
-		$obtenerservicios[$i]->cantidadalumnos=count($participantes);
+		$obtenerservicios[$i]->cantidadalumnos=count($participantes);*/
 		 //$obtenerservicios[$i]->horarios=$horarios;
 		$arreglohorarios=array();
 
 
 	 	$obtenerhorarios=$asignados->ObtenerHorariosProximo();
-	 	$participantes=$asignados->obtenerUsuariosServiciosAlumnosAsignados();
-		$obtenerservicios[$i]->cantidadalumnos=count($participantes);
+	 	/*$participantes=$asignados->obtenerUsuariosServiciosAlumnosAsignados();
+		$obtenerservicios[$i]->cantidadalumnos=count($participantes);*/
 		$porpasar=1;
 		$obtenerservicios[$i]->fechaproxima="";
 		$obtenerservicios[$i]->horainicial="";
@@ -140,27 +155,27 @@ try
 
 
 		$calificacion->idservicio=$asignados->idservicio;
-		$obtenercalificacion=$calificacion->ObtenerCalificacion();
+		/*$obtenercalificacion=$calificacion->ObtenerCalificacion();
 
 		$obtenerservicios[$i]->concalificacion=0;
 		if (count($obtenercalificacion)>0) {
 			$obtenerservicios[$i]->concalificacion=1;
-		}
+		}*/
 		$comentarios->idservicio=$asignados->idservicio;
-		$obtenercomentarios=$comentarios->ObtenerComentariosServicio();
+		/*$obtenercomentarios=$comentarios->ObtenerComentariosServicio();
 		$obtenerservicios[$i]->concomentarios=0;
 		if(count($obtenercomentarios)>0) {
 			$obtenerservicios[$i]->concomentarios=1;
-		}
+		}*/
 
 		$salachat->idservicio=$asignados->idservicio;
 		
-		$obtenersala=$salachat->ObtenerSalaChatServicio();
+		/*$obtenersala=$salachat->ObtenerSalaChatServicio();
 
 		$obtenerservicios[$i]->conchat=0;
 		if(count($obtenersala)>0) {
 			$obtenerservicios[$i]->conchat=1;
-		}
+		}*/
 
 
 		$lo->idservicio=$asignados->idservicio;

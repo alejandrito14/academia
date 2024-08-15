@@ -185,7 +185,8 @@ try
 					'fechamin'=>date('d-m-Y',strtotime($obtenerfechas[0]->fechamin)),
 					'fechamax'=>date('d-m-Y',strtotime($obtenerfechas[0]->fechamax)),
 					'tipopago'=>$tipopago,
-					'aceptacionpagoservicio'=>$aceptacionpagoservicio
+					'aceptacionpagoservicio'=>$aceptacionpagoservicio,
+					'habilitarmonedero'=>1
 			);
 				$total=$total+$montoapagar;
 				array_push($pagosencontrados,$objeto);
@@ -208,6 +209,7 @@ try
 	//var_dump($usuariosconsulta);die();
 	$lo->idusuarios=$usuariosconsulta;
 	$obtenerpagostipotres=$lo->ObtenerPagosTipoDosTres();
+
 	if (count($obtenerpagostipotres)>0) {
 
 		for ($i=0; $i < count($obtenerpagostipotres); $i++) { 
@@ -230,24 +232,45 @@ try
 				$folio="";
 				$concepto=$obtenerpagostipotres[$i]->concepto;
 				$tipopago='';
+				$habilitarmonedero=1;
 
 				if ($tipo==2) {
-					if ($pagoinscripcion==0) {
-						# code...
-					
+
 					$membresia->idmembresia=$idmembresia;
 					$membresia->idusuarios=$idusuarios;
 					$membresia->idpago=$idpago;
 					$buscarmembresiaasociada=$membresia->BuscarMembresiaAsociadaalapago();
 
-					$concepto=$concepto.'   Vigencia:'.date('d-m-Y',strtotime($buscarmembresiaasociada[0]->fechaexpiracion));
+					if (count($buscarmembresiaasociada)>0) {
+						$habilitarmonedero=$buscarmembresiaasociada[0]->habilitarmonedero;
+					}
+					
+					
+					if ($pagoinscripcion==0) {
+						# code...
+					
+					
+
+					$concepto=$concepto.'   Vigencia: '.date('d-m-Y',strtotime($buscarmembresiaasociada[0]->fechaexpiracion));
 				}
+
+
+
+
+
+				$tipopagorelacionados=$membresia->TipoPagoRelacionados();
+					if (count($tipopagorelacionados)>0) {
+
+						
+						$tipopago=$tipopagorelacionados[0]->tipopago;
+					}
 
 				}
 			$objeto=array('idusuarios'=>$idusuarios,'idmembresia'=>$idmembresia,'idservicio'=>$idservicio,'tipo'=>$tipo,'monto'=>$montoapagar,'estatus'=>$estatus,'dividido'=>$dividido,'fechainicial'=>$fechainicial,'fechafinal'=>$fechafinal,'concepto'=>$concepto,'folio'=>$folio,'fechaformato'=>'','nombre'=>$datosusuario[0]->nombre,'paterno'=>$datosusuario[0]->paterno,'materno'=>$datosusuario[0]->materno,'idpago'=>$idpago,'aceptados'=>'','alumnos'=>'','completo'=>'',
 				'fechamin'=>'','fechamax'=>'',
 				'tipopago'=>$tipopago,
-				'aceptacionpagoservicio'=>$aceptacionpagoservicio
+				'aceptacionpagoservicio'=>$aceptacionpagoservicio,
+				'habilitarmonedero'=>$habilitarmonedero
 			);
 
 				$total=$total+$montoapagar;

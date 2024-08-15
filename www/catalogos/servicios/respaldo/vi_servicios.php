@@ -45,12 +45,12 @@ $Servicios->db = $db;
 $Servicios->tipo_usuario = $tipousaurio;
 $Servicios->lista_empresas = $lista_empresas;
 
-$l_Servicios = $Servicios->ObtenerServicios();
+/*$l_Servicios = $Servicios->ObtenerServicios();
 $l_Servicios_row = $db->fetch_assoc($l_Servicios);
 
 
 $l_Servicios_num = $db->num_rows($l_Servicios);
-
+*/
 /*======================= INICIA VALIDACIÓN DE RESPUESTA (alertas) =========================*/
 
 if(isset($_GET['ac']))
@@ -138,7 +138,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 			<div class="col-md-6">
 				 <div class="form-group">
 			    <label for="">MES</label>
-			   	<select class="form-control" id="v_meses"></select>
+			   	<select class="form-control" id="v_meses" multiple="multiple"></select>
 			   
 			  </div>
 			</div>
@@ -174,14 +174,14 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 	    <div class="row" style="margin-right: 1em;margin-left: 1em;">
 				<div class="col-md-8"></div>
 				<div class="col-md-4">
-					<input type="text" placeholder="Buscar" id="buscadorservicio"  class="form-control" onkeyup="handleKeyPress2(event, '<?php echo $idmenumodulo; ?>')" style="width: 70%;float: right;margin-right: 1em;">
+					<input type="text"  placeholder="Buscar" id="buscadorservicio"  class="form-control"  onkeyup="handleKeyPress2(event, '<?php echo $idmenumodulo; ?>')" style="width: 70%;float: right;margin-right: 1em;">
 				</div>
 	    </div>
 		</div>
 	</div>
 	<div class="card-body">
 		<div class="table-responsive" id="contenedor_Servicios">
-			<table id="tbl_Servicios" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
+			 <table id="tbl_Servicios" cellpadding="0" cellspacing="0" class="table table-striped table-bordered">
 				<thead>
 					<tr>
 						 <th style="text-align: center;">ID</th>
@@ -198,7 +198,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 				</thead>
 				<tbody id="tblservicios">
 					
-					<?php
+					<!--<?php
 					if($l_Servicios_num== 0){
 						?>
 						<tr> 
@@ -351,9 +351,20 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 							<?php
 						}while($l_Servicios_row = $db->fetch_assoc($l_Servicios));
 					}
-					?>
-				</tbody>
-			</table>
+					?> -->
+				 </tbody>
+			</table> 
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6"></div>
+		<div class="col-md-2"></div>
+		<div class="col-md-4">
+			<p style="font-size:20px;">TOTAL DE SERVICIOS: <span id="totalservicios" style="font-weight: bold;"></span></p>
+
+			<p style="font-size:20px;">MONTO: <span id="totalmonto" style="font-weight: bold;"></span></p>
+
 		</div>
 	</div>
 </div>
@@ -742,28 +753,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
    <script src="js/jquery.selectlistactions.js"></script>
 
 <script type="text/javascript">
-	 $('#tbl_Servicios').DataTable( {		
-		 	"pageLength": 100,
-			"oLanguage": {
-						"sLengthMenu": "Mostrar _MENU_ ",
-						"sZeroRecords": "NO SE ENCONTRARON REGISTROS EN LA BASE DE DATOS.",
-						"sInfo": "Mostrar _START_ a _END_ de _TOTAL_ Registros",
-						"sInfoEmpty": "desde 0 a 0 de 0 records",
-						"sInfoFiltered": "(filtered desde _MAX_ total Registros)",
-						"sSearch": "Buscar",
-						"oPaginate": {
-									 "sFirst":    "Inicio",
-									 "sPrevious": "Anterior",
-									 "sNext":     "Siguiente",
-									 "sLast":     "Ultimo"
-									 }
-						},
-		   "sPaginationType": "full_numbers", 
-		 	"ordering": false,
 
-        	  "paging": false,
-    		"searching": false,
-		} );
 </script>
 <style>
 	#StaffList {
@@ -876,6 +866,31 @@ $estatus=array('DESACTIVADO','ACTIVADO');
        Cargaranios();
        CargarVariables();
 
+        $('#tbl_Servicios').DataTable( {		
+		 	"pageLength": 100,
+		 	"retrieve": true,
+			"oLanguage": {
+						"sLengthMenu": "Mostrar _MENU_ ",
+						"sZeroRecords": "NO SE ENCONTRARON REGISTROS EN LA BASE DE DATOS.",
+						"sInfo": "Mostrar _START_ a _END_ de _TOTAL_ Registros",
+						"sInfoEmpty": "desde 0 a 0 de 0 records",
+						"sInfoFiltered": "(filtro desde _MAX_ total Registros)",
+						"sSearch": "Buscar",
+						"oPaginate": {
+									 "sFirst":    "Inicio",
+									 "sPrevious": "Anterior",
+									 "sNext":     "Siguiente",
+									 "sLast":     "Ultimo"
+									 }
+						},
+		   "sPaginationType": "full_numbers", 
+		 	"ordering": false,
+
+        	  "paging": false,
+    		"searching": false,
+		} ); 
+
+
       
 </script>
 
@@ -928,4 +943,17 @@ $estatus=array('DESACTIVADO','ACTIVADO');
     padding-top: 1px;
     padding-bottom: 1px;
 }
+
+.SumoSelect{
+					width: 100%;
+				}
+
+				.SumoSelect .select-all{
+					height: 40px!important;
+				}
+
+.SumoSelect .CaptionCont{
+	height: 33px;
+}
+
 </style>

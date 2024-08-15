@@ -17,12 +17,20 @@ class Reportes
 
 		public function Lista_reportesante()
 	{
-		$sql = "SELECT * FROM reportes WHERE estatus=1 AND anterior=1";
+		$sql = "SELECT * FROM reportes WHERE estatus=1 AND anterior=1 and movimientos=0";
 
 		$result = $this->db->consulta($sql);
 		return $result;
 	}
 
+
+	public function Lista_reportesmovimientos()
+	{
+		$sql = "SELECT * FROM reportes WHERE estatus=1 AND anterior=1 and movimientos=1";
+
+		$result = $this->db->consulta($sql);
+		return $result;
+	}
 	public function buscar_reportes()
 	{
 		$sql = "SELECT * FROM reportes WHERE idreporte = '$this->idreporte'";

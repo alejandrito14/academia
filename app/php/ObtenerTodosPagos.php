@@ -92,7 +92,7 @@ try
 				$lo->requiereaceptacion=$aceptacionpagoservicio;
 
 				$PagosNoPagados=$lo->PagosNoPagados();
-				if (count($PagosNoPagados)>0) {
+				if (count($PagosNoPagados)>0) { 
 					$lo->EliminarPagoNoPagado();
 				}
 				
@@ -175,7 +175,7 @@ try
                  $lo->idmembresia=0;
                  $lo->folio="";
            $lo->CrearRegistroPago();
-
+ 
             $servicios->idservicio=$idservicio;
            $obtenerfechas=$servicios->ObtenerFechaHoras();
                 

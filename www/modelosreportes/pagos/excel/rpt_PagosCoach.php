@@ -116,7 +116,7 @@ $estatuspago=array('pendiente','proceso','aceptado','rechazado','reembolso','sin
 			WHERE 1=1 AND  usuarios.tipo=5  $sqlconcan $sqalumnoconcan 
 			GROUP BY usuarios.idusuarios
 		";
-		
+	
 		$resp=$db->consulta($sql);
 		$cont = $db->num_rows($resp);
 
@@ -191,13 +191,11 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 	$lo->idusuarios=$idusuarios;
 	$usuarios->id_usuario=$idusuarios;
     $datoscoach=$usuarios->ObtenerUsuarioDatos();
+
 	$asignacion->idusuario=$idusuarios;
-	$obtenerservicios=$asignacion->obtenerServiciosAsignadosCoach2();
+	$obtenerservicios=$asignacion->obtenerServiciosAsignadosCoach2($sqlcate);
 	$pagosdelcoach=array();
-
-
-
-
+	
 	$textoestatus=array('Pendiente','Aceptado','Cancelado');
 
 	for ($i=0; $i <count($obtenerservicios); $i++) { 

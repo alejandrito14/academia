@@ -4,10 +4,12 @@ var asignacionperiodos=[];
 var dynamicSheet1="";
 var arraydiaseleccionados=[];
 var fechasglobal2="";
+var arrayfechasguardadas=[];
+var contadorhorarios=0;
 function NuevoServicio(){
 	
 	GoToPage('nuevoservicio');
-}
+} 
 var zonasarray=[];
 
 var monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -79,7 +81,7 @@ function CargarFechasNuevoServicio() {
           	calendarInline.on('calendarChange()');
 
    
-
+ 
          
 
           },
@@ -312,7 +314,7 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 100%
 
    }
 }
-
+ 
 
 function ObtenerTodasZonas() {
 		
@@ -1427,7 +1429,7 @@ function AplicarFechas() {
 
 		}else{
 		HorariosDisponibles();
-		$("#demo-calendar").css('display','block');
+		//$("#demo-calendar").css('display','block');
 	}
 		/*var id=$("#id").val();
 		if (id>0) {
@@ -1516,6 +1518,7 @@ function EliminarHorariosFueraPeriodo(noseencuentra) {
  		
 }
 
+
 function HorariosDisponibles() {
 
 
@@ -1526,15 +1529,53 @@ function HorariosDisponibles() {
 	//arraydiaseleccionados=[];
 
 	 var v_zonas = [];
+	 var v_dias = [];
+
 	  $$('#v_zonas option:checked').each(function () {
 	  	
 	  		v_zonas.push($$(this).val());
 	    
 	  });
-
 	var domingo=0,lunes=0,martes=0,miercoles=0,jueves=0,Viernes=0,sabado=0;
+
+
+	    $$('#v_dias option:checked').each(function () {
+	  	
+	  		v_dias.push($(this).val());
+	  		var valor=$(this).val();
+	  		if(valor==0){
+
+				 domingo=1;
+				}
+				 if(valor==1){
+
+				 lunes=1;
+				}
+				 if(valor==2){
+
+				 martes=1;
+				}
+				 if(valor==3){
+
+				 miercoles=1;
+				}
+				if(valor==4){
+
+				 jueves=1;
+				}
+				 if(valor==5){
+
+				 Viernes=1;
+				}
+				 if(valor==6){
+
+					 sabado=1;
+				}
+	    
+	  });
+	    console.log(v_dias);
 	
-		if($("#Domingo").is(':checked')){
+		/*if($("#Domingo").is(':checked')){
 
 		 domingo=1;
 		}
@@ -1561,11 +1602,11 @@ function HorariosDisponibles() {
 		 if($("#Sabado").is(':checked')){
 
 			 sabado=1;
-		}	
+		}	*/
 	var v_zonaelegida=$("#v_zonas").val();
 	var v_horarios=$("#v_horarios").val();
-	var v_categoria=$("#v_categoriaservicio").val();
-	var v_tipocategoria=$("#v_categoria").val();
+	var v_categoria=$("#listadosubcategorias").val();
+	var v_tipocategoria=localStorage.getItem('idsubcategoria');
 	var v_fechainicial=$("#v_fechainicial").val();
 	var v_fechafinal=$("#v_fechafinal").val();
 
@@ -1593,111 +1634,162 @@ function HorariosDisponibles() {
 						 zonasarray = msj.zonas;
 					
 						 var respuesta=msj.respuesta;
-
-						 console.log(respuesta);
 						 fechasglobal2=respuesta;
-						eventos=[];
+						 eventos=[];
+
+						 var html="";
+
+
 						 if (respuesta.length>0) {
-						 	$("#calendario").css('display','block');
-						 for (var i = 0; i < respuesta.length; i++) {
-						 	var fecha=respuesta[i].fecha;
-						 	var idzona=respuesta[i].idzona;
-							var nombrezona=respuesta[i].nombrezona;
-						 	var dividirfecha=fecha.split('-');
-						 	var nuevafecha=dividirfecha[0]+'-'+parseInt(dividirfecha[1])+'-'+parseInt(dividirfecha[2]);
-						 	
-						 var anio=dividirfecha[0];
-						var mes=(dividirfecha[1].replace(/^(0+)/g, '')-1);
-						var dia=dividirfecha[2];
-						var color=respuesta[i].color;
-						var objeto={
-							date:new Date(anio,mes,dia),
-							color:'rgb(255 255 255 / 10%)',
-						};
-						 	eventos.push(objeto);
+
+						 	for (var i = 0; i <respuesta.length; i++) {
+						 			arrayfechasguardadas.push(respuesta[i]);
 					
+
+						 		}
+
 
 						 }
-						 calendarInline.setYearMonth(anioinicial, mesinicial, 2);
-						 calendarInline.params.events = eventos;
-						calendarInline.update();
-						 $(".calendar-day-today .calendar-day-number").addClass('diaactual');
+						 $("#listadofechas").html('');
+						var seleccionados=0;
+						 contadorhorarios=0;
 
-						 if($("#habilitarseleccion").val() ==1) {
+						 arrayfechasguardadas=groupAndSortData(arrayfechasguardadas);
+						 console.log(arrayfechasguardadas);
+						 for (var i = 0; i < arrayfechasguardadas.length; i++) {
+						 
 
-						 	if (localStorage.getItem('edicionservicio')==0) {
-								arraydiaselegidos=[];
-								arraydiaseleccionados=[];
-							
-								 	}
-			
+						 			html+=`<label style="margin-top:10px;">`+arrayfechasguardadas[i].fechaformato+`</label>`;
+						 			html+=`<div class="row">`;
+						 			var horas=arrayfechasguardadas[i].horasposibles;
 
-						 if (respuesta.length>0) {
-						 	$("#calendario").css('display','block');
-						 for (var i = 0; i < respuesta.length; i++) {
-						 	var fecha=respuesta[i].fecha;
-						 	var idzona=respuesta[i].idzona;
-							var nombrezona=respuesta[i].nombrezona;
-						 	var dividirfecha=fecha.split('-');
-						 	var nuevafecha=dividirfecha[0]+'-'+parseInt(dividirfecha[1])+'-'+parseInt(dividirfecha[2]);
+						 				console.log(horas);
+						 				for (var j = 0; j < horas.length; j++) {
+						 					var horainicial=horas[j].horainicial;
+						 					var dividirini=horainicial.split(':')[0]+':'+horainicial.split(':')[1];
+
+						 					var horafinal=horas[j].horafinal;
+						 					var dividirfi=horafinal.split(':')[0]+':'+horafinal.split(':')[1];
+						 					var disponible=horas[j].disponible;
+						 					var clases='button-fill';
+						 					if (disponible==1) {
+						 						
+
+						 						//clases='button-outline';
+
+						 					/*}else{
+						 						seleccionados++;
+						 					}
+*/
+						 					html+=` <button class="button `+clases+` button-round activo horafecha_`+arrayfechasguardadas[i].fecha+`" id="horafecha_`+arrayfechasguardadas[i].fecha+`_`+i+`_`+j+`" style="margin-top:1em;margin-bottom:1em;width: 30%;margin-left: 1em;
+    margin-right: 1em;" onclick="SeleccionarElementoHora(this)">`+dividirini+`-`+dividirfi+`</button>`;
+						 				
+    									contadorhorarios++;
+
+    									}
+						 				}
+						 				html+=`</div>`;
 						 	
-						 	var htmlcontenedor= $("."+nuevafecha).html();
-						 	var color=respuesta[i].color;
-						 	var html="";
-								 for (var j = 0; j < respuesta[i].horasposibles.length; j++) {
-								 	
-								 		for (var k = 0; k <respuesta[i].horasposibles[j].length; k++) {
-								 			var horainicial=respuesta[i].horasposibles[j][k].horainicial;
-								 			var horafinal=respuesta[i].horasposibles[j][k].horafinal;
 
-								 			
-								 			if (respuesta[i].horasposibles[j][k].disponible==1) {
-								 			var disponible=respuesta[i].horasposibles[j][k].disponible==0?'':color;
-
-								 			if (horainicial!=null && horafinal!=null) {
-								 				var id=fecha+'-'+horainicial.slice(0,5)+'-'+horafinal.slice(0,5)+'-'+idzona;
-								 					console.log('id'+id);
-
-								 					if (Buscardia(id)==false) {
-
-								 						CargaAutomatica(id);
-								 					}
-								 					 
-								 				
-
-								 				}
-								 			 }
-								 			}
-
-								 		
-						 							
-
-								 			}
-
-								 		}
-
-								 	}
-
-								 	Resumenfechas();
-								 	CantidadHorarios();
-
-								 }
+						 		}
+						 
+						 $("#listadofechas").html(html);
 
 
-
-						}else{
-
-							alerta('','No se encuentran horarios disponibles dentro del periodo');
-							//AbrirNotificacion('No se encuentran horarios disponibles dentro del periodo','mdi mdi-alert-circle');
-					
+						if (contadorhorarios>0) {
+							$("#divcantidadhorarios").css('display','block');
+							$("#candhorarios").text(contadorhorarios);
 						}
-						$(".calendar-day-has-events .calendar-day-number").addClass('calendarevento');
 
+					
+				}
+		});
+	
+}
+
+const data = [
+  // Tu JSON aquí...
+];
+
+function groupAndSortData(data) {
+  let counter = 1;
+  const groupedData = data.reduce((acc, current) => {
+    const { fecha, horasposibles } = current;
+    let key = Object.keys(acc).find(key => acc[key].fecha === fecha);
+    if (!key) {
+      key = counter++;
+      acc[key] = { ...current, horasposibles: [] };
+    }
+    acc[key].horasposibles = acc[key].horasposibles.concat(horasposibles);
+    return acc;
+  }, {});
+
+  const sortedData = Object.values(groupedData).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+
+  // Añadir índice
+  sortedData.forEach((item, index) => {
+    item.index = index + 1;
+  });
+
+  return sortedData;
+}
+
+//const result = groupAndSortData(data);
+//console.log(result);
+
+
+function SeleccionarElementoHora(elemento) {
+	console.log(arrayfechasguardadas);
+		var id=elemento.id;
+		var dividir=id.split('_');
+		var fecha=dividir[1];
+		var horainicial=dividir[2];
+		var horafinal=dividir[3];
+		var valor=0;
+		 if ($("#" + id).hasClass("activo")) {
+
+		    $("#" + id).removeClass("activo");
+        $("#" + id).removeClass("button-fill");
+        $("#" + id).addClass("button-outline");
+        valor = 0;
+        console.log('entro ' + valor);
+        contadorhorarios--;
+    } else {
+        $("#" + id).removeClass("button-outline");
+        $("#" + id).addClass("button-fill");
+        valor = 1;
+        		         $("#" + id).addClass("activo");
+
+        console.log('entro ' + valor);
+        contadorhorarios++;
+    }
+
+		for (var i = 0; i < arrayfechasguardadas.length; i++) {
+				console.log(arrayfechasguardadas[i].fecha+'=='+fecha);
+				if (arrayfechasguardadas[i].fecha==fecha) {
+					var horas=arrayfechasguardadas[i].horasposibles;
+
+					for (var j = 0; j < horas.length; j++) {
+							console.log('comparando'+i+'=='+horainicial+j+'=='+horafinal);
+						if (i==horainicial && j==horafinal) {
+							horas[j].disponible=valor;
+							break;
+						}
+					}
+				}
+
+
+		}
+
+
+
+							$("#divcantidadhorarios").css('display','block');
+							$("#candhorarios").text(contadorhorarios);
 						
 
-					}
-				});
-	
+		console.log('sele'+id);
+		console.log(arrayfechasguardadas);
+
 }
 
 
@@ -1710,39 +1802,47 @@ function HorariosDisponiblesFlecha() {
 	//arraydiaselegidos=[];
 	//arraydiaseleccionados=[];
 	var domingo=0,lunes=0,martes=0,miercoles=0,jueves=0,Viernes=0,sabado=0;
-	
-		if($("#Domingo").is(':checked')){
 
-		 domingo=1;
-		}
-		 if($("#Lunes").is(':checked')){
 
-		 lunes=1;
-		}
-		 if($("#Martes").is(':checked')){
+	    $$('#v_dias option:checked').each(function () {
+	  	
+	  		v_dias.push($(this).val());
+	  		var valor=$(this).val();
+	  		if(valor==0){
 
-		 martes=1;
-		}
-		 if($("#Miercoles").is(':checked')){
+				 domingo=1;
+				}
+				 if(valor==1){
 
-		 miercoles=1;
-		}
-		if($("#Jueves").is(':checked')){
+				 lunes=1;
+				}
+				 if(valor==2){
 
-		 jueves=1;
-		}
-		 if($("#Viernes").is(':checked')){
+				 martes=1;
+				}
+				 if(valor==3){
 
-		 Viernes=1;
-		}
-		 if($("#Sabado").is(':checked')){
+				 miercoles=1;
+				}
+				if(valor==4){
 
-			 sabado=1;
-		}	
+				 jueves=1;
+				}
+				 if(valor==5){
+
+				 Viernes=1;
+				}
+				 if(valor==6){
+
+					 sabado=1;
+				}
+	    
+	  });
+	var v_categoria=$("#listadosubcategorias").val();
+
+	var v_tipocategoria=localStorage.getItem('idsubcategoria');
 	var v_zonaelegida=$("#v_zonas").val();
 	var v_horarios=$("#v_horarios").val();
-	var v_categoria=$("#v_categoriaservicio").val();
-	var v_tipocategoria=$("#v_categoria").val();
 	var v_fechainicial=$("#v_fechainicial").val();
 	var v_fechafinal=$("#v_fechafinal").val();
 
@@ -1819,42 +1919,53 @@ function HorariosDisponiblesFecha(fechaseleccionada) {
 return new Promise((resolve, reject) => {
 
 	var v_zonas=[];
+	var v_dias=[];
 	/*arraydiaselegidos=[];
 	arraydiaseleccionados=[];*/
-	var domingo=0,lunes=0,martes=0,miercoles=0,jueves=0,Viernes=0,sabado=0;
 	
-		if($("#Domingo").is(':checked')){
+		var domingo=0,lunes=0,martes=0,miercoles=0,jueves=0,Viernes=0,sabado=0;
 
-		 domingo=1;
-		}
-		 if($("#Lunes").is(':checked')){
 
-		 lunes=1;
-		}
-		 if($("#Martes").is(':checked')){
+	    $$('#v_dias option:checked').each(function () {
+	  	
+	  		v_dias.push($(this).val());
+	  		var valor=$(this).val();
+	  		if(valor==0){
 
-		 martes=1;
-		}
-		 if($("#Miercoles").is(':checked')){
+				 domingo=1;
+				}
+				 if(valor==1){
 
-		 miercoles=1;
-		}
-		 if($("#Jueves").is(':checked')){
+				 lunes=1;
+				}
+				 if(valor==2){
 
-		 jueves=1;
-		}
-		 if($("#Viernes").is(':checked')){
+				 martes=1;
+				}
+				 if(valor==3){
 
-		 Viernes=1;
-		}
-		 if($("#Sabado").is(':checked')){
+				 miercoles=1;
+				}
+				if(valor==4){
 
-		 sabado=1;
-		}	
+				 jueves=1;
+				}
+				 if(valor==5){
+
+				 Viernes=1;
+				}
+				 if(valor==6){
+
+					 sabado=1;
+				}
+	    
+	  });
+	var v_categoria=$("#listadosubcategorias").val();
+
+	var v_tipocategoria=localStorage.getItem('idsubcategoria');
+
 	var v_zonaelegida=$("#v_zonas").val();
 	var v_horarios=$("#v_horarios").val();
-	var v_categoria=$("#v_categoriaservicio").val();
-	var v_tipocategoria=$("#v_categoria").val();
 	var v_fechainicial=fechaforma;
 	var v_fechafinal=fechaforma;
 
@@ -2560,45 +2671,42 @@ dynamicSheet1.close();
 function PintarCoaches() {
 	var html="";
 	
-	if (asignacioncoach.length>0) {
-		for (var i = 0; i <asignacioncoach.length; i++) {
+	var html=``;
+	$(".listadoele").html('');
+		if (arraycoachelegidos.length>0) {
+
 				html+=`
+				 <div class="list media-list list-outline-ios list-strong-ios list-dividers-ios">
+     		 <ul>
+			`;
+		for (var i = 0; i < arraycoachelegidos.length; i++) {
+  html += `
+    <li>
+      <span class="item-link item-content" onclick="event.stopPropagation()">
+        <div class="item-inner">
+          <div class="row">
+            <div class="col" style="font-weight: bold;">${arraycoachelegidos[i].nombre}</div>
+            <div class="col">
+              <div style="display: inline-block;padding: 5px 10px; margin-left: 10px;"></div>
+              
+            </div>
+          </div>
+          <div class="item-subtitle">${arraycoachelegidos[i].nombresubcategoria}</div>
+          <div class="item-text"></div>
+        </div>
+      </span>
+    </li>
+  `;
+}
 
-			<div class="col-100  elemento"  style="    margin-top: 1em;
-    margin-bottom: 1em;" id="elemento_`+i+`"><div class="card">
-    <div class="card-content card-content-padding ">
-    <div class="row">
-	    <div class="col-auto align-self-center">
-		    <div class="avatar avatar-30 alert-danger text-color-red rounded-circle">
-		    <i class="bi bi-person-circle"></i>
+			html+=`
+				</ul>
+			<div>
 
-		    </div>
-	    </div>
-    <div class="col align-self-center no-padding-left">
-    <div class="row margin-bottom-half"><div class="col">
-	    
-	    <p style="padding:.5em;">`+asignacioncoach[i].textonombre+`</p>
-	    </div>
-
-	  
-	    <div class="col-auto" style="text-align: right;">
-	    <span class="" style="float: left;padding: .5em;" onclick="EditarCoach(`+i+`)"><i class="bi-pencil-fill"></i> </span>
-	    	<span class="" style="float: left;padding: 0.5em;" onclick="EliminarCoach(`+i+`);"><i class="bi-x-circle-fill"></i></span>
-	    	</div>
-
-	    			</div>
-    			</div>
-    		</div>
-    	</div>
-   	 </div>
-    </div>
-		`;
-
+			`;
 		}
 
-		
-	}
-	$("#listadocoach").html(html);
+		$(".listadoele").html(html);
 }
 
 function EliminarCoach(posicion) {
@@ -3015,7 +3123,7 @@ function GuardarservicioNuevo2() {
 	 
 }
 //si es avanzado utiliza esta funcion Guardarservicio avanzado
-function Guardarservicio()
+/*function Guardarservicio()
 {
 
 
@@ -3084,12 +3192,215 @@ function Guardarservicio()
           verticalButtons: false,
         }).open();
 
+}*/
+
+
+function Guardarservicio()
+{
+
+
+ var html=`
+         
+              <div class="">
+
+                <div class="row" style="padding-top:1em;">
+                <span>¿Seguro que desea realizar la operación?</span>
+                </div>
+              </div>
+           
+         
+        `;
+       app.dialog.create({
+          title: '',
+          //text: 'Dialog with vertical buttons',
+          content:html,
+          buttons: [
+            {
+              text: 'NO',
+            },
+            {
+              text: 'SI',
+            },
+            
+          ],
+
+           onClick: function (dialog, index) {
+            if(index === 0){
+             
+          }
+          else if(index === 1){
+          	//if (Validacion()==1) {
+          	//var habilitarhorarios=	localStorage.getItem('habilitarhorarios');
+
+          	//if (habilitarhorarios==1) {
+
+          		//if (arraydiaselegidos.length>0) {
+          		
+          			GuardarservicioNuevoCoach();
+          		
+          		/*}else{
+          		  
+          		  alerta('Falta agregar horarios al servicio','');
+
+          		}*/
+	          	/*}else{
+
+	          			GuardarservicioNuevo();
+
+	          	}*/
+          		
+
+          	}
+          
+
+
+
+        },
+          verticalButtons: false,
+        }).open();
+
 }
 
 function LimpiarVariableHorarios() {
 	 arraydiaselegidos=[];
  	arraydiaseleccionados=[];
 
+}
+
+
+function GuardarservicioNuevoCoach() {
+				$(".lbltitulo").html('');
+				$(".lblnivel").html('');
+				$(".lbldias").html('');
+				$(".lblhorarios").html('');
+				$(".lblfechainicial").html('');
+				$(".lblfechafinal").html('');
+		var imagenessucursal=localStorage.getItem('fotoimagenservicio');
+
+		var id=$("#id").val();
+		var costo=$("#v_costo").val();
+		var v_titulo=$("#v_titulo").val();
+		var idsubsubcategoria=$("#listadosubcategorias").val();
+		var estatus=$("#v_estatus").is(':checked')?1:0;
+		var v_dias=$("#v_dias").val();
+		var v_horarios=$("#v_horarios").val();
+		var v_fechainicial=$("#v_fechainicial").val();
+		var v_fechafinal=$("#v_fechafinal").val();
+		var idsubcategoria=localStorage.getItem('idsubcategoria');
+		var idtiposervicioconfiguracion=localStorage.getItem('idtiposervicioconfiguracion');
+		var iduser=localStorage.getItem('id_user');
+		var tipousuario=localStorage.getItem('idtipousuario');
+		var datos="costo="+costo+"&v_titulo="+v_titulo+"&idsubsubcategoria="+idsubsubcategoria+"&idsubcategoria="+idsubcategoria+"&idtiposervicioconfiguracion="+idtiposervicioconfiguracion+"&v_horarios="+v_horarios;
+		datos+="&v_dias="+v_dias+"&iduser="+iduser+"&id="+id+"&estatus="+estatus+"&tipousuario="+tipousuario+"&imageneservicio="+imagenessucursal;
+		datos+="&v_fechainicial="+v_fechainicial+"&v_fechafinal="+v_fechafinal+"&horariosposibles="+JSON.stringify(arrayfechasguardadas)+"&arraycoachelegidos="+JSON.stringify(arraycoachelegidos);
+
+	var bandera=1;
+
+	if (v_titulo=='') {
+		bandera=0;
+	}
+
+	if (idsubsubcategoria==0 || idsubsubcategoria==null) {
+		bandera=0;
+	}
+
+	/*if (v_dias=='') {
+		bandera=0;
+	}
+
+	if (v_horarios=='') {
+		bandera=0;
+	}
+
+	if (v_fechainicial=='') {
+		bandera=0;
+	}
+	if (v_fechafinal=='') {
+		bandera=0;
+	}*/
+
+console.log('idsubsubcategoria'+idsubsubcategoria);
+
+	if (bandera==1) {
+	 $.ajax({
+					url:urlphp+'GuardarservicioNuevoCoach.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos
+					data: datos, //Le pasamos el objeto que creamos con los archivos	
+					dataType:'json',
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+					  }, 
+					success:function(msj){
+						var resp = msj.respuesta;
+
+
+								if( resp == 1 ){
+								alerta('','Se realizó el registro correctamente');
+						 		arrayfechasguardadas=[];
+								arraydiaselegidos=[];
+								arraydiaseleccionados=[];
+								asignacionperiodos=[];
+								asignacioncoach=[];
+								localStorage.setItem('fotoimagenservicio','');
+
+									if (localStorage.getItem('idtipousuario')==0) {
+										GoToPage('homeadmin');
+									
+									}
+									if(localStorage.getItem('idtipousuario')==5) {
+										
+										GoToPage('homecoach');
+									}
+						 	 }else{
+									alerta('','Error.Intente nuevamente');
+
+						  	}
+								
+					  	}
+				  });	
+	}else{
+
+			if (v_titulo=='') {
+					$(".lbltitulo").html('campo requerido');
+				}
+
+				if (idsubsubcategoria==0 || idsubsubcategoria==null) {
+					bandera=0;
+					$(".lblnivel").html('campo requerido');
+
+				}
+
+				/*if (v_dias=='') {
+					bandera=0;
+					$(".lbldias").html('campo requerido');
+
+				}
+
+				if (v_horarios=='') {
+					bandera=0;
+
+				$(".lblhorarios").html('campo requerido');
+
+				}
+
+				if (v_fechainicial=='') {
+					bandera=0;
+					$(".lblfechainicial").html('campo requerido');
+
+				}
+				if (v_fechafinal=='') {
+					bandera=0;
+
+					$(".lblfechafinal").html('campo requerido');
+
+				}*/
+
+	}
 }
 	/*if(confirm("\u00BFDesea realizar esta operaci\u00f3n?"))
 	{	
@@ -4037,7 +4348,7 @@ function Colocardescripcion() {
 
 function Validacion() {
 	var titulo=$("#v_titulo").val();
-	var descripcion=$("#v_descripcion").val();
+	//var descripcion=$("#v_descripcion").val();
 	var categoria=$("#v_categoria").val();
 	var orden=$("#v_orden");
 	var estatus=$("#v_estatus").val();
@@ -4067,12 +4378,12 @@ var bandera=1;
 		bandera=0;
 		$(".lititulo").addClass('requerido');
 	}
-	if (descripcion=='') {
+	/*if (descripcion=='') {
 		bandera=0;
 		$(".lidescripcion").addClass('requerido');
 
-	}
-	if (categoria==0) {
+	}*/
+	/*if (categoria==0) {
 		bandera=0;
 		$(".litiposervicio").addClass('requerido');
 
@@ -4082,22 +4393,22 @@ var bandera=1;
 		bandera=0;
 			$(".liorden").addClass('requerido');
 
-	}
-	if (estatus=='') {
+	}*/
+	/*if (estatus=='') {
 		bandera=0;
-	}
+	}*/
 	var contardias=0;
-	if (avanzado==1) {
+	//if (avanzado==1) {
 
 		var v_categoriaservicio=$("#v_categoriaservicio").val();
-		if (v_categoriaservicio==0) {
+		/*if (v_categoriaservicio==0) {
 			bandera=0;
 			$(".licategoria").addClass('requerido');
 
 		}
+*/
 
-
-		if($("#Domingo").is(':checked')){
+		/*if($("#Domingo").is(':checked')){
 
 		 contardias++;
 		}
@@ -4124,9 +4435,9 @@ var bandera=1;
 		 if($("#Sabado").is(':checked')){
 
 		 contardias++;
-		}	
-
-		if (contardias==0) {
+		}	*/
+		var horarios=$("#v_horarios").val();
+		if (horarios!='') {
 			bandera=0;
 			$(".liseleccionardias").addClass('requerido');
 
@@ -4147,13 +4458,13 @@ var bandera=1;
 
 		}
 
-		if (localStorage.getItem('habilitarhorarios')==1) {
+		/*if (localStorage.getItem('habilitarhorarios')==1) {
 				if(arraydiaseleccionados.length==0){
 				bandera=0;
 			$(".liseleccionafechas").addClass('requerido2');
 
 			}
-		}
+		}*/
 
 		
 
@@ -4169,24 +4480,24 @@ var bandera=1;
 
 			}
 
-			if (asignacionperiodos.length==0) {
+			/*if (asignacionperiodos.length==0) {
 				bandera=0;
 			  $(".liperiodosdecobro").addClass('requerido2');
-			}
+			}*/
 
-			var modalidad=0;
+			/*var modalidad=0;
 			  if(document.querySelector('input[name="v_grupo"]:checked')) { 
 			     	modalidad=$('input[name="v_grupo"]:checked').val();
-			     }
+			     }*/
 
-			if (modalidad==0) {
+		/*	if (modalidad==0) {
 				bandera=0;
 				$(".limonto").addClass('requerido2');
-			}
+			}*/
 
 			var numeroparticipantesmin=$("#v_numparticipantesmin").val();
 			var numeroparticipantesmax=$("#v_numparticipantesmax").val();
-			if ( numeroparticipantesmin=='') {
+		/*	if ( numeroparticipantesmin=='') {
 				bandera=0;
 				
 				$(".linumparticipantesmin").addClass('requerido');
@@ -4196,18 +4507,18 @@ var bandera=1;
 				bandera=0;
 				$(".linumparticipantesmax").addClass('requerido');
 
-			}
+			}*/
 
 			var politicasaceptacion=$("#v_politicasaceptacion").val();
-			if (politicasaceptacion == '') {
+			/*if (politicasaceptacion == '') {
 				bandera=0;
 				$(".lidescripcionpoliticas").addClass('requerido');
 				$(".parrafopoliticasaceptacion").addClass('requerido2');
 
-			}
+			}*/
 
 	}
-}
+//}
 
 	/*if (bandera==1) {
 		$("#divflotantea").css('display','block');
@@ -4688,18 +4999,18 @@ var pagina = "Obtenerdatospersonales.php";
 		data:datos,
 		success: function(datos){
 
-			var resp=datos.respuesta.habilitarhorarios;
-			if (resp==1) {
+			//var resp=datos.respuesta.habilitarhorarios;
+		//	if (resp==1) {
   $("#btnaplicar").attr('onclick','AplicarFechas()');
-  $(".contadorhorarios").css('display','block');
-  $(".divseleccionarhorarios").css('display','block');
-		 	}else{
+  //$(".contadorhorarios").css('display','block');
+  //$(".divseleccionarhorarios").css('display','block');
+		 //	}else{
 
-  $("#btnaplicar").attr('onclick','AplicarSeleccion()');
-  $(".contadorhorarios").css('display','none');
-  $(".divseleccionarhorarios").css('display','none');
+  //$("#btnaplicar").attr('onclick','AplicarSeleccion()');
+  //$(".contadorhorarios").css('display','none');
+ // $(".divseleccionarhorarios").css('display','none');
 
-			}
+		//	}
 
 		localStorage.setItem('habilitarhorarios',resp);
 
@@ -4952,4 +5263,405 @@ function compararHoras(horaA, horaB) {
   } else {
     return 0;
   }
+}
+
+
+
+function ObtenerConfiguracionCoachSubcategoria(idtiposervicioconfiguracion,idsubcategoria,nombresubcategoria,costo) {
+
+
+	
+	
+ObtenerConfiguracionSubcategoria(idtiposervicioconfiguracion, idsubcategoria)
+    .then(function(respuesta) {
+        // Hacer algo con la respuesta si es exitosa
+        console.log('return promesa');
+
+        console.log(respuesta);
+        localStorage.setItem('idtiposervicioconfiguracion',idtiposervicioconfiguracion);
+        localStorage.setItem('idsubcategoria',idsubcategoria);
+        ObtenerSubsubcategorias(idsubcategoria);
+        var tiposervicio=respuesta.tiposervicio[0];
+        var precio=0;
+        if (costo!=0) {
+           precio=costo;
+        }else{
+
+           precio=tiposervicio.precio;
+        }
+        
+        
+        $("#v_costo").val('$'+precio);
+        $("#licategorias").css('display','none');
+        $("#lisubcategorias").css('display','none');
+        $("#txtcategoria").html(nombresubcategoria);
+        $("#v_descripcion").css('display','none');
+        $(".lidescripcion").css('display','none');
+        $("#costos-tab").css('display','block');
+        $("#profile-tab").css('display','block');
+        $("#v_costo").addClass('input-focused"');
+        $(".classli").addClass('item-input-focused');
+        $(".lisubcategoriasli").css('display','block');
+        $("#v_costo").prop('disabled','disabled');
+        
+    })
+    .catch(function(error) {
+        // Manejar el error si la promesa es rechazada
+        console.error(error);
+    });
+
+}
+
+
+function AbrirModalCoaches() {
+	
+
+	var aviso="Elegir coach";
+  var parrafo="<p class='cambiarfuente' style='font-size:30px;line-height:1;'>"+aviso+"</p>";
+   
+  var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height:90%;background: white;">
+            
+            <div class="sheet-modal-inner" style="background: white;border-top-left-radius: 20px;border-top-right-radius:20px; ">
+               <div class="iconocerrar link sheet-close" style="z-index:10;">
+               <svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M25.5188 4.48126C23.4385 2.4011 20.788 0.984547 17.9026 0.410715C15.0171 -0.163118 12.0264 0.131546 9.30839 1.25744C6.59043 2.38334 4.26736 4.28991 2.63294 6.73606C0.998525 9.18221 0.12616 12.0581 0.12616 15C0.12616 17.9419 0.998525 20.8178 2.63294 23.264C4.26736 25.7101 6.59043 27.6167 9.30839 28.7426C12.0264 29.8685 15.0171 30.1631 17.9026 29.5893C20.788 29.0155 23.4385 27.5989 25.5188 25.5188C26.9003 24.1375 27.9961 22.4976 28.7437 20.6928C29.4914 18.888 29.8762 16.9535 29.8762 15C29.8762 13.0465 29.4914 11.1121 28.7437 9.30724C27.9961 7.50242 26.9003 5.86255 25.5188 4.48126ZM20.3126 18.7613C20.4187 18.8606 20.5034 18.9808 20.5612 19.1142C20.6191 19.2476 20.6489 19.3915 20.6489 19.5369C20.6489 19.6823 20.6191 19.8262 20.5612 19.9596C20.5034 20.093 20.4187 20.2131 20.3126 20.3125C20.2133 20.411 20.0956 20.4889 19.9661 20.5418C19.8367 20.5946 19.698 20.6214 19.5582 20.6206C19.2795 20.6195 19.0124 20.5088 18.8145 20.3125L15.0001 16.4981L11.2388 20.3125C11.0409 20.5088 10.7738 20.6195 10.4951 20.6206C10.3553 20.6214 10.2166 20.5946 10.0872 20.5418C9.95773 20.4889 9.83999 20.411 9.74071 20.3125C9.54282 20.1134 9.43174 19.8441 9.43174 19.5634C9.43174 19.2827 9.54282 19.0135 9.74071 18.8144L13.502 15L9.74071 11.2388C9.56665 11.0355 9.47569 10.774 9.48602 10.5066C9.49635 10.2392 9.6072 9.98557 9.79642 9.79635C9.98565 9.60712 10.2393 9.49627 10.5067 9.48594C10.7741 9.47561 11.0356 9.56657 11.2388 9.74063L15.0001 13.5019L18.7613 9.74063C18.8597 9.63878 18.9772 9.55729 19.107 9.50083C19.2369 9.44437 19.3766 9.41404 19.5182 9.41158C19.6598 9.40911 19.8004 9.43456 19.9322 9.48646C20.0639 9.53836 20.1842 9.6157 20.286 9.71407C20.3879 9.81244 20.4694 9.9299 20.5258 10.0598C20.5823 10.1896 20.6126 10.3293 20.6151 10.4709C20.6175 10.6125 20.5921 10.7532 20.5402 10.8849C20.4883 11.0167 20.411 11.1369 20.3126 11.2388L16.4982 15L20.3126 18.7613Z" fill="#AAAAAA"></path>
+            </svg>
+                       </div>
+              <div class="page-content" style="height: 100%;">
+                <div style="background: white; height: 100%;width: 100%;border-radius: 20px;">
+                   <div class="row">
+                     <div class="col-20">
+                        
+                    </div>
+
+                     <div class="col-60">
+                     <span class="titulomodal cambiarfuente" style="font-size: 20px;
+    text-align: center;font-weight: 600;color: #c7aa6a;"></span>
+                     </div>
+                     <div class="col-20">
+                     <span class="limpiarfiltros"></span>
+                     </div>
+                 </div>
+                 <div class="" style="position: absolute;top:1em;width: 100%;">
+                
+                       
+                        `;
+                      
+
+                          html+=`
+                          <div class="row" style="    margin-left: 2em; margin-right: 2em;margin-top: 20px;">
+                          <div class="col-100">
+                          <div style="color: #c7aa6a;font-size: 30px;text-align: center;" class="cambiarfuente">
+                           
+
+                            </div>
+                          </div>
+
+                          </div>`;
+
+                          html+=`
+                            <div class="row margin-bottom " style="padding-top: 1em;margin-right: 2em;margin-top:20px;">
+                            <div class="col-100" style="">
+                            <div class="listadocoach"></div>
+                            </div>
+                             <div class="col-50" style="">
+                            </div>
+                          
+                          </div>
+                          `;
+
+                      
+                         html+=` </div>
+
+                         
+
+
+                      </div>
+
+                  </div>
+
+                </div>
+                
+              </div>
+            </div>
+          </div>`;
+          /*<p><button class="button color-theme btncortesias" id="cortesia_`+respuesta[i].idcortesia+`" onclick="ElegirCortesia(`+idcarrito+`,`+respuesta[i].idcortesia+`)" style="background: white;color:black;padding: 10px 20px;">
+                                        Elegir
+                                       </button>
+                                     </p>*/
+    dynamicSheet1 = app.sheet.create({
+        content: html,
+
+      swipeToClose: true,
+        backdrop: true,
+        // Events
+        on: {
+          open: function (sheet) {
+
+           //cargar coaches
+          	ObtenerservicioCoach();
+          },
+          opened: function (sheet) {
+            console.log('Sheet opened');
+
+           
+          },
+
+          close: function (sheet) {
+            console.log('Sheet close');
+
+            CargarCoachElegidos();
+           
+          },
+        }
+      });
+
+
+       dynamicSheet1.open();
+}
+
+
+function ObtenerservicioCoach(argument) {
+		
+	var listadotipoconfiguracion=$("#listadotipoconfiguracion").val();
+	var listadotipocategoria=$("#listadotipocategoria").val();
+	var datos="listadotipoconfiguracion="+listadotipoconfiguracion+"&listadotipocategoria="+listadotipocategoria;
+
+	$.ajax({
+					url:urlphp+'ObtenerCoachesNuevo.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					dataType:'json',
+					data:datos,
+					async:false,
+				
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+
+						var respuesta=msj.respuesta;
+						PintarCoachesNuevo(respuesta);
+						
+			
+					}
+				});
+}
+arraycoachelegidos=[];
+function PintarCoachesNuevo(respuesta) {
+		var html="";
+		if (respuesta.length>0) {
+
+			html+=`
+				 <div class="list media-list list-outline-ios list-strong-ios list-dividers-ios">
+     		 <ul>
+			`;
+			for (var i = 0; i < respuesta.length; i++) {
+				
+					if (!BuscarEnarrayCoach(respuesta[i].idusuarios)) {
+
+					
+
+				if (respuesta[i].nombresubcategoria==null) {
+					respuesta[i].nombresubcategoria='';
+				}
+
+				if (respuesta[i].costo==null) {
+					respuesta[i].costo=0;
+				}
+
+				var nombre=respuesta[i].nombre+` `+respuesta[i].paterno;
+      html+=`
+      	<li>
+          <a class="item-link item-content" onclick="ElegirCoach(`+respuesta[i].idusuarios+`,'`+nombre+`',`+respuesta[i].idtiposervicioconfiguracion+`,`+respuesta[i].idsubcategoria+`,'`+respuesta[i].nombresubcategoria+`','`+respuesta[i].costo+`')">
+            <div class="item-inner">
+              <div class="item-title-row">
+                <div class="item-title">`+respuesta[i].nombre+` `+respuesta[i].paterno+`</div>
+                <div class="item-after"></div>
+              </div>
+              <div class="item-subtitle">`+respuesta[i].nombresubcategoria+`</div>
+              <div class="item-text"></div>
+            </div>
+          </a>
+        </li>
+
+      `;
+
+      	}
+
+			}
+			html+=`
+				 </ul>
+   		 </div>
+
+			`;
+
+		}
+
+		$(".listadocoach").html(html);
+}
+
+function ElegirCoach(idusuarios,nombre,idtiposervicioconfiguracion,idsubcategoria,nombresubcategoria,costo) {
+	
+	var objeto={
+		idusuarios:idusuarios,
+		nombre:nombre,
+		idtiposervicioconfiguracion:idtiposervicioconfiguracion,
+		idsubcategoria:idsubcategoria,
+		nombresubcategoria:nombresubcategoria,
+		costo:costo
+	};
+
+	arraycoachelegidos.push(objeto);
+
+	dynamicSheet1.close();
+
+
+}
+
+function CargarCoachElegidos() {
+	var html=``;
+	$(".listadoele").html('');
+		if (arraycoachelegidos.length>0) {
+
+				html+=`
+				 <div class="list media-list list-outline-ios list-strong-ios list-dividers-ios">
+     		 <ul>
+			`;
+		for (var i = 0; i < arraycoachelegidos.length; i++) {
+  html += `
+    <li>
+      <span class="item-link item-content" onclick="event.stopPropagation()">
+        <div class="item-inner">
+          <div class="row">
+            <div class="col" style="font-weight: bold;">${arraycoachelegidos[i].nombre}</div>
+            <div class="col">
+              <div style="display: inline-block;padding: 5px 10px; margin-left: 10px;"></div>
+              <span style="
+                display: inline-block;
+                background: red;
+                color: white;
+                padding: 5px 10px;
+                border-radius: 20px;
+                margin-left: 10px;
+                cursor: pointer;
+              " onclick="EliminarCoach(`+arraycoachelegidos[i].idusuarios+`)">Eliminar</span>
+            </div>
+          </div>
+          <div class="item-subtitle">${arraycoachelegidos[i].nombresubcategoria}</div>
+          <div class="item-text"></div>
+        </div>
+      </span>
+    </li>
+  `;
+}
+
+			html+=`
+				</ul>
+			<div>
+
+			`;
+		}
+
+		$(".listadoele").html(html);
+
+
+				if (arraycoachelegidos.length>0) {
+
+
+					var cantidad=arraycoachelegidos.length;
+					ultimo=arraycoachelegidos[cantidad-1];
+					console.log(ultimo);
+					idtiposervicioconfiguracion=ultimo.idtiposervicioconfiguracion;
+					idsubcategoria=ultimo.idsubcategoria;
+					costo=ultimo.costo;
+					nombresubcategoria=ultimo.nombresubcategoria;
+		ObtenerConfiguracionSubcategoria(idtiposervicioconfiguracion, idsubcategoria)
+    .then(function(respuesta) {
+        // Hacer algo con la respuesta si es exitosa
+        console.log('return promesa');
+
+        console.log(respuesta);
+        localStorage.setItem('idtiposervicioconfiguracion',idtiposervicioconfiguracion);
+        localStorage.setItem('idsubcategoria',idsubcategoria);
+        ObtenerSubsubcategorias(idsubcategoria);
+        var tiposervicio=respuesta.tiposervicio[0];
+        var precio=0;
+        if (costo!=0) {
+           precio=costo;
+        }else{
+
+           precio=tiposervicio.precio;
+        }
+        
+        
+        $("#v_costo").val('$'+precio);
+        $("#licategorias").css('display','none');
+        $("#lisubcategorias").css('display','none');
+        $("#txtcategoria").html(nombresubcategoria);
+        $("#v_descripcion").css('display','none');
+        $(".lidescripcion").css('display','none');
+        $("#costos-tab").css('display','block');
+        $("#profile-tab").css('display','block');
+        $("#v_costo").addClass('input-focused"');
+        $(".classli").addClass('item-input-focused');
+        $(".lisubcategoriasli").css('display','block');
+        $("#v_costo").prop('disabled','disabled');
+        
+    })
+    .catch(function(error) {
+        // Manejar el error si la promesa es rechazada
+        console.error(error);
+    });
+
+
+				}
+
+
+}
+
+function EliminarCoach(idusuario){
+	
+
+	  app.dialog.confirm('','¿Seguro de eliminar el elemento?', function () {
+
+		for (var i =0; i < arraycoachelegidos.length; i++) {
+			
+				if (idusuario==arraycoachelegidos[i].idusuarios) {
+					arraycoachelegidos.splice(i,1);
+
+					CargarCoachElegidos();
+					return 0;
+				}
+		}
+
+
+	});
+		
+
+
+}
+
+
+function BuscarEnarrayCoach(idusuario) {
+		var encontrado=0;
+
+		if (arraycoachelegidos.length>0) {
+		for (var i =0; i < arraycoachelegidos.length; i++) {
+				if (idusuario==arraycoachelegidos[i].idusuarios) {
+					arraydiaselegidos.splice(i,1);
+					encontrado=1;
+					return encontrado;
+				}
+		}
+	}
+
+		if (encontrado==0) {
+
+			return 0;
+		}
+
 }

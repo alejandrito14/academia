@@ -63,7 +63,9 @@ class Tipocoach
 	
 	public function Guardartipocoach()
 	{
-		$query="INSERT INTO tipocoach (tipocoach,estatus) VALUES ('$this->nombre','$this->estatus')";
+		$query="INSERT INTO tipocoach (nombre,estatus,tipocomision,monto,costo) VALUES ('$this->nombre','$this->estatus','$this->tipocomision','$this->monto','$this->costo')";
+
+
 		
 		$resp=$this->db->consulta($query);
 		$this->idtipocoach = $this->db->id_ultimo();
@@ -73,10 +75,14 @@ class Tipocoach
 	//funcion para modificar los usuarios
 	public function Modificartipocoach()
 	{
-		$query="UPDATE tipocoach SET tipocoach='$this->nombre',
-		estatus='$this->estatus'
+		$query="UPDATE tipocoach SET 
+		nombre='$this->nombre',
+		estatus='$this->estatus',
+		tipocomision='$this->tipocomision',
+		monto='$this->monto',
+		costo='$this->costo'
 		WHERE idtipocoach=$this->idtipocoach";
-
+		
 		$resp=$this->db->consulta($query);
 	}
 	
@@ -92,13 +98,7 @@ class Tipocoach
 		return $resp;
 	}
 
-	public function VerificarRelaciontipocoach()
-	{
-		$query="SELECT * FROM tipocoach_deporte WHERE idtipocoach=".$this->idtipocoach;
-		$resp=$this->db->consulta($query);
-		//echo $total;
-		return $resp;
-	}
+
 
 	public function Borrartipocoach()
 	{
@@ -133,7 +133,8 @@ class Tipocoach
 
 	public function ObtenerTipoMontoCoach()
 	{
-		$query="SELECT
+		try {
+			$query="SELECT
 			usuarios.idusuarios,
 			usuarios.nombre,
 			usuarios.paterno,
@@ -165,10 +166,22 @@ class Tipocoach
 			} 
 		}
 		return $array;
+			
+		} catch (Exception $e) {
+			echo $e;
+		}
+
+		
 	}
 
 	
-
+	public function VerificarRelacionTipoCoach()
+	{
+		$query="SELECT * FROM usuarios WHERE idtipocoach=".$this->idtipocoach;
+		$resp=$this->db->consulta($query);
+		
+		return $resp;
+	}
 }
 
 ?>

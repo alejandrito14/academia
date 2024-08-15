@@ -36,7 +36,7 @@ class WhatsapMensaje
     "to": "'.$this->tophone.'",
     "type": "template",
     "template": {
-        "name": "enviotoken",
+        "name": "gopadel",
         "language": {
             "code": "es_MX"
         },

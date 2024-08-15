@@ -877,6 +877,80 @@ class Clientes
 		return $array;
 	}
 
+
+	public function ObtenerParticipantesCoach2($idtipo)
+	{
+		$sql="SELECT *FROM usuarios 
+		 WHERE  tipo='$idtipo' and estatus=1 ";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function ObtenerParticipantesCoach2Tiposervicios($idtipo,$idtiposervicio)
+	{
+
+		$sql="SELECT GROUP_CONCAT(idcategorias) AS categoriasid FROM categorias WHERE depende IN ($idtiposervicio) OR idcategorias IN ($idtiposervicio)";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		$idcategorias=$array[0]->categoriasid;
+
+		
+		$sql2="SELECT
+		*
+		FROM
+		servicios
+		JOIN usuarios_servicios
+		ON servicios.idservicio = usuarios_servicios.idservicio
+		LEFT JOIN usuarios ON
+		usuarios.idusuarios=usuarios_servicios.idusuarios WHERE usuarios.tipo=$idtipo AND servicios.idcategoriaservicio IN($idcategorias) GROUP BY usuarios.idusuarios ";
+		
+		$resp2=$this->db->consulta($sql2);
+		$cont2 = $this->db->num_rows($resp2);
+
+
+		$array2=array();
+		$contador2=0;
+		if ($cont2>0) {
+
+			while ($objeto2=$this->db->fetch_object($resp2)) {
+
+				$array2[$contador2]=$objeto2;
+				$contador2++;
+			} 
+		}
+		
+		return $array2;
+	}
+
 	
 }
 ?>

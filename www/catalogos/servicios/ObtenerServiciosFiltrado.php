@@ -7,7 +7,8 @@ $se = new Sesion();
 
 if(!isset($_SESSION['se_SAS']))
 {
-	/*header("Location: ../../login.php"); */ echo "login";
+	/*header("Location: ../../login.php"); */ 
+	echo "login";
 
 	exit;
 }
@@ -44,16 +45,44 @@ try
 	$mes=$_POST['v_meses'];
 	$anio=$_POST['v_anios'];
 	$v_buscar=$_POST['v_buscar'];
+	$categoriasid="";
+	if ($tiposervicio!=0) {
+		// code...
+	
+	$obtenercategoriasdepende=$categorias->ObtenerCategoriasGroupEstatusDepende($tiposervicio);
+
+	
+	$categoriasid=$obtenercategoriasdepende[0]->categoriasid;
+	
+
+	/*if ($categoriasid==null) {
+		$categoriasid=$tiposervicio;
+	}*/
+}
+
 
 
 $estatus=array('DESACTIVADO','ACTIVADO');
 
 
-	$obtener=$lo->ObtenerServiciosFiltrado($tiposervicio,$coach,$mes,$anio,$v_buscar);
+	$obtener=$lo->ObtenerServiciosFiltrado($categoriasid,$coach,$mes,$anio,$v_buscar);
 
 	if (count($obtener)>0) {
 		for ($i=0; $i <count($obtener) ; $i++) { 
 			$avanzado=0;
+			$obtener[$i]->montoservicio=0;
+			$cantidadh =$obtener[$i]->cantidadhorarios;
+			$precio=$obtener[$i]->precio;
+
+			if ($obtener[$i]->modalidad==1) {
+				$obtener[$i]->montoservicio=$precio*$obtener[$i]->integrantesasignados;
+			}
+
+			if ($obtener[$i]->modalidad==2) {
+				$obtener[$i]->montoservicio=$precio*$cantidadh;
+			}
+
+
 			if ($obtener[$i]->idcategorias!='' && $obtener[$i]->idcategorias!=0) {
 				$idcategoria=$obtener[$i]->idcategorias;
 				$categorias->idcategoria=$idcategoria;

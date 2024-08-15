@@ -29,7 +29,7 @@ $rpt->db = $db;
 
 
 // Consultas
-$l_reportes = $rpt->Lista_reportes();
+$l_reportes = $rpt->Lista_reportesante();
 $l_reportes_row = $db->fetch_assoc($l_reportes);
 $l_reportes_num = $db->num_rows($l_reportes);
 
@@ -100,7 +100,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				<div class="row">
 					<div class="form-group col-md-6">
 						<label for="exampleInputEmail1">LISTA DE REPORTES</label>
-						<select name="v_id_reportes" id="v_id_reportes" class="form-control"  onchange="CargarFiltrosreportes($(this).val())">
+						<select name="v_id_reportes" id="v_id_reportes" class="form-control"  onchange="CargarFiltrosreportesAnte($(this).val())">
 							  <option value="0">ESCOGER REPORTE</option>
 
 							<?php 
@@ -130,7 +130,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				</div>
 				<div class="row" >
 				  <div class="col-md-6" id="tiposervicios" style="display: none;">
-
+ 
 				  	<div class="form-group m-t-20">
 				  	<label>CATEGORÍAS</label>
 				  	<select id="v_tiposervicios" class="form-control" multiple="multiple" style="width: 100%;">
@@ -141,11 +141,48 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				</div>
 
 				<div class="row" >
+				  <div class="col-md-6" id="divcategoriapadre" style="display: none;">
+
+				  	<div class="form-group m-t-20">
+				  	<label>CATEGORÍAS</label>
+				  	<select id="v_categoriapadre" class="form-control" multiple="multiple" style="width: 100%;">
+				  		
+				  	</select>
+				   	</div>
+				  </div>
+				</div>  
+
+				<div class="row" >
 				  <div class="col-md-6" id="tiposervicios2" style="display: none;">
 
 				  	<div class="form-group m-t-20">
 				  	<label>CATEGORÍAS DEPENDIENTES</label>
 				  	<select id="v_tiposervicios2" class="form-control" multiple="multiple" style="width: 100%;">
+				  		
+				  	</select>
+				   	</div>
+				  </div>
+				</div>  
+
+					<div class="row" >
+				  <div class="col-md-6" id="tsubcategorias" style="display: none;">
+
+				  	<div class="form-group m-t-20">
+				  	<label>CATEGORÍAS SUBCATEGORÍAS</label>
+				  	<select id="v_subcategorias" class="form-control" multiple="multiple" style="width: 100%;">
+				  		
+				  	</select>
+				   	</div>
+				  </div>
+				</div> 
+
+
+				<div class="row" >
+				  <div class="col-md-6" id="tsubsubcategorias" style="display: none;">
+
+				  	<div class="form-group m-t-20">
+				  	<label>CATEGORÍAS SUB SUBCATEGORÍAS</label>
+				  	<select id="v_subsubcategorias" class="form-control" multiple="multiple" style="width: 100%;">
 				  		
 				  	</select>
 				   	</div>
@@ -334,7 +371,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 					<div class="col-md-6" id="">
 					
 						
-						<button style="display: none;    float: right;" id="btngenerar" class="btn btn-primary" onclick="">GENERAR REPORTE</button>
+						<button style="display: none;    float: right;" id="btngenerar" class="btn btn-primary btngenerarreporte" onclick="">GENERAR REPORTE</button>
 
 					</div>
 
@@ -355,7 +392,16 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 		 </div>
 
 		 	
-
+<div class="modal" id="modalCargando" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <!-- Contenido del modal aquí -->
+      <div class="modal-body">
+        <div id="mainc"></div>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 		 <style type="text/css">
@@ -370,9 +416,18 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				.SumoSelect .select-all{
 					height: 40px!important;
 				}
+
+
+				.vertabla{
+					  overflow: scroll;
+					  width: 100%;
+					  max-width: 1000px;
+					  overflow-x: auto;
+				}
 		 </style>
 
 
+<script src="js/fn_reportesanteriores.js"></script>
 
 <!--  Funcion para llenar el list de sucursales dependiendo el id de empresa  -->
 <script type="text/javascript">

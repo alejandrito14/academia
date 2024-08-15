@@ -11,7 +11,7 @@ if(!isset($_SESSION['se_SAS']))
 
 	exit;
 }
-
+ 
 /*======================= TERMINA VALIDACIÓN DE SESIÓN =========================*/
 
 //Importamos las clases que vamos a utilizar

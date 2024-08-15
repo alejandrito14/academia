@@ -14,6 +14,7 @@ require_once("clases/emails/class.Emails.php");*/
 require_once "clases/class.AltiriaSMS.php";
 
 require_once "clases/class.WhatsapMensaje.php";
+require_once "clases/class.PagConfig.php";
 
 try
 {

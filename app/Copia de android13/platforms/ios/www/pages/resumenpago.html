@@ -1,0 +1,324 @@
+<template>
+<div class="page " data-name="resumenpago">
+  <div class="navbar">
+    <div class="navbar-bg"></div>
+    <div class="navbar-inner">
+      <div class="left">
+        <!--  <a class="button button-fill text-color-theme bg-color-white button-44 regreso" >
+          <i class="bi bi-arrow-left"></i>
+        </a> -->
+      </div>
+      <div class="title">
+        <div class="logo-small">
+     
+          <h5>Resumen de pago</h5>
+        </div> 
+      </div>
+      <div class="right">
+       <!--  <a href="/profile/" class="button button-fill text-color-theme bg-color-white button-44">
+          <i class="bi bi-bell"></i>
+        </a> -->
+      </div>
+    </div>
+  </div>
+
+
+  <div class="fab fab-left-bottom  " style="bottom: 4em; ">
+    <a class="btnregreso regreso"  style="">
+     <i class="bi bi-arrow-left" style=""></i>
+    </a>
+  </div>
+  <!-- main page content -->
+  <div class="page-content" style="overflow: scroll;">
+    <!-- banner -->
+ 
+
+   
+    <div class="row">
+      
+
+      <div class="list media-list no-margin" style="background: white;    padding-left: 0;
+    padding-right: 0;">
+           <ul class="listadopagoselegidos" style="list-style: none;padding: 0;">
+      
+              </ul>
+           </div>
+           <div >
+           
+             
+          </div>
+      </div>
+
+      <!-- <div class="row">
+        <div class="list media-list no-margin" style="background: white;">
+            <ul class="cupon" style="list-style: none;">
+              <li>
+                    <div class="row">
+                        <div class="col-50" style="padding: 0">
+                            <p class="text-muted small" style="font-size:18px;" id="">
+                             Monedero
+                            </p>
+
+                             <p class="text-muted " style="font-size:30px;text-align:right;">$0.00</p>
+                        </div>
+                        <div class="col-50">
+                        <span class="chip color-green" style="
+                                height: 40px;
+                                justify-content: center;
+                                display: flex;
+                                margin-right: 1em;
+                                margin-left: 1em;"><span class="chip-label">Aplicar</span></span>
+
+                        </div>
+                    </div>
+                 </li>
+
+                  
+
+            </ul>
+           </div>
+           <div >
+          </div>
+      </div> -->
+
+<div class="divmonedero row">
+        <div class="list media-list no-margin" style="background: white;">
+            <ul class="cupon" style="list-style: none;">
+             <li class="list-item" style="display: none;">
+                    <div class="row">
+                        <div class="col-80" style="padding: 0;">
+                            <p class="text-muted small" style="font-size:18px;" id="">
+                             Monedero
+                            </p>
+                             <p class="text-muted " style="font-size:30px;text-align:right;">$<span class="monedero">0.00</span></p>
+
+                        </div>
+                        <div class="col-20">
+                          <span class="chip color-green btnmonedero" 
+                          id="" style="
+                                height: 30px;
+                                /*justify-content: center;
+                                display: flex;
+                                margin-right: 1em;
+                                margin-left: 1em;*/top: 3em;"><span class="chip-label">Aplicar</span></span>
+                        </div>
+                    </div>
+                 </li>
+                  
+
+            </ul>
+           </div>
+           <div >
+          </div>
+      </div>
+
+
+       <div class="divcupones row" style="display: none;">
+        <div class="list media-list no-margin" style="background: white;">
+            <ul class="cupon" style="list-style: none;">
+             <li class="list-item">
+                    <div class="row">
+                        <div class="col-80" style="padding: 0;">
+                            <p class="text-muted small" style="font-size:18px;" id="">
+                             Cupón
+                            </p>
+                             <p class="text-muted " style="font-size:30px;text-align:right;">$<span class="cupondescuento">0.00</span></p>
+
+                        </div>
+                        <div class="col-20">
+                          <span class="chip color-green btncupon" style="
+                                height: 30px;
+                                justify-content: center;
+                                display: flex;
+                                margin-right: 1em;
+                                margin-left: 1em;top: 3em;"><span class="chip-label">Aplicar</span></span>
+                        </div>
+                    </div>
+                 </li>
+                  
+
+            </ul>
+           </div>
+           <div >
+          </div>
+      </div>
+
+
+      <!--   <div class="row" style="background: white;height: 60px;">
+        <div class="list media-list no-margin" style="background: white;">
+            <div class="cupon" style="list-style: none;">
+              <li>
+                    <div class="row" style="margin-top: .5em;">
+                        <div class="col-50" style="padding: 0">
+                             <input type="text" placeholder="Código cupón" name="couponcode" class="" style="width: 70%;float: left;" />
+                        </div>
+                        <div class="col-50"><span class="chip color-green" style="
+                                height: 40px;
+                                justify-content: center;
+                                display: flex;
+                                margin-right: 1em;
+                                margin-left: 1em;"><span class="chip-label">Aplicar</span></span></div>
+                    </div>
+                 </li>
+             </div>
+           </div>
+         
+          </div> -->
+     
+      <div id="visualizardescuentos" style="display: none;">
+       <div class="divdescuentos row">
+        <div class="list media-list no-margin" style="background: #46b2e2;">
+            <ul class="descuentos" style="list-style: none;" id="uldescuentos">
+            </ul>
+          </div>
+        </div>
+      </div>
+        
+
+    <div class="row">
+        <div class="list " style="background: #aeb3b7;    padding: 0;
+    margin: 0;">
+            <ul class="cupon" style="list-style: none;padding: 0;">
+             <li class="list-item">
+                    <div class="row" style="    padding-right: 1em;
+    padding-left: 1em;">
+                        <div class="col-80" style="padding: 0;">
+                         <p class="text-muted small" style="font-size:18px;" id="">
+                             Resumen
+                         </p>
+                        </div>
+                         <div class="col-80" style="padding: 0;">
+                             <p class="text-muted " style="font-size:30px;text-align:right;">$<span class="lblresumen">0.00</span></p>
+
+                        </div>
+                       
+                    </div>
+                 </li>
+                  
+            </ul>
+           </div>
+          
+      </div>
+
+      <div class="divcomision">
+      <div class="row">
+        <div class="list " style="background: #aeb3b7;padding: 0;
+    margin: 0;">
+            <ul class="cupon" style="list-style: none;padding: 0;">
+             <li class="list-item">
+                    <div class="row">
+                        <div class="col-80" style="padding: 0;">
+                            <p class="text-muted small" style="font-size:18px;" id="">
+                             Comision
+                            </p>
+                           </div>
+                           <div class="col-80" style="padding: 0;">
+                             <p class="text-muted " style="font-size:30px;text-align:right;">$<span class="lblcomision">0.00</span></p>
+
+                        </div>
+                        <div class="col-20">
+                        
+                        </div>
+                    </div>
+                 </li>
+                  
+            </ul>
+           </div>
+          
+      </div>
+    </div>
+
+      <div class="row">
+        <div class="list" style="background: #aeb3b7;padding: 0;
+    margin: 0;">
+            <ul class="" style="list-style: none;padding: 0;">
+             <li class="list-item">
+                    <div class="row" style="padding-left: 1em;padding-right: 1em;">
+                        <div class="col-80" style="padding: 0;">
+                            <p class="text-muted small" style="font-size:18px;" id="">
+                             Total
+                            </p>
+                         </div>
+                           <div class="col-80" style="padding: 0;">
+                             <p class="text-muted " style="font-size:30px;text-align:right;">$<span class="lbltotal">0.00</span></p>
+
+                        </div>
+                        <div class="col-20">
+                        
+                        </div>
+                    </div>
+                 </li>
+                  
+            </ul>
+           </div>
+          
+      </div>
+
+
+       <div class="row" style="margin-top: 1em;">
+             <div class="col-100">
+          <button type="button" class="button button-fill color-theme button-large button-raised btnpagar" id="btnpagarresumen" >Continuar</button>
+        </div>
+      </div>
+     
+      <!--  <div class="row">
+        <div class="list media-list no-margin" style="background: white;">
+            <ul class="cupon" style="list-style: none;">
+              
+            </ul>
+           </div>
+           <div >
+          </div>
+      </div> -->
+   
+      <!-- <div id="inferior">
+        <div class="block">
+           <div class="row" style="margin-bottom: 1em;">
+         <div class="col-50"> <span style="font-size: 16px;margin-left: .3em;">Total a pagar</span></div>
+        <div class="col-45">
+          <span style="text-align: right;font-size: 16px;font-weight: bold;float: right;">$<span id="cantidad">0</span></span></div>
+
+       </div>
+          <div class="row">
+             <div class="col-100">
+          <button type="button" class="button button-fill color-theme button-large button-raised" id="btnpagar" >Pagar</button>
+        </div>
+           </div>
+        </div>
+      
+
+      </div> -->
+
+    <!-- offers banner -->
+    <!-- <div class="row margin-bottom">
+      <div class="col-100">
+        <div class="card bg-color-green text-color-white text-align-center">
+          <div class="card-content card-content-padding ">
+            <div class="row">
+              <div class="col align-self-center">
+                <h1>12% OFF</h1>
+                <p class="size-12 text-muted">
+                  On every bill pay, launch offer get 5% Extra
+                </p>
+                <div class="tag border-dashed border-opac">
+                  BILLPAY12OFF
+                </div>
+              </div>
+              <div class="col-50 align-self-center no-padding-left">
+                <img src="img/offergraphics-green.png" alt="" class="max-width-100" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
+
+  </div>
+
+
+
+
+
+</div>
+</template>

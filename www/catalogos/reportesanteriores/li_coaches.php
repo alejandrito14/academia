@@ -38,13 +38,14 @@ $rpt->db = $db;
 
 //Realizamos consulta
 
-$coaches=$rpt->ObtenerParticipantesCoach(5);
+$coaches=$rpt->ObtenerParticipantesCoach2(5);
 $resultado_num=count($coaches);
 				if ($resultado_num==0) { ?>
 					
 					<option value="0">NO SE ENCONTRARON REGISTROS</option>
 					
-			<?php	}else{?>
+			<?php	}else{ ?>
+				<option value="0">Sin coach </option>
 
 				
 						<?php 

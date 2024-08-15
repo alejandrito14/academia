@@ -485,7 +485,7 @@ function PintarParticipantesAlumnosCancela(respuesta) {
 	$("#divalumnoscancelacion").html(html);
 
 }
-
+ 
 function GuardarCancelarServicio() {
 	
 	var idusuarioscancela=[];
@@ -559,11 +559,13 @@ function ObtenerServicioNuevo(valor) {
 		cache: false,
 		data:datos,
 		success: function(datos){
+			$(".formulario").css('display','block');
  		var encontropago=datos.encontropago;
 		var respuesta=datos.respuesta;
 		var idcategoriaservicio=respuesta.idcategoriaservicio;
 		var idservicio=respuesta.idservicio;
 		var idcategoria=respuesta.idcategoria;
+		var idtiposervicioconfiguracion=respuesta.idtiposervicioconfiguracion;
 		var titulo=respuesta.titulo;
 		var descripcion=respuesta.descripcion;
 		var politicasaceptacion=respuesta.politicasaceptacion;
@@ -573,6 +575,11 @@ function ObtenerServicioNuevo(valor) {
 		var tiempoaviso=respuesta.tiempoaviso;
 		var tituloaviso=respuesta.tituloaviso;
 		var aceptarserviciopago=respuesta.aceptarserviciopago;
+		var idsubcategoria=idcategoriaservicio;
+  var nombresubcategoria='';
+  var costo=respuesta.precio;
+  var idsubsubcategoria=idcategoria;
+
 		$("#v_tiempoaviso").val(tiempoaviso);
 		$("#v_tituloaviso").val(tituloaviso);
 		//$("#v_estatus").val(estatus);
@@ -596,32 +603,35 @@ function ObtenerServicioNuevo(valor) {
 			    }
 		$("#v_titulo").val(titulo);
 		$("#v_descripcion").val(descripcion);
-		 var lunes= respuesta.lunes;
+		var lunes= respuesta.lunes;
 		var martes=respuesta.martes;
 		var miercoles=respuesta.miercoles;
 		var jueves=respuesta.jueves;
 		var viernes=respuesta.viernes;
 		var sabado=respuesta.sabado;
 		var domingo=respuesta.domingo;
-		ObtenerTipoServicios(idcategoriaservicio);
+
+
+		//ObtenerTipoServicios(idcategoriaservicio);
 
 		//ObtenerTipoServicios(idcategoriaservicio);
 		//ObtenerCategoriaServicios(idcategoria);
 		$("#v_categoria").val(idcategoriaservicio);
 		$("#v_categoriaservicio").val(idcategoria);
 	 var demo = new Promise((resolve, reject) => {
-	 resolve(ObtenerCategoriaServicios(idcategoria));
+	 resolve(1);
       
     });
 	 demo.then(()=>{
-   	SeleccionarCategoriaNuevo2(idcategoriaservicio,valor,lunes,martes,miercoles,jueves,viernes,sabado,domingo);
-		 ObtenerEncuestas(idservicio);
+	 	var cancelado=respuesta.cancelado;
+   		//SeleccionarCategoriaNuevo2(idcategoriaservicio,valor,lunes,martes,miercoles,jueves,viernes,sabado,domingo);
+		 //ObtenerEncuestas(idservicio);
 
 
-		 var modalidad=respuesta.modalidad;
-		 ValidarCheckmodalidad(modalidad);
+		 //var modalidad=respuesta.modalidad;
+		 //ValidarCheckmodalidad(modalidad);
 
-		 if (modalidad==1) {
+		/* if (modalidad==1) {
 		 	 $("#v_individual").attr('checked',true);
 
 		 	 if (aceptarserviciopago==1) {
@@ -629,15 +639,15 @@ function ObtenerServicioNuevo(valor) {
 		 	 	$("#v_aceptarserviciopago").attr('checked',true);
 
 		 	 }
-		 }
+		 }*/
 
-		 if (modalidad==2) {
+		/* if (modalidad==2) {
 
 		 	 $("#v_grupal").attr('checked',true);
 		 	 $("#v_aceptarserviciopago").attr('checked',false);
 		 	 $("#v_aceptarserviciopago").val(0);
 
-		 }
+		 }*/
 
 
 
@@ -652,11 +662,15 @@ function ObtenerServicioNuevo(valor) {
 		var precio	=respuesta.precio;
 		//$("#v_totalclase").val(totalclases);
 
-		$("#v_costo").prop("type", "text");
+		
 		$("#v_costo").val(precio);
-		$("#v_costo").prop("type", "number");
-
-	
+		$("#v_costo").addClass('input-focused"');
+		
+        $("#v_costo").prop('disabled',false);
+        $(".classli").addClass('item-input-focused');
+        $(".licosto").addClass('item-input-with-value');
+ 
+		$("#costos-tab").css('display','block');
 
 		//$("#v_montopagarparticipante").val(montopagarparticipante);
 		//$("#v_montopagargrupo").val(montopagargrupo);
@@ -666,15 +680,15 @@ function ObtenerServicioNuevo(valor) {
 		var modalidadpago=respuesta.modalidadpago;
 		//var periodo='<?php echo $periodo; ?>';
 
-		 if (modalidadpago==1) {
+		/* if (modalidadpago==1) {
 		 	 $("#v_habilitarevento").attr('checked',true);
 		 	 $("#v_periodo").val(0);
-		 }
+		 }*/
 
-		 if (modalidadpago==2) {
+		 /*if (modalidadpago==2) {
 		 	 $("#v_habilitarperiodo").attr('checked',true);
 		 	 $("#v_periodo").val(periodo);
-		 }
+		 }*/
 
 
 		
@@ -683,79 +697,17 @@ function ObtenerServicioNuevo(valor) {
 		var fechainicial=respuesta.fechainicial; 
 		var fechafinal=respuesta.fechafinal;
 		
-		$("#v_fechainicial").val(fechainicial);
-		$("#v_fechafinal").val(fechafinal);
+		//$("#v_fechainicial").val(fechainicial);
+		//$("#v_fechafinal").val(fechafinal);
 		$("#v_politicasaceptacion").val(politicasaceptacion);
 		$("#v_politicaaceptacionseleccion").val(idpoliticaaceptacion);
-		SeleccionarPolitica();
+		//SeleccionarPolitica();
 		ObtenerHorariosSemana(idservicio);
 		//ObtenerHorariosServicioComprobacion(idservicio);
-		ObtenerPeriodos(idservicio);
+		//ObtenerPeriodos(idservicio);
 		ObtenerCoachesServicio(idservicio);
+		$(".btnabrirmodalcoach").css('display','none');
 		
-	abiertocliente=respuesta.abiertocliente;
-	abiertocoach=respuesta.abiertocoach;
-	abiertoadmin=respuesta.abiertoadmin;
-	ligarcliente=respuesta.ligarcliente;
-	reembolso=respuesta.reembolso; 
-	asistencia=respuesta.controlasistencia;
-	//cantidadreembolso='<?php echo $cantidadreembolso; ?>';
-	asignadocliente=respuesta.asignadocliente;
-	asignadocoach=respuesta.asignadocoach;
-	asignadoadmin=respuesta.asignadoadmin;
-	cancelado=respuesta.canceladoservicio;
-	/*tiempoaviso='<?php echo $tiempoaviso; ?>';
-	tituloaviso='<?php echo $tituloaviso; ?>';
-	descripcionaviso='<?php echo $descripcionaviso; ?>';
-	politicasca='<?php echo $politicasca; ?>';*/
-
-		if (abiertocliente==1) {
-			$("#v_abiertocliente").attr('checked',true);
-		}
-
-		if (abiertocoach==1) {
-			$("#v_abiertocoach").attr('checked',true);
-		}
-		if (abiertoadmin==1) {
-
-			$("#v_abiertoadmin").attr('checked',true);
-		}
-
-		if (ligarcliente==1) {
-			
-			$("#v_ligarclientes").attr('checked',true);
-			Permitirligar();
-		}
-
-		if (reembolso==1) {
-			
-			$("#v_reembolso").attr('checked',true);
-			HabilitarcantidadReembolso();
-		}
-
-		if (asignadocliente==1) {
-			
-			$("#v_asignadocliente").attr('checked',true);
-		}
-
-		if (asignadoadmin==1) {
-			
-			$("#v_asignadoadmin").attr('checked',true);
-		}
-		if (asignadocoach==1) {
-			
-			$("#v_asignadocoach").attr('checked',true);
-		}
-
-		if (asistencia==1) {
-		$("#v_asistencia").attr('checked',true);
-	
-		}
-
-		if (localStorage.getItem('idtipousuario')==0) {
-			$("#contentestatus").css('display','block');
-		}
-
 		 if (localStorage.getItem('idtipousuario')==0) {
 		 	if (cancelado==0) {
 
@@ -783,10 +735,67 @@ function ObtenerServicioNuevo(valor) {
     );
 
 demo.then(()=>{
-		ObtenerHorariosCategoria2(idcategoria,idcategoriaservicio,valor,lunes,martes,miercoles,jueves,viernes,sabado,domingo);
+		//ObtenerHorariosCategoria2(idcategoria,idcategoriaservicio,valor,lunes,martes,miercoles,jueves,viernes,sabado,domingo);
 
+  Obtenerservicioconfiguracion(idtiposervicioconfiguracion);
+
+    	FiltarSubcategoria(idsubcategoria);
 
 });
+
+
+	
+  
+
+ObtenerConfiguracionSubcategoria(idtiposervicioconfiguracion, idsubcategoria)
+    .then(function(respuesta) {
+        // Hacer algo con la respuesta si es exitosa
+        console.log('return promesa');
+        console.log(respuesta);
+        localStorage.setItem('idtiposervicioconfiguracion',idtiposervicioconfiguracion);
+        localStorage.setItem('idsubcategoria',idsubcategoria);
+        var tiposervicio=respuesta.tiposervicio[0];
+        var precio=0;
+        if (costo!=0) {
+           precio=costo;
+        }else{
+
+           precio=tiposervicio.precio;
+        }
+       
+        $("#v_costo").val('$'+precio);
+        $("#licategorias").css('display','none');
+        $("#lisubcategorias").css('display','none');
+        $("#txtcategoria").html(nombresubcategoria);
+        $("#v_descripcion").css('display','none');
+        $(".lidescripcion").css('display','none');
+        $("#costos-tab").css('display','block');
+        $("#profile-tab").css('display','block');
+        $("#v_costo").addClass('input-focused"');
+        $(".classli").addClass('item-input-focused');
+        $(".lisubcategoriasli").css('display','block');
+        
+    })
+    .then(function() {
+    	
+    //alert('idsubsubcategoria'+idsubsubcategoria);
+
+        ObtenerSubsubcategorias2(idsubcategoria,idsubsubcategoria);
+
+       if (localStorage.getItem('idtipousuario')==0){
+
+ 			var smartSelectLink = document.querySelector('.smartselecttiponego');
+            smartSelectLink.classList.add('disabled');
+       
+             var smartSelectLink1 = document.querySelector('.smartselecttipocate');
+            smartSelectLink1.classList.add('disabled');
+        }
+
+    })
+    .catch(function(error) {
+        // Manejar el error si la promesa es rechazada
+        console.error(error);
+    });
 	//	Permitirligar();
 		//HabilitarcantidadReembolso();
 
@@ -1074,15 +1083,16 @@ function ObtenerHorariosSemana(idservicio) {
 					},	
 					success: function (msj) {
 						$("#selected-dates").html('');
-						var horarios=msj.respuesta;
+						var horarios=msj.arraydias;
 						var servicio=msj.servicio;
 						 zonasarray=msj.zonas;
 						 arraydiaseleccionados=[];
 						arraydiaselegidos=[];
 						if (horarios.length>0) {
-							PintarHorariosServicio(horarios,servicio);
-							Resumenfechas();
-							CantidadHorarios();
+							//PintarHorariosServicio(horarios,servicio);
+							//Resumenfechas();
+							//CantidadHorarios();
+							PintarHorariosServicioAgrupado(horarios);
 						}
 
 
@@ -1129,33 +1139,191 @@ function ObtenerPeriodos(idservicio) {
 }
 
 
-function PintarHorariosServicio(horarios,servicio) {
+function PintarHorariosServicioAgrupado(horarios,servicio) {
+	var html="";
+	arrayfechasguardadas=horarios;
+	console.log(arrayfechasguardadas);
+	// arrayfechasguardadas=convertToComplexData(horarios);
+	/*	console.log(arrayfechasguardadas);
 
-		for (var i = 0; i <horarios.length; i++) {
-				var fecha=horarios[i].fecha;
-				var dividir=fecha.split('-');
-				//aqui
-				var id=dividir[0]+'-'+dividir[1]+'-'+dividir[2]+'-'+horarios[i].horainicial+'-'+horarios[i].horafinal+'-'+horarios[i].idzona;
-			
 
-				//10-10-2022-19:00-20:00-6
-				arraydiaselegidos.push(id);
-				var iddividido = id.split('-');
-				var color=horarios[i].color;
-									
-				var dividirfecha=id.split('-');
-					var objeto={
-						id:id,
-						fecha:dividirfecha[0]+'-'+dividirfecha[1]+'-'+dividirfecha[2],
-						idzona:dividirfecha[5],
-						horainicial:dividirfecha[3],
-						horafinal:dividirfecha[4],
-						color:color,
+ let contador = 0;
 
-					};
-				arraydiaseleccionados.push(objeto);
-				}
-}	
+ arrayfechasguardadas = Object.values(arrayfechasguardadas).reduce((acc, item) => {
+    if (!acc[contador]) {
+        acc[contador] = {
+            fecha: item.fecha,
+            fechaformato: item.fechaformato,
+            horasposibles: []
+        };
+        contador++;  // Incrementa el contador después de asignar un nuevo índice
+    }
+    acc[contador - 1].horasposibles.push(...item.horasposibles);
+    return acc;
+}, {});*/
+
+	$("#listadofechas").html('');
+	var seleccionados=0;
+	contadorhorarios=0;
+
+  // Recorrer el objeto
+  /*for (let key in arrayfechasguardadas) {
+    if (arrayfechasguardadas.hasOwnProperty(key)) {
+      const fechaGuardada = arrayfechasguardadas[key];
+      
+      html += `<label style="margin-top:10px;">${fechaGuardada.fechaformato}</label>`;
+      html += `<div class="row">`;
+      
+      const horas = fechaGuardada.horasposibles;
+      console.log('aqui');
+      console.log(horas);
+      
+      for (let j = 0; j < horas.length; j++) {
+        const hora = horas[j];
+        const dividirini = hora.horainicial.substring(0, 5); // Formato HH:MM
+        const dividirfi = hora.horafinal.substring(0, 5); // Formato HH:MM
+        const disponible = hora.disponible;
+        let clases = 'button-fill';
+        
+        if (disponible == 1) {
+          // Puedes agregar lógica adicional aquí si es necesario
+        }
+
+        html += `<button class="button ${clases} button-round activo horafecha_${fechaGuardada.fecha}" id="horafecha_${fechaGuardada.fecha}_${key}_${j}" style="margin-top:1em;margin-bottom:1em;width: 30%;margin-left: 1em;margin-right: 1em;" onclick="SeleccionarElementoHora(this)">${dividirini}-${dividirfi}</button>`;
+     	contadorhorarios++;
+      }
+      
+      html += `</div>`;
+    }
+  }*/
+
+
+	 for (var i = 0; i < arrayfechasguardadas.length; i++) {
+						 
+						 			var horas=arrayfechasguardadas[i].horasposibles;
+						 			if(horas.length>0){
+						 			html+=`<label style="margin-top:10px;">`+arrayfechasguardadas[i].fechaformato+`</label>`;
+						 			}
+						 			html+=`<div class="row">`;
+
+
+						 				for (var j = 0; j < horas.length; j++) {
+						 					
+						 					var horainicial=horas[j].horainicial;
+						 					var dividirini=horainicial.split(':')[0]+':'+horainicial.split(':')[1];
+
+						 					var horafinal=horas[j].horafinal;
+						 					var dividirfi=horafinal.split(':')[0]+':'+horafinal.split(':')[1];
+						 					var disponible=horas[j].disponible;
+						 					var clases='button-fill';
+						 					if (disponible==1) {
+						 						
+
+						 						//clases='button-outline';
+
+						 					/*}else{
+						 						seleccionados++;
+						 					}
+*/
+						 					html+=` <button class="button `+clases+` button-round activo horafecha_`+arrayfechasguardadas[i].fecha+`" id="horafecha_`+arrayfechasguardadas[i].fecha+`_`+i+`_`+j+`" style="margin-top:1em;margin-bottom:1em;width: 30%;margin-left: 1em;
+    margin-right: 1em;" onclick="SeleccionarElementoHora(this)">`+dividirini+`-`+dividirfi+`</button>`;
+						 				
+    									contadorhorarios++;
+
+    										}
+						 				}
+						 				html+=`</div>`;
+						 	
+
+						 		}
+						 
+						 $("#listadofechas").html(html);
+
+
+
+
+						if (contadorhorarios>0) {
+							$("#divcantidadhorarios").css('display','block');
+							$("#candhorarios").text(contadorhorarios);
+						}
+
+
+
+
+
+// Agrupar los datos por días de la semana
+const groupedByDay = arrayfechasguardadas.reduce((acc, item) => {
+    const dayName = getDayName(item.fecha);
+    if (!acc[dayName]) {
+        acc[dayName] = [];
+    }
+    acc[dayName].push(item);
+    return acc;
+
+
+}, {});
+
+const groupedArray = Object.entries(groupedByDay).map(([day, data]) => ({ day, data }));
+
+	var html2='';
+	var contador=0;
+
+	
+for (let i = 0; i < groupedArray.length; i++) {
+    html2 += groupedArray[i].day;
+
+    if (i < groupedArray.length - 1) {
+        html2 += ",";
+    }
+}
+
+	$("#divhorariostexto").html(html2);
+	$("#divhorariostexto").css('display','block');
+}
+
+const getDayName = (dateString) => {
+    const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const date = new Date(dateString);
+    return days[date.getDay()+1];
+}
+
+
+const convertToComplexData = (data) => {
+  let complexData = {};
+  const diasSemana = ['DOMINGO', 'LUNES', 'MARTES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SÁBADO'];
+  contador=0;
+  data.forEach(entry => {
+
+    let dateKey = entry.fecha;
+    const date = new Date(dateKey);
+
+    const diaSemana = diasSemana[date.getUTCDay()];
+  	const dia = date.getUTCDate();
+    const mes = date.toLocaleString('es-ES', { month: 'long' });
+
+    if (!complexData[contador]) {
+      complexData[contador] = {
+        fecha: entry.fecha,
+        diaSemana: diaSemana, // Puedes calcular esto si es necesario
+        dia: entry.dia,
+        numdia: entry.dia,
+        horasposibles: [],
+        fechaformato: `${diaSemana.charAt(0) + diaSemana.slice(1).toLowerCase()} ${dia} de ${mes.charAt(0).toUpperCase() + mes.slice(1)}, ${date.getUTCFullYear()}`
+      };
+    }
+
+    complexData[contador].horasposibles.push({
+      horainicial: entry.horainicial + ":00", // Convertir a formato HH:MM:SS
+      horafinal: entry.horafinal + ":00", // Convertir a formato HH:MM:SS
+      disponible: 1 // Asumimos que todos los horarios en simpleData son disponibles
+    });
+
+
+    contador++;
+  });
+
+  return complexData;
+};	
 
 function ObtenerCoachesServicio(idservicio) {
 	var datos="idservicio="+idservicio;
@@ -1179,12 +1347,14 @@ function ObtenerCoachesServicio(idservicio) {
 					for (var i = 0; i < respuesta.length; i++) {
 				
 							var objeto={
-							idcoach:respuesta[i].idusuarios,
-							textonombre:respuesta[i].nombre+' '+respuesta[i].paterno+' '+respuesta[i].materno,
-							tipopago:respuesta[i].tipopago,
-							monto:respuesta[i].monto
+							idusuarios:respuesta[i].idusuarios,
+							nombre:respuesta[i].nombre+' '+respuesta[i].paterno,
+							idsubcategoria:respuesta[i].idsubcategoria,
+							idtiposervicioconfiguracion:respuesta[i].idtiposervicioconfiguracion,
+							costo:respuesta[i].costo,
+							nombresubcategoria:respuesta[i].nombresubcategoria
 							};
-						asignacioncoach.push(objeto);
+						arraycoachelegidos.push(objeto);
 
 					}
 					PintarCoaches();
@@ -1478,7 +1648,7 @@ function GuardarCancelacion(idservicio) {
 
 function CargarMeses() {
 	var html="";
-	html+=`<option value="0">Seleccionar mes</option>
+	html+=`<option value="0">Seleccionar</option>
 			`;
 	if (meses.length>0) {
 		for (var i = 0; i <meses.length; i++) {
@@ -1513,7 +1683,7 @@ function Cargaranios(anio) {
 					var respuesta=msj.respuesta;
 					Pintaranios(respuesta);
 					if (anio>0) {
-					$("#v_anios").val(anio);
+						$("#v_anios").val(anio);
 
 					}	
 					}
@@ -1522,7 +1692,7 @@ function Cargaranios(anio) {
 	
 function Pintaranios(anios) {
 	var html="";
-	html+=`<option value="0">Seleccionar año</option>
+	html+=`<option value="0">Seleccionar</option>
 			`;
 	if (anios.length>0) {
 		for (var i = 0; i <anios.length; i++) {
@@ -1540,3 +1710,234 @@ function Pintaranios(anios) {
 	//$("#v_anios").val(mesanio);
 }
 
+function VerMasServiciosAdmin() {
+    currentPages++;
+    FiltrarServiciosConfi();
+}
+
+function FiltrarServiciosConfiBoton() {
+	currentPages=1;
+	$$(".serviciosregistrados").html('');
+
+	FiltrarServiciosConfi();
+}
+
+function FiltrarServiciosConfi() {
+
+		var tipoconfiguracion=$("#listadotipoconfiguracion2").val();
+		var bandera=1;
+		if (tipoconfiguracion==null || tipoconfiguracion=='') {
+			bandera=0;
+		}
+
+		
+		if (bandera==1) {
+	 const myPromise = new Promise((resolve, reject) => {
+        CrearModalEspera4((finalizar) => {
+	var tipoconfiguracion=$("#listadotipoconfiguracion2").val();
+	var tipocategoria=$("#listadotipocategoria2").val();
+	var anio=$("#v_anios").val();
+	var mes=$("#v_meses").val();
+	var coach=$("#v_coach").val();
+	var datos="tipoconfiguracion="+tipoconfiguracion+"&tipocategoria="+tipocategoria+"&anio="+anio+"&mes="+mes+"&v_coach="+coach+"&pagina="+ currentPages;
+	localStorage.setItem('tipocategoria',tipocategoria);
+	localStorage.setItem('v_coachvalor',coach);
+	localStorage.setItem('v_mes',mes);
+	localStorage.setItem('v_anio',anio);
+	
+			$.ajax({
+					url: urlphp+'FiltrarServiciosConfi.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					dataType:'json',
+					async:false,
+					data:datos,
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+					},	
+					success: function (msj) {
+						var fechaactual=msj.fechaactual;
+
+						var respuesta=msj.respuesta;
+
+						if (respuesta.length>0) {
+							$("#divcargarmas").css('display','block');
+						}else{
+
+							$("#divcargarmas").css('display','none');
+			
+						}
+
+						PintarServiciosRegistrados3(respuesta,fechaactual);
+						dynamicSheet2.close();
+								
+					}
+				});
+			
+
+			});
+        });
+	}
+
+}
+
+
+function FiltrarServiciosCoach() {
+	currentPages=1;
+	
+	$$(".serviciosasignados").html('');
+	FiltrarServiciosConfi2();
+}
+
+
+function FiltrarServiciosConfi2() {
+
+		var tipoconfiguracion=$("#listadotipoconfiguracion2").val();
+		var bandera=1;
+		/*if (tipoconfiguracion==null || tipoconfiguracion=='') {
+			bandera=0;
+		}*/
+
+		
+	if (bandera==1) {
+	const myPromise = new Promise((resolve, reject) => {
+    CrearModalEspera4((finalizar) => {
+	var tipoconfiguracion=$("#listadotipoconfiguracion2").val();
+	var tipocategoria=$("#listadotipocategoria2").val();
+	var anio=$("#v_anios").val();
+	var mes=$("#v_meses").val();
+	var coach=localStorage.getItem('id_user');
+	var datos="tipoconfiguracion="+tipoconfiguracion+"&tipocategoria="+tipocategoria+"&anio="+anio+"&mes="+mes+"&v_coach="+coach+"&pagina="+ currentPages;
+	localStorage.setItem('tipocategoria',tipocategoria);
+	localStorage.setItem('v_coachvalor',coach);
+	localStorage.setItem('v_mes',mes);
+	localStorage.setItem('v_anio',anio);
+	
+			$.ajax({
+					url: urlphp+'FiltrarServiciosConfi.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					dataType:'json',
+					async:false,
+					data:datos,
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+						dynamicSheet2.close();
+
+					},	
+					success: function (msj) {
+						var fechaactual=msj.fechaactual;
+
+						var respuesta=msj.respuesta;
+						console.log(respuesta);
+
+						if (respuesta.length>0) {
+							$("#divcargarmas").css('display','block');
+						}else{
+
+							$("#divcargarmas").css('display','none');
+			
+						}
+							PintarServiciosAsignadosCoach2(respuesta,fechaactual);
+
+						//PintarServiciosRegistrados3(respuesta,fechaactual);
+						dynamicSheet2.close();
+								
+					}
+				});
+			
+
+			});
+        });
+	}
+
+}
+
+
+
+
+function VerMasServiciosCoach() {
+    currentPages++;
+    FiltrarServiciosConfi2();
+}
+
+function FiltrarServiciosConfi2MesActual() {
+		var tipoconfiguracion=0;
+		var bandera=1;
+		/*if (tipoconfiguracion==null || tipoconfiguracion=='') {
+			bandera=0;
+		}
+*/
+		
+	if (bandera==1) {
+	const myPromise = new Promise((resolve, reject) => {
+    CrearModalEspera4((finalizar) => {
+
+    	const fechaActual = new Date();
+
+		// Obtener el año actual
+		const anioActual = fechaActual.getFullYear();
+
+		// Obtener el mes actual (Nota: Los meses en JavaScript van de 0 a 11, por lo que sumamos 1)
+		const mesActual = fechaActual.getMonth() + 1;
+
+	var tipoconfiguracion=0;
+	var tipocategoria=0;
+	var anio=anioActual;
+	var mes=mesActual;
+	var coach=localStorage.getItem('id_user');
+	var datos="tipoconfiguracion="+tipoconfiguracion+"&tipocategoria="+tipocategoria+"&anio="+anio+"&mes="+mes+"&v_coach="+coach+"&pagina="+ currentPages;
+	localStorage.setItem('tipocategoria',tipocategoria);
+	localStorage.setItem('v_coachvalor',coach);
+	localStorage.setItem('v_mes',mes);
+	localStorage.setItem('v_anio',anio);
+
+	
+			$.ajax({
+					url: urlphp+'FiltrarServiciosConfi.php', //Url a donde la enviaremos
+					type: 'POST', //Metodo que usaremos
+					dataType:'json',
+					async:false,
+					data:datos,
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						var error;
+						console.log(XMLHttpRequest);
+						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
+						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
+						$("#divcomplementos").html(error);
+						dynamicSheet2.close();
+
+					},	
+					success: function (msj) {
+						var fechaactual=msj.fechaactual;
+
+						var respuesta=msj.respuesta;
+						console.log(respuesta);
+
+						if (respuesta.length>0) {
+							$("#divcargarmas").css('display','block');
+						}else{
+
+							$("#divcargarmas").css('display','none');
+			
+						}
+							PintarServiciosAsignadosCoach2(respuesta,fechaactual);
+							$("#v_meses").val(mes);
+							$("#v_anios").val(anio);
+						//PintarServiciosRegistrados3(respuesta,fechaactual);
+						dynamicSheet2.close();
+								
+					}
+				});
+			
+
+			});
+        });
+	}
+}

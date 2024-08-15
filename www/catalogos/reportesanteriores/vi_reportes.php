@@ -100,7 +100,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				<div class="row">
 					<div class="form-group col-md-6">
 						<label for="exampleInputEmail1">LISTA DE REPORTES</label>
-						<select name="v_id_reportes" id="v_id_reportes" class="form-control"  onchange="CargarFiltrosreportes($(this).val())">
+						<select name="v_id_reportes" id="v_id_reportes" class="form-control"  onchange="CargarFiltrosreportesAnte($(this).val())">
 							  <option value="0">ESCOGER REPORTE</option>
 
 							<?php 
@@ -130,7 +130,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				</div>
 				<div class="row" >
 				  <div class="col-md-6" id="tiposervicios" style="display: none;">
-
+ 
 				  	<div class="form-group m-t-20">
 				  	<label>CATEGORÍAS</label>
 				  	<select id="v_tiposervicios" class="form-control" multiple="multiple" style="width: 100%;">
@@ -141,11 +141,48 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 				</div>
 
 				<div class="row" >
+				  <div class="col-md-6" id="divcategoriapadre" style="display: none;">
+
+				  	<div class="form-group m-t-20">
+				  	<label>CATEGORÍAS</label>
+				  	<select id="v_categoriapadre" class="form-control" multiple="multiple" style="width: 100%;">
+				  		
+				  	</select>
+				   	</div>
+				  </div>
+				</div>  
+
+				<div class="row" >
 				  <div class="col-md-6" id="tiposervicios2" style="display: none;">
 
 				  	<div class="form-group m-t-20">
 				  	<label>CATEGORÍAS DEPENDIENTES</label>
 				  	<select id="v_tiposervicios2" class="form-control" multiple="multiple" style="width: 100%;">
+				  		
+				  	</select>
+				   	</div>
+				  </div>
+				</div>  
+
+					<div class="row" >
+				  <div class="col-md-6" id="tsubcategorias" style="display: none;">
+
+				  	<div class="form-group m-t-20">
+				  	<label>CATEGORÍAS SUBCATEGORÍAS</label>
+				  	<select id="v_subcategorias" class="form-control" multiple="multiple" style="width: 100%;">
+				  		
+				  	</select>
+				   	</div>
+				  </div>
+				</div> 
+
+
+				<div class="row" >
+				  <div class="col-md-6" id="tsubsubcategorias" style="display: none;">
+
+				  	<div class="form-group m-t-20">
+				  	<label>CATEGORÍAS SUB SUBCATEGORÍAS</label>
+				  	<select id="v_subsubcategorias" class="form-control" multiple="multiple" style="width: 100%;">
 				  		
 				  	</select>
 				   	</div>
@@ -330,6 +367,28 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 			</div>
 
 
+			<div class="row" id="mes">
+				  <div class="col-md-6" id="">
+				  	<div class="form-group">
+				  		<label>MES:</label>
+			            <select class="form-control" id="v_meses" multiple="multiple"></select>
+				  </div>
+				</div>
+			</div>
+
+
+				<div class="row" id="anio">
+				  <div class="col-md-6" id="">
+				  	<div class="form-group">
+				  		<label>AÑO:</label>
+
+			            <select class="form-control" id="v_anios"></select>
+				  </div>
+				</div>
+			</div>
+
+
+
 				<div class="row">
 					<div class="col-md-6" id="">
 					
@@ -404,6 +463,10 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 	$("#horafin").css('display','none');
 	$("#fechainiciopago").css('display','none');
 	$("#fechafinpago").css('display','none');
+	$("#mes").css('display','none');
+	$("#anio").css('display','none');
+
+
 
 		$('#v_tiposervicios').SumoSelect({ 
 			    placeholder: 'Seleccionar categoria',

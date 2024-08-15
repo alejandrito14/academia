@@ -185,6 +185,8 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 						<th style="text-align: center;">FOLIO </th> 
 						<th style="text-align: center;">ALUMNO</th>
 						<th style="text-align: center;">FECHA</th>
+						<th style="text-align: center;">FECHA VALIDACIÓN</th>
+
 						<th style="text-align: center;">TIPO DE PAGO</th>
 						<th style="text-align: center;">TOTAL</th>
 						<th style="text-align: center;">MONTO MONEDERO</th>
@@ -220,6 +222,19 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 							<td style="text-align: center;"><?php echo $l_pagos_row['nombre'].' '.$l_pagos_row['paterno'].' '.$l_pagos_row['materno'];?></td>
 
 							<td style="text-align: center;"><?php echo date('d-m-Y H:i:s',strtotime($l_pagos_row['fecha']));?></td>
+
+
+							<td style="text-align: center;"><?php 
+
+							if ($l_pagos_row['fechareporte']!='') {
+
+							echo date('d-m-Y H:i:s',strtotime($l_pagos_row['fechareporte']));
+
+								}
+							?>
+								
+
+							</td>
 							<td style="text-align: center;"><?php echo $l_pagos_row['tipopago'];?></td>
 							<?php $total=$l_pagos_row['total'];
 								if ($total==0) {

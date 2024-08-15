@@ -36,7 +36,7 @@ try
 		
 	
 	//Recbimos parametros
-	$tipocoach->idtipocoach = trim($_POST['id']);
+	$tipocoach->idtipocoach = trim($_POST['idtipocoach']);
 	$tipocoach->nombre = trim($f->guardar_cadena_utf8($_POST['v_nombre']));
 	$tipocoach->tipocomision=$_POST['v_tipocomision'];
 	$tipocoach->monto=$_POST['v_monto'];
@@ -51,7 +51,7 @@ try
 		$tipocoach->Guardartipocoach();
 		$md->guardarMovimiento($f->guardar_cadena_utf8('tipocoach'),'tipocoach',$f->guardar_cadena_utf8('Nuevo tipocoach creado con el ID-'.$tipocoach->idtipocoach));
 	}else{
-		$tipocoach->Modificartipocoach();	
+		$tipocoach->Modificartipocoach();	 
 		$md->guardarMovimiento($f->guardar_cadena_utf8('tipocoach'),'tipocoach',$f->guardar_cadena_utf8('Modificación de tipocoach -'.$tipocoach->idtipocoach));
 	}
 				

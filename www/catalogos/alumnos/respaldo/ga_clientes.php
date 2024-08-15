@@ -29,6 +29,7 @@ try
 	$db->begin();
 		
 	$id = $_POST['v_id'];
+	$idusuario=$id;
 	$us->id_usuario=$id;
 	$us->idperfiles = 0;
 	$us->idpuesto = $_POST['idpuesto'];
@@ -48,7 +49,9 @@ try
 	$us->estatus=$_POST['estatus'];
 	$tipo = $_POST['tipo'];
 	$us->tipo=$tipo;
-	
+	$usuariosid=json_decode($_POST['asociados']);
+	$asociadoseliminados=json_decode($_POST['asociadoseliminados']);
+
 	if($id == 0)
 	{
 	
@@ -90,6 +93,59 @@ try
 	$md->guardarMovimiento($f->guardar_cadena_utf8('Alumnos'),'usuarios',$f->guardar_cadena_utf8('Modificación de Usuario -'.$_POST['usuario']));
 		
 	}
+
+
+	if ($usuariosid[0]!='' && $usuariosid[0]!=null)
+	{
+		for ($i=0; $i < count($usuariosid); $i++) { 
+		
+
+            $v_celularaso=$usuariosid[$i]->{'v_celularaso'};
+			$v_aliasaso=$usuariosid[$i]->{'v_aliasaso'};
+			$nombreaso=$usuariosid[$i]->{'nombreaso'};
+			$v_paternoaso=$usuariosid[$i]->{'v_paternoaso'};
+			$v_maternoaso=$usuariosid[$i]->{'v_maternoaso'};
+			$v_sexoaso=$usuariosid[$i]->{'v_sexoaso'};
+			$v_fechanacimientoaso=$usuariosid[$i]->{'v_fechanacimientoaso'};
+			$emailaso=$usuariosid[$i]->{'emailaso'};
+			$v_soytutor=$usuariosid[$i]->{'v_soytutor'};
+			$idalumnoasociado=$usuariosid[$i]->{'idalumnoasociado'};
+
+			$parentesco=$usuariosid[$i]->{'parentesco'};
+
+			 $us->estatus  = 1;
+             $us->tipo=3;
+             $us->usuario='';
+             $us->nombre=$nombreaso;
+			 $us->paterno=$v_paternoaso;
+			 $us->materno=$v_maternoaso;
+			 $us->fecha=$v_fechanacimientoaso;
+			 $us->sexo=$v_sexoaso;
+			 $us->celular=$v_celularaso;
+			 $us->email=$emailaso;
+			 $us->alias='';
+			
+			 $idusuario=$us->id_usuario;
+
+			 if ($idalumnoasociado==0) {
+			 	 $us->GuardarUsuarioTutorado();
+				 $us->GuardarUsuarioyTutor($idusuario,$parentesco,$v_soytutor);
+			 }
+			
+		}
+		
+	}
+
+if ($asociadoseliminados[0]!='' && $asociadoseliminados[0]!=null)
+	{
+	for ($i=0; $i <count($asociadoseliminados) ; $i++) { 
+			if ($asociadoseliminados[$i]->{'idalumnoasociado'}>0) {
+				$us->id_usuario=$asociadoseliminados[$i]->{'idalumnoasociado'};
+				$us->EliminarAsociacion($idusuario);
+			}
+	}
+
+}
 	
 	$db->commit();
 	echo 1;

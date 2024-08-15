@@ -1,0 +1,99 @@
+<template>
+	<div class="page page-" data-name="detalleservicioactivo">
+    <div class="navbar">
+        <div class="navbar-bg"></div>
+        <div class="navbar-inner">
+            <div class="left">
+               <!--  <a href="" class="button button-fill text-color-theme bg-color-white button-44 regreso">
+                    <i class="bi bi-arrow-left"></i>
+                </a> -->
+            </div>
+            <div class="title">
+                <h5></h5>
+            </div>
+            <div class="right">
+                <!-- <a href="/notification/" class="button button-fill text-color-theme bg-color-white button-44">
+                    <i class="bi bi-bell"></i>
+                </a> -->
+            </div>
+        </div>
+    </div>
+      <div class="fab fab-left-bottom  " style="bottom: 4em; ">
+    <a class="btnregreso regreso" style="">
+     <i class="bi bi-arrow-left" style=""></i>
+    </a>
+  </div>
+
+    <!-- main page content -->
+    <div class="page-content">
+
+        <div class="row">
+            <div class="col-100">
+                <img src="" alt="" class="imgservicioasignado" style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;border-radius: 10px;" />
+            </div>
+        </div>
+      <div class="row padding-vertical">
+        <h2 style="text-align: center;font-size: 18px;" id="tituloservicio" class="tituloservicio"> </h2>
+            <h3 class="fechasservicio" style=" text-align: center;font-weight: bold;color: #919191;font-size: 16px;"></h3>
+            <h4 style="text-align: center;font-size: 18px;" class="numeroparticipantes">Alumnos: <span class="cantidadalumnos"></span> de <span class="cantidadtotal"></span></h4>
+            <h4 style="text-align: center;font-size: 18px;" class="numeroparticipantes">Numero de horarios: <span class="cantidadhorarios"></span></h4>
+
+            <a class="btncalendario" style="
+    text-align: center;">Ver horarios</a>
+
+      </div>
+        <div class="row padding-vertical divcomienza" style="display: none;" >
+
+ 
+ 
+          <div class="col-100 ">
+                <div class="card  margin-bottom">
+                    <div class="card-content card-content-padding">
+                        <div class="row">
+                           <!--  <div class="col-auto">
+                                <div class="avatar avatar-40 alert-success text-color-green rounded-circle">
+                                    <i class="bi bi-controller size-20"></i>
+                                </div>
+                            </div> -->
+                            <div class="col-100 align-self-center " >
+                                <div class="" style="margin-right: 1em;text-align: center;">
+                                       <p class="no-margin-bottom" style="text-align: center;font-weight: bold;">Comienza</p>
+                                <div class="colocarhorarios" style="    margin-left: 1em;text-align: center;">
+                                    
+
+                                </div>
+
+                                <!-- <a id="btncalendario" style="display: none;">Ver calendario</a> -->
+                                </div>
+                             
+                              
+                               
+                            </div>
+
+                            <div class="col" id="Abrirchat" style="display: none;" >
+                               
+                                <span style="font-size: 35px;" class="  text-color-blue "><i class=" bi bi-chat-left-quote-fill"></i></span>
+                                 <p>Chat</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+
+            </div>  
+
+
+              <div class="row margin-bottom  padding-vertical permisoasignaralumno" id="permisoasignaralumno" style="display: none;">
+           
+                    <div class="col">
+                     <button class="button button-fill button-large color-theme button-raised margin-bottom-half " id="btnasignaralumno">
+                          <i style="margin-right: .3em;"  class="bi bi-calendar-event">
+                        </i> Tomar el servicio
+                      </button>
+                  
+                  </div>
+
+            </div>  
+          </div>
+        </div>
+      </template>

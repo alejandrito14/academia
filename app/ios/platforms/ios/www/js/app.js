@@ -18,7 +18,7 @@ var app = new Framework7({
     // Enable fast clicks
    // fastClicks: true,
   },
-
+ 
   popup: {
     closeOnEscape: true,
   },
@@ -138,7 +138,7 @@ $(document).ready(function() {
 
 var lhost = "localhost:8888";
 var rhost = "issoftware1.com.mx";
-var version='1.0.34';
+var version='1.0.35';
 
 localStorage.setItem('versionapp',version);
 var abrir=0;

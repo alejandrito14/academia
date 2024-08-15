@@ -63,7 +63,7 @@ class NotificacionPush
     public function AgregarNotifcacionaUsuarios($idusuario,$texto,$ruta,$valor,$estatus)
     {
        $sql="INSERT INTO notificacioncliente(idusuario,texto,ruta,valor,estatus) VALUES('$idusuario','$texto','$ruta','$valor','$estatus')";
-
+       
      
         $resp=$this->db->consulta($sql);
 

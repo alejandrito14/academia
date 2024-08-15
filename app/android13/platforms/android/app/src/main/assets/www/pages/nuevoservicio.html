@@ -1,6 +1,6 @@
 <template>
 <div class="page " data-name="nuevoservicio">
-    
+     
     <div class="navbar">
         <div class="navbar-bg"></div>
         <div class="navbar-inner">
@@ -45,12 +45,16 @@
         <div style=""></div>
         <!-- user information -->
 
+      
+        <div class="formulario" style="display:none">
         <div class="row">
 
           <div class="col-85 margin-left-auto margin-right-auto align-self-center  padding-vertical"><h1 style="" id="txtpagina"> Nuevo <span style="color: #0abe68;">servicio</span>
           </h1>
         </div>
       </div>
+
+             
 
 
       <div class="row">
@@ -60,7 +64,80 @@
         </div>
       </div>
 
+       <div class="row">
+              <div id="txtcategoria" style="margin-left: 1.5em;font-weight: bold;margin-top: 1em;margin-bottom: 1em;"></div>
+        </div>
+          <div class="categoriatiposervicio">
+              <div class="row">
+                <div class="list accordion-list ">
+               
+                <ul>
+                 <li class="accordion-item accordion-item-opened" id="general-tab" style="background: white; ">
+         
+          <div class="accordion-item-content" style="font-size: 16px;" aria-hidden="true">
+                  <div id="divtiposervicioconfiguracion">
+                    
 
+                     <a class="item-link smart-select smart-select-init smartselecttiponego" data-open-in="popover">
+                      <select name="listadotipoconfiguracion" id="listadotipoconfiguracion" >
+                      
+
+                      </select>
+                      <div class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title">Tipo de negocios</div>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+
+                </div>
+              </li>
+
+
+
+     <li class="accordion-item accordion-item-opened" id="general-tab" style="background: white; ">
+         
+          <div class="accordion-item-content" style="font-size: 16px;" aria-hidden="true">
+                  <div id="divtipocategoria">
+                    
+
+                     <a class="item-link smart-select smart-select-init smartselecttipocate" data-open-in="popover">
+                      <select name="listadotipocategoria" id="listadotipocategoria" >
+                      
+
+                      </select>
+                      <div class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title">Tipo de categoría</div>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+
+                </div>
+              </li>
+
+            </ul>
+          </div>
+        </div>
+        
+        </div>
+
+
+          <div class="tiposervicioconfiguracion">
+          <div class="row">
+               <button class="button button-large button-round button-fill btnabrirmodalcoach" style="    margin-left: 1em;
+    margin-right: 1em;">Agregar Coach</button>
+
+          </div>
+
+          <div class="row">
+            <div class="listadoele"></div>
+          </div>
+
+         
+        </div>
 
       
             
@@ -72,12 +149,40 @@
       <input type="hidden" id="id" value="0"/>
       <input type="hidden" id="avanzado" value="0" />
       <ul>
+
+
+        <li class="accordion-item accordion-item-opened" style="background: #f3f3f3;display: none; " id="costos-tab">
+        
+          <div class="accordion-item-content" style="font-size: 16px;" aria-hidden="true">
+            <div class="block" style="background: white">
+
+              <!-- <div class="row" style="margin-top: 1em;">
+               <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Asignar costo</p>
+
+              </div> -->
+
+               <div class="row">
+                <div class="item-content item-input item-input-with-value classli" style="background: gainsboro;">
+                  <div class="item-inner licosto">
+                    <div class="item-title item-floating-label">Costo unitario $</div>
+                    <div class="item-input-wrap">
+                      <input name="v_costo" id="v_costo" type="text" placeholder="" class="input-with-value" style="" />
+                      <span class="input-clear-button limpiarvalor"></span>
+                    </div>
+                  </div>
+                 </div>
+
+               </div>
+             </div>
+           </div>
+         </li>
+
         <li class="accordion-item accordion-item-opened" id="general-tab" style="background: #f3f3f3 ">
-          <a href="#" class="item-link item-content">
+          <!-- <a href="#" class="item-link item-content">
             <div class="item-inner">
               <div class="item-title">General</div>
             </div>
-          </a>
+          </a> -->
           <div class="accordion-item-content" style="font-size: 16px;" aria-hidden="true">
             <div class="block" style="background: white">
                 <div class="item-content item-input  item-input-with-value  itemtitulo">
@@ -88,12 +193,14 @@
                       <span class="input-clear-button"></span>
                     </div>
                   </div>
+
+                 
             </div>
 
-
+             <label class="lbltitulo" style="color:red;margin-left: 1em;"></label>
 
  
-            <div class="item-content item-input item-input-with-value">
+            <!-- <div class="item-content item-input item-input-with-value">
                   <div class="item-inner lidescripcion">
                         <div class="item-title item-label">Descripción</div>
                     <div class="item-input-wrap">
@@ -101,10 +208,10 @@
                       <span class="input-clear-button"></span>
                     </div>
                   </div>
-              </div>
+              </div> -->
            
 
-            <div class="item-content item-input item-input-with-value">
+            <div class="item-content item-input item-input-with-value" style="display:none;">
                   <div class="item-inner litiposervicio">
                         <div class="item-title item-label">Tipo de servicio</div>
                     <div class="item-input-wrap">
@@ -117,7 +224,7 @@
               </div>
 
 
-  <div class="item-content item-input item-input-with-value divcategoria" id="" style="display: none;">
+              <div class="item-content item-input item-input-with-value divcategoria" id="" style="display: none;">
                   <div class="item-inner licategoria">
                         <div class="item-title item-label">Categoria</div>
                     <div class="item-input-wrap">
@@ -141,7 +248,7 @@
              <div class="item-content item-input item-input-with-value" style="display: none;" id="contentestatus">
                   <div class="item-inner liestatus">
                    <div class="item-title item-label">Estatus</div>
-                    <div class="item-input-wrap">
+                    <div class="item-input-wrap" style="margin-bottom: 1em;">
                       <!-- <select id="v_estatus">
                        <option value="0">Desactivado</option>
                        <option value="1" selected="selected">Activado</option>
@@ -164,77 +271,164 @@
           </div>
   
         </li>
-        <li class="accordion-item" id="profile-tab" style="display: none;">
-          <a href="#" class="item-link item-content">
+
+        <li id="licategorias" style="display:none;">
+          <div style="font-weight: bold;">Categorías:</div>
+         <!--  <div id="listadocategorias" style="margin-top: 1em;"></div> -->
+
+
+          <div class="container">
+            <div class="" id="listadocategorias" style="    margin-bottom: 2em;">
+              <!-- Las diapositivas se agregarán aquí -->
+            </div>
+            <!-- <div class="swiper-pagination"></div> -->
+          </div>
+
+        </li>
+
+
+         <li id="lisubcategorias" class="lisubcategoriasli" style="background: white">
+
+         <!--  <div id="listadosubcategorias" class="listadosubcategorias" style="margin-top: 1em;"></div> -->
+
+           <a class="item-link smart-select smart-select-init smartselectzonas" data-open-in="popover">
+                      <select name="listadosubcategorias" id="listadosubcategorias" >
+                      
+
+                      </select>
+                      <div class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title">Nivel</div>
+                        </div>
+                      </div>
+                    </a>
+
+               <label class="lblnivel" style="color:red;margin-left: 1em;"></label>
+
+        </li>
+
+
+          <li style="    margin: 0;padding: 0;background: white" >
+                    <a class="item-link smart-select smart-select-init smartselectzonas" data-open-in="popover">
+                      <select name="v_dias" id="v_dias" multiple>
+
+                     
+
+                       <option value="0">Domingo</option>
+                       <option value="1">Lunes</option>
+
+                       <option value="2">Martes</option>
+
+                       <option value="3">Miercoles</option>
+
+                       <option value="4">Jueves</option>
+
+                       <option value="5">Viernes</option>
+                       <option value="6">Sabado</option>
+
+                      </select>
+                      <div class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title">Días</div>
+                        </div>
+                      </div>
+                    </a>
+
+
+                    <label class="lbldias" style="color:red;margin-left: 1em;"></label>
+                  </li>
+
+                  
+
+                    <li style="    margin: 0;padding: 0;background: white">
+                    <a class="item-link smart-select smart-select-init smartselectorhora" data-open-in="popover">
+                      <select name="horarios" id="v_horarios" multiple>
+                       
+                      </select>
+                      <div class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title">Horarios</div>
+                        </div>
+                      </div>
+                    </a>
+
+                    <label class="lblhorarios" style="color:red;margin-left: 1em;"></label>
+                  </li>
+              
+       
+        
+
+ <li class="accordion-item accordion-item-opened" id="profile-tab" style="display: none;">
+         <!--  <a href="#" class="item-link item-content">
             <div class="item-inner">
               <div class="item-title">Disponibilidad</div>
             </div>
-          </a>
+          </a> -->
           <div class="accordion-item-content" style="font-size: 16px;" aria-hidden="true">
             <div class="list" style="background: white">
              <div class="btn-group btn-group-toggle d-flex flex-column flex-md-row" data-toggle="buttons">
-              <div class="row" style="margin-top: 1em;">
+             <!--  <div class="row" style="margin-top: 1em;">
                <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Días</p>
 
-              </div>
+              </div> -->
 
-               <div class="row">
+             <!--   <div class="row">
                <span style="" class="liseleccionardias">Seleccionar días</span>
                
-              </div>
+              </div> -->
 
-              <div class="row"> 
+              <!-- <div class="row"> 
                  <label class="btn btn_colorgray2 lbldomingo lbldias btn_colorgray3">
-                                    <input type="checkbox" id="Domingo" class="diasckeckbox" value="0"  /> Domingo
+                  <input type="checkbox" id="Domingo" class="diasckeckbox" value="0"  /> Domingo
                   </label>
 
-              </div>
-               <div class="row"> 
+              </div> -->
+              <!--  <div class="row"> 
                    <label class="btn btn_colorgray2 lbllunes lbldias">
                     <input type="checkbox" id="Lunes" class="diasckeckbox" value="1" /> Lunes
                                   </label>
-                   </div>
-               <div class="row"> 
+                   </div> -->
+              <!--  <div class="row"> 
 
                    <label class="btn btn_colorgray2 lblmartes lbldias">
                        <input type="checkbox" id="Martes" class="diasckeckbox" value="2"  /> Martes
                                   </label>
-                </div>
-                 <div class="row"> 
+                </div> -->
+                <!--  <div class="row"> 
 
                     <label class="btn btn_colorgray2 lblmiercoles lbldias">
                     <input type="checkbox" id="Miercoles" class="diasckeckbox" value="3"  /> Miércoles
                     </label>
-                   </div>
-                     <div class="row"> 
+                   </div> -->
+                    <!--  <div class="row"> 
 
 
                         <label class="btn btn_colorgray2 lbljueves lbldias">
                          <input type="checkbox" id="Jueves" class="diasckeckbox" value="4"  /> Jueves
                                   </label>
-                                 </div>
-                     <div class="row"> 
+                                 </div> -->
+                     <!-- <div class="row"> 
 
                                    <label class="btn btn_colorgray2 lblviernes lbldias btn_colorgray3">
                                 <input type="checkbox" id="Viernes" class="diasckeckbox" value="5"  /> Viernes
                                   </label>
-                                 </div>
-                         <div class="row"> 
+                                 </div> -->
+                         <!-- <div class="row"> 
 
                             <label class="btn btn_colorgray2 lblsabado lbldias btn_colorgray3">
                                 <input type="checkbox" id="Sabado" class="diasckeckbox" value="6"  /> Sábado
                                   </label>
-                        </div>
+                        </div> -->
 
-              <div class="row" style="margin-top: 1em;">
+              <!-- <div class="row" style="margin-top: 1em;">
                <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Asignar horarios</p>
 
-              </div>
+              </div> -->
 
-               <div class="row">
+               <!-- <div class="row">
                <span style="" class="liseleccionafechas">Selecciona la fecha inicial y final para el periodo del servicio </span>
                
-              </div>
+              </div> -->
 
               <div class="row">
                <div class="item-content item-input"><div class="item-inner lifechainicial">
@@ -243,7 +437,7 @@
                  <input type="date" class="form-control" id="v_fechainicial" name="v_fechainicial"  title="FECHA INICIAL" placeholder="" />
                 <span class="input-clear-button"></span></div></div></div>
 
-
+                <label class="lblfechainicial" style="color:red;"></label>
               
               </div>
 
@@ -255,7 +449,7 @@
 
                 <span class="input-clear-button"></span></div></div></div>
 
-              
+                <label class="lblfechafinal" style="color:red;"></label>
               </div>
               <div class="row divrow divseleccionarhorarios" style="margin-top: 1em;display: none;">
 
@@ -275,39 +469,36 @@
                   </li>
               </div>
 
-               <div class="row divseleccionarhorarios" style="margin-top: 1em;display: none;">
+              
 
-                 <div class="item-title item-label">Seleccionar horario</div>
-
-                    <li style="    margin: 0;padding: 0;">
-                    <a class="item-link smart-select smart-select-init smartselectorhora" data-open-in="popover">
-                      <select name="horarios" id="v_horarios" multiple>
-                       
-                      </select>
-                      <div class="item-content">
-                        <div class="item-inner">
-                          <div class="item-title">Horarios</div>
-                        </div>
-                      </div>
-                    </a>
-                  </li>
-              </div>
-
-              <div class="row" style="margin-top: 1em;">
+              <div class="row" style="margin-top: 1em;display: none;" >
               <div class="form-check" >
                   <input type="checkbox" id="habilitarseleccion" class="form-check-input " value="0" style="top: -0.3em;" />
                   <label for="" class="form-check-label">Selección automática</label>
 
                  </div>
             </div>
+            <div class="row">
+              <div class="col" id="divcantidadhorarios" style="display:none;margin-top: 1em;font-weight: bold;">
+                
+                <span>Horarios: <span id="candhorarios" style="font-size: 25px;"></span></span>
+              </div>
+            </div>
 
 
               <div class="row" style="margin-top: 1em;">
                 <div class="col">
-                   <button class="link button " style="font-size: 17px;background: white;" id="btnaplicar" style="">Aplicar</button>
+                   <button class="link button button-fill" style="font-size: 17px;background: white;" id="btnaplicar" style="">Aplicar</button>
                 </div>
               
               </div>
+
+              <div class="row">
+              <div class="col" id="divhorariostexto" style="display:none;margin-top: 1em;font-weight: bold;">
+                
+              </div>
+            </div>
+
 
               <div class="row" style="" id="listadofechas"></div>
               <div class="row contadorhorarios" style="margin-bottom:1em;display:none;">
@@ -330,34 +521,20 @@
             </div>
           </div>
         </li>
-        <li class="accordion-item" style="background: #f3f3f3;display: none; " id="costos-tab">
-          <a href="#" class="item-link item-content">
+
+         
+
+
+          <li class="accordion-item" style="background: #f3f3f3;display: none; " id="avanzados-tab">
+          <!-- <a href="#" class="item-link item-content">
             <div class="item-inner">
-              <div class="item-title">Costos</div>
+              <div class="item-title">Modalidad</div>
             </div>
-          </a>
+          </a> -->
+
           <div class="accordion-item-content" style="font-size: 16px;" aria-hidden="true">
-            <div class="block" style="background: white">
 
-              <div class="row" style="margin-top: 1em;">
-               <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Asignar costo</p>
-
-              </div>
-
-               <div class="row">
-                <div class="item-content item-input item-input-with-value">
-                  <div class="item-inner licosto">
-                    <div class="item-title item-label">Costo unitario $</div>
-                    <div class="item-input-wrap">
-                      <input name="v_costo" id="v_costo" type="number" placeholder="" class="input-with-value"/>
-                      <span class="input-clear-button"></span>
-                    </div>
-                  </div>
-            </div>
-
-               </div>
-
-                <div class="row">
+          <div class="row">
                <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Modalidad de cobro</p>
 
               </div>
@@ -436,7 +613,7 @@
 
              
             </div>
-          </div>
+          
         </li>
 
           <li class="accordion-item" style="display: none;" id="aceptacion-tab">
@@ -677,11 +854,11 @@
 
 
          <li class="accordion-item" style="display: none;" id="coach-tab">
-          <a href="#" class="item-link item-content">
+         <!--  <a href="#" class="item-link item-content">
             <div class="item-inner">
               <div class="item-title">Asignar coaches</div>
             </div>
-          </a>
+          </a> -->
           <div class="accordion-item-content" style="font-size: 16px;" aria-hidden="true">
             <div class="block" style="background: white">
               <div id="listadocoach" style="margin-bottom: 1em;" class="row"></div>
@@ -708,7 +885,7 @@
           <button class="button button-fill color-red" id="btncancelarservicio">Cancelar servicio</button>
         </div>
       </div>
-   
+    </div>
 
     </div>
              
@@ -730,4 +907,23 @@
 
 
 </template>
+
+<style type="text/css">
+  .swiper-container {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-wrapper {
+    display: flex;
+}
+
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff; /* Color de fondo de las slides */
+    /* Puedes agregar más estilos a tus slides aquí */
+}
+</style>
 

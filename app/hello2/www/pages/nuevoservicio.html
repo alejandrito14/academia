@@ -1,0 +1,733 @@
+<template>
+<div class="page " data-name="nuevoservicio">
+    
+    <div class="navbar">
+        <div class="navbar-bg"></div>
+        <div class="navbar-inner">
+            <div class="left">
+               <!--  <a class="button button-fill text-color-theme bg-color-white button-44 regreso"
+                    >
+                    <i class="bi bi-arrow-left"></i>
+                </a> -->
+            </div>
+            <div class="title">
+              
+            
+            </div>
+            <div class="right">
+             
+            </div>
+        </div>
+    </div>
+
+      <div class="fab fab-left-bottom  " style="bottom: 4em; ">
+    <a class="btnregreso regreso" style="">
+     <i class="bi bi-arrow-left" style=""></i>
+    </a>
+  </div>
+
+    <div class="fab  fab-right-bottom divflotantea" style="" style="bottom: 4em; ">
+    <a  style="" class="color-theme" id="btnguardarservicio">
+    <i class="bi-check-circle-fill"></i>
+     <!--  <div class="fab-text">Guardar</div> -->
+    </a>
+  <!--   <a  style="    border-radius: 10px;
+    height: 60px;" class="button button-fill button-large button-raised margin-bottom color-theme" id="btnsiguiente">
+      <div class="fab-text">Siguiente</div>
+    </a> -->
+
+    <!-- <a  class="link button" style="border-radius: 10px;height: 60px;background: white;color: #007aff;"  id="btncancelarasi">
+      <div class="">Cancelar</div>
+    </a> -->
+  </div>
+    <!-- main page content -->
+    <div class="page-content">
+        <div style=""></div>
+        <!-- user information -->
+
+        <div class="row">
+
+          <div class="col-85 margin-left-auto margin-right-auto align-self-center  padding-vertical"><h1 style="" id="txtpagina"> Nuevo <span style="color: #0abe68;">servicio</span>
+          </h1>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-100">
+          <img src="" alt="" class="imglogoimagenservicio fotoimagen" style="width: 100%;height: 70%;border-top-left-radius: 10px;border-top-right-radius: 10px;border-radius: 10px;" />
+         
+        </div>
+      </div>
+
+
+
+      
+            
+        <div class="row listadoserviciosadicionales">
+
+
+            <div class="list accordion-list ">
+               
+      <input type="hidden" id="id" value="0"/>
+      <input type="hidden" id="avanzado" value="0" />
+      <ul>
+        <li class="accordion-item accordion-item-opened" id="general-tab" style="background: #f3f3f3 ">
+          <a href="#" class="item-link item-content">
+            <div class="item-inner">
+              <div class="item-title">General</div>
+            </div>
+          </a>
+          <div class="accordion-item-content" style="font-size: 16px;" aria-hidden="true">
+            <div class="block" style="background: white">
+                <div class="item-content item-input  item-input-with-value  itemtitulo">
+                  <div class="item-inner lititulo">
+                        <div class="item-title item-floating-label">Titulo</div>
+                    <div class="item-input-wrap">
+                      <input name="v_titulo" id="v_titulo" type="text" placeholder="" />
+                      <span class="input-clear-button"></span>
+                    </div>
+                  </div>
+            </div>
+
+
+
+ 
+            <div class="item-content item-input item-input-with-value">
+                  <div class="item-inner lidescripcion">
+                        <div class="item-title item-label">Descripción</div>
+                    <div class="item-input-wrap">
+                      <input name="v_descripcion" type="text" id="v_descripcion" placeholder="" class="input-with-value"/>
+                      <span class="input-clear-button"></span>
+                    </div>
+                  </div>
+              </div>
+           
+
+            <div class="item-content item-input item-input-with-value">
+                  <div class="item-inner litiposervicio">
+                        <div class="item-title item-label">Tipo de servicio</div>
+                    <div class="item-input-wrap">
+                    <select id="v_categoria">
+                     
+                    </select>
+                      
+                    </div>
+                  </div>
+              </div>
+
+
+  <div class="item-content item-input item-input-with-value divcategoria" id="" style="display: none;">
+                  <div class="item-inner licategoria">
+                        <div class="item-title item-label">Categoria</div>
+                    <div class="item-input-wrap">
+                   <select id="v_categoriaservicio">
+                    </select>
+                      
+                    </div>
+                  </div>
+              </div>
+
+            <div class="item-content item-input item-input-with-value" style="display: none;">
+                  <div class="item-inner liorden">
+                        <div class="item-title item-label">Orden</div>
+                    <div class="item-input-wrap">
+                      <input name="v_orden" type="number" id="v_orden" placeholder="" class="input-with-value"/>
+                      <span class="input-clear-button"></span>
+                    </div>
+                  </div>
+              </div>
+              
+             <div class="item-content item-input item-input-with-value" style="display: none;" id="contentestatus">
+                  <div class="item-inner liestatus">
+                   <div class="item-title item-label">Estatus</div>
+                    <div class="item-input-wrap">
+                      <!-- <select id="v_estatus">
+                       <option value="0">Desactivado</option>
+                       <option value="1" selected="selected">Activado</option>
+                    </select> -->
+
+                     <label class="toggle toggle-init color-blue">
+                      <input id="v_estatus" type="checkbox"  />
+                      <span class="toggle-icon"></span>
+                    </label>
+
+                    </div>
+
+
+                  </div>
+            </div>
+
+
+            </div>
+
+          </div>
+  
+        </li>
+        <li class="accordion-item" id="profile-tab" style="display: none;">
+          <a href="#" class="item-link item-content">
+            <div class="item-inner">
+              <div class="item-title">Disponibilidad</div>
+            </div>
+          </a>
+          <div class="accordion-item-content" style="font-size: 16px;" aria-hidden="true">
+            <div class="list" style="background: white">
+             <div class="btn-group btn-group-toggle d-flex flex-column flex-md-row" data-toggle="buttons">
+              <div class="row" style="margin-top: 1em;">
+               <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Días</p>
+
+              </div>
+
+               <div class="row">
+               <span style="" class="liseleccionardias">Seleccionar días</span>
+               
+              </div>
+
+              <div class="row"> 
+                 <label class="btn btn_colorgray2 lbldomingo lbldias btn_colorgray3">
+                                    <input type="checkbox" id="Domingo" class="diasckeckbox" value="0"  /> Domingo
+                  </label>
+
+              </div>
+               <div class="row"> 
+                   <label class="btn btn_colorgray2 lbllunes lbldias">
+                    <input type="checkbox" id="Lunes" class="diasckeckbox" value="1" /> Lunes
+                                  </label>
+                   </div>
+               <div class="row"> 
+
+                   <label class="btn btn_colorgray2 lblmartes lbldias">
+                       <input type="checkbox" id="Martes" class="diasckeckbox" value="2"  /> Martes
+                                  </label>
+                </div>
+                 <div class="row"> 
+
+                    <label class="btn btn_colorgray2 lblmiercoles lbldias">
+                    <input type="checkbox" id="Miercoles" class="diasckeckbox" value="3"  /> Miércoles
+                    </label>
+                   </div>
+                     <div class="row"> 
+
+
+                        <label class="btn btn_colorgray2 lbljueves lbldias">
+                         <input type="checkbox" id="Jueves" class="diasckeckbox" value="4"  /> Jueves
+                                  </label>
+                                 </div>
+                     <div class="row"> 
+
+                                   <label class="btn btn_colorgray2 lblviernes lbldias btn_colorgray3">
+                                <input type="checkbox" id="Viernes" class="diasckeckbox" value="5"  /> Viernes
+                                  </label>
+                                 </div>
+                         <div class="row"> 
+
+                            <label class="btn btn_colorgray2 lblsabado lbldias btn_colorgray3">
+                                <input type="checkbox" id="Sabado" class="diasckeckbox" value="6"  /> Sábado
+                                  </label>
+                        </div>
+
+              <div class="row" style="margin-top: 1em;">
+               <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Asignar horarios</p>
+
+              </div>
+
+               <div class="row">
+               <span style="" class="liseleccionafechas">Selecciona la fecha inicial y final para el periodo del servicio </span>
+               
+              </div>
+
+              <div class="row">
+               <div class="item-content item-input"><div class="item-inner lifechainicial">
+                <div class="item-title item-label">Fecha inicial</div><div class="item-input-wrap">
+
+                 <input type="date" class="form-control" id="v_fechainicial" name="v_fechainicial"  title="FECHA INICIAL" placeholder="" />
+                <span class="input-clear-button"></span></div></div></div>
+
+
+              
+              </div>
+
+              <div class="row">
+
+               <div class="item-content item-input"><div class="item-inner lifechafinal">
+                <div class="item-title item-label">Fecha final</div><div class="item-input-wrap">
+                <input type="date" class="form-control" id="v_fechafinal" name="v_fechafinal" title="FECHA FINAL" placeholder="" />
+
+                <span class="input-clear-button"></span></div></div></div>
+
+              
+              </div>
+              <div class="row divrow divseleccionarhorarios" style="margin-top: 1em;display: none;">
+
+                 <div class="item-title item-label">Seleccionar cancha</div>
+
+                    <li style="    margin: 0;padding: 0;">
+                    <a class="item-link smart-select smart-select-init smartselectzonas" data-open-in="popover">
+                      <select name="superhero" id="v_zonas" multiple>
+                       
+                      </select>
+                      <div class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title">Canchas</div>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+              </div>
+
+               <div class="row divseleccionarhorarios" style="margin-top: 1em;display: none;">
+
+                 <div class="item-title item-label">Seleccionar horario</div>
+
+                    <li style="    margin: 0;padding: 0;">
+                    <a class="item-link smart-select smart-select-init smartselectorhora" data-open-in="popover">
+                      <select name="horarios" id="v_horarios" multiple>
+                       
+                      </select>
+                      <div class="item-content">
+                        <div class="item-inner">
+                          <div class="item-title">Horarios</div>
+                        </div>
+                      </div>
+                    </a>
+                  </li>
+              </div>
+
+              <div class="row" style="margin-top: 1em;">
+              <div class="form-check" >
+                  <input type="checkbox" id="habilitarseleccion" class="form-check-input " value="0" style="top: -0.3em;" />
+                  <label for="" class="form-check-label">Selección automática</label>
+
+                 </div>
+            </div>
+
+
+              <div class="row" style="margin-top: 1em;">
+                <div class="col">
+                   <button class="link button " style="font-size: 17px;background: white;" id="btnaplicar" style="">Aplicar</button>
+                </div>
+              
+              </div>
+
+              <div class="row" style="" id="listadofechas"></div>
+              <div class="row contadorhorarios" style="margin-bottom:1em;display:none;">
+                <div class="col">
+                 <span style="font-weight: bold;">Horarios:</span> <span id="cantidadhorarios">0</span>
+               </div>
+               
+              </div>
+              <div class="row">
+               <div id="demo-calendar" style="display: none;"></div>
+              </div>
+
+              <div class="row" id="selected-dates" style="margin-top: 1em;">
+                
+              </div>
+
+
+
+               </div>
+            </div>
+          </div>
+        </li>
+        <li class="accordion-item" style="background: #f3f3f3;display: none; " id="costos-tab">
+          <a href="#" class="item-link item-content">
+            <div class="item-inner">
+              <div class="item-title">Costos</div>
+            </div>
+          </a>
+          <div class="accordion-item-content" style="font-size: 16px;" aria-hidden="true">
+            <div class="block" style="background: white">
+
+              <div class="row" style="margin-top: 1em;">
+               <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Asignar costo</p>
+
+              </div>
+
+               <div class="row">
+                <div class="item-content item-input item-input-with-value">
+                  <div class="item-inner licosto">
+                    <div class="item-title item-label">Costo unitario $</div>
+                    <div class="item-input-wrap">
+                      <input name="v_costo" id="v_costo" type="number" placeholder="" class="input-with-value"/>
+                      <span class="input-clear-button"></span>
+                    </div>
+                  </div>
+            </div>
+
+               </div>
+
+                <div class="row">
+               <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Modalidad de cobro</p>
+
+              </div>
+               <div class="row">
+               <p style="" class="limonto">Monto</p>
+
+              </div>
+
+              <div class="row">
+                <label class="btn btn_colorgray2  btn_colorgray3">
+                    <input type="radio" name="v_grupo" id="v_individual" class="" value="1" /> Monto fijo
+                  </label>
+
+                  <label for="" style="    margin-left: 1em;height: 40px;    margin-top: 1em;display: none;" id="divaceptarserviciopago">
+                    <input type="checkbox" name="" id="v_aceptarserviciopago" value="0" />Aceptar el servicio en el pago
+                  </label>
+
+
+              </div>
+
+               <div class="row">
+                <label class="btn btn_colorgray2  btn_colorgray3">
+                  <input type="radio" name="v_grupo" id="v_grupal" value="2"  class="" /> Monto dividido
+                  </label>
+
+
+              </div>
+
+                 <div class="row" style="margin-top: 1em;">
+                <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Número de participantes</p>
+
+              </div>
+
+                <div class="row">
+                <div class="item-content item-input item-input-with-value">
+                  <div class="item-inner linumparticipantesmin">
+                        <div class="item-title item-label">Mínimo</div>
+                      <div class="item-input-wrap">
+                        <input name="v_numparticipantesmin" id="v_numparticipantesmin" type="number" placeholder="" class="input-with-value"/>
+                        <span class="input-clear-button"></span>
+                      </div>
+                    </div>
+              </div>
+
+
+
+               </div>
+
+                <div class="row">
+                <div class="item-content item-input item-input-with-value">
+                  <div class="item-inner linumparticipantesmax">
+                        <div class="item-title item-label">Máximo</div>
+                      <div class="item-input-wrap">
+                        <input name="v_numparticipantesmax" id="v_numparticipantesmax" type="number" placeholder="" class="input-with-value"/>
+                        <span class="input-clear-button"></span>
+                      </div>
+                    </div>
+              </div>
+
+              
+
+               </div>
+
+               <div class="row" style="margin-top: 1em;">
+                <p class="liperiodosdecobro" style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Periodos de cobro</p>
+
+              </div>
+
+               <div id="listadoperiodo" style="margin-bottom: 1em;" class="row"></div>
+<div class="row" >
+  <div class="col">
+               <button id="btnagregarperiodo" class="link button " style="font-size: 17px;background: white;" >Agregar periodo</button>
+             </div>
+</div>
+
+
+             
+            </div>
+          </div>
+        </li>
+
+          <li class="accordion-item" style="display: none;" id="aceptacion-tab">
+          <a href="#" class="item-link item-content">
+            <div class="item-inner">
+              <div class="item-title">Políticas y Mensajes</div>
+            </div>
+          </a>
+          <div class="accordion-item-content" style="font-size: 16px;" aria-hidden="true">
+            <div class="block" style="background: white">
+              <div class="row" style="margin-top: 1em;">
+                <p class="parrafopoliticasaceptacion" style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Políticas de aceptación</p>
+
+              </div>
+
+
+              <div class="row">
+                <div class="item-content item-input item-input-with-value lipoliticasaceptacion">
+                  <div class="item-inner">
+                    <select name="" id="v_politicaaceptacionseleccion"></select>
+                  </div>
+                </div>
+              </div>
+                <div class="row">
+                <div class="item-content item-input item-input-with-value">
+                  <div class="item-inner lidescripcionpoliticas">
+                        <div class="item-title item-label">Descripcion</div>
+                      <div class="item-input-wrap">
+                        <input name="v_politicasaceptacion" id="v_politicasaceptacion" type="text" placeholder="" class="input-with-value" disabled />
+                        <span class="input-clear-button"></span>
+                      </div>
+                    </div>
+              </div>
+
+              
+
+               </div>
+
+                <div class="row" style="margin-top: 1em;display: none;">
+                <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Avisos</p>
+
+              </div>
+
+               <div class="row" style="">
+                <div class="item-content item-input item-input-with-value">
+                  <div class="item-inner litiempoavisos">
+                        <div class="item-title item-label">Tiempo de avisos (minutos antes)</div>
+                      <div class="item-input-wrap">
+                        <input name="v_tiempoaviso" id="v_tiempoaviso" type="text" placeholder="" class="input-with-value"/>
+                        <span class="input-clear-button"></span>
+                      </div>
+                    </div>
+              </div>
+
+              
+
+               </div>
+
+                <div class="row" style="">
+                <div class="item-content item-input item-input-with-value">
+                  <div class="item-inner litituloavisos" style="display: none;">
+                        <div class="item-title item-label">Mensaje</div>
+                      <div class="item-input-wrap">
+                        <input name="v_tituloaviso" id="v_tituloaviso" type="text" placeholder="" class="input-with-value"/>
+                        <span class="input-clear-button"></span>
+                      </div>
+                    </div>
+              </div>
+
+              
+
+               </div>
+
+                  <div class="row" style="display: none;">
+                <div class="item-content item-input item-input-with-value">
+                  <div class="item-inner lidescripcionavisos">
+                        <div class="item-title item-label">Descripción</div>
+                      <div class="item-input-wrap">
+                        <input name="v_descripcionaviso" id="v_descripcionaviso" type="text" placeholder="" class="input-with-value"/>
+                        <span class="input-clear-button"></span>
+                      </div>
+                    </div>
+              </div>
+
+              
+
+               </div>
+
+
+             
+            </div>
+          </div>
+        </li>
+
+
+         <li class="accordion-item" style="background: #f3f3f3;display: none;" id="multi-tab">
+          <a href="#" class="item-link item-content">
+            <div class="item-inner">
+              <div class="item-title">Reglas y permisos</div>
+            </div>
+          </a>
+          <div class="accordion-item-content" style="font-size: 16px;" aria-hidden="true">
+            <div class="block" style="background: white">
+               <div class="row" style="margin-top: 1em;">
+                <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Controlar asistencia</p>
+
+              </div>
+
+                <div class="row"> 
+
+                          <label class="btn ">
+                         <input type="checkbox" id="v_asistencia" class=""   /> Asistencia
+                         </label>
+                  </div>
+                  <div class="row" style="margin-top: 1em;">
+                 <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Poíticas de cancelación</p>
+
+               </div>
+                   <div class="row"> 
+
+                          <label class="btn ">
+                         <input type="checkbox" id="v_reembolso" class=""   /> Reembolso
+                         </label>
+                        </div>
+
+
+
+                 <div class="row divcantidadreembolso" style="display: none;">
+
+                    <div class="item-content item-input item-input-with-value">
+                  <div class="item-inner litiporeembolso">
+                        <div class="item-title item-label">Tipo de reembolso</div>
+                      <div class="item-input-wrap">
+                        <select name="v_tiporeembolso" id="v_tiporeembolso">
+                          <option value="0">Porcentaje</option>
+                          <option value="1">Monto</option>
+                        </select>
+                      </div>
+                    </div>
+              </div> 
+            </div>
+
+                   <div class="row divcantidadreembolso" style="display: none;">
+
+                    <div class="item-content item-input item-input-with-value">
+                  <div class="item-inner licantidadreembolso">
+                        <div class="item-title item-label">Cantidad</div>
+                      <div class="item-input-wrap">
+                       
+                       <input type="number" id="v_cantidadreembolso" class="input-with-value"   /> 
+                        
+
+                        <span class="input-clear-button"></span>
+                      </div>
+                    </div>
+              </div> 
+                       
+                         
+                        
+                  </div>
+                   <div class="row ">
+                        <label class="btn ">
+                         <input type="checkbox" id="v_asignadocliente" class=""   /> Cancelado por cliente
+                         </label>
+                        </div>
+                   <div class="row ">
+                        <label class="btn ">
+                         <input type="checkbox" id="v_asignadocoach" class=""   /> Cancelado por coach
+                         </label>
+                        </div>
+                    <div class="row ">
+                        <label class="btn ">
+                         <input type="checkbox" id="v_asignadoadmin" class=""   /> Cancelado por admin
+                         </label>
+                        </div>
+
+                   <div class="row" style="margin-top: 1em;">
+                     <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Asignaciones</p>
+
+               </div>
+
+               <div class="row ">
+                        <label class="btn ">
+                         <input type="checkbox" id="v_abiertocliente" class=""   /> Permitir asignar al cliente
+                         </label>
+                        </div>
+
+                <div class="row ">
+                        <label class="btn ">
+                         <input type="checkbox" id="v_abiertocoach" class=""   /> Permitir asignar al coach
+                         </label>
+                        </div>
+                
+                 <div class="row ">
+                        <label class="btn ">
+                         <input type="checkbox" id="v_abiertoadmin" class=""   /> Permitir asignar al admin
+                         </label>
+                        </div>
+
+               <div class="row" style="margin-top: 1em;">
+                 <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);">Ligar clientes</p>
+
+               </div>
+
+                <div class="row ">
+                        <label class="btn ">
+                         <input type="checkbox" id="v_ligarclientes" class=""   /> Permitir ligar clientes
+                         </label>
+                        </div>
+
+            <div class="row" id="cantidadligar" style="display: none;">
+              <div class="item-content item-input item-input-with-value" >
+                  <div class="item-inner licantidadligar">
+                        <div class="item-title item-label">Cantidad</div>
+                      <div class="item-input-wrap">
+                       
+                       <input type="number" id="v_numligarclientes" placeholder="" class="input-with-value"   /> 
+                        
+
+                        <span class="input-clear-button"></span>
+                      </div>
+                    </div>
+              </div> 
+             </div>
+
+             <div class="row">
+                 <p style="font-weight: bold;background: rgba(0, 0, 0, 0.03);margin-bottom: 1em;">Encuestas</p>
+
+               </div>
+                <div class="row">
+               <div class="listadoencuestas"></div>
+                </div> 
+                <div class="row"></div> 
+             
+            </div>
+          </div>
+        </li>
+
+
+         <li class="accordion-item" style="display: none;" id="coach-tab">
+          <a href="#" class="item-link item-content">
+            <div class="item-inner">
+              <div class="item-title">Asignar coaches</div>
+            </div>
+          </a>
+          <div class="accordion-item-content" style="font-size: 16px;" aria-hidden="true">
+            <div class="block" style="background: white">
+              <div id="listadocoach" style="margin-bottom: 1em;" class="row"></div>
+              <div class="row">
+                <div class="col">
+                  
+                   <button id="btnagregarcoach" class="link button " style="font-size: 17px;background: white;" >Agregar coach</button>
+                </div>
+              
+</div>
+                <div style="height: 50px;"></div>
+
+            </div>
+          </div>
+        </li>
+
+
+
+      </ul>
+
+
+      <div class="row" style="margin-top: 1em;">
+        <div class="col" id="btncancelar">
+          <button class="button button-fill color-red" id="btncancelarservicio">Cancelar servicio</button>
+        </div>
+      </div>
+   
+
+    </div>
+             
+        </div>
+       <!--  <div class="row">
+          <div class="col">
+             <button id="btnguardarservicio" class="button button-fill button-large button-raised margin-bottom color-theme" >GUARDAR</button>
+          </div>
+         
+        </div> -->
+        <div style="height: 100px;"></div>
+
+
+    </div>
+
+
+</div>
+
+
+
+</template>
+

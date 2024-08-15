@@ -464,6 +464,115 @@ function decrypt($string, $key) {
     $cadena = strtr($cadena, utf8_decode($originales), $modificadas);
     return utf8_encode($cadena);
 		}
+
+		function agruparHorarios($arr) {
+    $horariosAgrupados = array();
+
+    foreach ($arr as $diaObj) {
+        $horas = $diaObj['horas'];
+
+        foreach ($horas as $horaObj) {
+            $horainicial = $horaObj['horainicial'];
+            $horafinal = $horaObj['horafinal'];
+            $disponible = $horaObj['disponible'];
+
+            // Añadir solo si horafinal no está vacío
+            if (!empty($horafinal)) {
+                // Buscar si ya existe un intervalo con la misma hora inicial y final
+                $encontrado = false;
+                foreach ($horariosAgrupados as &$grupo) {
+                    if ($grupo['horainicial'] === $horainicial && $grupo['horafinal'] === $horafinal) {
+                        // Si encontramos un intervalo igual, actualizamos el disponible
+                        if ($grupo['disponible'] !== $disponible) {
+                            $grupo['disponible'] = $disponible;
+                        }
+                        $encontrado = true;
+                        break;
+                    }
+                }
+
+                // Si no encontramos un intervalo igual, lo añadimos al array de agrupados
+                if (!$encontrado) {
+                    $horariosAgrupados[] = array(
+                        'horainicial' => $horainicial,
+                        'horafinal' => $horafinal,
+                        'disponible' => $disponible
+                    );
+                }
+            }
+        }
+    }
+
+    return $horariosAgrupados;
+}
+
+
+function agruparPorFecha($data) {
+    $agrupado = [];
+
+    foreach ($data as $entry) {
+        $fecha = $entry['fecha'];
+        $horas = $entry['horasposibles'][0];
+        $fechaformato=$entry['fechaformato'];
+        if (!isset($agrupado[$fecha])) {
+            $agrupado[$fecha] = [
+                'fecha' => $fecha,
+                'diaSemana' => $entry['diaSemana'],
+                'dia' => $entry['dia'],
+                'numdia' => $entry['numdia'],
+                'horasposibles' => $horas,
+                'fechaformato'=>$fechaformato
+            ];
+        } else {
+            $agrupado[$fecha]['horasposibles'] = array_merge($agrupado[$fecha]['horasposibles'], $horas);
+        }
+    }
+
+    // Convertimos el objeto de nuevo a un array
+    return array_values($agrupado);
+}
+
+
+
+
+	function agruparPorFecha2($data) {
+    $agrupado = [];
+
+    foreach ($data as $entry) {
+        $fecha = $entry['fecha'];
+        $horas = $entry['horasposibles'][0];
+        $fechaformato = $entry['fechaformato'];
+
+        if (!isset($agrupado[$fecha])) {
+            $agrupado[$fecha] = [
+                'fecha' => $fecha,
+                'diaSemana' => $entry['diaSemana'],
+                'dia' => $entry['dia'],
+                'numdia' => $entry['numdia'],
+                'horasposibles' => [],
+                'fechaformato' => $fechaformato
+            ];
+        }
+
+        // Aplanar las horas y evitar duplicados
+        foreach ($horas as $hora) {
+            $found = false;
+            foreach ($agrupado[$fecha]['horasposibles'] as $existingHora) {
+                if ($existingHora['horainicial'] == $hora['horainicial'] && $existingHora['horafinal'] == $hora['horafinal']) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                //$agrupado[$fecha]['horasposibles'][] = $hora;
+                array_push($agrupado[$fecha]['horasposibles'],$hora);
+            }
+        }
+    }
+
+    // Convertimos el objeto de nuevo a un array
+    return array_values($agrupado);
+}
 	
 }
 ?>

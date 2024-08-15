@@ -57,8 +57,13 @@ class Notapago
 
 	public $idpaquete;
 	public $costounitario;
+	public $monederousado;
 
+	public $idnotapagodescripcion;
 
+	public $idbancoseleccionado;
+	public $idopciontarjetaseleccionado;
+	public $digitostarjeta;
 	/*public function CrearNotapago()
 	{
 		$sql="INSERT INTO notapago( idusuario, subtotal, iva, total, comisiontotal, montomonedero, estatus, idtipopago, tipopago, confoto, datostarjeta,datostarjeta2,idpagostripe, folio) VALUES ('$this->idusuario', '$this->subtotal','$this->iva', '$this->total', '$this->comisiontotal','$this->montomonedero','$this->estatus','$this->idtipopago','$this->tipopago','$this->confoto','$this->datostarjeta','$this->datostarjeta2','$this->idpagostripe','$this->folio')";
@@ -70,7 +75,7 @@ class Notapago
 
 	public function CrearNotapago()
 	{
-		$sql="INSERT INTO notapago( idusuario, subtotal, iva, total, comisiontotal, montomonedero, estatus, idtipopago, tipopago, confoto, datostarjeta,datostarjeta2,idpagostripe,folio,comisionpornota,comisionnota,tipocomisionpornota,requierefactura,razonsocial,rfc,direccion,nointerior,noexterior,colonia,municipio,estado,codigopostal,correo,pais,asentamiento,calle,formapago,metodopago,usocfdi,imagenconstancia,idusuariodatofiscal) VALUES ('$this->idusuario', '$this->subtotal','$this->iva', '$this->total', '$this->comisiontotal','$this->montomonedero','$this->estatus','$this->idtipopago','$this->tipopago','$this->confoto','$this->datostarjeta','$this->datostarjeta2','$this->idpagostripe','$this->folio','$this->comisionpornota','$this->comisionnota','$this->tipocomisionpornota',
+		$sql="INSERT INTO notapago( idusuario, subtotal, iva, total, comisiontotal, montomonedero, estatus, idtipopago, tipopago, confoto, datostarjeta,datostarjeta2,idpagostripe,folio,comisionpornota,comisionnota,tipocomisionpornota,requierefactura,razonsocial,rfc,direccion,nointerior,noexterior,colonia,municipio,estado,codigopostal,correo,pais,asentamiento,calle,formapago,metodopago,usocfdi,imagenconstancia,idusuariodatofiscal,tpv,idbanco,tipotarjeta,digitostarjeta) VALUES ('$this->idusuario', '$this->subtotal','$this->iva', '$this->total', '$this->comisiontotal','$this->montomonedero','$this->estatus','$this->idtipopago','$this->tipopago','$this->confoto','$this->datostarjeta','$this->datostarjeta2','$this->idpagostripe','$this->folio','$this->comisionpornota','$this->comisionnota','$this->tipocomisionpornota',
 			'$this->requierefactura',
 			'$this->razonsocial',
 			'$this->rfc',
@@ -89,11 +94,17 @@ class Notapago
 			'$this->metodopago',
 			'$this->usocfdi',
 			'$this->imagenconstancia',
-			'$this->idusuariodatofiscal'
+			'$this->idusuariodatofiscal',
+			'1',
+			'$this->idbancoseleccionado',
+			'$this->idopciontarjetaseleccionado',
+			'$this->digitostarjeta'
 
 			)";
+ 
+			
 
-		echo $sql;die();
+
 		 $resp=$this->db->consulta($sql);
 		 $this->idnotapago=$this->db->id_ultimo();
 
@@ -101,7 +112,7 @@ class Notapago
 
 	public function ActualizarNotapago()
 	{
-		$sql="UPDATE notapago SET 
+		/*$sql="UPDATE notapago SET 
 			  subtotal = '$this->subtotal',
 			  iva = '$this->iva', 
 			  total = '$this->total', 
@@ -111,8 +122,19 @@ class Notapago
 			  idpagostripe = '$this->idpagostripe', 
 			  descuento='$this->descuento',
 			  descuentomembresia='$this->descuentomembresia'
+			  WHERE idnotapago='$this->idnotapago'";*/
+			 $sql="UPDATE notapago SET 
+			  subtotal = '$this->subtotal',
+			  iva = '$this->iva', 
+			  total = '$this->total', 
+			  comisiontotal = '$this->comisiontotal',
+			  montomonedero = '$this->montomonedero', 
+			  estatus = '$this->estatus',  
+			  idpagostripe = '$this->idpagostripe', 
+			  descuento='$this->descuento',
+			  descuentomembresia='$this->descuentomembresia',
+			  fechareporte='$this->fechareporte'
 			  WHERE idnotapago='$this->idnotapago'";
-
 		$resp=$this->db->consulta($sql);
 
   
@@ -120,17 +142,24 @@ class Notapago
 
 	public function Creardescripcionpago()
 	{
-		$sql="INSERT INTO notapago_descripcion( idnotapago, descripcion, cantidad, monto, idpago) VALUES ( '$this->idnotapago', '$this->descripcion', '$this->cantidad','$this->monto', '$this->idpago')";
-
+		$sql="INSERT INTO notapago_descripcion( idnotapago, descripcion, cantidad, monto, idpago,monederousado) VALUES ('$this->idnotapago', '$this->descripcion', '$this->cantidad','$this->monto', '$this->idpago','$this->monederousado')";
+		
 		$resp=$this->db->consulta($sql);
-
+		$this->idnotapagodescripcion=$this->db->id_ultimo();
 	}
 	
 	public function CreardescripcionpagoPaquete()
+
 	{
-		$sql="INSERT INTO notapago_descripcion( idnotapago, descripcion, cantidad, monto, idpaquete,costounitario) VALUES ( '$this->idnotapago', '$this->descripcion', '$this->cantidad','$this->monto', '$this->idpaquete','$this->costounitario')";
+		try {
+			$sql="INSERT INTO notapago_descripcion( idnotapago, descripcion, cantidad, monto, idpaquete,costounitario,monederousado) VALUES ( '$this->idnotapago', '$this->descripcion', '$this->cantidad','$this->monto', '$this->idpaquete','$this->costounitario','$this->monederousado')";
 
 		$resp=$this->db->consulta($sql);
+		$this->idnotapagodescripcion=$this->db->id_ultimo();
+		} catch (Exception $e) {
+			echo $e;
+		}
+		
 
 	}
 
@@ -411,8 +440,8 @@ class Notapago
 	{
 		$sql="SELECT notapago.idnotapago,descripcion as concepto,monto,idpago,notapago.fecha,notapago.fechaaceptacion,cantidad,notapago.estatus,notapago.tipopago,notapago.folio,notapago.fechareporte  	FROM notapago_descripcion 
 		INNER JOIN notapago ON notapago.idnotapago=notapago_descripcion.idnotapago
-		 WHERE idpago='$this->idpago'";
-
+		 WHERE idpago='$this->idpago' AND notapago.estatus=1";
+		 
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -525,6 +554,20 @@ class Notapago
 		return $array;
 	}
 
+	public function ActualizarNotaAIncompleto()
+	{
+		try {
+			$sql="UPDATE notapago SET 
+				  estatus =3 
+		WHERE idnotapago='$this->idnotapago'";
+				  
+			$resp=$this->db->consulta($sql);
+			
+		} catch (Exception $e) {
+			echo $e;
+		}
+		
+	}
 
 	
 	

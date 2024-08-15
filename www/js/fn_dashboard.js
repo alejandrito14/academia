@@ -535,7 +535,7 @@ function PintarDia(msj) {
 
 										colorfondo="background:"+zonas[i].color;
 										servicioac=servicio[0].idservicio;
-										titulo="";
+										titulo=""; 
 										 marginbottom="border-bottom: 1px solid "+zonas[i].color+";";
 										 margintop="border-top: 1px solid "+zonas[i].color+";";
 											if (servicioante!=servicioac) {

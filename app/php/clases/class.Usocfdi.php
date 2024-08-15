@@ -140,7 +140,7 @@ class Usocfdi
 	public function ObtenerImagenesConstancia($iddatofiscal)
 	{
 		$query="SELECT * FROM imagenesconstancia WHERE idusuariosdatosfiscales='$iddatofiscal'";
-		echo $sql;die();
+		
 		$resp = $this->db->consulta($query);
 				$cont = $this->db->num_rows($resp);
 

@@ -2883,7 +2883,7 @@ function GuardarValidacionNota(idnotapago) {
      var bandera=1;
 	if (descripcion=='') {
 		bandera=0;
-		$("#txtvalidacion").css('border','1px solid red');
+	 	$("#txtvalidacion").css('border','1px solid red');
 		$("#txtdescripcion").text('Campo requerido');
 		$("#txtdescripcion").addClass('inputrequerido');
 	}

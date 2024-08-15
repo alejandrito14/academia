@@ -139,6 +139,8 @@ $estatuspago = array('NO PAGADO','PAGADO');
 						<th style="text-align: center;">ALUMNO</th>
 							<th style="text-align: center;">DESCRIPCIÓN</th>
 						<th style="text-align: center;">FECHA</th>
+						
+						<th style="text-align: center;">FECHA VALIDACIÓN</th>
 						<th style="text-align: center;">TIPO DE PAGO</th>
 					
 						<th style="text-align: center;">TOTAL</th>
@@ -186,6 +188,18 @@ $estatuspago = array('NO PAGADO','PAGADO');
 							
 
 							<td style="text-align: center;"><?php echo date('d-m-Y H:i:s',strtotime($l_pagos_row['fecha']));?></td>
+
+
+
+							<td style="text-align: center;"><?php
+							if ($l_pagos_row['fechareporte']!='') {
+								// code...
+							
+
+							 echo date('d-m-Y H:i:s',strtotime($l_pagos_row['fechareporte']));
+
+							}
+							?></td>
 
 							<td style="text-align: center;"><?php echo $l_pagos_row['tipopago'];?></td>
 
@@ -373,7 +387,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 <script type="text/javascript">
 	 $('#tbl_pagos').DataTable( {		
 	 
- "order": [[ 3, "desc" ]],
+ 			"order": [[ 3, "desc" ]],
 		 	"pageLength": 100,
 			"oLanguage": {
 						"sLengthMenu": "Mostrar _MENU_ ",

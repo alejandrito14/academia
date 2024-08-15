@@ -1,0 +1,209 @@
+<template>
+  <div class="page " data-name="registrodatosacceso">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="left">
+         <!--  <a href="/registro/"  class="button button-fill text-color-theme bg-color-white button-44 ">
+            <i class="bi bi-arrow-left"></i>
+          </a> -->
+        </div>
+        <div class="title">
+           
+        </div>
+        <div class="right"></div>
+      </div>
+    </div>
+
+      <div class="fab fab-left-bottom  " style="bottom: 4em; ">
+    <a class="btnregreso " href="/registro/" style="">
+     <i class="bi bi-arrow-left" style=""></i>
+    </a>
+  </div>
+
+    <div class="page-content">
+      <div class="block h-100 no-margin">
+        <div class="row ">
+           <div class="col-85 margin-left-auto margin-right-auto align-self-center  padding-vertical">
+          <h1 style=""> Ingresa tus <span style="color: #0abe68;">datos de acceso</span></h1>
+
+          
+         </div>
+
+          <div
+            class="col-85  margin-left-auto margin-right-auto align-self-center text-align-center padding-vertical">
+            <form  >
+              <div class="list form-list no-margin margin-bottom">
+                <ul>
+
+                   <li class="item-content item-input item-input-with-value is-valid licorreo">
+
+                  <div class="item-inner">
+                  <div class="item-title item-floating-label">Email</div>
+                  <div class="item-input-wrap">
+                  <input type="text" name="v_correo" id="v_correo" class="input-with-value" />
+                  <span class="input-clear-button datosregistro"></span>
+                </div>
+              </div>
+              </li>
+
+
+            
+                <li class="item-content item-input item-input-with-value is-valid liusuario">
+
+                  <div class="item-inner">
+                  <div class="item-title item-floating-label">Usuario</div>
+                  <div class="item-input-wrap">
+                  <input type="text" name="v_usuario" id="v_usuario" class="input-with-value" />
+                  <span class="input-clear-button datosregistro"></span>
+                </div>
+              </div>
+              </li>
+
+               <li class="item-content item-input item-input-with-value is-valid licontra1">
+
+                  <div class="item-inner">
+                  <div class="item-title item-floating-label"> Contraseña</div>
+                  <div class="item-input-wrap">
+                  <div class="cambiarinput"></div>
+
+                  <input type="password" name="v_contra1" id="v_contra1" class="input-with-value"  style="float: left;width: 80%;" />
+
+                    <span id="span1" style="color: rgb(146, 145, 141);
+    float: left;
+    width: 10%;
+    height: 34px;
+    margin-top: 0.9em;
+    margin-left: -0.5em;
+    display: none;
+    font-size: 20px;" 
+                                class="ojitoicono icon ">
+                                <i class="bi bi-eye-fill"></i></span>           
+                  <span class="input-clear-button limpiar"></span>
+                </div>
+              </div>
+              </li>
+
+               <li class="item-content item-input item-input-with-value is-valid licontra2">
+
+                  <div class="item-inner">
+                  <div class="item-title item-floating-label"> Confirmar contraseña</div>
+                  <div class="item-input-wrap">
+                     <div class="cambiarinput2"></div>
+                  <input type="password" name="v_contra2" id="v_contra2" class="input-with-value"  style="float: left;width: 80%;"/>
+
+                   <span id="span2" style="color: rgb(146, 145, 141);
+    float: left;
+    width: 10%;
+    height: 34px;
+    margin-top: 0.9em;
+    margin-left: -0.5em;
+    display: none;
+    font-size: 20px;" 
+                                class="ojitoicono2 icon ">
+                                <i class="bi bi-eye-fill"></i></span>  
+                  <span class="input-clear-button limpiar2"></span>
+                </div>
+              </div>
+              </li>
+              <div class="">
+                <div id="respuesta"></div> 
+              </div>
+             
+
+             
+          
+
+               <li class="item-content item-input item-input-with-value is-valid litipousuario" style="display: none;">
+
+                  <div class="item-inner">
+                  <div class="item-title item-floating-label">Tipo de usuario:</div>
+                  <div class="item-input-wrap">
+                  <select name="gender" id="v_tipousuario" class="colorletra" >
+                          <option value="0" class="special">Seleccionar tipo de usuario</option>
+                          <option class="black" value="3" >Alumno</option>
+                          <option class="black" value="5">Coach</option>
+                          <option class="black" value="2">Administrador</option>
+
+                        </select>
+                </div>
+              </div>
+              </li>
+            </ul>
+
+
+
+
+            </div>
+          
+              <p class="margin-bottom"> </p>
+
+              
+             
+
+             
+            </form>  
+            <div class="row" style="margin-bottom: 1em;">
+               <button type="button"  class="button button-fill button-large bg-color-white text-color-theme button-raised" id="btnmembresia" style="    margin: 1em;display: none;">
+               Solicitar membresía
+              </button>
+
+            </div>
+             <div id="mostrartuto">
+           
+
+             <div class="">
+                  <div class="col-100">
+                           <button type="button"  class="button button-fill button-large bg-color-white text-color-theme button-raised" id="btnregistraralumnos" style="margin-bottom: 1em;">
+                          ¿Deseas asociar un usuario?
+                          </button> 
+                      </div> 
+              </div>
+            <div class="mostraralumnos" style="display: none;">
+             <div class="row">
+              <div class="col" style="text-align: left;margin-top: 1em;font-weight: bold;">
+                Usuarios asociados
+              </div>
+            </div>
+
+              <div class="" id="alumnossecundarios" style="">
+             
+                <div class="col">
+                  <div class="block">
+                 
+                 <div class="list media-list listado" id="" style="">           
+                      </div>
+              
+                             
+                      </div>
+                    </div>
+              
+              </div>
+            </div>
+
+
+             
+
+              </div>
+               <div class="row">
+                
+               <!--  <div class="col-50">
+                  <button type="button"  class="button button-fill button-large bg-color-white text-color-theme button-raised" id="btnregresaracceso">
+                   Regresar
+                   </button>
+                </div> -->
+                <div class="col-100">
+                  
+                  <button type="button"  class="button button-fill button-large button-raised margin-bottom color-theme" id="btncontinuaracceso">
+                   Guardar
+                  </button>
+                </div>
+              </div>
+
+
+          </div>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

@@ -122,6 +122,7 @@ class Categorias
 	public function buscarCategoria()
 	{
 		$sql = "SELECT * FROM categorias WHERE idcategorias = '$this->idcategoria'";
+
 		$resp = $this->db->consulta($sql);
 		return $resp;
 	}
@@ -302,8 +303,8 @@ class Categorias
 	public function ObtenerCategoriasGroupEstatusDepende($depende)
 	{
 		
-		$sql="SELECT GROUP_CONCAT(idcategorias) AS categoriasid FROM categorias WHERE depende IN ($depende)";
-
+		$sql="SELECT GROUP_CONCAT(idcategorias) AS categoriasid FROM categorias WHERE depende IN ($depende) OR idcategorias IN ($depende)";
+		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -600,6 +601,7 @@ public function ObtenerCategoriasEstatusDepende2($depende)
 	{
 		$sql ="SELECT * FROM 
 			categorias  WHERE idtiposervicioconfiguracion='$this->tiposervicioconfiguracion'";
+			echo $sql;die();
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -688,6 +690,54 @@ GROUP BY YEAR(horariosservicio.fecha)";
 		
 		return $array;
 	}
+
+
+
+public function ObtenerSubSubCategoriaServicioFiltro($filtrosub)
+	{
+		
+		$sql="SELECT idcategoriasservicio, nombrecategoria from categoriasservicio WHERE 1=1 '";
+
+		if ($filtrosub!='') {
+
+			$sql.=" AND idcategorias='$this->idcategoria";
+		}
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function obtenerTodasSubcategorias($vcategoriapadre)
+	{
+		$sql="SELECT *FROM categorias";
+
+		if ($vcategoriapadre!='') {
+			$sql.=" WHERE idtiposervicioconfiguracion IN('$vcategoriapadre')";
+		}
+
+		
+
+		
+		$resp = $this->db->consulta($sql);
+		return $resp;
+	}
+
+
 
 
 }

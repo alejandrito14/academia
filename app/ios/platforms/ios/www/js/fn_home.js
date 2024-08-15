@@ -56,7 +56,7 @@ function CargarDatos() {
 
 	$$(".btnmisserviciospendientes").attr('onclick','MisServiciosPendientesAlumno()');
 	$$(".btnpagos").attr('onclick','GoToPage("listadopagos")');
-	$$(".inicioenlace").attr('onclick','GoToPage("home")');
+	 $$(".inicioenlace").attr('onclick','GoToPage("home")');
  	classtipo='tipoalumno';
  	 $$(".tipousuario").removeClass('tipoadmin');
  	 $$(".tipousuario").removeClass('tipocoach');
@@ -148,11 +148,13 @@ function CargarDatosAdmin(argument) {
 
     $$(".btnserviciosporvalidar").attr('onclick','ServiciosporValidar()');
 	VerificarServiciosporValidarAdmin();
-	VerificarServicios();
+	$(".divbtnservicios").css('display','block');
+
+	//VerificarServicios();
 	$$(".lipagos").attr('href','/listadopagosadmin/');
  
       //identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 5000);
-ObtenerCantidadNuevas();
+	ObtenerCantidadNuevas();
       if (localStorage.getItem('id_user')==1) {
       	var swiper = app.swiper.destroy('.cardswiper');
 		var swiper2 = app.swiper.destroy('.cardpublicidad');
@@ -238,8 +240,8 @@ function VerificarServiciosAsignados() {
 }
 function VerificarServicios() {
 	
-	var pagina = "ObtenerServicios.php";
-	var estatus=0;
+	var pagina = "ObtenerServiciosSinfiltro.php";
+	var estatus=0; 
 	var datos="estatus="+estatus;
 	$.ajax({
 		type: 'POST',
@@ -3131,12 +3133,18 @@ function FiltroServiciosCat() {
 	var v_coach=$("#v_coach").val();
 	var estatus=0;
 	var datos="estatus="+estatus+"&v_categorias="+v_categorias+"&v_coach="+v_coach;
+	 const myPromise = new Promise((resolve, reject) => {
+        CrearModalEspera4((finalizar) => {
+
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
 		url: urlphp+pagina,
 		data:datos,
 		async:false,
+		beforeSend: function() {
+
+		},
 		success: function(datos){
 
 			localStorage.setItem('v_categoriasvalor',v_categorias);
@@ -3144,7 +3152,14 @@ function FiltroServiciosCat() {
 			var respuesta=datos.respuesta;
 			var fechaactual=datos.fechaactual;
 			PintarServiciosRegistrados3(respuesta,fechaactual);
-			 ObtenerCoachesFiltro();
+			
+			if (v_coach==0) {
+				
+				 ObtenerCoachesFiltro();
+			}
+
+				dynamicSheet2.close();
+
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
 				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
@@ -3153,6 +3168,18 @@ function FiltroServiciosCat() {
 					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
 			}
 		});
+
+	  resolve("Modal cerrado después de realizar accion");
+            });
+
+        });
+
+
+	
+}
+
+function finalizar() {
+	dynamicSheet2.close();
 }
 
 function FiltroServiciosCoach() {
@@ -3164,6 +3191,10 @@ function FiltroServiciosCoach() {
 	var v_mes=$("#v_meses").val();
 	var v_anio=$("#v_anios").val();
 	var estatus=0;
+
+	 const myPromise = new Promise((resolve, reject) => {
+        CrearModalEspera4((finalizar) => {
+
 	var datos="estatus="+estatus+"&v_categorias="+v_categorias+"&v_coach="+v_coach+"&v_mes="+v_mes+"&v_anio="+v_anio;
 	$.ajax({
 		type: 'POST',
@@ -3179,15 +3210,18 @@ function FiltroServiciosCoach() {
 			var respuesta=datos.respuesta;
 			var fechaactual=datos.fechaactual;
 			PintarServiciosRegistrados3(respuesta,fechaactual);
-			
+			dynamicSheet2.close();
 			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
 				var error;
 				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
 				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
 								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
 					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
-			}
-		});
+					}
+				});
+
+			});
+        });
 }
 
 function FiltroBuscador() {
@@ -5751,4 +5785,117 @@ function ExistenServiciosporpagar() {
 					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
 			}
 		});
+}
+
+
+function CrearModalEspera4(callback) {
+  
+var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 50%;background:none;">
+            
+            <div class="sheet-modal-inner" style=" ">
+              
+              <div class="page-content" style="height: 100%;">
+                <div style="height: 100%;width: 100%;border-radius: 20px;">
+                   <div class="row">
+                     <div class="col-20">
+                        
+                    </div>
+
+                     <div class="col-60">
+                     <span class="titulomodal cambiarfuente" style="font-size: 20px;
+    text-align: center;
+    font-weight: 600;
+    color: #c7aa6a;"></span>
+                     </div>
+                     <div class="col-20">
+                     <span class="limpiarfiltros"></span>
+                     </div>
+                 </div>
+                 <div class="" style="position: absolute;top:1em;width: 100%;">
+                
+                       
+                        `;
+
+                       
+                          
+                          
+                      
+
+                          html+=`
+                          <div class="row" style="  margin-top: 20px;">
+                          <div class="col-100">
+                          <div style="color: #c7aa6a;font-size: 30px;text-align: center;" class="cambiarfuente">
+                           
+                          <div id="" class="mensajeproceso" style="font-weight:bold;color:#c7aa6a;" >
+                            <img src="img/loading.gif" style="width:20%;display: flex;justify-content: center;align-items: center;margin:0px auto;margin-top: 20px;">
+
+                          </div>
+                          <p id="" class="mensajeerror" style="font-weight:bold;display:none;color:#c7aa6a;text-align:center;line-height: 1;" >Oops, algo no está bien, intenta de nuevo.</p>
+                          <p id="" class="mensajeexito" style="font-weight:bold;display:none;color:#c7aa6a;text-align:center;line-height: 1;" >Se realizó correctamente</p>
+
+                        </div>
+
+                        
+
+                          
+
+                          </div>
+                          </div>
+
+                          <div class="row margin-bottom " style="padding-top: 1em;    margin-left: 2em;margin-right: 2em;margin-top:20px;">
+                            <div class="col-100" style="margin-left: 1em;margin-right: 1em;">
+                            <button style="background: #C7AA6A;color:white;display:none;" type="button" class="button button-fill color-theme button-large button-raised  cambiarfuente butonok" onclick="VerCompras()"  id="btnConfirm">Aceptar</button>
+                            </div>
+
+                            <div class="col-100" style="margin-left: 1em;margin-right: 1em;" >
+                            <button style="background: #C7AA6A;color:white;display:none;" type="button" class="button button-fill color-theme button-large button-raised  cambiarfuente butoerror" onclick="CerrarEspera2()"  id="btnCancel" >Aceptar</button>
+                            </div>
+                          </div>
+
+
+                      </div>
+
+                  </div>
+
+                </div>
+                
+              </div>
+            </div>
+          </div>`;
+          /*<p><button class="button color-theme btncortesias" id="cortesia_`+respuesta[i].idcortesia+`" onclick="ElegirCortesia(`+idcarrito+`,`+respuesta[i].idcortesia+`)" style="background: white;color:black;padding: 10px 20px;">
+                                        Elegir
+                                       </button>
+                                     </p>*/
+    dynamicSheet2 = app.sheet.create({
+        content: html,
+
+      swipeToClose: false,
+        backdrop: true,
+        // Events
+        on: {
+          open: function (sheet) {
+          	$(".sheet-backdrop").css('background','none');
+
+          },
+          opened: function (sheet) {
+                 console.log('Sheet opened');
+
+          },
+
+          close:function (sheet) {
+                $(".sheet-backdrop").css('background','#e5ecfe');
+
+          },
+        }
+      });
+
+
+
+       dynamicSheet2.open();
+
+
+        setTimeout(() => {
+        // Ejecuta RealizarCargo() dentro del timeout
+        callback();
+    }, 5000); // Cambiado a 5000 milisegundos (5 segundos)
 }

@@ -71,7 +71,7 @@ class Clientes
 	public $lista_empresas;
 	public $edad;
 	public $celular;
-	
+	public $alias;
 	//VARIABLES PARA PODER GUARDAR LAS DIRECCIONES DE ENVIO.
 	
 	public $idclientes_envios;
@@ -378,7 +378,7 @@ class Clientes
 	
 	public function buscarMovimientoMonedero()
 	{
-		$sql = "SELECT * FROM cliente_monedero WHERE idcliente_monedero = '$this->idcliente_monedero'";
+		$sql = "SELECT * FROM monedero WHERE idmonedero = '$this->idcliente_monedero'";
 		$resp = $this->db->consulta($sql);
 		return $resp;
 	}
@@ -847,6 +847,60 @@ class Clientes
 		$r = $this->db->consulta($sql);
 		return $r; 
 	}
+
+	public function ObtenerAsociados()
+	{
+		# code...
+	}
+
+
+	public function ObtenerParticipantesCoach($idtipo)
+	{
+		$sql="SELECT *FROM usuarios 
+		 WHERE  tipo='$idtipo' ";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerParticipantesCoach2($idtipo)
+	{
+		$sql="SELECT *FROM usuarios 
+		 WHERE  tipo='$idtipo' and estatus=1 ";
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
 	
 }
 ?>

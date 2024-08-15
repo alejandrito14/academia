@@ -73,7 +73,7 @@
         //app.preloader.hide();
         app.dialog.close();
         if(result == 1){
-            alerta('',ruta);
+            //alerta('',ruta);
 
             localStorage.setItem('fotoimagenservicio',ruta);
 

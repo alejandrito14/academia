@@ -174,7 +174,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 						//SCRIPT PARA CONSTRUIR UN BOTON
 						$bt->titulo = "";
 						$bt->icon = "mdi-delete-empty";
-						$bt->funcion = "BorrarNivel('".$l_tipocoaches_row['idtipocoach']."','tipocoach','tipocoach','n','catalogos/tipocoach/vi_tipocoach.php','main','$idmenumodulo')";
+						$bt->funcion = "BorrarTipoCoach('".$l_tipocoaches_row['idtipocoach']."','tipocoach','tipocoach','n','catalogos/tipocoach/vi_tipocoach.php','main','$idmenumodulo')";
 
 						$bt->estilos = "";
 						$bt->permiso = $permisos;

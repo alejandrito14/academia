@@ -36,6 +36,11 @@ function PintarTiposUsuarios(respuesta,seleccionado) {
 	if (seleccionado!=0) {
 
 		$("#v_tipo").val(seleccionado);
+
+		if (seleccionado==5) {
+
+			CambioTipoUsuario();
+		}
 	}
 }
 
@@ -606,9 +611,11 @@ function CambioTipoUsuario() {
 
 	if (tipo==3) {
 	  $("#divasociados").css('display','block');
+	  $(".divtipocoach").css('display','none');
+
 	}else{
 	  $("#divasociados").css('display','none');
-
+	  $(".divtipocoach").css('display','block');
 	}
 
 }
@@ -904,4 +911,42 @@ function PintarTutoradosdetalle(respuesta) {
 	$(".divtutorados").html(html);
 
 	CargarPaginacion('tutoradostbl');
+}
+
+
+function Obtenertipocoach(idtipocoach) {
+	 $.ajax({
+					url:'catalogos/alumnos/Obtenertipocoach.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos
+					dataType:'json',
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $("#empresasasignadas").html(error); 
+					  },
+					success:function(msj){
+						
+							PintarTipocoach(msj.respuesta);
+
+							if (idtipocoach>0) {
+								$("#v_tipocoach").val(idtipocoach);
+							}
+					  	}
+				  });
+}
+
+function PintarTipocoach(respuesta) {
+	var html="";
+				html+=`<option value="0">Seleccionar tipo de coach</option>`;
+
+	if (respuesta.length>0) {
+		for (var i = 0; i < respuesta.length; i++) {
+			html+=`<option value="`+respuesta[i].idtipocoach+`">`+respuesta[i].nombre+`</option>`;
+		}
+	}
+
+	$("#v_tipocoach").html(html);
+
 }

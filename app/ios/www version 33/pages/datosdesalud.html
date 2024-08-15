@@ -1,0 +1,176 @@
+<template>
+  <div class="page " data-name="datosdesalud">
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="left">
+         <!--  <a href="#" class="button button-fill text-color-theme bg-color-white button-44 back ">
+            <i class="bi bi-arrow-left"></i>
+          </a> -->
+        </div>
+        <div class="title">
+          
+        </div>
+        <div class="right"></div>
+      </div>
+    </div>
+
+  <div class="fab fab-left-bottom  " style="bottom: 4em; ">
+    <a class="btnregreso " href="/profile/" style="">
+     <i class="bi bi-arrow-left" style=""></i>
+    </a>
+  </div>
+    <div class="page-content">
+      <div class="block h-100 no-margin">
+        <div class="row ">
+            <div class="col-85  margin-left-auto margin-right-auto align-self-center  padding-vertical">
+
+            <h1 style=""> Ingresa tus <span style="color: #0abe68;">datos </span>de salud</h1>
+          
+         </div>
+
+          <div
+            class="col-85  margin-left-auto margin-right-auto align-self-center text-align-center padding-vertical">
+             <input type="text" name="v_idsalud" id="v_idsalud" value="0"  class="input-with-value" style="display: none;" />
+            <form  >
+              <div class="list form-list no-margin margin-bottom">
+                <ul>
+             
+                <li class="item-content item-input item-input-with-value is-valid liestatura">
+
+                  <div class="item-inner">
+                  <div class="item-title item-floating-label">Estatura</div>
+                  <div class="item-input-wrap">
+                  <input type="text" name="v_estatura" 
+                  id="v_estatura" class="input-with-value" />
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+              </li>
+
+               <li class="item-content item-input item-input-with-value is-valid lipeso">
+
+                  <div class="item-inner">
+                  <div class="item-title item-floating-label">Peso</div>
+                  <div class="item-input-wrap">
+                  <input type="text" name="v_peso" id="v_peso" class="input-with-value" />
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+              </li>
+
+
+              <li class="item-content item-input item-input-with-value is-valid lipatologia">
+
+                  <div class="item-inner">
+                  <div class="item-title item-floating-label">Patologías</div>
+                  <div class="item-input-wrap">
+                  <input type="text" name="v_patologia" id="v_patologias" class="input-with-value" />
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+              </li>
+
+               <li class="item-content item-input item-input-with-value is-valid licirugia">
+
+                  <div class="item-inner">
+                  <div class="item-title item-floating-label">Cirugías</div>
+                  <div class="item-input-wrap">
+                  <input type="text" name="v_cirugia" id="v_cirugias" class="input-with-value" />
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+              </li>
+
+               <li class="item-content item-input item-input-with-value is-valid lialergia">
+
+                  <div class="item-inner">
+                  <div class="item-title item-floating-label">Alergias</div>
+                  <div class="item-input-wrap">
+                  <input type="text" name="v_alergia" id="v_alergias" class="input-with-value" />
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+              </li>
+
+               <li class="item-content item-input item-input-with-value is-valid liortopedico">
+                 <div class="item-inner">
+                  <div class="item-title item-floating-label">Ortopédicos</div>
+                  <div class="item-input-wrap">
+                  <input type="text" name="v_ortopedico" id="v_ortopedicos" class="input-with-value" />
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+              </li>
+
+               <li class="item-content item-input item-input-with-value is-valid limedicamento">
+                 <div class="item-inner">
+                  <div class="item-title item-floating-label">Medicamentos permanentes</div>
+                  <div class="item-input-wrap">
+                  <input type="text" name="v_medicamento" id="v_medicamentos" class="input-with-value" />
+                  <span class="input-clear-button"></span>
+                </div>
+              </div>
+              </li>
+
+
+            </ul>
+          </div>
+
+           <div class="item-content lipoliticas">
+                <div class="item-inner">
+                  <div class="row">
+                    <div class="col-20">
+                      <input type="checkbox" id="inputleido"  style=" width: 30px;height: 20px;    margin-left: 1.5em;" />
+                    </div>
+                    <div class="col" style="text-align: left; ">
+                       <span class="leidoacepto">He leído y acepto los</span><a  class="" style="color: #007aff!important;" href="/politicas3/"> Términos y Condiciones</a>, así como el <a  class="" style="color: #007aff!important;" href="/politicas3/">Aviso de Privacidad</a>
+                    </div>
+                  </div>
+                 
+                </div>
+              </div>
+
+            <div>
+              <div class="item-content lidatos">
+                <div class="item-inner">
+                   <div class="row">
+                    <div class="col-20">
+                      <input type="checkbox" id="inputleido2" style=" width: 30px;height: 20px;    margin-left: 1.5em;" />
+                    </div>
+                    <div class="col" style="text-align: left;">
+                       Todos los datos son verdaderos,bajo mi responsabilidad
+                    </div>
+                 
+                   </div>
+              </div>
+
+            </div>
+          </div>
+
+
+          
+          
+              <p class="margin-bottom"> </p>
+
+              <button type="button"  class="button button-fill button-large button-raised margin-bottom color-theme" id="btnguardardatosalud">
+               Guardar
+              </button>
+            </form>          
+          </div>
+         
+          <!-- <div class="col-100 text-align-center margin-top-auto">
+            <div class="row justify-content-center footer-info">
+              <div class="col">
+                <p class="text-muted display-inline">Or you can continue with </p>
+
+                <a href="#" class="padding-half"><i class="bi bi-twitter"></i></a>
+                <a href="#" class="padding-half"><i class="bi bi-google"></i></a>
+                <a href="#" class="padding-half"><i class="bi bi-facebook"></i></a>
+              </div>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

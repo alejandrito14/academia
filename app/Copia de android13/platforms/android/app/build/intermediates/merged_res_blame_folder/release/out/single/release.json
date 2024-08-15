@@ -1,0 +1,74 @@
+[
+    {
+        "merged": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-merged_res-8:/xml_file_paths.xml.flat",
+        "source": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-main-9:/xml/file_paths.xml"
+    },
+    {
+        "merged": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-merged_res-8:/drawable-xxhdpi_ic_action_remove.png.flat",
+        "source": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-main-9:/drawable-xxhdpi/ic_action_remove.png"
+    },
+    {
+        "merged": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-merged_res-8:/drawable-mdpi_ic_action_next_item.png.flat",
+        "source": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-main-9:/drawable-mdpi/ic_action_next_item.png"
+    },
+    {
+        "merged": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-merged_res-8:/drawable-nodpi_ic_cdv_splashscreen.png.flat",
+        "source": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-main-9:/drawable-nodpi/ic_cdv_splashscreen.png"
+    },
+    {
+        "merged": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-merged_res-8:/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-main-9:/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-merged_res-8:/drawable-xhdpi_ic_action_next_item.png.flat",
+        "source": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-main-9:/drawable-xhdpi/ic_action_next_item.png"
+    },
+    {
+        "merged": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-merged_res-8:/xml_config.xml.flat",
+        "source": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-main-9:/xml/config.xml"
+    },
+    {
+        "merged": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-merged_res-8:/drawable-hdpi_ic_action_remove.png.flat",
+        "source": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-main-9:/drawable-hdpi/ic_action_remove.png"
+    },
+    {
+        "merged": "com.woolis.app-merged_res-8:/xml_config.xml.flat",
+        "source": "com.woolis.app-main-9:/xml/config.xml"
+    },
+    {
+        "merged": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-merged_res-8:/drawable-xhdpi_ic_action_previous_item.png.flat",
+        "source": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-main-9:/drawable-xhdpi/ic_action_previous_item.png"
+    },
+    {
+        "merged": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-merged_res-8:/drawable-hdpi_ic_action_previous_item.png.flat",
+        "source": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-main-9:/drawable-hdpi/ic_action_previous_item.png"
+    },
+    {
+        "merged": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-merged_res-8:/drawable-xhdpi_ic_action_remove.png.flat",
+        "source": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-main-9:/drawable-xhdpi/ic_action_remove.png"
+    },
+    {
+        "merged": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-merged_res-8:/xml_camera_provider_paths.xml.flat",
+        "source": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-main-9:/xml/camera_provider_paths.xml"
+    },
+    {
+        "merged": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-merged_res-8:/drawable-mdpi_ic_action_previous_item.png.flat",
+        "source": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-main-9:/drawable-mdpi/ic_action_previous_item.png"
+    },
+    {
+        "merged": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-merged_res-8:/drawable-mdpi_ic_action_remove.png.flat",
+        "source": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-main-9:/drawable-mdpi/ic_action_remove.png"
+    },
+    {
+        "merged": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-merged_res-8:/drawable-hdpi_ic_action_next_item.png.flat",
+        "source": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-main-9:/drawable-hdpi/ic_action_next_item.png"
+    },
+    {
+        "merged": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-merged_res-8:/drawable-xxhdpi_ic_action_previous_item.png.flat",
+        "source": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-main-9:/drawable-xxhdpi/ic_action_previous_item.png"
+    },
+    {
+        "merged": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-merged_res-8:/drawable-xxhdpi_ic_action_next_item.png.flat",
+        "source": "/private/var/root/.gradle/daemon/7.6/com.woolis.app-main-9:/drawable-xxhdpi/ic_action_next_item.png"
+    }
+]

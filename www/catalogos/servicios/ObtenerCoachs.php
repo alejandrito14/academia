@@ -35,7 +35,7 @@ try
 
 
 	//Recbimos parametros
-	$obtener=$usuarios->ObtenerTodosUsuariosCoach();
+	$obtener=$usuarios->ObtenerTodosUsuariosCoach2();
 
 
 	$respuesta['respuesta']=$obtener;

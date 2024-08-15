@@ -10,6 +10,7 @@ class CategoriasServicios
 	public $estatus;
 	public $idclasificacion;
 	public $intervalo;
+	public $idcategorias;
 	
 	//Funcion para obtener todos los categoriasservicio activos
 	public function ObtcategoriasservicioActivos()
@@ -39,7 +40,10 @@ class CategoriasServicios
 	idcategoriasservicio,
 	categoriasservicio.idclasificacion,
 	clasificacion.nombre,
-	categoriasservicio.estatus,intervalo FROM categoriasservicio INNER JOIN clasificacion ON categoriasservicio.idclasificacion = clasificacion.idclasificacion ";
+	categoriasservicio.estatus,intervalo,
+	categorias.titulo as nombreca FROM categoriasservicio INNER JOIN clasificacion ON categoriasservicio.idclasificacion = clasificacion.idclasificacion
+	LEFT JOIN categorias on categorias.idcategorias=categoriasservicio.idcategorias
+	 ";
 		$resp=$this->db->consulta($query);
 		
 		//echo $total;
@@ -60,7 +64,7 @@ class CategoriasServicios
 	
 	public function Guardarcategoriasservicio()
 	{
-		$query="INSERT INTO categoriasservicio (nombrecategoria,estatus,idclasificacion,intervalo) VALUES ('$this->nombre','$this->estatus','$this->idclasificacion','$this->intervalo')";
+		$query="INSERT INTO categoriasservicio (nombrecategoria,estatus,idclasificacion,intervalo,idcategorias) VALUES ('$this->nombre','$this->estatus','$this->idclasificacion','$this->intervalo','$this->idcategorias')";
 		
 		$resp=$this->db->consulta($query);
 		$this->idcategoriasservicio = $this->db->id_ultimo();
@@ -74,7 +78,8 @@ class CategoriasServicios
 		nombrecategoria='$this->nombre',
 		estatus='$this->estatus',
 		intervalo='$this->intervalo',
-		idclasificacion='$this->idclasificacion'
+		idclasificacion='$this->idclasificacion',
+		idcategorias='$this->idcategorias'
 		WHERE idcategoriasservicio=$this->idcategoriasservicio";
 
 		$resp=$this->db->consulta($query);

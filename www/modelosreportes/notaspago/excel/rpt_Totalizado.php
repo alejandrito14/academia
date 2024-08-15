@@ -76,6 +76,7 @@ $estatusapagado=array('NO PAGADO','PAGADO');
 	$sqlconcan="";
 	$sqalumnoconcan="";
 	$sqlcategorias="";
+	$cantidadelementos=0;
 	$sqlfecha="";
 	$sqlestatusaceptado="";
 	$sqlestatuspagado="";
@@ -163,8 +164,11 @@ $estatusapagado=array('NO PAGADO','PAGADO');
 
 
 		$categoriasid=$obtenercategoriasdepende[0]->categoriasid;
+ 
+		/*if ($categoriasid==null) {
+			$categoriasid=$tiposervicio;
+		}*/
 
-		
 		$sqlcategorias=" AND idcategoriaservicio IN($categoriasid)";
 	}
 
@@ -182,7 +186,7 @@ $estatusapagado=array('NO PAGADO','PAGADO');
 	}
 */
 
-
+$globalgenerado=0;
 
 	$array=array();
 
@@ -224,6 +228,18 @@ $estatusapagado=array('NO PAGADO','PAGADO');
                 AND pagos.idusuarios = usuarios_servicios.idusuarios
         ) AS fechareporte,
 
+
+				   (
+            SELECT MAX(notapago.tipopago)
+            FROM notapago_descripcion
+            JOIN pagos ON notapago_descripcion.idpago = pagos.idpago
+            JOIN notapago ON notapago.idnotapago = notapago_descripcion.idnotapago
+            WHERE pagado = 1
+                AND notapago.estatus = 1
+                AND pagos.idservicio = usuarios_servicios.idservicio
+                AND pagos.idusuarios = usuarios_servicios.idusuarios
+        ) AS tipopago,
+
          (
             SELECT MAX(notapago.folio)
             FROM notapago_descripcion
@@ -244,10 +260,10 @@ $estatusapagado=array('NO PAGADO','PAGADO');
 			usuarios.tipo = 3
 			AND usuarios_servicios.idservicio = servicios.idservicio AND aceptarterminos=1 AND cancelacion=0
 		) AS cantidadalumnos,
-		
+		 
 		(
 		SELECT
-			GROUP_CONCAT( usuarios_servicios.idusuarios ) AS coaches 
+			COALESCE(GROUP_CONCAT( usuarios_servicios.idusuarios),  0) AS coaches 
 		FROM
 			usuarios_servicios
 			INNER JOIN usuarios ON usuarios.idusuarios = usuarios_servicios.idusuarios 
@@ -277,7 +293,7 @@ JOIN (
     AND usuarios_servicios.fechacreacion = ultima_fecha.ultima_fechacreacion
 		inner join servicios on usuarios_servicios.idservicio=servicios.idservicio
 		inner join usuarios ON  usuarios_servicios.idusuarios=usuarios.idusuarios
-				WHERE usuarios.tipo=3 
+				WHERE usuarios.tipo=3 AND usuarios_servicios.cancelacion=0
 
 		) as tabla where 1=1
 	";
@@ -292,9 +308,11 @@ JOIN (
 			$sql.=" AND pagado IN($estatuspagado)";	
 		}
 
-		if ($v_coaches!='') {
+		if ($v_coaches>0) {
 			$sql.=" AND coaches IN($v_coaches)";
 		}
+
+		
 
 		$sql.=$sqlfecha;
 		$sql.=$sqlfechapago;
@@ -330,10 +348,12 @@ JOIN (
 	
 
 	$uniqueValues = [];
+	$contador=1;
 foreach ($array as $item) {
     $key = $item->idservicio . '|' . $item->titulo;
     if (!isset($uniqueValues[$key])) {
         $uniqueValues[$key] = [
+        		
             'idservicio' => $item->idservicio,
             'titulo' => $item->titulo,
              'fechainicial'=>$item->fechamin,
@@ -344,12 +364,14 @@ foreach ($array as $item) {
              'cantidadhorarios'=>$item->cantidadhorarios
 
         ];
+
+        $contador++;
     }
 }
 
 // Resultado
 $uniqueValues = array_values($uniqueValues);
-
+$cantidadelementos=count($uniqueValues);
 //var_dump($uniqueValues);die();
  
 if($pantalla==0) {
@@ -389,53 +411,17 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 				foreach ($array as $alumnos) {
 
     if ($alumnos->idservicio == $idservicio) {
-
     			 $idusuariosalumno=$alumnos->idusuarios;
-	for ($k=0; $k <count($obtenerservicios); $k++) {
+    			 $pagos->idservicio=$idservicio;
+							 $servicios->idservicio=$idservicio;
 
 
-
-	$asignacion->idusuario=$obtenerservicios[$k]->idusuarios;
- $datoscoach=$usuarios->ObtenerUsuarioDatos();
-		# code...
- 
-	 $idusuarios=$obtenerservicios[$k]->idusuarios;
- 	 $nombreservicio=$obtenerservicios[$k]->titulo;
- 	 $nombrecoach=$obtenerservicios[$k]->nombre.' '.$obtenerservicios[$k]->paterno.' '.$obtenerservicios[$i]->materno;
-	 $idcoach=$obtenerservicios[$k]->idusuarios;
-
-
-			$idusuarios_servicios=$obtenerservicios[$k]->idusuarios_servicios;
-			$asignacion->idusuarios_servicios=$idusuarios_servicios;
-			$tipomontopago=$asignacion->ObtenertipoMontopago();
-
-			
-			$pagos->idservicio=$idservicio;
-			$servicios->idservicio=$idservicio;
-
-			$peridohorario=$servicios->ObtenerFechaHoras();
+    $peridohorario=$servicios->ObtenerFechaHoras();
 		
-			 $poncentaje="";
-				  	  $pesos="";
-				  	  if ($tipomontopago[0]->tipopago==0) {
-				  	  	$poncentaje="%";
-				  	  }else{
-
-				  	  	$pesos="$";
-				  	  }
-
-				  $montopagocoach=$tipomontopago[0]->monto;
-						$montopagocoach=$pesos.$montopagocoach.$poncentaje;
-
-
-
-			$pagos->idusuarios=$idusuariosalumno;
-
+			 $pagos->idusuarios=$idusuariosalumno;
 		 	$obtenerpago=$pagos->ChecarPagosServicio($sqlfechapago);
 
-		/* if ($idservicio==246) {
-		 			var_dump($obtenerpago);die();
-		 		}*/
+		
 		 	$pagado=0;
 		 	$tdescuentomembresia=0;
 		 	$fechapago="";
@@ -551,21 +537,49 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 			 			 // 
 
 			 		}
+			 	}
+
+	for ($k=0; $k <count($obtenerservicios); $k++) {
+
+
+
+	$asignacion->idusuario=$obtenerservicios[$k]->idusuarios;
+ $datoscoach=$usuarios->ObtenerUsuarioDatos();
+		# code...
+ 
+	 $idusuarios=$obtenerservicios[$k]->idusuarios;
+ 	 $nombreservicio=$obtenerservicios[$k]->titulo;
+ 	 $nombrecoach=$obtenerservicios[$k]->nombre.' '.$obtenerservicios[$k]->paterno.' '.$obtenerservicios[$i]->materno;
+	 $idcoach=$obtenerservicios[$k]->idusuarios;
+
+
+			$idusuarios_servicios=$obtenerservicios[$k]->idusuarios_servicios;
+			$asignacion->idusuarios_servicios=$idusuarios_servicios;
+			$tipomontopago=$asignacion->ObtenertipoMontopago();
+
+			
+			
+			$poncentaje="";
+				  	  $pesos="";
+				  	  if ($tipomontopago[0]->tipopago==0) {
+				  	  	$poncentaje="%";
+				  	  }else{
+
+				  	  	$pesos="$";
+				  	  }
+
+				  $montopagocoach=$tipomontopago[0]->monto;
+						$montopagocoach=$pesos.$montopagocoach.$poncentaje;
+
+			
 		 	
 
 		 		}
 		 		
-		 	}else{
-		 			/*	array_push($montopagoalumno, 0);
-		 				array_push($montodescuentoalumno, 0);
-		 				array_push($montodescuentomembresiaalumno, 0);
-*/
-					
-
-		 	}
+		
 
 		 
-		 /*	$verificadopago=0;
+		 	$verificadopago=0;
 		 	$montopagadocoach=0;
 		 	if ($idpago!=0) {
 		 		 	$lo->idusuarios=$idcoach;
@@ -580,12 +594,12 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 		 				}
 
 		 	}
-*/
 
 
-		//	$objeto=array('idusuariocoach'=>$idcoach,'coach'=>$nombrecoach,'tipocomision'=>$tipomontopago[0]->tipopago,'monto'=>$tipomontopago[0]->monto,'montocomision'=>$montocomision,'montopagocoach'=>$montopagocoach,'idpago'=>$idpago,'idservicio'=>$idservicio,'pagado'=>$verificadopago,'montopagadocoach'=>$montopagadocoach);
 
-			//array_push($arraycoachcomision,$objeto);
+			$objeto=array('idusuariocoach'=>$idcoach,'coach'=>$nombrecoach,'tipocomision'=>$tipomontopago[0]->tipopago,'monto'=>$tipomontopago[0]->monto,'montocomision'=>$montocomision,'montopagocoach'=>$montopagocoach,'idpago'=>$idpago,'idservicio'=>$idservicio,'pagado'=>$verificadopago,'montopagadocoach'=>$montopagadocoach);
+
+			array_push($arraycoachcomision,$objeto);
 
 		}
 
@@ -607,7 +621,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 
 					          		$resultado=$montoapagar-$montopago-$descuento[0]->montodescontar-$tdescuentomembresia;
 
-					          	$sumatoriapendiente=$sumatoriapendiente+$resultado;
+					          	$sumatoriapendiente=$sumatoriapendiente+abs($resultado);
 
 		
 
@@ -631,6 +645,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 			<th></th>
 			<th></th>
 			<th></th>
+
 		 </thead>
 		 <tbody>
 		 	<tr>
@@ -676,6 +691,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
             <th style="width: 100px;">Monto pendiente</th>
             <th style="width: 100px;">Folio</th>
             <th style="width: 100px;">Fecha</th>
+            <th style="width: 100px;">Método de pago</th>
         </tr>
     </table>
 		</th>
@@ -731,23 +747,14 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 							$totaldescuentomembresia=0;
 							$totaldescuentootros=0;
 							$totalcobrado=0;
+
 					foreach ($array as $alumnos) {
 
     if ($alumnos->idservicio == $idservicio) {
 
     			 $idusuariosalumno=$alumnos->idusuarios;
-	for ($k=0; $k <count($obtenerservicios); $k++) {
 
 
-
-	$asignacion->idusuario=$obtenerservicios[$k]->idusuarios;
- $datoscoach=$usuarios->ObtenerUsuarioDatos();
-		# code...
- 
-	 $idusuarios=$obtenerservicios[$k]->idusuarios;
- 	 $nombreservicio=$obtenerservicios[$k]->titulo;
- 	 $nombrecoach=$obtenerservicios[$k]->nombre.' '.$obtenerservicios[$k]->paterno.' '.$obtenerservicios[$i]->materno;
-	 $idcoach=$obtenerservicios[$k]->idusuarios;
 
 
 			$idusuarios_servicios=$obtenerservicios[$k]->idusuarios_servicios;
@@ -755,13 +762,11 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 			//
 			
 
-			$tipocoach->idcoach=$idcoach;
-
-		//	$tipomontopago=$asignacion->ObtenertipoMontopago();
-			$tipomontopago=$tipocoach->ObtenerTipoMontoCoach();
+		
 			
 			$pagos->idservicio=$idservicio;
 			$servicios->idservicio=$idservicio;
+			$pagos->idusuarios=$idusuariosalumno;
 
 			$peridohorario=$servicios->ObtenerFechaHoras();
 		
@@ -779,16 +784,16 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 
 
 
-			$pagos->idusuarios=$idusuariosalumno;
 
 		 	$obtenerpago=$pagos->ChecarPagosServicio($sqlfechapago);
 
-
+		 	
 		/* if ($idservicio==246) {
 		 			var_dump($obtenerpago);die();
 		 		}*/
 		 	$pagado=0;
 		 	$tdescuentomembresia=0;
+		 	$montopagocondescuento=0;
 		 	$fechapago="";
 		 	$metodopago="";
 		 	$montopago="";
@@ -807,7 +812,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 		 	$modalidad=$uniqueValues[$i]['modalidad'];
 				$costo=$uniqueValues[$i]['precio'];
 								
-									if ($modalidad==1) {
+								if ($modalidad==1) {
 										
 										$montoapagar=$costo;
 
@@ -850,8 +855,9 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 
 						$totalgenerado=$totalgenerado+0;
 							}
-					
 
+
+							$globalgenerado=$globalgenerado+$montoapagar;
 		 	if (count($obtenerpago)>0) {
 
 		 		$nota->idpago=$obtenerpago[0]->idpago;
@@ -896,7 +902,7 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 			 		
 			 			
 			 					
-			 					$montocomision=$asignacion->CalcularMontoPago2($tipomontopago[0]->tipopago,$tipomontopago[0]->monto,$montopagocondescuento,$cantidadhorarios);
+			 			
 
 			 					
 			 			 // 
@@ -905,15 +911,27 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 		 	
 
 		 		}
-		 		
-		 	}else{
-		 			/*	array_push($montopagoalumno, 0);
-		 				array_push($montodescuentoalumno, 0);
-		 				array_push($montodescuentomembresiaalumno, 0);
-*/
-					
-
 		 	}
+	for ($k=0; $k <count($obtenerservicios); $k++) {
+	 $idcoach=$obtenerservicios[$k]->idusuarios;
+	
+	$tipocoach->idcoach=$idcoach;
+
+		//	$tipomontopago=$asignacion->ObtenertipoMontopago();
+			$tipomontopago=$tipocoach->ObtenerTipoMontoCoach();
+
+					$montocomision=$asignacion->CalcularMontoPago2($tipomontopago[0]->tipopago,$tipomontopago[0]->monto,$montopagocondescuento,$cantidadhorarios);
+
+	$asignacion->idusuario=$obtenerservicios[$k]->idusuarios;
+ $datoscoach=$usuarios->ObtenerUsuarioDatos();
+		# code...
+ 
+	 $idusuarios=$obtenerservicios[$k]->idusuarios;
+ 	 $nombreservicio=$obtenerservicios[$k]->titulo;
+ 	 $nombrecoach=$obtenerservicios[$k]->nombre.' '.$obtenerservicios[$k]->paterno.' '.$obtenerservicios[$i]->materno;
+
+		 		
+		 
 
 		 
 		 	$verificadopago=0;
@@ -1038,6 +1056,9 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 					          </td>
 					          <td style="width: 100px;"><?php echo $alumnos->folio; ?></td>
 					           <td style="width: 100px;"><?php echo $alumnos->fechareporte; ?></td>
+
+					            <td style="width: 100px;"><?php echo $alumnos->tipopago; ?></td>
+					           
 					         </tr> 
 					         
 
@@ -1178,6 +1199,19 @@ header('Content-Disposition: attachment; filename="'.$filename.'"');
 
 
 </table>
+
+<div class="row">
+		<div class="col-md-6"></div>
+		<div class="col-md-2"></div>
+		<div class="col-md-4">
+			<p style="font-size:20px;">TOTAL DE SERVICIOS: <span id="totalservicios" style="font-weight: bold;"><?php echo $cantidadelementos; ?></span></p>
+
+			<p style="font-size:20px;">MONTO: <span id="totalmonto" style="font-weight: bold;"><?php echo '$'.number_format($globalgenerado,2,'.',','); ?></span></p>
+
+		</div>
+	</div>
+
+
 
 
 

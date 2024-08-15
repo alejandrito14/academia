@@ -38,6 +38,7 @@ class Usuarios
 	public $sexo;
 	public $fechanacimiento;
 	public $idservicio;
+	public $tipocoach;
 	
 	//Funcion para obtener todos los usuarios activos
 	public function ObtUsuariosActivos()
@@ -54,7 +55,7 @@ class Usuarios
 	public function GuardarUsuario()
 
 	{
-		$query="INSERT INTO usuarios(idperfiles,nombre,paterno,materno,usuario,clave,celular,telefono,email,estatus,tipo,alias,sexo,fechanacimiento)VALUES($this->idperfiles,'$this->nombre','$this->paterno','$this->materno','$this->usuario','$this->clave','$this->celular','$this->telefono','$this->email',$this->estatus,'$this->tipo','$this->alias','$this->sexo','$this->fechanacimiento')";
+		$query="INSERT INTO usuarios(idperfiles,nombre,paterno,materno,usuario,clave,celular,telefono,email,estatus,tipo,alias,sexo,fechanacimiento,idtipocoach)VALUES($this->idperfiles,'$this->nombre','$this->paterno','$this->materno','$this->usuario','$this->clave','$this->celular','$this->telefono','$this->email',$this->estatus,'$this->tipo','$this->alias','$this->sexo','$this->fechanacimiento','$this->tipocoach')";
 
 		$resp=$this->db->consulta($query);
 	    $this->id_usuario=$this->db->id_ultimo();
@@ -76,7 +77,8 @@ class Usuarios
 			tipo=$this->tipo,
 			alias='$this->alias',
 			sexo='$this->sexo',
-			fechanacimiento='$this->fechanacimiento'
+			fechanacimiento='$this->fechanacimiento',
+			idtipocoach='$this->tipocoach'
 		 	WHERE idusuarios=$this->id_usuario";
 		
 		$resp=$this->db->consulta($query);
@@ -331,6 +333,8 @@ class Usuarios
 		}
 		return $array;
 	}
+
+	
 
 
 	public function ObtenerUsuario()
@@ -1037,6 +1041,54 @@ class Usuarios
         
         return $array;
 	}
+
+	public function ObtenerEdades($idcategoriaserv)
+	{
+		$sql = "SELECT fechanacimiento,TIMESTAMPDIFF(YEAR,fechanacimiento,CURDATE()) AS edad 
+			 from usuarios_servicios
+			LEFT JOIN usuarios ON usuarios_servicios.idusuarios =usuarios.idusuarios
+			LEFT JOIN servicios ON usuarios_servicios.idservicio = servicios.idservicio
+			 where fechanacimiento is not null and FIND_IN_SET(servicios.idcategoria,'$idcategoriaserv') GROUP BY TIMESTAMPDIFF(YEAR,fechanacimiento,CURDATE())  ";
+		
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+
+	public function ObtenerUsuariosSistema()
+	{
+		$sql="SELECT *FROM usuarios WHERE tipo IN (0) AND estatus=1 ";
+
+		$resp = $this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		return $array;
+	}
+
+
 
 }
 

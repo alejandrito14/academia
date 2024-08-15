@@ -1205,9 +1205,14 @@ $navegador = $f->navegador();
  -->
  <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js' type='text/javascript'></script>
  <script src="js/fn_categorias.js"></script>
+  <script src="js/fn_tiponegocios.js"></script>
+  <script src="js/fn_tipocoach.js"></script>
+
 <script src="js/fn_notificacion.js"></script>
 <script src="js/fn_politicasaceptacion.js"></script>
 <script src="js/fn_caja.js"></script>
+<script src="js/fn_movimientogastos.js"></script>
+
 <script src="js/modal.js"></script>
 <script src="js/fn_matrices.js?<?php echo time(); ?>"></script>
 
@@ -1267,6 +1272,7 @@ $navegador = $f->navegador();
 
 <script src="js/fn_tutor.js"></script>
 <script src="js/fn_clasificacion.js"></script>
+<script src="js/fn_clasificadorgastos.js"></script>
 <script src="js/fn_llaves.js"></script>
 
 <script src="js/fn_nivel.js?<?php echo time(); ?>"></script>
@@ -1282,6 +1288,11 @@ $navegador = $f->navegador();
 <script src="js/fn_tipopartido.js?<?php echo time(); ?>"></script>
 <script src="js/fn_partidos.js?<?php echo time(); ?>"></script>
 <script src="js/fn_juego.js?<?php echo time(); ?>"></script>
+
+<script src="js/fn_cuentas.js?<?php echo time(); ?>"></script>
+<script src="js/fn_formapagocuenta.js?<?php echo time(); ?>"></script>
+
+
 
 <script src="js/fn_notaspago.js?<?php echo time(); ?>"></script>
 <script src="js/fn_tipojuego.js?<?php echo time(); ?>"></script>

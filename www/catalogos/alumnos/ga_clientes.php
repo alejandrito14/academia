@@ -52,6 +52,8 @@ try
 	$usuariosid=json_decode($_POST['asociados']);
 	$asociadoseliminados=json_decode($_POST['asociadoseliminados']);
 
+	$tipocoach=$_POST['tipocoach'];
+	$us->tipocoach=$tipocoach;
 	if($id == 0)
 	{
 	

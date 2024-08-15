@@ -1396,6 +1396,35 @@ public function validarUsuarioClienteTokenCel()
   }
 
 
+  public function obtenerCoachesActivosTipo($listadotipoconfiguracion2,$listadotipocategoria2)
+    {
+         $sql = "SELECT * FROM usuarios
+
+            INNER JOIN tipocoachsubcategoria ON
+            tipocoachsubcategoria.idtipocoach=usuarios.idtipocoach
+           WHERE usuarios.tipo IN(5) AND estatus=1
+           AND idtiposervicioconfiguracion='$listadotipoconfiguracion2' AND idsubcategoria='$listadotipocategoria2';
+
+           ";
+           
+      
+        $resp = $this->db->consulta($sql);
+        $cont = $this->db->num_rows($resp);
+
+        $array    = array();
+        $contador = 0;
+        if ($cont > 0) {
+
+            while ($objeto = $this->db->fetch_object($resp)) {
+
+                $array[$contador] = $objeto;
+                $contador++;
+            }
+        }
+        return $array;
+    }
+
+
 }
 
  ?>

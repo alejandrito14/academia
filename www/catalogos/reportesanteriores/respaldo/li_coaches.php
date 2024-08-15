@@ -46,8 +46,7 @@ $resultado_num=count($coaches);
 					
 			<?php	}else{?>
 
-					<option value="0">SELECCIONAR COACH</option>
-
+				
 						<?php 
 						for ($i=0; $i <count($coaches) ; $i++) { 
 												

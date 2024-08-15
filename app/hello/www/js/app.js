@@ -99,7 +99,7 @@ $(document).ready(function() {
     }else{
            // codigoservicioreal='109';
 
-      codigoservicio='124';
+      codigoservicio='109';
     }
 
 
@@ -138,7 +138,7 @@ $(document).ready(function() {
 
 var lhost = "localhost:8888";
 var rhost = "issoftware1.com.mx";
-var version='1.0.31';
+var version='1.0.32';
 
 localStorage.setItem('versionapp',version);
 var abrir=0;
@@ -275,7 +275,7 @@ var carpetaapp="";
   
     var uid='000';
     localStorage.setItem("UUID",uid);
-    if (device1.ios) {
+  /*  if (device1.ios) {
       localStorage.setItem("SO", "ios");
       var uid= device.uuid;
 
@@ -294,7 +294,7 @@ var carpetaapp="";
 
       localStorage.setItem("SO", "desktop");
     }
-   
+   */
 
 
      

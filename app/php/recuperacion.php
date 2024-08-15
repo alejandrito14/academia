@@ -13,6 +13,7 @@ require_once("clases/class.AltiriaSMS.php");
 require_once("clases/class.phpmailer.php");
 require_once("clases/emails/class.Emails.php");
 require_once "clases/class.WhatsapMensaje.php";
+require_once "clases/class.PagConfig.php";
 
 
 try
@@ -77,14 +78,18 @@ try
 		$response = $sms->sendSMS($sDestination, $sMessage);
 
 	}
-
+ 
 	if ($eleccionusuario==2) {
+		$mensaje->Version='v19.0';
 
-		$mensaje->Version='v17.0';
-    	$mensaje->phoneid='162367660284534';
+		//$mensaje->Version='v17.0';
+    	//$mensaje->phoneid='162367660284534';
+		$mensaje->phoneid='239003922634897';
     	$mensaje->tophone='52'.$lo->celular;
   
-    	$mensaje->accestoken='EAAPR4S8LbikBO5OooXf3Uz8fFxvpf9r4zSKZBz5otYZAgNtYBwt4flObUw5YT0ZCXKDXO3BmUV3NfOWFZBsCErVHEor4ZBeoRDv5HcC0lMDujBFGYj9DXLmoYw1OzcbfUaMDjhXUt4p05I6ZArul74mHTNpXeDhg67YoCORxTlXjbLcPBP9ZCYs34cYZA7Jd';
+    	//$mensaje->accestoken='EAAPR4S8LbikBO5OooXf3Uz8fFxvpf9r4zSKZBz5otYZAgNtYBwt4flObUw5YT0ZCXKDXO3BmUV3NfOWFZBsCErVHEor4ZBeoRDv5HcC0lMDujBFGYj9DXLmoYw1OzcbfUaMDjhXUt4p05I6ZArul74mHTNpXeDhg67YoCORxTlXjbLcPBP9ZCYs34cYZA7Jd';
+
+    	$mensaje->accestoken='EAAFFRVtQFoABO73Jm0leTdQAyRWk491qkozHJbjcUUD0ZA2KA75KHn132MvDcyHUycTZC5FyXbMZCt0omSpvXlsYywMidJy1HhTHWzI6NlG4Seq42ZCf9LgGUeU0ZCdZBbs8aOb8KqAl6aMCtEOJPoxZCpoT19Q1ncXUbD9bc3qSDeIbYKP5wiZBvgrQmG4h7ZBRS';
     	$mensaje->texto=$obtenertoken;
     	$resp=$mensaje->EnviarMensaje();
 	}

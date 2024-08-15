@@ -9,14 +9,14 @@ class MySQL
     private $usuario;
     private $contrase;
     private $db;
-
+ 
     //funcion de coneccion con la base de datos
     public function __construct()
     {
         $this->servidor = 'localhost';
         $this->usuario  = 'root';
         $this->contrase = 'root';
-        $this->db       = 'base109pruebalocal';
+        $this->db       = 'basewoliss110124';
 
         if (!isset($this->conexion)) {
 

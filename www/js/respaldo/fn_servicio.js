@@ -3569,7 +3569,7 @@ function ObtenerTipoServicios2() {
 	  $.ajax({
         type: 'POST',
         dataType: 'json',
-		url: 'catalogos/servicios/ObtenerTipoServicios.php', //Url a donde la enviaremos
+		url: 'catalogos/servicios/tiposerviciosprincipal.php', //Url a donde la enviaremos
         async: false,
         success: function (resp) {
            
@@ -3671,6 +3671,7 @@ function FiltrarServicios(idmenumodulo) {
 		url: 'catalogos/servicios/ObtenerServiciosFiltrado.php', //Url a donde la enviaremos
         async: false,
         data:datos,
+        dataType:'json',
         success: function (resp) {
         	PintarServiciosFiltrado(resp);
 
@@ -3686,9 +3687,184 @@ function FiltrarServicios(idmenumodulo) {
 }
 
 function PintarServiciosFiltrado(resultado) {
+	$("#totalservicios").html(0);
+		 $("#totalmonto").html(0);
+	var suma=0;
+	var resultado=resultado.respuesta;
+	var html="";
+	if (resultado.length>0) {
+		for (var i = 0; i <resultado.length; i++) {
 
-	$("#tblservicios").html(resultado);
-	 $('#tbl_Servicios').DataTable();
+			var permisos=resultado[i].permiso.split('|');
+
+
+			
+			html+=`
+			<tr>
+					<td style="text-align: center;">
+						`+resultado[i].idservicio+`
+					</td>
+					<td style="text-align: center;">
+					<p>`+resultado[i].titulo+`
+					</p>`;
+
+					if (resultado[i].periodo!='') {
+				html+=`	<p>Periodo: `+resultado[i].periodo+`
+						</p>`;
+
+					}
+					coachesfiltro2_sin_duplicados=[];
+					if (resultado[i].coachesfiltro2!=null) {
+					coaches=resultado[i].coachesfiltro2.split(',');
+					 coachesfiltro2_sin_duplicados = [...new Set(coaches)];
+
+						}
+
+					if (coachesfiltro2_sin_duplicados.length>0 && coachesfiltro2_sin_duplicados[0]!='') {
+
+						for (var j = 0; j <coachesfiltro2_sin_duplicados.length; j++) {
+							html+=`<p style="margin: 0;">`
+							+coachesfiltro2_sin_duplicados[j]+`
+							</p> `;
+
+						}
+					}
+
+					if (resultado[i].precio!=null && resultado[i].precio>0) {
+					
+							html+=`<p>Costo: $`+formato_numero(resultado[i].precio,2,'.',',')+`</p>`;
+						}
+
+					if (resultado[i].cantidadhorarios!=null) {
+					
+							html+=`<p>Horarios: `+resultado[i].cantidadhorarios+`</p>`;
+						}
+
+
+						if (resultado[i].integrantesasignados!=null && resultado[i].integrantesaceptados!=null) {
+					
+							html+=`<p>Integrantes: `+resultado[i].integrantesaceptados+` de `+resultado[i].integrantesasignados+`</p>`;
+						}
+
+
+						if (resultado[i].integrantesasignados!=null && resultado[i].integrantesaceptados!=null) {
+							var color='';
+							
+
+							if (resultado[i].pagados<resultado[i].integrantesaceptados) {
+								color='#dcda32';
+							}
+
+							if (resultado[i].pagados>=resultado[i].integrantesaceptados) {
+								color='#69b153';
+							}
+							if (resultado[i].pagados==0) {
+								color='red';
+							}
+					
+							html+=`<div style="margin: 10px;"><span style="padding: 8px;
+    border-radius: 10px;color: white;background:`+color+`">`+resultado[i].pagados+` de `+resultado[i].integrantesasignados+`</span></div>`;
+						
+							//si es cero rojo , si es mas 1 en amarillo , si esta pagado 
+						}
+
+						if (resultado[i].montoservicio!=null && resultado[i].montoservicio>0) {
+					
+							html+=`<p >Monto total: <span style="font-weight:bold;" class="montovista" >$`+formato_numero(resultado[i].montoservicio,2,'.',',')+`</span></p>`;
+							suma=parseFloat(suma)+parseFloat(resultado[i].montoservicio);
+						}
+
+						
+					html+=`
+					</td>
+					<td style="text-align: center;">
+					 <img src="`+resultado[i].imagen+`" alt=""style="width: 400px;">
+					</td>
+					<td style="text-align: center;">
+						`+resultado[i].nombrecategoria+`
+					</td>
+
+					<td style="text-align: center;">
+						`+resultado[i].fechacreacion+`
+					</td>
+
+					<td style="text-align: center;">
+						`+resultado[i].orden+`
+					</td>
+
+					<td style="text-align: center;">
+						`+resultado[i].estatus+`
+					</td>
+
+					 <td style="text-align: center; font-size: 15px;">`;
+
+					 	if (permisos[2]==1) {
+						html+=` <button type="button" onclick="`+resultado[i].funcioneditar+`" class="btn btn_colorgray" style="" title="EDITAR">
+								<i class="mdi mdi-table-edit"></i>
+						</button>`;
+
+					}
+
+					if (permisos[1]==1) {
+						html+=`
+						<button type="button" onclick="`+resultado[i].funcionborrar+`" class="btn btn_rojo" style="" title="BORRAR">
+								<i class="mdi mdi-delete-empty"></i>
+						</button>`;
+					}
+						
+						
+
+					 html+=`<button type="button" onclick="`+resultado[i].funcionclonar+`" class="btn btn_accion" style="" title="CLONAR">
+								<i class="mdi mdi-book-multiple"></i>
+						</button>
+
+						<button type="button" onclick="`+resultado[i].funcioninscritos+`" class="btn btn_accion" style="" title="ALUMNOS INSCRITOS">
+								<i class="mdi mdi-account-check"></i>
+						</button>
+					 	
+					 	<button type="button" onclick="`+resultado[i].funcionmodalasignacion+`" class="btn btn_accion" style="" title="ASIGNACIÓN DE ALUMNOS">
+								<i class="mdi mdi-account-multiple"></i>
+						</button>
+
+					 	<button type="button" onclick="`+resultado[i].funcionimagenes+`" class="btn btn_accion" style="" title="IMÁGENES INFORMATIVAS">
+								<i class="mdi mdi-cloud-upload"></i>
+						</button>
+
+					 	
+
+						
+	 	
+					 </td>
+
+
+					`;
+
+					html+=`</tr>
+
+			`;
+
+		}
+
+		$("#totalservicios").html(resultado.length);
+		$("#totalmonto").html('$'+formato_numero(suma,2,'.',','));
+	}
+
+
+
+
+	$("#tblservicios").html(html);
+
+	//$('#tbl_Servicios').DataTable().destroy();
+
+
+	$('#tbl_Servicios').DataTable({
+		"searching": false,
+		"retrieve": true,
+
+		});
+
+	   
+
 }
 
 
@@ -4409,8 +4585,8 @@ function GuardarAsignacionAlumnos(idservicio) {
 function CargarMeses() {
 	var html="";
 
-html+=` <option value="0">Seleccionar mes</option>`;
-
+/*html+=` <option value="0">Seleccionar mes</option>`;
+*/
 	if (meses.length>0) {
 		for (var i = 0; i <meses.length; i++) {
 			html+=` <option value="`+(i+1)+`">`+meses[i]+`</option>`;
@@ -4422,6 +4598,14 @@ html+=` <option value="0">Seleccionar mes</option>`;
 	const fechaActual = new Date();
 	const mesActual = fechaActual.getMonth() + 1;
 	//$("#v_meses").val(mesActual);
+
+
+	 	$('#v_meses').SumoSelect({
+	 		 placeholder: 'Seleccionar mes',
+				     selectAll : true,selectAllPartialCheck : true,
+	                 locale :  ['Aceptar', 'Cancelar', 'Seleccionar todos'],
+	 		});
+
 
 	}
 
@@ -4499,8 +4683,14 @@ function CargarVariables(argument) {
 	}
 	
 
-	if (filtromes>0) {
-		$("#v_meses").val(filtromes);
+	if (filtromes!=0 && filtromes!='') {
+		$('#v_meses').SumoSelect();
+		var splitmes=filtromes.split(',');
+
+		$("#v_meses").val(splitmes);
+
+		$('#v_meses').trigger('change');
+
 		filtrar=1;
 	}
 
@@ -5101,7 +5291,7 @@ function SeleccionarCoachComision(contador) {
 						if (XMLHttpRequest.status === 500) error = "Error del Servidor" + XMLHttpRequest.status; // display some server error 
 						$("#divcomplementos").html(error);
 					},	
-					success: function (msj) {
+					success: function (msj) { 
 					
 					var respuesta=msj.respuesta;
 					var tipocoach= msj.tipocoach;
@@ -5110,9 +5300,10 @@ function SeleccionarCoachComision(contador) {
 
 							var tipo=tipocoach[0].tipocomision;
 							var monto=tipocoach[0].monto;
+							var costo=tipocoach[0].costo;
 							$("#tipo_"+contador).val(tipo);
 							$("#txtcantidaddescuento_"+contador).val(monto);
-					
+							$("#v_costo").val(costo);
 							$("#tipo_"+contador).attr('disabled',true);
 							$("#txtcantidaddescuento_"+contador).attr('disabled',true);
 
@@ -6024,6 +6215,9 @@ function ObtenerHorariosBloqueoCancha(idservicio) {
 						if (horarios.length>0) {
 							PintarHorariosServicioBloqueo(horarios,servicio);
 						}
+					console.log('horarios');
+
+						console.log(horarios);
 
 
 					}

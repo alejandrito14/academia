@@ -122,6 +122,7 @@ class Categorias
 	public function buscarCategoria()
 	{
 		$sql = "SELECT * FROM categorias WHERE idcategorias = '$this->idcategoria'";
+
 		$resp = $this->db->consulta($sql);
 		return $resp;
 	}
@@ -302,8 +303,8 @@ class Categorias
 	public function ObtenerCategoriasGroupEstatusDepende($depende)
 	{
 		
-		$sql="SELECT GROUP_CONCAT(idcategorias) AS categoriasid FROM categorias WHERE depende IN ($depende)";
-
+		$sql="SELECT GROUP_CONCAT(idcategorias) AS categoriasid FROM categorias WHERE depende IN ($depende) or idcategorias=$depende";
+		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -621,7 +622,7 @@ public function ObtenerCategoriasEstatusDepende2($depende)
 
 	public function ObtenerCategoriasListado()
 	{
-		$sql="SELECT *FROM categorias WHERE estatus=1 AND depende>0 ORDER by titulo asc";
+		$sql="SELECT *FROM categorias WHERE estatus=1 AND depende=0 ORDER by titulo asc";
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);

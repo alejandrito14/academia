@@ -145,8 +145,11 @@ public function obtenerServiciosAsignadosPendientes()
 				ON usuarios_servicios.idusuarios = usuarios.idusuarios  WHERE usuarios_servicios.idservicio=servicios.idservicio    
 				 AND usuarios.tipo=3
 				) as asignados
-		FROM usuarios_servicios INNER JOIN 
-		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
+		FROM usuarios_servicios
+		 INNER JOIN 
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio
+		
+		 WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
 			AND cancelacion=0 AND servicios.validaradmin=1
 		 ";
 
@@ -155,7 +158,7 @@ public function obtenerServiciosAsignadosPendientes()
 		 }
 
 		 $sql.=" GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios";
-
+		
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -201,14 +204,16 @@ public function obtenerServiciosAsignadosPendientes()
 		
 		}
 
-		return $array;
+		
 
 	}
+
+	return $array;
 }
 
 	public function ObtenerHorariosServicio()
 	{
-		$sql="SELECT *FROM horariosservicio INNER JOIN zonas ON horariosservicio.idzona=zonas.idzona WHERE idservicio='$this->idservicio' ORDER BY fecha,dia,horainicial asc
+		$sql="SELECT *FROM horariosservicio left JOIN zonas ON horariosservicio.idzona=zonas.idzona WHERE idservicio='$this->idservicio' ORDER BY fecha,dia,horainicial asc
 		 ";
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -1163,7 +1168,7 @@ public function obtenerServiciosAsignadosPendientes()
 				WHERE tipousuario.idtipousuario=5 AND
 				usuarios_servicios.idservicio = '$this->idservicio' AND usuarios_servicios.idusuarios='$this->idusuario' 
 		 ";
-
+		
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
@@ -1834,6 +1839,165 @@ public function obtenerServiciosAsignadosPendientes()
 		return $array;
 	}
 
+
+
+	public function obtenerServiciosAsignadosCoachFiltro($vcategoria,$limit,$offset)
+	{
+		$sql="SELECT 
+    us.*, 
+    s.*,
+	IFNULL(tblpagos.pagados,'0') as pagados,
+	
+ 	IFNULL(integrantesacep.integrantesaceptados,'0')  as aceptados,
+		
+	 IFNULL(integrantesa.integrantesasignados,'0') as asignados 
+	FROM 
+    usuarios_servicios us
+	INNER JOIN 
+    servicios s ON us.idservicio = s.idservicio
+		
+		LEFT JOIN (
+			SELECT COUNT(*) AS integrantesasignados,usuarios_servicios.idservicio from usuarios_servicios
+			inner join usuarios ON usuarios_servicios.idusuarios=usuarios.idusuarios
+			 WHERE  usuarios.tipo=3 AND usuarios_servicios.cancelacion=0 GROUP BY usuarios_servicios.idservicio
+			)as integrantesa ON integrantesa.idservicio=s.idservicio
+
+
+		LEFT JOIN (
+			SELECT COUNT(*) AS integrantesaceptados,usuarios_servicios.idservicio from usuarios_servicios
+			inner join usuarios ON usuarios_servicios.idusuarios=usuarios.idusuarios
+			 WHERE  usuarios.tipo=3 AND usuarios_servicios.aceptarterminos=1 AND usuarios_servicios.cancelacion=0 GROUP BY usuarios_servicios.idservicio
+			)as integrantesacep ON integrantesacep.idservicio=s.idservicio
+			
+			LEFT JOIN (
+
+			SELECT COUNT(*) as pagados,pagos.idservicio 
+			from notapago inner join notapago_descripcion on notapago.idnotapago=notapago_descripcion.idnotapago
+				inner join pagos on pagos.idpago=notapago_descripcion.idpago
+				WHERE notapago.estatus=1 AND pagos.pagado=1 GROUP BY pagos.idservicio
+
+			)as tblpagos on tblpagos.idservicio=s.idservicio
+		WHERE us.idusuarios='$this->idusuario'
+    		AND us.estatus IN (0, 1)
+    		AND us.cancelacion = 0
+    		AND s.validaradmin = 1
+		 ";
+
+		 if ($vcategoria>0) {
+		 	$sql.=" AND servicios.idcategoriaservicio IN($vcategoria)";
+		 }
+
+		 $sql.=" GROUP BY us.idservicio,us.idusuarios ORDER BY us.idservicio desc LIMIT ". $limit ." OFFSET ".$offset;
+
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$fechaactual=date('Y-m-d');
+
+
+					
+			if ($objeto->asignados>0) {
+				
+
+					$array[$contador]=$objeto;
+					$contador++;
+					
+					
+				}else{
+
+
+				$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
+				$resphorarios=$this->db->consulta($sql1);
+
+				$conta = $this->db->num_rows($resphorarios);
+
+					if ($conta>0) {
+
+					$array[$contador]=$objeto;
+						$contador++;
+
+					}
+					
+
+				//}
+			} 
+		
+		
+		
+		}
+
+		return $array;
+
+	}
+}
+
+
+public function ObtenerServiciosAsignadosCoachVigentes($vcategoria)
+	{
+		$sql="SELECT *,
+
+
+		(SELECT COUNT(*) FROM usuarios_servicios  INNER JOIN pagos on usuarios_servicios
+		.idusuarios=pagos.idusuarios   WHERE pagos.pagado=1 AND usuarios_servicios.idservicio=servicios.idservicio )  AS pagados,
+		(SELECT COUNT(*) FROM usuarios_servicios    WHERE usuarios_servicios.aceptarterminos=1  AND usuarios_servicios.idservicio=servicios.idservicio) as aceptados
+		FROM usuarios_servicios 
+		INNER JOIN 
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio 
+		LEFT JOIN (
+	    SELECT 
+	        idservicio, 
+	        MAX(fecha) AS fechafinalservicio, 
+	        MIN(fecha) AS fechainicialservicio
+	    FROM 
+	        horariosservicio
+	    GROUP BY 
+	        idservicio
+	) AS fechas ON usuarios_servicios.idservicio = fechas.idservicio
+
+		WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
+			AND cancelacion=0 AND servicios.validaradmin=1
+
+			and fechafinalservicio>='$this->fecha'
+		 ";
+
+		 if ($vcategoria>0) {
+		 	$sql.=" AND servicios.idcategoriaservicio IN($vcategoria)";
+		 }
+
+		 $sql.=" GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios";
+
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			
+			} 
+		}
+		
+		return $array;
+	}
+
+	public function filtrarTodosServicios($tipoconfiguracion,$tipocategoria)
+	{
+		
+	}
 
 
 

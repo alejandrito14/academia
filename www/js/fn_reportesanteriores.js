@@ -1,3 +1,33 @@
+$(document).ready(function () {
+
+ $('#v_subsubcategorias').SumoSelect();
+
+$('#v_categoriapadre').SumoSelect();
+$("#v_subcategorias").SumoSelect();
+
+$("#v_tiposervicios2").change(function(){
+		CargarCoachestiposervicios();	
+		CargarSubsubcategorias();
+
+	});
+
+
+ $("#v_categoriapadre").change(function(){
+		CargarSubCategorias();	
+		
+
+	});
+
+ $("#v_subcategorias").change(function(){
+ 	
+		CargarSubsubcategorias2();	
+		
+
+	});
+
+
+});
+ 
 
 function CargarSucursales()
 {
@@ -46,7 +76,32 @@ function CargarCoaches()
 		}); 
 }
 
-function CargarFiltrosreportes(idreporte) {
+function CargarCoachestiposervicios() {
+	var v_tiposervicios2=$("#v_tiposervicios2").val();
+	var datos="v_tiposervicios2="+v_tiposervicios2;
+	$.ajax({
+		type:'POST',
+		url: 'catalogos/reportesanteriores/li_coachestiposervicios.php',
+		cache:false,
+		async:false,
+		data:datos,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+		alert(error);						  
+		 },
+		success : function (msj){
+		
+			$('#v_coaches').html(msj);   
+			$('#v_coaches').SumoSelect().sumo.reload();
+
+			}
+		}); 
+}
+
+function CargarFiltrosreportesAnte(idreporte) {
 
 	if (idreporte>0) {
 	var datos="idreporte="+idreporte;
@@ -84,9 +139,18 @@ function CargarFiltrosreportes(idreporte) {
 			var habilitarfechainiciopago=respuesta.habilitarfechainiciopago;
 			var habilitarfechafinpago=respuesta.habilitarfechafinpago;
 			var habilitartiposervicionodepende=respuesta.habilitartiposervicionodepende;
-				
+			var habilitarcuenta=respuesta.habilitarcuenta;
+			var habilitarclasificadorgastos=respuesta.habilitarclasificadorgastos;
+			var habilitarcuentabancaria=respuesta.habilitarcuentabancaria;	
+			var habilitarsubsubcategoria=respuesta.habilitarsubsubcategoria;
+			
+			var habilitarsubcategoria=respuesta.habilitarsubcategoria;
+			
+			var habilitarcategoriapadre=respuesta.habilitarcategoriapadre;
+			var habilitarmes=respuesta.habilitarmes;
+			var habilitaranio=respuesta.habilitaranio;
 
-			Filtrosreportesanteriores(habilitarservicio,habilitarfechainicio,habilitarfechafin,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios,estatusaceptado,estatuspagado,coaches,habilitarfechainiciopago,habilitarfechafinpago,habilitartiposervicionodepende);
+			Filtrosreportesanteriores(habilitarservicio,habilitarfechainicio,habilitarfechafin,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios,estatusaceptado,estatuspagado,coaches,habilitarfechainiciopago,habilitarfechafinpago,habilitartiposervicionodepende,habilitarcuenta,habilitarclasificadorgastos,habilitarcuentabancaria,habilitarsubsubcategoria,habilitarsubcategoria,habilitarcategoriapadre,habilitarmes,habilitaranio);
 			
 
 			/*$("#fechainicio1").val(fechactual);
@@ -109,11 +173,65 @@ function CargarFiltrosreportes(idreporte) {
 	}
 }
 
-function Filtrosreportesanteriores(habilitarservicio,habilitarfechainicio,habilitarfechafinal,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios,estatusaceptado,estatuspagado,coaches,habilitarfechainiciopago,habilitarfechafinpago,habilitartiposervicionodepende) {
+function CargarSubsubcategorias() {
+	var v_tiposervicios2=$("#v_tiposervicios2").val();
+	var datos="v_tiposervicios2="+v_tiposervicios2;
+	$.ajax({
+		type:'POST',
+		url: 'catalogos/reportesanteriores/li_subsubcategorias.php',
+		cache:false,
+		async:false,
+		data:datos,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+		alert(error);						  
+		 },
+		success : function (msj){
+		
+			$('#v_subsubcategorias').html(msj);   
+			$('#v_subsubcategorias').SumoSelect().sumo.reload();
+
+			}
+		}); 
+}
+
+
+function CargarSubsubcategorias2() {
+	var v_tiposervicios2=$("#v_subcategorias").val();
+	var datos="v_tiposervicios2="+v_tiposervicios2;
+	$.ajax({
+		type:'POST',
+		url: 'catalogos/reportesanteriores/li_subsubcategorias.php',
+		cache:false,
+		async:false,
+		data:datos,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+		alert(error);						  
+		 },
+		success : function (msj){
+		
+			$('#v_subsubcategorias').html(msj);   
+			$('#v_subsubcategorias').SumoSelect().sumo.reload();
+
+			}
+		}); 
+}
+
+function Filtrosreportesanteriores(habilitarservicio,habilitarfechainicio,habilitarfechafinal,habilitarhorainicio,habilitarhorafin,funcion,habilitaralumnos,funcionpantalla,habilitartiposervicios,estatusaceptado,estatuspagado,coaches,habilitarfechainiciopago,habilitarfechafinpago,habilitartiposervicionodepende,habilitarcuenta,habilitarclasificadorgastos,habilitarcuentabancaria,habilitarsubsubcategoria,habilitarsubcategoria,habilitarcategoriapadre,habilitarmes,habilitaranio) {
 	$("#tiposervicios").css('display','none');
 	$("#servicios").css('display','none');
 	$("#fechainicio").css('display','none');
 	$("#fechafinal").css('display','none');
+	$("#porcuentabancaria").css('display','none');
+	$("#tsubsubcategorias").css('display','none');
+
 	$("#btngenerar").css('display','block');
 	$("#btngenerar").attr('onclick','ejecutar('+funcionpantalla+')');
 
@@ -127,6 +245,11 @@ function Filtrosreportesanteriores(habilitarservicio,habilitarfechainicio,habili
 	$("#fechainiciopago").css('display','none');
 	$("#fechafinpago").css('display','none');
 	$("#tiposervicios2").css('display','none');
+	$("#tsubsubcategorias").css('display','none');
+	$("#divcategoriapadre").css('display','none');
+	$("#tsubcategorias").css('display','none');
+	$("#mes").css('display','none');
+	$("#anio").css('display','none');
 
 	//$("#btnpantalla").css('display','block');
 	$("#btnpantalla").attr('onclick',funcion);
@@ -179,9 +302,10 @@ function Filtrosreportesanteriores(habilitarservicio,habilitarfechainicio,habili
 		$("#tiposervicios").css('display','block');
 		CargarTipoServiciosRe();
 	}
-
+ 
 	if (habilitartiposervicionodepende==1) {
 		$("#tiposervicios2").css('display','block');
+		
 		CargarTipoServiciosRe2();
 	}
 	
@@ -204,8 +328,109 @@ function Filtrosreportesanteriores(habilitarservicio,habilitarfechainicio,habili
 
 	}
 	
+	if (habilitarcuentabancaria==1) {
 
+		CargarCuentasbancarias();
+		$("#porcuentabancaria").css('display','block');
+	}
+
+
+
+	if (habilitarsubsubcategoria==1) {
+
+		$("#tsubsubcategorias").css('display','block');
+
+	}
+
+
+
+	if (habilitarcategoriapadre==1) {
+		$("#divcategoriapadre").css('display','block');
+		CargarCategoriaPadre();
+	}
+
+	if (habilitarsubcategoria==1) {
+		$("#tsubcategorias").css('display','block');
+
+		CargarSubCategorias();
+	}
+	if (habilitarmes==1) {
+		 CargarMeses();
+		 $("#mes").css('display','block');
+		 $('#v_meses').SumoSelect().sumo.reload();
+
+      
+	}
 	
+	if (habilitaranio==1) {
+		 Cargaranios();
+		 $("#anio").css('display','block');
+
+	}
+}
+
+function CargarCategoriaPadre() {
+
+	 $.ajax({
+					url:'catalogos/reportesanteriores/li_categoriapadre.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+					  },
+					success:function(msj){
+						
+							$("#v_categoriapadre").html(msj);
+	
+
+							$('#v_categoriapadre').SumoSelect().sumo.reload();
+
+					  	}
+				  });
+}
+
+function CargarSubCategorias() {
+
+	var v_categoriapadre=$("#v_categoriapadre").val();
+	var datos="v_categoriapadre="+v_categoriapadre;
+
+	 $.ajax({
+					url:'catalogos/reportesanteriores/li_categoriasubcategoria.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos,
+					data:datos,
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+					  },
+					success:function(msj){
+						
+							$("#v_subcategorias").html(msj);
+	
+
+							$('#v_subcategorias').SumoSelect().sumo.reload();
+
+					  	}
+				  });
+}
+
+function PintarCategoriaPadre(respuesta) {
+	var html="";
+	if (respuesta.length>0) {
+
+		for (var i = 0; i <respuesta.length; i++) {
+			html+=`<option value="`+respuesta[i].idcategorias+`">`+respuesta[i].titulo+`</option>`;
+		}
+	}
+
+
 }
 
 function CargarTipoServiciosRe() {
@@ -632,7 +857,8 @@ function CargarEstilostable(elemento) {
 		   "sPaginationType": "full_numbers", 
 		 	"paging":   true,
 		 	"ordering": true,
-        	
+        	"order": [[1, "asc" ]],
+
         	"bAutoWidth": false,
 
 
@@ -1315,4 +1541,265 @@ function ejecutarFuncionDinamica(funcionpantalla) {
 }
 
 
+function GenerarReportePantallaGastos() {
+	var fechainicio=$("#fechain").val();
+	var fechafin1=$("#fechafin").val();
+	/*var idservicio=$("#v_servicios").val();
+	
+
+	var horainicio=$("#v_horainicio").val();
+	var horafin=$("#v_horafin").val();
+*/
+	/*var fechainicio1=fechainicio.split(' ')[0];
+	var fechafin1=fechafin.split(' ')[0];*/
+
+	var datos="fechainicio="+fechainicio+"&fechafin="+fechafin1+"&pantalla=1";
+
+	var url='modelosreportes/gastos/excel/egresos.php'; 
+
+
+	$.ajax({
+		type:'GET',
+		url: url,
+		cache:false,
+		data:datos,
+		async:false,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+		alert(error);						  
+		 },
+		success : function (msj){
+		
+			$("#contenedor_reportes").html(msj);
+
+			//CargarEstilostable('.vertabla');
+			$("#btnpantalla").css('display','block');
+
+			}
+		}); 
+}
+
+function GenerarReporteGastos(argument) {
+	var fechainicio=$("#fechain").val();
+	var fechafin=$("#fechafin").val();
+
+	
+	var fechainicio1=fechainicio.split(' ')[0];
+	var fechafin1=fechafin.split(' ')[0];
+	
+	var datos="fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&pantalla=0";
+
+	var url='modelosreportes/gastos/excel/egresos.php?'+datos; 
+
+	//alert(url);
+	window.open(url, '_blank');	
+
+}
+
+
+function CargarCuentasbancarias() {
+
+	 $.ajax({
+					url:'catalogos/reportesanteriores/ObtenerCuentasbancarias.php', //Url a donde la enviaremos
+					type:'POST', //Metodo que usaremos
+					dataType:'json',
+					error:function(XMLHttpRequest, textStatus, errorThrown){
+						  var error;
+						  console.log(XMLHttpRequest);
+						  if (XMLHttpRequest.status === 404)  error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+						  if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+						  $('#abc').html('<div class="alert_error">'+error+'</div>');	
+						  //aparecermodulos("catalogos/vi_ligas.php?ac=0&msj=Error. "+error,'main');
+					  },
+					success:function(msj){
+						
+						var respuesta=msj.respuesta;
+						PintarCuentasBancarias(respuesta);
+
+					  	}
+				  });
+	
+}
+function PintarCuentasBancarias(respuesta) {
+	var html="";
+	if (respuesta.length>0) {
+
+		for (var i = 0; i <respuesta.length; i++) {
+			html+=`<option value="`+respuesta[i].idformapagocuenta+`">`+respuesta[i].nombre+`</option>`;
+		}
+	}
+
+	$("#v_txtporcuentabancaria").html(html);
+	
+}
+
+function GenerarReportePantallaCuentasbancarias() {
+	var fechainicio=$("#fechain").val();
+	var fechafin1=$("#fechafin").val();
+	var cuentabancaria=$("#v_txtporcuentabancaria").val();
+
+	var datos="cuentabancaria="+cuentabancaria+"&fechainicio="+fechainicio+"&fechafin="+fechafin1+"&pantalla=1";
+
+	var url='modelosreportes/gastos/excel/porcuentabancaria.php'; 
+
+	$.ajax({
+		type:'GET',
+		url: url,
+		cache:false,
+		data:datos,
+		async:false,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+		alert(error);						  
+		 },
+		success : function (msj){
+		
+			$("#contenedor_reportes").html(msj);
+
+			//CargarEstilostable('.vertabla');
+			$("#btnpantalla").css('display','block');
+
+			}
+		}); 
+}
+
+function GenerarReporteCuentasbancarias(argument) {
+	var fechainicio1=$("#fechain").val();
+	var fechafin1=$("#fechafin").val();
+	var cuentabancaria=$("#v_txtporcuentabancaria").val();
+	
+	/*var fechainicio1=fechainicio.split(' ')[0];
+	var fechafin1=fechafin.split(' ')[0];*/
+	
+	var datos="cuentabancaria="+cuentabancaria+"&fechainicio="+fechainicio1+"&fechafin="+fechafin1+"&pantalla=0";
+
+	var url='modelosreportes/gastos/excel/porcuentabancaria.php?'+datos; 
+
+	//alert(url);
+	window.open(url, '_blank');	
+}
+
+function GenerarReportePantallaVentasClases() {
+	var fechainicio=$("#fechainicio1").val();
+	var fechafin1=$("#fechafin").val();
+	var v_tiposervicios2=$("#v_tiposervicios2").val();
+	var v_coaches=$("#v_coaches").val();
+	var meses=$("#v_meses").val();
+	var anios=$("#v_anios").val();
+	var datos="v_coaches="+v_coaches+"&v_tiposervicios2="+v_tiposervicios2+"&fechainicio="+fechainicio+"&fechafin="+fechafin1+"&pantalla=1";
+		datos+='&v_meses='+meses+"&v_anios="+anios;
+
+	var url='modelosreportes/ventas/excel/rpt_Ventasclasesacademias.php'; 
+
+	$.ajax({
+		type:'GET',
+		url: url,
+		cache:false,
+		data:datos,
+		async:false,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+		alert(error);						  
+		 },
+		success : function (msj){
+		
+			$("#contenedor_reportes").html(msj);
+
+			//CargarEstilostable('.vertabla');
+			$("#btnpantalla").css('display','block');
+
+			}
+		});
+}
+
+function GenerarReporteVentasclases() {
+
+	var fechainicio=$("#fechainicio1").val();
+	var fechafin1=$("#fechafin").val();
+	var v_tiposervicios2=$("#v_tiposervicios2").val();
+	var v_coaches=$("#v_coaches").val();
+	var v_meses=$("#v_meses").val();
+	var v_anios=$("#v_anios").val();
+	var datos="v_coaches="+v_coaches+"&v_tiposervicios2="+v_tiposervicios2+"&fechainicio="+fechainicio+"&fechafin="+fechafin1+"&pantalla=0";
+		datos+='&v_meses='+v_meses+"&v_anios="+v_anios;
+
+	var url='modelosreportes/ventas/excel/rpt_Ventasclasesacademias.php?'+datos; 
+
+	//alert(url);
+	window.open(url, '_blank');	
+
+}
+
+function GenerarReporteVentasAcademias(argument) {
+	var fechainicio=$("#fechainicio1").val();
+	var fechafin1=$("#fechafin").val();
+	var v_tiposervicios2=$("#v_tiposervicios2").val();
+	var v_coaches=$("#v_coaches").val();
+	var v_meses=$("#v_meses").val();
+	var v_anios=$("#v_anios").val();
+	//var datos="v_coaches="+v_coaches+"&v_tiposervicios2="+v_tiposervicios2+"&fechainicio="+fechainicio+"&fechafin="+fechafin1+"&pantalla=0";
+	var v_categoriapadre=$("#v_categoriapadre").val();
+
+	var v_subcategorias=$("#v_subcategorias").val();
+
+	var v_subsubcategorias=$("#v_subsubcategorias").val();
+
+	var datos="v_categoriapadre="+v_categoriapadre+"&v_subcategorias="+v_subcategorias+"&v_subsubcategorias="+v_subsubcategorias+"&v_coaches="+v_coaches+"&fechainicio="+fechainicio+"&fechafin="+fechafin1+"&pantalla=0";
+		datos+='&v_meses='+v_meses+"&v_anios="+v_anios;
+
+	var url='modelosreportes/ventas/excel/rpt_Ventasacademias.php?'+datos; 
+
+	//alert(url);
+	window.open(url, '_blank');	
+}
+
+
+function GenerarReporteAcademiasPantalla() {
+	var fechainicio=$("#fechainicio1").val();
+	var fechafin1=$("#fechafin").val();
+	//var v_tiposervicios2=$("#v_tiposervicios2").val();
+	var v_coaches=$("#v_coaches").val();
+	var v_meses=$("#v_meses").val();
+	var v_anios=$("#v_anios").val();
+	var v_categoriapadre=$("#v_categoriapadre").val();
+	var v_subcategorias=$("#v_subcategorias").val();
+	var v_subsubcategorias=$("#v_subsubcategorias").val();
+	//var datos="v_coaches="+v_coaches+"&v_tiposervicios2="+v_tiposervicios2+"&v_subsubcategorias="+v_subsubcategorias+"&fechainicio="+fechainicio+"&fechafin="+fechafin1+"&pantalla=1";
+	var datos="v_categoriapadre="+v_categoriapadre+"&v_subcategorias="+v_subcategorias+"&v_subsubcategorias="+v_subsubcategorias+"&v_coaches="+v_coaches+"&fechainicio="+fechainicio+"&fechafin="+fechafin1+"&pantalla=1";
+		datos+='&v_meses='+v_meses+"&v_anios="+v_anios;
+
+	var url='modelosreportes/ventas/excel/rpt_Ventasacademias.php'; 
+
+	$.ajax({
+		type:'GET',
+		url: url,
+		cache:false,
+		data:datos,
+		async:false,
+		error:function(XMLHttpRequest, textStatus, errorThrown){
+		 console.log(arguments);
+		 var error;
+		 if (XMLHttpRequest.status === 404) error="Pagina no existe"+XMLHttpRequest.status;// display some page not found error 
+		 if (XMLHttpRequest.status === 500) error="Error del Servidor"+XMLHttpRequest.status; // display some server error 
+		alert(error);						  
+		 },
+		success : function (msj){
+		
+			$("#contenedor_reportes").html(msj);
+
+			//CargarEstilostable('.vertabla');
+			$("#btnpantalla").css('display','block');
+
+			}
+		});
+}
 

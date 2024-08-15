@@ -35,7 +35,7 @@ class Categorias
 	public $dia;
 	public $horainiciosemana;
 	public $horafinsemana;
-
+	public $tiposervicioconfiguracion;
 
 	public function ObtenerCategorias()
 	{
@@ -128,6 +128,30 @@ class Categorias
 		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function ObtenerCategoriasTipoServicioConfi()
+	{
+		$sql ="SELECT * FROM 
+			categorias  WHERE idtiposervicioconfiguracion='$this->tiposervicioconfiguracion'";
+			
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
 
 		$array=array();
 		$contador=0;

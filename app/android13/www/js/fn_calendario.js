@@ -240,7 +240,7 @@ function PintarEventos(resultado) {
 	if (resultado.length>0) {
 
 		for (var i = 0; i <resultado.length; i++) {
-			var zona=resultado[i].nombre;
+			var zona=resultado[i].nombre!=null?resultado[i].nombre:'';
 			var color=resultado[i].color;
 			var fecha=resultado[i].fecha;
 			var dividir=fecha.split('-');

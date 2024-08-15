@@ -56,6 +56,8 @@ class Notapago
 	public $fechareporte;
 	public $idnotapagodescripcion;
 	public $monederousado;
+	public $idmercadopago;
+	public $estatusmercadopago;
 	public function CrearNotapago()
 	{
 		$sql="INSERT INTO notapago( idusuario, subtotal, iva, total, comisiontotal, montomonedero, estatus, idtipopago, tipopago, confoto, datostarjeta,datostarjeta2,idpagostripe,folio,comisionpornota,comisionnota,tipocomisionpornota,requierefactura,razonsocial,rfc,direccion,nointerior,noexterior,colonia,municipio,estado,codigopostal,correo,pais,asentamiento,calle,formapago,metodopago,usocfdi,imagenconstancia,idusuariodatofiscal) VALUES ('$this->idusuario', '$this->subtotal','$this->iva', '$this->total', '$this->comisiontotal','$this->montomonedero','$this->estatus','$this->idtipopago','$this->tipopago','$this->confoto','$this->datostarjeta','$this->datostarjeta2','$this->idpagostripe','$this->folio','$this->comisionpornota','$this->comisionnota','$this->tipocomisionpornota',
@@ -276,5 +278,23 @@ public function ActualizarNotaAIncompleto()
 		}
 		
 	}
+
+public function ActualizarIdMercado()
+	{
+		try {
+			$sql="UPDATE notapago SET 
+				  idmercadopago ='$this->idmercadopago',
+				  estatusmercadopago='$this->estatusmercadopago'
+		WHERE idnotapago='$this->idnotapago'";
+				  
+			$resp=$this->db->consulta($sql);
+			
+		} catch (Exception $e) {
+			echo $e;
+		}
+		
+	}
+
+
 }
  ?>

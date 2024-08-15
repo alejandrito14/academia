@@ -1,4 +1,6 @@
 var dynamicSheet1="";
+var currentPage = 0;
+
 function CargarInicio() {
 	var idtipousuario=localStorage.getItem('idtipousuario');
 	
@@ -278,35 +280,37 @@ function CargarDatosCoach() {
 	GuardarTokenBase();
 	localStorage.setItem('variable',0);
 	localStorage.setItem('valor','');
-	$$(".inicioenlace").attr('onclick','GoToPage("homecoach")');
-  	 $$(".lipagos").attr('href','/pagos/');
-  	 $$(".serviciosnoavanzados").attr('onclick','PintarServiciosnoAvanzados()');
+	  $$(".inicioenlace").attr('onclick','GoToPage("homecoach")');
+  	$$(".lipagos").attr('href','/pagos/');
+  	$$(".serviciosnoavanzados").attr('onclick','PintarServiciosnoAvanzados()');
 
-  var nombreusuario= localStorage.getItem('alias');
-	$$(".nombreusuario").text(nombreusuario);
-	var tipousuario=localStorage.getItem('tipoUsuario');
-	$$(".tipousuario").text(tipousuario);
+    var nombreusuario= localStorage.getItem('alias');
+	  $$(".nombreusuario").text(nombreusuario);
+	  var tipousuario=localStorage.getItem('tipoUsuario');
+	  $$(".tipousuario").text(tipousuario);
 	//$("#lipagos").css('display','none');
-	$$(".tipousuario").addClass('tipocoach');
-	$$(".btnmisservicios").attr('onclick','MisServiciosCoah()');
-  classtipo='tipocoach';
-  $$(".tipousuario").addClass(classtipo);
+	  $$(".tipousuario").addClass('tipocoach');
+	  $$(".btnmisservicios").attr('onclick','MisServiciosCoah()');
+    classtipo='tipocoach';
+    $$(".tipousuario").addClass(classtipo);
     $$(".btnserviciosactivos").attr('onclick','ServiciosActivosCoach()');
     $$(".btnnuevoservicio").attr('onclick','NuevoServicio()');
     $$(".btnreplicaservicio").attr('onclick','ReplicaServicio()');
     $$(".btnserviciosporvalidar").attr('onclick','ServiciosporValidar()');
     $$(".btnreagendarservicio").attr('onclick','ReagendarServicio()');
-
+		$(".divserviciosactivos").css('display','block');
+		$(".divservicios").css('display','block');
 	ObtenerTableroAnuncios(1);
 	ObtenerEntradas(1);
    
      //identificadorDeTemporizador = setInterval('ObtenerCantidadNuevas()', 5000);
      //botones
-    ObtenerCantidadNuevas();
+  ObtenerCantidadNuevas();
 	ExistenServiciosporvalidar();
-	MostrarBotonServiciosActivosCoach();
-	VerificarServiciosAsignadosCoach();
-	
+	ObtenerServiciosVigentesCoach();
+	//MostrarBotonServiciosActivosCoach();
+	//VerificarServiciosAsignadosCoach();
+	//ObtenerServiciosAsignadosCoachFiltro();
 	VerificarPermisoUsuario();
 	//ObtenerServiciosAsignadosCoach();
 	//Obtenerpublicidad();
@@ -394,11 +398,11 @@ function VerificarServiciosAsignadosCoach() {
 
 			var respuesta=datos.respuesta;
 			var fechaactual=datos.fechaactual;
-			$(".divservicios").css('display','none');
+			//$(".divservicios").css('display','none');
 		
 			if (respuesta.length>0) {
 
-				$(".divservicios").css('display','block');
+				//$(".divservicios").css('display','block');
 				$("#numerosservicios").html(respuesta.length);
 				$(".numerosservicios").html(respuesta.length);
 
@@ -1442,9 +1446,11 @@ function ObtenerServiciosAsignadosCoach() {
 		url: urlphp+pagina,
 		data:datos,
 		async:false,
-		success: function(datos){
+		success: function(resp){
 
-			var respuesta=datos.respuesta;
+			var respuesta=resp.respuesta;
+
+			
 			var fechaactual=datos.fechaactual;
 			PintarServiciosAsignadosCoach2(respuesta,fechaactual);
 
@@ -1496,6 +1502,7 @@ function PintarServiciosAsignadosCoach2(respuesta,fechaactual) {
 		
 	
 	var html="";
+	//$$(".serviciosasignados").html('');
 
 	if (respuesta.length>0) {
 		var contadorpasado=0;
@@ -1545,11 +1552,11 @@ function PintarServiciosAsignadosCoach2(respuesta,fechaactual) {
 
 			if (respuesta[i].porpasar==0 && contadorpasado==0) {
 
-
+/*
 				html+=`<div class="row">
 				<div class="linea"><span>Hoy `+fechaactual+`</span></div>
 
-				</div>`;
+				</div>`;*/
 				contadorpasado++;
 
 
@@ -1604,12 +1611,12 @@ function PintarServiciosAsignadosCoach2(respuesta,fechaactual) {
                     		horarioshtml+=`<span style="color:black;font-size:18px;">`+respuesta[i].fechaproxima+` </span><br><span style="margin-top:.5em;font-size:16px;">`+respuesta[i].horainicial+` - `+respuesta[i].horafinal+` Hrs.</span>`;
                     		}
                     	//}
-
+                    		var zonanombre=respuesta[i].zonanombre != null ? respuesta[i].zonanombre : '';
                     html+=`
 
 
                      <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+horarioshtml+`</span>
-                     <span class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].zonanombre+`</span>
+                     <span class="text-color-theme size-12" style="text-align:center;" onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+zonanombre+`</span>
 
  					<span class="text-muted no-margin-bottom tituloserviciolista"  style="text-align: center;opacity: 0.6;font-size: 12px;"  onclick="DetalleServicioAsignadoCoach(`+respuesta[i].idusuarios_servicios+`)">`+respuesta[i].titulo+`</span>
                   	<a class="btncalendario" style="text-align:center;color:#007aff;font-size: 14px;" onclick="VisualizarHorarios(`+respuesta[i].idservicio+`)">Ver horarios</a>
@@ -1644,11 +1651,11 @@ function PintarServiciosAsignadosCoach2(respuesta,fechaactual) {
 
 		}
 
-		$$(".serviciosasignados").html(html);
+		$$(".serviciosasignados").append(html);
 	}else{
 
 
-		html+=`
+		/*html+=`
 			 <div class="list-item">
                 <div class="row text-color-theme">
                   <h4 style="text-align:center;">No se encontraron servicios</h4>
@@ -1656,9 +1663,9 @@ function PintarServiciosAsignadosCoach2(respuesta,fechaactual) {
               </div>
 
 
-		`;
+		`;*/
 
-				$$(".serviciosasignados").html(html);
+				//$$(".serviciosasignados").append(html);
 
 	}
 }
@@ -3851,7 +3858,7 @@ function PintarServicioporvalidar(respuesta,fechaactual) {
 			if (respuesta[i].concomentarios==1) {
 				clasecomentario="convalor";
 			}
-
+			var zona=respuesta[i].zonanombre!=null?respuesta[i].zonanombre:'';
 			var colocarnumero="";
               if(respuesta[i].numeroparticipantesmax=='' ) {
 				respuesta[i].numeroparticipantesmax=0;
@@ -3889,7 +3896,7 @@ function PintarServicioporvalidar(respuesta,fechaactual) {
 
                     html+=`
                      <span class="text-color-theme size-12" style="text-align:center;font-weight:bold;">`+horarioshtml+`</span>
-                     <span class="text-color-theme size-12" style="text-align:center;" >`+respuesta[i].zonanombre+`</span>
+                     <span class="text-color-theme size-12" style="text-align:center;" >`+zona+`</span>
 
  					<span class="text-muted no-margin-bottom tituloserviciolista"  style="text-align: center;opacity: 0.6;font-size: 12px;" >`+respuesta[i].titulo+`</span>
                   
@@ -5008,10 +5015,42 @@ function ObtenerCoachesFiltro() {
 		});
 }
 
+function FiltrarCoachesTipo(valorlistado) {
+	var listadotipoconfiguracion2=$("#listadotipoconfiguracion2").val();
+	var listadotipocategoria2=$("#listadotipocategoria2").val();
+	var pagina = "FiltrarCoachesTipo.php";
+	var datos="listadotipoconfiguracion2="+listadotipoconfiguracion2+"&listadotipocategoria2="+listadotipocategoria2;
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		data:datos,
+		async:false,
+		success: function(datos){
+
+			var respuesta=datos.respuesta;
+	    var valorlistado=localStorage.getItem('valorlistado');
+
+			PintarCoachesFiltro(respuesta,valorlistado);
+
+
+
+
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+
 function PintarCoachesFiltro(respuesta,valorlistado) {
 	var html="";
 	if (respuesta.length>0) {
-		html+=`<option value="0" selected>Todos los coaches</option>`;
+		html+=`<option value="0" selected>Seleccionar</option>`;
 		html+=`<option value="-1">Sin coach</option>`;
 
 		for (var i = 0; i < respuesta.length;i++) {
@@ -5021,10 +5060,10 @@ function PintarCoachesFiltro(respuesta,valorlistado) {
 
 	$(".v_coach").html(html);
 
-	if (valorlistado!=undefined && valorlistado>0) {
+	if (valorlistado!='undefined' && valorlistado>0) {
 		$(".v_coach").val(valorlistado);
            		
-  		FiltrarServicios();
+  		FiltrarServiciosConfi();
 	}
 	
 
@@ -5155,10 +5194,10 @@ clasecantidad="colorred";
 			if (respuesta[i].porpasar==0 && contadorpasado==0) {
 
 
-				html+=`<div class="row">
+			/*	html+=`<div class="row">
 				<div class="linea"><span>Hoy `+fechaactual+`</span></div>
 
-				</div>`;
+				</div>`;*/
 				contadorpasado++;
 
 
@@ -5279,16 +5318,16 @@ clasecantidad="colorred";
 
 		if (respuesta.length==contadorporpasar) {
 
-				html+=`<div class="row">
+			/*	html+=`<div class="row">
 				<div class="linea"><span>Hoy `+fechaactual+`</span></div>
-				</div>`;
+				</div>`;*/
 			}
 
-		$$(".serviciosregistrados").html(html);
+		$$(".serviciosregistrados").append(html);
 	}else{
 
 
-		html+=`
+		/*html+=`
 			 <div class="list-item">
                 <div class="row text-color-theme">
                   <h4 style="text-align:center;"> No se encontraron servicios</h4>
@@ -5296,9 +5335,9 @@ clasecantidad="colorred";
               </div>
 
 
-		`;
+		`;*/
 
-		$$(".serviciosregistrados").html(html);
+		$$(".serviciosregistrados").append(html);
 
 	}
 
@@ -5897,5 +5936,62 @@ var html=` <div class="sheet-modal my-sheet-swipe-to-close1" style="height: 50%;
         setTimeout(() => {
         // Ejecuta RealizarCargo() dentro del timeout
         callback();
-    }, 5000); // Cambiado a 5000 milisegundos (5 segundos)
+    }, 1000); // Cambiado a 5000 milisegundos (5 segundos)
+}
+
+function VerMasServicios() {
+    currentPage++;
+    ObtenerServiciosAsignadosCoachFiltro();
+}
+
+function ObtenerServiciosAsignadosCoachFiltro() {
+	 var idusuario = localStorage.getItem('id_user');
+    var datos = "idusuario=" + idusuario + "&page=" + currentPage;
+	var pagina = "ObtenerServiciosAsignadosCoachFiltro.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		data:datos,
+		async:false,
+		success: function(datos){
+
+			var respuesta=datos.respuesta;
+			var fechaactual=datos.fechaactual;
+			PintarServiciosAsignadosCoach2(respuesta,fechaactual);
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
+}
+
+function ObtenerServiciosVigentesCoach() {
+	var idusuario = localStorage.getItem('id_user');
+  var datos = "idusuario=" + idusuario + "&page=" + currentPage;
+	var pagina = "ObtenerServiciosVigentesCoach.php";
+	$.ajax({
+		type: 'POST',
+		dataType: 'json',
+		url: urlphp+pagina,
+		data:datos,
+		async:false,
+		success: function(datos){
+
+			var respuesta=datos.respuesta;
+			$("#numerosservicios").text(respuesta);
+			
+
+			},error: function(XMLHttpRequest, textStatus, errorThrown){ 
+				var error;
+				  	if (XMLHttpRequest.status === 404) error = "Pagina no existe "+pagina+" "+XMLHttpRequest.status;// display some page not found error 
+				  	if (XMLHttpRequest.status === 500) error = "Error del Servidor"+XMLHttpRequest.status; // display some server error 
+								//alerta("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR"); 
+					console.log("Error leyendo fichero jsonP "+d_json+pagina+" "+ error,"ERROR");
+			}
+		});
 }

@@ -1720,6 +1720,81 @@ public function obtenerServiciosAsignadosPendientes()
 	}
 
 
+	public function VerificacionUsuarioServicios($idcategoria)
+	{
+		$sql="SELECT *FROM (SELECT usuarios_servicios.idusuarios,usuarios_servicios.idservicio,
+			(SELECT COUNT(*) FROM pagos INNER JOIN notapago_descripcion on pagos.idpago=notapago_descripcion.idpago
+		INNER JOIN notapago on notapago_descripcion.idnotapago =notapago.idnotapago
+		WHERE pagos.idservicio=servicios.idservicio and pagos.idusuarios='$this->idusuario' and notapago.estatus=1 ) AS numeropagos
+		FROM usuarios_servicios INNER JOIN 
+		servicios ON usuarios_servicios.idservicio=servicios.idservicio WHERE usuarios_servicios.idusuarios='$this->idusuario' AND usuarios_servicios.cancelacion=0 and usuarios_servicios.aceptarterminos=1 AND servicios.idcategoriaservicio='$idcategoria')as tabla WHERE numeropagos=0";
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+
+	}
+
+
+	public function obtenerUsuariosServicios()
+	{
+		$sql="SELECT
+				usuarios.nombre,
+				usuarios.paterno,
+				usuarios.telefono,
+				usuarios.materno,
+				usuarios.email,
+				usuarios.celular,
+				usuarios.usuario,
+				usuarios.idusuarios,
+				usuarios.foto,
+				usuarios.tipo,
+				tipousuario.nombretipo
+				FROM
+				usuarios_servicios
+				JOIN usuarios
+				ON usuarios_servicios.idusuarios = usuarios.idusuarios
+				JOIN tipousuario
+				ON tipousuario.idtipousuario=usuarios.tipo
+				WHERE
+				usuarios_servicios.idservicio='$this->idservicio'  AND usuarios.tipo=3 AND usuarios_servicios.cancelacion=0 ORDER BY usuarios.tipo DESC 
+		 ";
+
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+
+	
 
 
 

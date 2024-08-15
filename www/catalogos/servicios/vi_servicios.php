@@ -138,7 +138,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 			<div class="col-md-6">
 				 <div class="form-group">
 			    <label for="">MES</label>
-			   	<select class="form-control" id="v_meses"></select>
+			   	<select class="form-control" id="v_meses" multiple="multiple"></select>
 			   
 			  </div>
 			</div>
@@ -174,7 +174,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 	    <div class="row" style="margin-right: 1em;margin-left: 1em;">
 				<div class="col-md-8"></div>
 				<div class="col-md-4">
-					<input type="text" placeholder="Buscar" id="buscadorservicio"  class="form-control" onkeyup="handleKeyPress2(event, '<?php echo $idmenumodulo; ?>')" style="width: 70%;float: right;margin-right: 1em;">
+					<input type="text"  placeholder="Buscar" id="buscadorservicio"  class="form-control"  onkeyup="handleKeyPress2(event, '<?php echo $idmenumodulo; ?>')" style="width: 70%;float: right;margin-right: 1em;">
 				</div>
 	    </div>
 		</div>
@@ -354,6 +354,18 @@ $estatus=array('DESACTIVADO','ACTIVADO');
 					?> -->
 				 </tbody>
 			</table> 
+		</div>
+	</div>
+	
+
+	<div class="row">
+		<div class="col-md-6"></div>
+		<div class="col-md-2"></div>
+		<div class="col-md-4">
+			<p style="font-size:20px;">TOTAL DE SERVICIOS: <span id="totalservicios" style="font-weight: bold;"></span></p>
+
+			<p style="font-size:20px;">MONTO: <span id="totalmonto" style="font-weight: bold;"></span></p>
+
 		</div>
 	</div>
 </div>
@@ -742,28 +754,7 @@ $estatus=array('DESACTIVADO','ACTIVADO');
    <script src="js/jquery.selectlistactions.js"></script>
 
 <script type="text/javascript">
-	 $('#tbl_Servicios').DataTable( {		
-		 	"pageLength": 100,
-			"oLanguage": {
-						"sLengthMenu": "Mostrar _MENU_ ",
-						"sZeroRecords": "NO SE ENCONTRARON REGISTROS EN LA BASE DE DATOS.",
-						"sInfo": "Mostrar _START_ a _END_ de _TOTAL_ Registros",
-						"sInfoEmpty": "desde 0 a 0 de 0 records",
-						"sInfoFiltered": "(filtered desde _MAX_ total Registros)",
-						"sSearch": "Buscar",
-						"oPaginate": {
-									 "sFirst":    "Inicio",
-									 "sPrevious": "Anterior",
-									 "sNext":     "Siguiente",
-									 "sLast":     "Ultimo"
-									 }
-						},
-		   "sPaginationType": "full_numbers", 
-		 	"ordering": false,
 
-        	  "paging": false,
-    		"searching": false,
-		} );
 </script>
 <style>
 	#StaffList {
@@ -876,6 +867,31 @@ $estatus=array('DESACTIVADO','ACTIVADO');
        Cargaranios();
        CargarVariables();
 
+        /*$('#tbl_Servicios').DataTable( {		
+		 	"pageLength": 100,
+		 	"retrieve": true,
+			"oLanguage": {
+						"sLengthMenu": "Mostrar _MENU_ ",
+						"sZeroRecords": "NO SE ENCONTRARON REGISTROS EN LA BASE DE DATOS.",
+						"sInfo": "Mostrar _START_ a _END_ de _TOTAL_ Registros",
+						"sInfoEmpty": "desde 0 a 0 de 0 records",
+						"sInfoFiltered": "(filtro desde _MAX_ total Registros)",
+						"sSearch": "Buscar",
+						"oPaginate": {
+									 "sFirst":    "Inicio",
+									 "sPrevious": "Anterior",
+									 "sNext":     "Siguiente",
+									 "sLast":     "Ultimo"
+									 }
+						},
+		   "sPaginationType": "full_numbers", 
+		 	"ordering": false,
+
+        	  "paging": false,
+    		"searching": false,
+		} ); 
+*/
+
       
 </script>
 
@@ -928,4 +944,17 @@ $estatus=array('DESACTIVADO','ACTIVADO');
     padding-top: 1px;
     padding-bottom: 1px;
 }
+
+.SumoSelect{
+					width: 100%;
+				}
+
+				.SumoSelect .select-all{
+					height: 40px!important;
+				}
+
+.SumoSelect .CaptionCont{
+	height: 33px;
+}
+
 </style>

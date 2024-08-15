@@ -65,7 +65,7 @@ try
 		$array->materno=$resultado_row['materno'];	
 		$array->alias=$resultado_row['alias'];
 		$array->usuario=$resultado_row['usuario'];		
-
+		$array->email=$resultado_row['email'];
 	
 		$array->validado=1;	
 		$array->foto=$resultado_row['foto'];

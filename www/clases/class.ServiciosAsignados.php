@@ -890,7 +890,7 @@ class ServiciosAsignados
 		$sql="SELECT *FROM usuarios_servicios INNER JOIN 
 		servicios ON usuarios_servicios.idservicio=servicios.idservicio
 		INNER JOIN usuarios ON usuarios.idusuarios=usuarios_servicios.idusuarios
-		 WHERE idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
+		 WHERE usuarios_servicios.idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
 			AND cancelacion=0 AND servicios.validaradmin=1 ";
 
 		/*if ($sqlcategorias!='') {
@@ -899,9 +899,8 @@ class ServiciosAsignados
 		}*/
 
 
-		$sql.="	GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios
-		 ";
-
+		$sql.="	GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios";
+		
 		$resp=$this->db->consulta($sql);
 		$cont = $this->db->num_rows($resp);
 
@@ -1509,5 +1508,389 @@ class ServiciosAsignados
 		
 		return $array;
 	}
+
+
+
+	public function obtenerServiciosAsignadosCoach4($sqlcategorias,$sqlfechas,$v_meses,$v_anios)
+	{
+		$sql="SELECT 
+    usuarios_servicios.*,
+    servicios.*,
+    usuarios.*,
+    fechas.fechainicialservicio,
+    fechas.fechafinalservicio,
+      MONTH(fechas.fechainicialservicio) AS mes_fechamin,
+    YEAR(fechas.fechainicialservicio) AS anio_fechamin
+	FROM 
+	    usuarios_servicios
+	INNER JOIN 
+	    servicios ON usuarios_servicios.idservicio = servicios.idservicio
+	INNER JOIN 
+	    usuarios ON usuarios.idusuarios = usuarios_servicios.idusuarios
+	LEFT JOIN (
+	    SELECT 
+	        idservicio, 
+	        MAX(fecha) AS fechafinalservicio, 
+	        MIN(fecha) AS fechainicialservicio
+	    FROM 
+	        horariosservicio
+	    GROUP BY 
+	        idservicio
+	) AS fechas ON usuarios_servicios.idservicio = fechas.idservicio
+		 WHERE usuarios_servicios.idusuarios='$this->idusuario' AND usuarios_servicios.estatus IN(0,1)
+			AND cancelacion=0 AND servicios.validaradmin=1 ";
+
+
+
+
+		if ($sqlcategorias!='') {
+			
+			$sql.=$sqlcategorias;
+		}
+
+		if ($sqlfechas!='') {
+			$sql.=$sqlfechas;
+		}
+
+
+		$sql.="	GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios 
+		";
+
+
+		 if ($v_meses!='' || $v_anios!='' ) {
+     	$sql.=" HAVING ";
+
+     
+
+	 if ($v_meses!='') {
+       		 $sql.= " mes_fechamin IN ($v_meses)";
+    	}
+
+   	if ($v_meses!='' && $v_anios!='' ) {
+     	$sql.="AND ";
+
+     }
+
+    if ($v_anios>0) {
+        $sql.= "  anio_fechamin= '$v_anios'";
+    }
+}
+		
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				/*$fechaactual=date('Y-m-d');
+
+
+				$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
+				$resphorarios=$this->db->consulta($sql1);
+
+				$conta = $this->db->num_rows($resphorarios);
+*/
+				//if ($conta>0) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				
+				//}
+			} 
+		}
+		
+		return $array;
+	}
+
+
+
+
+
+
+	public function obtenerServiciosAsignadosCoach5($sqlcategorias,$sqlfechas,$idcategoriasservicio)
+	{
+		$sql="SELECT 
+    usuarios_servicios.*,
+    servicios.*,
+    usuarios.*,
+    fechas.fechainicialservicio,
+    fechas.fechafinalservicio
+	FROM 
+	    usuarios_servicios
+	INNER JOIN 
+	    servicios ON usuarios_servicios.idservicio = servicios.idservicio
+	INNER JOIN 
+	    usuarios ON usuarios.idusuarios = usuarios_servicios.idusuarios
+	LEFT JOIN (
+	    SELECT 
+	        idservicio, 
+	        MAX(fecha) AS fechafinalservicio, 
+	        MIN(fecha) AS fechainicialservicio
+	    FROM 
+	        horariosservicio
+	    GROUP BY 
+	        idservicio
+	) AS fechas ON usuarios_servicios.idservicio = fechas.idservicio
+		 WHERE  usuarios_servicios.estatus IN(0,1)
+	AND cancelacion=0 AND servicios.validaradmin=1 AND servicios.idcategoria='$idcategoriasservicio'";
+
+		if ($sqlcategorias!='') {
+			
+			$sql.=$sqlcategorias;
+		}
+
+		if ($sqlfechas!='') {
+			$sql.=$sqlfechas;
+		}
+
+
+		$sql.="	GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios 
+		";
+		
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				/*$fechaactual=date('Y-m-d');
+
+
+				$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
+				$resphorarios=$this->db->consulta($sql1);
+
+				$conta = $this->db->num_rows($resphorarios);
+*/
+				//if ($conta>0) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				
+				//}
+			} 
+		}
+		
+		return $array;
+	}
+
+
+
+	public function obtenerServiciosAsignados2($sqlcategorias,$sqlfechas)
+	{
+		$sql="SELECT 
+    servicios.*,
+    fechas.fechainicialservicio,
+    fechas.fechafinalservicio
+FROM 
+    servicios
+INNER JOIN 
+    usuarios_servicios ON servicios.idservicio = usuarios_servicios.idservicio
+INNER JOIN 
+    usuarios ON usuarios.idusuarios = usuarios_servicios.idusuarios
+LEFT JOIN (
+    SELECT 
+        idservicio, 
+        MAX(fecha) AS fechafinalservicio, 
+        MIN(fecha) AS fechainicialservicio
+    FROM 
+        horariosservicio
+    GROUP BY 
+        idservicio
+) AS fechas ON servicios.idservicio = fechas.idservicio
+WHERE servicios.estatus IN (0,1)
+    AND servicios.validaradmin = 1
+ ";
+
+		if ($sqlcategorias!='') {
+			
+			$sql.=$sqlcategorias;
+		}
+
+		if ($sqlfechas!='') {
+			$sql.=$sqlfechas;
+		}
+
+
+		$sql.="	GROUP BY usuarios_servicios.idservicio,usuarios_servicios.idusuarios 
+		";
+		
+		
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				/*$fechaactual=date('Y-m-d');
+
+
+				$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
+				$resphorarios=$this->db->consulta($sql1);
+
+				$conta = $this->db->num_rows($resphorarios);
+*/
+				//if ($conta>0) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				
+				//}
+			} 
+		}
+		
+		return $array;
+	}
+
+
+	public function obtenerUsuariosServiciosAsignadosAlumnossincancelar()
+	{
+		$sql="SELECT
+				usuarios.nombre,
+				usuarios.paterno,
+				usuarios.telefono,
+				usuarios.materno,
+				usuarios.email,
+				usuarios.celular,
+				usuarios.usuario,
+				usuarios.idusuarios,
+				usuarios.foto,
+				usuarios.tipo,
+				tipousuario.nombretipo,
+				usuarios_servicios.aceptarterminos
+				FROM
+				usuarios_servicios
+				JOIN usuarios
+				ON usuarios_servicios.idusuarios = usuarios.idusuarios
+				JOIN tipousuario
+				ON tipousuario.idtipousuario=usuarios.tipo
+				WHERE
+				usuarios_servicios.idservicio='$this->idservicio' and usuarios_servicios.cancelacion=0 AND usuarios.tipo=3 ORDER BY usuarios.tipo DESC 
+		 ";
+
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
+	}
+
+
+
+	public function obtenerServiciosAsignadosCoach6($sqlcategorias,$sqlfechas,$idcategoriasservicio,$v_meses,$v_anios)
+	{
+		$sql="SELECT
+   	s.*,
+    fechas.fechainicialservicio,
+    fechas.fechafinalservicio,
+    MONTH(fechas.fechainicialservicio) AS mes_fechamin,
+    YEAR(fechas.fechainicialservicio) AS anio_fechamin
+FROM
+   
+    servicios s
+
+LEFT JOIN (
+    SELECT 
+        idservicio, 
+        MAX(fecha) AS fechafinalservicio, 
+        MIN(fecha) AS fechainicialservicio 
+    FROM 
+        horariosservicio 
+    GROUP BY 
+        idservicio
+) AS fechas ON s.idservicio = fechas.idservicio
+WHERE
+    s.estatus IN (0, 1)
+   
+    AND s.validaradmin = 1
+    AND s.idcategoria = '$idcategoriasservicio'";
+
+
+    	if ($sqlcategorias!='') {
+			
+			$sql.=$sqlcategorias;
+		}
+
+		if ($sqlfechas!='') {
+			$sql.=$sqlfechas;
+		}
+
+		$sql.=" GROUP BY s.idservicio ";
+
+     if ($v_meses!='' || $v_anios!='' ) {
+     	$sql.=" HAVING ";
+
+     
+
+	 if ($v_meses!='') {
+       		 $sql.= " mes_fechamin IN ($v_meses)";
+    	}
+
+   	if ($v_meses!='' && $v_anios!='' ) {
+     	$sql.="AND ";
+
+     }
+
+    if ($v_anios>0) {
+        $sql.= "  anio_fechamin= '$v_anios'";
+    }
+}
+
+
+		$resp=$this->db->consulta($sql);
+		$cont = $this->db->num_rows($resp);
+
+
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				/*$fechaactual=date('Y-m-d');
+
+
+				$sql1="SELECT *FROM horariosservicio WHERE idservicio='$objeto->idservicio' AND fecha>='$fechaactual'";
+				$resphorarios=$this->db->consulta($sql1);
+
+				$conta = $this->db->num_rows($resphorarios);
+*/
+				//if ($conta>0) {
+
+					$array[$contador]=$objeto;
+					$contador++;
+				
+				//}
+			} 
+		}
+		
+		return $array;
+	}
+
 
 }

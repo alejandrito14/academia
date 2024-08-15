@@ -102,7 +102,7 @@ try
 			# code...
 		
 		 $array=array();
-		 $intervaloshorarios[$i]=array('dia'=>$dia,'horas'=>$array);
+		 $intervaloshorarios[$i]=array('dia'=>$dia,'horas'=>$array,'fechaformato'=>'1');
 		 
 		 $intervalos=$fechas->intervaloHora($obtenerzonaho[$i]->horainicial,$obtenerzonaho[$i]->horafinal,$row['intervalo']);
 	
@@ -110,7 +110,7 @@ try
 		//}
 	}
 
-	//var_dump($intervaloshorarios);die();
+	
 	$horariosdeseados=array();
 	for ($i=0; $i <count($diasservicio) ; $i++) { 
 		
@@ -126,6 +126,8 @@ try
 			}
 		}
 	}
+
+	//var_dump($horariosdeseados);die();
 
 	//var_dump($horariosdeseados);die();
 	//peridos
@@ -146,6 +148,7 @@ try
 		array_push($arrayfechasdias,$dias);
 	}
 
+	
 	$arreglodiasfechas=array();
 	for ($i=0; $i <count($diasservicio) ; $i++) { 
 
@@ -160,6 +163,9 @@ try
 		}
 
 	}
+
+	//print_r($horariosdeseados);die();
+
 	$horariosseleccionados=explode(',',$_POST['v_horarios']);
 	//var_dump($horariosdeseados);die();
 	//var_dump($arreglodiasfechas);die();
@@ -173,6 +179,8 @@ try
 						
 					for ($k=0; $k <count($horariosdeseados[$i]['horas'][$j]) ; $k++) { 
 						$agregar=1;
+
+
 						if ($horariosseleccionados[0]!=0) {
 							$agregar=0;
 							for ($l=0; $l <count($horariosseleccionados) ; $l++) { 
@@ -194,6 +202,7 @@ try
 							
 							 $arreglo=array('horainicial'=> $horariosdeseados[$i]['horas'][$j][$k],'horafinal'=> $horariosdeseados[$i]['horas'][$j][$k+1],'disponible'=>0);
 					 			array_push($arrayformateado, $arreglo);
+
 					 			
 						
 							}
@@ -201,8 +210,8 @@ try
 						}
 				
 				}
-				$arreglo=array('dia'=>$dia,'horas'=>$arrayformateado);
-
+				$arreglo=array('dia'=>$dia,'horas'=>$arrayformateado,'fechaformato'=>'0');
+				//print_r($arreglo);die();
 				array_push($diashoras,$arreglo);
 				
 
@@ -214,7 +223,7 @@ try
 			for ($i=0; $i <count($arreglodiasfechas) ; $i++) { 
 					$arreglodiasfechas[$i]['horasposibles']=array();
 
-					if (date('Y-m-d',strtotime($arreglodiasfechas[$i]['fecha']))==date('Y-m-d')) {
+					/*if (date('Y-m-d',strtotime($arreglodiasfechas[$i]['fecha']))==date('Y-m-d')) {
 
 							for ($j=0; $j < count($diashoras); $j++) { 
 						$arrayhoras=array();
@@ -222,11 +231,11 @@ try
 
 							for ($k=0; $k <count($diashoras[$j]['horas']) ; $k++) { 
 							
-								if(date('H:i:s',strtotime($diashoras[$j]['horas'][$k]['horainicial'])) >= $horaactual)
+								/*if(date('H:i:s',strtotime($diashoras[$j]['horas'][$k]['horainicial'])) >= $horaactual)
 								{
 								
 									array_push($arrayhoras, $diashoras[$j]['horas'][$k]);
-								}
+								//}
 							
 							}
 						
@@ -234,7 +243,7 @@ try
 						}
 					}
 						
-					}else{
+					}else{*/
 
 
 
@@ -247,7 +256,7 @@ try
 						}
 					}
 
-					}
+					//}
 
 				
 
@@ -265,6 +274,7 @@ try
 				array_push($arraydatoszona, $datoszona[0]);
 				
 			for ($i=0; $i <count($arreglodiasfechas) ; $i++) {
+
 
 				$arreglodiasfechas[$i]['nombrezona']=$datoszona[0]->nombre;
 				$arreglodiasfechas[$i]['idzona']=$datoszona[0]->idzona;
@@ -285,14 +295,14 @@ try
 					$horarioservicio->horafinal=$horafinal;
 					$horarioservicio->fecha=$fecha;
 					
-					$consultarsiestaocupado=$horarioservicio->Disponibilidad3();
+					/*$consultarsiestaocupado=$horarioservicio->Disponibilidad3();
 					
 					if (count($consultarsiestaocupado)>0) {
 				
 
 			$arreglodiasfechas[$i]['horasposibles'][0][$j]['disponible']=0;
 
-					}else{
+					}else{*/
 
 						/*if ($horafinal==NULL || $horainicial==NULL) {
 					
@@ -301,10 +311,10 @@ try
 						}else{*/
 							$arreglodiasfechas[$i]['horasposibles'][0][$j]['disponible']=1;
 
-						//}
+						
 
 						
-					}
+					//}
 
 					
 
@@ -349,7 +359,29 @@ try
 
 			}
 
-	$respuesta['respuesta']=$arraydiaszonas;
+
+			if (count($arraydiaszonas)>0) {
+				
+
+				for ($i = 0; $i < count($arraydiaszonas); $i++) {
+					$arraydiaszonas[$i]['fechaformato'] = '';
+				    $fechaforma = $fechas->fecha_texto5($arraydiaszonas[$i]['fecha']);
+				    $arraydiaszonas[$i]['fechaformato'] = $fechaforma;
+				}
+			}
+			//print_r($arraydiaszonas);
+
+			//$arrayLimitado = array_slice($arraydiaszonas, 0, 3);
+
+			$arrayLimitado=$f->agruparPorFecha2($arraydiaszonas);
+
+			//print_r($arrayagrupado);die();
+
+usort($arrayLimitado, function($a, $b) {
+    return strtotime($a['fecha']) - strtotime($b['fecha']);
+});
+
+	$respuesta['respuesta']=$arrayLimitado;
 	$respuesta['zonas']=$arraydatoszona;
 	$respuesta['fechadia']=$fechadia;
 	$respuesta['arrayfechasdias']=$arrayfechasdias;

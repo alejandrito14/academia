@@ -80,7 +80,7 @@ if(isset($_SESSION['permisos_acciones_erp'])){
 
 
 
-$estatus=array('PENDIENTE','ACEPTADO','CANCELADO');
+$estatus=array('PENDIENTE','ACEPTADO','CANCELADO','DECLINADO');
 $estatuspago = array('NO PAGADO','PAGADO');
 ?>
 
@@ -106,6 +106,8 @@ $estatuspago = array('NO PAGADO','PAGADO');
 				$bt->armar_boton();
 			
 			?>
+			<br>
+					<button type="button" id="exportarBtn" class="btn btn-success" style="margin-right: 10px;    margin-top: 10px;">Exportar a Excel</button>
 			
 			<div style="clear: both;"></div>
 		</div>
@@ -118,10 +120,14 @@ $estatuspago = array('NO PAGADO','PAGADO');
 	<div class="card-body">
 		<div class="table-responsive" id="contenedor_Pagos">
 				<div class="row" style="margin-bottom:1em;">
-				<div class="col-md-9"></div>
-					<div class="col-md-3">
-							<button id="exportarBtn" class="btn btn-success" style="margin-left: 70px;">Exportar a Excel</button>
-					</div>
+				<div class="col-md-10"></div>
+					
+						<div style="float: right;">
+					
+
+
+							</div>
+				
 			</div>
 		
 
@@ -133,9 +139,9 @@ $estatuspago = array('NO PAGADO','PAGADO');
 						<th style="text-align: center;">ALUMNO</th>
 							<th style="text-align: center;">DESCRIPCIÓN</th>
 						<th style="text-align: center;">FECHA</th>
-						<th style="text-align: center;">MÉTODO DE PAGO</th>
+						<th style="text-align: center;">TIPO DE PAGO</th>
 					
-						<th style="text-align: center;">MONTO</th>
+						<th style="text-align: center;">TOTAL</th>
 						<th style="text-align: center;">ESTATUS</th>
 
 						<th style="text-align: center;">ACCI&Oacute;N</th>
@@ -176,15 +182,27 @@ $estatuspago = array('NO PAGADO','PAGADO');
 
 							?></td>
 
-								<td style="text-align: center;"><?php echo $l_pagos_row['tipopago'];?></td>
+								
 							
 
 							<td style="text-align: center;"><?php echo date('d-m-Y H:i:s',strtotime($l_pagos_row['fecha']));?></td>
 
+							<td style="text-align: center;"><?php echo $l_pagos_row['tipopago'];?></td>
 
 
+							<td style="text-align: center;">$<?php 
+								if ( $l_pagos_row['total']==0) {
 
-							<td style="text-align: center;">$<?php echo $l_pagos_row['total'];?></td>
+											echo $l_pagos_row['montomonedero'];
+
+								}else{
+
+										echo $l_pagos_row['total'];
+								}
+						
+
+
+							?></td>
 							<?php 
 								$clase="";
 
@@ -198,6 +216,10 @@ $estatuspago = array('NO PAGADO','PAGADO');
 
 								if ($l_pagos_row['estatus']==2) {
 									$clase='notacancelado';
+								}
+
+								if ($l_pagos_row['estatus']==3) {
+											$clase='notadeclinado';
 								}
 
 							 ?>
@@ -323,12 +345,12 @@ $estatuspago = array('NO PAGADO','PAGADO');
       	<form action="">
       		  <div class="form-group">
 			    <label for="formGroupExampleInput">Fecha inicio</label>
-			    <input type="date" class="form-control" id="txtfechainicio" placeholder="">
+			    <input type="date" class="form-control" id="txtfechainicio" value="<?php echo date('Y-m-d') ?>" placeholder="">
 			  </div>
 
 			  <div class="form-group">
 			    <label for="formGroupExampleInput">Fecha final</label>
-			    <input type="date" class="form-control" id="txtfechafinal" placeholder="">
+			    <input type="date" class="form-control" id="txtfechafinal" value="<?php echo date('Y-m-d') ?>" placeholder="">
 			  </div>
       	</form>
      	
@@ -351,7 +373,7 @@ $estatuspago = array('NO PAGADO','PAGADO');
 <script type="text/javascript">
 	 $('#tbl_pagos').DataTable( {		
 	 
- "order": [[ 2, "desc" ]],
+ "order": [[ 3, "desc" ]],
 		 	"pageLength": 100,
 			"oLanguage": {
 						"sLengthMenu": "Mostrar _MENU_ ",

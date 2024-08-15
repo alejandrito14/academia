@@ -80,14 +80,49 @@ class Servicios
 		$sql="SELECT servicios.*,categorias.titulo as nombrecategoria,categorias.avanzado,
 		(SELECT MIN(fecha) from horariosservicio WHERE horariosservicio.idservicio =servicios.idservicio) as fechamin,
 	(SELECT MAX(fecha) from horariosservicio WHERE horariosservicio.idservicio =servicios.idservicio) as fechamax,
-	(SELECT GROUP_CONCAT(CONCAT(usuarios.nombre,' ',usuarios.paterno,' ',usuarios.materno)) FROM usuarios_servicios INNER JOIN usuarios ON usuarios_servicios.idusuarios=usuarios.idusuarios
-		where usuarios.tipo=5 and usuarios_servicios.idservicio=servicios.idservicio) AS coachesfiltro
-		 FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio ORDER BY orden asc";
+	(SELECT GROUP_CONCAT(CONCAT(usuarios.nombre,' ',usuarios.paterno,' ',usuarios.materno)) 
+
+		FROM usuarios_servicios INNER JOIN usuarios ON usuarios_servicios.idusuarios=usuarios.idusuarios
+		where usuarios.tipo=5 and usuarios_servicios.idservicio=servicios.idservicio) AS coachesfiltro,
+	horario.cantidadhorario
+		 FROM servicios 
+
+		 INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio 
+		 LEFT JOIN (
+		 	SELECT count(*) as cantidadhorario horariosservicio 
+		 	) as horario ON horario.idservicio=servicios.idservicio
+		 ORDER BY orden asc";
 
 	/*	$sql="SELECT * FROM servicios  ORDER BY orden asc";*/
 	
 		$resp=$this->db->consulta($sql);
 		return $resp;
+	}
+
+
+	public function ObtenerServicios2()
+	{
+		$sql="SELECT servicios.*,categorias.titulo as nombrecategoria,categorias.avanzado,
+		(SELECT MIN(fecha) from horariosservicio WHERE horariosservicio.idservicio =servicios.idservicio) as fechamin,
+	(SELECT MAX(fecha) from horariosservicio WHERE horariosservicio.idservicio =servicios.idservicio) as fechamax,
+	(SELECT GROUP_CONCAT(CONCAT(usuarios.nombre,' ',usuarios.paterno,' ',usuarios.materno)) FROM usuarios_servicios INNER JOIN usuarios ON usuarios_servicios.idusuarios=usuarios.idusuarios
+		where usuarios.tipo=5 and usuarios_servicios.idservicio=servicios.idservicio) AS coachesfiltro
+		 FROM servicios INNER JOIN categorias ON categorias.idcategorias=servicios.idcategoriaservicio ORDER BY orden asc";
+
+
+	
+		$array=array();
+		$contador=0;
+		if ($cont>0) {
+
+			while ($objeto=$this->db->fetch_object($resp)) {
+
+				$array[$contador]=$objeto;
+				$contador++;
+			} 
+		}
+		
+		return $array;
 	}
 
 	public function ObtenerServicio($value='')
@@ -803,7 +838,7 @@ class Servicios
 		return $resp;
 	}
 
-	public function ObtenerServiciosFiltrado($tiposervicio,$coach,$mes,$anio,$v_buscar)
+	/*public function ObtenerServiciosFiltrado($tiposervicio,$coach,$mes,$anio,$v_buscar)
 	{
 		$sql="SELECT *FROM (SELECT servicios.idservicio,servicios.titulo,servicios.imagen,categorias.titulo as nombrecategoria,categorias.idcategorias,servicios.orden,servicios.estatus,servicios.fechacreacion,
 			MONTH((SELECT MIN(fecha) from horariosservicio WHERE horariosservicio.idservicio =servicios.idservicio))AS MES,
@@ -830,7 +865,7 @@ class Servicios
 
 
 
-		/*if ($coach>0 && $coach!='t') {
+		if ($coach>0 && $coach!='t') {
 		$sql.=" LEFT JOIN usuarios_servicios ON usuarios_servicios.idservicio = servicios.idservicio
 		LEFT JOIN usuarios ON usuarios.idusuarios=usuarios_servicios.idusuarios ";
 
@@ -842,7 +877,7 @@ class Servicios
 			$filtro.=" AND usuarios.idusuarios='$coach'";
 
 			}
-		}*/
+		}
 
 
 		if ($filtro!='') {
@@ -857,7 +892,7 @@ class Servicios
 		if ($coach>0) {
 
 			$sql.=" AND FIND_IN_SET('$coach',TABLA.coachesfiltro)";
-			/*$sql.=" AND TABLA.coachesfiltro IN($v_coach)";*/
+			
 		}
 
 if ($tiposervicio>0 || $coach>-1) {
@@ -897,7 +932,162 @@ if ($tiposervicio>0 || $coach>-1) {
 		}
 		
 		return $array;
-	}
+	}*/
+
+	public function ObtenerServiciosFiltrado($tiposervicio, $coach, $mes, $anio, $v_buscar)
+{
+
+	$sql="
+	SELECT
+	* 
+	FROM
+	(
+	SELECT
+		s.idservicio,
+		s.titulo,
+		s.idcategoriaservicio,
+		s.precio,
+		s.imagen,
+		c.titulo AS nombrecategoria,
+		c.idcategorias,
+		s.orden,
+		s.estatus,
+		s.fechacreacion,
+		min_fecha.fechamin,
+		max_fecha.fechamax,
+		GROUP_CONCAT( us.idusuarios ) AS coachesfiltro,
+		GROUP_CONCAT(
+		CONCAT( u.nombre, ' ', u.paterno, ' ', u.materno )) AS coachesfiltro2,
+		MONTH ( min_fecha.fechamin ) AS mes_fechamin,
+		YEAR ( min_fecha.fechamin ) AS anio_fechamin,
+		horarios.cantidadhorarios,
+	 IFNULL(integrantesa.integrantesasignados,'0') as integrantesasignados ,
+ IFNULL(integrantesacep.integrantesaceptados,'0')  as integrantesaceptados,
+ IFNULL(tblpagos.pagados,'0') as pagados,
+ 
+ 	(horarios.cantidadhorarios*s.precio) as montoservicio
+	FROM
+		servicios AS s
+		LEFT JOIN categorias AS c ON c.idcategorias = s.idcategoriaservicio
+		LEFT JOIN ( SELECT idservicio, MIN( fecha ) AS fechamin FROM horariosservicio GROUP BY idservicio ) AS min_fecha ON min_fecha.idservicio = s.idservicio
+		LEFT JOIN ( SELECT idservicio, MAX( fecha ) AS fechamax FROM horariosservicio GROUP BY idservicio ) AS max_fecha ON max_fecha.idservicio = s.idservicio
+		LEFT JOIN ( SELECT COUNT(*) AS cantidadhorarios,horariosservicio.idservicio FROM horariosservicio GROUP BY horariosservicio.idservicio) AS horarios ON horarios.idservicio = s.idservicio
+
+		LEFT JOIN (
+			SELECT COUNT(*) AS integrantesasignados,usuarios_servicios.idservicio from usuarios_servicios
+			inner join usuarios ON usuarios_servicios.idusuarios=usuarios.idusuarios
+			 WHERE  usuarios.tipo=3 AND usuarios_servicios.cancelacion=0 GROUP BY usuarios_servicios.idservicio
+			)as integrantesa ON integrantesa.idservicio=s.idservicio
+
+
+		LEFT JOIN (
+			SELECT COUNT(*) AS integrantesaceptados,usuarios_servicios.idservicio from usuarios_servicios
+			inner join usuarios ON usuarios_servicios.idusuarios=usuarios.idusuarios
+			 WHERE  usuarios.tipo=3 AND usuarios_servicios.aceptarterminos=1 AND usuarios_servicios.cancelacion=0 GROUP BY usuarios_servicios.idservicio
+			)as integrantesacep ON integrantesacep.idservicio=s.idservicio
+			
+			LEFT JOIN (
+
+			SELECT COUNT(*) as pagados,pagos.idservicio 
+			from notapago inner join notapago_descripcion on notapago.idnotapago=notapago_descripcion.idnotapago
+				inner join pagos on pagos.idpago=notapago_descripcion.idpago
+				WHERE notapago.estatus=1 AND pagos.pagado=1 GROUP BY pagos.idservicio
+
+			)as tblpagos on tblpagos.idservicio=s.idservicio
+
+		LEFT JOIN usuarios_servicios AS us ON us.idservicio = s.idservicio
+		LEFT JOIN usuarios AS u ON u.idusuarios = us.idusuarios 
+		AND u.tipo = 5 
+	GROUP BY
+		s.idservicio 
+	) AS subconsulta 
+WHERE
+	1 =1";
+           
+    /*$sql = "
+        SELECT
+            s.idservicio, s.titulo, s.imagen, c.titulo AS nombrecategoria, c.idcategorias, s.orden, s.estatus, s.fechacreacion,
+            MIN(hs.fecha) AS fechamin,
+            MAX(hs.fecha) AS fechamax,
+            GROUP_CONCAT(us.idusuarios) AS coachesfiltro,
+            GROUP_CONCAT(CONCAT(u.nombre, ' ', u.paterno, ' ', u.materno)) AS coachesfiltro2
+        FROM
+            servicios AS s
+            INNER JOIN categorias AS c ON c.idcategorias = s.idcategoriaservicio
+            LEFT JOIN horariosservicio AS hs ON hs.idservicio = s.idservicio
+            LEFT JOIN usuarios_servicios AS us ON us.idservicio = s.idservicio
+            LEFT JOIN usuarios AS u ON u.idusuarios = us.idusuarios AND u.tipo=5
+        WHERE
+            1=1";*/
+
+
+    if ($tiposervicio > 0) {
+        $sql .= " AND subconsulta.idcategoriaservicio IN($tiposervicio)";
+
+
+       // AND idcategoriaservicio IN($categoriasid)
+    }
+
+    if ($coach > 0) {
+       $sql .= " AND FIND_IN_SET('$coach', coachesfiltro) > 0";
+
+       // $sql .= " AND '$coach' IN (SELECT idusuarios FROM usuarios_servicios WHERE idservicio = subconsulta.idservicio)";
+        //$sql .= " AND subconsulta.coachesfiltro LIKE '%" . strtolower($v_buscar) . "%'";
+
+    }
+
+    if ($mes > 0) {
+        $sql .= " AND subconsulta.mes_fechamin IN($mes)";
+    }
+
+    if ($anio>0) {
+        $sql .= " AND subconsulta.anio_fechamin= '$anio'";
+    }
+
+    if ($v_buscar != '') {
+        $sql .= " AND (
+
+        LOWER(subconsulta.titulo) LIKE '%" . strtolower($v_buscar) . "%'
+
+         OR subconsulta.idservicio LIKE '%" . strtolower($v_buscar) . "%'
+
+         OR subconsulta.nombrecategoria 
+         LIKE '%" . $v_buscar . "%'
+
+    )";
+
+
+    }
+
+    // if ($v_buscar != '') {
+       
+    //}
+
+    // if ($v_buscar != '') {
+        //$sql .= " OR subconsulta.coachesfiltro2 LIKE '%" . strtolower($v_buscar) . "%'";
+    //}
+
+
+    /* if ($v_buscar != '') {
+        $sql .= " OR subconsulta.nombrecategoria LIKE '%" . $v_buscar . "%'";
+    }*/
+    
+
+    $sql .= "
+        ";
+
+          
+
+    $resp = $this->db->consulta($sql);
+    $array = [];
+
+    while ($objeto = $this->db->fetch_object($resp)) {
+        $array[] = $objeto;
+    }
+
+    return $array;
+}
+
 
 	public function ObtenerSiHayPago()
 	{

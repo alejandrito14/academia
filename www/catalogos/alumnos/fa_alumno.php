@@ -109,6 +109,7 @@ if(!isset($_GET['idusuarios']))
 	$titulo='NUEVO USUARIO';
 	$v_idtipo=3;
 	$bloquearediciondedatos=0;
+	$idtipocoach=0;
 			$rutaperfil="images/sinfoto.png";
 	//$validacion="onkeyup='ValidarCelular()'";
 
@@ -182,6 +183,8 @@ if(!isset($_GET['idusuarios']))
 	$v_municipio= $fu->imprimir_cadena_utf8($usuario_row['municipios']);
 	$v_estado= $fu->imprimir_cadena_utf8($usuario_row['estados']);
 	$idpais=$fu->imprimir_cadena_utf8($usuario_row['pais']);
+
+	$idtipocoach=$usuario_row['idtipocoach']!=''?$usuario_row['idtipocoach']:0;
 
 	$habilitarobservacion=$fu->imprimir_cadena_utf8($usuario_row['activarobservacion']);
 
@@ -354,7 +357,22 @@ $su->lista_empresas = $lista_empresas;
 							
 						</select>
 					</div>
+
+					<div class="form-group divtipocoach" style="display:none;">
+						<label for="">*TIPO DE COACH:</label>
+						<select name="tipocoach" id="v_tipocoach" class="v_tipocoach form-control" >
+							
+						</select>
 					</div>
+				
+
+
+					</div>
+
+					<div class="row">
+				
+				</div>
+
 				</div>
 			</div>
 		</div>
@@ -902,6 +920,15 @@ $su->lista_empresas = $lista_empresas;
 
 <script>
 //$("#v_estatus").chosen({width:"100%"});
+
+
+var idtipocoach='<?php echo $idtipocoach; ?>';
+Obtenertipocoach(idtipocoach);
+
+/*if (idtipocoach>0) {
+	alert(idtipocoach);
+	$("#v_tipocoach").val(idtipocoach);
+}*/
 
 	$("#v_pais").chosen({width:"100%"});
 	$("#v_pais1").chosen({width:"100%"});

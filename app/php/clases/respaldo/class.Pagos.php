@@ -157,9 +157,16 @@ class Pagos
 
 	public function ActualizarEstatus()
 	{
-		$sql="UPDATE pagos SET  estatus = '$this->estatus' WHERE idpago = '$this->idpago'";
+		try {
+
+			$sql="UPDATE pagos SET  estatus = '$this->estatus' WHERE idpago = '$this->idpago'";
 		
-		$resp=$this->db->consulta($sql);
+			$resp=$this->db->consulta($sql);
+			
+		} catch (Exception $e) {
+			$this->db->rollback();	
+		}
+		
 
 	}
 
@@ -414,6 +421,7 @@ class Pagos
 					pagos.tipodepago,
 					pagos.descuento,
 					pagos.folio,
+					pagos.pagoinscripcion,
 					usuarios.nombre,
 					usuarios.paterno,
 					usuarios.materno,

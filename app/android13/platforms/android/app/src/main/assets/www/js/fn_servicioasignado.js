@@ -60,6 +60,7 @@ function ObtenerServicioAsignado() {
 			$(".imgservicioasignado").attr('src',imagen);
 
 			$(".tituloservicio").text(respuesta.titulo);
+						if (respuesta.fechainicial!='') {
 
 			var fechainicial=respuesta.fechainicial.split('-');
 			var fechafinal=respuesta.fechafinal.split('-');
@@ -67,7 +68,7 @@ function ObtenerServicioAsignado() {
 			var fechaf=fechafinal[2]+'/'+fechafinal[1]+'/'+fechafinal[0];
 
 			$(".fechasservicio").text(fechai+' - '+fechaf);
-
+		}
 			var horarioshtml="";
 
              if (respuesta.fechaproxima!='') {
