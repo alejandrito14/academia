@@ -88,7 +88,7 @@ var app = new Framework7({
 
  var pictureSource;   // picture source
  var destinationType; 
- var produccion = 0;
+ var produccion = 1;
 
 var codigoservicio="0";
 $(document).ready(function() {
@@ -1940,7 +1940,7 @@ $$(document).on('page:init', '.page[data-name="asignaralumnos"]', function (e) {
 $$(document).on('page:init', '.page[data-name="serviciosasignados"]', function (e) {
   myStopFunction(identificadorDeTemporizador);
  currentPages = 1;
-
+ var filtrar=0;
 
   if (localStorage.getItem('idtipousuario') == 3) {
         $("#filtrocategorias").css('display','none');
@@ -2290,7 +2290,7 @@ $$(document).on('page:init', '.page[data-name="resumenpago"]', function (e) {
  localStorage.setItem('campomonto',0);
  localStorage.setItem('constripe',0);
  localStorage.setItem('comisiontotal',0);
-
+ 
  var demo1 = new Promise((resolve, reject) => {
      
      resolve(ObtenerDescuentosRelacionados());

@@ -1912,21 +1912,7 @@ function GuardarAsignacion() {
 	var usuariosparaquitar="";
 	var usuariosparagregar="";
 
-	/*for (var i = 0; i < usuariosquitados.length; i++) {
-		
-		var id=usuariosquitados[i];
-		var resultado = participastesalumnosservicio.find( usuarios => usuarios.idusuarios === id );
-			
-				if (resultado == undefined) {
-					 resultado = listaalumnos.find( usuarios => usuarios.idusuarios === id );
-		
-				}
-
-			usuariosparaquitar+=`<p style="text-align:center;font-size:18px;">`+(i+1)+`.- `+resultado.nombre+` `+ resultado.paterno+`</p>`;
-
-	}*/
-
-//	console.log(listaalumnos);
+	
 	for (var i = 0; i < idusuarios.length; i++) {
 		
 		var id=idusuarios[i];

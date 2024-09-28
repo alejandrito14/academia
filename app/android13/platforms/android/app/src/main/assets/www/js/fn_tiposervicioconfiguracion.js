@@ -453,7 +453,7 @@ function ObtenerHorariosparaSeleccion(argument) {
                 var inicial=dividir[0]+':'+dividir[1];
                 var dividir2=respuesta[i].horafinal.split(':');
                 var final=dividir2[0]+':'+dividir2[1];
-                html+=`<option value="`+respuesta[i].horainicial+`-`+respuesta[i].horafinal+`">`+inicial+`-`+final+`</option>`;
+                html+=`<option value="`+respuesta[i].horainicial+`-`+respuesta[i].horafinal+`">`+inicial+`</option>`;
               
                }
 

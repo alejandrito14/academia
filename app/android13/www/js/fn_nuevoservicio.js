@@ -1605,6 +1605,8 @@ function HorariosDisponibles() {
 		}	*/
 	var v_zonaelegida=$("#v_zonas").val();
 	var v_horarios=$("#v_horarios").val();
+
+	
 	var v_categoria=$("#listadosubcategorias").val();
 	var v_tipocategoria=localStorage.getItem('idsubcategoria');
 	var v_fechainicial=$("#v_fechainicial").val();
@@ -1617,7 +1619,7 @@ function HorariosDisponibles() {
 					type: 'POST', //Metodo que usaremos
 					data:datos,
 					dataType:'json', 
-					error: function (XMLHttpRequest, textStatus, errorThrown) {
+				 	error: function (XMLHttpRequest, textStatus, errorThrown) {
 						var error;
 						console.log(XMLHttpRequest);
 						if (XMLHttpRequest.status === 404) error = "Pagina no existe" + XMLHttpRequest.status; // display some page not found error 
